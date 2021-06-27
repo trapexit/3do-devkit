@@ -1,0 +1,128 @@
+ IF	:DEF:|_TASK_I|
+ ELSE
+	GBLL	|_TASK_I|
+
+;*****************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: task.i,v 1.20 1994/11/17 20:56:46 vertex Exp $
+;*
+;*  Kernel task management definitions
+;*
+;*****************************************************************************
+
+	INCLUDE	structs.i
+	INCLUDE	nodes.i
+	INCLUDE item.i
+
+TASK_READY   EQU 1
+TASK_WAITING EQU 2
+TASK_RUNNING EQU 4
+TASK_SUPER   EQU 8
+
+TASK_DATADISCOK		EQU 1
+TASK_ALLOCATED_SP	EQU 2
+
+PRIVTASK_MIN_PRIORITY EQU 1
+PRIVTASK_MAX_PRIORITY EQU 254
+
+TASK_MIN_PRIORITY	EQU 10
+TASK_MAX_PRIORITY	EQU 199
+
+
+	BEGINSTRUCT	Task
+		STRUCT	ItemNode,t_t
+		PTR	t_ThreadTask
+		ARRAY	UINT32,t_Private0,2
+		UINT32	t_WaitBits
+		UINT32	t_SigBits
+		UINT32	t_AllocatedSigs
+		PTR	t_StackBase
+		UINT32	t_StackSize
+		ARRAY	UINT32,t_Private1,22
+		UINT32	t_SuperStackSize
+		PTR	t_SuperStackBase
+		ITEM	t_WaitItem
+		PTR	t_FreeMemoryLists
+		ARRAY	UINT32,t_Private2,2
+		ARRAY	INT32,t_ElapsedTime,2
+		UINT32	t_MaxTicks
+		UINT32	t_MaxUsecs
+		ARRAY	UINT32,t_Private3,2
+		UINT32	t_NumTaskLaunch
+		UINT32	t_Flags
+		STRUCT	MinNode,t_TaskLinkNode
+	ENDSTRUCT
+
+ITEM_WAS_OPENED		EQU &00004000
+ITEM_NOT_AN_ITEM        EQU &80000000
+
+SIGF_MEMLOW    EQU 2
+SIGF_MEMGONE   EQU 1
+SIGF_ABORT     EQU 4
+SIGF_IODONE    EQU 8
+SIGF_DEADTASK  EQU 16
+SIGF_ONESHOT   EQU 32
+
+CREATETASK_TAG_PC       EQU TAG_ITEM_LAST+1
+CREATETASK_TAG_MAXQ     EQU TAG_ITEM_LAST+2
+CREATETASK_TAG_STACKSIZE        EQU TAG_ITEM_LAST+3
+CREATETASK_TAG_ARGC     EQU TAG_ITEM_LAST+4
+CREATETASK_TAG_ARGP     EQU TAG_ITEM_LAST+5
+CREATETASK_TAG_SP       EQU TAG_ITEM_LAST+6
+CREATETASK_TAG_BASE     EQU TAG_ITEM_LAST+7
+CREATETASK_TAG_UNUSED   EQU TAG_ITEM_LAST+8
+CREATETASK_TAG_IMAGESZ  EQU TAG_ITEM_LAST+9
+CREATETASK_TAG_AIF      EQU TAG_ITEM_LAST+10
+CREATETASK_TAG_CMDSTR   EQU TAG_ITEM_LAST+11
+CREATETASK_TAG_PRIVATE0	EQU TAG_ITEM_LAST+12
+CREATETASK_TAG_RSA	EQU TAG_ITEM_LAST+13
+CREATETASK_TAG_USERONLY EQU TAG_ITEM_LAST+14
+CREATETASK_TAG_ALLOCDTHREADSP EQU TAG_ITEM_LAST+15
+CREATETASK_TAG_MSGFROMCHILD   EQU TAG_ITEM_LAST+16
+
+
+	MACRO
+	Wait
+	swi	KERNELSWI+1
+	MEND
+
+	MACRO
+	WaitSignal
+	swi	KERNELSWI+1
+	MEND
+
+	MACRO
+	Signal
+	swi	KERNELSWI+2
+	MEND
+
+	MACRO
+	SendSignal
+	swi	KERNELSWI+2
+	MEND
+
+	MACRO
+	Yield
+	swi	KERNELSWI+9
+	MEND
+
+	MACRO
+	AllocSignal
+	swi	KERNELSWI+21
+	MEND
+
+	MACRO
+	FreeSignal
+	swi	KERNELSWI+22
+	MEND
+
+	MACRO
+	SetExitStatus
+	swi	KERNELSWI+39
+	MEND
+
+ ENDIF ; |_TASK_I|
+	END

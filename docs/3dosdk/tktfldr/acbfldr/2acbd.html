@@ -1,0 +1,116 @@
+<TITLE>Choosing a division implementation</TITLE>
+<H1>Choosing a division implementation</H1><HR>
+This recipe shows you:<P>
+<UL>
+<LI>how to select a divide implementation for the C-library
+<LI>how to use the fast divide routines from the examples directory
+<LI>a comparison of the speeds of the divide routines.
+</UL>
+The ARM instruction set does not have a divide instruction.  In some applications it is important that a general purpose divide executes as quickly as possible.  This recipe shows how to choose between different divide implementations for the ARM.<P>
+<H2>Divide implementations in the C-library</H2>
+The C-library offers a choice between two divide variants.  This choice is basically a speed vs. space tradeoff; the options are: 'unrolled' and 'small'.<P>
+In the C-library build directory (eg. directory <I>semi</I> for the semi-hosted library), the file <I>options</I> is used to select variants of the C-library.<P>
+The supplied file contains the following:<P>
+<CODE>
+<PRE>
+memcpy = fast
+divide = unrolled
+stdfile_redirection = off
+fp_type = module
+stack = contiguous
+backtrace = off
+</CODE>
+</PRE>
+The default divide implementation 'unrolled' is fast, but occupies a total of 416 bytes (55 instructions for the signed version plus 49 instructions for the unsigned version).  This is an appropriate default for most toolkit users who are interested in obtaining maximum performance.<P>
+Alternatively you can change this file to select 'small' divide which is more compact at 136 bytes(20 instructions for signed plus 14 instructions for unsigned) but somewhat slower as there is considerable looping overhead.<P>
+For a comparison of the speed difference between these two routines, consult the following table (the speed of divide is data-dependent):<P>
+<H3>Signed division example timings</H3>
+Cycle times are F-cycles on a cached ARM6 series processor excluding call &amp; return<P>
+<PRE>
+---------------------------------------------------------
+Calc        |unrolled     |rolled cycles                 
+            |cycles       |                              
+---------------------------------------------------------
+0/100       |22           |19                            
+---------------------------------------------------------
+9/7         |22           |19                            
+---------------------------------------------------------
+4096/2      |70           |136                           
+---------------------------------------------------------
+1000000/3   |99           |240                           
+---------------------------------------------------------
+1000000000/1|148          |370                           
+---------------------------------------------------------
+</PRE>
+<P>
+If you have a specific requirement you can modify the supplied routines to suit your application better.  For instance, you could write an unrolled-2-times version or you could combine the signed and unsigned versions to save more space.<P>
+<H2>Guaranteed-performance divide routines for real-time applications</H2>
+The C-library also contains two fully unwound divide routines.  These have been carefully implemented for maximum speed.  They are useful when a guaranteed performance is required, eg. for real-time feedback control routines or DSP.  The long maximum division time of the standard C-library functions may make them unsuitable for some real-time applications.<P>
+The supplied routines implement signed division only; it would be possible to modify them for unsigned division if required.  The routines are described by the standard header file "<I>stdlib.h</I>" which contains the following declarations:<P>
+<H3>ARM real-time divide functions for guaranteed performance</H3>
+
+<CODE>
+<PRE>
+typedef struct __sdiv32by16 { int quot, rem; } __sdiv32by16;
+/* used int so that values return in regs, although 16-bit */
+typedef struct __sdiv64by32 { int rem, quot; } __sdiv64by32;
+
+__value_in_regs extern __sdiv32by16 __rt_sdiv32by16(
+    int /*numer*/,
+    short int /*denom*/);
+/*
+ * Signed div: (16-bit quot), (16-bit rem) = (32-bit) / (16-bit)
+ */
+__value_in_regs extern __sdiv64by32 __rt_sdiv64by32(
+    int /*numer_h*/, unsigned int /*numer_l*/,
+    int /*denom*/);
+/*
+ * Signed div: (32-bit quot), (32-bit rem) = (64-bit) / (32-bit)
+ */
+</CODE>
+</PRE>
+These routines both have guaranteed performance:<P>
+ 108 cycles for __rt_sdiv64by32 (excluding call &amp; return)<P>
+ 44 cycles for __rt_sdiv32by16<P>
+Currently the C-compiler does not automatically use these routines, as the default routines have early-termination which yields good performance for small values.<P>
+In order to use these new divide routines, you should explicitly call the relevant function.  The __rt_div64by32 function is complicated by the fact that our C-compiler does not currently support 64-bit integers, as you have to split a 64-bit value between two 32-bit variables.<P>
+The following example program shows how to use these routines.  This program is available as <I>dspdiv.c</I> in the <I>examples</I> directory.  Once the program has been compiled and linked, type<P>
+<CODE>
+<PRE>
+armsd dspdiv 1000 3            
+</CODE>
+</PRE>
+to calculate 1000/3<P>
+<H3>divdsp.c source code</H3>
+
+<CODE>
+<PRE>
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc, char *argv[])
+{
+    if (argc != 3)
+        puts("needs 2 numeric args");
+    else
+    {
+        __sdiv32by16 result;
+
+        result = __rt_sdiv32by16(atoi(argv[1]), atoi(argv[2]));
+
+        printf("quotient %d\n", result.quot);
+        printf("remainder %d\n", result.rem);
+    }
+    return 0;
+}
+</CODE>
+</PRE>
+<H2>Summary</H2>
+The standard division routine used by the C-library can be selected by using the options file in the C-library build area.  If the supplied variants are not suitable, you can write your own.<P>
+For real-time applications, the maximum division time must be as short as possible to ensure that the calculation can complete in time.  In this case, the functions __rt_sdiv64by32 and __rt_sdiv32by16 are useful.<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./2acbc.html#XREF21356">Division by a constant</A>;
+<LI><A HREF="./4acbc.html#XREF10783">C Programming for deeply embedded applications</A> for information about the division routines to which <I>armcc</I> generates references;
+</UL>

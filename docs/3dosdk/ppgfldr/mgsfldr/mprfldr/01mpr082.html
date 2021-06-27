@@ -1,0 +1,22 @@
+<Title>UnloadInstrument</Title>
+<A NAME="XREF16084"><H1>UnloadInstrument </A></H1>
+<A NAME="XREF29418"></A> Unloads an instrument loaded with LoadInstrument().<P>
+<H3>Synopsis</H3>
+<CODE>Err UnloadInstrument (Item Instrument)</CODE><P>
+<H3>Description</H3>
+This function frees the Instrument and unloads the Template loaded by <CODE>LoadInstrument()</CODE>. <P>
+Do not confuse this function with <CODE>DeleteInstrument()</CODE>, which deletes an Instrument created by <CODE>CreateInstrument()</CODE>. Calling <CODE>DeleteInstrument()</CODE> for an instrument created by <CODE>LoadInstrument()</CODE> deletes the Instrument, but not the Template, leaving you with an unaccessible Template Item that you can't delete. Calling <CODE>UnloadInstrument()</CODE> for and Instrument created by <CODE>CreateInstrument()</CODE> deletes Template for that Instrument along with all other Instruments created from that Template. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>Item number of the instrument. 
+</DL>
+<H3>Return Value</H3>
+The function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr052.html#XREF40571"><CODE>LoadInstrument</A>(), <A HREF="./01mpr029.html#XREF39688">DeleteInstrument</A>(), <A HREF="./01mpr081.html#XREF38811">UnloadInsTemplate</A>() </CODE><P>
+</CODE>

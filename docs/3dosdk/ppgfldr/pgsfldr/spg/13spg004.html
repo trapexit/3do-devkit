@@ -1,0 +1,13 @@
+<TITLE>Converting Character Sets With the JString Folio</TITLE>
+<H1><LINK NAME="XREF23143">Converting Character Sets With the JString Folio</LINK></H1><HR>
+The International folio uses calls from the JString folio to convert character sets from one format to another. The JString folio contains four calls:<P>
+<UL>
+<LI><CODE>ConvertASCII2ShiftJIS()c</CODE>onverts a string from ASCII to Shift-JIS.
+<LI><CODE>ConvertShiftJIS2ASCII()c</CODE>onverts a string from Shift-JIS to ASCII.
+<LI><CODE>ConvertShiftJIS2UniCode()c</CODE>onverts a string from Shift-JIS to UniCode.
+<LI><CODE>ConvertUniCode2ShiftJIS() c</CODE>onverts a string from UniCode to Shift-JIS.
+</UL>
+These calls are used to enter data or develop applications using the Shift-JIS character set and then convert the date to ASCII or UniCode at runtime. <P>
+For example, the International folio generates dates and currency in UniCode. Because the current 3DO text routines can only handle ASCII or Shift-JIS, you need to convert it to render the information on the display. You can parse the UniCode and render it using your own font technology, or use the 3DO JString calls to convert the text to Shift-JIS.<P>
+The International folio automatically loads the JString folio when you call <CODE>intlTransliterateString</CODE> and requests Shift-JIS translation.<P>
+<P>

@@ -1,0 +1,86 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_DEQUE_INCLUDED
+#define TTL_DEQUE_INCLUDED
+
+#include "allocator"
+#include "cstdint"
+
+template<class T,
+         class ALLOC = allocator<T> >
+class deque
+{
+public:
+  typedef T                 value_type;
+  typedef ALLOC             allocator_type;
+  typedef value_type       &reference;
+  typedef const value_type &const_reference;
+  typedef value_type       *pointer;
+  typedef const value_type *const_pointer;
+  typedef uint32_t          size_type;
+  typedef int32_t           difference_type;
+
+public:
+  deque()
+  {
+  }
+
+  ~deque()
+  {
+  }
+
+public:
+  deque&
+  operator=(const deque &x_)
+  {
+    return *this;
+  }
+
+public:
+  size();
+  max_size();
+  resize();
+  empty();
+  shrink_to_fit();
+  
+public:
+  operator[]();
+  at();
+  front();
+  back();
+
+public:
+  push_back();
+  push_front();
+  pop_back();
+  pop_front();
+  insert();
+  erase();
+  swap();
+  clear();
+  emplace();
+  emplace_front();
+  emplace_back();
+
+private:
+  size_type _size;
+  const size_type _cap;
+};
+
+#endif

@@ -1,0 +1,23 @@
+<TITLE>Time and the DataStreamer</TITLE>
+<H1><LINK NAME="XREF12832">Time and the DataStreamer</LINK></H1><HR>
+One of the central concepts of streaming is the association of start time and duration with data. The chunks in the stream file have associated time information that is used by the different threads. <P>
+<UL>
+<LI>The streamer thread examines each data chunk from the pool of available data and decides whether to hold, send, or drop it. 
+<p>
+<LI>Subscribers decide which piece of available data to pass on for playing. For instance, if there are five frames of animation data currently in memory, the one with a timestamp closest to the actual time should be displayed. 
+</UL>
+When the presentation time for a piece of data has passed, the streamer throws the data away and returns all resources associated with it to their respective free pools. <P>
+<B>Note: </B>If time for a piece of compressed video that was based on frame differencing passes, the streamer cannot discard it because differencing relies on the streamer having played all data. In that case, playback will halt. <P>
+<H2>The stream clock</H2>
+To manage start time and duration associated with data, the DataStreamer maintains a time base known as the stream clock. Clock time is measured in standard Portfolio audio ticks, and runs 240 Hz. <P>
+The stream clock can be in one of the following states:<P>
+<UL>
+<LI>Upon initialization of the streamer or when there is no instantiated stream, the clock is in an invalid state. 
+<p>
+<LI>When a time base is established through the presence of an audio channel reference or through an explicit call to<CODE> DSSetClock(),</CODE> the clock is valid.
+<p>
+<LI>The valid clock can be running or stopped. 
+</UL>
+Note that the streamer thread delivers data for playback only if the clock is valid and running.<P>
+One important function of the clock is making synchronization of audio and video possible. The DataStreamer derives its time base from an audio channel managed by the audio subscriber and synchronizes the other subscribers to that time base. <P>
+<B>Note: </B>If there is no audio channel in your stream, you must explicitly set the clock to validate it with DSSetClock() for your stream to play back.<P>

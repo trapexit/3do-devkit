@@ -1,0 +1,12 @@
+<TITLE>Caveats</TITLE>
+<H1><LINK NAME="XREF18978">Caveats</LINK></H1><HR>
+The application programmer controls how well the advanced sound player functions. You should keep the following points in mind when writing programs that use the advanced sound player:<P>
+<UL>
+<LI>Branches must make sense in terms of the sound data being played back. The advanced sound player simply switches from one sound source to another. It does not crossfade.
+<P>
+<LI>The service function, <CODE>spService()</CODE>, must be called frequently enough to avoid spooler starvation. Spooler starvation causes silent gaps in the sound output.
+<P>
+<LI>The spooler buffers must be sufficiently large to avoid starvation while performing the branches that are called for, yet be small enough to keep branch response time reasonable.
+<P>
+<LI>Be careful when using default decision functions because they get called at every <CODE>SPMarker</CODE>. Since this effectively causes the advanced sound player to only be able to read and spool data between each <CODE>SPMarker</CODE> at a time, densely packed <CODE>SPMarker</CODE>s can have a serious impact on efficient use of disc I/O and the sound spooler.
+</UL>

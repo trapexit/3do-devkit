@@ -1,0 +1,50 @@
+<Title>SetupMSEvents</Title>
+<A NAME="XREF24816"><H1>SetupMSEvents </A></H1>
+ Sets up message and signal event handling.<P>
+<H3>Synopsis</H3>
+<CODE>MSEventHandle SetupMSEvents (MSEventData eventData[], int32 numEvents, int32 reserved)</CODE><P>
+<H3>Description</H3>
+Creates resources needed to dispatch message and signal events. Uses the array of MSEventData structures you pass in to decide what type of setups to do. It allocates signal and port items that you didn't allocate yourself, and also builds internal control data to assist in waiting for and dispatching the events. <P>
+The MSEventData structure is defined in msgutils.h as follows: <P>
+<CODE>
+<PRE>
+typedef struct MSEventData 
+{   char *name; 
+    int32 (*handler)(MSEventData *eventData, void *userCo ntext); 
+    void  *userData; 
+    int32 signal; 
+    Item  port; 
+    Item msgItem; 
+    Message *msgPtr; 
+    MsgValueTypes   *msgValues; 
+    MSEventHandle   backLink; } MSEventData; 
+</CODE>
+</PRE>
+The values you place in the MSEventData structures before calling this function control resource allocation, as described in the following paragraphs. <P>
+If you provide a non-NULL name pointer the MSEventData describes a message port. If the name field is NULL it describes a signal. For message ports, the port is created using the name you provide; if you don't need a name just provide an empty string ("") for the name. <P>
+The handler field is a pointer to your function to handle events for the message port or signal. Every event must have a non-NULL handler pointer. <P>
+If you set the signal field to zero and the name field is NULL, <CODE>SetupMSEvents()</CODE> will allocate a signal for you and store it in this field. If the signal field is non-zero and the name field is NULL the signal field is used as the signal(s) to be waited on for this event. If the name field is non-NULL (IE, this is a message event) any value already existing in the signal field is replaced with the port's signal mask during setup. <P>
+If you set the port field to zero and the name field is non-NULL, <CODE>SetupMSEvents() </CODE>allocates a message port for you and store it in this field. If the port field is non-zero, it is assumed to be a message port item number for a port you allocated yourself. If the name field is NULL (IE, this is a signal event) the port field is ignored. <P>
+The remaining fields, (msgItem, msgPtr, msgValues, and backLink) are read-only fields from your point of view. When a message event arrives, the dispatcher fills in the msgItem, msgPtr, and msgValues fields before calling your handler function. Your handler can refer to these values when processing the message. <P>
+The MSEventData array can contain some elements for which you've allocated your own signal or port and other elements with zero values that request automatic allocation at setup time. The internals keep track of who allocated which resources and at cleanup time only automatically allocated resources are freed automatically. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>eventData
+<DD>Pointer to an array of MSEventData structures which describe the event(s). 
+</DL>
+<DL>
+<DT>numEvents
+<DD>Number of elements in the MSEventData array. 
+</DL>
+<DL>
+<DT>reserved
+<DD>Reserved for future expansion; pass zero. 
+</DL>
+<H3>Return Value</H3>
+Returns negative on error, or non-negative on success. The non-negative return value is a handle which must be passed to the Dispatch and Cleanup routines. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, msgutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO037.html#XREF31382"><CODE>CleanupMSEvents</A>, <A HREF="./01LDO060.html#XREF38141">DispatchMSEvents</A> </CODE><P>

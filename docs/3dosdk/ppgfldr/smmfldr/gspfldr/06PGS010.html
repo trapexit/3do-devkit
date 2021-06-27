@@ -1,0 +1,11 @@
+<TITLE>Hoarding System Resources</TITLE>
+<H1><LINK NAME="XREF25182">Hoarding System Resources</LINK></H1><HR>
+<H3>What is it:</H3>
+Keeping memory, items, devices, and files allocated to your task when you're not using them. <P>
+<H3>Why it's bad:</H3>
+In the best case, adversely affects system performance. In the worst case, causes applications or part of the system to fail because they cannot allocate the resources they need.<P>
+<H3>What to do</H3>
+Free memory, close devices, and delete items when they're not in use. Hold system resources only for as long as you need them.<P>
+In a resource-constrained environment like the 3DO Interactive Multiplayer system, it is important to use resources only for as long as you need them. Keep devices open only for as long as you're making requests of that device. Similarly, release memory as soon as you don't need it any more. Choose the objects that need to persist across your application's execution carefully, opting for dynamic allocation when possible. For example, if you're using a particular CCB to draw a cel that only comes up at the end of the title, allocate that CCB and read in the cel when it's needed-don't just leave the CCB and associated memory hanging around from initialization to exit.<P>
+On a related note, applications should always clean up after themselves when they exit by releasing any and all resources they allocate while executing. Aside from being a good general programming practice, this makes your code easier to reuse in different contexts.<P>
+<P>

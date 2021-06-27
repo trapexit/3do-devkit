@@ -1,0 +1,15 @@
+<HTML><HEAD><TITLE>The list Data Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The list Data Abstraction</H2>
+<P>The <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> data structure is a container of relatively fixed size.  While the standard library provides facilities for dynamically changing the size of a vector, such operations are costly and should be used only rarely.  Yet in many problems, the size of a collection may be difficult to predict in advance, or may vary widely during the course of execution.  In such cases an alternative data structure should be employed.  In this section we will examine an alternative data structure that can be used in these circumstances, the <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> data type.  </P>
+<P>A list corresponds to the intuitive idea of holding elements in a linear (although not necessarily ordered) sequence.  New values can be added or removed either to or from the front of the list, or to or from the back.  By using an iterator to denote a position, elements can also be added or removed to or from the middle of a list.  In all cases the insertion or removal operations are efficient; they are performed in a constant amount of time that is independent of the number of elements being maintained in the collection.  Finally, a list is a linear structure.  The contents of the list cannot be accessed by subscript, and, in general, elements can only be accessed by a linear traversal of all values. </P>
+<A NAME="includefiles"><H3>Include files</H3></A>
+<P>Whenever you use a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A>, you must include the <SAMP>list</SAMP> header file.</P>
+<PRE>   # include &#60;list>
+</PRE>
+
+<HR>
+<A HREF="lis_3222.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="lis_8858.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

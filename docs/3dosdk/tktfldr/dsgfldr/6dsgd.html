@@ -1,0 +1,131 @@
+<TITLE>The SubscriberMsg data structure</TITLE>
+<H1><LINK NAME="XREF24954">The SubscriberMsg data structure</LINK></H1><HR>
+The streamer thread uses the <CODE>SubscriberMsg</CODE> structure, defined in <I>DataStream.h</I>, to communicate with data subscriber threads. The message header, <CODE>DS_MSG_HEADER</CODE>, shown in Example 1, is common to both data acquisition and data subscriber messages.<P>
+The streamer sends messages to a data subscriber client whenever it encounters data belonging to the subscriber in the data stream. The subscriber is responsible for doing whatever is appropriate with the data, such as outputting graphics, audio, or other data, and typically, synchronizing it with some master time base. As these buffers are used, they must be passed back to the streamer by way of the subscriber calling <CODE>ReplyMsg()</CODE> using the <CODE>msgItem</CODE> field in the message header. This allows the streamer to reuse the buffer space for additional data acquisition.<P>
+<B>Example 1: </B><I>SubscriberMsg data structure.</I><P>
+<CODE>
+<PRE>
+typedef struct SubscriberMsg {
+
+</CODE>
+</PRE>
+
+    <CODE>
+<PRE>
+union {
+        struct {                                /* kStreamOpData */
+            void*            buffer;                /* ptr to the data */
+            } data;
+    
+        struct {                                /* kStreamOpGetChan, kStreamOpSetChan */
+            long            number;                /* channel number to operate upon */
+            long            status;                /* channel status (bits 31-16 subscriber\
+                                                                    defined) */
+            } channel;
+    
+        struct {                                /* kStreamOpControl */
+            long            controlArg1;                /* subscriber defined */
+            void*        controlArg2;                    /* subscriber defined */
+            } control;
+
+
+</CODE>
+</PRE>
+            <CODE>
+<PRE>
+unsigned long    clock;                        /* current time */
+            } sync;
+
+        struct {                                /* kStreamOpStart */
+            unsigned long    options;                        /* start options */
+            } start;
+
+        struct {                                /* kStreamOpStop */
+            unsigned long    options;                        /* stop options */
+            } stop;
+
+        } msg;
+
+    } SubscriberMsg, *SubscriberMsgPtr;
+
+/*****************************************/
+/* Opcode values as passed in `whatToDo' */
+/*****************************************/
+typedef enum StreamOpcode {
+
+</CODE>
+</PRE>
+        <CODE>
+<PRE>
+kStreamOpGetChan,                                /* get logical channel status */
+        kStreamOpSetChan,                                /* set logical channel status */
+        kStreamOpControl,                                /* perform subscriber defined function */
+        kStreamOpSync,                                /* clock stream resynched the clock */
+        kStreamOpStart,                                /* stream is being started */
+        kStreamOpStop,                                /* stream is being stopped */
+
+        /* The following msgs have no extended message arguments
+         * and only may use the whatToDo and context
+         * fields in the following message record.
+         */
+
+        kStreamOpOpening,                                /* one time initialization call from DS */
+        kStreamOpClosing,                                /* stream is being closed */
+        kStreamOpEOF,                                /* physical EOF on data, no more to come */
+        kStreamOpAbort                                /* a subscriber gave up, streaming aborted */
+        };
+</CODE>
+</PRE>
+<H2>Subscriber message opcodes</H2>
+The table below describes the messages the streamer thread may send to a subscriber thread. The subscriber should ignore any messages that do not contain one of the subscriber message opcode shown in the table in its <CODE>whatToDo</CODE> field.<P>
+<PRE>
+<B>Table 8: </B><I> Subscriber message opcodes.</I>
+---------------------------------------------------------
+WhatToDo field   |Meaning                                
+---------------------------------------------------------
+kStreamOpData    |New data has arrived as specified in   
+                 |msg.data.buffer field. When the        
+                 |subscriber is completely finished with 
+                 |the data, it should reply to the       
+                 |message with ReplyMsg(), using the     
+                 |msgItem field from the standard message
+                 |header. This signals to the streamer   
+                 |that the buffer can be reused.         
+---------------------------------------------------------
+kStreamOpGetChan |Request to get logical channel status  
+                 |for the channel specified in           
+                 |msg.channel.number.                    
+---------------------------------------------------------
+kStreamOpSetChan |Request to set logical channel status  
+                 |given the channel number and status    
+                 |specified in msg.channel.number and    
+                 |msg.channel.status.                    
+---------------------------------------------------------
+kStreamOpControl |Perform a subscriber-defined function. 
+---------------------------------------------------------
+kStreamOpSync    |The clock stream resynched the clock.  
+                 |The subscriber should examine the new  
+                 |clock as specified in msg.sync.clock   
+                 |and take whatever actions are          
+                 |appropriate given that the stream clock
+                 |has been changed.                      
+---------------------------------------------------------
+kStreamOpOpening |An initialization message from the     
+                 |streamer that is sent when a stream is 
+                 |initially opened.                      
+---------------------------------------------------------
+kStreamOpClosing |Stream is being closed.                
+---------------------------------------------------------
+kStreamOpStart   |Stream is being started.               
+---------------------------------------------------------
+kStreamOpStop    |Stream is being stopped.               
+---------------------------------------------------------
+kStreamOpEOF     |An EOF has been encountered; no more   
+                 |data to come.                          
+---------------------------------------------------------
+kStreamOpAbort   |A subscriber detected some type of     
+                 |error and streaming is terminated.     
+---------------------------------------------------------
+</PRE>
+<P>
+<P>

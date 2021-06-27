@@ -1,0 +1,97 @@
+<TITLE>Fundamentals of 3DO Graphics</TITLE>
+<H1><LINK NAME="XREF18852">Fundamentals of 3DO Graphics</LINK></H1><HR>
+In this background section you learn about:<P>
+
+<UL>
+<LI><A HREF="#XREF37375">3DO Cels and Images</A> 
+<LI><A HREF="#XREF16251">Uncoded and Coded Cels</A>
+<LI><A HREF="#XREF41202">Commonly Used Cel Formats</A>
+</UL>
+<H3>For More Information</H3>
+The <A 
+HREF="../.././ggsfldr/gpgfldr/00gpg1.html#XREF38776">  3DO Graphics 
+Programmer's Guide</A> provides a comprehensive 
+discussion of 3DO graphics programming, supplemented by function 
+descriptions for all functions in the<A 
+HREF="../.././ggsfldr/gprfldr/00gpr1.html#XREF38776">  3DO 
+Graphics Programmer's 
+Reference</A>. <P>
+The volume 
+<A 
+HREF="../../../tktfldr/00tkt.html#XREF4"> 3DO Tools for Art 
+Production</A> contains manuals for all 
+3DO art conversion tools and the <A 
+HREF=../../../tktfldr/ginfldr/0ginfrst.html">Introduction to 3DO 
+Graphics</A> manual, 
+which is aimed at graphic artists but is useful for a more general 
+audience as well. <P>
+<A NAME="XREF37375"><H2>3DO Cels and Images</A></H2>
+The two basic formats for 3DO graphics are 3DO images and 3DO cels. <P>
+<UL>
+<LI>A 3DO image is the simplest kind of 3DO graphic. For NTSC screens, it 
+is a 320-x-240 array of 16-bit pixel values, laid out in the format of the 
+display buffer (352 x 288 for PAL). The hardware can draw an image very 
+quickly by copying it into the display buffer directly, but cannot process 
+or compress images. jsbasicslideshow.c displays images in sequence based 
+on user input. It's also possible to let the slide show run in stand-alone 
+mode. 
+<p>
+<LI>A 3DO cel is more complex than an image. In addition to the raw pixel 
+data, a cel has a header called a cel control block (CCB) that tells the 
+cel engine how to draw the cel. A program can flip, rotate, stretch, or 
+even "bow-tie" the cel as it is being displayed. You can also make parts 
+of the cel transparent or translucent, or you can enhance its luminance, 
+if the illustration has been prepared correctly using the 3DO PostPro 
+tool, a Photoshop custom plug-in, or the 3DO Animator tool. Most of the 
+Jumpstart2 example programs use cels. 
+</UL>
+There are several cel formats. The format depends on the number of bits 
+per pixel and on whether the cel is indexed into a color table (coded) or 
+not. <P>
+<B>Note: </B>3DO animations consist of 3DO cels, and are discussed in <A 
+HREF="./03PGSTOC.html#XREF10092">Playing an Animation</A><A 
+NAME="XREF38527">.</A><P>
+<A NAME="XREF16251"><H2>Uncoded and Coded Cels</A></H2>
+Uncoded cels contain pixels with values that are turned directly into 
+16-bit frame-pixel values. Uncoded cels offer a large number of colors but 
+use more memory than coded cels.<P>
+Coded cels are indexed into a color table. As a result, coded cels end up 
+being much smaller than uncoded cels, as illustrated below. <P>
+
+<IMG SRC="Figures/CLUTDiagram.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>How uncoded and coded cels use the system color table. </I><P>
+The color table is part of a pixel lookup table (PLUT). The PLUT contains 
+the color table and may also contain extra bits to store information about 
+how the pixel is displayed. A pixel may become partly transparent, may 
+have its color enhanced by an alternate multiply value (AMV), or may be 
+mixed with the background using a P-Mode setting. P-Mode (or Pixel-Mode) 
+lets you change the display for predefined pixels or predefined colors. 
+You can use P-Mode, for example, to make part of a cel translucent and 
+part of a cel opaque, or to make part of a cel smoky or enhance its 
+brightness.<P>
+<A NAME="XREF41202"><H2>Commonly Used Cel Formats</A></H2>
+Commonly used cel formats are 16-bit uncoded cels 8-bit or 6-bit coded 
+cels:<P>
+<UL>
+<LI>16-bit uncoded cels store a full 15-bit RGB value for each pixel, 
+allowing the cel to use the full range of display colors. Because each 
+pixel takes up 2 bytes, these cels take twice as long to render as cels 
+that use 8 or fewer bits per pixel. The topmost bit in a 16-bit uncoded 
+cel is used for P-Mode. 
+<p>
+<LI>8-bit coded cels provide 32 colors and 7 additional shades of each 
+color. They don't use much more space than 6-bit coded cels but provide 
+far more colors. You can use the Coded-8 CelWriter, discussed in the 
+<I>3DO Custom Plug-Ins and CCMs</I> manual in the volume "3DO Tools for 
+Art Production," to create 8-bit coded cels. 
+<p>
+<LI>6-bit coded cels have only 32 colors. Each pixel is stored as a 5-bit 
+index into a palette of 32 colors. The palette is user-definable, and can 
+be unique to one cel or shared among many cels. The topmost bit in a 6-bit 
+coded cel is used for P-Mode, just like the topmost bit in a 16-bit 
+uncoded cel.
+</UL>
+3DO developers don't often use 8-bit uncoded cels, since they offer only 
+256 colors and color distortion during cel creation can be quite 
+noticeable. <P>

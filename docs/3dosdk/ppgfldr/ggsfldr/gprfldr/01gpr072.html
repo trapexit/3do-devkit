@@ -1,0 +1,27 @@
+<Title>WaitVBLDefer </Title>
+<A NAME="XREF14961"><H1>WaitVBLDefer </A></H1>
+<A NAME="XREF28104"> Waits the specified number of VBLs.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err WaitVBLDefer (Item ioreq,uint32 numfields)</CODE><P>
+<H3>Description</H3>
+This convenience call is not actually part of the Graphics folio. It is included here because it resides in the graphics.lib for the moment. It uses the timer device, which is completely independent of the Graphics folio. <P>
+This call allows a task to wait the specified number of VBLs. The I/O request argument is set up to use the timer device. The numfields argument is a count of the number of video fields for which the task must wait. <P>
+This call differs from <CODE>WaitVBL()</CODE> because it does not wait for the operation to complete. Instead, control returns to the calling application immediately, which can do more work while the I/O request is in the queue. When using the deferred version of the request, <CODE>WaitIO()</CODE> should be used when you want to wait for the completion of the I/O request. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ioreq
+<DD>The item number of the I/O request. 
+</DL>
+<DL>
+<DT>numfields
+<DD>Number of VBLs to wait. 
+</DL>
+<H3>Return Value</H3>
+The call returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in graphics.lib V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr071.html#XREF41440"><CODE>WaitVBL</A>(), <A HREF="./01gpr035.html#XREF19321">GetVBLIOReq</A>() </CODE><P>
+</CODE>

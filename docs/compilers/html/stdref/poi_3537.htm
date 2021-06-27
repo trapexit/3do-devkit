@@ -1,0 +1,49 @@
+<HTML><TITLE>pointer_to_binary_function</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>pointer_to_binary_function</H2>
+<HR><PRE>     Function Object</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>A function object which adapts a pointer to a binary function to work where a <A HREF="bin_7851.htm"><B><I>binary_function</B></I></A> is called for.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;functional></PRE>
+<PRE>
+template &#60;class Arg1, class Arg2, class Result>
+class <B>pointer_to_binary_function</B> : public binary_function&#60;Arg1, Arg2, 
+                                                          Result> ;
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>pointer_to_binary_function</B></I> class encapsulates a pointer to a two-argument function.  The class provides an <SAMP>operator()</SAMP> so that the resulting object serves as a binary function object for that function. </P>
+<P>The <SAMP>ptr_fun</SAMP> function is overloaded to create instances of a <B><I>pointer_to_binary_function</B></I> when provided with the appropriate pointer to a function. </P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class Arg1, class Arg2, class Result>
+class pointer_to_binary_function : public binary_function&#60;Arg1, Arg2, 
+                                                          Result> {
+ public:
+   typedef typename binary_function&#60;Arg1, Arg2, 
+                                    Result>::second_argument_type 
+                                             second_argument_type;
+   typedef typename binary_function&#60;Arg1, Arg2, 
+                                    Result>::first_argument_type 
+                                             first_argument_type;
+   typedef typename binary_function&#60;Arg1, Arg2, Result>::result_type 
+                                                         result_type;   
+   explicit pointer_to_binary_function (Result (*f)(Arg1, Arg2));
+   Result operator() (const Arg1&#38;, const Arg2&#38;) const;
+};
+template&#60;class Arg1, class Arg2, class Result>
+pointer_to_binary_function&#60;Arg1, Arg2, Result>
+  ptr_fun (Result (*x)(Arg1, Arg2));
+</PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="bin_7851.htm"><B><I>binary_function</B></I></A>, <A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A>, <A HREF="poi_7375.htm"><B><I>pointer_to_unary_function</B></I></A>, <A HREF="ptr_4059.htm"><B><I>ptr_fun</B></I></A></P>
+<HR>
+<A HREF="plu_3223.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="poi_7375.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

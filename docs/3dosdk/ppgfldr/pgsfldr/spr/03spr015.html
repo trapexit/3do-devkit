@@ -1,0 +1,23 @@
+<Title>CompareU64</Title>
+<A NAME="XREF35891"><H1>CompareU64 </A></H1>
+<A NAME="XREF12528"></A> Compares two unsigned 64-bit integer quantities.<P>
+<H3>Synopsis</H3>
+<CODE>int32 CompareU64( uint64 *s1, uint64 *s2 )</CODE><P>
+<H3>Description</H3>
+This function compares two unsigned 64-bit integers. This function is actually the same function as <CODE>CompareUF32()</CODE> and <CODE>CompareUF60()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>s1, s2                       Pointers to unsigned 64-bit integers. 
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>The function returns 1 if s1 &gt; s2, zero if s1 == s2, or -1 if s1 &lt; s2.
+<DD> 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr013.html#XREF37222"><CODE>CompareSF32</A>(), <A HREF="./03spr012.html#XREF27069">CompareS64</A>(), <A HREF="./03spr016.html#XREF33265">CompareUF32</A>(), <A HREF="./03spr014.html#XREF36592">CompareSF60</A>(), <A HREF="./03spr017.html#XREF26027">CompareUF60</A>() </CODE><P>
+</CODE>

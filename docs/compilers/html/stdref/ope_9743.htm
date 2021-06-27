@@ -1,0 +1,33 @@
+<HTML><TITLE>operator!=, operator>, operator&#60;=, operator>=</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>operator!=, operator>, operator&#60;=, operator>=</H2>
+<HR><PRE>     Utility Operators</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Operators for the C++ Standard Template Library</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;utility></PRE>
+<PRE>
+template &#60;class T>
+bool <B>operator!=</B> (const T&#38;, const T&#38;);
+template &#60;class T>
+ bool <B>operator></B> (const T&#38;, const T&#38;);
+template &#60;class T>
+ bool <B>operator&#60;=</B> (const T&#38;, const T&#38;);
+template &#60;class T>
+ bool <B>operator>=</B> (const T&#38;, const T&#38;);</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>To avoid redundant definitions of <SAMP>operator!=</SAMP> out of <SAMP>operator==</SAMP>  and of <SAMP>operators  ></SAMP>, <SAMP>&#60;=</SAMP>, and <SAMP>>= </SAMP>out of <SAMP>operator&#60;</SAMP>, the library provides these definitions: </P>
+<PRE>    operator!= returns !(x==y),
+    operator>  returns y&#60;x,
+    operator&#60;= returns !(y&#60;x), and
+    operator>= returns !(x&#60;y).
+</PRE>
+<HR>
+<A HREF="num_5679.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="ost_2238.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

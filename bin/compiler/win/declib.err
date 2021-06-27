@@ -1,0 +1,172 @@
+msg_bad_relocation:*** bad relocation at offset %#lx\n
+msg_sym_local:Local,  
+msg_sym_global:Global, 
+msg_aifsym_absolute:Absolute
+msg_aifsym_thumb:16-bit, 
+msg_aifsym_text:Code
+msg_aifsym_data:Data
+msg_aifsym_zinit:Zero-Init
+msg_err_format:*** Format Error at %#lx: Section expected\n
+msg_err_tabletoolong:*** Format Error at offset %#lx: item longer than described by length field (%#lx vs %#lx)\n
+msg_itemlength0:*** Item length = 0 at offset %#lx\n
+msg_misplaced_section:*** Misplaced section at offset %#lx\n
+msg_linker_debug:\
+*** Low level (linker generated) debugging tables in AOF file at offset %#lx\n
+msg_endproc_scopes_open:*** scopes still open at endproc at offset %#lx\n
+msg_var_reg_odd:*** ? register %ld at offset %#lx\n
+msg_var_odd:: *** ? storage class %ld at offset %#lx
+msg_subr_bytesize_odd:    *** Format error at offset %#lx: Illegal byte size\n
+msg_unknown_type:*** ? type (%ld) at offset %#lx
+msg_typeno:type {%.6lx}
+msg_linepos:%s at %ld
+msg_linepos_char:%s at %ld,%ld
+msg_section:Section: length %ld\n
+lang_c:    Language: C\n
+lang_pascal:    Language: Pascal\n
+lang_fortran:    Language: Fortran\n
+lang_asm:    Language: Assembler\n
+lang_unk:    Language: Unknown (%d)\n
+msg_flag:    Flags: 
+msg_flag_none:none
+msg_flag_lines:line number info
+msg_flag_vars:variable info
+msg_flag_vars_more:, variable info
+msg_flag_fpmap:fp map
+msg_flag_fpmap_more:, fp map
+msg_debug_version:    Debugging table version: %d\n
+msg_code_addr:    Code: address
+msg_data_addr:    Data: address
+msg_size:, size = 0x%lx\n
+msg_fileinfo_offset:    File info offset = 0x%.6lx\n
+msg_section_size:    Section size = %ld\n
+msg_section_name:    Section name: \"%.*s\"\n
+msg_section_codeaddr:Code address
+msg_proc:Proc
+msg_proc_name:: name %.*s:
+msg_proc_args:: %ld arguments\n
+msg_proc_start:    Start address
+msg_proc_body:, body
+msg_proc_end0:    Endproc = 0 => Label\n
+msg_proc_end:    Endproc 0x%.6lx\n
+msg_proc_file:    File 0x%.6lx\n
+msg_endproc:Endproc
+msg_endproc_limit:: limit
+msg_endproc_file:    File 0x%.6lx\n
+msg_endproc_returnpt:    return point %ld
+msg_endproc_blankrpt:                 %ld
+msg_endproc_blank:
+msg_var:Var
+msg_var_name:: name %.*s: 
+msg_var_at: at
+msg_var_var:: Argument by reference (Pascal VAR argument) 
+msg_var_fpoffset:FP offset %ld\n
+msg_var_fcarg:: Fortran character argument
+msg_var_farg:: Fortran argument
+msg_var_fortran_offset: Argument list offset %ld\n
+msg_var_odd1:Offset / address = 0x%.6lx\n
+msg_var_extern:: extern
+msg_var_static:: static
+msg_var_auto:: auto
+msg_var_register:: register 
+msg_type:Type %.*s 
+msg_type_union:Union
+msg_type_struct:Struct
+msg_type_class:Class
+msg_type_unknown:*** Unknown Type ***
+msg_type_data:%s: %ld fields, size 0x%lx\n
+msg_type_data1:    field %ld offset 0x%lx: name %.*s: 
+msg_enumd:EnumD: 
+msg_enum_members: %ld members\n
+msg_enum_member:    value 0x%lx: name %.*s\n
+msg_enumc:EnumC: 
+msg_array:Array: element size = %ld: 
+msg_array_flags_odd: *** ? flags 0x%lx\n
+msg_array_lbound_var:          %sVariable lower bound: var %ld\n
+msg_array_lbound_fpoffset:          %sVariable lower bound: FP offset %ld\n
+msg_array_ubound_var:          %sVariable upper bound: var %ld\n
+msg_array_ubound_fpoffset:          %sVariable upper bound: FP offset %ld\n
+msg_subr:Subrange\n
+msg_subr_bytesize:Byte size = %ld
+msg_subr_type:    Type = 
+msg_subr_lbound:    Lowerbound = %ld\n
+msg_subr_ubound:    Upperbound = %ld\n
+msg_set:Set: size %ld\n
+msg_bitfield:Bitfield: 
+msg_bitfield_container: container: 
+msg_bitfield_offset: offset %ld size %ld\n
+msg_scope_begin:Begin scope at
+msg_scope_end:End scope at
+msg_undef:File 0x%.6lx line %ld #undef %.*s\n
+msg_define:File 0x%.6lx line %ld #define %.*s
+msg_fileinfo:File Info: length %ld\n
+msg_fileinfo_entry_len:Entry length = %ld
+msg_fileinfo_entry_eof: => end of file info\n
+msg_fileinfo_date:date 0x%.8lx 
+msg_fileinfo_fragment:%ld fragments\n
+msg_fileinfo_fragment_info:Fragment %ld (size %ld): lines %ld to %ld\n
+msg_fileinfo_codeaddr:Code address
+msg_fileinfo_size:, size 0x%lx\n
+msg_fileinfo_lineinfo4:0x%.6lx line %ld/%1ld:%-2ld
+msg_fileinfo_lineinfo3:0x%.6lx line %ld/%1ld   
+msg_fileinfo_lineinfo2:0x%.6lx line %ld  :%-2ld
+msg_fileinfo_lineinfo1:0x%.6lx line %ld     
+msg_fpmap:fp map fragment: length %ld,
+msg_fpmap_size: size 0x%lx
+msg_fpmap_base: base
+msg_fpmap_save: save
+msg_fpmap_offset:0x%.6lx offset %ld
+msg_debugobj_unk:*** ? debugging item %ld\n
+dwarf_area_name:\n%s:\n
+dwarf_illegal_debugoff:*** Illegal offset into '.debug' section\n
+dwarf_unexpected_form:*** Unexpected form for attribute\n
+dwarf_bad_length:*** Block length differs from expected length\n
+dwarf_dumping:*** Dumping remaining data in this tag\n
+dwarf_overruns:*** Overruns\n
+dwarf_zero_length_tag:*** TAG has length 0 (assuming 4)\n
+dwarf_no_sibling:*** No sibling found (assuming this+length)\n
+dwarf_back_sibling:*** Sibling (0x%lx) points before this element (assuming this+length)\n
+dwarf_parent_sibling:*** Reached sibling of parent (missing null entry)\n
+dwarf_truncated:*** Truncating to %ld bytes\n
+dwarf_bad_line_length:*** Length-8 not a multiple of 10 bytes\n
+dwarf_bad_line_end:*** List doesn't end with line 0\n
+dwarf_bad_line_pcinc:*** PC deltas do not increase monotonically\n
+dwarf_bad_version:*** Unknown version number - skipping\n
+dwarf_bad_name:*** Name does not match TAG's AT_name attribute\n
+dwarf_line_eol_nozero:*** End of list for compilation unit (should be a zero offset)\n
+dwarf_bad_area:*** Unrecognised DWARF debugging area \"%s\"\n
+dwarf_unknown_version:*** Unknown version number - skipping\n
+dwarf_bad_type:*** Bad type attribute\n
+dwarf_subscr_ft:Index: Fundamental type: 
+dwarf_subscr_ut:Index: User type ref: %ld\n
+dwarf_subscr_lox:Lower bound:  %ld\n
+dwarf_subscr_lol:Lower bound (loc): (%d bytes)\n
+dwarf_subscr_lou:Lower bound: <unspecified>\n
+dwarf_subscr_hix:Higher bound: %ld\n
+dwarf_subscr_hil:Higher bound (loc): (%d bytes)\n
+dwarf_subscr_hiu:Higher bound: <unspecified>\n
+dwarf_subscr_bad:*** Last subscript-data elememt not type-specifier\n
+dwarf_name:Name
+dwarf_producer:Producer
+dwarf_type:Type: 
+dwarf_reference:reference to offset 0x%06lx\n
+dwarf_ellipsis:...\n
+dwarf_bytes:(%ld bytes)
+dwarf_null_entry:null entry (%ld bytes)
+dwarf_padding:%ld bytes of padding data\n
+dwarf_offset:Offset 0x%lx (0x%lx)\n
+dwarf_eol:End of list for compilation unit (zero offset)\n
+dwarf_arange:0x%.8lx: %ld bytes\n
+dwarf_cu_at:Compilation unit at address %08lx (%ld bytes)\n
+dwarf_cu_vsn:Compilation unit (%ld bytes) vsn %d:\n
+dwarf_cu_size:%ld bytes generated for unit\n
+dwarf_line_at:0x%08lx at line %ld
+dwarf_warn_pc_inc:  (PC offset not greater than previous entry)
+dwarf_warn_extra_bytes: *** %ld extra bytes in area %s\n
+dwarf_unknown_tag:unknown tag (0x%x)
+dwarf_unknown_op:unknown OP (%d)
+dwarf_unknown_mod:unknown MOD (%d) 
+dwarf_unknown_ft:unknown FT (%d)\n
+dwarf_unknown_at:unknown AT (0x%x)
+dwarf_unknown_form: (unknown FORM) (0x%x)\n
+dwarf_unknown_ord:unknown ORD (%ld)\n
+dwarf_unknown_lang:unknown LANG (%ld)\n

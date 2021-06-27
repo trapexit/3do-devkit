@@ -1,0 +1,37 @@
+<Title>spStartPlaying</Title>
+<A NAME="XREF15941"><H1>spStartPlaying </A></H1>
+<A NAME="XREF42551"></A> Begin emitting sound for an SPPlayer.<P>
+<H3>Synopsis</H3>
+<CODE>Err spStartPlaying (SPPlayer *player, const TagArg *samplerTags)<BR>
+Err spStartPlayingVA (SPPlayer *player, uint32 samplerTag1, ...)</CODE><P>
+<H3>Description</H3>
+Begins the actual output of spooled sound. This function begins playback immediately making it suitable for being called in sync with some user activity if necessary. <CODE>spStartReading()</CODE> prefills the spooler buffers. This function should therefore be called some time after calling <CODE>spStartReading()</CODE>. <P>
+Calling this function starts the process of signals arriving which need to be serviced with <CODE>spService()</CODE>. This function causes the SP_STATUS_F_PLAYING flag to be set. <P>
+Call <CODE>spStop()</CODE> to manually stop or wait for playback to finish by checking <CODE>spGetPlayerStatus()</CODE> after calling <CODE>spService()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to SPPlayer to start playing. 
+</DL>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_AMPLITUDE
+<DD>(uint32) Amplitude to set SPPlayer's sample player instrument to. Defaults to whatever the last setting was. Valid range is 0 to 0x7fff. 
+</DL>
+<DL>
+<DT>AF_TAG_RATE
+<DD>(uint32) Sample playback rate value for variable rate sample player instruments expressed as a 1.15 fixed point value. 0x8000 is the normal rate (e.g. 44100 sample frames / sec). Valid range is 0x0001 (really, really, slow) to 0xffff (nearly twice the normal rate). Defaults to whatever the last setting was (variable rate sample player instruments typically default to 0x8000). Ignored for fixed rate sample players. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Notes</H3>
+The only bad thing that will happen if you call this function before calling <CODE>spStartReading()</CODE>  is that you won't have any control over the precise time that playback begins. In that case, playback would start as soon as <CODE>spStartReading()</CODE> has read a buffer's worth of data. The player also might starve briefly if the 2nd buffer weren't ready before the first one finished. <P>
+Multiple calls to <CODE>spStartPlaying()</CODE> without an intervening stop of some kind <CODE>(spStop()</CODE> or marker causing a stop) cause stuttered sound output. <P>
+A call to <CODE>spStartPlaying()</CODE> will supercede a previous call to <CODE>spPause()</CODE>. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr092.html#XREF25186"><CODE>spStartReading</A>(),<A HREF="./02mpr093.html#XREF20856">spStop</A>(),<A HREF="./02mpr086.html#XREF41970">spService</A>(),<A HREF="./02mpr077.html#XREF27522">spGetPlayerStatus</A>() </CODE><P>
+</CODE>

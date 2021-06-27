@@ -1,0 +1,28 @@
+<Title>LoadProgramPrio</Title>
+<A NAME="XREF40203"><H1>LoadProgramPrio </A></H1>
+<A NAME="XREF30520"></A>Loads a binary image and spawns it as a task, with priority.<P>
+<H3>Synopsis</H3>
+<CODE>Item LoadProgramPrio(char *cmdLine, int32 priority);</CODE><P>
+<H3>Description</H3>
+This function loads an executable file from disk and launches a new task to execute the code. <P>
+You give this function a command line to interpret. The first component of the command line is taken as the name of the file to load. The entirety of the command line is passed to the new task as argc and argv in the <CODE>main()</CODE> function. The filename component of the command line specifies either a fully qualified pathname, or a pathname relative to the current directory. <P>
+The priority argument specifies the task priority to use for the new task. If you simply want the new task to have the same priority as the current task, use the <CODE>LoadProgram()</CODE> function instead. Alternatively, passing a negative priority to this function will also give the new task the same priority as the current task. <P>
+If a priority was given to the executable being launched using the modbin utility, then the priority you give to this function is ignored, and the priority that was specified to modbin will be used instead. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cmdLine
+<DD>A NULL-terminated string indicating the file to load as a task. The string may also contain arguments for the task being started. 
+</DL>
+<DL>
+<DT>priority
+<DD>The task priority for the new task. For user code, this can be in the range 10 to 199. 
+</DL>
+<H3>Return Value</H3>
+The item number of the newly created task, or a negative error code if the task could not be created. <P>
+<H3>Implementation</H3>
+Folio call implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr012.html#XREF40015"><CODE>LoadProgram</A>(), <A HREF="./02spr011.html#XREF35386">LoadCode</A>(), <A HREF="./02spr009.html#XREF27642">ExecuteAsThread</A>() </CODE><P>
+</CODE>

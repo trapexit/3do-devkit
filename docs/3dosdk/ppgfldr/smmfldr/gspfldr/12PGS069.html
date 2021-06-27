@@ -1,0 +1,76 @@
+<Title>tsc_soundfx</Title>
+<A NAME="XREF41879"><H1>tsc_soundfx </A></H1>
+<A NAME="XREF38879"> </A>Uses the score player as a sound effects 
+manager.<P>
+<H3>Synopsis</H3>
+<CODE>tsc_soundfx</CODE><P>
+<H3>Description</H3>
+Demonstrate use of ScoreContext as a simple sound effects manager. This 
+gives you dynamic voice allocation, and a simple MIDI-like interface. <P>
+To run this program: <P>
+1) Install the sample library from the recent 3DO tools disk as 
+documented. <P>
+If you don't have the sample library, edit this program to use your own 
+samples. Search for .aiff. <P>
+2) Run the program, follow printed instructions. <P>
+The idea behind this program is that one can use the virtual MIDI routines 
+in the music library as a simple sound effects manager. You can assign 
+samples to channels, and then pay those samples using 
+<CODE>StartScoreNote()</CODE>. This will take advantage of the voice 
+allocation, automatic mixer connections, and other management code already 
+used for playing scores. You do not have to play sequences or load MIDI 
+files to do this. <P>
+You can load your samples based on a PIMap text file using the 
+<CODE>LoadPIMap()</CODE> routine. This is documented in the manual under 
+score playing. You may also load the samples yourself and put them in the 
+PIMap which will give you more control. This example program shows you how 
+to do that. Samples are assigned to Program Numbers at this step. <P>
+Assigning program numbers to channels is accomplished by calling 
+<CODE>ChangeScoreProgram()</CODE>. Once you have assigned a program to a 
+channel, you can play the sound by calling: <P>
+<DL>
+<DD><CODE>StartScoreNote (scon, Channel, Note, Velocity); </CODE><BR>
+</DL>
+Channel selects the sound. Note determines the pitch and may also be used 
+to select parts of a multisample, e.g. a drum kit. Velocity controls 
+loudness. The voice allocation occurs during this call. <P>
+<H3>Implementation</H3>
+This example was revised to take advantage of a change made for music.lib 
+V22 to permit playing multiple voices per MIDI node, which greatly 
+facilitates sound effects playback. <P>
+<H3>Associated Files</H3>
+$samples<P>
+<H3>Location</H3>
+examples/Audio <P>
+<H3>Notes</H3>
+1) Prior to music.lib V22, if you wanted to get multiple voices on a given 
+channel, you had to use different note values. The allocator would only 
+assign one voice to any given note number, regardless of MaxVoices. 
+music.lib V22 supports having more than one voice per note number. Earlier 
+versions of this example demonstrated a way around this by using a 
+different note for each voice on a channel. Since this trick is no longer 
+necessary and is somewhat less than straightforward, this example has been 
+modified to take advantage of the V22 feature of multiple voices per 
+notes. <P>
+2) Prior to music.lib V24, you needed to be careful when assigning high 
+priorities. Higher priority instruments never got stolen for lower 
+priority instruments in that scheme. Thus you could clog up the DSPP if 
+you have a high priority instrument with MaxVoices&gt;1 and are also 
+trying to play lower priority instruments. Starting with music.lib V24, 
+higher priority instruments can be stolen by lower priority instruments if 
+the higher priority instruments are stopped. As in the original voice 
+stealing algorithm, voices do not get stolen from higher priority 
+instruments if they are still playing at all (started or released). <P>
+3) Samples that are attached to an InsTemplate are deleted when the 
+Template is deleted. You can detach the sample first by calling 
+<CODE>DeleteAttachment()</CODE> if you don't want this to happen. <P>
+4) You can share the ScoreContext with code that plays a score as long as 
+you don't overlap the channels or program numbers. You might restrict 
+scores to channels 0-7 and programs 0-19. You could then use channels 8-15 
+and programs 20-39 for sound effects. The advantage of this is that they 
+share the same voice allocation and thus resources will be shared between 
+them. If desired, you could instead use separate independent 
+ScoreContexts. <P>
+<H3>See Also</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/02mpr025.html#XREF42191">CreateScoreContext</A><P>
+</CODE>

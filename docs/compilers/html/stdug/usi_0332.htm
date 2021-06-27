@@ -1,0 +1,43 @@
+<HTML><HEAD><TITLE>Using Exceptions</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Using Exceptions</H2>
+<P>All exceptions thrown explicitly by any element of the library are guaranteed to be part of the standard exception hierarchy.  Review the reference for these classes to determine which functions throw which exceptions.  You can then choose to catch particular exceptions, or catch any that might be thrown (by specifying the base class exception).  </P>
+<P>For instance, if you are going to call the <SAMP>insert</SAMP> function on <A HREF="../stdref/str_8586.htm"><B><I>string</I></B></A> with a position value that could at some point be invalid,  then you should use code like this:</P>
+<PRE>string s;
+int n;
+...
+try 
+{
+s.insert(n,"Howdy");
+} 
+catch (const exception&#38; e)
+{
+   // deal with the exception
+}
+</PRE>
+<P>To throw your own exceptions, simply construct an exception of an appropriate type, assign it an appropriate message and throw it.  For example:</P>
+<PRE>...
+if (n > max)
+   throw out_of_range("Your past the end, bud");
+</PRE>
+<P>The class <A HREF="../stdref/exc_9785.htm"><B><I>exception</I></B></A> serves as the base class for all other exception classes.  As such it defines a standard interface.  This interface includes the <SAMP>what()</SAMP> member function, which returns a null-terminated string that represents the message that was thrown with the exception.  This function is likely to be most useful in a catch clause, as demonstrated in the example program at the end of this section.</P>
+<P>The class <A HREF="../stdref/exc_9785.htm"><B><I>exception</I></B></A> does not contain a constructor that takes a message string, although it can be thrown without a message.  Calling <SAMP>what()</SAMP> on an exception object will return a default message.  All classes derived from <B><I>exception</I></B> <I>do</I> provide a constructor that allows you to specify a particular message.</P>
+<P>To throw a base exception you would use the following code:</P>
+<PRE>throw exception;
+</PRE>
+<P>This is generally not very useful, since whatever catches this exception will have no idea what kind of error has occurred.  Instead of a base exception, you will usually throw a derived class such as <B><I>logic_error </I></B>or one of its derivations (such as <B><I>out_of_range</I></B> as shown in the example above).  Better still, you can extend the hierarchy by deriving your own classes.  This allows you to provide error reporting specific to your particular problem.  For instance:</P>
+<PRE>class bad_packet_error : public runtime_error
+{
+   public:
+      bad_packet_error(const string&#38; what);
+};
+
+if (bad_packet())
+   throw bad_packet_error("Packet size incorrect");
+</PRE>
+<P>This demonstrates how the Standard C++ exception classes provide you with a basic error model.  From this foundation you can build the right error detection and reporting methods required for your particular application.</P>
+<HR>
+<A HREF="sta_8979.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="exa_1053.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

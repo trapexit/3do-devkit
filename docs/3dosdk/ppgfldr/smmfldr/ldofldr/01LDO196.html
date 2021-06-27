@@ -1,0 +1,30 @@
+<Title>TimerSignalAtTime</Title>
+<A NAME="XREF27716"><H1>TimerSignalAtTime </A></H1>
+ Sends a signal at the specified time.<P>
+<H3>Synopsis</H3>
+<CODE>TimerHandle TimerSignalAtTime (int32 signal, uint32 seconds, uint32 microseconds)</CODE><P>
+<H3>Description</H3>
+This function creates a timer that notifies you by signal at the specified time. The timer is a one-shot; after sending a notification message the timer enters a suspended state. Use <CODE>TimerReset()</CODE> to reactivate the timer using new time values, or <CODE>TimerCancel()</CODE> to delete the timer. <P>
+AtTime signals are useful primarily for synchronizing with real-world events. For a one-shot delay use <CODE>TimerSignalDelay()</CODE>. For a periodic series of signals, use <CODE>TimerSignalHeartbeat()</CODE>. <P>
+The TimerServices thread must be active before calling this function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>signal
+<DD>Signal to send to your task. 
+</DL>
+<DL>
+<DT>seconds
+<DD>Seconds portion of the time. 
+</DL>
+<DL>
+<DT>microseconds
+<DD>Microseconds portion of the time. This value can be larger than 1 million. 
+</DL>
+<H3>Return Value</H3>
+A TimerHandle (a positive value) on success or a negative error code. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO194.html#XREF12450"><CODE>TimerSignalAfterDelay</A>, <A HREF="./01LDO198.html#XREF28077">TimerSignalHeartbeat</A></CODE><P>

@@ -1,0 +1,30 @@
+<Title>samplerenv.dsp</Title>
+<A NAME="XREF33876"><H1>samplerenv.dsp </A></H1>
+<A NAME="XREF24871"></A> Variable-rate sample player with amplitude envelope.<P>
+<H3>Function</H3>
+This is a composite instrument consisting of sampler.dsp with a built-in amplitude envelope generator. <P>
+<H3>Knobs</H3>
+<DL>
+<DT>Frequency
+<DD>Units are fixed point phase increment. $800 0 equals the normal sample rate, with 1 sample per frame. Thus, you can go from zero to one octave above the original. Defaults  to $8000. 
+</DL>
+<DL>
+<DT>Amplitude
+<DD>0..$7FFF. Defaults to $7FFF. 
+</DL>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+InFIFO <P>
+<H3>Envelopes </H3>
+<DL>
+<DT>AMPEnv
+<DD>Amplitude envelope hook. 
+</DL>
+<H3>Resources</H3>
+Ticks: 56 <P>
+Code: 36 words <P>
+<H3>Implementation</H3>
+V20 <P>
+<H3>Notes</H3>
+This instrument has some obvious limitations. Consider using the discrete  instruments sampler.dsp and envelope.dsp or designing a custom  instrument with ARIA instead of using this instrument. <P>

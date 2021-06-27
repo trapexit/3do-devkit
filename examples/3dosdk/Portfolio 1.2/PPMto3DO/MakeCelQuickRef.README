@@ -1,0 +1,30 @@
+MakeCel Quick Reference
+
+makecel  [flags]  3DOimagefile 3DOcelfile
+
+Flags
+
+-b N	set the number of bits per pixel in the output cel (BPP field
+		in first preamble word) 
+-c		data of the output cel is coded to index a PLUT (clear UNCODED
+		bit in first preamble word); one of -c or -uc must be specified
+-d		put preamble word(s) at start of data, not at end of CCB output 
+-f		a foreground cel in which black (zero-value) pixels are treated
+		as transparent (clear BGND bit in CCB flags); default is to output
+		a background cel
+-rc		for an 8-bit uncoded output cel only, clear the low bits when
+		generating 5-bit color components from the 3- or 2-bit color
+		components of the cel's pixels (clear REP8 bit in first preamble
+		word); default is to replicate bits from the 3- or 2-bit components
+-t N	specify a color in the input image to be translated to transparent 
+		(zero) in the output cel data; N is a hexadecimal number representing 
+		a 16-bit, 555-RGB color value; outputs a foreground cel (clears BGND
+		bit in CCB flags)
+-uc		data of the output cel is uncoded color values (set UNCODED bit in
+		first preamble word); cel data must be 8- or 16-bits per pixel; one
+		of -c or -uc must be specified
+-up		data of the output cel is not to be packed (clear PACKED bit in 
+		CCB flags); default is to pack the cel data
+-v		print information about the output cel
+
+

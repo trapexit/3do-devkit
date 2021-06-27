@@ -1,0 +1,432 @@
+ErrMess_CantDoNow:Can't be done after program has terminated
+ErrMess_BeforeStart:Can't be done before program starts
+ErrMess_CommandSyntax:Syntax error
+ErrMess_BadEnd:Expression incorrectly terminated
+ErrMess_NoLogFile:No log file
+ErrMess_LogOpen:Already logging, use 'LOG' with no arguments to close
+ErrMess_FOpen:Cannot open file
+ErrMess_FileRW:File transfer failure
+ErrMess_NoFile:No file
+ErrMess_Type:Type error
+ErrMess_BadFormat:Bad format string, no \'%%\'
+ErrMess_NotInDbgData:Debug data not available
+ErrMess_Brace:Missing brace
+ErrMess_MultipleBreakPoints:Multiple breakpoints, please specify breakpoint to remove
+ErrMess_NoBreakPoints:No breakpoints set
+ErrMess_MultipleWatchPoints:Multiple watchpoints, please specify watchpoint to remove
+ErrMess_NoWatchPoints:No watchpoints set
+ErrMess_NoImage:No image loaded
+ErrMess_UnknownCoPro:Unknown coprocessor
+ErrMess_BadCoProReg:Invalid coprocessor register number
+ErrMess_SplitCodeData:Split code and data probably error for executable AIF image
+ErrMess_MemStats:Error reading memory statistics
+ErrMess_SillyRange:Unreasonably large address range
+ErrMess_NoSuchAlias:No such alias
+ErrMess_BadFormat2:Bad format string, '%%\' not followed by conversion specifier
+ErrMess_NotHandled:No handler for this SYS command
+ErrMess_Unknown:Unknown error code %d
+ErrMess_NoPiccolo:No piccolo
+ErrMess_UnexpectedErr:Unexpected error code
+Fail_MissingParam:Missing parameter for \"-%s\"
+Fail_SignalHandler:Signal handler error?
+Fail_SignalHandlerPathetic:Signal handler doesn't know what to do\n
+Fail_Reopen:Failed to reopen file %s
+Fail_Fseek:Fseek to %x failed on reopening file %s
+Fail_InvalidLinespeed:%d is an invalid linespeed
+Fail_InvalidClockspeed:\"%s\" is an invalid clock speed
+Fail_UnrecognisedArg:Unrecognised argument \"-%s %s\"
+Fail_UnrecognisedArg2:unrecognised argument \"%s\"
+Fail_NoRDI:No RDI interface matches arguments
+Fail_Allocate:Failed to allocate heap space (size %d)
+Fail_LoadDLL:Failed to load %s
+Fail_BadRDIDLL:%s isn't a valid RDI implementation
+Fail_Timeout:Fatal error: Timeout in host-target communications\n
+Misc_ArithError:\nArithmetic error\n
+Misc_ErrorAt:%s at 
+Misc_TypeVersion:%s %s\n
+Misc_SelectedVersion:Selected version = %d\n
+Misc_ConfigVersion:%s  version %ld\n
+Misc_ObjProgramFile:Object program file %s\n
+Misc_Warning:** Warning: %s\n
+Misc_Error:** Error: %s\n
+Misc_Quitting:Quitting\n
+Misc_FoundAt:Found at:
+Misc_FoundAtBlank:         
+Misc_StrAtLoc:%s at 0x%lx\n
+Misc_NotFound:Not found
+Misc_Line1:, line %ld
+Misc_Line2:, line %ld:%ld
+Misc_Line3:, line %ld/%ld
+Misc_Line4:, line %ld:%ld/%ld
+Misc_Offset: (offset %#lx)
+Misc_Of: of 
+Misc_OutOfScope:Watchpoint #%d at %s out of scope\n
+Misc_BreakptAt:at %s
+Misc_BreakptCount: count %d (of %d) 
+Misc_Context:\ncontext: 
+Misc_RDIReset:\nRDI reset\n
+Misc_MemStatBanner:address  name       w acc R(N/S)  W(N/S)     reads(N/S)     writes(N/S)   time (ns)\n
+Misc_MemStatFormat:%.8lX %-10s %c %s %3d/%-3d %3d/%-3d %7ld/%-7ld %7ld/%-7ld %-12.0f
+Misc_AmbiguousRDI:RDI interface ambiguous from arguments - choosing '%s'
+Log_Banner:| ARM Symbolic Debugger command interaction log\n
+Log_ProgName:| Program file %s\n
+Complain_OverlongInput:Overlong input line\n
+Complain_Syntax:Syntax: %s\n
+Complain_Unrecognised:Unrecognised command: <%s>\n
+Complain_InitErr:Error during initialisation: %s\n
+Complain_InitFailed:** Initialisation failed: %s\n
+help1:\n\
+%s is an interactive source-level debugger providing high level debugging\n\
+support for languages such as C and low level support for assembly\n\
+language.\n\n\
+Interactive help is available within %s with the HELP command.\n\n\
+Command line format:\n\n
+help2: %s [options] [<imagefile> [<arguments>]]\n\n
+help3:\
+options: (abbreviations shown capitalised)\n\
+\n\
+-Little          require target memory to be little-endian\n\
+-Big             require target memory to be big-endian\n
+help4:\
+-PRocessor name  specify target processor\n\
+-FPE             require target to load the FP emulator\n\
+-NOFPE           require target not to load the FP emulator\n\
+-SYmbols name    load symbols from specified file (cf Readsymbols command)\n
+help4andahalf:\
+-O name          write output from the debuggee to the named file\n\
+-SCript name     take commands from the named file (reverting to stdin on\n\
+                 reaching EOF)\n\
+-Exec            do not ask for commands, instead do \"go\" and then \"quit\"\n\
+-Iname           add name to the set of paths to be searched to find source\n\
+                 files\n
+help5:\
+Debuggee selection\n\
+-REMote          select remote debugging - by default this will be ADP\n\
+-ADP             select remote debugging using ADP.  Use this with\n\
+                 the Angel Debug Monitor or EmbeddedICE vsn 2.0 onwards\n\
+-ARMUL           select the software ARM Emulator (ARMulator)\n\
+This image supports: -REMote, 
+help7_1:\n\n\
+Port Specification with ADP:\n\
+-Port expr       To select serial comms expr can be any of:\n\
+                   1, 2, device name, s=1, s=2, s=device name\n\
+                 To select serial and parallel comms, expr can be:\n\
+                   s=n,p=m (no spaces, where n,m can be 1, 2 or a device name)\n
+help7_2:\
+                 To select ethernet comms, expr can be:\n\
+                   e=id, where id is the ethernet address of the target board\n
+help7_3:\
+                 In the case of serial and/or parallel comms, \"h=0,\" may be\n\
+                 prefixed to the port expression, and this will switch off\n\
+                 the heartbeat feature of ADP.\n\n\
+-LINEspeed n     set line speed to n\n
+help8:\
+-LOadconfig name specify file containing configuration data to be loaded\n\
+-Selectconfig name version\n\
+                 specify target configuration to be used (syntax as for\n\
+                 selectconfig command\n\
+-Reset           reset target processor immediately (if supported for target)\n
+help8andahalf:\
+-Clock nnn       Specify the clock speed in HZ (suffixed with K or M)\n\
+                 (only valid with an 'armsd.map' file, see \"Benchmarking,\n\
+                 Performance Analysis and Profiling\" in the SDT User Guide)\n
+help9:\n\
+<imagefile> is the name of an AIF or ELF file formats.\n\
+\n\
+<arguments> are any command line arguments accepted by <imagefile>.\n
+help_quit1:Exit from the debugger.\n
+help_quit2:
+help_log1:\
+Log interactions to file, (cancel logging if <filename> is omitted).\n
+help_log2:
+help_obey1:Execute the commands in file <filename>.\n
+help_obey2:
+help_go1:\
+(Re)start execution, stop at breakpoints only if <expr> evaluates to 0.\n
+help_go2:
+help_step1:\
+Step by source program statements. 'in' means step into calls. <count> specifies\n\
+the no. of statements / instructions to be stepped. <expr> specifies a\n\
+condition which must evaluate to 0 before stepping stops.\n
+help_step2:
+help_ret1:Return from current call, with <expr> as result if given.\n
+help_ret2:
+help_break1:\
+Set breakpoint, or with no arguments display breakpoint list.\n\
+<size> specifies 16 or 32 bit instructions. If omitted, the instruction size\n\
+will be guessed based on debugging information. <count> specifies the number\n
+help_break2:\
+of times the breakpoint must occur before execution is halted or <expr> is\n\
+tested. If the optional 'if' clause is specified execution is only halted if\n\
+<expr> evaluates to non 0. If the optional 'do' clause is specified then the\n
+help_break3:\
+commands enclosed in braces {} are executed when program execution is stopped\n\
+because of the breakpoint. '{' & '}' indicate the { and } characters.\n\n
+help_break4:\
+For example:\n\
+\n\
+break move do { args; g } if r0 == 0\n\
+break @memcpy do { pc = memmove; g }\n\
+break play if colour == white\n
+help_break5:
+help_unbrk1:\
+Clear breakpoint identified by <context> as specified in the BREAK command or\n\
+a breakpoint <number> as displayed by the BREAK command with no arguments.\n
+help_unbrk2:
+help_watch1:\
+Set a watchpoint, or with no argument display watchpoint list. <expr> is either\n\
+a variable name in which case execution is stopped whenever that variable\n\
+changes or an expression specifying a memory address in which case execution is\n
+help_watch2:stopped whenever the word at that memory location changes.\n
+help_unwch1:\
+Clear watchpoint identified by <expr> as specified in the WATCH command or a\n\
+watchpoint <number> as displayed by the WATCH command with no arguments.\n
+help_unwch2:
+help_con1:\
+Set current context as specifed by <context> or with no argument restore it to\n\
+the current execution state (ie the location of the last breakpoint or the last\n\
+location stepped to). A <context> is just the name of a location within a\n
+help_con2:\
+program. The format for a <context> is [#<module>:]{:<proc>}[\\[-]<count>].\n\
+<module> is the name of the compiled module, in C this would typically be the\n\
+leaf component of the filename. <proc> is the name of a procedure activation,\n
+help_con3:\
+eg. main, it may also be specified as a source line number. <count> refers to a\n\
+procedure invocation on the stack, -1 refers to the previous invocation.\n\
+A context may also be specified as @<symbol> or @<address> where <symbol> is a\n
+help_con4:\
+low level symbol and <address> is a constant specifying a memory location.\n
+help_con5:
+help_in1:\
+Step back in one stack level restoring the current context to that called by\n\
+the current procedure or function.\n
+help_in2:
+help_out1:\
+Step out one stack level setting the current context to that of the calling\n\
+procedure or function.\n
+help_out2:
+help_where1:\
+Display a context, if <context> is not specified it defaults to the current\n\
+context. The following information is printed if available: The procedure or\n\
+function name, the current line number & the source line. If the source line is\n
+help_where2:\
+not available or 'lang NONE' has been specified the instruction at the current\n\
+location is disassembled.\n
+help_where3:
+help_trace1:\
+Display stack backtrace. <count> specifies the no. of stack levels to display,\n\
+if <count> is not specified all stack levels displayed.\n
+help_trace2:
+help_var1:\
+Display the following information about the named variable: The variable name,\n\
+its type, its storage class (one of external, static, automatic, register, VAR\n\
+argument or character argument) & the context which defined this variable.\n
+help_var2:
+help_symb1:\
+Display the names, types & storage classes of all variable defined in the\n\
+specified context. If <context> is not specified it defaults to the current\n\
+context.  'symbols $' displays the ARMsd internal variables.\n
+help_symb2:
+help_let1:\
+Assign variable or change memory. The <expr> on the left hand side is either\n\
+a variable name in which case that variable is assigned or an expression\n\
+specifying a memory location in which case the word at that location is\n
+help_let2:\
+changed. Multiple comma separated or space separated expressions may be given\n\
+on the right hand side in which case subsequent memory locations are changed.\n
+help_args1:\
+Display the arguments to the specified context. If <context> is not specified\n\
+it defaults to the current context.\n
+help_args2:
+help_prt1:\
+Print result of <expr>. If <format> is specified this overrides the default\n\
+format for printing of integral values (as specified by the value of the\n\
+$format variable). Note that if you wish to include spaces in the format string\n
+help_prt2:\
+then you must enclose the format string in quotes (\"). If the result is not\n\
+integral (ie. structure, array, subrange, set, function, floating point number,\n\
+complex number or string) it is printed in a form appropriate to its type.\n
+help_prt3:\
+If the result contains sub-components (structure or array) these are printed\n\
+using the specified or default format.\n
+help_lng1:\
+Alter or display debugger's current language. If LANG NONE is specified then\n\
+any contexts displayed are displayed in low level format (ie instruction\n\
+disassembly).\n
+help_lng2:
+help_help1:\
+Display help information on one of the following commands:\n\n
+help_help5:\
+\n\
+HELP * gives helps on all available commands. To print the help use the LOG\n\
+command to record the help output into a file & print the file.\n\n
+help_help6:\
+If the first character of a line is the '!' character the rest of the command\n\
+line is executed by a call to system(). If the first character of a line is\n\
+the '|' character the rest of the line is a treated as a comment.\n\n
+help_help7:\
+Note that this help is not intended to replace the printed manual which\n\
+explains ARMSD in much greater detail.\n
+help_help8:
+help_regs1:\
+Display contents of ARM registers R0 to R15 of the current mode and decode the\n\
+PSR. If a mode is given, display the contents of those registers which differ\n\
+between the named and the current mode.\n
+help_regs2:
+help_fpreg1:\
+Display contents of floating point registers F0 to F7 & the FPSR and decode\n\
+the flags in the FPSR.\n
+help_fpreg2:
+help_type1:\
+Type portion of a text (source) file. <line1> & <line2> specify the range of\n\
+lines to be displayed. The default file is the source file associated with the\n\
+current context.\n
+help_type2:
+help_mem1:\
+Examine memory contents in hex & character format. If the \'+\' is specified \n\
+<expr2> is a byte count.\n
+help_mem2:
+help_list1:\
+Examine memory contents in instruction, hex & character format. If <size> is\n\
+omitted, it is guessed from available debugging information. If the \'+\' is\n\
+specified <expr2> is a byte count.\n
+help_list2:
+help_while1:\
+If <expr> evaluates to non 0 re-execute current input line.\n
+help_while2:
+help_alias1:\
+Define or undefine an alias. If no arguments are given all currently defined\n\
+aliases are printed. If only <name> is given the corresponding alias is\n\
+deleted. If <name> and <expansion> are both given the alias <name> is set to be\n
+help_alias2:\
+<expansion>, <expansion> may be enclosed in quotes (\") to allow inclusion of\n\
+the alias expansion character (`) and the command separator character (;)\n\
+within an alias. Alias expansion is performed whenever a command line is about\n
+help_alias3:\
+to be interpreted. Any words in backquotes (`) are expanded to their aliases.\n\
+If the character after the word is not an alphanumeric character or an\n\
+underscore the closing backquote may be omitted. If the word is the first word\n
+help_alias4:\
+of a command the opening backquote may be omitted. Alias expansion is not\n\
+recursive.\n
+help_alias5:
+help_load1:\
+Load an image for debugging. <imagefile> is the filename of the image.\n\
+/Callgraph requests that code be inserted in the loaded image to describe\n\
+the dynamic call graph. /Profile requests that the code be prepared for\n\
+flat profiling.\n
+help_load2:\
+<arguments> are any command line arguments expected by <imagefile>.\n
+help_reload1:\
+Reload for debugging the last image loaded.\n\
+/Callgraph requests that code be inserted in the loaded image to describe\n\
+the dynamic call graph. /Profile requests that the code be prepared for\n\
+flat profiling.\n
+help_reload2:\
+<arguments> are any command line arguments expected by <imagefile>.\n
+help_readsyms1:\
+Load debug information from the specified file.\n\
+The corresponding code must be present in some other way (via GETFILE, for\n\
+example, or by being in ROM)\n
+help_readsyms2:
+help_call1:\
+Call a function. <size> specifies 16 or 32 bit instructions.  The arguments\n\
+to the function should all be word size. The return value of the function\n\
+(if any) may be accessed through the symbols $result or $fpresult.\n
+help_call2:
+help_lsym1:\
+Display low-level symbols. <sym> is a pattern describing symbols to list. For\n\
+example LSYM ma* would list the symbols main, market and madrigal. LSYM on its\n\
+own lists all symbols.\n
+help_lsym2:
+help_find1:\
+Find word value or string in specified memory range. The default for the low\n\
+bound of the memory range is the base of the image being debugged. The default\n\
+for the high bound is the top of the image's static data.\n
+help_find2:
+help_getfile1:Read bytes from file into memory at address <expr>\n
+help_getfile2:
+help_putfile1:\
+Write bytes to file area of memory starting at address <expr1> and ending at\n\
+address <expr2>-1 (expr2 not preceded by +) or <expr1>+<expr2>-1 (otherwise).\n
+help_putfile2:
+help_localvar1:\
+Creates a debugger variable of the specified type in the debugger's own symbol\n\
+table (so access to the variable requires a '$' prefix)\n
+help_localvar2:
+help_copro1:Describe the registers of the named coprocessor\n
+help_copro2:
+help_creg1:\
+Display contents of the registers of the named coprocessor (which may have\n\
+been described by a previous coproc command)\n
+help_creg2:
+help_cwrite1:Update a coprocessor register\n
+help_cwrite2:
+help_cregdef1:Describe the contents of the named coprocessor register\n
+help_cregdef2:
+help_comment1:\
+Write the remainder of the statement to the debugger's output\n
+help_comment2:
+help_pause1:\
+Write the remainder of the statement to the screen, then wait until a key\n\
+is pressed. If the key is <escape>, and input is from an obey file, the obey\n\
+file is closed (and input reverts to the previous source)\n
+help_pause2:
+help_loadconfig1:\
+Download a file containing configuration data to the debuggee / debug agent\n
+help_loadconfig2:
+help_selconfig1:\
+Select a configuration from (downloaded or builtin) configurations.\n\
+The latest version present is chosen which matches the given version:\n
+help_selconfig2:\
+  if version is any, any version matches\n\
+  if version is a simple integer, only that version matches\n\
+  if version is of the form n+, any version numbered not less than n matches\n
+help_selconfig3:
+help_listconfig1:\
+List the configurations known to the debug agent\n
+help_listconfig2:
+help_loadagent1:\
+Load a new debug agent over the existing one, and start it\n
+help_loadagent2:
+help_profon1:\
+Start collecting profile data, with the specified sampling interval\n
+help_profon2:
+help_profoff1:Stop collecting profile data\n
+help_profoff2:
+help_profclear1:Clear profile counts\n
+help_profclear2:
+help_profwrite1:\
+Write profiling data collected so far to the named file\n
+help_profwrite2:
+help_history1:\
+Displays the PRINT history\n
+help_history2:
+help_noneavail1:\
+Sorry - no help available\n
+help_noneavail2:
+help_ccin1:\
+Select a file to read Comms Channel data from\n\
+This command also enables Host to Target Comms Channel communication\n
+help_ccin2:
+help_ccout1:\
+Select a file to write Comms Channel data to\n\
+This command also enables Target to Host Comms Channel communication\n
+help_ccout2:
+help_sys1:Access OS-specific or extended commands\n
+help_sys2:Use SYS HELP to list available commands\n
+help_sys_help1:\
+Display help information on one of the following SYS commands:\n\n
+help_sys_help2:\
+\n\
+SYS HELP * gives helps on all available commands.\n\
+To print the help use the LOG command to record the help output into\n\
+a file and print the file.\n\n
+help_aci1:\
+Send command to ARM Coverification Interface\n
+help_proc1:\
+Switch between processors.\n\n\
+With no argument, display a list of processors, the current marked with\n\
+with a '*'.\n\n\
+If a command is specified, that command is run on the named processor,\n\
+but the current processor remains unchanged.\n\n

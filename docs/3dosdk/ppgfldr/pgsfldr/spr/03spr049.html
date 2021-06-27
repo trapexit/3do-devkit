@@ -1,0 +1,40 @@
+<Title>MulManyVec3Mat33DivZ_F16</Title>
+<A NAME="XREF37499"><H1>MulManyVec3Mat33DivZ_F16 </A></H1>
+<A NAME="XREF33484"></A>Multiplies a 3x3 matrix of 16.16 values by 1 or more 3-coordinate vectors of 16.16 values, then multiplies x and y elements of the result vector by ratio of n/z.<P>
+<H3>Synopsis</H3>
+<CODE>void MulManyVec3Mat33DivZ_F16( mmv3m33d *s )</CODE><P>
+<H3>Description</H3>
+This function multiplies a 3x3 matrix of 16.16 fractions by one or more 3-coordinate vectors of 16.16 values. It then multiplies the x and y elements of the result vector {x, y, z} by the ratio of n/z, and deposits the result vector {x*n/z, y*n/z, z} in the product vector dest. This function can be used to perform the final projection transformation on points just before rendering. <P>
+This function uses the structure mmv3m33d. Here is its definition: <P>
+// structure to pass arguments to MulManyVec3Mat33DivZ_F16 function typedef struct mmv3m3dd{vec3f16*dest; vec3f16*src;mat33f16*mat; frac16n; uint32count;} mmv3m33d; <P>
+<H3>Arguments</H3>
+<DL>
+<DT>s-&gt;dest
+<DD>A pointer to the destination vector to store
+<DD> results. 
+</DL>
+<DL>
+<DT>s-&gt;vec
+<DD>A pointer to the vector to multiply.
+</DL>
+<DL>
+<DT>s-&gt;mat
+<DD>A pointer to the 3 X 3 matrix of 16.16 
+<DD> fractions to multiply. 
+</DL>
+<DL>
+<DT>s-&gt;n
+<DD>Scale factor to be multiplied by x and y 
+<DD> projected results. 
+</DL>
+<DL>
+<DT>s-&gt;count
+<DD>Number of vectors for the multiplication.
+</DL>
+<H3>Implementation</H3>
+SWI implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr048.html#XREF25424"><CODE>MulManyVec3Mat33_F16</A>() </CODE><P>
+</CODE>

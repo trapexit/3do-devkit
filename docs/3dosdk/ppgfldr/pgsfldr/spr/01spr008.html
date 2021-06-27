@@ -1,0 +1,37 @@
+<Title>AllocMemList</Title>
+<A NAME="XREF23775"><H1>AllocMemList </A></H1>
+<A NAME="XREF26866"></A>Creates a private memory list.<P>
+<H3>Synopsis</H3>
+<CODE>MemList *AllocMemList( const void *p, char *name )</CODE><P>
+<H3>Description</H3>
+A task can do its own memory management by creating one or more private memory lists. Use this procedure to allocate a private memory list. <P>
+A memory list you create with <CODE>AllocMemList()</CODE> is initially empty. To add memory to the list, use the <CODE>FreeMemToMemList()</CODE> procedure. <P>
+<B>Note: </B> A single memory list can store either DRAM or VRAM, but not both. The p argument points to an example of the memory the task wants to manage with this MemList. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>p
+<DD>A pointer to a memory address whose memory type (either DRAM or VRAM) is the type you want to store in the list. You control actual type of memory in the list by controlling what you free into the list. 
+</DL>
+<DL>
+<DT>name
+<DD>The optional name of the memory list. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a pointer to the MemList structure that is created or NULL if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+To deallocate a memory list created with <CODE>AllocMemList()</CODE>, use <CODE>FreeMemList()</CODE>. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr006.html#XREF20160"><CODE>AllocMemFromMemList</A>(), <A HREF="./01spr065.html#XREF12757">FreeMemList</A>(), <A HREF="./01spr066.html#XREF14037">FreeMemToMemList</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF23775"></LINK></H1><HR>

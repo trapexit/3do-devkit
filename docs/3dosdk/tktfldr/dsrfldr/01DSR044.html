@@ -1,0 +1,35 @@
+<Title>InitDataAcq</Title>
+<A NAME="XREF19399"><H1>InitDataAcq</A></H1>
+<A NAME="XREF16869"></A> Initializes the data acquisition memory pool.<P>
+<H3>Synopsis</H3>
+<CODE>int32 InitDataAcq (int32 dataAcqCount)</CODE><P>
+<H3>Description</H3>
+Initializes the memory pool used by acquisition threads. <CODE>InitDataAcq()</CODE> must be called before any acquisition threads are created with <CODE>NewDataAcq()</CODE>.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>dataAcqCount</CODE>
+<DD>Number of acquisition threads for which the context memory pool is initialized.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT><CODE>Value</CODE>
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoErr</CODE>
+<DD>None
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoMemErr</CODE>
+<DD>Could not allocate memory pool for acquisition threads
+<DD>
+</DL>
+<H3>Associated Files</H3>
+DataAcq.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR045.html#XREF14373">InitDataStreaming</A>, 
+<A HREF="./01DSR005.html#XREF10461">CloseDataAcq</A>, 
+<A HREF="./01DSR048.html#XREF21532">NewDataAcq</A></CODE><P>
+

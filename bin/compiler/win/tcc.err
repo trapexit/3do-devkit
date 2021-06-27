@@ -1,0 +1,919 @@
+warn_option_letter:unknown option -%c%c: ignored
+warn_option_string:unknown option -%s%s: ignored
+warn_option_g:unknown debugging option -g%c: -g assumed
+warn_preinclude:can't open pre-include file %s (ignored)
+warn_option_E:Obsolete use of '%s' to suppress errors -- use '-zu' for PCC mode
+warn_option_p:unknown profile option %s: -p assumed
+warn_option:unknown option %s: ignored
+warn_usage_rw:undefined behaviour: $b written and read without intervening sequence point
+warn_usage_ww:undefined behaviour: $b written twice without intervening sequence point
+pp_warn_triglyph:ANSI '%c%c%c' trigraph for '%c' found - was this intended?
+pp_warn_nested_comment:character sequence %s inside comment
+pp_warn_many_arglines:(possible error): >= %lu lines of macro arguments
+pp_warn_redefinition:repeated definition of #define macro %s
+pp_warn_ifvaldef:#ifdef %s may indicate trouble...
+pp_warn_nonansi_header:Non-ANSI #include <%s>
+pp_warn_bad_pragma:Unrecognised #pragma (no '-' or unknown word)
+pp_warn_bad_pragma1:Unrecognised #pragma -%c
+pp_warn_unused_macro:#define macro '%s' defined but not used
+pp_warn_unbalanced:Unbalanced #if/#ifdef/#ifndef/#endif in file
+pp_warn_macro_arg_exp_in_string:argument %s of macro %s expanded in %c...%c
+pp_warn_pragma_suppress:#pragma -b suppresses errors (hence non-ANSI)
+pp_warn_not_guarded:Header file not guarded against multiple inclusion
+pp_warn_guard_not_defined:File is guarded by '%s' but does not #define it
+pp_warn_continued_comment:trailing '\\' continues comment
+pp_warn_directive_in_args:preprocessor directive ignored in macro argument list\n
+pp_warn_eol_string_skipped:Unmatched quote (%c) in skipped line
+pp_warn_deprecated_pragma:'#pragma -%c' is deprecated; use '%s'
+pp_warn_deprecated_pragma_keyword:'#pragma %s' is deprecated; use '%s'
+pp_rerr_redefinition:differing redefinition of #define macro %s
+pp_rerr_nonunique_formal:duplicate macro formal parameter: '%s'
+pp_rerr_define_hash_arg:operand of # not macro formal parameter
+pp_rerr_define_hashhash:## first or last token in #define body
+pp_rerr_newline_eof:missing newline before EOF - inserted
+pp_rerr_nonprint_char:unprintable char %#.2x found - ignored
+pp_rerr_illegal_option:illegal option -D%s%s
+pp_rerr_spurious_else:spurious #else ignored
+pp_rerr_spurious_elif:spurious #elif ignored
+pp_rerr_spurious_endif:spurious #endif ignored
+pp_rerr_hash_line:number missing in #line
+pp_rerr_hash_error:#error encountered \"%s\"
+pp_rerr_hash_ident:#ident is not in ANSI C
+pp_rerr_junk_eol:junk at end of #%s line - ignored
+pp_err_eof_comment:EOF in comment
+pp_err_eof_string:EOF in string
+pp_err_eol_string:quote (%c) inserted before newline
+pp_err_eof_escape:EOF in string escape
+pp_err_missing_quote:Missing '%c' in pre-processor command line
+pp_err_if_defined:No identifier after #if defined
+pp_err_if_defined1:No ')' after #if defined(...
+pp_err_rpar_eof:Missing ')' after %s(... on line %ld
+pp_err_many_args:Too many arguments to macro %s(... on line %ld
+pp_err_few_args:Too few arguments to macro %s(... on line %ld
+pp_err_missing_identifier:Missing identifier after #define
+pp_err_missing_parameter:Missing parameter name in #define %s(...
+pp_err_missing_comma:Missing ',' or ')' after #define %s(...
+pp_err_undef:Missing identifier after #undef
+pp_err_ifdef:Missing identifier after #ifdef
+pp_err_include_quote:Missing '<' or '\"' after #include
+pp_err_include_junk:Junk after #include %c%s%c
+pp_err_include_file:#include file %c%s%c wouldn't open
+pp_err_unknown_directive:Unknown directive: #%s
+pp_err_endif_eof:Missing #endif at EOF
+pp_fatalerr_hash_error:#error encountered \"%s\"
+pp_fatalerr_readfail:Host file system read error\n
+bind_warn_extern_clash:extern clash $r, $r clash (ANSI 6 char monocase)
+bind_warn_unused_static_decl:unused earlier static declaration of $r
+bind_warn_not_in_hdr:extern $r not declared in header
+bind_warn_main_not_int:extern 'main' needs to be 'int' function
+bind_warn_label_not_used:label $r was defined but not used
+bind_warn_typedef_not_used:typedef $b declared but not used
+bind_warn_typename_not_used:typename $b declared but not used
+bind_warn_function_not_used:function $b declared but not used
+bind_warn_variable_not_used:variable $b declared but not used
+bind_warn_static_not_used:static $b declared but not used
+inline_warn_implicit_return:implicit return in inlined non-void function $r
+flowgraf_warn_implicit_return:implicit return in non-void function
+regalloc_warn_use_before_set:$b may be used before being set
+regalloc_warn_never_used:$b is set but never used
+sem_warn_unsigned:ANSI surprise: 'long' $s 'unsigned' yields 'long'
+sem_warn_format_type:actual type $t of argument %d mismatches format '%.*s'
+sem_warn_bad_format:Illegal format conversion '%%%c'
+sem_warn_incomplete_format:Incomplete format string
+sem_warn_format_nargs_0:Format requires 0 parameters, but %ld given
+sem_warn_format_nargs_1:Format requires 1 parameter, but %ld given
+sem_warn_format_nargs_n:Format requires %ld parameters, but %ld given
+sem_warn_addr_array:'&' unnecessary for function or array $e
+sem_warn_bad_shift:shift of $m by %ld undefined in ANSI C
+sem_warn_divrem_0:division by zero: $s
+sem_warn_fp_overflow:floating point constant overflow: $s
+sem_warn_implicit_constructor:implicit constructor $t()
+sem_warn_cast_sametype:explicit cast to same type
+sem_warn_ctor_confused:user defined constructors confusing
+sem_warn_structassign:structure assignment
+sem_errwarn_udiad_overflow:unsigned constant overflow: $s
+sem_errwarn_diad_overflow:signed constant overflow: $s
+sem_errwarn_umonad_overflow:unsigned constant overflow: $s
+sem_errwarn_monad_overflow:signed constant overflow: $s
+sem_errwarn_bad_shift:overlarge shift distance
+sem_errwarn_divrem_0:division by zero: $s
+sem_errwarn_ucomp_0:odd unsigned comparison with 0: $s
+sem_errwarn_ucomp_0_false:unsigned comparison with 0 is always false: $s
+sem_errwarn_ucomp_0_true:unsigned comparison with 0 is always true: $s
+sem_errwarn_fp_overflow:floating point constant overflow: $s
+sem_rerr_udiad_overflow:unsigned constant overflow: $s
+sem_rerr_diad_overflow:signed constant overflow: $s
+sem_rerr_umonad_overflow:unsigned constant overflow: $s
+sem_rerr_monad_overflow:signed constant overflow: $s
+sem_rerr_implicit_cast_overflow:implicit cast (to $t) overflow
+sem_rerr_implicit_cast5:$s: implicit cast of pointer loses $m qualifier
+sem_warn_depr_string:$s: deprecated conversion of string literal to pointer to non-const
+sem_rerr_too_many_args_ovld:too many arguments for overload resolution
+sem_rerr_postdecr_bool:operand of $s cannot be 'bool'
+sem_rerr_opequal_bool:type of left operand of $s cannot be 'bool'
+sem_warn_deprecated_bool:deprecated use: operand of $s is 'bool'
+sem_warn_unusual_bool:$s: cast to 'bool' (other than integer 0 or 1)
+sem_warn_fix_fail:floating to integral conversion overflow
+sem_warn_index_ovfl:out-of-bound offset %ld in address
+sem_warn_low_precision:lower precision in wider context: $s
+sem_warn_odd_condition:use of $s in condition context
+sem_warn_void_context:no side effect in void context: $e
+sem_warn_olde_mismatch:argument and old-style parameter mismatch: $e
+sem_warn_uncheckable_format:'format' arg. to printf/scanf etc. is variable, so cannot be checked
+sem_warn_narrow_voidstar:implicit cast from (void *), C++ forbids
+sem_warn_narrowing:implicit narrowing cast: $s
+sem_warn_fn_cast:$s: cast between function pointer and non-function object
+sem_warn_pointer_int:explicit cast of pointer to 'int'
+bind_warn_unused_this_in_member:'this' unused in non-static member function
+bind_warn_cpp_scope_differ:C++ scope may differ: $c
+bind_warn_new_tag_in_formals:$c invented in parameter list
+bind_err_cant_use_outer_member:attempt to use $p$r
+bind_err_extern_clash:extern clash $r, $r (linker %ld char)
+bind_err_extern_clash_monocase:extern clash $r, $r (linker %ld char monocase)
+bind_err_duplicate_tag:duplicate definition of $c
+bind_err_reuse_tag:re-using $c as $s tag
+bind_err_incomplete_tentative:incomplete tentative declaration of $r
+bind_err_type_disagreement:type disagreement for $r
+bind_err_duplicate_definition:duplicate definition of $r
+bind_err_duplicate_label:duplicate definition of label $r - ignored
+bind_err_unset_label:label $r has not been set
+bind_err_undefined_static:static function $b not defined - treated as extern
+bind_err_conflicting_globalreg:conflicting global register declarations for $b
+xbind_rerr_no_stg_friend:storage class not allowed for friends -- ignored
+xbind_err_template_specialize_after:attempt to specialize after use
+xbind_err_template_undef:attempt to instantiate undefined template $b
+xbind_err_template_none:no template found to specialize or instantiate
+xbind_err_template_ambiguous:ambiguous templates to specialize or instantiate
+bind_err_template_tpara_redeclared:re-declaration of template type parameter $r
+fp_err_very_big:Overlarge floating point value found
+fp_err_big_single:Overlarge (single precision) floating point value found
+sem_err_typeclash:Illegal types for operands: $s
+sem_err_sizeof_struct:size of $c needed but not yet defined
+sem_rerr_sizeof_opaque:size of opaque $c needed
+sem_err_lvalue:Illegal in lvalue: function or array $e
+sem_err_bitfield_address:bit fields do not have addresses
+sem_err_lvalue1:Illegal in l-value: 'enum' constant $b
+sem_err_lvalue2:Illegal in the context of an l-value: $s
+sem_err_nonconst:illegal in %s: <unknown>
+sem_err_nonconst1:illegal in %s: non constant $b
+sem_err_nonconst2:illegal in %s: $s
+bind_msg_const_nonconst:illegal in constant expression: <unknown>
+bind_msg_const_nonconst1:illegal in constant expression: non constant $b
+bind_msg_const_nonconst2:illegal in constant expression: $s
+moan_floating_type_nonconst:illegal in floating type initialiser: <unknown>
+moan_floating_type_nonconst1:illegal in floating type initialiser: non constant $b
+moan_floating_type_nonconst2:illegal in floating type initialiser: $s
+moan_static_int_type_nonconst:illegal in static integral type initialiser: <unknown>
+moan_static_int_type_nonconst1:illegal in static integral type initialiser: non constant $b
+moan_static_int_type_nonconst2:illegal in static integral type initialiser: $s
+sem_err_nonfunction:attempt to apply a non-function
+sem_err_void_argument:'void' values may not be arguments
+sem_err_bad_cast:$s: illegal cast of $t to pointer
+sem_err_bad_cast1:$s: illegal cast to $t
+sem_err_bad_cast2:$s: cast to non-equal $t illegal
+sem_err_undef_struct:$c not yet defined - cannot be selected from
+sem_err_unknown_field:$c has no $r field
+sem_err_no_this_pntr:no 'this' pointer to access member
+sem_err_no_this_pntr2:no 'this' pointer for member function $e
+sem_err_dupl_default_value:duplicate declaration of default value for argument #%d: $r
+sem_err_missing_default_value:missing default value for argment #%d: $r
+sem_err_noncallsite_function:non-call site '.*' or '->*' yielding function
+sem_err_illegal_loperand:illegal left operand to $s
+sem_err_addr_globalvar:$b is a global register variable - can't take its address
+sem_err_ctor_confused:construction of value of type $t is recursively confused
+sem_err_no_ctor_at_type:no constructor for $c at this type signature
+sem_err_template_nontype_storage:template non-type $b has no storage
+syn_err_template_member:template member expected
+syn_rerr_temp_para_redefinition:template parameter $b re-defined
+simplify_err_outsizearray:array $b too large
+simplify_err_illegal_use_of_mem_fn:illegal use of member function - '&$#b' intended?
+bind_rerr_undefined_tag:$s tag $b not defined
+bind_rerr_cant_declare_tag:$c cannot be declared here
+bind_rerr_mem_opaque:can't access data member $b of opaque type
+bind_rerr_linkage_disagreement:linkage disagreement for $r - treated as $g
+bind_rerr_linkage_disagreement_2:$b has no linkage, but $b requires it to have
+bind_rerr_linkage_disagreement_3:linkage disagreement between $b and $b
+bind_rerr_linkage_previously_c:$b was previously declared without \"C\" linkage
+bind_rerr_duplicate_typedef:duplicate typedef $r
+bind_rerr_local_extern:extern $r mismatches top-level declaration
+xbind_warn_implicit_virtual:$p$r inherits implicit virtual
+xbind_rerr_inherited_type_differs:inherited virtual function type differs: $b
+xbind_rerr_ovld_non_fn:attempt to overload non-function $b
+xbind_rerr_is_ambiguous_name:$r is an ambiguous name in $c
+xbind_rerr_dl_cant_be_overloaded:'operator delete' can't be overloaded
+xbind_rerr_bad_dl_type:'operator delete' must be of type 'void (void*)' or 'void (void*, size_t)'
+xbind_rerr_bad_global_dl_type:'::operator delete' must be of type 'void (void*)'
+xbind_rerr_bad_nw_type:'operator new' must have a return type of 'void*' and have a first argument of type 'size_t'
+xbind_rerr_more_than_one_C_linkage:more than one $r has \"C\" linkage
+xbind_rerr_both_virtual_and_nonvirtual:$r inherits both virtual and non-virtual attributes from bases of $c
+cg_rerr_iffy_arithmetics:iffy arithmetic shift
+fp_rerr_very_small:small floating point value converted to 0.0
+fp_rerr_small_single:small (single precision) floating value converted to 0.0
+sem_rerr_sizeof_bitfield:sizeof <bit field> illegal - sizeof(int) assumed
+sem_rerr_sizeof_void:size of 'void' required - treated as 1
+sem_rerr_sizeof_array:size of a [] array required, treated as [1]
+sem_rerr_sizeof_function:size of function required - treated as size of pointer
+sem_rerr_pointer_arith:<int> $s <pointer> treated as <int> $s (int)<pointer>
+sem_rerr_pointer_arith1:<pointer> $s <int> treated as (int)<pointer> $s <int>
+sem_rerr_assign_const:assignment to 'const' object $e
+sem_rerr_addr_regvar:'register' attribute for $b ignored when address taken
+sem_rerr_lcast:objects that have been cast are not l-values
+sem_rerr_pointer_compare:comparison $s of pointer and int:\n\
+  literal 0 (for == and !=) is only legal case
+sem_rerr_different_pointers:differing pointer types: $s
+sem_rerr_wrong_no_args:wrong number of parameters to $e
+sem_rerr_casttoenum:$s: cast of $m to differing enum
+sem_rerr_valcasttoref:$s: non-lvalue cast to non-const reference
+sem_rerr_implicit_cast1:$s: implicit cast of pointer to non-equal pointer
+sem_rerr_implicit_cast2:$s: implicit cast of non-0 int to pointer
+sem_rerr_implicit_cast3:$s: implicit cast of pointer to 'int'
+sem_rerr_implicit_cast4:$s: implicit cast of $t to 'int'
+sem_rerr_nonpublic:$p$r is a non-public member
+sem_rerr_cant_balance:differing pointer types: $s
+sem_rerr_void_indirection:illegal indirection on (void *): '*'
+sem_rerr_noncallsite_ovld:non-call site overload (using $b for $e)
+sem_rerr_cast_dtype_from_vbase:cast to derived type from virtual base
+sem_rerr_abclass_need_vtable:confusion: abstract? $c needs vtable
+sem_rerr_too_many_args:too many arguments: $t constructor
+obj_fatalerr_io_object:I/O error on object stream
+compiler_rerr_no_extern_decl:no external declaration in translation unit
+compiler_fatalerr_io_error:I/O error writing '%s'
+compiler_fatalerr_load_version:load file created with a different version of the compiler
+driver_fatalerr_io_object:I/O error on object stream
+driver_fatalerr_io_asm:I/O error on assembler output stream
+driver_fatalerr_io_listing:I/O error on listing stream
+aout_fatalerr_toomany:Too many symbols for 'a.out' output
+aout_fatalerr_toobig:Module too big for a.out formatter
+coff_fatalerr_toomany:Too many relocations for COFF format in .o file
+coff_fatalerr_toobig:Module too big for COFF formatter
+misc_fatalerr_space1:out of store (for error buffer)
+misc_fatalerr_toomanyerrs:Too many errors
+misc_fatalerr_space2:out of store (in cc_alloc)\n\
+(Compilation of the debugging tables requested with the -g option\n\
+ requires a great deal of memory. Recompiling without -g, with\n\
+ the more restricted -gf option, or with the program broken into\n\
+ smaller pieces, may help.)
+misc_fatalerr_space3:out of store (in cc_alloc)
+driver_message_nolisting:Unable to open %s for listing: -l option ignored
+driver_message_noasm:This version of the compiler does not support -s
+driver_message_writefail:Couldn't write file '%s'
+driver_message_oddoption:Unrecognized option '%c': ignored
+driver_message_readfail:Couldn't read file '%s'
+driver_message_toomanyfiles:Too many file args
+driver_message_asmstdout:Assembly code will go to stdout
+driver_message_no_listing:-m option useless without source listing. Ignored
+driver_message_nomap:-m file not available or corrupt - ignored
+driver_message_notest:This version of the compiler does not support the -test option
+driver_message_needfile:At least one file argument wanted
+driver_message_spool:output to clog1.log & clog2.log
+driver_message_testfile:No files allowed with -test
+driver_abort_msg:Compilation aborted.
+driver_couldnt_write:couldn't write file '%s'
+driver_couldnt_read:couldn't read file '%s'
+driver_couldnt_read_counts:couldn't read \"counts\" file
+driver_malformed_counts:malformed \"counts\" file
+driver_copy_unparse:internal fault in copy_unparse
+driver_ignored_filename_overlong:Overlong filename ignored: %s\n
+driver_unknown_filetype:Error: type of '%s' unknown (file ignored)\n
+driver_too_many_file_args:too many file arguments
+driver_toolenv_writefail:Couldn't write installation configuration\n
+driver_incompat_cfrontcpp_ansi:-ansi incompatible with -cfront or -cpp
+driver_incompat_cfrontcpp_pcc:-pcc incompatible with -cfront or -cpp
+driver_incompat_pccansi_cfront:-cfront incompatible with -pcc or -ansi
+driver_incompat_pccansi_cpp:-cpp incompatible with -pcc or -ansi
+driver_ignored_arthur_unix:Warning: -arthur/-super ignored under unix\n
+driver_ignored_linkerflags:Warning: linker flag(s) ignored with -c -E -M or -S\n
+driver_conflict_EM:Warning: options -E and -M conflict: -E assumed\n
+driver_conflict_strict_onetrip:Warning: -onetrip and -strict conflict: -strict assumed\n
+driver_conflict_strict_f66:Warning: -f66 and -strict conflict: -strict assumed\n
+driver_conflict_strict_extend:Warning: -extend and -strict conflict: -strict assumed\n
+driver_implies_f66_onetrip:Warning: -f66 implies -onetrip\n
+driver_option_bad:Error: bad option '%s': ignored\n
+driver_option_nimp:Error: unimplemented option '%s': ignored\n
+driver_via_not_opened:Can't open -via file %s\n
+driver_option_bad1:Error: bad option 
+driver_option_bad2:: ignored\n
+driver_option_missing_filearg:Missing file argument for %s\n
+driver_option_missing_lastarg:No argument to last compiler option
+driver_option_missing_arg:No argument to compiler option %s\n
+driver_cant_open_output:Can't open %s for output\n
+driver_cpp_toomanyfileargs:More than 2 file arguments to cpp ignored\n
+driver_cpp_cantopenoutput:Can't open output file %s\n
+driver_stdin_otherfiles:stdin ('-') combined with other files -- ignored\n
+driver_noeffect:Warning: %s command with no effect\n
+driver_banner:%s\n
+driver_prerelease:%s\n
+driver_expire:\
+This time-limited software remains the property of %s.\n\
+It will expire at (GMT) %s\n
+help_blank:\n
+help_bsd_f77:\n\nBSD compatible ANSI F77 compiler.\n
+help_usage:\n\
+Usage:         %s [options] file1 file2 ... filen\n
+help_main_options:Main options:\n
+help_list:\
+-list          Generate a compilation listing\n
+help_iso:\
+-iso           Compile strictly according to ISO (BS 6192 : 1982)\n
+help_ansi:\
+-ansi          Compile ANSI-style C source code\n
+help_strict:\
+-strict        Accept only programs strictly conforming to ANSI standard\n
+help_pcc:\
+-pcc           Compile UNIX PCC style C source code\n
+help_pcc_bsd:\
+-pcc           Compile BSD UNIX PCC-style C source code\n
+help_f66:\
+-f66           Follow F66 practices or rules when conflicting with F77\n
+help_arthur:\
+-arthur        Add 'arthur' to the list of libraries to be linked with\n\
+                 (Arthur only)\n
+help_brazil:\
+-super         Add 'supervisor' to the list of libraries to be linked with\n\
+                 (Brazil only)\n
+help_dont_link:\
+-c             Do not link the files being compiled\n
+help_dont_link_invoke:\
+-c             Do not invoke the linker to link the files being compiled\n
+help_leave_comments:\
+-C             Prevent the preprocessor from removing comments (Use with -E)\n
+help_predefine:\
+-D<symbol>     Define <symbol> on entry to the compiler\n
+help_predefine_pp:\
+-D<symbol>     Define preprocessor <symbol> on entry to the compiler\n
+help_preprocess_pascal:\
+-E             Preprocess the Pascal source code only\n
+help_preprocess_c:\
+-E             Preprocess the C source code only\n
+help_preprocess_fortran:\
+-E             Preprocess the F77 source code only\n
+help_compiler_features:\
+-f<options>    Enable a selection of compiler defined features\n
+help_runtime_checks:\
+-R<options>    Disable selected run time error checks\n
+help_debug:\
+-g<options>    Generate tables for high-level debugging\n
+help_debug_noopt:\
+-g             Generate tables for high-level debugging\n
+help_include_I:\
+-I<directory>  Include <directory> on the #include search path\n
+help_16bit_ints:\
+-i2            Make the default integer size 16 bits\n
+help_include_J:\
+-J<directory>  Replace the default #include path with <directory>\n
+help_libraries:\
+-L<libs>       Specify a comma-joined list of libraries to be linked with\n\
+               instead of the standard library\n
+help_makefile:\
+-M<options>    Generate a 'makefile' style list of dependencies\n
+help_output:\
+-o<file>       Name the file that holds the final output of the compilation\n
+help_output_space:\
+-o <file>      Name the file that holds the final output of the compilation\n
+help_optimised:\
+-O             Invoke the object code improver\n
+help_optimize0:\
+-O0            Minimum optimization\n
+help_optimize1:\
+-O1            Restricted optimization for debugging\n
+help_optimize2:\
+-O2            Maximum optimization\n
+help_onetrip:\
+-onetrip       Compile DO loops that are performed at least once if reached\n
+help_profile:\
+-P<options>    Generate code to generate 'profile' information\n
+help_profile_lc:\
+-p<options>    Generate code to generate 'profile' information\n
+help_readonly_strings:\
+-R             Place all compile time strings in a 'Read only' segment\n
+help_readonly_strings_lc:\
+-r             Place all compile time strings in a 'Read only' segment\n
+help_output_assembler:\
+-S             Output assembly code instead of object code\n
+help_generate_assembler:\
+-S             Generate assembly code instead of object code\n
+help_dont_downcase:\
+-U             Do not convert upper case letters to lower case\n
+help_preundefine:\
+-U<symbol>     Undefine <symbol> on entry to the compiler\n
+help_preundefine_pp:\
+-U<symbol>     Undefine preprocessor <symbol> on entry to the compiler\n
+help_disable_warnings:\
+-W<options>    Disable all or selected warning messages\n
+help_disable_warnings_lc:\
+-w<options>    Disable all or selected warning and error messages\n
+help_helios_libraries:\
+-Z<option>     Special Helios options for shared library building etc\n
+misc_message_lineno:\"%s\", line %ld: %s
+misc_message_lineno_mpw:File \"%s\"; Line %ld # %s
+misc_message_lineno_unix:%s: %ld: %s
+misc_message_nolineno:\"%s\": %s
+misc_message_nolineno_mpw:File \"%s\" # %s
+misc_message_nolineno_unix:%s: %s
+misc_message_nofile:%s
+misc_message_sum1_zero:%s: 0 warnings
+misc_message_sum1_sing:%s: 1 warning
+misc_message_sum1:%s: %ld warnings
+misc_message_sum1_zero_mpw:### \"%s\": 0 warnings
+misc_message_sum1_sing_mpw:### \"%s\": 1 warning
+misc_message_sum1_mpw:### \"%s\": %ld warnings
+misc_message_sum2: (+ %ld suppressed)
+misc_message_sum3_zero:, 0 errors
+misc_message_sum3_sing:, 1 error
+misc_message_sum3:, %ld errors
+misc_message_sum5_zero:, 0 serious errors\n
+misc_message_sum5_sing:, 1 serious error\n
+misc_message_sum5:, %ld serious errors\n
+misc_message_internal:Failure of internal consistency check
+misc_msg_fnarg_this_fnap:<implicit 'this' argument to function call>
+misc_msg_fnarg_this_fnname:<implicit 'this' argument to $b>
+misc_msg_fnarg_fnap:<argument %d to function call>
+misc_msg_fnarg_fnname:<argument %d to $b>
+misc_died_on_recovery:Unable to recover from a previous error
+warn_untrustable:untrustable code generated for $r
+misc_message_warning:Warning: 
+misc_message_error:Error: 
+misc_message_serious:Serious error: 
+misc_message_fatal:Fatal error: 
+misc_message_abandoned:\nCompilation abandoned.\n
+errname_unset:<?>
+errname_pointertypes:<after * in declarator>
+errname_toplevel:<top level>
+errname_structelement:<structure component>
+errname_formalarg:<formal parameter>
+errname_formaltype:<formal parameter type declaration>
+errname_blockhead:<head of block>
+errname_typename:<type-name>
+errname_unknown:<unknown context>
+errname_error:<previous error>
+errname_invisible:<invisible>
+errname_let:<let>
+errname_character:<character constant>
+errname_wcharacter:<wide character constant>
+errname_integer:<integer constant>
+errname_int64con:<int64 constant>
+errname_boolean:<boolean constant>
+errname_floatcon:<floating constant>
+errname_string:<string constant>
+errname_wstring:<wide string constant>
+errname_identifier:<identifier>
+errname_binder:<variable>
+errname_tagbind:<struct/union tag>
+errname_simpletype:<simple type>
+errname_conversiontype:<conversion type>
+errname_new_type_name:<new-type-name>
+errname_catch_name:<catch name>
+errname_cond:_?_:_
+errname_displace:++ or --
+errname_postinc:++
+errname_postdec:--
+errname_arrow:->
+errname_dotstar:.*
+errname_arrowstar:->*
+errname_constructor:<constructor>
+errname_destructor:<destructor>
+errname_addrof:unary &
+errname_content:unary *
+errname_monplus:unary +
+errname_neg:unary -
+errname_fnap:<function argument>
+errname_fnarg:<function argument %d>
+errname_subscript:<subscript>
+errname_cast:<cast>
+errname_sizeoftype:sizeof
+errname_sizeofexpr:sizeof
+errname_ptrdiff:-
+errname_endcase:break
+errname_block:<block>
+errname_decl:decl
+errname_fndef:fndef
+errname_typespec:typespec
+errname_typedefname:typedefname
+errname_valof:valof
+errname_ellipsis:...
+errname_init:<initialisation>
+errname_eol:\\n
+errname_eof:<eof>
+errname_longdouble:long double
+errname_membertemplate:<member template>
+errname_classtemplate:<class template>
+errname_rangecheck:<rangecheck>
+errname_checknot:<checknot>
+lex_warn_force_unsigned:'%s' treated as '%sul' in 32-bit implementation
+lex_warn_force_longlong:'%s' treated as '%sll'
+lex_warn_force_ulonglong:'%s' treated as '%sull'
+lex_warn_multi_char:non-portable - not 1 char in '...'
+lex_warn_cplusplusid:C++ keyword used as identifier: $r
+lex_warn_cplusplusimpl:Functionality of C++ keyword is not fully implemented: $r
+syn_warn_hashif_undef:Undefined macro '%s' in #if - treated as 0
+syn_warn_invent_extern:inventing 'extern int %s();'
+syn_warn_unary_plus:Unary '+' is a feature of ANSI C
+syn_warn_spurious_braces:spurious {} around scalar initialiser
+syn_warn_dangling_else:Dangling 'else' indicates possible error
+syn_warn_void_return:non-value return in non-void function
+syn_warn_use_of_short:'short' slower than 'int' on this machine (see manual)
+syn_warn_undeclared_parm:formal parameter $r not declared - 'int' assumed
+syn_warn_old_style:Old-style function $r
+syn_warn_give_args:Deprecated declaration %s() - give arg types
+syn_warn_ANSI_decl:ANSI style function declaration used, '%s(...)'
+syn_warn_archaic_init:Ancient form of initialisation, use '='
+syn_warn_untyped_fn:implicit 'int' return type for $r - 'void' intended?
+syn_warn_no_named_member:$c has no named member
+syn_warn_extra_comma:Superfluous ',' in 'enum' declaration
+syn_warn_struct_padded:padding inserted in struct $b
+syn_warn_switch_funny:'switch (e)' not followed by '{'
+syn_warn_modify_access:access declaration with no effect
+syn_warn_storageclass_no_declarator:storage-class without declarator is spurious
+syn_warn_lacks_storage_type:declaration lacks type/storage-class (assuming 'int'): $r
+syn_warn_archaic_fnpara:archaic C-style function parameter $l
+syn_warn_special_ops:'=', ',' or unary '&' defined as non-member
+syn_warn_ineffective_asm_decl:asm(...) ignored: inline assembler not available
+syn_warn_insert_sym_anachronism:inserting $r in ':(...)' anachronism
+syn_warn_superfluous_prefix:superfluous 'union','class', 'struct' or 'enum' prefix
+syn_warn_no_default_structor:$b: $c has no default %s
+syn_warn_export_ignored:$l ignored for template
+syn_warn_fntryblock:Function try block not implemented yet, handler(s) ignored
+syn_warn_qual_ignored:$s ignored
+syn_warn_qual_ignored_for:$s ignored for $r
+syn_warn_qual_ignored_return:$s ignored in return type
+xsyn_info_instantiate_class:    while instantiating $c
+xsyn_info_instantiate_fn:    while instantiating function $p$r
+xsem_info_vtable_construction:    while constructing vtable for $c, possibly a lack of a unique final overrider
+xsyn_info_ovld_candidate:    candidate: $b
+xsyn_info_ovld_unop:    candidate: builtin 'operator$#s($#t)'
+xsyn_info_ovld_binop:    candidate: builtin 'operator$#s($#t,$#t)'
+xsyn_warn_ARM_cctor_suppress:$b suppresses default copy constructor under ARM semantics
+xsyn_warn_ISO_cctor_no_suppress:$b does not suppress default copy constructor under ISO semantics
+xsyn_warn_ARM_opeq_suppress:$b suppresses default operator= under ARM semantics
+xsyn_warn_ISO_opeq_no_suppress:$b does not suppress default operator= under ISO semantics
+xsyn_warn_delete_undef:delete of pointer to undefined $c; no destructor will be called
+xsyn_warn_implicit_private_base:base class $c is implicitly private
+xsyn_warn_exceptiontables_disabled:exception handling is not supported in this release
+xsyn_warn_catch_bind_nyi:binding to caught object not yet implemented
+xsyn_warn_baseinit_order:base $c will be initialized in declaration order instead of the order written
+xsyn_warn_meminit_order:member $b will be initialized in declaration order instead of the order written
+simp_warn_checkvar:syserr soon: checkvar use %ld
+vargen_warn_nonull:omitting trailing '\\0' for %s [%ld]
+vargen_warn_unnamed_bitfield:Unnamed bit field initialised to 0
+vargen_warn_init_non_aggregate:Attempt to initialise non-aggregate
+vargen_warn_extended_init:extended constant initialiser used
+lex_err_ioverflow:Number %s too large for 32-bit implementation
+lex_err_ioverflow_64:Number %s too large for 64-bit implementation
+lex_err_overlong_fp:Grossly over-long floating point number
+lex_err_fp_syntax1:Digit required after exponent marker
+lex_err_overlong_hex:Grossly over-long hexadecimal constant
+lex_err_overlong_int:Grossly over-long number
+lex_err_need_hex_dig:Hex digit needed after 0x or 0X
+lex_err_need_hex_dig1:Missing hex digit(s) after \\x
+lex_err_backslash_blank:\\<space> and \\<tab> are invalid string escapes
+lex_err_unterminated_string:Newline or end of file within string
+lex_err_bad_hash:misplaced preprocessor character '%c'
+lex_err_bad_char:illegal character (0x%lx = \'%c\') in source
+lex_err_bad_noprint_char:illegal character (hex code 0x%x) in source
+lex_err_ellipsis:(...) must have exactly 3 dots
+lex_err_illegal_whitespace:$s may not have whitespace in it
+syn_err_illdtor:illegal destructor '~$#l'
+syn_err_bitsize:bit size %ld illegal - 1 assumed
+syn_err_zerobitsize:zero width named bit field - 1 assumed
+syn_err_arraysize:Array size %ld illegal - 1 assumed
+syn_err_expected:expected $s - inserted before $l
+syn_err_expected1:expected $s - inserted before $l
+syn_err_expected1_aftercommand:expected $s after command - inserted before $l
+syn_err_expected2:expected $s or $s - inserted $s before $l
+syn_err_expecteda:expected $s
+syn_err_expected1a:expected $s
+syn_err_expected1a_aftercommand:expected $s after command
+syn_err_expected2a:expected $s or $s
+syn_err_mix_strings:char and wide (L\"...\") strings do not concatenate
+syn_err_expected_expr:<expression> expected but found $l
+syn_err_valof_block:{ following a cast will be treated as VALOF block
+syn_err_typedef:typedef name $r used in expression context
+syn_err_assertion:___assert(0, $e)
+syn_err_expected_member:Expected <member> but found $l
+syn_err_hashif_eof:EOF not newline after #if ...
+syn_err_hashif_junk:Junk after #if <expression>
+syn_err_initialisers:too many initialisers in {} for aggregate
+syn_err_initialisers1:{} must have 1 element to initialise scalar
+syn_rerr_empty_init:Initialiser list must contain at least one expression
+syn_err_default:'default' not in switch - ignored
+syn_err_default1:duplicate 'default' case ignored
+syn_err_case:'case' not in switch - ignored
+syn_err_case1:duplicated case constant: %ld
+syn_err_expected_cmd:<command> expected but found $l
+syn_err_expected_stmt:<statement> expected but found $l
+syn_err_expected_while:'while' expected after 'do' but found $l
+syn_err_else:Misplaced 'else' ignored
+syn_err_continue:'continue' not in loop - ignored
+syn_err_break:'break' not in loop or switch - ignored
+syn_err_no_label:'goto' not followed by label - ignored
+syn_err_no_brace:'{' of function body expected - found $l
+syn_err_stgclass:storage class $s not permitted in context %s - ignored
+syn_err_stgclass1:storage class $s incompatible with $g - ignored
+syn_err_typeclash:type $s inconsistent with $m
+syn_rerr_typeclash_type:type $t inconsistent with $m
+syn_err_tag_brace:'{' or <identifier> expected after $s but found $l
+syn_err_expected3:Expecting <declarator> or <type> but found $l
+syn_err_unneeded_id:superfluous $l in <abstract declarator> - ignored
+syn_err_undef_struct_member:undefined $c member: $r
+syn_err_undef_struct_object:undefined $c object: $r
+syn_err_selfdef_struct_member:attempt to include $c member: $r within itself
+syn_err_selfdef_struct_object:attempt to include $c object: $r within itself
+syn_err_incomplete_tag:incomplete type $c
+syn_err_void_type:illegal 'void' type
+syn_err_void_object_member:illegal 'void' member: $r
+syn_err_void_object_object:illegal 'void' object: $r
+syn_err_duplicate_type:duplicate type specification of formal parameter $r
+syn_err_not_a_formal:Non-formal $r in parameter-type-specifier
+syn_err_cant_init:$g names may not be initialised
+syn_err_enumdef:<identifier> expected but found $l in 'enum' definition
+syn_err_undef_enum:Undefined enum $r
+syn_err_misplaced_brace:Misplaced '{' at top level - ignoring block
+syn_err_not_friend:not a friend class $r
+syn_err_undef_basetag:undefined base: $c
+syn_err_missing_basetag:missing base tag: $l
+syn_err_incomp_arg_ovld:Incompatible arguments to $b (overload missing?)
+syn_err_no_operator_ovld:No operator $s with this type signature
+syn_err_multi_overload_call:ambiguous %d-way overload for call to $b
+syn_err_multi_operator_ovld:ambiguous %d-way overload for operator $s
+syn_err_pseudo_undefined:Missing definition for $r
+syn_err_multi_convfn_ovld:ambiguous %d-way choice of conversion from $c to $t
+syn_err_multi_ctor_ovld:ambiguous %d-way choice of constructor from $t to $c
+syn_err_ambiguous_user_defined_conv:ambiguous implicit user-defined conversion from $c to $c
+syn_err_illegal_asm_decl:illegal asm(...) declaration (ignored)
+syn_err_recursive_app_operator_arrow:recursive application of operator->() to object of type $c; return type intended?
+sem_err_assign_ovld:no suitable operator=() for $c: overload missing?
+sem_warn_virtual:virtual function call of $b
+sem_warn_addr_of_memfn:address of member function $b
+xsem_warn_cast_undef_struct:cast from ptr/ref to $c to ptr/ref to $c; one is undefined, assuming unrelated
+xsem_err_cast_ptrmemfn_this_offset:can't yet cast ptr-to-mem needing this offset
+xsem_warn_unreachable_handler:handler is unreachable
+xsem_warn_pure_virtual:pure virtual function $b called
+sem_warn_name_mangling_unique:name mangling truncated '%s'
+syn_err_constructor_init:constructor forbids $r = {...} initialiser
+syn_err_no_named_member:$c has no $r member
+syn_err_not_found_named_member:member $r not found in $c
+syn_err_missing_named_mfn:Missing class member function name
+syn_err_classname_not_found:class-name $r not found
+syn_err_member_cannot_init:member cannot be initialised: $r
+syn_err_lacks_bclass_anachronism:$c lacks base class for ':(...)' anachronism
+syn_err_not_member:$l is not a member of struct/class $b
+syn_err_catch_ignored:misplaced 'catch' ignored
+syn_err_illegal_simple_types:illegal <simple type>: $m
+syn_err_no_member_here:class member $b cannot be defined here
+syn_err_friend_type:'friend <type>;' needs elaborated-type-specifier
+syn_err_linkage_spec:expected <linkage-spec> '}' before $l
+syn_err_illegal_operator:'operator $s' is illegal
+syn_err_wrong_args_ovld:wrong number of arguments to overload $b
+syn_err_cannot_follow_unary_dcolon:$l cannot follow unary '::'
+syn_err_cannot_follow_binary_dcolon:$l cannot follow binary '::'
+syn_err_expected_dtor_name:expected destructor name after ::~, found $l
+syn_err_missing_tlevel_decl:missing top-level declaration: $r
+syn_err_no_decl_at_type:no $b declaration at this type
+syn_err_lacks_arg_ctor:$t lacks an %ld-argument constructor
+syn_err_no_nullary_ctor:no nullary constructor: $b
+syn_err_requires_pntr_arg:requires pointer argument: $s
+syn_err_duplicated_mem_init:duplicate member initialisation: $r
+syn_err_init_not_in_ctor:member initialiser not in constructor
+syn_err_expected_id_in_mem_init:expecting <identifier> in <member-initialiser>
+syn_err_missing_catch_after_try:omitted 'catch' after 'try'
+syn_err_ill_this:legal only in member function: $l
+syn_err_template_notclassorfunction:'template' not class nor function
+syn_err_template_scope:invalid $c scope
+syn_err_unspecialized_template:attempt to use $c without parameters
+syn_err_asm_not_available:inline assembler not available in strict ANSI mode
+syn_err_structreg_large:__value_in_regs structures must fit into 4 words
+syn_err_structreg_packed:__value_in_regs structures cannot be packed
+syn_err_type_member_in_qual:cannot have member $r of type $t in $s $c
+syn_err_unpacked_member_in_qual:cannot have member $r of type unpacked $c in $s $c
+xsem_rerr_no_conversion:no conversion to type $t in $c
+xsem_rerr_abstract_class_member:abstract $c member: $r
+xsem_rerr_abstract_class_object:abstract $c object: $r
+xsem_rerr_abstract_tag:abstract type $c
+sem_err_multiple_target_types:type deduction: overloaded function type of $b
+sem_err_temp_type_float:floating point type not allowed
+sem_err_addr_template:attempt to take address of template $b
+sem_err_typededuce_disagree:type deduction fails: $t disagrees with $t
+sem_warn_typededuce_arraysize:type deduction fails: array size differs
+sem_err_typededuce_ambiguous:type deduction fails: function type %d-way resolvable
+sem_err_typededuce_pointer:type deduction fails: $t incompatible to $t
+sem_err_typededuce_recognize:type deduction fails: un-recognizable type $t
+sem_err_typededuce_type:type deduction fails: free template type arg $r
+sem_err_typededuce_const:type deduction fails: free template non-type arg $r
+sem_err_typename_not_found:type deduction failed: typename $b not found\n
+sem_err_template_ambiguous:Ambiguous class/function templates
+sem_err_non_type_arg_linkage:extern linkage expected for template argument $b
+sem_err_non_type_arg_value:illegal non-type template arg $e
+sem_err_template_arg_linkage:template type arg $t must have extern linkage
+sem_err_call_dependency:call to $e not dependent on template args to $c
+sem_err_type_arg_expected:template type arg expected
+sem_err_typeclash_1:template type $r requires a $m but given $t
+sem_err_typeclash_2:template type expected, found $e
+sem_err_typeclash_3:template type inconsistent with $t
+sem_err_lvalue_needed:temporary required for template argument
+sem_err_dotdotdot_handler_not_last:handler for '...' must come last
+sem_rerr_template_formal_length_class:number of template formals for $c differs from a previous declaration
+sem_rerr_template_formal_length_function:number of template formals for $b differs from a previous declaration
+sem_rerr_template_formal_type:template formal type $t inconsistent with $t
+sem_err_longlongbitfield:long long bitfields are not supported
+sem_err_too_large:structure or array too large
+vargen_err_long_string:string initialiser longer than %s [%ld]
+vargen_err_nonstatic_addr:non-static address $b in constant initialiser
+vargen_err_bad_ptr:$s: illegal use in constant initialiser
+vargen_err_init_void:objects of type 'void' can not be initialised
+vargen_err_undefined_struct:$c must be defined for (static) variable declaration
+vargen_err_open_array:uninitialised static [] arrays illegal
+vargen_err_overlarge_reg:invalid global register number; 1 to %d allowed
+vargen_err_no_float_reg:no global floating point registers allowed
+vargen_err_no_int_reg:no global int registers allowed
+vargen_err_not_int:invalid type for global int register
+vargen_err_not_float:invalid type for global floating point register
+vargen_err_badinit:illegal initialisation to $r%+ld
+vg_err_dynamicinit:Initialised dynamic array with -ZR or -ZL
+vargen_rerr_nonaligned:Non-aligned ADCON at data+0x%lx (value $r+0x%lx) set to NULL
+vargen_rerr_datadata_reloc:RISC OS (or other) reentrant module has static init. to data $r
+vargen_rerr_compiler_confused:compiler confused: static const with dynamic initialisation
+vargen_rerr_local_static_with_dtor:unimplemented: local static with destructor: $b
+lex_rerr_8_or_9:digit 8 or 9 found in octal number
+lex_rerr_pp_number:number illegally followed by letter
+lex_rerr_hex_exponent:hex number cannot have exponent
+lex_rerr_esc16_truncated:overlarge escape '\\x%s%lx' treated as '\\x%lx'
+lex_rerr_esc8_truncated:overlarge escape '\\%o' treated as '\\%o'
+lex_rerr_illegal_esc:illegal string escape '\\%c' - treated as %c
+lex_rerr_not1wchar:L'...' needs exactly 1 wide character
+lex_rerr_empty_char:no chars in character constant ''
+lex_rerr_overlong_char:more than 4 chars in character constant
+syn_rerr_qualified_void:Return type may not be a void type other than 'void'
+syn_rerr_array_0:array [0] found
+syn_rerr_void_valof:void valof blocks are not permitted
+syn_rerr_undeclared:undeclared name, inventing 'extern int %s'
+syn_rerr_undeclared_fn:undeclared name, inventing 'extern \"C\" int %s(...);'
+syn_rerr_insert_parens:parentheses (..) inserted around expression following $s
+syn_rerr_return_expr_void:return <expr> illegal for void function
+syn_rerr_return_expr_ctor:return <expr> illegal for constructor
+syn_rerr_return_expr_dtor:return <expr> illegal for destructor
+syn_rerr_qualified_typedef:$m typedef $b has $m re-specified
+syn_rerr_no_quals_allowed:only non-static member functions can be const or volatile
+syn_rerr_no_quals_allowed_ptr:pointers to const or volatile functions must be pointers to non-static member functions
+syn_rerr_missing_type:missing type specification - 'int' assumed
+syn_rerr_missing_type_for:missing type specification for $r - 'int' assumed
+syn_rerr_long_float:ANSI C does not support 'long float'
+syn_rerr_missing_type1:omitted <type> before formal declarator - 'int' assumed
+syn_rerr_missing_type2:function prototype formal $r needs type or class - 'int' assumed
+syn_rerr_ellipsis_first:ellipsis (...) cannot be only parameter
+syn_rerr_mixed_formals:prototype and old-style parameters mixed
+syn_rerr_open_member:illegal [] member: $r
+syn_rerr_ref_void:illegal type (void &) treated as (int &)
+syn_rerr_ill_ref:$t of reference illegal -- '&' ignored
+syn_rerr_fn_returntype:function returning $t illegal -- assuming pointer
+syn_rerr_abst_class_rtype:abstract $c is illegal for function return type
+syn_rerr_array_elttype:array of $t illegal -- assuming pointer
+syn_rerr_fn_ptr_type:type may not be function -- assuming pointer
+syn_rerr_fn_ptr_member:member $r may not be function -- assuming pointer
+syn_rerr_fn_ptr_object:object $r may not be function -- assuming pointer
+syn_rerr_fn_ptr1:function $r may not be initialised - assuming function pointer
+syn_rerr_archaic_init:Ancient form of initialisation, use '='
+syn_rerr_bitfield:illegal bit field type $t - 'int' assumed
+syn_rerr_ANSIbitfield:ANSI C forbids bit field type $t
+syn_rerr_missing_formal:formal name missing in function definition
+syn_rerr_ineffective:declaration with no effect
+syn_rerr_duplicate_member:duplicate member $b
+syn_rerr_duplicate_member2:duplicate member $p$r
+syn_rerr_semicolon_in_arglist:',' (not ';') separates formal parameters
+syn_rerr_no_members:$c has no members
+syn_rerr_not_base:$b is not a base member of $c
+syn_rerr_badly_placed_access:access declarations only in public and protected parts
+syn_rerr_modify_access:base access rights cannot be altered
+xsyn_rerr_bad_conv:illegal conversion $p$r
+xsyn_rerr_zero_params:$p$r must have zero parameters
+xsyn_rerr_non_memfn_operator:$p$r must be a non-static member function
+xsyn_rerr_no_return_type_allowed:no return type allowed for $p$r
+xsyn_rerr_must_be_function:$p$r must be a function
+xsyn_rerr_bad_operator_declarator:Invalid declarator in operator context
+xsyn_rerr_ignored_new_array_ctor:'new' <array> initialiser ignored
+xsyn_rerr_empty_placement:empty 'new' placement argument list
+syn_rerr_jump_past_init:jump past initialisation for $b
+syn_rerr_ambiguous_qualification:$r is ambiguously qualified
+syn_rerr_ambiguous_destructor:Ambiguous definitions for destructor $r
+syn_rerr_opaque_class_member:opaque $c member: $r
+syn_rerr_opaque_class_object:opaque $c object: $r
+syn_rerr_opaque_tag:opaque type $c
+syn_rerr_insert_braces:inserting { } around command after $s
+syn_rerr_not_decl_qual:Definition of $c not $s: qualifier ignored
+syn_rerr_ignored_non_fn:$g ignored for non-function $r
+syn_rerr_ignored_non_fnaux:$s ignored for non-function $r
+syn_rerr_global_anon_union:global anonymous union must be static
+syn_rerr_defaults_ordering:defaulted parameter $r followed by non-defaulted
+syn_rerr_unknown_linkage:unknown linkage: extern $e
+syn_rerr_illegal_anon_union_mem:illegal anonymous union member $r
+syn_rerr_illegal_nonpub_anon_union_mem:illegal non-public anonymous union member $r
+syn_rerr_delete_expr_anachronism:'e' ignored in 'delete [e]' anachronism
+syn_rerr_self_copying_ctor:self-copying constructor for $c
+syn_rerr_duplicated_base:duplicate base $c ignored
+syn_rerr_no_arg_in_template:no arguments in template<>
+syn_rerr_superfluous_access_adjuster:superfluous type for access adjuster, declaration ignored
+syn_rerr_private_bmember_ignored:private overloaded base member ignored
+syn_rerr_local_default:$b has auto storage
+syn_rerr_declaree_out_of_scope:'$#b::$#r' cannot be declared here
+syn_rerr_declaree_out_of_scope_2:$b cannot be declared here
+syn_rerr_friend_class_not_definable:friend $c shall not be defined
+syn_rerr_expect_dtor:expecting destructor for $c, found $r
+syn_rerr_union_w_base:unions may not have bases
+xsyn_rerr_meminit_wrong_args:too few/many arguments to initialiser for simple member $b
+syn_rerr_ref_not_initialised:reference $b must be initialised
+xsyn_rerr_no_default_ref:references cannot be default initialised
+xsyn_rerr_no_new_ref:$s type cannot be a reference
+syn_rerr_no_const_fns:function types cannot be $m
+syn_rerr_const_not_initialised:constant $b must be initialised
+xsyn_rerr_const_not_initialised_2:constant must be initialised
+syn_rerr_addrof_cdtor_taken:can't take address of constructor or destructor
+syn_rerr_multi_convfn_bool:ambiguous %d-way choice of conversion from $c in Boolean context
+syn_rerr_tagdef_in_formals:cannot define within formals: $c
+syn_rerr_neg_unsigned_enum:$c cannot have both negative and unsigned enumerators
+xsyn_rerr_instantiate_mixup:instantiate don't mix with template or specialization
+xsyn_rerr_spurious_instantiate:too many instantiate request
+syn_rerr_extra_template_actuals:extra template actual(s) ignored
+syn_rerr_no_typedef:typedef name $b not allowed after $s
+syn_rerr_bad_template:templates are only allowed in namespace and class scopes
+syn_rerr_missing_qual:$c has been declared as $s but not defined as $s
+syn_moan_hashif_nonconst:illegal in #if <expression>: <unknown>
+syn_moan_hashif_nonconst1:illegal in #if <expression>: non constant $b
+syn_moan_hashif_nonconst2:illegal in #if <expression>: $s
+syn_moan_case_nonconst:illegal in case expression (ignored): <unknown>
+syn_moan_case_nonconst1:illegal in case expression (ignored): non constant $b
+syn_moan_case_nonconst2:illegal in case expression (ignored): $s
+syn_moan_hashif:#if <expression>
+syn_moan_case:case expression (ignored)
+xsyn_constructor_string:constructor
+xsyn_copy_constructor_string:copy constructor
+xsyn_destructor_string:destructor
+xsyn_copy_assign_string:copy assignment
+misc_disaster_banner:\n\
+Internal inconsistency: either resource shortage or compiler fault. If you\n\
+cannot alter your program to avoid this failure, please contact your supplier\n
+mcdep_warn_fpinconsistent:Software floating point inconsistent with FPE2/3 and FPREGARGS
+gen_warn_Lisp:Lisp-support stack push needed %ld
+gen_err_swi:SWI number 0x%x too large
+gen_err_irq:%s cannot handle __irq functions
+gen_err_swst:an __irq function cannot call functions that use stack checking
+thumbgen_fatalerr_branch_structure:Branch structure too complicated for Thumb compiler
+thumbgen_fatalerr_switch_too_large:switch statement too large for Thumb compiler
+obj_warn_area_name_truncated:area name \"%s\" trunctated
+obj_err_common:repeated common block $r
+obj_err_common1:common block $r too small
+obj_err_common2:common block $r too large
+armobj_fatalerr_toomany:Too many symbols for ACORN linker
+armdbg_fatalerr_toobig:Debug table size exceeds space in Acorn AOF format
+armdbg_warn_itemsize:ASD debug item for $m would be too large - truncated before $r
+asm_non_const:illegal constant (ignored): <unknown>
+asm_nonconst1:illegal constant expression (ignored): non constant $b
+asm_nonconst2:illegal constant expression (ignored): $s
+asm_err_bad_shift:illegal shift specifier: %s
+asm_err_expected_shift:shift specifier expected
+asm_err_bad_opcode:illegal instruction opcode: %s
+asm_err_bad_physreg:physical registername expected, but found %s instead
+asm_err_bad_psrfield:illegal PSR field: %s
+asm_err_expected_psr:PSR field expected
+asm_err_bad_shiftval:shift value %d out of range
+asm_err_expected_coproc:coprocessor identifier expected
+asm_err_unknown_coproc:illegal coprocessor identifier: %s
+asm_err_ldrt_adrmode:preindexed addressing not available for LDRT/STRT
+asm_err_no_mrs:MRS & MSR are not available on this architecture
+asm_err_no_teqp:TEQP/TSTP/CMPP/CMNP are not available on this architecture
+asm_err_no_longmul:long multiply is not available on this architecture
+asm_err_no_halfword:halfword support is not available on this architecture
+asm_err_no_clz:count leading zeros is not available on this architecture
+asm_err_no_dspmul:dsp multiply is not available on this architecture
+asm_err_corrupted_reg:R%ld corrupted but possibly reused later. This code may not work correctly
+asm_err_ldm_base_list:LDM/STM base with writeback in register list
+asm_err_ldm_empty:LDM/STM with empty register list
+asm_err_ldm_badlist:LDM/STM with illegal register list
+asm_err_ldr_base_wb:LDR/STR base, [base] with writeback
+asm_err_mul_conflict:MUL/MLA with Rd = Rm
+asm_err_mull_conflict:MULL/MLAL with Rhi = Rlo, Rhi = Rm or Rlo = Rm
+asm_err_swp_conflict:SWP with Rd = Rm, Rm = Rn or Rd = Rn
+asm_err_adc_conflict:Thumb ADC/SBC cannot be used as 3-operand instructions
+asm_err_pc:illegal use of PC as operand
+asm_err_write_pc:illegal write to PC
+asm_err_branch_pc:branching by writing PC is not supported
+asm_err_fn_id:function identifier expected
+asm_err_fn_notfound:function %s undefined
+asm_err_thumb_highreg:illegal access to high register R%d
+asm_err_int_expected:expression of type <int> expected
+asm_err_float_expected:expression of type <float> expected
+asm_err_const_range:constant expression %u out of range (max %u)
+asm_err_offset_range:offset %d out of range
+asm_err_offset_align:unaligned offset not allowed
+asm_err_ibase:IBASE or 9 expected
+asm_err_mdrsdr:MDR or SDR expected
+asm_err_sdr:SDR expected
+mcdep_warn_unaligned:illegal unaligned load or store access - use __packed instead
+config_proc_arch_mismatch:specified processor '%s' does not match specified architecture '%s' (try '-arch %s')
+config_interwork_needs_thumb:'-apcs /interwork' is only allowed when compiling for processors that support THUMB instructions
+config_need_thumb:specified processor or architecture does not support THUMB instructions
+config_obsolete_fp:apcs /fp will not be supported in future releases of the compiler
+config_obsolete_reent:this implementation of /reent is obsolete
+config_obsolete_wide:apcs /wide is less efficient than apcs /narrow
+config_obsolete_26bit:apcs /26 will not be supported in future releases of the compiler
+config_obsolete_nofpr:apcs /nofpr will not be supported in future releases of the compiler
+config_obsolete_asd:ASD debug table format will not be supported in future releases of the compiler
+config_obsolete_dwarf:-dwarf is obsolete. Use -dwarf2 (recommended) or -dwarf1 instead

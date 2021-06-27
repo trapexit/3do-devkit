@@ -1,0 +1,101 @@
+<HTML><TITLE>adjacent_difference</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>adjacent_difference</H2>
+<HR><PRE>     Generalized Numeric Operation</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Outputs a sequence of the differences between each adjacent pair of elements in a range.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;numeric>
+
+template &#60;class InputIterator, class OutputIterator>
+OutputIterator adjacent_difference (InputIterator first,
+                                    InputIterator last,
+                                    OutputIterator result);</PRE><PRE>template &#60;class InputIterator,
+          class OutputIterator,
+          class BinaryOperation>
+OutputIterator adjacent_difference (InputIterator first,
+                                    InputIterator last,
+                                    OutputIterator result,
+                                    BinaryOperation bin_op);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Informally, <B><I>adjacent_difference</B></I> fills a sequence with the differences between successive elements in a container.  The result is a sequence in which the first element is equal to the first element of the sequence being processed, and the remaining elements are equal to the the calculated differences between adjacent elements.  For instance, applying <B><I>adjacent_difference</B></I> to {1,2,3,5} will produce a result of {1,1,1,2}.  </P>
+<P>By default, subtraction is used to compute the difference, but you can supply any binary operator. The binary operator is then applied to adjacent elements.  For example, by supplying the plus (+) operator, the result of applying <B><I>adjacent_difference</B></I> to {1,2,3,5} is the sequence {1,3,5,8}.</P>
+<P>Formally,<B><I> adjacent_difference</B></I> assigns to every element referred to by iterator <SAMP>i</SAMP> in the range <SAMP>[result + 1, result + (last - first))</SAMP> a value equal to the appropriate one of the following:</P>
+<PRE>*(first  + (i - result)) - *(first + (i - result) - 1)</PRE>
+<PRE></PRE><P> or </P>
+<PRE>binary_op (*(first + (i - result)), *(first + (i - result) - 1))</PRE>
+<PRE></PRE><P><SAMP>result</SAMP> is assigned the value of <SAMP>*first</SAMP>.</P>
+<P><SAMP>adjacent_difference</SAMP> returns <SAMP>result + (last - first)</SAMP>.</P>
+<P><SAMP>result</SAMP> can be equal to <SAMP>first</SAMP>.  This allows you to place the results of applying <B><I>adjacent_difference</B></I> into the original sequence.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>This algorithm performs exactly<SAMP> (last-first) - 1</SAMP> applications of the default operation (<SAMP>-</SAMP>) or <SAMP>binary_op</SAMP>. </P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// adj_diff.cpp
+//
+ #include&#60;numeric>       //For adjacent_difference
+ #include&#60;vector>        //For vector
+ #include&#60;functional>    //For times
+ #include &#60;iostream.h>
+ int main()
+ {
+   //
+   //Initialize a vector of ints from an array
+   //
+   int arr[10] = {1,1,2,3,5,8,13,21,34,55};
+   vector&#60;int> v(arr,arr+10);
+   //
+   //Two uninitialized vectors for storing results
+   //
+   vector&#60;int> diffs(10), prods(10);
+   //
+   //Calculate difference(s) using default operator (minus)
+   //
+   adjacent_difference(v.begin(),v.end(),diffs.begin());
+   //
+   //Calculate difference(s) using the times operator
+   //
+   adjacent_difference(v.begin(), v.end(), prods.begin(), 
+         times&#60;int>());
+   //
+   //Output the results
+   //
+   cout &#60;&#60; "For the vector: " &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;   cout &#60;&#60; "The differences between adjacent elements are: " 
+        &#60;&#60; endl &#60;&#60; "     ";
+   copy(diffs.begin(),diffs.end(),
+        ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;   cout &#60;&#60; "The products of adjacent elements are: "
+        &#60;&#60; endl &#60;&#60; "     ";
+   copy(prods.begin(),prods.end(),
+        ostream_iterator&#60;int>(cout," "));   cout &#60;&#60; endl;
+   return 0;
+
+Ouput :
+For the vector:
+     1 1 2 3 5 8 13 21 34 55
+The differences between adjacent elements are:
+    1 0 1 1 2 3 5 8 13 21
+The products of adjacent elements are:
+     1 1 2 6 15 40 104 273 714 1870
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance you'll have to write:</P>
+<PRE>vector&#60;int,allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<PRE></PRE>
+<HR>
+<A HREF="acc_0611.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="adj_8817.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

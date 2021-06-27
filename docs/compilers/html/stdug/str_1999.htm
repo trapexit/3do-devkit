@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>The string Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The string Abstraction</H2>
+<P>A <I>string</I> is basically an indexable sequence of characters.  In fact, although a string is not declared as a subclass of <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>, almost all of the vector operators discussed in <a href="vec_1893.htm">Chapter 5</a> can be applied to string values.  However, a string is also a much more abstract quantity, and, in addition to simple vector operators, the <A HREF="../stdref/str_8586.htm"><B><I>string</I></B></A> data type provides a number of useful and powerful high level operations.</P>
+<P>In the standard library, a string is actually a template class, named <A HREF="../stdref/bas_0007.htm"><B><I>basic_string</I></B></A>. The template argument represents the type of character that will be held by the string container.  By defining strings in this fashion, the standard library not only provides facilities for manipulating sequences of normal 8-bit ASCII characters, but also for manipulating other types of character-like sequences, such as 16-bit wide characters.  The data types <A HREF="../stdref/str_8586.htm"><B><I>string</I></B></A> and <A HREF="../stdref/wst_4531.htm"><B><I>wstring</I></B></A> (for wide string) are simply typedefs of <B><I>basic_string</I></B>, defined as follows:</P>
+<PRE>   typedef basic_string&#60;char,strint_char_traits&#60;char> > string;
+   typedef basic_string&#60;wchar_t> wstring;
+</PRE>
+
+<A HREF="sidebar.htm#sidebar46"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Strings and Wide Strings</STRONG></A>
+
+<P>As we have already noted, a string is similar in many ways to a vector of characters.  Like the <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> data type, there are two sizes associated with a string.  The first represents the number of characters currently being stored in the string.  The second is the <I>capacity</I>, the maximum number of characters that can potentially be stored into a string without reallocation of a new internal buffer.  As it is in the vector data type, the capacity of a string is a dynamic quantity.  When string operations cause the number of characters being stored in a string value to exceed the capacity of the string, a new internal buffer is allocated and initialized with the string values, and the capacity of the string is increased.  All this occurs behind the scenes, requiring no interaction with the programmer.</P>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>Programs that use strings must include the <SAMP>string</SAMP> header file:</P>
+<PRE>   # include &#60;string></PRE>
+
+<HR>
+<A HREF="str_8586.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="str_7474.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

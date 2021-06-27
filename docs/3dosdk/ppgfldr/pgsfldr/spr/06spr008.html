@@ -1,0 +1,23 @@
+<Title>intlOpenLocale </Title>
+<A NAME="XREF34028"></A><H1>intlOpenLocale </A></H1>
+Gains access to a locale item.<P>
+<H3>Synopsis</H3>
+<CODE>Item intlOpenLocale(const TagArg *tags);</CODE><P>
+<H3>Description</H3>
+This function returns a locale item. You can then use <CODE>intlLookupLocale()</CODE> to gain access to the localization information within the locale item. This information enables software to adapt to different languages and customs automatically at run-time, thus creating truly international software. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tags
+<DD>A pointer to an array of tag arguments containing extra data for this function. This must currently always be NULL. 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of a locale. You can use <CODE>intlLookupLocale()</CODE> to get a pointer to the locale structure, which contains localization information. <P>
+<H3>Implementation</H3>
+Macro implemented in intl.h V24. <P>
+<H3>Associated Files</H3>
+intl.h<P>
+<H3>Notes</H3>
+Once you are finished with the locale item, you should call <CODE>intlCloseLocale()</CODE>. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./06spr001.html#XREF39846"><CODE>intlCloseLocale</A>(), <A HREF="./06spr007.html#XREF21681">intlLookupLocale</A>() </CODE><P>
+</CODE>

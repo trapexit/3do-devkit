@@ -1,0 +1,22 @@
+<Title>GetTextCelFormatBuffer</Title>
+<A NAME="XREF27762"><H1>GetTextCelFormatBuffer </A></H1>
+ Retrieves text cel format buffer and size.<P>
+<H3>Synopsis</H3>
+<CODE>void GetTextCelFormatBuffer(TextCel *tCel, char **buffer,uint32 *bufSize)</CODE><P>
+<H3>Description</H3>
+Retrieves the cel's formatting buffer and size. The format buffer is used for printf-style formatting of text during rendering. If the buffer size is zero, the buffer pointer is not valid. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>buffer
+<DD>Pointer to a variable to receive the pointer to the format buffer. 
+</DL>
+<DL>
+<DT>bufsize
+<DD>Pointer to a variable to receive the size of the format buffer. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

@@ -1,0 +1,32 @@
+<Title>ErrorText</Title>
+<A NAME="XREF12962"><H1>ErrorText</A></H1>
+<A NAME="XREF22280"> A table of error messages.</A> <P>
+<H3>Description</H3>
+An error text item is a table of error messages. The kernel maintains a list of these items and uses them to convert a Portfolio error code into a descriptive string.<P>
+<H3>Folio</H3>
+kernel<P>
+<H3>Item Type</H3>
+ERRORTEXTNODE<P>
+<H3>Create</H3>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE><P>
+<H3>Delete</H3>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE><P>
+<H3>Use</H3>
+<A HREF="./01spr080.html#XREF41016"><CODE>GetSysErr</A>()</CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>ERRTEXT_TAG_OBJID
+<DD>(uint32) Create. This tag specifies the 3 6-bit characters that idenify these errors. You use the Make6Bit() macro to convert from ASCII into the 6-bit character set.
+</DL>
+<DL>
+<DT>ERRTEXT_TAG_MAXERR
+<DD>(uint8) Create. Indicates the number of error strings being defined. This corresponds to the number of entries in the string table.
+</DL>
+<DL>
+<DT>ERRTEXT_TAG_TABLE
+<DD>(char **) Create. A pointer to an array of string pointers. These strings will be used when converting an error code into a string. The array is indexed by the lower 8 bits of the error code.
+</DL>
+<DL>
+<DT>ERRTEXT_TAG_MAXSTR
+<DD>(uint32) Create. Specifies the maximum string length of any string in the string table.
+</DL>

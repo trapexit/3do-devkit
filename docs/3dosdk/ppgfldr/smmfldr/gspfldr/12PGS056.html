@@ -1,0 +1,30 @@
+<Title>ta_customdelay</Title>
+<A NAME="XREF27928"><H1>ta_customdelay </A></H1>
+<A NAME="XREF19125"></A>Demonstrates a delay line attachment.<P>
+<H3>Synopsis</H3>
+<CODE>ta_customdelay [&lt;sample file&gt; [&lt;delay ticks&gt;]]</CODE><P>
+<H3>Description</H3>
+Demonstrates how to create and use a delay line to get real-time echo 
+effects in your program. Loads the specified AIFF file and plays it into a 
+delay line. By tweaking the knobs on the output mixer, you can control the 
+mix of delay sound versus original sound, and the speed at which the echo 
+will die down. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sample file
+<DD>Name of an AIFF file to play.
+</DL>
+<DL>
+<DT>delay ticks
+<DD>Amount of time, in audio clock ticks, to hold each note. Defaults to 
+240 ticks.
+</DL>
+<H3>Caveats</H3>
+<CODE>SleepAudioTicks()</CODE> is an inefficient way to delay a program, 
+and it is used in this program's <CODE>PlayPitchNote()</CODE> function. 
+Avoid or rewrite the <CODE>PlayPitchNote()</CODE> function for 
+performance-critical code. <P>
+<H3>Associated Files</H3>
+ta_customdelay.c<P>
+<H3>Location</H3>
+examples/Audio <P>

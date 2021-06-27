@@ -1,0 +1,23 @@
+<Title>spResume</Title>
+<A NAME="XREF28772"><H1>spResume </A></H1>
+<A NAME="XREF16840"></A> Resume playback of an SPPlayer after being paused.<P>
+<H3>Synopsis</H3>
+<CODE>Err spResume (SPPlayer *player)</CODE><P>
+<H3>Description</H3>
+Resumes playback of an SPPlayer after being paused. <P>
+Clears the SP_STATUS_F_PAUSED flag. Calling <CODE>spResume()</CODE> multiple times has no effect, the calls do not nest. Calling <CODE>spResume()</CODE> while the SPPlayer is the SP_STATUS_F_PLAYING flag is not set has no effect. The paused state is superceded by a call to spStop()  or <CODE>spStartPlaying()</CODE>. <P>
+There is presently no way to know if an SPPlayer is paused. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to SPPlayer to resume. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr082.html#XREF24746"><CODE>spPause</A>(), <A HREF="./02mpr091.html#XREF15941">spStartPlaying</A>(), <A HREF="./02mpr093.html#XREF20856">spStop</A>() </CODE><P>
+</CODE>

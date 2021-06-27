@@ -1,0 +1,27 @@
+<Title>RemoveNthFromObject</Title>
+<A NAME="XREF30804"><H1>RemoveNthFromObject </A></H1>
+<A NAME="XREF42220"></A> Removes the nth element of a collection.<P>
+<H3>Synopsis</H3>
+<CODE>Err RemoveNthFromObject( CObject *obj, int32 n )</CODE><P>
+<H3>Description</H3>
+This is a method macro that is part of the Juggler object-oriented toolbox.  An object's method can be called explicitly through the class structure function pointer or with one of the defined method macros. This method macro removes the reference to the nth element (a sequence or a collection) of a collection.  Numbering starts from 0. <P>
+Note that using this function to remove a sequence or collection from a higher collection doesn't delete the sequence or collection, but merely removes its reference in the higher collection so that the element is no longer part of the collection. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>obj
+<DD>A pointer to the CObject data structure for the object. 
+</DL>
+<DL>
+<DT>n
+<DD>A value indicating the element to remove, starting at 0. 
+</DL>
+<H3>Return Value</H3>
+This macro returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in cobj.h V20. <P>
+<H3>Associated Files</H3>
+cobj.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr016.html#XREF30718"><CODE>SetObjectInfo</A>(),<A HREF="./02mpr012.html#XREF21127">GetObjectInfo</A>(),<A HREF="./02mpr018.html#XREF26053">StopObject</A>(),  <A HREF="./02mpr005.html#XREF31433">AllocObject</A>(), <A HREF="./02mpr010.html#XREF17884">FreeObject</A>(),<A HREF="./02mpr011.html#XREF36448">GetNthFromObject</A>(), <A HREF="./02mpr014.html#XREF34902">PrintObject</A>(), <A HREF="./02mpr017.html#XREF20324">StartObject</A>()<BR>
+</CODE><P>
+</CODE>

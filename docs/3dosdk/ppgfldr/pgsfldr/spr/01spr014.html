@@ -1,0 +1,37 @@
+<Title>CheckItem</Title>
+<A NAME="XREF21994"><H1>CheckItem </A></H1>
+<A NAME="XREF36106"></A>Checks to see if an item exists.<P>
+<H3>Synopsis</H3>
+<CODE>void *CheckItem( Item i, uint8 ftype, uint8 ntype )</CODE><P>
+<H3>Description</H3>
+This procedure checks to see if a specified item exists. To specify the item, you use an item number, an item-type number, and the item number of the folio in which the item type is defined. If all three of these values match those of the item, the procedure returns a pointer to the item. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>i
+<DD>The item number of the item to be checked. 
+</DL>
+<DL>
+<DT>ftype
+<DD>The item number of the folio that defines the item type. (This is the same value that is passed to the MkNodeID() macro.) For a list of folio item numbers, see the Portfolio Item's chapter.
+</DL>
+<DL>
+<DT>ntype
+<DD>The item-type number for the item. (This is the same value that is passed to the MkNodeID() macro.) For a list of item-type numbers, see the Portfolio Item's chapter.
+</DL>
+<H3>Return Value</H3>
+If the item exists (and the values of all three arguments match those of the item), the procedure returns a pointer to the item. If the item does not exist, the procedure returns NULL. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr022.html#XREF15505"><CODE>CreateItem</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>(), <A HREF="./01spr054.html#XREF34211">FindNamedItem</A>(), <A HREF="./01spr061.html#XREF25874">FindVersionedItem</A>(), <A HREF="./01spr099.html#XREF27851">LookupItem</A>(), <A HREF="./01spr101.html#XREF23056">MkNodeID</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF21994"></LINK></H1><HR>

@@ -1,0 +1,22 @@
+<Title>AllocAmplitude</Title>
+<A NAME="XREF38370"><H1>AllocAmplitude </A></H1>
+<A NAME="XREF16565"></A> Allocates amplitude from available system amplitude.<P>
+<H3>Synopsis</H3>
+<CODE>int32 AllocAmplitude( int32 Amplitude )</CODE><P>
+<H3>Description</H3>
+<CODE>AllocAmplitude()</CODE>  is a voluntary function that checks available system amplitude and allocates the requested amplitude (or less, if the amount requested is not available) to the calling task.  It then marks that amplitude unavailable to other tasks making this call.  When the task finishes using the amplitude, it should call <CODE>FreeAmplitude()</CODE> to make the amplitude available to other tasks.  Note that this function is voluntary and doesn't restrict the amplitude actually used by a task; the only way it works is for all audio tasks to use this function. <P>
+This call is necessary, because the output of the DSP is limited by the signed 16-bit precision of the digital-to-analog converter (DAC).  If you add together signals whose amplitude exceeds the limit of 0x7FFF, the result will "wrap around,"  causing a horrendous noise.  Rather than dictate a restriction on use of the DSP, we assume that programmers/composers will restrict themselves using whatever scheme they choose.  It is necessary, however, to tell other tasks how much of the DSP precision you plan to use.  You can allocate some or all of the amplitude for your task and then give it back when done. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Amplitude
+<DD>The desired amplitude.  This must be value from 0 to 0x7FFF. 
+</DL>
+<H3>Return Value</H3>
+The function returns the amount of amplitude that was allocated.  This will be less than or equal to the desired amount.  If unsuccessful, it returns a negative value (an error code). <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr037.html#XREF40996"><CODE>FreeAmplitude</A>() </CODE><P>
+</CODE>

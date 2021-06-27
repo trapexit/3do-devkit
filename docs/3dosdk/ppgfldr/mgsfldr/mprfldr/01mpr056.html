@@ -1,0 +1,31 @@
+<Title>MonitorAttachment</Title>
+<A NAME="XREF24049"><H1>MonitorAttachment </A></H1>
+<A NAME="XREF40985"></A> Monitors an attachment, sends a cue at a specified point.<P>
+<H3>Synopsis</H3>
+<CODE>Err MonitorAttachment (Item Attachment, Item Cue, int32 Index)</CODE><P>
+<H3>Description</H3>
+This function sends a Cue to the calling task when the specified Attachment reaches the specified point. The function is often used with a sample Attachment to send a cue when the sample has been fully played. <P>
+There can be only one Cue per Attachment. The most recent call to <CODE>MonitorAttachment()</CODE>  takes precedence. <P>
+To remove the current Cue from an Attachment, call <CODE>MonitorAttachment (Attachment, 0, 0)</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Attachment
+<DD>The item number for the Attachment. 
+</DL>
+<DL>
+<DT>Cue
+<DD>Item number for the Cue to be associated with this attachment. Can be 0 to remove a the current Cue from the Attachment. 
+</DL>
+<DL>
+<DT>Index
+<DD>Value indicating the point to be monitored. At this time, the only value that can be passed is CUE_AT_END, which asks that a Cue be sent at the end of an Attachment. Index is ignored if Cue is 0. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr046.html#XREF11073"><CODE>GetCueSignal</A>(), </CODE><A HREF="./01mpr072.html#XREF15765">StartAttachment</A><CODE>(), </CODE><A HREF="./01mpr050.html#XREF32325">LinkAttachments</A><CODE>(), </CODE><A HREF="./01mpr084.html#XREF16016">WhereAttachment</A><CODE>() </CODE><P>
+</CODE>

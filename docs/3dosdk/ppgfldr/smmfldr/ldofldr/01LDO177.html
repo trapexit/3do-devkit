@@ -1,0 +1,27 @@
+<Title>taCreateTextCel</Title>
+<A NAME="XREF11319"><H1>taCreateTextCel </A></H1>
+ Creates a text cel from tag args.<P>
+<H3>Synopsis</H3>
+<CODE>TextCel * taCreateTextCel (TagArg *tags)</CODE><P>
+<H3>Description</H3>
+Creates a new text cel. Specifying appropriate tags and values during cel 
+creation sets all configurable attributes of the text cel. If you include 
+TCEL_TAG_UPDATE_TEXT_STRING in the tags, the specified text is rendered 
+into the cel after processing all other tags. <P>
+The only required tag is TCEL_TAG_FONT. All unspecified attributes are set 
+to default values as per <CODE>CreateTextCel()</CODE>. If width and/or 
+height tags are not specified, the associated values are set to zero, 
+resulting in an auto size cel. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tags
+<DD>Pointer to an array of tags and associated values. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the newly created TextCel structure; returns NULL if there 
+isn't enough memory to create the new TextCel, which indicates that 
+invalid tags are present. <P>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO046.html#XREF36470"><CODE>CreateTextCel</A> </CODE><P>

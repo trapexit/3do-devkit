@@ -1,0 +1,32 @@
+<Title>StartScoreNote</Title>
+<A NAME="XREF33263"><H1>StartScoreNote </A></H1>
+<A NAME="XREF19595"></A> Starts a MIDI note, uses voice allocation.<P>
+<H3>Synopsis</H3>
+<CODE>Err StartScoreNote( ScoreContext *scon, int32 Channel,int32 Note, int32 Velocity )</CODE><P>
+<H3>Description</H3>
+This function turns on a note for the score context and uses dynamic voice allocation to do so.  It is equivalent to a MIDI Note On message. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>A pointer to a ScoreContext data structure controlling playback. 
+</DL>
+<DL>
+<DT>Channel
+<DD>The number of the MIDI channel in which to play the note. 
+</DL>
+<DL>
+<DT>Note
+<DD>The MIDI pitch value of the note (0..127). 
+</DL>
+<DL>
+<DT>Velocity
+<DD>The MIDI attack velocity value of the note (0..127). If attack velocity is 0, the specified note is released (identical behavior to the MIDI Note  On event). 
+</DL>
+<H3>Return Value</H3>
+This function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr028.html#XREF37097"><CODE>FreeChannelInstruments</A>(), <A HREF="./02mpr040.html#XREF34628">NoteOnIns</A>(), <A HREF="./02mpr039.html#XREF31757">NoteOffIns</A>(), <A HREF="./02mpr042.html#XREF14731">ReleaseScoreNote</A>(),<A HREF="./02mpr047.html#XREF12834">StopScoreNote</A>()</CODE></CODE><P>

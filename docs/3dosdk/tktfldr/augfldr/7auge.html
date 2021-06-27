@@ -1,0 +1,201 @@
+<TITLE>Directives</TITLE>
+<H1><LINK NAME="XREF17895">Directives</LINK></H1><HR>
+<H2>Storage reservation and initialisation </H2>
+The syntax of the first three directives is:<P>
+<CODE>
+<PRE>
+{label} directive expression-list
+</CODE>
+</PRE>
+DCD can take program-relative and external expressions as well as numeric ones. In the case of DCB, the <I>expression-list</I> can include string expressions, the characters of which are loaded into consecutive bytes in store. Unlike C-strings, <I>armasm</I> strings do not contain an implicit trailing NUL, so a C-string has to be fabricated thus:<P>
+<CODE>
+<PRE>
+C_string DCB "C_string",0
+</CODE>
+</PRE>
+The syntax of <I>%</I> is:<P>
+<CODE>
+<PRE>
+{label} % numeric-expression
+</CODE>
+</PRE>
+This directive will initialise to zero the number of bytes specified by the <I>numeric</I><I> </I>expression.<P>
+Note that an <I>external expression</I> consists of an external symbol followed optionally by a constant expression.  The external symbol <I>must</I> come first.<P>
+<H2>Floating point store initialisation </H2>
+The syntax of these directives is:<P>
+<CODE>
+<PRE>
+{label} directive fp-constant{,fp-constant}
+</CODE>
+</PRE>
+Single precision numbers occupy one word, and double precision numbers occupy two; both should be word aligned. An <I>fp-constant </I>takes one of the following forms:<P>
+<CODE>
+<PRE>
+{-}integer E{-}integer                            e.g. 1E3, -4E-9
+{-}{integer}.integer{E{-}integer}                            e.g. 1.0, -.1, 3.1E6
+</CODE>
+</PRE>
+<I>E</I> may also be written in lower case.<P>
+<A NAME="XREF29996"><H2>Describing the layout of store </A></H2>
+The syntax of these directives is:<P>
+    <CODE>
+<PRE>
+^ expression{,base-register}{label} # expression
+</CODE>
+</PRE>
+The ^ directive sets the origin of a storage map at the address specified by the <I>expression</I>. A storage map location counter, @, is also set to the same address. The <I>expression</I> must be fully evaluable in the first pass of the assembly, but may be program-relative. If no ^ directive is used, the @ counter is set to zero. @ can be reset any number of times using ^ to allow many storage maps to be established.<P>
+Space within a storage map is described by the # directive. Every time # is used its <I>label</I> (if any) is given the value of the storage location counter @, and @ is then incremented by the number of bytes reserved. <P>
+In a ^ directive with a <I>base register</I>, the register becomes implicit in all symbols defined by # directives which follow, until cancelled by a subsequent ^ directive. These register-relative symbols can later be quoted in load and store instructions. For example:<P>
+    <CODE>
+<PRE>
+^ 0,r9
+    # 4
+Lab # 4
+    LDR   r0,Lab
+</CODE>
+</PRE>
+is equivalent to:<P>
+    <CODE>
+<PRE>
+LDR   r0,[r9,#4]
+</CODE>
+</PRE>
+<A NAME="XREF23090"><H2>Organisational directives </A></H2>
+
+<CODE>
+<PRE>
+END
+</CODE>
+</PRE>
+The assembler stops processing a source file when it reaches the END directive. If assembly of the file was invoked by a GET directive, the assembler returns and continues after the GET directive (see section <A HREF="#XREF36324">Links to other source files - GET/INCLUDE</A>). If END is reached in the top-level source file during the first pass without any errors, the second pass will begin. Failing to end a file with END is an error.<P>
+<CODE>
+<PRE>
+ORG numeric-expression
+</CODE>
+</PRE>
+A program's origin is determined by the ORG directive, which sets the initial value of the program location counter. Only one ORG is allowed in an assembly and no ARM instructions or store initialisation directives may precede it. If there is no ORG, the program is relocatable and the program counter is initialised to 0.<P>
+<CODE>
+<PRE>
+LTORG
+</CODE>
+</PRE>
+LTORG directs that the current literal pool be assembled immediately following it. A default LTORG is executed at every END directive which is not part of a nested assembly, but large programs may need several literal pools, each closer to where their literals are used to avoid violating LDR's 4KB offset limit.<P>
+<CODE>
+<PRE>
+KEEP {symbol}
+</CODE>
+</PRE>
+The assembler does not by default describe local (<I>non-exported</I>, see <A HREF="#XREF15249">Links to other object files - IMPORT and EXPORT</A>) symbols in its output object file. However, they can be retained in the object file's symbol table by using the KEEP directive. If the directive is used alone all symbols are kept; if only a specific symbol needs to be kept it can be specified by name.<P>
+<A NAME="XREF15249"><H2>Links to other object files </A></H2>
+
+<CODE>
+<PRE>
+IMPORT symbol{[FPREGARGS]}{,WEAK}
+EXPORT symbol{[FPREGARGS,DATA,LEAF]}
+</CODE>
+</PRE>
+IMPORT provides the assembler with a name (symbol) which is not defined in this assembly, but will be resolved at link time to a symbol defined in another, separate object file. The symbol is treated as a program address; if the WEAK attribute is given the Linker will not fault an unresolved reference to this symbol, but will zero the location referring to it. If [FPREGARGS] is present, the symbol defines a function which expects floating point arguments passed to it in floating point registers.<P>
+EXPORT declares a symbol for use at link time by other, separate object files. FPREGARGS signifies that the symbol defines a function which expects floating point arguments to be passed to it in floating point registers. DATA denotes that the symbol defines a code-segment datum rather than a function or a procedure entry point, and LEAF that it is a leaf function which calls no other functions.<P>
+<A NAME="XREF36324"><H2>Links to other source files </A></H2>
+
+<CODE>
+<PRE>
+GET filename
+INCLUDE filename
+</CODE>
+</PRE>
+GET includes a file within the file being assembled. This file may in turn use GET directives to include further files. Once assembly of the included file is complete, assembly continues in the including file at the line following the GET directive. INCLUDE is a synonym for GET.<P>
+<H2>Diagnostic generation </H2>
+
+<CODE>
+<PRE>
+ASSERT logical-expression
+! arithmetic-expression, string-expression
+</CODE>
+</PRE>
+ASSERT supports diagnostic generation. If the <I>logical expression</I> returns {FALSE}, a diagnostic is generated during the second pass of the assembly. ASSERT can be used both inside and outside macros.<P>
+! is related to ASSERT but is inspected on both passes of the assembly, providing a more flexible means for creating custom error messages. The arithmetic expression is evaluated; if it equals zero, no action is taken during pass one, but the string is printed as a warning during pass two; if the expression does not equal zero, the string is printed as a diagnostic and the assembly halts after pass one.<P>
+<H2>Dynamic listing options - OPT</H2>
+The OPT directive is used to set listing options from within the source code, providing that listing is turned on. The default setting is to produce a normal listing including the declaration of variables, macro expansions, call-conditioned directives and MEND directives, but without producing a pass one listing. These settings can be altered by adding the appropriate values from the list below, and using them with the OPT directive as follows:<P>
+<PRE>
+--------------------------------------------------------
+OPT n  |Effect                                          
+--------------------------------------------------------
+1      |Turns on normal listing.                        
+--------------------------------------------------------
+2      |Turns off normal listing.                       
+--------------------------------------------------------
+4      |Page throw: issues an immediate form feed and   
+       |starts a new page.                              
+--------------------------------------------------------
+8      |Resets the line number counter to zero.         
+--------------------------------------------------------
+16     |Turns on the listing of SET, GBL and LCL        
+       |directives.                                     
+--------------------------------------------------------
+32     |Turns off the listing of SET, GBL and LCL       
+       |directives.                                     
+--------------------------------------------------------
+64     |Turns on the listing of macro expansions.       
+--------------------------------------------------------
+128    |Turns off the listing of macro expansions.      
+--------------------------------------------------------
+256    |Turns on the listing of macro calls.            
+--------------------------------------------------------
+512    |Turns off the listing of macro calls.           
+--------------------------------------------------------
+1024   |Turns on the pass one listing.                  
+--------------------------------------------------------
+2048   |Turns off the pass one listing.                 
+--------------------------------------------------------
+4096   |Turns on the listing of conditional directives. 
+--------------------------------------------------------
+8192   |Turns off the listing of conditional directives.
+--------------------------------------------------------
+16384  |Turns on the listing of MEND directives.        
+--------------------------------------------------------
+32768  |Turns off the listing of MEND directives.       
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Titles - TTL and SUBT</H2>
+Titles can be specified within the code using the TTL (title) and SUBT (subtitle) directives. Each is used on all pages until a new title or subtitle is called. If more than one appears on a page, only the latest will be used: the directives alone create blank lines at the top of the page. The syntax is:<P>
+<CODE>
+<PRE>
+TTL title
+SUBT subtitle
+</CODE>
+</PRE>
+<A NAME="XREF11810"><H2>Miscellaneous directives </A></H2>
+
+<CODE>
+<PRE>
+ALIGN {power-of-two{,offset-expression}}
+</CODE>
+</PRE>
+After store-loading directives have been used, the program counter (PC) will not necessarily point to a word boundary. If an instruction mnemonic is then encountered, the assembler will insert up to three bytes of zeros to achieve alignment. However, an intervening label may not then address the following instruction. If this label is required, ALIGN should be used. On its own, ALIGN sets the instruction location to the next word boundary; the optional power-of-two parameter can be used to align with a coarser byte boundary, and the <I>offset expression</I> parameter to define a byte offset from that boundary.<P>
+<CODE>
+<PRE>
+NOFP
+</CODE>
+</PRE>
+In some circumstances there will be no support in either target hardware or software for floating point instructions. In these cases the NOFP directive can be used to ensure that no floating point instructions or directives are allowed in the code.<P>
+<CODE>
+<PRE>
+RLIST
+</CODE>
+</PRE>
+The syntax of this directive is:<P>
+<CODE>
+<PRE>
+label RLIST list-of-registers
+</CODE>
+</PRE>
+The RLIST (register list) directive can be used to give a name to a set of registers to be transferred by LDM or STM. <I>List-of-registers</I> is a list of register names or ranges enclosed in {} (see <A HREF="./7augb.html#XREF35349">Block data transfer - LDM and STM</A>).<P>
+<CODE>
+<PRE>
+ENTRY
+</CODE>
+</PRE>
+The ENTRY directive declares its offset in its containing AREA to be the unique entry point to any program containing this AREA.<P>
+<P>

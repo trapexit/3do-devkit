@@ -1,0 +1,52 @@
+<HTML><TITLE>distance_type</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>distance_type</H2>
+<HR><PRE>     Iterator primitive</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Determine the type of distance used by an iterator.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;iterator></PRE>
+<PRE>
+template &#60;class T, class Distance> 
+inline Distance* distance_type (const input_iterator&#60;T,
+      Distance>&#38;)
+template &#60;class T, class Distance> 
+inline Distance* distance_type (const forward_iterator&#60;T,
+      Distance>&#38;)
+template &#60;class T, class Distance> 
+inline Distance* 
+distance_type (const bidirectional_iterator&#60;T, Distance>&#38;)
+template &#60;class T, class Distance>
+inline Distance* 
+distance_type (const random_access_iterator&#60;T, Distance>&#38;)
+template &#60;class T>
+inline ptrdiff_t* distance_type (const T*)
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>distance_type</B></I> family of function templates return a pointer to a value that is of the same type as that used to represent a distance between two iterators.  The first four of these take an iterator of a particular type and return a pointer to a default value of the <B><I>distance_type</B></I> for that iterator.  The <SAMP>T*</SAMP> form of  the function returns <SAMP>ptrdiff_t*</SAMP>.</P>
+<P>Generic algorithms use this function to create local variables of the correct type.  The <B><I>distance_type</B></I> functions are typically used like this:</P>
+<PRE></PRE>
+<PRE>template &#60;class Iterator>
+void foo(Iterator first, Iterator last)
+{
+  __foo(begin,end,distance_type(first));
+}
+template &#60;class Iterator, class Distance>
+void __foo(Iterator first, Iterator last, Distance*>
+{
+  Distance d = Distance();
+  distance(first,last,d);
+  _
+}</PRE><P>The auxiliary function template allows the algorithm to extract a distance type from the first iterator and then use that type to perform some useful work.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P>Other iterator primitives:  <A HREF="val_9388.htm"><B><I>value_type</B></I></A>, <A HREF="ite_7451.htm"><B><I>iterator_category</B></I></A>, <A HREF="dis_0186.htm"><B><I>distance</B></I></A>, <A HREF="adv_9283.htm"><B><I>advance</B></I></A></P>
+<HR>
+<A HREF="dis_0186.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="div_3309.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

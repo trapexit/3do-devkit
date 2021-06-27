@@ -1,0 +1,50 @@
+<TITLE>Playing Sequences and Collections</TITLE>
+<H1><LINK NAME="XREF28469">Playing Sequences and Collections</LINK></H1><HR>
+Sequences and collections can be created directly, using<CODE> CreateObject()</CODE> calls and methods to set the objects' characteristics or the MIDI score interpretation tools described in <A HREF="./09mpg.html#XREF20742">Playing MIDI Scores</A> can be used. After the Juggler objects have been created, playing them with the Juggler is a simple process. This section describes the process used to play objects with the Juggler.<P>
+<H2>A Juggler Operational Overview</H2>
+The Juggler can be thought of as a person sitting in a room with a list of Juggler objects, a telephone, and no clock. The Juggler's job is to give the current time to the objects on its list so that each object can play the appropriate events. The Juggler must also tell anyone on the other end of the phone what time the next event will be executed.<P>
+<A NAME="XREF23205"><H3>Absolute and Relative Event Times</A></H3>
+Each Juggler object contains events, whether it is a sequence with its own event list, or a collection that contains sequences as constituents. Each event comes with a timestamp that gives the relative time in ticks for the start of each event. Relative time is reckoned as the number of ticks after starting time: 30 ticks after playback starts, 486 ticks after playback starts, 1090 ticks after playback starts, and so on. These relative event times are converted to absolute event times when an object becomes active.<P>
+When an object is activated with a Start message, the message provides an absolute starting time, which the object uses to determine subsequent times for all events. This absolute starting time is usually read from the audio clock when the object is started, but can be any arbitrary value in ticks. For example, an object has three events with timestamps at the relative times 0, 30, and 600 ticks. The object is started with a Start message that provides an absolute starting time of 34,765. The object executes its events at the absolute times 34,765 (34,765+0), 34,795 (34,765+30), and 35,365 (34,765+300).<P>
+If the object had a start delay specified when it was started (using the tag argument JGLR_TAG_START_DELAY), the specified delay ticks are added to the start time, effectively delaying all absolute event times by that amount. If the start delay was 300 ticks and the provided start time was 34,765, then the delayed start time would be 35,065 (34,765+300). The absolute event times would then be 35,065 and 35,095 and 35,695.<P>
+<H3>Current Time</H3>
+After an object is activated, the object appears in the Juggler's list of active objects so the Juggler can call it with timing information. The Juggler must get <I>its</I> timing information from an outside source. The time can be thought of as coming from outside phone calls because there is no clock available to the Juggler.<P>
+The time call comes from the task that runs the Juggler, a process called <I>bumping the Juggler</I>. Each call indicates the time in ticks, such as 20,045 or 34,765 or something similar. The calling task usually gets its time values from the audio timer, which provides a steady measure of time. However, the task can come up with time values from any source, such as vertical blanks. Or it can, if it wants, make up completely arbitrary time values to give to the Juggler, a convenient testing technique, as shown in the sample code in <A HREF="./08mpg007.html#XREF34225">An Example Program</A>.<P>
+<H3>Event Execution</H3>
+When the Juggler receives a current time value from a calling task (referred to as bumping the Juggler), the Juggler passes that value on to each of the objects in its active object list. Each object then looks to see if it has any unexecuted events that should have occurred by the current time value received. If it finds unexecuted events, it immediately executes them and marks them as executed.<P>
+If the calling task sends time values infrequently, consecutive events in an event list can be played simultaneously. For example, if a sequence has an event list with events occurring every 30 ticks and the calling task provides current time values 300 ticks apart, the object executes ten simultaneous events each time it receives a time value.<P>
+<H3>Time Intervals</H3>
+To keep events from executing simultaneously and to keep time values flowing smoothly, the calling task could send a new time value to the Juggler once every tick. This is a bad idea, though, similar to busy waiting, and can prevent other tasks from sharing system resources with your task. The Juggler returns the absolute time of the next event to the calling task, which can use that time to determine when to send the next time value.<P>
+When each active object receives the current time value from the Juggler, it executes the events that need execution and also looks to see what events are yet to be executed. A sequence finds the next event following the current time and reports the execution time of that event. A collection gathers the next event execution times from all of its constituent objects and reports the execution time of the earliest event. The Juggler gathers the next event execution times from all the active objects in its list and reports the earliest time back to the calling task.<P>
+When the calling task receives the absolute time of the next event, it can put itself into wait state or go on to do other things until that time occurs. When the time comes, the task calls the Juggler with the current time. The Juggler informs all the active objects of the time; they execute the event (or events) that need execution and report the time of the next event, which the Juggler returns to the calling task. The task waits again for the next event time and repeats this cycle until there are no more events to execute.<P>
+<H2>The Juggler Process</H2>
+To use the Juggler for event execution, a task usually follows these steps:<P>
+<UL>
+<LI>Initialize the Juggler.
+<LI>Create a score of events by creating the appropriate sequences and collections.
+<LI>Poll the audio timer for the current time.
+<LI>Use the current time to start all the objects to be played.
+<LI>Send the current time to the Juggler (referred to as bumping the Juggler).
+<LI>Retrieve the next event time returned by the Juggler.
+<LI>Wait until the next event time.
+<LI>Repeat the last three steps until there are no more events to execute.
+<LI>Stop the objects.
+<LI>Destroy the objects if they are no longer needed.
+<LI>Terminate the Juggler.
+</UL>
+<A NAME="XREF14054"><H2>Bumping the Juggler</A></H2>
+To bump the Juggler, a task uses the following call:<P>
+<DL>
+<DD><CODE>int32 BumpJuggler( Time CurrentTime, Time *NextTime,  int32 CurrentSignals, int32 *NextSignals )</CODE><BR>
+</DL>
+The call accepts four arguments: <CODE>CurrentTime</CODE>, the current time value supplied by the calling task; <CODE>*NextTime</CODE>, a pointer to a time variable where the Juggler stores the next event time; <CODE>CurrentSignals</CODE>, a signal mask containing the current signals received; and <CODE>*NextSignals</CODE>, a pointer to a signal mask variable where the Juggler stores the next event signal.<P>
+<B>Note: </B>The current version of the Juggler does not support signal designated events. The <CODE>CurrentSignals</CODE> argument should be set to 0 and the *<CODE>NextSignals</CODE> argument should point to a dummy variable.<P>
+A task making this call usually gets the current time value from the audio timer, but can supply whatever arbitrary value it wishes.<P>
+When executed, <CODE>BumpJuggler()</CODE> passes the <CODE>CurrentTime</CODE> value to the Juggler, which passes it on to the active objects in its list. The objects then execute unexecuted events that should have been executed by the supplied time. <CODE>BumpJuggler()</CODE> stores the time of the next event to be executed in the <CODE>NextEvent</CODE> variable, where the calling task can retrieve the time.<P>
+<CODE>BumpJuggler()</CODE> returns a 1 if every object is finished playing or if there are no active objects. It returns a 0 if it was successful and it executed events in active objects. It returns a negative value (an error code) if unsuccessful.<P>
+<H2>Terminating the Juggler</H2>
+When a task finishes using the Juggler to manage events and Juggler objects, the task should terminate the Juggler using this call:<P>
+<DL>
+<DD><CODE>int32 TermJuggler( void )</CODE><BR>
+</DL>
+This call accepts no arguments and, when executed, terminates the Juggler and frees any resources used to support the Juggler and Juggler objects.<P>

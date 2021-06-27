@@ -1,0 +1,21 @@
+<TITLE>Removing a Node From a List</TITLE>
+<H1>Removing a Node From a List</H1><HR>
+You can remove the first node, the last node, or a specific node from a list. The following sections explain how to do it.<P>
+<H2>Removing the First Node</H2>
+To remove the first node from a list, use the <CODE>RemHead()</CODE> function:<P>
+<DL>
+<DD><CODE>Node *RemHead( List *l )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list from which you want to remove the node. The function returns a pointer to the node that was removed from the list or NULL if the list was empty.<P>
+<H2>Removing the Last Node</H2>
+To remove the last node from a list, use the <CODE>RemTail()</CODE> function:<P>
+<DL>
+<DD><CODE>Node *RemTail( List *l )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list from which you want to remove the node. The function returns a pointer to the node that was removed from the list or NULL if the list was empty.<P>
+<H2>Removing a Specific Node</H2>
+To remove a specific node from a list, use the <CODE>RemNode()</CODE> function:<P>
+<DL>
+<DD><CODE>void RemNode( Node *n )</CODE><BR>
+</DL>
+The <CODE>n</CODE> argument is a pointer to the node you want to remove. Because a node can be only in one list, the node is automatically removed from the correct list.<A NAME="XREF17250"></A><P>

@@ -1,0 +1,11 @@
+# Weaver script for CPakTestStream. Writes a CTRL-ALRM chunk
+# to the end of the stream to loop streamed animation.
+
+streamblocksize 32768
+streamstarttime 0
+
+file Ganymede22.saudio 1 0
+file Ganymede.cv.MooV.FILM 10 0
+
+# markertime 7200
+

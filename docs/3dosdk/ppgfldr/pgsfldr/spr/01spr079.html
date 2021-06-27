@@ -1,0 +1,31 @@
+<TITLE>GetPageSize</TITLE>
+<A NAME="XREF32894"><H1>GetPageSize </A></H1>
+<A NAME="XREF14167"></A>Gets the number of bytes in a memory page.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetPageSize( uint32 memflags )</CODE><P>
+<H3>Description</H3>
+This procedure gets the number of bytes in a page of the specified type of memory. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>memflags
+<DD>Flags that specify the type of memory whose page size to get. These flags can include MEMTYPE_ANY, MEMTYPE_VRAM, MEMTYPE_DRAM, MEMTYPE_BANKSELECT, MEMTYPE_BANK1, MEMTYPE_BANK2, MEMTYPE_DMA, MEMTYPE_CEL, MEMTYPE_AUDIO, MEMTYPE_DSP, and MEMTYPE_SYSTEMPAGESIZE. For information about these flags, see the description of AllocMem(). 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the size, in bytes, of a page of the specified type of RAM. If there is no memory of the specified type, the procedure returns 0. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveats</H3>
+If you do not specify the type of memory you're asking about, the page size you get may be for memory you're not interested in. The page size for a particular piece of memory may be not what you expected if the amount of memory requested causes the allocator to jump to a different type of memory that can satisfy your request, but which may have a different page size. To ensure that you get the actual page size of the memory you're interested, call <CODE>GetMemType()</CODE> to get the memory flags for the memory, then call <CODE>GetPageSize()</CODE> with those flags as the memflags argument. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr074.html#XREF40631"><CODE>GetMemType</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF32894"></LINK></H1><HR>

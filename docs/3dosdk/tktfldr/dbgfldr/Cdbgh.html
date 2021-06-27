@@ -1,0 +1,23 @@
+<TITLE>setbg</TITLE>
+<H1><LINK NAME="XREF23340">setbg</LINK></H1><HR><P>
+<A NAME="XREF40672"></A>Sets the shell's default behavior to background 
+execution mode.<P>
+<H3>Synopsis</H3>
+<CODE>setbg</CODE><P>
+<H3>Description</H3>
+Sets the shell's default execution mode to background. This prevents the 
+shell from waiting for tasks to complete when they are executed. The shell 
+returns immediately and is ready to accept more commands.<P>
+If the shell is currently in foreground mode and you wish to execute only 
+a single program in background mode, you can append an ampersand (&amp;) 
+to the end of the command-line. <P>
+Use <A HREF="Cdbgu.html#XREF22457">showshellvars</A> to display the 
+current execution mode.<P>
+<H3>Implementation </H3>
+Command implemented in shell V20. <P>
+Built-in shell command. <P>
+<H3>Synonyms </H3>
+<CODE>bg</CODE><P>
+<H3>See Also</H3>
+<A HREF="Cdbgj.html#XREF32087"><CODE>setfg</A>, <A 
+HREF="Cdbgu.html#XREF22457">showshellvars</A></CODE><P>

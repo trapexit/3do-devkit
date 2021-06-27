@@ -1,0 +1,23 @@
+<Title>DeleteScreenGroup </Title>
+<A NAME="XREF34503"> Deletes a screen group and its associated data structures.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteScreenGroup (Item screenGroupItem)</CODE><P>
+<H3>Description</H3>
+This call undoes what <CODE>CreateScreenGroup()</CODE> does. Before release 1.3, <CODE>DeleteScreenGroup()</CODE> was defined to <CODE>DeleteItem()</CODE>, which was insufficient. <P>
+<CODE>DeleteScreenGroup()</CODE> frees memory for bitmap items, if and only if, the memory was allocated by <CODE>CreateScreenGroup()</CODE>. Screen and VDL items associated with the screenGroupItem are deleted. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screenGroupItem
+<DD>The item number of a screenGroup structure. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Caveats</H3>
+If you get clever with VDLs and bitmaps, don't assume <CODE>DeleteScreenGroup()</CODE> is as clever as you are. Unwind all your modifications before calling <CODE>DeleteScreenGroup()</CODE>. <P>
+<H3>Implementation</H3>
+Convenience call implemented graphics.lib V21.<P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr008.html#XREF29335"><CODE>CreateScreenGroup</A>() </CODE><P>
+</CODE>

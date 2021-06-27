@@ -1,0 +1,40 @@
+<Title>DisposeDataStream</Title>
+<A NAME="XREF31188"><H1>DisposeDataStream</A></H1>
+<A NAME="XREF12750"></A> Cancels a data stream.<P>
+<H3>Synopsis</H3>
+<CODE>int32 DisposeDataStream (Item msgItem, DSStreamCBPtr streamCBPtr)</CODE><P>
+<H3>Description</H3>
+Cancels a data stream by sending a message to the DataStreamer to close the stream. <CODE>DisposeDataStream()</CODE> also cancels the thread allocated for the stream and releases its stack block and context block.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>msgItem</CODE>
+<DD>Item of the request message.
+</DL>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Pointer to the stream context block.
+</DL>
+<H3>Return Value</H3>
+These values are returned if the DataStreamer encounters an error while processing the message request:<P>
+<DL>
+<DT>kDSInvalidDSRequest
+<DD>Invalid message (<CODE>whatToDo</CODE> set to invalid value)
+</DL>
+<DL>
+<DT>kDSNoReplyPortErr
+<DD>Could not locate item of the reply port
+</DL>
+<DL>
+<DT>-1
+<DD>Could not locate pointer to msgItem
+</DL>
+<DL>
+<DT>(Portfolio Error Code)
+<DD><CODE>SendMsg()</CODE> or <CODE>WaitPort()</CODE> failed
+</DL>
+The DataStreamer checks the validity of messages only if message checking was enabled when the DataStreamer is compiled (if the <CODE>VALIDATE_REQUEST_CODE</CODE> symbol is enabled).<P>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a listing of error messages returned by <CODE>SendMsg()</CODE> and <CODE>WaitPort()</CODE>.<P>
+<H3>Associated Files</H3>
+DataStream.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR049.html#XREF16651"><CODE>NewDataStream</A></CODE><P>

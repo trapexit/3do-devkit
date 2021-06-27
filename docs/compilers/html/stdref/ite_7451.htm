@@ -1,0 +1,69 @@
+<HTML><TITLE>iterator_category</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>iterator_category</H2>
+<HR><PRE><B><I>     </I></B>Iterator primitive</B></I>
+</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Determines the category an iterator belongs to.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Tag Types"><LI>Tag Types</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;iterator></PRE>
+<PRE>
+template &#60;class T, class Distance>
+inline input_iterator_tag 
+iterator_category (const input_iterator&#60;T, Distance>&#38;)
+inline output_iterator_tag iterator_category (const output_iterator&#38;)
+template &#60;class T, class Distance> 
+inline forward_iterator_tag
+iterator_category (const forward_iterator&#60;T, Distance>&#38;)
+template &#60;class T, class Distance>
+inline bidirectional_iterator_tag
+iterator_category (const bidirectional_iterator&#60;T, Distance>&#38;)
+template &#60;class T, class Distance> 
+inline random_access_iterator_tag
+iterator_category (const random_access_iterator&#60;T, Distance>&#38;)
+template &#60;class T>
+inline random_access_iterator_tag iterator_category (const T*)
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The<B><I> iterator_category</B></I> family of function templates allows you to determine the category that any iterator belongs to.  The first five functions take an iterator of a specific type and return the tag for that type.  The last takes a<SAMP> T* </SAMP>and returns <SAMP>random_access_iterator_tag</SAMP>.</P>
+<A NAME="Tag Types"><H3>Tag Types</H3></A>
+<PRE>input_iterator_tag</PRE>
+<PRE>output_iterator_tag
+forward_iterator_tag
+bidirectional_iterator_tag
+random_access_iterator_tag</PRE><P>The <B><I>iterator_category</B></I> function is particularly useful for improving the efficiency of algorithms.  An algorithm can use this function to select the most efficient implementation an iterator is capable of handling without sacrificing the ability to work with a wide range of iterator types.  For instance, both the <SAMP>advance</SAMP> and <SAMP>distance</SAMP> primitives use <B><I>iterator_category</B></I> to maximize their efficiency by using the tag returned from <B><I>iterator_category</B></I> to select from one of several different auxiliary functions.  Because this is a compile time selection, use of this primitive incurs no significant runtime overhead.</P>
+<P><B><I>iterator_category</B></I> is typically used like this:</P>
+<PRE></PRE>
+<PRE>template &#60;class Iterator>
+void foo(Iterator first, Iterator last)
+{
+  __foo(begin,end,iterator_category(first));
+}
+template &#60;class Iterator>
+void __foo(Iterator first, Iterator last,
+           input_iterator_tag>
+{
+  // Most general implementation
+}
+template &#60;class Iterator>
+void __foo(Iterator first, Iterator last,
+           bidirectional_iterator_tag>
+{
+  // Implementation takes advantage of bi-diretional
+  // capability of the iterators
+}
+_etc.
+</PRE><P>See the <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A> section in the Class Reference for a description of iterators and the capabilities associated with each type of iterator tag.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P>Other iterator primitives: <A HREF="val_9388.htm"><B><I>value_type</B></I></A>, <A HREF="dis_6675.htm"><B><I>distance_type</B></I></A>, <A HREF="dis_0186.htm"><B><I>distance</B></I></A>, <A HREF="adv_9283.htm"><B><I>advance</B></I></A></P>
+<HR>
+<A HREF="ist_4337.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Ite_5295.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

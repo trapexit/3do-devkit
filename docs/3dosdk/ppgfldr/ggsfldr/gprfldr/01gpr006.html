@@ -1,0 +1,41 @@
+<Title>CopyVRAMPagesDefer </Title>
+<A NAME="XREF39220"><H1>CopyVRAMPagesDefer </A></H1>
+<A NAME="XREF17597"> Copies a contiguous number of VRAM pages to a VRAM </A>destination asynchronously.<P>
+<H3>Synopsis</H3>
+<CODE>Err CopyVRAMPagesDefer (Item ioreq,void *dest,void *src,uint32 numpages,uint32 mask)</CODE><P>
+<H3>Description</H3>
+This call is a convenience call for SPORT device transfers. It copies the specified numpages number of pages from the specified src VRAM pages to the specified dest VRAM pages. The mask argument controls which bits of the destination are modified by bits of the source. <P>
+This call uses the SPORT device to do the transfer. It does not wait for the transfer to complete, but returns immediately. This allows the application to continue its work while the SPORT I/O request is in the queue. When using a deferred request such as this, use <CODE>WaitIO()</CODE> to wait until the I/O request completes. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ioreq
+<DD>Item number of the I/O request. 
+</DL>
+<DL>
+<DT>dest
+<DD>Pointer to the VRAM buffer to receive the copy. 
+</DL>
+<DL>
+<DT>src
+<DD>Pointer to the VRAM buffer that's the source of the copy. 
+</DL>
+<DL>
+<DT>numpages
+<DD>Number of VRAM pages to be copied. 
+</DL>
+<DL>
+<DT>mask
+<DD>Write mask, which controls which bits of the source are copied to the destination. 
+</DL>
+<H3>Return Value</H3>
+The call returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Notes</H3>
+The use of a mask value other than all 1s (0xFFFFFFFF) is discouraged. Future systems may not support this feature in a performance-conscious manner. <P>
+<H3>Implementation</H3>
+Convenience call implemented in graphics.lib V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr002.html#XREF11416"><CODE>CloneVRAMPages</A>(), <A HREF="./01gpr068.html#XREF23837">SetVRAMPages</A>(), <A HREF="./01gpr069.html#XREF40027">SetVRAMPagesDefer</A>(), <A HREF="./01gpr006.html#XREF39220">CopyVRAMPagesDefer</A>(), <A HREF="./01gpr003.html#XREF15822">CloneVRAMPagesDefer</A>(), <A HREF="./01gpr036.html#XREF18489">GetVRAMIOReq</A>(), <A HREF="../../pgsfldr/spr/01spr079.html#XREF32894">GetPageSize</A>() <BR>
+</CODE><CODE></CODE><P>
+</CODE>

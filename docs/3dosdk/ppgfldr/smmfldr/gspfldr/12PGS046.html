@@ -1,0 +1,26 @@
+<Title>playsample</Title>
+<A NAME="XREF41344"><H1>playsample </A></H1>
+<A NAME="XREF24566"> </A>Plays an AIFF sample in memory using the control 
+pad.<P>
+<H3>Synopsis</H3>
+<CODE>playsample [&lt;sample file&gt; [&lt;rate&gt;]]</CODE><P>
+<H3>Description</H3>
+This program shows how to load an AIFF sample file and play it using the 
+control pad. Use the A button to start the sample, the B button to release 
+the sample, and the C button to stop the sample. The X button quits the 
+program. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sample file
+<DD>Name of a compatible AIFF sample file. Defaults to sinewave.aiff. 
+</DL>
+<DL>
+<DT>rate
+<DD>Proportion of 44,100 Hz for the sample rate expressed as a 1.15 
+fraction. Unity is 32768, which is the default. Examples: 16384 for 22,050 
+Hz, 65535 for nearly 88,200 Hz.
+</DL>
+<H3>Associated Files</H3>
+playsample.c<P>
+<H3>Location</H3>
+examples/Audio <P>

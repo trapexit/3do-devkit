@@ -1,0 +1,22 @@
+<Title>GetChunk</Title>
+<A NAME="XREF11600"><H1>GetChunk </A></H1>
+ Finds a chunk of specified chunk ID<P>
+<H3>Synopsis</H3>
+<CODE>char *GetChunk (ulong chunk_ID, char **buffer, long *bufLen)</CODE><P>
+<H3>Description</H3>
+Searches buffer until it finds chunk_ID. On exit, updates the buffer pointer that is to point to the next chunk and bufLen to contain the number of bytes remaining in the buffer. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>chunk_ID
+<DD>ID of the chunk you are looking for. 
+</DL>
+<DL>
+<DT>*buffer 
+<DD>Pointer to the buffer you are looking for. 
+</DL>
+<DL>
+<DT>bufLen
+<DD>Number of bytes in the buffer that follow the chunk. 
+</DL>
+<H3>Return Value</H3>
+Returns NULL or a pointer to the chunk. <P>

@@ -1,0 +1,84 @@
+<TITLE>Using appropriate streamblock size and number of buffers</TITLE>
+<H1>Using appropriate streamblock size and number of buffers</H1><HR>
+This section discusses how using the right streamblock size and number of 
+buffers can improve performance of your application. In reading this 
+section, keep in mind that streamblock size and buffer size <I>must</I> be 
+equal: You specify streamblock size in the Weaver script file when weaving 
+the stream, but you then have to allocate buffers of the same size when 
+playing back the application. If you need to change buffer size, you have 
+to change streamblock size and re-weave your stream. <P>
+This section discusses:<P>
+
+<UL>
+<LI><A HREF="#XREF36720">Streamblock size restrictions</A>
+<LI><A HREF="#XREF18129">Dealing with data rate spikes</A>
+<LI><A HREF="#XREF27693">Using more buffers to prevent starving buffers</A>
+</UL>
+<A NAME="XREF36720"><H2>Streamblock size restrictions</A></H2>
+You specify streamblock size in the Weaver script, using the 
+<CODE>streamblocksize</CODE> command. When specifying streamblock size, 
+follow these general rules: <P>
+<UL>
+<LI>Streamblock sizes must be an even multiple of the physical block size 
+of the device. This guarantees that the file system behaves as efficiently 
+as possible. In the case of CD-ROM, the physical block size is 2048 bytes. 
+<p>
+<LI>Using a streamblock size that is a factor or multiple of 32 KB tends 
+to improve performance of the stream because of the caching mechanism in 
+the current CD-ROM firmware. 
+<p>
+<LI>Large streamblocks usually result in a smaller percent of filler but 
+may introduce delays in applications that branch frequently. 
+</UL>
+<A NAME="XREF18129"><H2>Dealing with data rate spikes</A></H2>
+The maximum data rate from the CD-ROM is 300 KB/s. Because you have to 
+take into account user input and other nonstreaming activities, the 
+observed rate for all data has to be even lower. In practice, <I>brief 
+</I>periods of data consumption in excess of 300 KB/s are possible as long 
+as the average data consumption rate is 300 KB/s or less. The figure below 
+shows how the actual rate from CD (dotted line) fluctuates around the 
+maximum rate (300 KB/s). While the actual rate is higher than the maximum 
+at times, it is usually lower and the stream would probably play with no 
+data rate errors. <P>
+
+<IMG SRC="Figures/Spikes.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 3: </B><I>Data rate spikes.</I><P>
+<A NAME="XREF27693"><H2>Using more buffers to prevent starving 
+buffers</A></H2>
+The main activity of a program that uses streaming is to fill empty 
+buffers with data, hand the data off to subscribers, and empty the buffers 
+after the data have been played (see <A 
+HREF="./3dsga.html#XREF32484">DataStreamer threads and data flow</A>). If 
+data are not placed in a way that prevents bunching up in the buffers, the 
+program may suddenly find no empty buffers in which to place the data, or 
+no data in the buffers it wants to use for playback. Having more buffers 
+makes it easier to process the data as they arrive.<P>
+The DataStreamer cannot reuse a stream buffer until it receives a reply 
+for every chunk of data it has sent to subscribers. In the table below, 
+the SCEL chunk at time 1000 has a duration of 1200 (five seconds). As a 
+result, the stream buffer that contains the SCEL chunk is unavailable for 
+reuse until the SCEL subscriber has replied that chunk has been played. 
+Five seconds pass before the streamer can refill the buffer. <P>
+<PRE>
+<B>Table 8: </B><I> Chunks in one stream buffer which have different 
+duration.</I>
+---------------------------------------------------------
+Type            |Time              |Duration             
+---------------------------------------------------------
+SNDS            |1000              |80                   
+---------------------------------------------------------
+SCEL            |1000              |1200                 
+---------------------------------------------------------
+SNDS            |1163              |80                   
+---------------------------------------------------------
+SNDS            |1243              |80                   
+---------------------------------------------------------
+</PRE>
+<P>
+To avoid the problem of starving buffers, consider working with the SCEL 
+subscriber or Text subscriber. They allow for a stream header flag that 
+copies a specified chunk out of the stream buffer. You can also use them 
+as sample programs for your own customized subscriber. See the 
+<I>Attic</I> folder for more information. <P>
+<P>

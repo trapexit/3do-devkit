@@ -1,0 +1,30 @@
+<Title>InitEventUtility</Title>
+<A NAME="XREF13029"><H1>InitEventUtility </A></H1>
+<A NAME="XREF24979"></A> Connects task to the event broker.<P>
+<H3>Synopsis</H3>
+<CODE>Err InitEventUtility( int32 numControlPads, int32 numMice,int32 focusListener )</CODE><P>
+<H3>Description</H3>
+This convenience call allows a task to easily monitor events on controller pads or mice. This function connects the task to the event broker, sets the tasksfocusinterest,and'determines how many controller pads and mice the task wants to monitor. <P>
+The function creates a reply port and a message, sends a configuration message to the event broker (which asks the event broker to report appropriate mouse and controller pad events), and deals with the event brokersconfigurationreply.'<P>
+<H3>Arguments</H3>
+<DL>
+<DT>numControlPads
+<DD>The number of controller pads to monitor. 
+</DL>
+<DL>
+<DT>numMice
+<DD>The number of mice to monitor. 
+</DL>
+<DL>
+<DT>focusListener
+<DD>The focus of the task when it is connected as a listener. If the value is nonzero, the task is connected as a focus-dependent listener. If the value is zero, the task is connected as a focus-independent listener. 
+</DL>
+<H3>Return Value</H3>
+This function returns a value greater than or equal to 0 if all went well or a negative error code if an error occurred. <P>
+<H3>Implementation</H3>
+Convenience call implemented in input.lib V20. <P>
+<H3>Associated Files</H3>
+event.h, input.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./04spr001.html#XREF17030"><CODE>GetControlPad</A>(), <A HREF="./04spr002.html#XREF40840">GetMouse</A>(), <A HREF="./04spr004.html#XREF31682">KillEventUtility</A>() </CODE><P>
+</CODE>

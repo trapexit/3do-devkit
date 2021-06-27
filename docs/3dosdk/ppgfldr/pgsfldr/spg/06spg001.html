@@ -1,0 +1,53 @@
+<TITLE>About Items</TITLE>
+<H1><LINK NAME="XREF24176">About Items</LINK></H1><HR>
+Items are system-maintained handles for shared resources. Each item contains a globally unique identification number and a pointer to the resource. Items can refer to any one of many different system components such as data structures, 
+I/O devices, folios, tasks, and so on. You need to understand and use the item function calls in order to use these various system components.<P>
+The procedure for working with an item is the same, regardless of the item type. The procedure is as follows:<P>
+<OL>
+<LI>Define the necessary parameters (tag arguments) for the item you want.
+
+<LI>Create or open the item using the tag arguments.
+<LI>Use the item.
+<LI>Delete or close the item when you're finished with it.
+</OL>
+Portfolio provides a set of kernel calls that manage items while they're in use. These calls allow a task to check for the existence of an item, find the item number of a named object, get a pointer to an item, lock and unlock an item, and change the item's priority and owner.<P>
+To create items for you application, you need to include the following header files:<P>
+<UL>
+<LI><I>kernelnodes.h</I>
+<LI><I>nodes.h</I>
+<LI><I>folio.h</I>
+<LI><I>item.h</I>
+<LI><I>types.h</I>
+</UL>
+These header files declare structures, types, parameters, routine definitions, and other definitions needed for items. You also need the include file for some items that are associated with that folio. For example, to create an item used by the Audio folio, you'll have to include the </I><I>audio.h</I> file.<P>
+The kernel creates and keeps track of items in system memory. When the kernel creates an item, it creates a node for that item using the ItemNode data structure:<P>
+<CODE>
+<PRE>
+typedef struct ItemNode
+{
+    struct ItemNode *n_Next; /*pointer to next itemnode in */
+
+                                /* list */
+    struct ItemNode *n_Prev; /*pointer to previous itemnode in 
+
+                                /* list */
+    uint8 n_SubsysType;    /* what folio manages this node */
+    uint8 n_Type;        /* what type of node for the folio */
+    uint8 n_Priority;    /* queueing priority */
+    uint8 n_Flags;        /* misc flags, see below */
+    int32 n_Size;        /* total size of node including hdr */
+    char *n_Name;        /* ptr to null terminated string or NULL*/
+    uint8 n_Version;    /* version of of this itemnode */
+    uint8 n_Revision;    /* revision of this itemnode */
+    uint8 n_FolioFlags;    /* flags for this item's folio */
+    uint8 n_ItemFlags;    /* additional system item flags */
+    Item  n_Item;        /* ItemNumber for this data structure */
+    Item  n_Owner;        /* creator, present owner, disposer */
+    void *n_ReservedP;    /* Reserved pointer */
+} ItemNode, *ItemNodeP;
+</CODE>
+</PRE>
+The fields in this data structure define the status of the item and give information about the item. User tasks can't change their values, but they can look at them for information such as the version and revision numbers of an item (useful for items such as folios or devices). <CODE>LookupItem()</CODE>, described later, returns a pointer to the ItemNode structure for a specific item.<P>
+<H2>Creating or Opening an Item</H2>
+To use most items such as message ports and semaphores, a task must first create them. The system, however, supplies some items premade on disk: folios, devices, and drivers. To use a folio or a device, a task opens it instead of creating it from scratch.<P>
+The difference between item creation and item opening is important: a created item is owned by the creating task, which can delete the item at any time. A created item is automatically deleted if the owning task quits without deleting it. On the other hand, an opened item is owned by the original creator and is shared among tasks. When a task opens the item, the item is loaded into memory and the kernel registers the opening task as a user. When another task opens the same item, the kernel registers that task as well. <P>

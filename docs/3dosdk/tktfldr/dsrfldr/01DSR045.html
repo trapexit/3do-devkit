@@ -1,0 +1,32 @@
+<Title>InitDataStreaming</Title>
+<A NAME="XREF14373"><H1>InitDataStreaming</A></H1>
+<A NAME="XREF42727"></A> Initializes data streaming.<P>
+<H3>Synopsis</H3>
+<CODE>int32 InitDataStreaming (long maxNumberOfStreams)</CODE><P>
+<H3>Description</H3>
+Initializes the DataStreamer environment by allocating the memory pool required for the context blocks of the specified number of data streams. <CODE>InitDataStreaming()</CODE> allocates a memory pool large enough to contain a context block for each stream, whether or not the maximum number of streams is initialized.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>maxNumberOfStreams</CODE>
+<DD>Maximum number of streams that may be created.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoErr</CODE>
+<DD>None
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoMemErr</CODE> 
+<DD>Could not allocate memory pool
+<DD>
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR044.html#XREF19399"><CODE>InitDataAcq</A>, <A HREF="./01DSR049.html#XREF16651">NewDataStream</A>, <A HREF="./01DSR014.html#XREF31188">DisposeDataStream</A></CODE><P>

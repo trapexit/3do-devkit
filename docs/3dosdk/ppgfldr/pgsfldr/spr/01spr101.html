@@ -1,0 +1,29 @@
+<TITLE>MkNodeID</TITLE>
+<A NAME="XREF23056"><H1>MkNodeID </A></H1>
+<A NAME="XREF18036"></A>Creates an item type value<P>
+<H3>Synopsis</H3>
+<CODE>int32 MkNodeID( uint8 a , uint8 b )</CODE><P>
+<H3>Description</H3>
+This macro creates an item type value, a 32-bit value that specifies an item type and the folio in which the item type is defined. This value is required by other procedures that deal with items, such as <CODE>CreateItem()</CODE> and <CODE>FindItem()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>a
+<DD>The item number of the folio in which the item type of the item is defined. For a list of folio item numbers, see the "Portfolio Items" chapter. 
+</DL>
+<DL>
+<DT>b
+<DD>The item type number for the item. For a list of item type numbers, see the "Portfolio Items" chapter. 
+</DL>
+<H3>Return Value</H3>
+The macro returns an item type value or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in nodes.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>nodes.h
+<DD>ANSI C Macro definition 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr022.html#XREF15505"><CODE>CreateItem</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>(), <A HREF="./01spr054.html#XREF34211">FindNamedItem</A>(), <A HREF="./01spr061.html#XREF25874">FindVersionedItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF23056"></LINK></H1><HR>

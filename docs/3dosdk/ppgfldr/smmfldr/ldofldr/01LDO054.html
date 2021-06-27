@@ -1,0 +1,19 @@
+<Title>DeleteBasicDisplay</Title>
+<A NAME="XREF12240"><H1>DeleteBasicDisplay </A></H1>
+ Deletes a display created with CreateBasicDisplay().<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteBasicDisplay (ScreenContext *sc)</CODE><P>
+<H3>Description</H3>
+Releases all resources acquired internally by <CODE>CreateBasicDisplay()</CODE>, and closes the graphics folio. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sc
+<DD>Pointer to the ScreenContext structure which <CODE>CreateBasicDisplay()</CODE> filled in. If this pointer is NULL, the function returns an error code. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, displayutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO042.html#XREF27530"><CODE>CreateBasicDisplay</A> </CODE><P>
+</CODE>

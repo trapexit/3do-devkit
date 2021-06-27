@@ -1,0 +1,30 @@
+<TITLE>Testing the Mouse</TITLE>
+<H1>Testing the Mouse</H1><HR>
+To test the mouse, follow these steps: <P>
+<OL>
+<LI>Connect the mouse as described above, and place it on the mouse pad. 
+<p>
+<LI>Start the 3DO Development Station and the Macintosh, and launch the Debugger.<p> 
+</OL>
+You can now type the name of one of the programs (described in <A HREF="#XREF33834">Sample Programs</A>), into the Debugger Terminal window. Press Enter.<P>
+<UL><p>
+<LI><CODE>cdump</CODE> prints information about the devices hooked up to the bus. 
+It should notice that a mouse is currently hooked up. <p>
+<LI><CODE>lookie</CODE> and <CODE>maus</CODE> print messages as you click or move the mouse:<p>
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>left button is the high bit (31)<p>
+<LI>middle button is the next bit (30)<p>
+<LI>right button is the low bit (29)<p>
+<LI>since the 0,0 point is in the top-left corner, moving the mouse down or to the right increases the numbers that are printed, moving the mouse left or up decreases the numbers. 
+</UL><p>
+</DL>
+<UL>
+<LI><CODE>luckie</CODE> prints messages about the first control pad only; 
+you should not get information about the mouse. <p>
+<LI><CODE>focus</CODE> prints messages only while a program is running. 
+Try it later when you execute your first program using the mouse. <p>
+</UL>
+To exit from any of the programs testing the mouse, press all three buttons at the same time. <P>

@@ -1,0 +1,32 @@
+<TITLE>Example</TITLE>
+<H1><LINK NAME="XREF29389">Example</LINK></H1><HR>
+Most memory allocation involves nothing more than calling <CODE>AllocMem()</CODE> to allocate memory and <CODE>FreeMem()</CODE> to free memory. Here is a simple example. <P>
+<B>Example 1: </B><I>Allocating memory.</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "mem.h"
+#include "stdio.h"
+
+int main(int32 argc, char **argv)
+{
+void *memBlock;
+
+    memBlock = AllocMem(123,MEMTYPE_ANY);  /* allocate any type of 
+memory */
+    if (memBlock)
+    {
+        /* memBlock now contains the address of a block of memory
+         * 123 bytes in size
+         */
+
+        FreeMem(memBlock,123); /* return the memory */
+    }
+    else
+    {
+        printf("Could not allocate memory!\n");
+    }
+}
+
+</CODE>
+</PRE>

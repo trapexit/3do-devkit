@@ -1,0 +1,25 @@
+<Title>DeleteIOReq</Title>
+<A NAME="XREF13807"><H1>DeleteIOReq </A></H1>
+<A NAME="XREF39404"></A>Deletes an I/O request.<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteIOReq( Item item )</CODE><P>
+<H3>Description</H3>
+This macro deletes an I/O request item. You can use this macro in place of <CODE>DeleteItem()</CODE> to delete the item. If there was any outstanding I/O with this IOReq, it will be aborted first. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>item
+<DD>The item number of the I/O request to delete. 
+</DL>
+<H3>Return Value</H3>
+The macro returns 0 if the I/O request was successfully deleted or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in io.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>io.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr021.html#XREF36930"><CODE>CreateIOReq</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF13807"></LINK></H1><HR>

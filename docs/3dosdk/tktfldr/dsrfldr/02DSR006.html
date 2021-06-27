@@ -1,0 +1,132 @@
+<Title>DSErrorCode</Title>
+<A NAME="XREF16084"><H1>DSErrorCode</A></H1>
+<A NAME="XREF14575">Error code enumeration.</A><P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef enum DSErrorCode {
+   kDSNoErr 0,
+   kDSAbortErr -1000,
+   kDSEndOfFileErr,
+   kDSWasFlushedErr,
+   kDSNotRunningErr,
+   kDSWasRunningErr,
+   kDSNoPortErr,
+   kDSNoMsgErr,
+   kDSNotOpenErr,
+   kDSNoMemErr,
+   kDSNoSignalErr,
+   kDSSignalErr,
+   kDSNoReplyPortErr,
+   kDSBadConnectPortErr,
+   kDSSubDuplicateErr,
+   kDSSubMaxErr,
+   kDSSubNotFoundErr,
+   kDSInvalidTypeErr,
+   kDSBadBufAlignErr,
+   kDSBadChunkSizeErr,
+   kDSInitErr,
+   kDSClockNotValidErr,
+   kDSInvalidDSRequest,
+   kDSEOSRegistrationErr
+}</CODE></PRE><P>
+<H3>Description</H3>
+The set of error codes the streamer uses to describe fault conditions.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>kDSNoErr</CODE>
+<DD>No error, successful completion. 
+</DL>
+<DL>
+<DT><CODE>kDSAbortErr</CODE>
+<DD>Some error occurred. 
+</DL>
+<DL>
+<DT><CODE>kDSEndOfFileErr</CODE>
+<DD>End of file reached.
+</DL>
+<DL>
+<DT><CODE>kDSWasFlushedErr</CODE>
+<DD>Buffer was flushed.
+</DL>
+<DL>
+<DT><CODE>kDSNotRunningErr</CODE>
+<DD>Stream not running.
+</DL>
+<DL>
+<DT><CODE>kDSWasRunningErr</CODE>
+<DD>Stream already running.
+</DL>
+<DL>
+<DT><CODE>kDSNoPortErr</CODE>
+<DD>Couldn't allocate a message port for stream.
+</DL>
+<DL>
+<DT><CODE>kDSNoMsgErr</CODE>
+<DD>Couldn't allocate message item for a data buffer.
+</DL>
+<DL>
+<DT><CODE>kDSNotOpenErr</CODE>
+<DD>Stream not open.
+</DL>
+<DL>
+<DT><CODE>kDSNoMemErr</CODE>
+<DD>Couldn't allocate needed memory. 
+</DL>
+<DL>
+<DT><CODE>kDSNoSignalErr</CODE>
+<DD>Couldn't allocate needed signal.
+</DL>
+<DL>
+<DT><CODE>kDSSignalErr</CODE>
+<DD>Problem sending/receiving a signal. 
+</DL>
+<DL>
+<DT><CODE>kDSNoReplyPortErr</CODE>
+<DD>Message requires a reply port. 
+</DL>
+<DL>
+<DT><CODE>kDSBadConnectPortErr</CODE>
+<DD>Invalid port specified for data connection.
+</DL>
+<DL>
+<DT><CODE>kDSSubDuplicateErr</CODE>
+<DD>Duplicate subscriber.
+</DL>
+<DL>
+<DT><CODE>kDSSubMaxErr</CODE>
+<DD>Subscriber table full, too many subscribers.
+</DL>
+<DL>
+<DT><CODE>kDSSubNotFoundErr</CODE>
+<DD>Specified subscriber not found.
+</DL>
+<DL>
+<DT><CODE>kDSInvalidTypeErr</CODE>
+<DD>Invalid subscriber data type specified.
+</DL>
+<DL>
+<DT><CODE>kDSBadBufAlignErr</CODE>
+<DD>Buffer list passed to DSHOpenStream contains a non QUADBYTE aligned buffer.
+</DL>
+<DL>
+<DT><CODE>kDSBadChunkSizeErr</CODE>
+<DD>Chunk size in stream is a non-QUADBYTE multiple.
+</DL>
+<DL>
+<DT><CODE>kDSInitErr</CODE>
+<DD>Some internal initialization failed.
+</DL>
+<DL>
+<DT><CODE>kDSClockNotValidErr</CODE>
+<DD>Clock dependent call failed because clock not set.
+</DL>
+<DL>
+<DT><CODE>kDSInvalidDSRequest</CODE>
+<DD>Unknown request message send to server thread. 
+</DL>
+<DL>
+<DT><CODE>kDSEOSRegistrationErr</CODE>
+<DD>EOS registrant replaced by new registrant.
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

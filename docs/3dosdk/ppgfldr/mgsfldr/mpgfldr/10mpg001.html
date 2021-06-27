@@ -1,0 +1,42 @@
+<TITLE>DSP Resources</TITLE>
+<H1><LINK NAME="XREF33503">DSP Resources</LINK></H1><HR>
+<H2>Maximum Number of Audio Voices</H2>
+<B>Q:</B>  What is the maximum number of audio voices?<P>
+<B>A:  </B>This is a complex issue. The number of voices available is determined by the sum of all resources used by all the active voices. These include: <P>
+<UL>
+<LI>EI, I, and EO memory 
+<LI>The 512 word instruction, `N',  memory
+<LI>The thirteen input FIFOs and four output FIFOs 
+<LI>The 500+ ticks of DSP cycles per frame
+</UL>
+Typically the N memory and the number of ticks are the limiting factors. Instrument prioritization and voice stealing provide a good dynamic real-time system that optimizes DSP usage. <P>
+The real limits are not known yet, but you can play at least 8 variable rate, 
+16-bit samples with loudness control. Fixed rate samples are much less expensive 
+than variable rate samples and are limited by the 13 input FIFOs. Resonant 
+filters are cheaper than a variable rate sampler. <P>
+<A NAME="XREF30476"><H2>Allocating DSP Resources</A></H2>
+<B>Q:   </B>After eight loads of <CODE>halfmono8.dsp</CODE>, the ninth load fails and I receive the error message: "Couldn't allocate DSP resources."  Can you explain why?<P>
+<B>A:  </B>Only eight fit. <CODE>Halfmono8.dsp</CODE> requires 49 DSP code words, and 38 DSP tick(cycles). For code words, the total is 512. The system takes 70, and a <CODE>mixer4x2.dsp</CODE> takes 32. That leaves 410 available. Divide that by 49 yields 8.36 <CODE>halfmono8</CODE> instruments worth of code maximum.<P>
+For ticks, the total is 565. The system takes 45, and a <CODE>mixer4x2.dsp</CODE> takes 32, that leaves 488 available. Dividing that by 38 yields 12.84 <CODE>halfmono8</CODE> instruments worth of ticks maximum. The code words are the limiting resource. <P>
+<H2>DSP DMA</H2>
+<B>Q:</B>  How many DMA channels are used for each DSP program such as <CODE>sampler.dsp</CODE>? Does the number of channels vary with the instrument?<P>
+<B>A:</B>  Synthesis instruments such as <CODE>svfilter.dsp</CODE> and <CODE>triangle.dsp</CODE> use 0 DMA channels. Mono and stereo sample playing instruments each use one DMA channel. The only instrument that uses two input DMA channels is <CODE>sampler3d.dsp</CODE>. The <CODE>delay1tap.dsp</CODE> instrument uses one output DMA channel and one input DMA channel.<P>
+<B>Q:  </B>How many DMA channels can be allocated for the DSP?<P>
+<B>A:</B>  There are 13 INPUT DMA channels used for playing samples. There are four OUTPUT DMA channels used for echo and delay effects.<P>
+<B>Q:</B>  Could you briefly tell me about the relationship between the DSP and DMA controller?<P>
+<B>A:</B>   The DSP plays audio samples by reading the sample data from a register in the DSP address space. There is a register for each DMA channel. The register connects to a FIFO which can store up to eight 16 bit sample words. When the FIFO is down to two sample words, a DMA request is issued that fills the FIFO from main memory.<P>
+<H2>DSP Usage Monitor</H2>
+<B>Q:</B>   It seems to me that I saw a tool somewhere that would give a readout of the current used DSP resources. Can anyone tell me where this is?<P>
+<B>A: </B>  The tool is called <CODE>audiomon</CODE> and it resides in <CODE>$c</CODE> (an alias set to
+<I>$boot/System/Programs</I>). <CODE>audiomon</CODE> displays a bar graph of DSP resources on the graphics screen. There is also a tool called <CODE>DumpDSPP.c</CODE>  that prints to the terminal so it can be used when the graphics screen is busy.<P>
+<H2>Dynamic Voice Allocation</H2>
+<B>Q:</B>   Is dynamic voice allocation supported?<P>
+<B>A: </B>  The score playing code in the Music library supports dynamic voice allocation. When a voice is needed, the code attempts the following: <P>
+<UL>
+<LI>Adopt an unused instrument of the same type.
+<LI>If that fails create a new instrument.
+<LI>If that fails adopt another instrument of a different type, kill it and use its resources.
+<LI>If that fails scavenge instruments from itself or others.
+</UL>
+The code uses the Audio folio calls AbandonInstrument(), <CODE>AdoptInstrument()</CODE>, ScavengeInstrument(), and GetAudioItemInfo() to implement these functions.<P>
+For an example of using the score player as a sound effects manager, see the example program <I>tsc_soundfx.c</I>.<P>

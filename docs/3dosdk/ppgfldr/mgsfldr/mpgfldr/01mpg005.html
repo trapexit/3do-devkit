@@ -1,0 +1,22 @@
+<TITLE>How Do I Play a Musical Score?</TITLE>
+<H1>How Do I Play a Musical Score?</H1><HR>
+Playing a musical score can be done as follows:<P>
+<OL>
+<LI>Use commercial sequencers to compose the score, and then export it as a Format 0 or Format 1 MIDI file. 
+<p>
+<LI>Create a PIMap text file that maps MIDI program numbers to AIFF sample files or ARIA instrument files. 
+<p>
+<p>The PIMap text file is required so that the score player knows what to do when it encounters a MIDI program change command. 
+
+<p>
+<LI>Load the score into Juggler Objects called Sequences and Collections. 
+<p>
+<p>Sequences are arrays of events. In this case, the events are MIDI commands with time stamps. The Collections hold multiple Sequences that are played in parallel. 
+<p>
+<LI>Once the score is loaded, you can start it playing by calling <CODE>StartObject()</CODE>.
+<p>There are a number of things you can do with a score while it is playing. You can mute tracks, change the tempo, or pause. You can also request that callback functions be called when the score starts, repeats or stops. You can use these to chain together multiple score fragments for interactive score playing. See <I>CoalRiver.c</I> for an example.
+</OL>
+<H3>For More Information</H3>
+PIMaps are explained in <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>.<P>
+See <A HREF="./09mpg.html#XREF20742">Playing MIDI Scores</A>, for programming details.<P>
+For an example of playing a musical score,  see the example program <I>playmf.c</I>.<P>

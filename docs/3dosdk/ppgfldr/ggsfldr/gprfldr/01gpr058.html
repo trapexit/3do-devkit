@@ -1,0 +1,29 @@
+<Title>SetCEWatchDog </Title>
+<A NAME="XREF32099"><H1>SetCEWatchDog </A></H1>
+<A NAME="XREF39275"> Sets the length of time in which the cel engine can do one </A>draw.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetCEWatchDog (Item bitmapItem,int32 db_ctr)</CODE><P>
+<H3>Description</H3>
+This call controls how long <CODE><A HREF="./01gpr020.html#XREF25632">DrawCels</A>()</CODE> allows the cel engine do one draw before it is killed. The delay interval is expressed in microseconds. The intent of SetCEWatchD<CODE>og()</CODE> is to provide a way to abort cel engine lock-ups (which can be caused by bad data, a linked list that is a loop, or other problems).<P>
+Currently, the default counter is 1,000,000 microseconds (1 second). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>Item number of a bitmap structure. 
+</DL>
+<DL>
+<DT>db_ctr
+<DD>Value for the draw counter, in microseconds. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<DL>
+<DT>GRAFERR_BADDEADBOLT is returned if an illegal value is specified. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr020.html#XREF25632"><CODE>DrawCels</A>(), <A HREF="./01gpr022.html#XREF27677">DrawScreenCels</A>() </CODE><P>
+</CODE>

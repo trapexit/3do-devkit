@@ -1,0 +1,15 @@
+<TITLE>How Do I Play a Long Sound File?</TITLE>
+<H1><LINK NAME="XREF20901">How Do I Play a Long Sound File?</LINK></H1><HR>
+If you have a long AIFF sound file that does not fit in memory, you need to play it as it is read from disc. There are several ways to do this:<P>
+<UL>
+<LI>You can use the old, but small, sound file player in the Music library. It plays a file straight through but does not provide seamless loops or branches. See the <CODE>CreateSoundFilePlayer()</CODE>  function call for more information. See <I>playsoundfile.c</I> for an example program. See <I>spoolsoundfile.c</I> for an example of playing in a background thread.
+<p>
+<LI>You can use the advanced sound player. It lets you play multiple sound files as well as samples in memory and  branch between files and loop seamlessly without glitches. See the <CODE>spCreatePlayer()</CODE> function call and <A HREF="./06mpg.html#XREF24054">Advanced Sound Player</A>, for more information. For examples, see <I>tsp_*.c</I>.
+<p>
+<LI>If you need to read other information from disc along with the audio, you can use the DataStreamer. It allows you to intermix various types of data like audio, video, application data, and so on. The chunks are read from the disc and passed to subscribers that handle the chunk appropriately.
+<p>
+<LI>If you need to build your own sound file player from scratch, you may want to use the low-level sound spooler in the Music library. You can get the audio data into memory any way you want, then pass it to the sound spooler to be queued and ultimately played using the DSP. See <I>ta_spool.c</I> for an example.
+</UL>
+<H3>For More Information</H3>
+See <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>, in the <I>3DO Music and Audio Programmer's Reference</I> for information on these calls.<P>
+See the <I>DataStreamer Programmer's Guide</I> and <I>Data Stream Reference Guide</I> for more information on the DataStreamer.<P>

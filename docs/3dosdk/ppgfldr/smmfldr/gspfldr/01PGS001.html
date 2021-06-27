@@ -1,0 +1,31 @@
+<TITLE>Programming in the 3DO Environment</TITLE>
+<H1><LINK NAME="XREF24172">Programming in the 3DO Environment</LINK></H1><HR>
+This section provides background information about libraries, header files, and documentation that makes writing your first program easier.<P>
+<H2>Libraries</H2>
+The development environment consists of a large number of libraries and header files. They include:<P>
+<UL>
+<LI>Operating system and hardware folios (runtime libraries) and other libraries specific to the 3DO environment 
+<p>
+<LI>A number of libraries that offer convenience routines or other special functionality
+<p>
+<LI>Standard ANSI C libraries specific to the processor
+</UL>
+<H2>The 3DO Portfolio Operating System</H2>
+This section briefly looks at how you can benefit from having an operating system, then discusses how to include the correct header files in your program. <P>
+<H3>Benefits of an Operating System</H3>
+3DO Portfolio, the 3DO operating system, makes programming for the 3DO system easier, faster, and more robust.<P>
+Portfolio lets you interface to the 3DO hardware in a more abstract manner than is usually the case on competing products like Sega and Nintendo. This extra level of abstraction enables multiple hardware vendors to supply radically different implementations of the 3DO standard, yet continue to run all existing software titles.<P>
+For example, Portfolio is the reason why all 3DO titles can run on both the Panasonic REAL player, and the Creative Labs 3DOBlaster. Even though the two systems are quite different, Portfolio hides the differences. <P>
+In addition to automating compatibility with different hardware platforms, Portfolio offers many general-purpose operating system services which make programming easier and faster. For example, multitasking lets you program quicker and make better use of the system bandwidth.<P>
+<H3>Portfolio Folios and Libraries</H3>
+Portfolio consists of several runtime libraries (folios) and other libraries. During title development, you should only include those libraries that your title actually needs. To find out what library a particular function comes from, see the "Associated Files" field in the function description for the function in question (see <A HREF="#XREF14814">Documentation</A> for more information).<P>
+<H2>Lib3DO and the 3DO DataStreamer</H2>
+Some available libraries are <I>not</I> part of the 3DO Portfolio operating system: <P>
+<UL>
+<LI>The Lib3DO library, available on the 3DO Portfolio CD-ROM, contains a variety of useful initialization routines and other utilities as well as functions to manipulate fonts generated with the 3DO FontWriter. The library consists of several files and is documented in the manual <I>Lib3DO Programmer's Reference </I>that is part of the Portfolio documentation set (red cover). The Jumpstart2 example programs use Lib3DO extensively.
+<p>
+<LI>The 3DO DataStreamer consists of a set of tools and a streamed file I/O library that helps you minimize seek delays when reading data from CD-ROM. By interleaving data chunks into a stream file, the DataStreamer allows you to read heterogeneous types of data, such as audio and video, without opening multiple files. The DataStreamer tools and library are in the Streaming folder on the 3DO Toolkit CD-ROM. Additional examples and tools are in the Attic folder on the 3DO Toolkit CD-ROM. Documentation is in the volume 3DO Tools for Programming I (blue cover). 
+</UL>
+<A NAME="XREF14814"><H2>Documentation</A></H2>
+Documentation for the 3DO Toolkit and the 3DO Portfolio operating system is available both in hardcopy format and online. <P>
+Starting with the 3DO Portfolio 2.5 release, both 3DO Portfolio and 3DO Toolkit documentation is available in html format. You can look at the documentation, taking advantage of the extensive hypertext links provided, using any html viewer (like Mosaic or Netscape) on your Macintosh or UNIX workstation. (PC compatibility is not possible in this release because of filename limitations)<P>

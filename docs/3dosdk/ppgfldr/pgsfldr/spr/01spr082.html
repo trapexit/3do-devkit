@@ -1,0 +1,20 @@
+<TITLE>GetTaskSignals</TITLE>
+<A NAME="XREF40947"><H1>GetTaskSignals </A></H1>
+<A NAME="XREF35905"></A>Gets the currently received signal bits.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetTaskSignals( Task *t )</CODE><P>
+<H3>Description</H3>
+This macro returns the signal bits that have been received by the specified task. For information about signals, see the description of the <CODE>AllocSignal()</CODE> procedure and the "Communicating Among Tasks" chapter in the 3DO Portfolio Programmer's Guide.<P>
+<H3>Return Value</H3>
+A 32-bit word in which all currently received signal bits for the task are set. <P>
+<H3>Implementation</H3>
+Macro implemented in task.h V21. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr009.html#XREF39797"><CODE>AllocSignal</A>(), <A HREF="./01spr068.html#XREF37706">FreeSignal</A>(), <A HREF="./01spr123.html#XREF40028">SendSignal</A>(), <A HREF="./01spr133.html#XREF12306">WaitSignal</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF40947"></LINK></H1><HR>

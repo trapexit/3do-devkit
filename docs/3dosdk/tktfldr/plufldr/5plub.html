@@ -1,0 +1,108 @@
+<TITLE>Creating a 3DO animation</TITLE>
+<H1><LINK NAME="XREF38295">Creating a 3DO animation</LINK></H1><HR>
+The 3DO CCM for DeBabelizer offers conversion to two different animation 
+formats: <P>
+<UL>
+<LI>A simple animation (ANIM) is one file consisting of 3DO cels and 
+information about the frame rate. 
+<p>
+<LI>A streamed animation (SANM) is an animation which has been prepared 
+for weaving by the 3DO Data Streamer's Weaver tool. 
+</UL>
+<B>Note: </B>Before you convert a file or set of files, make sure the 
+number of colors does not exceed the colors permissible for the type of 
+cel you create. You can perform color reduction in your favorite graphics 
+tool or, if you're familiar with DeBabelizer, include it in a script that 
+also does the conversion.<P>
+<H2>How to create an ANIM file with the CCM</H2>
+To create an ANIM file with the CCMm follow these steps:<P>
+<OL>
+<LI>Open DeBabelizer.<P> 
+<p>
+<LI>From the File menu, choose Batch, then Save Simple from the submenu.<P>
+<p>
+<LI>Specify the file or files in the left panel of the dialog: <P>
+<p>
+<p>If you're converting a series of frames, click on New, then create the 
+batch list using the dialog that appears.
+<p>
+<p>If you're converting an animation or QuickTime movie, create a batch 
+list consisting of a single file. 
+<p>
+<B>Note: </B>You can follow the corresponding steps to create a SANM. <P>
+
+<IMG SRC="Figures/PLU5.figs/CCM-BatchSimple.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Dialog for saving a simple animation.</I><P>
+
+<LI>In the right panel, click on Auto Naming Options and type a name for 
+your animation (see the figure above). 
+<p>
+<p><B>Note: </B>When creating an animation from a list of files, make 
+sure to supply a single new name. <BR>
+<P>
+
+<IMG SRC="Figures/PLU5.figs/AutoName.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Dialog for specifying auto-naming options.</I><P>
+<p>
+<LI>Click on the Set button in the Save: region of the Batch Save Simple 
+dialog to specify the directory for the 3DO animation. 
+<p>
+<LI>Bring up the Type pop-up, choose 3DO, and choose the desired type from 
+the submenu. 
+<p>
+<LI>Click DO IT to start the conversion process.
+<p>
+<p>If you've selected Anim, the following dialog appears next: 
+<p>
+<IMG SRC="Figures/PLU5.figs/CCB-Dialog.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>Dialog options for a 3DO animation.</I><P>
+<p>
+<p>If you select Single CCB, the CCM saves one CCB for all frames in the 
+animation. This is usually preferable for uncoded cels. 
+<p>
+<p>If you select Add Header, you can then determine the frame rate. 
+<p>
+<LI>Check "Skip this box" unless you want to make changes for future 
+frames. 
+<p>
+<p><B>Note: </B>If the dialog has been used before and the "Skip this box 
+next time" box was checked, hold down the Option key while clicking DO IT 
+to override.<P>
+<p>
+Next, you are prompted for the cel type. You will see the CelWriter 
+dialog.
+<p>
+<IMG SRC="Figures/PLU5.figs/CelWriter prompt.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 4: </B><I>CelWriter</I><P>
+<p>
+<p>You can currently save 16-bit and 8-bit uncoded cels and 6-bit, 4-bit, 
+2-bit, and 1-bit coded cels with the CelWriter CCM. Note that 8-bit 
+uncoded cels are rarely desirable, since you have no control over the 
+palette.
+<p>
+<p><B>Note: </B>To save an 8-bit coded cel, use the Coded-8 CCM 
+discussed  in <A HREF="./2pluc.html#XREF10727">Creating coded cels with 
+the 3DO CelWriter</A>. <BR>
+<p>
+<LI>Select the cel type you need, then check the Suppress Dialogs box 
+unless you expect to make a different selection for the next frame. 
+<p>
+<UL>
+<LI>DeBabelizer saves the first file, reporting progress in a dialog. 
+<p>
+
+<LI>When DeBabelizer gets to the second file, you are prompted for a new 
+name.
+</UL> 
+<p>
+<LI>Click Replace All to create one animation file containing all the 
+frames in the list or the QuickTime movie.
+</OL>

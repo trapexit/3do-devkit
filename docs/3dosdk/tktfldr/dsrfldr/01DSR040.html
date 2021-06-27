@@ -1,0 +1,22 @@
+<Title>GetSegmentCound</Title>
+<A NAME="XREF41884"><H1>GetSegmentCount</A></H1>
+<A NAME="XREF27579"></A> Return cumulative count of animation segments.<P>
+<H3>Synopsis</H3>
+<CODE>long GetSegmentCount (struct SCelContext* context,long channelNumber)</CODE><P>
+<H3>Description</H3>
+Returns the count of animation segments that have flowed through the specified logical channel. This value will increase monotonically, and can be used to determine segment boundaries. This value is not an absolute segment number identifying a particular animation segment within the logical channel.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>context</CODE> 
+<DD>Pointer to context structure for the SCel subscriber.
+</DL>
+<DL>
+<DT><CODE>channelNumber</CODE> 
+<DD>Logical channel number.
+</DL>
+<H3>Return Value</H3>
+Returns a cumulative count of animation segments, or a negative error code.<P>
+<H3>Caveat</H3>
+This function is part of the <I>Subscriber.lib</I> library file that can currently (Toolkit1.5) be found in <I>Attic:Streaming:2p1:DataStream:Subscribers:Subscriber.lib</I>. It will later be integrated into the main Streaming tree. <P>
+<H3>See Also</H3>
+<A HREF="./01DSR036.html#XREF12637"><CODE>GetFramesRemaining</A></CODE><P>

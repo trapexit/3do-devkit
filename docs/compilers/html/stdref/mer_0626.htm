@@ -1,0 +1,116 @@
+<HTML><TITLE>merge</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>merge</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Merge two sorted sequences into a third sequence.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class InputIterator1, class InputIterator2,
+          class OutputIterator>
+  OutputIterator
+  <B>merge</B>(InputIterator first1, InputIterator1 last1,
+        InputIterator2 first2, InputIterator last2,
+        OutputIterator result);
+template &#60;class InputIterator1, class InputIterator2,
+          class OutputIterator, class Compare>
+  OutputIterator
+  <B>merge</B>(InputIterator1 first1, InputIterator1 last1,
+        InputIterator2 first2, InputIterator last2,
+        OutputIterator result, Compare comp);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>merge</B></I> algorithm merges two sorted seqeunces, specified by <SAMP>[first1, last1)</SAMP> and <SAMP>[first2, last2)</SAMP>, into the sequence specified by <SAMP>[result, result + (last1 - first1) + (last2 - first2))</SAMP>.  The first version of the <B><I>merge</B></I> algorithm uses the less than operator (<SAMP>&#60;</SAMP>) to compare elements in the two sequences.  The second version uses the comparision function provided by the function call.  If a comparison function is provided, <B><I>merge</B></I> assumes that both sequences were sorted using that comparison function.</P>
+<P>The merge is stable. This means that if the two original sequences contain equivalent elements, the elements from the first sequence will always precede the matching elements from the second in the resulting sequence.  The size of the result of a <B><I>merge</B></I> is equal to the sum of the sizes of the two argument sequences.  <B><I>merge</B></I> returns an iterator that points to the end of the resulting sequence, i.e., <SAMP>result + (last1 - first1) + (last2 -first2)</SAMP>. The result of <B><I>merge</B></I> is undefined if the resulting range overlaps with either of the original ranges. </P>
+<P><B><I>merge</B></I> assumes that there are at least <SAMP>(last1 - first1) + (last2 - first2)</SAMP> elements following <SAMP>result</SAMP>, unless <SAMP>result</SAMP> has been adapted by an insert iterator. </P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>For <B><I>merge</B></I> at most <SAMP>(last - first1) + (last2 - first2) - 1</SAMP> comparisons are performed.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// merge.cpp
+//
+ #include &#60;algorithm>
+ #include &#60;vector>
+ #include &#60;iostream.h>
+ int main()
+ {
+   int d1[4] = {1,2,3,4};
+   int d2[8] = {11,13,15,17,12,14,16,18};
+   // Set up two vectors
+   vector&#60;int> v1(d1,d1 + 4), v2(d1,d1 + 4);
+   // Set up four destination vectors
+   vector&#60;int> v3(d2,d2 + 8),v4(d2,d2 + 8),
+               v5(d2,d2 + 8),v6(d2,d2 + 8);
+   // Set up one empty vector
+   vector&#60;int> v7;
+   // Merge v1 with v2
+   <B>merge</B>(v1.begin(),v1.end(),v2.begin(),v2.end(),v3.begin());
+   // Now use comparator
+   <B>merge</B>(v1.begin(),v1.end(),v2.begin(),v2.end(),v4.begin(),
+         less&#60;int>());
+   // In place merge v5
+   vector&#60;int>::iterator mid = v5.begin();
+   advance(mid,4);
+   inplace_merge(v5.begin(),mid,v5.end());
+   // Now use a comparator on v6
+   mid = v6.begin();
+   advance(mid,4);
+   inplace_merge(v6.begin(),mid,v6.end(),less&#60;int>()); 
+   
+   // Merge v1 and v2 to empty vector using insert iterator
+   <B>merge</B>(v1.begin(),v1.end(),v2.begin(),v2.end(),
+         back_inserter(v7));
+   // Copy all cout
+   ostream_iterator&#60;int> out(cout," ");
+   copy(v1.begin(),v1.end(),out);
+   cout &#60;&#60; endl;
+   copy(v2.begin(),v2.end(),out);
+   cout &#60;&#60; endl;
+   copy(v3.begin(),v3.end(),out);
+   cout &#60;&#60; endl;
+   copy(v4.begin(),v4.end(),out);
+   cout &#60;&#60; endl;
+   copy(v5.begin(),v5.end(),out);
+   cout &#60;&#60; endl;
+   copy(v6.begin(),v6.end(),out);
+   cout &#60;&#60; endl;
+   copy(v7.begin(),v7.end(),out);
+   cout &#60;&#60; endl;
+    
+   // Merge v1 and v2 to cout
+   <B>merge</B>(v1.begin(),v1.end(),v2.begin(),v2.end(),
+         ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl;
+   return 0;
+ }
+Output :
+1 2 3 4
+1 2 3 4
+1 1 2 2 3 3 4 4
+1 1 2 2 3 3 4 4
+11 12 13 14 15 16 17 18
+11 12 13 14 15 16 17 18
+1 1 2 2 3 3 4 4
+1 1 2 2 3 3 4 4
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance you'll have to write:</P>
+<PRE>vector&#60;int,allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Con_2487.htm"><B><I>Containers</B></I></A>, <A HREF="inp_3138.htm"><B><I>inplace_merge</B></I></A></P>
+<HR>
+<A HREF="max_8656.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="min_9233.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

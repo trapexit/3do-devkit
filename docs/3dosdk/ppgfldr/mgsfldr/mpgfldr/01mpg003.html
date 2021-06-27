@@ -1,0 +1,14 @@
+<TITLE>How Do I Determine When a Sample or Envelope  </TITLE>
+<H1><LINK NAME="XREF38694">How Do I Determine When a Sample or Envelope  </LINK></H1><HR>
+Samples and envelopes become associated with an instrument by creating an attachment item. You can use the same sample on multiple instruments, or  you can use multiple samples on one instrument. What you really need to know is when a specific attachment has finished. There are two ways to do this:  <P>
+<UL>
+<LI>The first is to call <CODE>MonitorAttachment()</CODE> to request a signal when the sample or envelope has finished. This method can be used with <CODE>WaitSignal()</CODE> which lets a task sleep until the attachment is finished. 
+<p>
+<LI>The second way is to set the AF_ATTF_FATLADYSINGS flag in the attachment. When the attachment finishes, it stops the associated instrument. You can then poll the instrument by calling <CODE>GetAudioItemInfo()</CODE> with AF_TAG_STATUS.
+</UL>
+Be careful when you are polling for an instrument to finish. Never loop continuously while polling. This is called <I>busy waiting</I>. Busy waiting takes up CPU cycles and can cause a drop in performance or a deadlock.<P>
+<H3>For More Information</H3>
+See <A HREF="./03mpg.html#XREF22719">Preparing Instruments</A>, for complete programming details.<P>
+See <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>, in the <I>3DO Music and Audio Programmer's Reference</I> for information on these calls.<P>
+See the example files <I>ta_attach.c</I> and <I>sample_envelope.c</I> for examples of <CODE>MonitorAttachment()</CODE> usage.<P>
+<P>

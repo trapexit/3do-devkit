@@ -1,0 +1,21 @@
+<Title>ReleaseKnobe</Title>
+<A NAME="XREF20424"><H1>ReleaseKnob </A></H1>
+<A NAME="XREF29581"></A> Releases a knob grabbed with GrabKnob().<P>
+<H3>Synopsis</H3>
+<CODE>Err ReleaseKnob (Item KnobItem)</CODE><P>
+<H3>Description</H3>
+This function deletes the Knob item created by <CODE>GrabKnob()</CODE>, freeing its resource and disconnecting the task that created the Knob item from the instrument containing the Knob. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>KnobItem
+<DD>Item number of knob. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in audio.lib V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr049.html#XREF29402"><CODE>GrabKnob</A>() </CODE><P>
+</CODE>

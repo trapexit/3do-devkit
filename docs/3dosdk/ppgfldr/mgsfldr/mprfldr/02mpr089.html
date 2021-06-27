@@ -1,0 +1,36 @@
+<Title>spSetMarkerDecisionFunction</Title>
+<A NAME="XREF13040"><H1>spSetMarkerDecisionFunction </A></H1>
+<A NAME="XREF40331"></A> Install a marker decision function.<P>
+<H3>Synopsis</H3>
+<CODE>Err spSetMarkerDecisionFunction (SPSound *sound, const char *markerName,SPDecisionFunction decisionFunc, void *decisionData)</CODE><P>
+<H3>Description</H3>
+Install a decision function that is to be called when the player reaches the specified marker. Each marker can have a different decision function. <P>
+Clear the marker's decision function with <CODE>spCleateMarkerDecisionFunction()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to SPSound containing marker to which to install decision function. 
+</DL>
+<DL>
+<DT>markerName
+<DD>Name of marker in sound to which to install decision function. 
+</DL>
+<DL>
+<DT>decisionFunc
+<DD>An SPDecisionFunction to install, or NULL to clear. 
+</DL>
+<DL>
+<DT>decisionData
+<DD>A pointer to client-supplied data to be passed to decisionFunc when called. Can be NULL. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Notes</H3>
+While a marker decision function is installed, reading from disc is interrupted every time this marker is encountered. This can have an impact on performance. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr066.html#XREF39335"><CODE>spClearMarkerDecisionFunction</A>(), <A HREF="./02mpr088.html#XREF33640">spSetDefaultDecisionFunction</A>(), <A HREF="./02mpr069.html#XREF41344">SPDecisionFunction</A> </CODE><P>
+</CODE>

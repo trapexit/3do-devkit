@@ -1,0 +1,32 @@
+<Title>intlCloseLocale </Title>
+<A NAME="XREF39846"><H1>intlCloseLocale </A></H1>
+Terminates use of a given locale item.<P>
+<H3>Synopsis</H3>
+<CODE>Err intlCloseLocale(Item locItem);</CODE><P>
+<H3>Description</H3>
+This function concludes the title's use of the given locale item. After this call is made, the locale item may no longer be used. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>locItem
+<DD>The locale item, as obtained from intlOpenLocale(). 
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>&gt; = 0
+<DD>Item successfully closed. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADITEM
+<DD>locItem was not an existing locale item. 
+</DL>
+<DL>
+<DT>INTL_ERR_CANTCLOSEITEM
+<DD>At attempt was made to close this locale item more often than it was opened. 
+</DL>
+<H3>Implementation</H3>
+Macro implemented in intl.h V24. <P>
+<H3>Associated Files</H3>
+intl.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./06spr008.html#XREF34028"><CODE>intlOpenLocale</A>(), <A HREF="./06spr007.html#XREF21681">intlLookupLocale</A>() </CODE><P>
+</CODE>

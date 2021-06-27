@@ -1,0 +1,74 @@
+<HTML><TITLE>find_if</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>find_if</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Find an occurrence of value in a sequence that satisfies a specifed predicate.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class InputIterator, class Predicate>
+  InputIterator <B>find_if</B>(InputIterator first,
+                        InputIterator last,
+                        Predicate pred);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>find_if</B></I> algorithm allows you to search for the first element in a sequence that satisfies a particular condition.  The sequence is defined by iterators <SAMP>first</SAMP> and <SAMP>last</SAMP>, while the condition is defined by the third argument:  a predicate function that returns a boolean value.   <B><I>find_if</B></I> returns the first iterator <SAMP>i</SAMP> in  the  range  <SAMP>[first, last)</SAMP> for  which the following condition holds:</P>
+<PRE> pred(*i) == true. </PRE>
+<PRE></PRE><P>If no such iterator is found, <B><I>find_if</B></I> returns <SAMP>last</SAMP>.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P><B><I>find_if</B></I> performs at most <SAMP>last-first</SAMP> applications of the corresponding predicate.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// find.cpp
+//
+#include &#60;vector>
+#include &#60;algorithm>
+#include &#60;iostream.h>
+ 
+int main()
+ {
+   typedef vector&#60;int>::iterator iterator;
+   int d1[10] = {0,1,2,2,3,4,2,2,6,7}; 
+   // Set up a vector
+   vector&#60;int> v1(d1,d1 + 10);
+   // Try find  
+   iterator it1 = find(v1.begin(),v1.end(),3);
+   // it1 = v1.begin() + 4;
+<B>   </B>// Try find_if
+   iterator it2 = 
+      <B>find_if</B>(v1.begin(),v1.end(),bind1st(equal_to&#60;int>(),3));
+   // it2 = v1.begin() + 4
+   // Try both adjacent_find variants
+   iterator it3 = adjacent_find(v1.begin(),v1.end());
+   // it3 = v1.begin() +2
+   iterator it4 = 
+      adjacent_find(v1.begin(),v1.end(),equal_to&#60;int>());
+   // v4 = v1.begin() + 2
+   // Output results
+   cout &#60;&#60; *it1 &#60;&#60; " " &#60;&#60; *it2 &#60;&#60; " " &#60;&#60; *it3 &#60;&#60; " " 
+        &#60;&#60; *it4 &#60;&#60; endl;
+   return 0;
+ }
+Output : 3 3 2 2
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance you'll have to write:</P>
+<PRE>vector&#60;int, allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="adj_8817.htm"><B><I>adjacent_find</B></I></A>, <A HREF="Alg_5157.htm"><B><I>Algorithms</B></I></A>,  <A HREF="fin_7988.htm"><B><I>find</B></I></A>,<A HREF="fin_7707.htm"><B><I>find_end</B></I></A>, <A HREF="fin_8583.htm"><B><I>find_first_of</B></I></A></P>
+<HR>
+<A HREF="fin_8583.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="for_7707.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

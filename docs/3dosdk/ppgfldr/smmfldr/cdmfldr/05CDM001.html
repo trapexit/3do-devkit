@@ -1,0 +1,61 @@
+<TITLE>Overview of Encryption Requirements</TITLE>
+<H1><LINK NAME="XREF15476">Overview of Encryption 
+Requirements</LINK></H1><HR>
+When you submit a title for encryption, 3DO CD Operations checks that all 
+requirements are met before starting the encryption process. This document 
+summarizes the requirements, providing references to more detailed 
+information as appropriate. <P>
+<B>Warning: </B>3DO CD Operations will not encrypt titles that don't meet 
+the requirements outlined here.<P>
+<H2>Minimum memory testing</H2>
+3DO Quality Assurance tests each title in both in the minimum memory 
+environment, and in the nonrestricted full-memory environment. Each title 
+is briefly tested before encryption, then for seven days after encryption. 
+<P>
+You can run the minmem utility in one of two ways: <P>
+<UL>
+<LI>Type <CODE>minmem</CODE> at the Debugger prompt after running the boot 
+script but before launching your application.
+<p>
+<LI>Include <CODE>minmem</CODE> in the <I>AppStartup</I> script.
+</UL>
+See <A HREF="./02CDM004.html#XREF37473">Testing Your Title in the Minimum 
+Memory Configuration</A> for more information.<P>
+<H2>Low memory access</H2>
+Your title must be low memory clean. See <A 
+HREF="./02CDM003.html#XREF27784">Checking for Low Memory Pointers</A> for 
+more information.<P>
+<H2>Three-Second 3DO licensed product symbol</H2>
+Each application is required to display the 3DO licensed product symbol, 
+in at least quarter-screen height, for a minimum of three seconds when the 
+title boots up. <P>
+Use the files containing the 3DO licensed product symbol which are 
+included on the installation CD-ROM at top level in the "Approved 3DO Logo 
+Art" folder.<P>
+The three-second 3DO licensed product symbol is not required if the title 
+uses a banner screen (see <A HREF="./03CDM002.html#XREF24558">Preparing 
+and Using a Banner Screen</A>). <P>
+<H2>CD packaging and artwork</H2>
+CD artwork and CD packaging artwork are inspected for adherence to 3DO 
+guidelines. <I>Artwork within the application is not censored in any 
+way</I>; only the CD surface and CD packaging artwork must conform to 
+certain guidelines. <P>
+The approval process is described in the Essentials Kit. <P>
+Files you have to deliver<P>
+3DO Developer Services needs to see the <I>/takeme</I> directory of your 
+title to verify that you created your <I>cdrom.image</I> file with the 
+appropriate 3DO system files.<P>
+<p>
+When you submit your title for encryption, include 
+<UL>
+<LI>the <I>cdrom.image</I> file
+<p>
+<LI>the <I>/takeme</I> directory (without executable and data files). 
+</UL>
+Deliver these files in HFS format on CD-ROM. Send at least two copies. See 
+the Disc Processing Form for detail; a copy of that form is required for 
+encryption. <P>
+<H3>For More Information</H3>
+The information above is only an overview of encryption requirements. For 
+more detailed information, contact your account manager or 3DO CD 
+Operations. <P>

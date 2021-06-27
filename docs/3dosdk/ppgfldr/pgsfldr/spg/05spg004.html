@@ -1,0 +1,7 @@
+<TITLE>Reclaiming Memory for Other Tasks</TITLE>
+<H1><LINK NAME="XREF33449">Reclaiming Memory for Other Tasks</LINK></H1><HR>
+When you free a large chunk of memory, it is good practice to return the pages to the system-wide free memory pool with <CODE>ScavengeMem()</CODE>, so other tasks can use them:<P>
+<DL>
+<DD><CODE>int32 ScavengeMem( void )</CODE><BR>
+</DL>
+This function finds pages of memory from which no memory is allocated in the task's free memory pool and gives those pages back to the system-wide free memory pool. The function returns the amount of memory that was returned to the system-wide memory pool, in bytes, or it returns 0 if no memory was returned.<P>

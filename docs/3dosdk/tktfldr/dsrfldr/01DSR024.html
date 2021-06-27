@@ -1,0 +1,104 @@
+<Title>DSGoMarker</Title>
+<A NAME="XREF15844"><H1>DSGoMarker</A></H1>
+<A NAME="XREF40543"> Shifts to a location in the stream.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 DSGoMarker (Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr, unsigned long markerValue, unsigned long options)</CODE><P>
+<H3>Description</H3>
+Sends a message telling the acquisition thread to shift to a specified location in the stream. Stream locations are normally defined by the clock timestamps embedded in streamed data.<P>
+<CODE>DSGoMarker()</CODE> sets the members of the message data structure required to move the acquisition thread to the specified location. (The message is the <CODE>DSRequestMsg</CODE> identified by <CODE>reqMsg</CODE>.) If a message is specified, <CODE>DSGoMarker()</CODE> sends the message and returns immediately. If no message is specified (if <CODE>reqMsg</CODE> is <CODE>NULL</CODE>),<CODE> DSGoMarker()</CODE> creates a message, sends it to the DataStreamer, and waits until the message has been received before returning.<P>
+You have the following options<P>
+<CODE>
+<PRE>
+GOMARKER_ABSOLUTE                absolute marker FILE POSITION
+GOMARKER_FORWARD                 count of markers to skip forward
+GOMARKER_BACKWARD                count of markers to skip backward
+GOMARKER_ABS_TIME                absolute stream time of destination
+GOMARKER_FORW_TIME               stream time by which to advance
+GOMARKER_BACK_TIME               stream time by which to regress
+GOMARKER_NAMED                   ptr to name of destination marker
+GOMARKER_NUMBER                  go to given marker number
+</CODE>
+</PRE>
+If you are using the ShuttlePlayer example, which is currently still an independent branch from the main DataStreamer branch, you have the following additional options:<P>
+<CODE>
+<PRE>
+GOMARKER_NUMBER                        go to given marker number: ccw mod 
+GOMARKER_FWD_POS_RELATIVE              number of blocks to skip forward relative 
+                                       to our current position
+GOMARKER_BWD_POS_RELATIVE              number of blocks to skip backward 
+                                       relative to our current position
+</CODE>
+</PRE>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>msgItem</CODE>
+<DD>Item of the request message.
+</DL>
+<DL>
+<DT><CODE>reqMsg</CODE>
+<DD>Pointer to the <CODE>DSRequestMsg</CODE> message that is formatted and sent to the DataStreamer. A value of <CODE>NULL</CODE> forces creation of an internal <CODE>DSRequestMsg</CODE> message and synchronous operation.
+</DL>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Pointer to the Stream context block
+</DL>
+<DL>
+<DT><CODE>markerValue</CODE>
+<DD>the Stream location, normally defined as a DataStreamer clock value.
+</DL>
+<DL>
+<DT><CODE>options</CODE>
+<DD>options to specify marker handling and flushing.
+</DL>
+<H3>Messages</H3>
+The members of <CODE>reqMsg</CODE> are set to the following values:<P>
+<DL>
+<DT><CODE>whatToDo
+<DD>kDSOpGoMarker
+</DL>
+<DL>
+<DT><CODE>msg.goMarker.markerValue
+<DD>markerValue
+</DL>
+<DL>
+<DT><CODE>msg.goMarker.options
+<DD>options</CODE>
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT>0
+<DD>None
+<DD>
+</DL>
+These values are returned if the DataStreamer encounters an error while processing the message request:<P>
+<DL>
+<DT><CODE>kDSInvalidDSRequest</CODE>
+<DD>Invalid message (whatToDo set to invalid value)
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoReplyPortErr</CODE> 
+<DD>Could not locate item of the reply port
+<DD>
+</DL>
+<DL>
+<DT>-1
+<DD>Could not locate pointer to msgItem
+<DD>
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>SendMsg()</CODE> or <CODE>WaitPort()</CODE> failed
+<DD>
+</DL>
+The DataStreamer checks the validity of messages only if message checking is enabled when the DataStreamer is compiled (if the <CODE>VALIDATE_REQUEST_CODE</CODE> symbol is enabled).<P>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a listing of error messages returned by <CODE>SendMsg()</CODE> and <CODE>WaitPort()</CODE>.<P>
+<H3>Associated Files</H3>
+DataStreamLib.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR025.html#XREF19686"><CODE>DSIsMarker</A></CODE><P>

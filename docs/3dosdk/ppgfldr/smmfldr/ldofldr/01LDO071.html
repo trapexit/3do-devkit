@@ -1,0 +1,31 @@
+<Title>FPointFromFVal</Title>
+<A NAME="XREF37375"><H1>FPointFromFVal </A></H1>
+ Creates an FPoint from inline values.<P>
+<H3>Synopsis</H3>
+<CODE>FPoint * FPointFromFVal (FPoint *dst, frac16 x, frac16 y)</CODE><P>
+<H3>Description</H3>
+Stores the specified x and y values into *dst. It is useful for writing inline calls like the following: <P>
+<CODE>
+<PRE>
+FPoint    wrk; 
+OffsetCelListByFDelta (cel, FPointFromFVal (&amp;wrk, my_x, my_y)); 
+</CODE>
+</PRE>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to the FPoint where the results are to be stored. 
+</DL>
+<DL>
+<DT>x y 
+<DD>Values to be used for the FPoint.
+</DL>
+<H3>Return Value</H3>
+The input parameter dst. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO072.html#XREF32425"><CODE>FPointFromIPoint</A> </CODE><P>
+</CODE>

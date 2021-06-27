@@ -1,0 +1,14 @@
+<TITLE>The ARM Librarian (armlib)</TITLE>
+<H1><LINK NAME="XREF15841">The ARM Librarian (armlib)</LINK></H1><HR>
+The ARM Librarian allows sets of related AOF files to be collected together, and for these libraries to be maintained. Such a library can then be passed to the linker instead of several AOF files. <P>
+However, linking with an object library file does not necessarily produce the same results as linking with all the object files collected into the object library file. This is due to the way <I>armlink</I> processes its input files:<P>
+<UL>
+<LI>each object file in the input list appears in the output unconditionally (although unused areas will be eliminated if the output is AIF or if the -NOUNUSEDareas option is specified);
+<p>
+<LI>a module from a library file is only included in the output if an object file, or previously processed library file refers to it.
+</UL>
+To see all <A HREF="./4auga.html#XREF15633">Command line options</A>, click on their highlighted name.<P>
+<H2>For more information</H2>
+For more information on how <I>armlink</I> processes its input files refer to <A HREF="../arrfldr/3arrc.html#XREF13307">Area placement and sorting rules</A>.<P>
+The full specification of ARM Object Library Format can be found in <A HREF="../atsfldr/ats2frst.html#XREF16187">ARM Object Format</A>.<P>
+<P>

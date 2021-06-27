@@ -1,0 +1,185 @@
+<TITLE>Making the most of conditional execution</TITLE>
+<H1><LINK NAME="XREF38287">Making the most of conditional 
+execution</LINK></H1><HR>
+<H2>About this recipe</H2>
+In this recipe you learn how conditional execution can eliminate branch 
+instructions, producing smaller and faster code. Euclid's Greatest Common 
+Divisor algorithm is used for illustrative purposes. Specifically, you 
+will learn how to use:<P>
+<UL>
+<LI>conditional execution;
+<LI>the 'S' bit in ARM data processing instructions.
+</UL>
+<H2>The ARM's ALU status flags</H2>
+The ARM's Program Status Register contains, among other flags, copies of 
+the ALU status flags:<P>
+<PRE>
+---------------------------------------------------------
+N     |Negative result from ALU flag                     
+---------------------------------------------------------
+Z     |Zero result from ALU flag                         
+---------------------------------------------------------
+C     |ALU operation Carried out                         
+---------------------------------------------------------
+V     |ALU operation oVerflowed                          
+---------------------------------------------------------
+</PRE>
+<P>
+<H2>Execution conditions</H2>
+Every ARM instruction has a 4 bit field which encodes the conditions under 
+which it will be executed.  These conditions refer to the state of the ALU 
+N, Z, C and V flags as follows:<P>
+<PRE>
+--------------------------------------------------------
+EQ     |Z set (equal)                                   
+--------------------------------------------------------
+NE     |Z clear (not equal)                             
+--------------------------------------------------------
+CS/HS  |C set (unsigned &gt;=)                             
+--------------------------------------------------------
+CC/LO  |C clear (unsigned &lt;)                            
+--------------------------------------------------------
+MI     |N set (negative)                                
+--------------------------------------------------------
+PL     |N clear (positive or zero)                      
+--------------------------------------------------------
+VS     |V set (overflow)                                
+--------------------------------------------------------
+VC     |V clear (no overflow)                           
+--------------------------------------------------------
+HI     |C set and Z clear (unsigned &gt;)                  
+--------------------------------------------------------
+LS     |C clear and Z set (unsigned &lt;=)                 
+--------------------------------------------------------
+GE     |N and V the same (signed &gt;=)                    
+--------------------------------------------------------
+LT     |N and V differ (signed &lt;)                       
+--------------------------------------------------------
+GT     |Z clear, N and V the same (signed &gt;)            
+--------------------------------------------------------
+LE     |Z set, N and V differ (signed &lt;=)               
+--------------------------------------------------------
+AL     |Always execute (the default if none is          
+       |specified)                                      
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Setting the ALU flags in the PSR</H2>
+Data processing instructions change the state of the ALU's N,Z,C and V 
+status outputs but these are latched in the PSR'S ALU flags only if a 
+special bit (the 'S' bit) is set in the instruction.<P>
+<H2>Illustration</H2>
+The following code fragment is extracted from <B>gcd.c</B>, which can be 
+found in the <B>examples</B> directory.<P>
+<CODE>
+<PRE>
+while (a != b)
+{ if (a &gt; b) a -= b;
+  else       b -= a;
+}
+</CODE>
+</PRE>
+Without conditional execution this could be naively coded as:<P>
+<CODE>
+<PRE>
+gcd CMP    a1, a2
+    BEQ    end
+    BLT    lessthan
+    SUB    a1, a1, a2
+    B      gcd
+lessthan
+    SUB    a2, a2, a1
+    B      gcd
+end 
+</CODE>
+</PRE>
+Conditional execution and selective setting of the PSR'S ALU flags allows 
+it to be coded much more compactly as follows (this version can be found 
+in the <B>examples</B> directory as <B>gcd.s</B>).<P>
+<CODE>
+<PRE>
+gcd CMP    a1, a2
+    SUBGT  a1, a1, a2
+    SUBLT  a2, a2, a1
+    BNE    gcd
+</CODE>
+</PRE>
+Two tricks are illustrated:<P>
+<UL>
+<LI>The CMP instruction (implicitly) has the 'S' bit set, so the result of 
+the comparison sets the PSR ALU status flags.  However, the following  two 
+subtractions do not have the 'S' bit set, so they do not affect the PSR 
+ALU status flags which remain in the state set by the earlier CMP 
+instruction when the BNE instruction is executed.  The test (a != b) has 
+been combined with the branch back to the top of the loop, giving shorter 
+code, and in many instances code which runs more quickly.<P>
+<LI>The two subtractions are executed only if the condition specified is 
+met, so two branches around these instructions can be avoided.  In 
+addition to the obvious benefit of smaller code, any pipeline refill 
+caused by the branches will also have been avoided.
+</UL>
+<H2>Running the C example</H2>
+You can run the C <B>gcd</B> routine shown above under <B>armsd</B>.  To 
+do this first set your current directory to the <B>examples</B> 
+directory.<P>
+Compile, link and run the C version of the <B>gcd</B> routine by using the 
+following commands:<P>
+<CODE>
+<PRE>
+armcc -c gcd.c -li -apcs 3/32bit
+armcc -c gcdtest.c -li -apcs 3/32bit
+armlink -o gcdtest gcd.o gcdtest.o <B>somewhere</B>/armlib.321
+armsd -li gcdtest
+</CODE>
+</PRE>
+where <B>somewhere</B> is the directory in which <B>armlib.32l</B> can be 
+found.<P>
+<H3>Explanation</H3>
+The two <B>armcc</B> commands compile the gcd function and the test 
+harness, creating relocatable object files <B>gcd.o</B> and 
+<B>gcdtest.o</B>.  The -li flag tells <B>armcc</B> to compile for a 
+little-endian memory. The -apcs 3/32bit option tells <B>armcc</B> to use a 
+32 bit version of the ARM Procedure Call Standard.  You can omit these 
+options if your <B>armcc</B> has been configured for this default.<P>
+The <B>armlink</B> command links your relocatable objects with the ARM C 
+library to create a runnable program (here called <B>gcdtest</B>).<P>
+The <B>armsd</B> command invokes the debugger, with <B>gcdtest</B> as the 
+program to be run.  Again -li specifies that little-endian memory is 
+required (as with <B>armasm</B> above).<P>
+<H2>Running the assembler example</H2>
+You can run the <B>gcd</B> routine shown above under <B>armsd</B>.  To do 
+this first set your current directory to the <B>examples</B> directory.<P>
+You can assemble, link and run the assembler <B>gcd</B> routine by using 
+the following commands:<P>
+<CODE>
+<PRE>
+armasm gcd.s -o gcd.o -li
+armcc -c gcdtest.c -li -3/32bit
+armlink -o gcdtest gcd.o gcdtest.o <B>somewhere</B>/armlib.32l
+armsd -li gcdtest
+</CODE>
+</PRE>
+where <B>somewhere</B> is the directory in which <B>armlib.32l</B> can be 
+found.<P>
+<H3>Explanation</H3>
+The <B>armasm</B> command assembles the <B>gcd</B> function, creating the 
+relocatable object file <B>gcd.o</B>.  The -li flag tells <B>armasm</B> to 
+assemble for a little-endian memory.  The -apcs 3/32bit option tells 
+<B>armcc</B> to use a 32 bit version of the ARM Procedure Call Standard.  
+You can omit these options if your <B>armasm</B> has been configured for 
+this default.<P>
+The <B>armcc</B> command compiles the test harness.  The -c flag tells 
+<B>armcc</B> not to link its output with the C library; the -li flag tells 
+<B>armcc</B> to compile for a little-endian memory (as with 
+<B>armasm</B>).<P>
+The <B>armlink</B> command links your relocatable objects with the ARM C 
+library to create a runnable program (here called <B>gcdtest</B>).<P>
+The <B>armsd</B> command invokes the debugger, with <B>gcdtest</B> as the 
+program to be run.  Again -li specifies that little-endian memory is 
+required (as with <B>armasm</B> above).<P>
+<H2>Related topics</H2>
+<UL>
+<LI>There are many examples of code which makes good use of the ARM's 
+condition codes and 'S' bit in recipes in <A 
+HREF="./acb2frst.html#XREF32584">Exploring ARM Assembly Language</A>.
+</UL>

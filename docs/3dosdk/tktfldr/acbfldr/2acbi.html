@@ -1,0 +1,45 @@
+<TITLE>Loading a word from an unknown alignment</TITLE>
+<H1>Loading a word from an unknown alignment</H1><HR>
+<H2>About this recipe</H2>
+In this recipe a code sequence which loads a word from memory at any byte 
+alignment is described.  Although loading 32-bit data from non word 
+aligned addresses should be avoided whenever possible, it may sometimes be 
+necessary.<P>
+<H2>The details</H2>
+The ARM Load and Store (single and multiple) instructions are designed to 
+load word aligned data.  Unless there is a very good reason it is best to 
+avoid having to load or store word-sized data to or from non word aligned 
+addresses, as neither the Load or Store instruction can do this unaided.<P>
+To deal with misaligned word fetches two words must be read and the 
+required data extracted from these two words.  The code below performs 
+this operation for a little endian ARM, making good use of the barrel 
+shifter in the process.<P>
+<CODE>
+<PRE>
+; enter with address in R0
+; R2 and R3 are used as temporary registers
+; the word is loaded into R1
+;
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+BIC    R2, R0, #3                         ; Get word aligned address
+LDMIA  R2, {R1, R3}                       ; Get 64 bits containing data
+AND    R2, R0, #3                         ; Get offset in bytes
+MOVS   R2, R2, LSL #3                     ; Get offset in bits
+MOVNE  R1, R1, LSR R2                     ; Extract data from bottom 32 bits
+RSBNE  R2, R2, #32                        ; Get 32 - offset in bits
+ORRNE  R1, R1, R3, LSL R2                 ; Extract data from top 32 bits
+                                          ; and combine with the other data
+</CODE>
+</PRE>
+This code can easily be modified for use on a big endian ARM - the LSR R2 
+and LSL R2 just have to be swapped over.<P>
+For details of what the Load and Store instructions do if used with non 
+word aligned addresses refer to the appropriate datasheet.  Note that non 
+word aligned word loads are also used in .<P>
+<H2>Related topics</H2>
+<P>
+<A HREF="./2acbf.html#XREF39169">Using 16-bit data on the ARM</A>
+<P>

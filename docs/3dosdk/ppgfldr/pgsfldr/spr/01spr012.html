@@ -1,0 +1,39 @@
+<Title>CallFolioRet</Title>
+<A NAME="XREF20564"><H1>CallFolioRet </A></H1>
+<A NAME="XREF38536"></A>Invokes from the folio vector table a folio procedure that returns a value.<P>
+<H3>Synopsis</H3>
+<CODE>void CallFolioRet( const Folio *folio, int32 func, args, ret, cast )</CODE><P>
+<H3>Description</H3>
+This macro allows a task to invoke a folio procedure directly from the folio vector table, thereby bypassing the normal procedure interface. It can be used only for folio procedures that return a value. (To invoke a folio procedure that does not return a value, use <CODE>CallFolio()</CODE>.) This approach, which is slightly faster than invoking the procedure through the normal interface, is intended for use by the folios themselves, but it can be also be used by applications. <P>
+<B>Note: </B> Most tasks should invoke folio procedures in the normal way, using the interfaces described in this manual. Only tasks that require the utmost in speed and efficiency should invoke folio procedures directly from the vector table. <P>
+Example of n = RemTail(l) using CallFolioRet: 
+CallFolioRet(KernelBase, KBV_REMTAIL, (l), n, (Node *)); <P>
+<H3>Arguments</H3>
+<DL>
+<DT>folio
+<DD>A pointer to the folio item that contains the procedure. Use LookupItem() to get this pointer. For the item number of a folio (which you pass to LookupItem()), see the Portfolio Items chapter or call FindAndOpenFolio(). 
+</DL>
+<DL>
+<DT>func
+<DD>The index of the vector table entry for the folio procedure to invoke. This index (a negative integer, because the table grows backward in memory) is listed in the header file for the folio. 
+</DL>
+<DL>
+<DT>args
+<DD>The arguments for the procedure, separated by commas and enclosed within parentheses.
+</DL>
+<DL>
+<DT>ret
+<DD>A variable to receive the result from the folio procedure. The result is coerced to the type specified by the cast argument before it is assigned to this variable. 
+</DL>
+<DL>
+<DT>cast
+<DD>The desired type for the result, surrounded by parentheses. The result returned by the folio procedure is cast to this type. 
+</DL>
+<H3>Implementation</H3>
+Macro implemented in folio.h V20. <P>
+<H3>Associated Files</H3>
+folio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr011.html#XREF18576"><CODE>CallFolio</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF20564"></LINK></H1><HR>

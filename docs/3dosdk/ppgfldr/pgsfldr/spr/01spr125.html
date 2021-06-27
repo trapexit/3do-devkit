@@ -1,0 +1,32 @@
+<TITLE>SetItemOwner</TITLE>
+<A NAME="XREF39158"><H1>SetItemOwner </A></H1>
+<A NAME="XREF18048"></A>Changes the owner of an item.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetItemOwner( Item i, Item newOwner )</CODE><P>
+<H3>Description</H3>
+This procedure makes another task the owner of an item. A task must be the owner of the item to change its ownership. The item is removed from the current task's resource table and placed in the new owner's resource table.<P>
+You normally use this procedure to keep a resource available after the task that created it terminates. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>i
+<DD>The item number of the item to give to a new owner. 
+</DL>
+<DL>
+<DT>newOwner
+<DD>The item number of the new owner task. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if ownership of the item is changed or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Caveats</H3>
+This is not implemented for all items that should be able to have their ownership changed. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr022.html#XREF15505"><CODE>CreateItem</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF39158"></LINK></H1><HR>

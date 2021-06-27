@@ -1,0 +1,22 @@
+<TITLE>setfg</TITLE>
+<H1><LINK NAME="XREF32087">setfg</LINK></H1><HR><P>
+<A NAME="XREF37148"></A>Sets the shell's default behavior to foreground 
+execution mode.<P>
+<H3>Synopsis</H3>
+<CODE>setfg</CODE><P>
+<H3>Description </H3>
+Sets the shell's default execution mode to foreground. This forces the 
+shell to wait for tasks to complete when they are executed. The shell will 
+not accept new commands until the current task completes.<P>
+If the shell is currently in background mode and you wish to execute only 
+a single program in foreground mode, you can append a '#' at the end of 
+the command-line. <P>
+Use the showshellvars command to display the current execution mode.<P>
+<H3> Implementation </H3>
+Command implemented in shell V20. <P>
+Built-in shell command. <P>
+<H3>Synonyms </H3>
+<CODE>fg</CODE><P>
+<H3>See Also</H3>
+<A HREF="#XREF42215"><CODE>setbg</A>, <A 
+HREF="#XREF15363">showshellvars</A></CODE><P>

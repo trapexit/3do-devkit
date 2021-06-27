@@ -1,0 +1,62 @@
+<TITLE>What are stream files?</TITLE>
+<H1><LINK NAME="XREF35287">What are stream files?</LINK></H1><HR>
+The DataStreamer works on a stream file. The stream file contains all video, audio, and other data in a compressed and interleaved form and contains timestamps. This section explains basic concepts and terminology. Specifically: <P>
+
+<UL>
+<LI><A HREF="#XREF38583">Stream file preparation basics</A> 
+<LI><A HREF="#XREF30034">Stream file terminology</A>
+</UL>
+<A NAME="XREF38583"><H2>Stream file preparation basics</A></H2>
+Preparing the stream file involves two steps: <P>
+<OL>
+<LI>Compressing data and creating <I>chunk files</I> of each type of data using the appropriate DataStreamer tools. 
+<p>
+<LI>Using the Weaver tool and a Weaver script to create a single stream file from the different chunk files. The stream file contains:
+<p>
+<UL>
+<LI>All <I>data</I>, interleaved, with timestamps
+<p>
+<LI>A <I>stream header </I>with information about buffer size, audio channels, and so on, that the Weaver tool extracts from the Weaver script
+<p>
+<LI><I>Filler chunks</I> that organize the data into stream blocks
+<p>
+<LI><I>Control chunks</I> that mark branch locations and special actions (optional)
+</UL><BR>
+<p>The figure below shows an example of three files that have been merged into a single stream file with a stream header. The numbers are the timestamp associated with each data chunk. In the output stream, the shaded areas are filler placed in the stream to pad the data to the logical block size.<P>
+
+<IMG SRC="Figures/DSG.2-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Three chunk files are merged to create a single stream file.</I><P>
+</OL>
+<A NAME="XREF30034"><H2>Stream file terminology</A></H2>
+Select one of the following terms for more information:<P>
+
+<UL>
+<LI><A HREF="#XREF29424">Stream file</A>
+<LI><A HREF="#XREF20302">Chunk</A>
+<LI><A HREF="#XREF28798">Streamblock</A>
+<LI><A HREF="#XREF30698">Stream time</A>
+</UL>
+<A NAME="XREF29424"><H3>Stream file</A></H3>
+A file that contains interleaved data the DataStreamer library can parse and display. <P>
+You create a stream file using the Weaver tool and a Weaver script. <P>
+<A NAME="XREF20302"><H3>Chunk</A></H3>
+An atomic packet of data of one type; the basic element of a stream. <P>
+Chunks are timestamped, some with duration. Chunks must be quad-byte aligned, Types include: <P>
+<UL>
+<LI>FILM
+<LI>SCEL
+<LI>SAMN
+<LI>JOIN
+<LI>CTRL
+<LI>FILL
+<LI>SNDS
+</UL>
+<A NAME="XREF28798"><H3>Streamblock</A></H3>
+Streamblocks consist of interleaved chunks. Disc reads are done streamblock by 
+streamblock. <P>
+Streamblocks must be quad-byte aligned. Streamblock size must be a multiple of media size, only one size per stream is possible. Size of streamblocks must match the buffers established by the library. <P>
+<A NAME="XREF30698"><H3>Stream time</A></H3>
+Every chunk has a stream time, the time at which the chunk needs to be presented. Time is counted in audio folio ticks. <P>
+If you include the <CODE>writemarkertable</CODE> command in the script, the Weaver tool translates time into file offsets.<P>
+<P>

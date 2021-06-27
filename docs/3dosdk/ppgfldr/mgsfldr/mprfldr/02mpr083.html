@@ -1,0 +1,22 @@
+<Title>spRemoveMarker</Title>
+<A NAME="XREF25941"><H1>spRemoveMarker </A></H1>
+<A NAME="XREF18443"></A> Manually remove an SPMarker from an SPSound.<P>
+<H3>Synopsis</H3>
+<CODE>Err spRemoveMarker (SPMarker *marker)</CODE><P>
+<H3>Description</H3>
+Removes and frees the specified marker from the sound that it belongs to. All markers belonging to an SPSound are automatically disposed of when that sound is disposed of with <CODE>spRemoveSound()</CODE> or when the player that owns that sound is deleted with <CODE>spDeletePlayer()</CODE>. Use this function if you want to remove a marker manually. <P>
+This function cannot be used to remove a permanent marker (SP_MARKER_NAME_BEGIN or SP_MARKER_NAME_END) from a sound. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>marker
+<DD>Pointer to an SPMarker to remove. Can be NULL. If this is one of the permanent markers (SP_MARKER_NAME_BEGIN or SP_MARKER_NAME_END) this function does nothing and returns ML_ERR_INVALID_MARKER. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr072.html#XREF37325"><CODE>spFindMarkerName</A>(), <A HREF="./02mpr061.html#XREF17185">spAddMarker</A>(), <A HREF="./02mpr084.html#XREF24744">spRemoveSound</A>(), <A HREF="./02mpr070.html#XREF29915">spDeletePlayer</A>() </CODE><P>
+</CODE>

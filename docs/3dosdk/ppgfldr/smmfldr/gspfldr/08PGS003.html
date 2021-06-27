@@ -1,0 +1,104 @@
+<TITLE>Event Broker</TITLE>
+<H1><LINK NAME="XREF27911">Event Broker</LINK></H1><HR>
+Peripherals pose a unique challenge to standard I/O in that interactive 
+peripheral device state is constantly changing. A task working with a 
+peripheral must continually monitor it to know what the user is doing. It 
+can either run a loop that periodically polls the device, which involves 
+considerable CPU overhead, or have the driver respond only to I/O requests 
+that indicate a change-a similarly cumbersome scheme.<P>
+The 3DO operating system solves this problem with the event broker, a task 
+that monitors activity exclusively on the control port. Control port 
+activities, or events, include the pressing of any buttons and 
+manipulation of controls on peripherals, as well as connection and 
+disconnection of peripherals in a daisy chain. <P>
+The event broker task starts at system bootup and stands as a kind of 
+gatekeeper between user tasks and interactive devices on the control port. 
+To work with interactive peripheral devices, a user task connects to the 
+event broker and registers itself as a <I>listener</I>. A listener, then, 
+is a task connected to the event broker to receive event notification from 
+peripherals, or to pass data to peripherals. <P>
+For more information, see Chapter 9 "Understanding Devices and I/O" in 
+<A HREF="../../pgsfldr/spg/00spg1.html#XREF38776">3DO System Programmer's 
+Guide</A>.<P>
+<H2>Sample Programs</H2>
+The <I>examples:Eventbroker:joystick</I> folder contains sample programs 
+that enable you to connect and use peripherals.
+
+This section describes the basic procedure for working with these 
+programs, including all relevant function calls.<P>
+<OL>
+<LI>Make a communications connection to the event broker.<P>
+<DL>
+<DD><CODE>BS_ConnectBroker();</CODE><BR><P>
+</DL>
+
+<LI>Listen for the devices from which you want events with the following 
+calls:<P>
+
+<DL>
+<DD><CODE>BS_WatchPad(); <BR>
+BS_WatchJoyStick(); <BR>
+BS_WatchMouse(); <BR>
+BS_WatchLGun();</CODE><BR><P>
+</DL>
+
+<LI>To pay attention to certain events at particular times, interleave 
+<CODE>Ignore</CODE> and <CODE>Watch</CODE> calls with any of the 
+following:<P>
+
+<DL>
+<DD><CODE>BS_IgnoreCPad() <BR>
+BS_IgnoreLGun() <BR>
+BS_IgnoreMouse() <BR>
+BS_IgnoreJoyStick()</CODE><BR><P>
+</DL>
+
+<LI>Wait for event broker events in a CPU-friendly fashion.<P>
+
+<DL>
+<DD><CODE>BS_NiceWaitEvent();</CODE><BR><P>
+</DL>
+<CODE>BS_NiceWaitEvent()</CODE> returns a mask indicating which 
+devices have received data.<P>
+If you receive signals other than event broker message signals, get 
+the signals you received with:<P> 
+
+<DL>
+<DD><CODE>BS_GetOtherSignals();</CODE><BR><P>
+</DL>
+
+The mask <CODE>BS_PORT_CHANGE</CODE> indicates there has been a change 
+on the control port device daisy chain.<P> 
+
+<LI>Get a tally of devices with:<P>
+<DL>
+<DD><CODE>BS_GetPeripheralCount();</CODE><BR><P>
+</DL>
+
+<LI>Manipulate received data with any of the following:<P>
+
+<DL>
+<DD><CODE>BS_ProcessJoyStickData(); <BR>
+BS_ProcessCPadData(); <BR>
+BS_ProcessMouseData(); <BR>
+BS_ProcessLGunData();</CODE><BR><P>
+</DL>
+
+<LI>Shut down the connection to the broker and free up temporary data 
+allocations.<P>
+
+<DL>
+<DD><CODE>BS_DisconnectBroker();</CODE><BR>
+</DL>
+</OL>
+For more extensive sample code for programming peripherals using the event 
+broker, see the <I>3DO:examples:Eventbroker</I> folder provided on the 
+Portfolio 2.5 CD-ROM. In particular, see the 
+<I>3DO:examples:Eventbroker:Joystick</I> folder.<P>
+For sample code that shows how to incorporate a light gun peripheral into 
+a title, see the <I>3DO:examples:Eventbroker:Lightgun</I> folder that is 
+provided with this release. Sample code for other types of peripherals is 
+also included in the <I>3DO:examples:Eventbroker</I> folder.<P>
+
+<B>Note: </B>Sample code is provided to illustrate functionality and is 
+not always the best solution to a problem. <P>

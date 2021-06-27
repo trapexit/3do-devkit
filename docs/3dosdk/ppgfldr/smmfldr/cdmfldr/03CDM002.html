@@ -1,0 +1,83 @@
+<TITLE>Required Files and Folders</TITLE>
+<H1><LINK NAME="XREF12577">Required Files and Folders</LINK></H1><HR>
+Before you can run the layout script file to create a CD-ROM image file you must set up the files and folders for your title. You need to complete the following steps, discussed in detail in the sections below: <P>
+
+<UL>
+<LI><A HREF="#XREF34059">Preparing Your Title's Files for the Layout Process</A>, that is, placing them into a folder that contains a runtime version of the operating system and renaming them so the layout tool can recognize them.
+<p>
+<LI><A HREF="#XREF30935">Checking the AppStartup File</A>
+<p>
+<LI><A HREF="#XREF36094">Modifying the BannerScreen File</A>
+</UL>
+<A NAME="XREF34059"><H2>Preparing Your Title's Files for the Layout Process</A></H2>
+Before you can use the layout tool to create the CD-ROM image, put all files needed in the image into one folder as follows: <P>
+<OL>
+<LI>Find your most recent operating system CD-ROM and locate the <I>/cdrommaster</I> folder.
+<p>
+<p>This folder contains a number of important system files. 
+<p>
+
+<LI>Copy the <I>/cdrommaster</I> folder to your hard drive.
+<p>
+<LI>Place copies of your application's executable and data folders (or folder hierarchies) in the <I>/takeme</I> folder inside the folder named after the current operating system version. 
+<p>
+<LI>Rename the main executable of the application to <I>launchme</I>.
+</OL>
+<A NAME="XREF30935"><H2>Checking the AppStartup File</A></H2>
+The <I>AppStartup</I> script file is in the <I>/takeme</I> folder. In this file, you can define aliases and add commands that are executed upon system startup. Make sure that the file follows these guidelines:<P>
+<UL>
+<LI>Any user-defined aliases should point to<I> $app </I>or <I>$boot</I>, not to <I>/cd-rom</I> or 
+<I>/remote</I>.) 
+<p>
+<LI>If your title has a mechanism to take advantage of additional memory if it becomes available, make sure there is no minmem command at the end of the file so your title can take advantage of additional memory if it becomes available. 
+</UL>
+<A NAME="XREF36094"><H2>Modifying the BannerScreen File</A></H2>
+Starting with 3DO Portfolio 2.5, your title can use a banner screen instead of the three-second 3DO licensed product symbol required by the license agreement. <P>
+<B>Note: </B>Using a banner screen is highly recommended, but you may choose to use the 3DO licensed product symbol instead. <P>
+The banner screen is a video image that the system displays early in the boot sequence. This video image is title-specific and is displayed while the system completes the boot sequence. <P>
+<H3>Reasons for Using a Banner Screen</H3>
+Although a banner screen is not required, there are several advantages to using one:<P>
+<UL>
+<LI>A banner screen reduces the boot time of a title significantly.
+<p>
+<LI>Presenting a title-related image early in the boot sequence gets the user excited about the title.
+<p>
+<LI>A banner screen fulfills the "three second 3DO licensed product symbol" requirement, so there is no need for an additional screen to display the 3DO licensed product symbol.
+</UL>
+<H3>Banner Screen Requirements</H3>
+If you use a banner screen, it must meet certain requirements.<P>
+<B>Warning: </B>If you use a banner screen, it has to meet the requirements or the title will not receive the Right to Manufacture. <P>
+<UL>
+<LI>A banner screen is a 3DO image that has been processed with the MakeBannerScreen utility (see below).
+<p>
+<LI>The banner screen must contain an image of the 3DO licensed product symbol in at least quarter-screen height.
+<p>
+<LI>The banner screen must contain the name of the title, prominently displayed. The company name alone is not sufficient. 
+<p>
+<LI>The banner screen must be specific to each title.
+<p>
+<LI>The banner screen must contain appropriate copyright notices for the title.
+</UL>
+<A NAME="XREF24558"><H3>Preparing and Using a Banner Screen</A></H3>
+One sample banner screen in BannerScreen format and samples in 3DO image format are included in the <I>cdrommaster</I> folder. <P>
+To prepare your own BannerScreen file, follow these steps:<P>
+<OL>
+<LI>Create a picture with the name and copyright for the title and the 3DO licensed product symbol (at least)1/4 screen height), as specified above. 
+<p>
+<LI>Convert the picture to 3DO image format using the 3DO Image Writer custom plug-in. 
+<p>
+<LI>Launch MPW, make the <I>cdrommaster</I> folder the current directory, and 
+execute MakeBannerScreen by typing to the MPW Shell:
+<p>
+<DL>
+<DD><CODE>MakeBannerScreen <I>your_file</CODE></CODE><BR>
+</DL>
+<p>
+<p>This reads your file and produces a file named <I>BannerScreen</I>. 
+<p>
+<LI>Drag the new <I>BannerScreen</I> file into your <I>takeme</I> folder, replacing the sample file provided by The 3DO Company.
+<p>
+<p><B>Note: </B>Make sure you choose the takeme folder; not a higher-level folder. <BR>
+<p>
+<p>If you choose not to use a banner screen, leave the sample BannerScreen file untouched in the <I>/takeme</I> folder. As a result, any CD-ROM images you create will use this sample screen. The sample screen is not used during encryption.<P>
+</OL>

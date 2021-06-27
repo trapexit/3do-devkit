@@ -1,0 +1,127 @@
+ IF :DEF:|_MEM_I|
+ ELSE
+	GBLL	|_MEM_I|
+
+;*****************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: mem.i,v 1.9 1994/10/12 18:52:13 vertex Exp $
+;*
+;*  Kernel memory management definitions
+;*
+;*****************************************************************************
+
+	INCLUDE structs.i
+	INCLUDE nodes.i
+	INCLUDE item.i
+
+	BEGINSTRUCT	MemInfo
+		UINT32	minfo_SysFree
+		UINT32	minfo_SysLargest
+		UINT32	minfo_TaskFree
+		UINT32	minfo_TaskLargest
+	ENDSTRUCT
+
+	BEGINSTRUCT	MemHdr
+		STRUCT	Node,memh_n
+		UINT32	memh_Types
+		INT32	memh_PageSize
+		UINT32	memh_PageMask
+		INT32	memh_VRAMPageSize
+		UINT32	memh_VRAMPageMask
+		PTR	memh_FreePageBits
+		PTR	memh_MemBase
+		PTR	memh_MemTop
+		UINT8	memh_FreePageBitsSize
+		UINT8	memh_PageShift
+		UINT8	memh_VRAMPageShift
+		UINT8	memh_Reserved
+	ENDSTRUCT
+
+MEMTYPE_ANY        EQU 0
+
+MEMTYPE_MASK       EQU &ffffff00
+MEMTYPE_FILLMASK   EQU &000000ff
+
+MEMTYPE_FILL       EQU &00000100
+MEMTYPE_MYPOOL     EQU &00000200
+MEMTYPE_FROMTOP    EQU &00004000
+MEMTYPE_TASKMEM    EQU &00008000
+
+MEMTYPE_VRAM	   EQU &00010000
+MEMTYPE_DMA	   EQU &00020000
+MEMTYPE_CEL	   EQU &00040000
+MEMTYPE_DRAM       EQU &00080000
+MEMTYPE_AUDIO	   EQU &00100000
+MEMTYPE_DSP	   EQU &00200000
+
+MEMTYPE_INPAGE     EQU &01000000
+MEMTYPE_STARTPAGE  EQU &02000000
+MEMTYPE_SYSTEMPAGESIZE EQU &04000000
+
+MEMF_ALIGNMENTS EQU (MEMTYPE_INPAGE|MEMTYPE_STARTPAGE)
+
+MEMTYPE_BANKSELECT      EQU &40000000
+MEMTYPE_BANKSELECTMSK   EQU &30000000
+MEMTYPE_BANK1           EQU &10000000
+MEMTYPE_BANK2           EQU &20000000
+
+MEMC_NOWRITE   EQU 1
+MEMC_OKWRITE   EQU 2
+MEMC_GIVE      EQU 3
+MEMC_SC_GIVE   EQU 4
+
+	BEGINSTRUCT MemList
+	    STRUCT	Node,meml_n
+	    UINT32	meml_Types
+	    PTR		meml_OwnBits
+	    PTR		meml_WriteBits
+	    PTR		meml_MemHdr
+	    PTR		meml_l
+	    ITEM	meml_Sema4
+	    UINT8	meml_OwnBitsSize
+	    ARRAY	UINT8,meml_Reserved,3
+	ENDSTRUCT
+
+MEMDEBUGF_ALLOC_PATTERNS	EQU 1
+MEMDEBUGF_FREE_PATTERNS		EQU 2
+MEMDEBUGF_PAD_COOKIES		EQU 4
+MEMDEBUGF_DEBUG_ON_ERRORS	EQU 8
+MEMDEBUGF_ALLOW_OWNER_SWITCH	EQU 16
+MEMDEBUGF_CHECK_ALLOC_FAILURES	EQU 32
+MEMDEBUGF_KEEP_TASK_DATA	EQU 64
+MEMDEBUGF_USE_VRAM		EQU 128
+
+MEMDEBUG_ALLOC_PATTERN		EQU &ac0debad
+MEMDEBUG_FREE_PATTERN		EQU &fc0debad
+
+MEMDEBUG_CALL_ALLOCMEM			EQU 0
+MEMDEBUG_CALL_ALLOCMEMFROMMEMLISTS	EQU 1
+MEMDEBUG_CALL_MALLOC			EQU 2
+MEMDEBUG_CALL_CALLOC			EQU 3
+MEMDEBUG_CALL_REALLOC			EQU 4
+MEMDEBUG_CALL_ALLOCMEMBLOCKS		EQU 5
+MEMDEBUG_CALL_FREEMEM			EQU 6
+MEMDEBUG_CALL_FREEMEMTOMEMLISTS		EQU 7
+MEMDEBUG_CALL_FREE			EQU 8
+
+	MACRO
+	AllocMemBlocks
+	swi	KERNELSWI+13
+	MEND
+
+	MACRO
+	ControlMem
+	swi	KERNELSWI+20
+	MEND
+
+	MACRO
+	SystemScavengeMem
+	swi	KERNELSWI+33
+	MEND
+
+ ENDIF	; |_MEM_I|
+
+	END

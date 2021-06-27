@@ -1,0 +1,50 @@
+<TITLE>Setting a Screen Color Palette</TITLE>
+<H1><LINK NAME="XREF15173">Setting a Screen Color Palette</LINK></H1><HR>
+The contents of a screen CLUT set determine the color palette available to the pixels in the screen. If you don't specify any custom colors for a screen, then the screen uses the default CLUT set: the fixed CLUT set. This fixed CLUT set contains a linear ascending color palette.<P>
+You can set a custom color palette for a screen, by creating a custom VDL, which can be an involved process. A custom VDL lets you change color palettes from line to line within a screen. If you simply want to set a color palette for an entire screen that uses a simple VDL (one that doesn't change parameters from line to line), you can use the simpler Graphics folio color calls. These calls accept new color entries for a screen's CLUT set and then revise the screen VDL appropriately. You don't have to deal directly with the VDL.<P>
+<H2>A CLUT Set Review</H2>
+As you'll recall from <A HREF="./2gpg.html#XREF34189">Understanding the Display Generator</A> the display generator reads pixels from the bitmap buffer. Each bitmap-buffer pixel has a 15-bit color value: 5 bits devoted to red, 5 to green, and 5 to blue. Those values enter the CLUT (color lookup table) set, which has a separate lookup table for red, green, and blue. Each CLUT register stores an 8-bit value.<P>
+When a 15-bit RGB value enters the CLUT set, it's broken into its red, green, and blue components. Each component enters the appropriate CLUT, where it selects a corresponding 8-bit red, green, or blue value. The three outputs are combined into a 24-bit RGB value that is then used for that pixel in the rest of the display generator.<P>
+The CLUT for each color has 33 registers: numbers 0-31 are for direct color indexing; number 32 is for any pixel marked as background. Although red, green, and blue are separated when they enter the CLUT set and the CLUT set is treated as three CLUTs, one for each color, the physical reality of the CLUT hardware is that each CLUT register extends across all three colors. That is, each register is 24 bits wide. The first 8 bits are for red, the second 8 bits for green, and the last 8 bits for blue. When the VDL processor writes a new register value into the CLUT set, it writes a 24-bit value that changes red, green, and blue for that register number. For example, if the VDL processor sets a new value for register 3, it writes a 24-bit value that changes red register 3, green register 3, and blue register 3.<P>
+<H2>Specifying a New Color</H2>
+To set a new color in the CLUT set, you must first specify which CLUT register you want to set, and then specify the 8-bit red, green, and blue values you want in that register. Use <CODE>MakeCLUTColorEntry</CODE> to specify red, green, and blue together and then return a value you can use to set red, green, and blue within a CLUT register:<P>
+<CODE><DL>
+<DD><CODE>VDLEntry MakeCLUTColorEntry( index, red, green, blue )</CODE><BR>
+</DL>
+</CODE><CODE>MakeCLUTColorEntry</CODE> accepts an unsigned index byte that indicates which CLUT set register you want to change. A value of 0 to 31 indicates registers 0 to 31 in the CLUT set; a value of 32 indicates the background register.<P>
+<CODE>MakeCLUTColorEntry</CODE> also accepts an unsigned byte each for the red, green, and blue value you want to set in the CLUT set register. A minimum value of 0 indicates none of the color, while a maximum value of 255 indicates as much of the color as possible.<P>
+<CODE>MakeCLUTColorEntry()</CODE> returns a 32-bit value that you can use with the color-setting calls to change CLUT set registers.<P>
+To specify only a red, a green, or a blue value to write into a CLUT register without touching any of the other color values in the register, use these three calls:<P>
+<CODE><DL>
+<DD><CODE>VDLEntry MakeCLUTRedEntry( index, red )<BR>
+</CODE><CODE>VDLEntry MakeCLUTGreenEntry( index, blue )<BR>
+</CODE><CODE>VDLEntry MakeCLUTBlueEntry( index, blue )</CODE><BR>
+</DL>
+</CODE>Each macro accepts an unsigned index byte to indicate which CLUT set register you want to change, and then accepts an unsigned byte that signifies a red, green, or blue color value you want to set. Use <CODE>MakeCLUTRedEntry()</CODE> to specify a red value, <CODE>MakeCLUTGreenEntry()</CODE> to specify a green value, and <CODE>MakeCLUTBlueEntry()</CODE> to specify a blue value.<P>
+Each of these macros returns a 32-bit value to use with a color-setting call.<P>
+<H2>Setting a New Color Register Value in the CLUT Set</H2>
+The simplest for setting a new color register value in the CLUT set is:<P>
+<CODE><DL>
+<DD><CODE>int32 SetScreenColor( Item screenItem, uint32 colorEntry )</CODE><BR>
+</DL>
+</CODE><CODE>SetScreenColor()</CODE> accepts the item number of the screen for which you want to change the color palette. It also accepts a color entry value created by any of the four CLUT entry macros:<CODE> MakeCLUTColorEntry(), MakeCLUTRedEntry()</CODE>,<CODE> MakeCLUTGreenEntry(),</CODE> and <CODE>MakeCLUTBlueEntry()</CODE>. The color value specifies the color register and the colors you want to change. <CODE>SetScreenColor()</CODE> then changes the screen's VDL so the screen uses the custom CLUT set (if it was using the fixed CLUT set) and so the appropriate register in the CLUT set uses the new color or colors you specified.<P>
+<CODE>SetScreenColor()</CODE> returns 0 if successful, or a negative number (an error code) if unsuccessful. This macro only works on <CODE>VDLTYPE_Simple</CODE> screen items.<P>
+<H2>Setting Multiple New Color Register Values in the CLUT Set</H2>
+If you want to set more than one color at a time in a screen's palette, use this macro:<P>
+<CODE><DL>
+<DD><CODE>int32 SetScreenColors( Item screenItem, int32 *entries, int32 count )</CODE><BR>
+</DL>
+</CODE>The macro accepts the item number of the screen for which you want to change the color palette. It also accepts a pointer to a list of 32-bit color entries and a 32-bit count value that gives the number of entries in the list. Each of the color entries is a value set by one of the four CLUT entry calls.<P>
+When <CODE>SetScreenColors()</CODE> executes, it reads each color entry, and then changes the specified screen's VDL appropriately so that it uses the custom CLUT set and writes the specified colors into the specified CLUT set registers. This macro only works on <CODE>VDLTYPE_Simple</CODE> screen items.<P>
+<H2>Reading Current CLUT Set Registers</H2>
+Occasionally, you may need to read the color value currently stored in a CLUT set register. To do so, use this call:<P>
+<CODE><DL>
+<DD><CODE>RGB888 ReadCLUTColor( ulong index )</CODE><BR>
+</DL>
+</CODE>It accepts an index number from 0 to 32 that specifies registers 0 to 31 or the background register (32) of the CLUT set. It returns a 24-bit RGB value if successful. The first byte of the RGB value is red, the second is green, and the third is blue. The macro returns a negative number (an error code) if unsuccessful. This macro only works on <CODE>VDLTYPE_Simple</CODE> screen items.<P>
+<H2>Resetting the Fixed Palette for a Screen</H2>
+If you want a screen to abandon its custom palette and return to the linear ascending color of the fixed palette, use this call:<P>
+<CODE><DL>
+<DD><CODE>int32 ResetScreenColors( Item screenItem )</CODE><BR>
+</DL>
+</CODE>It accepts the item number of the screen for which you want to reset the palette and, when it is executed, changes the screen's simple VDL so it specifies the fixed CLUT set for the entire screen. It returns 0 if successful, or a negative number (an error code) if unsuccessful. This macro only works on <CODE>VDLTYPE_Simple</CODE> screen items.<P>

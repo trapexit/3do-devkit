@@ -1,0 +1,45 @@
+<TITLE>Tips, Tricks, and Troubleshooting</TITLE>
+<H1><LINK NAME="XREF41287">Tips, Tricks, and Troubleshooting</LINK></H1><HR>
+This section provides some information that 3DO title developers have found useful when preparing 3DO titles: <P>
+
+<UL>
+<LI><A HREF="#XREF36915">CCB Formulas</A>
+<LI><A HREF="#XREF19895">Working with Cels Efficiently</A>
+<LI><A HREF="#XREF35878">Additional Code Examples</A> 
+</UL>
+<A NAME="XREF36915"><H2>CCB Formulas</A></H2>
+Here are some formulas that make working with CCBs easier. The order of points is clockwise from the upper left corner. <P>
+HDX = (X1 - X0) / W<P>
+HDY = (Y1 - Y0) / W<P>
+VDX = (X3 - X0) / H<P>
+VDY = (Y3 - Y0) / H<P>
+HDDX = [ (X2- X3) - (X1 - X0)] / (WH) = (HDX1 - HDX0) / H<P>
+HDDY = [ (Y2- Y3) - (Y1 - Y0)] / (WH) = (HDY1 - HDY0) / H<P>
+<A NAME="XREF19895"><H2>Working with Cels Efficiently</A></H2>
+To work with cels efficiently, keep in mind the following: <P>
+<UL>
+<LI>Try to call <CODE>DrawCels()</CODE> only once by working with cel lists if possible, as discussed in Chapter 2, "Displaying Cels."
+<p>
+<LI><CODE>MapCel()</CODE> can became a CPU bottleneck in certain titles. If you are manipulating data with width and height that are powers of 2, you should use the <CODE>FastMapCel()</CODE> function from graphics.lib. It operates quite a bit faster than <CODE>MapCel()</CODE> since it can use shifts instead of divides and multiplies. 
+</UL>
+<A NAME="XREF35878"><H2>Additional Code Examples</A></H2>
+Here are some additional examples from the sample programs that help with cel manipulation. <CODE>CenterCCB()</CODE> centers a cel. This example comes from jsanimation.c. <P>
+<B>Example 1: </B><I>Centering a cel</I><P>
+<CODE>
+<PRE>
+void CenterCCB(CCB *aCCB, Coord aXCenter, Coord aYCenter)
+{
+    int32 aWidth;
+    int32 aHeight;
+    int32 aXPos;
+    int32 aYPos;
+
+    aWidth = aCCB-&gt;ccb_Width;
+    aHeight = aCCB-&gt;ccb_Height;
+    aXPos = aXCenter - aWidth / 2;
+    aYPos = aYCenter - aHeight / 2;
+
+    MoveCCB(aCCB, aXPos, aYPos);
+}
+</CODE>
+</PRE>

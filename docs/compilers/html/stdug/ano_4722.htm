@@ -1,0 +1,25 @@
+<HTML><HEAD><TITLE>An Overview of the Standard Library Allocators</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>An Overview of the Standard Library Allocators</H2>
+<P>The Standard C++ allocator interface encapsulates the types and functions needed to manage the storage of data in a generic way.  The interface provides:</P>
+<UL><LI><P>pointer and reference types;</P>
+</LI>
+<LI><P>the type of the difference between pointers;</P>
+</LI>
+<LI><P>the type for any object's <SAMP>size</SAMP>;</P>
+</LI>
+<LI><P>storage allocation and deallocation primitives;</P>
+</LI>
+<LI><P>object construction and destruction primitives.</P>
+</UL>
+<P>The allocator interface wraps the mechanism for managing data storage, and separates this mechanism from the classes and functions used to maintain associations between data elements.  This eliminates the need to rewrite containers and algorithms to suit different storage mechanisms.  The interface lets you encapsulate all the storage mechanism details in an allocator, then provide that allocator to an existing container when appropriate.</P>
+<P>The Standard C++ Library provides a default allocator class, <A HREF="../stdref/all_7029.htm"><B><I>allocator</I></B></A>, that implements this interface using the Standard <SAMP>new</SAMP> and <SAMP>delete</SAMP> operators for all storage management.  </P>
+<P>This section briefly describes how to use allocators with existing containers,  then discusses what you need to consider when designing your own allocators.  The later section of this guide, entitled "Building Containers and Generic Algorithms" describes what you must consider when designing containers that use allocators.</P>
+
+</LI>
+</UL>
+<HR>
+<A HREF="usi_0776.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="usi_1829.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

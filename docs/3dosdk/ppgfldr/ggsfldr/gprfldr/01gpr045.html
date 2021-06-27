@@ -1,0 +1,25 @@
+<Title>MapCel </Title>
+<A NAME="XREF30941"><H1>MapCel </A></H1>
+<A NAME="XREF32225"> Maps this cel onto any four corners.</A><P>
+<H3>Synopsis</H3>
+<CODE>void MapCel (CCB *ccb,Point *quad)</CODE><P>
+<H3>Description</H3>
+This call maps a cel onto the four points specified by the quad argument. The mapping is created by setting the delta fields in the specified ccb argument. The deltas will cause the cel to be rendered such that the four corners of the imagery map to the four corners. <P>
+The quad argument points to an array of four-point structures. In the normal configuration of the quad, the first entry refers to the top left-corner of the imagery, the second entry refers to top-right, the third to bottom-right, and the fourth to bottom-left. Those corners of the cel imagery map to those four entries in the quad, no matter what values are given to the quad entries. <P>
+This call requires that the CCB structures width and height fields have valid values (the width and height fields are add-ons that are not required by the cel engine hardware.)<P>
+<H3>Arguments</H3>
+<DL>
+<DT>ccb
+<DD>Pointer to the CCB structure whose delta fields are modified to map to the quad. 
+</DL>
+<DL>
+<DT>quad
+<DD>Pointer to a four-entry array of point structures. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr028.html#XREF34286"><CODE>FastMapCel</A>(), <A HREF="./01gpr029.html#XREF30188">FastMapCelf16</A>(), <A HREF="./01gpr030.html#XREF29704">FastMapCelInit</A>() </CODE><P>
+</CODE>

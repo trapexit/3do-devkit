@@ -1,0 +1,48 @@
+<Title>tsp_rooms</Title>
+<A NAME="XREF30384"><H1>tsp_rooms</A></H1>
+<A NAME="XREF15936"></A>Room-sensitive soundtrack example using advanced 
+sound player.<P>
+<H3>Synopsis</H3>
+<CODE>tsp_rooms</CODE><P>
+<H3>Description</H3>
+Creates a thread to playback a sound track based on a global room variable 
+gRoom. <P>
+The parent task, tsp_rooms, gets control port events and updates gRoom as 
+follows: <P>
+<UL>
+<LI>A -Enter room A. 
+<LI>B-Enter room B.
+<LI>C - Enter room C. 
+<LI>X (Stop)-Exit nicely. 
+<LI>Shift-X-Stop immediately. 
+</UL>
+The soundtrack thread, Soundtrack, uses the advanced sound player to play 
+a unique sound file for each room. When the main task changes rooms, the 
+soundtrack thread adapts the soundtrack to the change in room at a 
+musically convenient location. <P>
+The way this is done is that each room's soundfile is designed so it can 
+play in a loop. In addition to this, the end of each sound file, and 
+additional optional marked locations within the sound file, must be 
+musically sensible locations to transition to the beginning of any of the 
+other room's sound files. When playback reaches the next marked position 
+in, or the end of, the current room's sound, a default decision function 
+is called to check to see if the main task changed room. If the room is 
+still the same, then the current sound continues to play, or loops if at 
+the end. <P>
+If the room has changed, the SPPlayer is instructed to begin playing the 
+sound for the new room. <P>
+Note that the soundtrack adapts to room changes by the main task instead 
+of making a sharp transition as soon as the room changes. It is possible 
+for the main task to make several room changes before the soundtrack 
+thread discovers that the room has changed at all. This results in smooth 
+soundtrack transitions that occur at seemingly random locations, which is 
+far less likely to become annoying to a game player than a soundtrack that 
+predictably changes the instant the player crosses a given threshold. <P>
+<H3>Associated Files</H3>
+tsp_rooms.c, $samples, words.aiff<P>
+<H3>Location</H3>
+examples/Audio/Advanced_Sound_Player<P>
+<H3>See Also</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/02mpr068.html#XREF24761">spCreatePlayer</A>, 
+<A HREF="./12PGS073.html#XREF12413">tsp_switcher</A>,
+<A HREF="./12PGS070.html#XREF12219">tsp_algorithmic</A> </CODE><P>

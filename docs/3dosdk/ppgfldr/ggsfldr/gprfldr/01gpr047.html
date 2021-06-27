@@ -1,0 +1,27 @@
+<Title>MoveTo </Title>
+<A NAME="XREF21217"><H1>MoveTo </A></H1>
+<A NAME="XREF25289"> Moves the pen position of a GrafCon to a new location.</A><P>
+<H3>Synopsis</H3>
+<CODE>void MoveTo (GrafCon *gc,Coord x,Coord y)</CODE><P>
+<H3>Description</H3>
+The call moves the position of a GrafCon pen to a new location. After this move, calls such as <CODE>DrawTo()</CODE> and <CODE>CopyRect()</CODE> use the new pen position to do their work. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>gc
+<DD>Pointer to a GrafCon structure. 
+</DL>
+<DL>
+<DT>x
+<DD>Column to which to move the pen. 
+</DL>
+<DL>
+<DT>y
+<DD>Row to which to move the pen. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr025.html#XREF12426"><CODE>DrawTo</A>() </CODE><P>
+</CODE>

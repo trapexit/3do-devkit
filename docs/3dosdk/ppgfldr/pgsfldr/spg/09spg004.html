@@ -1,0 +1,202 @@
+<TITLE>Performing I/O</TITLE>
+<H1><LINK NAME="XREF29742">Performing I/O</LINK></H1><HR>
+From a task's point of view, the process of I/O between a task and a device can be broken down into four stages:<P>
+<UL>
+<LI><B>Preparing for I/O</B>. Task opens a device, creates one or more IOReq data structures, and one or more IOInfo data structures.
+<p>
+<LI><B>Sending an IOReq</B>. Task fills in IOInfo values, writes output data into a write buffer (if appropriate), submits the task's IOInfo values to the kernel for processing.
+<p>
+<LI><B>Receiving an IOReq</B>. Task receives notification that an I/O operation is complete, reads data about the operation within a returned IOReq, and (if appropriate) reads data from a read buffer.
+<p>
+<LI><B>Finishing I/O</B>. Task finishes exchanging IOReqs with a device, deletes the IOReqs it created earlier, and closes the device.
+</UL>
+If a task wants to perform a series of I/O operations on a single device, it only needs to prepare for I/O once. The task can then send and receive IOReqs to and from the device until it is finished.<P>
+<A NAME="XREF23289"><H2>Preparing for I/O</A></H2>
+Before a task can send and receive IOReqs, it must prepare for I/O by opening a device and creating IOReq and IOInfo data structures.<P>
+To open a device, a task uses the following function call:<P>
+<DL>
+<DD><CODE>Item OpenNamedDevice( const char *name, void *args )</CODE><BR>
+</DL>
+The <CODE>name</CODE> argument is a pointer to a null-terminated string of characters that contains the name of the device. The <CODE>a</CODE> argument is a pointer reserved for future use. Currently, this value must always be NULL.<P>
+When <CODE>OpenNamedDevice()</CODE> executes, it opens the named device and returns 
+the item number of that device. Future I/O calls to the device use the device's item number.<P>
+<H2>Creating an IOReq </H2>
+Once a task opens a device, the task must create one or more IOReq items to communicate with the device. Before creating an IOReq, it's important to consider how the task will be notified when the IOReq is returned. There are two options:<P>
+<UL>
+<LI>Notification by signal
+<LI>Notification by message
+</UL>
+Notification by signal is the default method. When the device finishes with an 
+I/O operation and wants to return the IOReq to the task, it sends the system signal <CODE>SIGF_IODONE</CODE> to the task. The task then knows there's a completed IOReq, and it can retrieve the IOReq when it wants to.<P>
+Notification by message is specified by providing a message port when an IOReq is created. When the device finishes with an I/O operation and wants to return the IOReq, it sends a message to the specified port. The task can read the message to get a pointer to the IOReq and then read or reuse the IOReq when it wants to.<P>
+Either notification method has advantages and disadvantages. Notification by signal uses fewer resources, but doesn't identify the returning IOReq. It merely says that an IOReq has returned. Notification by signal is useful for I/O operations that use a single IOReq passed back and forth between the task and a device.<P>
+Notification by message uses more resources, but because each message identifies a particular IOReq, the task knows exactly which IOReq is returned when it receives notification. Notification by message is useful for I/O operations that use more than one IOReq.<P>
+Once a task opens a device, the task creates an IOReq data structure using this call:<P>
+<DL>
+<DD><CODE>Item CreateIOReq( const char *name, uint8 pri, Item dev, Item mp )</CODE><BR>
+</DL>
+The <CODE>name</CODE> argument is a pointer to a null-terminated character string containing the name of this IOReq. If the IOReq is unnamed, this argument should be NULL. The <CODE>pri</CODE> argument is a priority value from a low priority of 0 to a high priority of 255. The <CODE>dev</CODE> argument is the device number of the opened device to which this IOReq is to be sent.<P>
+The <CODE>mp</CODE> argument is the item number of a message port where the task is notified of the IOReq's completion. If the task wants to be notified of IOReq completion by message, it must create a message port and supply its item number here. If the task wants only to be notified of IOReq completion by signal, then this argument should be set 0.<P>
+When this call executes, the kernel creates an IOReq that is sent to the specified device and returns the item number of the IOReq. All future I/O calls using this IOReq specify it with its item number.<P>
+<H2>Initializing an IOInfo Structure</H2>
+Although a task can create an IOReq, it can't directly set values in it because an IOReq is an item. The task instead defines an IOInfo data structure in its own memory, and then, when it requests an I/O operation, the task fills in the appropriate values and passes the IOInfo on to the kernel with the IOReq.<P>
+The definitions of an IOInfo data structure and the IOBuf data structure used within it (both defined in <I>io.h</I>) are as follows:<P>
+<CODE>
+<PRE>
+typedef struct IOBuf
+{
+    void        *iob_Buffer;                  /* ptr to users buffer */
+    int32         iob_Len;                    /* len of this buffer, or transfer size*/
+} IOBuf;
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+typedef struct IOInfo
+{
+    uint8        ioi_Command;                 /* Command to be executed */
+    uint8        ioi_Flags;                   /* misc flags */
+    uint8        ioi_Unit;                    /* unit of this device */
+    uint8        ioi_Flags2;                  /* more flags, should be set to zero */
+    uint32        ioi_CmdOptions;             /* device dependent options */
+    uint32        ioi_User;                   /* for user use */
+    int32        ioi_Offset;                  /* offset into device for transfer to */
+                                              /*begin */
+    IOBuf        ioi_Send;                    /* copy out information */
+    IOBuf        ioi_Recv;                    /* copy in info, (address validated) */
+} IOInfo;
+</CODE>
+</PRE>
+The possible values for the IOInfo fields depend on the device to which the IOReq is sent. The fields include the following:<P>
+<UL>
+<LI><B>ioi_Command</B> carries the I/O command to be executed by the device driver. Every driver can recognize at least three commands defined in <I>io.h</I>: <CODE>CMD_WRITE</CODE>, <CODE>CMD_READ</CODE>, and <CODE>CMD_STATUS</CODE>. 
+<p>
+<LI><B>ioi_Flags</B> contains flags for I/O operation variations. Portfolio currently defines just one flag: <CODE>IO_QUICK</CODE>, which asks that I/O take place immediately (synchronously) without notification. All other bits must be set to 0.
+<p>
+<LI><B>ioi_Unit</B> specifies the unit of the device to communicate with. Available units change from device to device. The timer, for example, offers the <CODE>TIMER_UNIT_USEC</CODE> unit and the <CODE>TIMER_UNIT_VBLANK</CODE> unit.
+<p>
+<LI><B>ioi_Flags2 </B>currently is not used and is always set to 0.
+<p>
+<LI><B>ioi_CmdOptions</B> sets command options that vary from device to device.
+<p>
+<LI><B>ioi_User</B> contains a pointer to anything the user task wishes to point to. This is a handy field for keeping a reminder of the data on which an I/O operation is working. When the I/O operation completes, you can then look in the <CODE>io_Info.ioi_User</CODE> field of the IOReq structure to retrieve this pointer.
+<p>
+<LI><B>ioi_Offset</B> contains an offset into the device-a location-where the I/O operation begins. For output operations, this offset defines the starting point in the device where the task's data is written. For input operations, this offset defines the starting point in the device where data is read. This value, when supported by a device, uses the units of block size for whatever device it's addressing.
+<p>
+<LI><B>ioi_Send </B>contains the pointer to and size of a write buffer in which the task stores output data to be written to the device.
+<p>
+<LI><B>ioi_Recv</B> contains the pointer to and size of a read buffer in which the driver stores input data read from the device.
+</UL>
+The IOInfo structure should always contain a command value in <CODE>ioi_Command</CODE>, whether it's one of the three standard commands-<CODE>CMD_READ</CODE>, <CODE>CMD_WRITE</CODE>, or <CODE>CMD_STATUS</CODE>-or a device-specific command. If the command involves writing data, <CODE>ioi_Send</CODE> should be filled in with a write buffer definition; if the command involves reading data,<CODE> ioi_Recv</CODE> should be filled in with a read buffer definition. And if the task wants the fastest possible I/O operation with a device that can respond immediately (a timer, for example), <CODE>ioi_Flags</CODE> should be set to <CODE>IO_QUICK</CODE>. Any other fields should be filled in as appropriate for the operation.<P>
+<H2>Passing IOInfo Values to the Device</H2>
+To pass the IOInfo values to the system and send the IOReq, the task can use this call (found in <I>io.h</I>):<P>
+<DL>
+<DD><CODE>Err SendIO( Item ioReqItem, const IOInfo *ioiP )</CODE><BR>
+</DL>
+The ioReqItem argument is the item number of the IOReq to be sent to the device. The ioiP, argument is a pointer to the IOInfo structure that describes the I/O operation to perform.<P>
+When the kernel carries out <CODE>SendIO(),</CODE> it copies the IOInfo values into the IOReq, then checks the IOReq to be sure that all values are appropriate. If they are, the kernel passes on the I/O request to the device responsible. The device then carries out the request.<P>
+<CODE>SendIO()</CODE> returns 1 if immediate I/O was used and the IOReq is immediately available to the task. <CODE>SendIO()</CODE> returns a 0 if I/O was done asynchronously, which means that the request is being serviced by the device in the background. <CODE>SendIO()</CODE> returns a negative error code if there was an error in sending the IOReq. This usually occurs if there were inappropriate values included in the IOInfo structure.<P>
+<H2>Asynchronous vs. Synchronous I/O</H2>
+When a task sends an I/O request to a device using <CODE>SendIO()</CODE>, the device may or may not satisfy the request immediately. If <CODE>SendIO()</CODE> returns 1, it means that the operation is completed and no other actions are expected. If <CODE>SendIO()</CODE> returns a 0, it means that the I/O operation has been deferred and is being worked on in the background.<P>
+When an operation is deferred, your task is free to continue executing while the 
+I/O is being satisfied. For example, if the CD-ROM device is doing a long seek operation in order to get to a block of data you have asked it to read, you can continue executing the main loop of your task while you wait for the block to be transferred.<P>
+When <CODE>SendIO()</CODE> returns 0, which means the I/O request is being serviced asynchronously, you must wait for a notification that the I/O operation has completed before you can assume anything about the state of the operation. As shown previously, when you create an IOReq using <CODE>CreateIOReq()</CODE>, you can specify one of two types of notification: signal or message. When an asynchronous I/O operation completes, the device sends your task a signal or a message to inform you of the completion.<P>
+Once you receive the notification that an I/O operation is complete, you must call <CODE>WaitIO()</CODE> to complete the I/O process.<P>
+<DL>
+<DD><CODE>Err WaitIO( Item ioreq )</CODE><BR>
+</DL>
+<CODE>WaitIO()</CODE> cleans up any loose ends associated with the I/O process. <CODE>WaitIO()</CODE> can also be used when you wish to wait for an I/O operation to complete before proceeding any further. The function puts your task or thread on the wait queue until the specified IOReq has been serviced by the device.<P>
+The return value of <CODE>WaitIO()</CODE> corresponds to the result code of the whole I/O operation. If the operation fails for some reason, <CODE>WaitIO()</CODE> returns a negative error code describing the error.<P>
+If you have multiple I/O requests that are outstanding, and you receive a signal telling you an I/O operation is complete, you might need to determine which I/O request is complete. Use the <CODE>CheckIO()</CODE> function:<P>
+<DL>
+<DD><CODE>int32 CheckIO( Item ioreq )</CODE><BR>
+</DL>
+<CODE>CheckIO()</CODE> returns 0 if the I/O operation is still in progress. It returns greater than 0 if the operation completes; it returns a negative error code if something is wrong.<P>
+Do not use <CODE>CheckIO()</CODE> to poll the state of an I/O request. You should use <CODE>WaitIO()</CODE> if you need to wait for a specific I/O operation to complete, or use <CODE>WaitSignal()</CODE> or <CODE>WaitPort()</CODE> if you must wait for one of a number of I/O operations to complete.<P>
+There are many cases where an I/O operation is very short and fast. In these cases, the overhead of notifying your task when the I/O completes becomes significant. The I/O subsystem provides a quick I/O mechanism to help remove this overhead as much as possible.<P>
+Quick I/O occurs whenever <CODE>SendIO()</CODE> returns 1. It tells you that the I/O operation is complete, and that no signal or message will be sent to your task. You can request quick I/O by setting the <CODE>IO_QUICK</CODE> bit in the <CODE>ioi_Flags</CODE> field of the IOInfo structure before you call <CODE>SendIO()</CODE>. <CODE>IO_QUICK</CODE> is merely a request for quick I/O. It is possible that the system cannot perform the operation immediately. Therefore, check the return value of <CODE>SendIO()</CODE> to make sure the I/O was done immediately. If it was not done synchronously, you have to use <CODE>WaitIO()</CODE> to wait for the I/O operation to complete.<P>
+The fastest and simplest way to do quick I/O is to use the <CODE>DoIO() </CODE>function:<P>
+<DL>
+<DD><CODE>Err DoIO( Item ioreq, const IOInfo *ioInfo )</CODE><BR>
+</DL>
+<CODE>DoIO()</CODE> works just like <CODE>SendIO()</CODE>, except that it guarantees that the I/O operation is complete once it returns. You do not need to call <CODE>WaitIO()</CODE> or <CODE>CheckIO()</CODE> if you use <CODE>DoIO()</CODE> on an IOReq. <CODE>DoIO()</CODE> always requests quick I/O, and if the system is unable to do quick I/O, this function automatically waits for the I/O to complete before returning.<P>
+<A NAME="XREF41428"><H2>Completion Notification</A></H2>
+When an I/O operation is performed asynchronously, the device handling the request always sends a notification to the client task when the I/O operation is complete. As mentioned previously, the notification can be either a signal or a message.<P>
+When you create IOReq items with signal notification, the responsible devices send your task the <CODE>SIGF_IODONE</CODE> signal whenever an I/O operation completes. If you have multiple I/O requests outstanding at the same time, you can use the following to wait for any of the operations to complete. <P>
+<DL>
+<DD><CODE>WaitSignal(SIGF_IODONE);</CODE><BR>
+</DL>
+When <CODE>WaitSignal()</CODE> returns, you must call <CODE>CheckIO()</CODE> on all of the outstanding I/O requests you have to determine which one is complete. Once you find a completed request, call <CODE>WaitIO()</CODE> with that IOReq to mark the end of the I/O operation.<P>
+If you created your IOReq structures with message notification, you will receive a message whenever an I/O operation completes. The message is posted to the message port you specified when you created the IOReq. If you have multiple message-based I/O requests outstanding, you could wait for them using:<P>
+<DL>
+<DD><CODE>msgItem = WaitPort(replyPort,0);</CODE><BR>
+</DL>
+<CODE>WaitPort()</CODE> puts your task to sleep until any of the IOReqs complete. Once <CODE>WaitPort()</CODE> returns, you can look at three fields of the message structure to obtain information about the IOReq that has completed:<P>
+<CODE>
+<PRE>
+{
+Item msgItem;
+Message *msg;
+
+    msg        = (Message *) LookupItem(msgItem);
+    ioreq        = (Item) msg-&gt;msg_DataPtr;
+    result        = (Err) msg-&gt;msg_Result;
+    user        = msg-&gt;msg_DataSize;
+}
+</CODE>
+</PRE>
+The <CODE>msg_DataPtr</CODE> field contains the item number of the IOReq that has completed. The <CODE>msg_Result</CODE> field contains the result code of the I/O operation. This is the same value that <CODE>WaitIO()</CODE> would return for this IOReq. Finally, <CODE>msg_DataSize</CODE> contains the value of the <CODE>ioi_User</CODE> field from the <CODE>IOInfo</CODE> structure used to initiate the I/O operation with <CODE>SendIO()</CODE>.<P>
+<H2>Reading an IOReq</H2>
+Once an IOReq returns to a task, the task can read the IOReq for information about the I/O operation. To read an IOReq, a task must get a pointer to the IOReq using the <CODE>LookUpItem()</CODE> call. For example:<P>
+<DL>
+<DD><CODE>ior = (IOReq *)LookupItem(IOReqItem);</CODE><BR>
+</DL>
+Once a task has the address of an IOReq, it can read the values in the different fields of the IOReq. An IOReq data structure is defined as follows:<P>
+<CODE>
+<PRE>
+typedef struct IOReq
+{
+    ItemNode            io;
+    MinNode            io_Link;
+    struct            Device   *io_Dev;
+    struct            IOReq    *(*io_CallBack)(struct IOReq *iorP);
+                                   /* call, do not ReplyMsg */
+    IOInfo            io_Info;
+    int32            io_Actual;    /* actual size of request completed 
+*/
+    uint32            io_Flags;       /* internal to device driver */
+    int32            io_Error;       /* any errors from request? */
+    int32            io_Extension[2];    /* extra space if needed */
+    Item            io_MsgItem;
+    Item            io_SigItem;
+} IOReq;
+</CODE>
+</PRE>
+Fields that offer information to the average task are:<P>
+<UL>
+<LI><CODE>io_Info</CODE>.ioi<CODE>_User</CODE>. A copy of the <CODE>ioi_User</CODE> field from the IOInfo structure supplied by the task when calling <CODE>SendIO()</CODE> or <CODE>DoIO()</CODE>. This is a convenient location for the task to store context information associated with the IOReq.
+<p>
+<LI><CODE>io_Actual</CODE>. Supplies the size in bytes of the I/O operation just completed. This is a convenient place to find out the size of the last I/O transfer.
+<p>
+<LI><CODE>io_Error</CODE>. Contains any errors generated by the device carrying out the I/O operation. The meaning of this value depends on the device that was used. This value is also returned by <CODE>DoIO()</CODE> or <CODE>WaitIO()</CODE>.
+</UL>
+<A NAME="XREF33365"><H2>Continuing I/O</A></H2>
+Tasks often have a series of I/O operations to carry out with a device. If so, a task can recycle an IOReq once it's been returned; the task supplies new values in an IOInfo data structure, and then uses <CODE>SendIO()</CODE> or <CODE>DoIO()</CODE> to request a new operation.<P>
+A task isn't restricted to a single IOReq for a single device. If it's useful, a task can create two or more IOReqs for a device, and work with one IOReq while others are sent to the device or are awaiting action by the task.<P>
+<A NAME="XREF15660"><H2>Aborting I/O</A></H2>
+If an asynchronous I/O operation must be aborted while in process at the device, the issuing task can use this call (defined in <I>io.h</I>):<P>
+<DL>
+<DD><CODE>Err AbortIO( Item ioreq )</CODE><BR>
+</DL>
+<CODE>AbortIO()</CODE> accepts the item number of the IOReq that is responsible for the operation to be aborted. When executed, it notifies the device that the operation should be aborted. When it is safe, the operation is aborted and the device sets the IOReq's <CODE>Io_Error</CODE> field to <CODE>ABORTED</CODE>. The device then returns the IOReq to the task.<P>
+A task should always follow the <CODE>AbortIO()</CODE> call with a <CODE>WaitIO()</CODE> call so the task will wait for the abort to complete and the IOReq to return.<P>
+<A NAME="XREF26284"><H2>Finishing I/O</A></H2>
+When a task completely finishes I/O with a device, the task should clean up by deleting any IOReqs it created and by closing the device. To delete an IOReq, a task uses this call (found in <I>io.h</I>):<P>
+<DL>
+<DD><CODE>Err DeleteIOReq( Item ioreq )</CODE><BR>
+</DL>
+This call accepts the item number of an IOReq and frees any resources the IOReq used.<P>
+To close a device, a task uses the <CODE>CloseNameDevice()</CODE> call:<P>
+<DL>
+<DD><CODE>Err CloseNamedDevice( Item device )</CODE><BR>
+</DL>

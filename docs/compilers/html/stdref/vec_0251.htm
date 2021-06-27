@@ -1,0 +1,383 @@
+<HTML><TITLE>vector</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>vector</H2>
+<HR><PRE>     Container</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Sequence that supports random access iterators.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Special Case"><LI>Special Case</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Constructors and Destructors"><LI>Constructors and Destructors</LI></A>
+<A HREF="#Iterators"><LI>Iterators</LI></A>
+<A HREF="#Assignment Operator"><LI>Assignment Operator</LI></A>
+<A HREF="#Allocator"><LI>Allocator</LI></A>
+<A HREF="#Reference Operators"><LI>Reference Operators</LI></A>
+<A HREF="#Member Functions"><LI>Member Functions</LI></A>
+<A HREF="#Non-member Operators"><LI>Non-member Operators</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;vector></PRE>
+<PRE>
+template &#60;class T, class Allocator = allocator>
+class <B>vector</B> ;
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P><B><I>vector&#60;T, Allocator></B></I> is a type of sequence that supports random access iterators.  In addition, it supports amortized constant time insert and erase operations at the end.  Insert and erase in the middle take linear time.  Storage management is handled automatically.  In <B><I>vector</B></I>, <SAMP>iterator</SAMP> is a random access iterator referring to <SAMP>T</SAMP>.  <SAMP>const_iterator</SAMP> is a constant random access iterator that returns a <SAMP>const T&#38;</SAMP> when being dereferenced.  A constructor for <SAMP>iterator</SAMP> and <SAMP>const_iterator</SAMP> is guaranteed.  <SAMP>size_type</SAMP> is an unsigned integral type.  <SAMP>difference_type</SAMP> is a signed integral type. </P>
+<P>Any type used for the template parameter <SAMP>T</SAMP> must provide  the following (where <SAMP>T</SAMP> is the <SAMP>type</SAMP>, <SAMP>t</SAMP> is a <SAMP>value</SAMP> of <SAMP>T</SAMP> and <SAMP>u</SAMP> is a <SAMP>const</SAMP> <SAMP>value</SAMP> of <SAMP>T</SAMP>): </P>
+<PRE>Default constructor   T()
+  Copy constructors     T(t) and T(u)
+  Destructor            t.~T()
+  Address of            &#38;t and &#38;u yielding T* and
+                         const T* respectively
+  Assignment            t = a where a is a
+                        (possibly const) value of T
+</PRE>
+<A NAME="Special Case"><H3>Special Case</H3></A>
+<P>Vectors of bit values (boolean 1/0 values) are handled as a special case by the standard library, so that they can be efficiently packed several elements to a word.  The operations for a boolean vector, <B><I>vector&#60;bool></B></I>, are a superset of those for an ordinary vector, only the implementation is more efficient.</P>
+<P>Two member functions are available to the the boolean vector data type.  One  is <SAMP>flip()</SAMP>, which inverts all the bits of the vector.  Boolean vectors also return as reference an internal value that also supports the <SAMP>flip()</SAMP> member function.  The other <B><I>vector&#60;bool></B></I>-specific member function is a second form of the <SAMP>swap()</SAMP> function</P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class T, class Allocator = allocator>
+ class vector {
+public:
+ // Types
+   typedef T value_type;
+   typedef Allocator allocator_type;
+   typename reference;
+   typename const_reference; 
+   typename iterator;
+   typename const_iterator;
+   typename size_type;
+   typename difference_type;
+   typename reverse_iterator;
+   typename const_reverse_iterator;
+ // Construct/Copy/Destroy
+   explicit vector (const Allocator&#38; = Allocator());
+   explicit vector (size_type, const Allocator&#38; = Allocator ());
+   vector (size_type, const T&#38;, const Allocator&#38; = Allocator());
+   vector (const vector&#60;T, Allocator>&#38;);
+   template &#60;class InputIterator>
+    vector (InputIterator, InputIterator, 
+            const Allocator&#38; = Allocator ());
+   ~vector ();
+   vector&#60;T,Allocator>&#38; operator= (const vector&#60;T, Allocator>&#38;);
+   template &#60;class InputIterator>
+    void assign (InputIterator first, InputIterator last);
+   template &#60;class Size, class TT>
+    void assign (Size n);
+   template &#60;class Size, class TT>
+    void assign (Size n, const TT&#38;);
+   allocator_type get_allocator () const;
+ // Iterators
+   iterator begin ();
+   const_iterator begin () const;
+   iterator end ();
+   const_iterator end () const;
+   reverse_iterator rbegin ();
+   const_reverse_iterator rbegin () const;
+   reverse_iterator rend ();
+   const_reverse_iterator rend () const;
+ // Capacity
+   size_type size () const;
+   size_type max_size () const;
+   void resize (size_type);
+   void resize (size_type, T);
+   size_type capacity () const;
+   bool empty () const;
+   void reserve (size_type);
+ // Element Access
+   reference operator[] (size_type);
+   const_reference operator[] (size_type) const;
+   reference at (size_type);
+   const_reference at (size_type) const;
+   reference front ();
+   const_reference front () const;
+   reference back ();
+   const_reference back () const;
+ // Modifiers
+   void push_back (const T&#38;);
+   void pop_back ();
+   iterator insert (iterator);
+   iterator insert (iterator, const T&#38;);
+   void insert (iterator, size_type, const T&#38;);
+   template &#60;class InputIterator>
+    void insert (iterator, InputIterator, InputIterator);
+   iterator erase (iterator);
+   iterator erase (iterator, iterator);
+   void swap (vector&#60;T, Allocator>&#38;);
+};
+ // Non-member Operators
+template &#60;class T>
+ bool operator== (const vector&#60;T,Allocator>&#38;, 
+                  const vector &#60;T,Allocator>&#38;);
+template &#60;class T>
+ bool operator&#60; (const vector&#60;T,Allocator>&#38;, 
+                 const vector&#60;T,Allocator>&#38;);
+// Specialized Algorithms
+template &#60;class T, class Allocator>
+ void swap (const vector&#60;T,Allocator>&#38;, const vector&#60;T,Allocator>&#38;);
+</PRE>
+<A NAME="Constructors and Destructors"><H3>Constructors and Destructors</H3></A>
+<PRE>explicit <B>vector </B>(const Allocator&#38; alloc = Allocator());</PRE>
+<UL><P>The default constructor.  Creates a vector of length zero. The vector will use the allocator <SAMP>alloc</SAMP> for all storage management.</P>
+</UL>
+<PRE>explicit <B>vector</B> (size_type n, 
+                 const Allocator&#38; alloc = Allocator());</PRE>
+<UL><P>Creates a vector of length <SAMP>n</SAMP>, containing <SAMP>n</SAMP> copies of the default value for type <SAMP>T</SAMP>. Requires that <SAMP>T</SAMP> have a default constructor.  The vector will use the allocator <SAMP>alloc</SAMP> for all storage management.</P>
+</UL>
+<PRE><B>vector</B> (size_type n, const T&#38; value,
+        const Allocator&#38; alloc = Allocator());</PRE>
+<UL><P>Creates a vector of length <SAMP>n</SAMP>, containing <SAMP>n</SAMP> copies of value.  The vector will use the allocator <SAMP>alloc</SAMP> for all storage management.</P>
+</UL>
+<PRE><B>vector</B> (const vector&#60;T, Allocator>&#38; x);</PRE>
+<UL><P>Creates a copy of <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>template &#60;class InputIterator>
+<B>vector</B> (InputIterator first, InputIterator last,
+        const Allocator&#38; alloc = Allocator());</PRE>
+<UL><P>Creates a vector of length <SAMP>last - first</SAMP>, filled with all values obtained by dereferencing the <SAMP>InputIterators</SAMP> on the range <SAMP>[first, last)</SAMP>. The vector will use the allocator <SAMP>alloc</SAMP> for all storage management.</P>
+</UL>
+<PRE><B>~vector</B> ();</PRE>
+<UL><P>The destructor.  Releases any allocated memory for this vector.</P>
+</UL>
+<A NAME="Iterators"><H3>Iterators</H3></A>
+<PRE>iterator <B>begin</B> ();</PRE>
+<UL><P>Returns a random access <SAMP>iterator</SAMP> that points to the first element.</P>
+</UL>
+<PRE>const_iterator <B>begin</B> () const;</PRE>
+<UL><P>Returns a random access <SAMP>const_iterator</SAMP> that points to the first element.</P>
+</UL>
+<PRE>iterator <B>end</B> ();</PRE>
+<UL><P>Returns a random access <SAMP>iterator</SAMP> that points to the past-the-end value.</P>
+</UL>
+<PRE>const_iterator <B>end</B> () const;</PRE>
+<UL><P>Returns a random access <SAMP>const_iterator</SAMP> that points to the past-the-end value.</P>
+</UL>
+<PRE>reverse_iterator <B>rbegin</B> ();</PRE>
+<UL><P>Returns a random access <SAMP>reverse_iterator</SAMP> that points to the past-the-end value.</P>
+</UL>
+<PRE>const_reverse_iterator <B>rbegin</B> () const;</PRE>
+<UL><P>Returns a random access <SAMP>const_reverse_iterator</SAMP> that points to the past-the-end value.</P>
+</UL>
+<PRE>reverse_iterator <B>rend</B> ();</PRE>
+<UL><P>Returns a random access <SAMP>reverse_iterator</SAMP> that points to the first element.</P>
+</UL>
+<PRE>const_reverse_iterator <B>rend</B> () const;</PRE>
+<UL><P>Returns a random access <SAMP>const_reverse_iterator</SAMP> that points to the first element.</P>
+</UL>
+<A NAME="Assignment Operator"><H3>Assignment Operator</H3></A>
+<PRE>vector&#60;T, Allocator>&#38; <B>operator= </B>(const vector&#60;T, Allocator>&#38;  
+                                 x);</PRE>
+<UL><P>Erases all elements in self then inserts into self a copy of each element in <SAMP>x</SAMP>.  Returns a reference to self.</P>
+</UL>
+<A NAME="Allocator"><H3>Allocator</H3></A>
+<PRE>allocator_type <B>get_allocator</B> () const;</PRE>
+<UL><P>Returns a copy of the allocator used by self for storage management.</P>
+</UL>
+<A NAME="Reference Operators"><H3>Reference Operators</H3></A>
+<PRE>reference <B>operator[]</B> (size_type n);</PRE>
+<UL><P>Returns a reference to element <SAMP>n</SAMP> of self.  The result can be used as an lvalue.  The index <SAMP>n</SAMP> must be between 0 and the <SAMP>size</SAMP> less one.</P>
+</UL>
+<PRE>const_reference <B>operator[]</B> (size_type n) const;</PRE>
+<UL><P>Returns a constant reference to element <SAMP>n</SAMP> of self. The index <SAMP>n</SAMP> must be between 0 and the <SAMP>size</SAMP> less one.</P>
+</UL>
+<A NAME="Member Functions"><H3>Member Functions</H3></A>
+<PRE>template &#60;class InputIterator>
+void 
+<B>assign</B> (InputIterator first, InputIterator last);</PRE>
+<UL><P>Erases all elements contained in self, then inserts new elements from the range <SAMP>[first, last)</SAMP>.</P>
+</UL>
+<PRE>template &#60;class Size, class T>
+void 
+<B>assign</B> (Size n, const T&#38; t); </PRE>
+<UL><P>Erases all elements contained in self, then inserts <SAMP>n</SAMP> instances of the default value of  type <SAMP>T</SAMP>.</P>
+</UL>
+<PRE>template &#60;class Size, class T>
+void 
+<B>assign</B> (Size n, const T&#38; t); </PRE>
+<UL><P>Erases all elements contained in self, then inserts <SAMP>n</SAMP> instances of the value of <SAMP>t</SAMP>.</P>
+</UL>
+<PRE>reference 
+<B>at</B>(size_type n);</PRE>
+<UL><P>Returns a reference to element <SAMP>n</SAMP> of self.   The result can be used as an lvalue.  The index <SAMP>n</SAMP> must be between 0 and the <SAMP>size</SAMP> less one.</P>
+</UL>
+<PRE>const_reference 
+<B>at</B> (size_type) const;</PRE>
+<UL><P>Returns a constant reference to element <SAMP>n</SAMP> of self. The index <SAMP>n</SAMP> must be between 0 and the <SAMP>size</SAMP> less one.</P>
+</UL>
+<PRE>reference 
+<B>back</B> ();</PRE>
+<UL><P>Returns a reference to the last element.</P>
+</UL>
+<PRE>const_reference 
+<B>back</B> () const;</PRE>
+<UL><P>Returns a constant reference to the last element.</P>
+</UL>
+<PRE>size_type 
+<B>capacity</B> () const;</PRE>
+<UL><P>Returns the size of the allocated storage, as the number of elements that can be stored.</P>
+</UL>
+<PRE>void <B>clear</B> () ; </PRE>
+<UL><P>    Deletes all elements from the vector.</P>
+</UL>
+<PRE>bool 
+<B>empty</B> () const;</PRE>
+<UL><P>   Returns <SAMP>true</SAMP> if the <SAMP>size</SAMP> is zero.</P>
+</UL>
+<PRE>iterator
+<B>erase</B> (iterator position);</PRE>
+<UL><P>Deletes the vector element pointed to by the iterator <SAMP>position</SAMP>.  Returns an <SAMP>iterator</SAMP> pointing to the element following the deleted element, or <SAMP>end()</SAMP> if the deleted element was the last one in this vector. </P>
+</UL>
+<PRE>
+iterator
+<B>erase</B> (iterator first, iterator last);</PRE>
+<UL><P>Deletes the vector elements in the range (first, last).  Returns an <SAMP>iterator</SAMP> pointing to the element following the last deleted element, or <SAMP>end()</SAMP> if there were no elements in the deleted range. </P>
+</UL>
+<PRE>
+void
+<B>flip</B>();</PRE>
+<UL><P>Flips all the bits in the vector.  <I>This member function is only defined for </I><B><I>vector&#60;bool></B></I>.</P>
+</UL>
+<PRE>reference 
+<B>front</B> ();</PRE>
+<UL><P>Returns a reference to the first element.</P>
+</UL>
+<PRE>const_reference 
+<B>front</B> () const;</PRE>
+<UL><P>Returns a constant reference to the first element.</P>
+</UL>
+<PRE>iterator 
+<B>insert</B> (iterator position);</PRE>
+<UL><P>Inserts <SAMP>x</SAMP> before <SAMP>position</SAMP>.  The return value  points to the inserted <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>iterator 
+<B>insert</B> (iterator position, const T&#38; x);</PRE>
+<UL><P>Inserts <SAMP>x</SAMP> before <SAMP>position</SAMP>.  The return value  points to the inserted <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>void 
+<B>insert</B> (iterator position, size_type n, const  T&#38; x);</PRE>
+<UL><P>Inserts <SAMP>n</SAMP> copies of <SAMP>x</SAMP> before <SAMP>position</SAMP>.</P>
+</UL>
+<PRE>template &#60;class InputIterator>
+void 
+<B>insert</B> (iterator position, InputIterator first, 
+        InputIterator last);</PRE>
+<UL><P>Inserts copies of the elements in the range <SAMP>[first, last]</SAMP> before <SAMP>position</SAMP>.</P>
+</UL>
+<PRE>size_type 
+<B>max_size</B> () const;</PRE>
+<UL><P>Returns <SAMP>size()</SAMP> of the largest possible vector.</P>
+</UL>
+<PRE>void 
+<B>pop_back</B> ();</PRE>
+<UL><P>Removes the last element of self.</P>
+</UL>
+<PRE>void 
+<B>push_back</B> (const T&#38; x);</PRE>
+<UL><P>Inserts a copy of <SAMP>x</SAMP> to the end of self.</P>
+</UL>
+<PRE>void 
+<B>reserve</B> (size_type n);</PRE>
+<UL><P>Increases the capacity of self in anticipation of adding new elements.  <SAMP>reserve</SAMP> itself does not add any new elements.  After a call to <SAMP>reserve,</SAMP> <SAMP>capacity()</SAMP> is greater than or equal to <SAMP>n</SAMP> and subsequent insertions will not cause a reallocation until the size of the vector exceeds <SAMP>n</SAMP>.  Reallocation does not occur if <SAMP>n</SAMP> is less than <SAMP>capacity()</SAMP>.  If reallocation does occur, then all iterators and references pointing to elements in the vector are invalidated.  <SAMP>reserve</SAMP> takes at most linear time in the size of self.</P>
+</UL>
+<PRE>void 
+<B>resize</B> (size_type sz);</PRE>
+<UL><P>Alters the size of self.  If the new size (<SAMP>sz</SAMP>) is greater than the current size, then <SAMP>sz-size()</SAMP> instances of the default value of type<SAMP> T </SAMP> are inserted at the end of the vector.  If the new size is smaller than the current <SAMP>capacity</SAMP>, then the vector is truncated by erasing <SAMP>size()-sz</SAMP> elements off the end. If <SAMP>sz</SAMP> is equal to <SAMP>capacity</SAMP> then no action is taken.</P>
+</UL>
+<PRE>void 
+<B>resize</B> (size_type sz, T c);</PRE>
+<UL><P>Alters the size of self.  If the new size (<SAMP>sz</SAMP>) is greater than the current size, then <SAMP>sz-size()</SAMP> <SAMP>c</SAMP>'s are inserted at the end of the vector.  If the new size is smaller than the current <SAMP>capacity</SAMP>, then the vector is truncated by erasing <SAMP>size()-sz</SAMP> elements off the end. If <SAMP>sz</SAMP> is equal to <SAMP>capacity</SAMP> then no action is taken.</P>
+</UL>
+<PRE>size_type 
+<B>size</B> () const;</PRE>
+<UL><P>Returns the number of elements.</P>
+</UL>
+<PRE>void 
+<B>swap</B> (vector&#60;T, Allocator>&#38; x);</PRE>
+<UL><P>Exchanges self with <SAMP>x</SAMP>, by swapping all elements.</P>
+</UL>
+<PRE>
+void
+<B>swap</B>(reference x, reference y);</PRE>
+<UL><P>Swaps the values of <SAMP>x</SAMP> and <SAMP>y</SAMP>.  <I>This is a member function of</I> <B><I>vector&#60;bool></B></I> <I>only</I>.</P>
+</UL>
+<A NAME="Non-member Operators"><H3>Non-member Operators</H3></A>
+<PRE>template &#60;class T, class Allocator>
+bool <B>operator==</B> (const vector&#60;T, Allocator>&#38; x,
+                 const vector&#60;T, Allocator>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if <SAMP>x</SAMP> is the same as <SAMP>y</SAMP>.</P>
+</UL>
+<PRE>template &#60;class T>
+bool <B>operator&#60;</B> (const vector&#60;T, Allocator>&#38; x,
+                const vector&#60;T, Allocator>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if the elements contained in <SAMP>x </SAMP>are lexicographically less than the elements contained in <SAMP>y</SAMP>.</P>
+</UL>
+<PRE>template &#60;class T, class Allocator>
+void <B>swap </B>(vector &#60;T, Allocator>&#38; a, vector &#60;T, Allocator>&#38; b);</PRE>
+<UL><P>Efficiently swaps the contents of <SAMP>a</SAMP> and <SAMP>b</SAMP>.</P>
+</UL>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// vector.cpp
+//
+ #include &#60;vector>
+ #include &#60;iostream.h></PRE><PRE> ostream&#38; operator&#60;&#60; (ostream&#38; out, 
+                      const vector&#60;int, allocator>&#38; v)
+ {
+   copy(v.begin(), v.end(), ostream_iterator&#60;int>(out," "));
+   return out;
+ }</PRE><PRE> int main(void)
+ {
+   // create a vector of doubles
+   <B>vector</B>&#60;int, allocator>         vi;
+   int                 i;</PRE><PRE>   for(i = 0; i &#60; 10; ++i) {
+     // insert values before the beginning
+     vi.insert(vi.begin(), i);
+   }</PRE><PRE>   // print out the vector
+   cout &#60;&#60; vi &#60;&#60; endl;</PRE>
+<PRE>   // now let's erase half of the elements
+   int half = vi.size() >> 1;</PRE>
+<PRE>   for(i = 0; i &#60; half; ++i) {
+     vi.erase(vi.begin());
+   }</PRE><PRE>   // print ir out again
+   cout &#60;&#60; vi &#60;&#60; endl;</PRE>
+<PRE>   return 0;</PRE>
+<PRE> }</PRE>
+<PRE>Output : 
+
+9 8 7 6 5 4 3 2 1 0
+4 3 2 1 0
+</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>Member function templates are used in all containers provided by the Standard Template Library.  An example of this feature is the constructor for <B><I>vector&#60;T, Allocator></B></I> that takes two templated iterators:</P>
+<PRE>template &#60;class InputIterator>
+ vector (InputIterator, InputIterator,
+         const Allocator = Allocator());
+</PRE>
+<P><B><I>vector</B></I> also has an insert function of this type.  These functions, when not restricted by compiler limitations, allow you to use any type of input iterator as arguments.   For compilers that do not support this feature we provide substitute functions that allow you to use an iterator obtained from the same type of container as the one you are constructing (or calling a member function on), or you can use a pointer to the type of element you have in the container.</P>
+<P>For example, if your compiler does not support member function templates you can construct a vector in the following two ways:</P>
+<PRE>int intarray[10];
+vector&#60;int, allocator> first_vector(intarray, intarray + 10);
+vector&#60;int, allocator> second_vector(first_vector.begin(), 
+                                     first_vector.end());
+</PRE>
+<P>but not this way:</P>
+<PRE>vector&#60;long, allocator>
+long_vector(first_vector.begin(),first_vector.end());
+</PRE>
+<P>since the <SAMP>long_vector</SAMP> and <SAMP>first_vector</SAMP> are not the same type.</P>
+<P>Additionally, if your compiler does not support default template parameters, you will need to supply the <SAMP>Allocator</SAMP> template argument.  For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="all_7029.htm"><B><I>allocator</B></I></A>, <A HREF="Con_2487.htm"><B><I>Containers</B></I></A>, <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A>, <A HREF="lex_3806.htm"><B><I>lexicographical_compare</B></I></A></P>
+<HR>
+<A HREF="val_9388.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="wst_4531.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

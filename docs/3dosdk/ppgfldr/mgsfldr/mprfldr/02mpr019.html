@@ -1,0 +1,21 @@
+<Title>TermJuggler</Title>
+<A NAME="XREF25568"><H1>TermJuggler </A></H1>
+<A NAME="XREF34789"></A> Terminates the Juggler mechanism for controlling events.<P>
+<H3>Synopsis</H3>
+<CODE>int32 TermJuggler( void )</CODE><P>
+<H3>Description</H3>
+This function terminates the Juggler, which eliminates support for object-oriented calls, Juggler playback, and MIDI score playback.  A task should call this function when finished with the Juggler. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>None.
+<DD> 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+juggler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr013.html#XREF10647"><CODE>InitJuggler</A>(), <A HREF="./02mpr006.html#XREF21967">BumpJuggler</A>() </CODE><P>
+</CODE>

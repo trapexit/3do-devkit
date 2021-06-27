@@ -1,0 +1,27 @@
+<TITLE>DelayLine</TITLE>
+<H1><LINK NAME="XREF37273">DelayLine</LINK></H1><HR>
+<H1>DelayLine</H1>
+<A NAME="XREF38435"> Creates a delay line</A><P>
+<H3>Synopsis</H3>
+<CODE>DelayLine &lt;sample symbol&gt; &lt;nbytes&gt; [&lt;nchannels&gt;  [&lt;loop (1/0)&gt;]]</CODE><P>
+<H3>Description</H3>
+Creates a delay line (a special kind of sample) which can be attached to delay instruments.<P>
+<H3>Argument</H3>
+<DL>
+<DT>&lt;sample symbol&gt;
+<DD>New symbol in sample name space for the delay line.
+</DL>
+<DL>
+<DT>&lt;nbytes&gt;
+<DD>Size of delay line in bytes (not frames!). The formula for computing nbytes is: nchannels * nframes * 2. For a 1 second single channel delay, specify 44100 * 1 * 2, or 88200, bytes. This arcane method is identical to the audio folio DelayLine() function, and is intended to force you to realize how much memory you are actually using. The same method is used here because it seemed inappropriate to give the patch language a subtly different dialect from the audio folio.
+</DL>
+<DL>
+<DT>&lt;nchannels&gt;
+<DD>Optional # of channels. Defaults to 1.
+</DL>
+<DL>
+<DT>&lt;loop&gt;
+<DD>Optional argument that indicates whether or not delay line should be looped (1) or played only once (0) when started. Defaults to loop.
+</DL>
+<H3>See Also</H3>
+<CODE>AttachSample, LoadInstrument</CODE><P>

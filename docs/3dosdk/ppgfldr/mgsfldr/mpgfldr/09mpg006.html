@@ -1,0 +1,52 @@
+<TITLE>Importing a MIDI Score</TITLE>
+<H1>Importing a MIDI Score</H1><HR>
+After a MIDI environment is prepared with a score context and its attendant data structures, a task can import a MIDI score file for playback there. It helps if that MIDI score is tweaked to best fit into the 3DO MIDI environment. It should limit unnecessary programs and voices. It should plan, in its PIMap, to use less complex DSP instruments. The MIDI score should be stored in a Format 0 or Format 1 file, which is often available through a sequencer's or composition tool's Export command.<P>
+<H2>Declaring a MIDIFileParser Data Structure</H2>
+Before a task can import a MIDI file, it must first declare a <CODE>MIDIFileParser</CODE> data structure. This structure keeps track of the overall score parameters as the MIDI data is translated into a Juggler object. These parameters include values such as the clocks-per-second tempo set in the MIDI score. The <CODE>MIDIFileParser</CODE> data structure is defined in the <I>midifile.h</I> header file, and should never be written to directly by a task, the MIDI loading calls use it for their own internal purposes.<P>
+<H2>Creating a Juggler Object</H2>
+The next step in importing a MIDI score is to create a Juggler object appropriate for the imported score. If the score is a Format 0 file, you must create a single Juggler sequence to contain the translated score. If the score is a Format 1 file, you must create a Juggler collection that holds one Juggler sequence for each sequence in the score. (The translating call itself creates the Juggler sequences within the collection.)<P>
+<H2>Loading the Score</H2>
+With a <CODE>MIDIFileParser</CODE> data structure and a Juggler sequence in place, you can load a Format 0 MIDI score file using this call:<P>
+<DL>
+<DD><CODE>int32 MFLoadSequence( MIDIFileParser *mfpptr, char *filename, Sequence *SeqPtr )</CODE><BR>
+</DL>
+The call takes three arguments: <CODE>*mfpptr</CODE>, a pointer to the <CODE>MIDIFileParser</CODE> data structure used for translating the MIDI score; <CODE>*filename</CODE>, a pointer to a character string containing the name of the MIDI score file; and <CODE>*SeqPtr</CODE>, a pointer to the Juggler sequence where the translated MIDI score should be stored.<P>
+When <CODE>MFLoadSequence()</CODE> executes, it opens the MIDI score file, translates its contents using the <CODE>MIDIFileParser</CODE> data structure, and stores the translated MIDI messages in the specified sequence as MIDI events. It writes information about the MIDI score in the <CODE>MIDIFileParser</CODE> data structure. If successful, <CODE>MFLoadSequence()</CODE> returns 0; if unsuccessful, it returns a negative value (an error code).<P>
+To load a Format 1 MIDI score file, you must have a Juggler collection in place (instead of a Juggler sequence used for a Format 0 score). The collection should be empty. Use this call to load the file:<P>
+<DL>
+<DD><CODE>int32 MFLoadCollection( MIDIFileParser *mfpptr, char *filename, Collection *ColPtr )</CODE><BR>
+</DL>
+The call takes three arguments: <CODE>*mfpptr</CODE>, a pointer to the <CODE>MIDIFileParser</CODE> data structure used for translating the MIDI score; <CODE>*filename</CODE>, a pointer to a character string containing the name of the MIDI score file; and <CODE>*ColPtr</CODE>, a pointer to the Juggler collection where the translated MIDI score should be stored.<P>
+When <CODE>MFLoadCollection()</CODE> executes, it opens the MIDI score file and translates its contents using the <CODE>MIDIFileParser</CODE> data structure. It creates a Juggler sequence for each track in the MIDI score, and stores the translated contents of each track in a separate Juggler sequence. <CODE>MFLoadCollection()</CODE> writes information about the MIDI score in the <CODE>MIDIFileParser</CODE> data structure.<P>
+Note that if <CODE>MFLoadCollection()</CODE> processes a Format 0 MIDI file, it treats it as a
+ single-track Format 1 MIDI file and turns it into a single-sequence collection. This collection requires more processing overhead than the same score loaded by <CODE>MFLoadSequence()</CODE> as a Juggler sequence. If your MIDI score has only one channel and you can save it as a Format 0 file, then you should always load it as a sequence to save processing overhead.<P>
+If successful, <CODE>MFLoadCollection()</CODE> returns 0; if unsuccessful, it returns a negative value (an error code).<P>
+If you use data streaming to import the image of a MIDI score file, then use this call to turn the file image into a MIDI collection that can be played by the Juggler:<P>
+<DL>
+<DD><CODE>int32 MFDefineCollection( MIDIFileParser *mfpptr, char *Image, int32 NumBytes, Collection *ColPtr)</CODE><BR>
+</DL>
+The call takes four arguments: <CODE>*mfpptr</CODE>, a pointer to the <CODE>MIDIFileParser</CODE> data structure used for translating the MIDI score; <CODE>*Image</CODE>, a pointer to the file image (which should be a string of bytes); <CODE>NumBytes</CODE>, the size of the MIDI file image in bytes; and <CODE>*ColPtr</CODE>, a pointer to the Juggler collection where the translated MIDI score should be stored.<P>
+When <CODE>MFDefineCollection()</CODE> executes, it turns the MIDI file image into a collection just as <CODE>MFLoadCollection()</CODE> turns a MIDI file into a collection. <CODE>MFDefineCollection()</CODE> returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<H2>Specifying the User Context</H2>
+Juggler objects can contain a pointer to a user context. This feature is designed specifically for MIDI playback. Once a MIDI score is translated and placed in a Juggler sequence or collection, that sequence or collection must be set with a pointer to the score context used to play back the MIDI score. To do so, you use tag arguments and the <CODE>SetObjectInfo()</CODE> call as described in <A HREF="./08mpg.html#XREF34225">Creating and Playing Juggler Objects</A>."<P>
+The code fragment in Example 3 shows how a collection containing an imported MIDI score is set to point to the score context. <CODE>CollectionPtr</CODE> is a pointer to the collection; <CODE>SconPtr</CODE> is a pointer to the score context.<P>
+<B>Example 1: </B><I>Pointing to a score context.</I><P>
+<CODE>
+<PRE>
+/* Define TagList */
+Tags[0].ta_Tag = JGLR_TAG_CONTEXT;
+Tags[0].ta_Arg = (void *) SconPtr;
+Tags[1].ta_Tag = TAG_END;
+SetObjectInfo(CollectionPtr, Tags);
+</CODE>
+</PRE>
+After the pointer to the score context is set, the object's interpreter procedure can pass the pointer along to other MIDI calls as they execute the MIDI events in the object.<P>
+<A NAME="XREF39192"><H2>The Interpreter Procedure</A></H2>
+When <CODE>MFLoadSequence()</CODE> and <CODE>MFLoadCollection()</CODE> turn a MIDI score into a Juggler object, all translated sequences contain a pointer to an interpreter procedure. This call is the MIDI interpreter procedure:<P>
+<DL>
+<DD><CODE>int32 InterpretMIDIEvent( Sequence *SeqPtr, MIDIEvent *MEvCur, ScoreContext *scon )</CODE><BR>
+</DL>
+The call accepts three arguments: <CODE>*SeqPtr</CODE>, a pointer to the sequence for which it interprets; <CODE>*MEvCur</CODE>, a pointer to the current event in the sequence; and <CODE>*scon</CODE>, a pointer to the score context used to play the event.<P>
+When executed, <CODE>InterpretMIDIEvent()</CODE> extracts a MIDI message from the current event. The extracted message is string of one-byte values that can be from one to four bytes long. <CODE>InterpretMIDIEvent()</CODE> then calls <CODE>InterpretMIDIMessage()</CODE> and passes the MIDI message and score context pointer along to it.<P>
+<CODE>InterpretMIDIMessage()</CODE> looks at the MIDI message to see if it is one of the messages recognized by the Music library. If it is, <CODE>InterpretMIDIMessage()</CODE> calls whichever of these MIDI playback functions is appropriate for carrying out the message: <CODE>StartScoreNote()</CODE> for Note On messages, <CODE>ReleaseScoreNote()</CODE> for  Note Off messages, <CODE>ChangeScoreControl()</CODE> for volume or panning messages, <CODE>ChangeScoreProgram()</CODE> for program change messages, or <CODE> ChangeScorePitchBend()</CODE> for pitch bend change messages. Although these functions are called automatically during score playback, they can be used directly by a task, and are described more fully later in this chapter.<P>
+<P>

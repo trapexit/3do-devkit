@@ -1,0 +1,81 @@
+<TITLE>Players, Sounds, and Markers</TITLE>
+<H1><LINK NAME="XREF21933">Players, Sounds, and Markers</LINK></H1><HR>
+<H2>Players</H2>
+The top level data structure used by the advanced sound player is called an <CODE>SPPlayer</CODE>. Each <CODE>SPPlayer</CODE> contains a sound spooler, a sample player instrument, a set of buffers, and control information necessary to manage playback. A task can have multiple <CODE>SPPlayer</CODE>s, as long as they do not compete for the same media (e.g. two or more <CODE>SPPlayer</CODE>s trying to play sound from a CD at the same time is not likely to work).<P>
+<H2>Sounds</H2>
+<CODE>SPPlayer</CODE>s also contain a set of <CODE>SPSound</CODE>s they can play. An <CODE>SPSound</CODE> is a handle to sound data source. Currently two kinds of sound sources are supported: AIFF sound files and sample items. The difference is that AIFF sound files are spooled directly from disc and sample items are played entirely from memory. Since <CODE>SPSound</CODE>s built around sample items do not require access to the CD during playback, they can be used to keep playing sound while accessing the CD for something else. Other than that, different kinds of <CODE>SPSound</CODE>s are treated identically by the advanced sound player.<P>
+The set of <CODE>SPsound</CODE>s belonging to an <CODE>SPPlayer</CODE> can be managed at any time, even during playback. All of the <CODE>SPSound</CODE>s belonging to an <CODE>SPPlayer</CODE> must have the same sample format: number of channels, sample width, compression type and ratio.<P>
+<H2>Markers</H2>
+Each <CODE>SPSound</CODE> can have a set of markers at key sample positions within the sound data. These <CODE>SPMarker</CODE>s can be defined in the following ways:<P>
+<UL>
+<LI>Markers and loop points from an AIFF file.
+<LI>Loop points from a sample item.
+<LI>Begin and end markers (intrinsic <CODE>SPMarker</CODE>s created by the advanced sound player for all <CODE>SPSound</CODE>s).
+<LI><CODE>SPMarker</CODE>s created by the client.
+</UL>
+Any of the <CODE>SPMarker</CODE>s can be set to cause playback to branch seamlessly (without any audible pops or clicks) to another <CODE>SPMarker</CODE> within the same <CODE>SPSound</CODE> or any of the other <CODE>SPSound</CODE>s that have been added to the <CODE>SPPlayer</CODE>.<P>
+By default, <CODE>SPMarker</CODE>s do nothing during playback. Also, by default, when the end of the sound data for the currently playing <CODE>SPSound</CODE> is reached, playback automatically stops. This can be changed by the client by correct placement of branches either before or during playback. The following examples illustrate a few things that can be done with markers.<P>
+<A NAME="XREF16410"><H2>Examples of looping and branching</A></H2>
+Here are some simple modifications to the previous annotated example to do some simple branching.<P>
+<H3>Play Several Sound Files Sequentially</H3>
+Substitute these steps in the annotated example to link several sounds together for seamless playback.<P>
+<OL>
+<LI>Specify which sound files you want to play.
+<p>
+<DL>
+<DD><CODE>spAddSoundFile (&amp;first_sound, player, filename);<BR>
+spAddSoundFile (&amp;second_sound, player, filename);<BR>
+spAddSoundFile (&amp;third_sound, player, filename);<BR>
+.<BR>
+.<BR>
+.<BR>
+spAddSoundFile (&amp;penultimate_sound, player, filename);<BR>
+spAddSoundFile (&amp;final_sound, player, filename);</CODE><BR>
+</DL>
+<p>
+<LI>Set a branch at the end of each sound to the beginning of the next one. Each sound has intrinsic markers for its beginning and ending.
+<p>
+<DL>
+<DD><CODE>spBranchAtMarker (first_sound, SP_MARKER_NAME_END,<BR>
+                  second_sound, SP_MARKER_NAME_BEGIN);<BR>
+spBranchAtMarker (second_sound, SP_MARKER_NAME_END,<BR>
+                  third_sound, SP_MARKER_NAME_BEGIN);<BR>
+.<BR>
+.<BR>
+.<BR>
+spBranchAtMarker (penultimate_sound, SP_MARKER_NAME_END,<BR>
+                  final_sound, SP_MARKER_NAME_BEGIN);</CODE><BR>
+</DL>
+<p>
+Because there is no branch at the end of the final sound, playback stops when the end of the final sound is reached. <P>
+There is also a convenience macro for linking multiple sounds together that does the above <CODE>spBranchAtMarker()</CODE> calls:<P>
+<DL>
+<DD><CODE>spLinkSounds (first_sound, second_sound);<BR>
+spLinkSounds (second_sound, third_sound);<BR>
+.<BR>
+.<BR>
+.<BR>
+and so on.</CODE><BR>
+</DL>
+</OL>
+<H3>Play a Sound File Continuously in a Loop</H3>
+Substitute this step in the annotated example to create a seamless loop for the sound file and play that loop continuously.<P>
+
+<LI>Set a branch at the end of the sound back to the beginning of the sound.
+<p>
+<DL>
+<DD><CODE>spBranchAtMarker (sound, SP_MARKER_NAME_END,<BR>
+                  sound, SP_MARKER_NAME_BEGIN);</CODE><BR>
+</DL>
+<p>
+There is also a convenience macro for this:<P>
+<p>
+<DL>
+<DD><CODE>spLoopSound (sound);</CODE><BR>
+</DL>
+
+Note that this example does not stop automatically because the branch at the end of the sound always goes back to the beginning of the same sound. The sound file continues to loop until you instruct it to stop. One way to do that is to call <CODE>spStop()</CODE> to stop the playback immediately, but this will more than likely cause an audible pop. To avoid this while still stopping almost immediately, you could use an envelope to ramp down the amplitude of the sample player instrument prior to calling <CODE>spStop()</CODE>. You can also cause playback to stop the next time the end of the sound is reached by clearing the branch at the end of the sound:<P>
+<DL>
+<DD><CODE>spStopAtMarker (sound, SP_MARKER_NAME_END);</CODE><BR>
+</DL>
+You can do this at any time while playing the sound.<P>

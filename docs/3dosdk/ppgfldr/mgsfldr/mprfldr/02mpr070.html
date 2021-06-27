@@ -1,0 +1,21 @@
+<Title>spDeletePlayer</Title>
+<A NAME="XREF29915"><H1>spDeletePlayer </A></H1>
+<A NAME="XREF26010"></A> Delete an SPPlayer.<P>
+<H3>Synopsis</H3>
+<CODE>Err spDeletePlayer (SPPlayer *player)</CODE><P>
+<H3>Description</H3>
+Deletes an SPPlayer created by <CODE>spCreatePlayer()</CODE>. Automatically stops the SPPlayer and calls <CODE>spRemoveSound()</CODE> for all SPSounds belonging to the SPPlayer. If the <CODE>spCreatePlayer()</CODE> allocated buffers, those buffers are automatically freed. Custom allocated buffers passed in to <CODE>spCreatePlayer()</CODE> are not deleted. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to an SPPlayer to delete. Can be NULL. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr068.html#XREF24761"><CODE>spCreatePlayer</A>(), <A HREF="./02mpr084.html#XREF24744">spRemoveSound</A>(), <A HREF="./02mpr083.html#XREF25941">spRemoveMarker</A>() </CODE><P>
+</CODE>

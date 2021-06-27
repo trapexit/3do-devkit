@@ -1,0 +1,24 @@
+<Title>GetDirectory</Title>
+<A NAME="XREF39534"><H1>GetDirectory </A></H1>
+<A NAME="XREF34186"></A> Gets the item number and pathname for the current directory.<P>
+<H3>Synopsis</H3>
+<CODE>Item GetDirectory( char *pathBuf, int32 pathBufLen )</CODE><P>
+<H3>Description</H3>
+This function returns the item number of the calling task's current directory. If pathBuf is non-NULL, it must point to a buffer of writable memory whose length is given in pathBufLen; the absolute pathname of the current working directory is stored into this buffer. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>pathBuf
+<DD>A pointer to a buffer in which to receive the absolute pathname for the current directory. If you do not want to get the pathname string, use NULL as the value of this argument. 
+</DL>
+<DL>
+<DT>pathBufLen
+<DD>The size of the buffer pointed to by the pathBuf argument, in bytes, or zero if you don't provide a buffer.
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of the current directory. <P>
+<H3>Implementation</H3>
+SWI implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr001.html#XREF36854">ChangeDirectory</A>()</CODE><P>

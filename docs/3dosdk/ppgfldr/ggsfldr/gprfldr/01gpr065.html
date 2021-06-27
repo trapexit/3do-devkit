@@ -1,0 +1,27 @@
+<Title>SetScreenColor </Title>
+<A NAME="XREF17003"><H1>SetScreenColor </A></H1>
+<A NAME="XREF35478"> Sets a color in the 3DO system's palette.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err SetScreenColor (Item screenItem,int32 colorEntry)</CODE><P>
+<H3>Description</H3>
+This call sets a color in the palette of the screen specified by the screenItem argument. <P>
+The colorEntry argument is a packed color value containing an index and individual red, green, and blue components. Each of the four components in the colorEntry argument consists of 1 byte of the 4-byte word. The index is the high-order byte, followed by bytes of red, green, and blue, with the blue value in the low-order byte. The colorEntry argument can be constructed using the <CODE><A HREF="./01gpr040.html#XREF18008">MakeCLUTColorEntry</A>()</CODE> macro. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screenItem
+<DD>Item number of a screen structure. 
+</DL>
+<DL>
+<DT>colorEntry
+<DD>32-bit color entry comprising an index, a red, a green, and a blue value. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+GRAFERR_INDEXRANGE is returned if the index value in the color entry is larger than 32. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr040.html#XREF18008"><CODE>MakeCLUTColorEntry</A>() </CODE><P>
+</CODE>

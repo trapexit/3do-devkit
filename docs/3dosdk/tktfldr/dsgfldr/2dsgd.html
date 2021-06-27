@@ -1,0 +1,72 @@
+<TITLE>Creating a stream file with the Weaver tool</TITLE>
+<H1><LINK NAME="XREF41137">Creating a stream file with the Weaver tool</LINK></H1><HR>
+The DataStreamer processes only one file, the stream file. You create a stream file by preparing a Weaver script file and then submitting that script and all data files to the Weaver tool. <P>
+This section describes how to weave chunk files in the following subsections:<P>
+
+<UL>
+<LI><A HREF="#XREF14223">Creating a Weaver script</A>
+<LI><A HREF="#XREF41596">Using the Weaver tool</A>
+<LI><A HREF="#XREF29645">Examining the output stream</A> 
+</UL>
+<A NAME="XREF14223"><H2>Creating a Weaver script</A></H2>
+The Weaver tool uses a simple proprietary scripting language to control the assembly of chunk files into streams. Some of the information in the script determines the placement of chunks. Other information is written to the stream header, which becomes part of the stream file. Stream header information is used by the application to extract certain information about the stream file. <P>
+<H3>Basic Weaver script</H3>
+Weaver scripts consist of lines that are the "rules" the Weaver tool follows when building a stream file from the different chunk files. Each line in a Weaver script consists of a command and, depending on the command, zero, one, or more arguments. <P>
+The figure below shows a Weaver script that contains sufficient information to generate a file for use with the <I>NuPlayer</I> example inside the <I>Streaming</I> folder on the Toolkit CD-ROM. Note that not all the commands used in this sample script are necessarily needed by all applications. <P>
+Some additional script commands are also discussed in <A HREF="./4dsgb.html#XREF37759">Using Weaver script commands to place markers</A>.<P>
+
+<IMG SRC="Figures/2-2.Weaver Script.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Example for a basic Weaver script. </I><P>
+Here's some explanation of the commands used in the example script:<P>
+<UL>
+<LI>writestreamheader-writes a header with information for stream playback to the stream file. Header information comes from the script file itself. 
+<p>
+<LI>streamblocksize<B>-</B>specifies the size of the stream blocks. Since stream blocks and playback buffers are the same size, it also specifies the buffer size. 
+<p>
+<LI>streambuffers<B>-</B>specifies how many buffers to allocate for stream playback.
+<p>
+<LI>streamerdeltapri and dataacqdeltapri-specifies the difference in priority between your own application and the streamer and data acquisition threads. The threads are discussed in detail in <A HREF="./3dsga.html#XREF32484">DataStreamer threads and data flow</A>.
+<p>
+<LI>preloadinstrument-specifies an instrument to preload for playing audio at a later time. Preload instruments to eliminate disc seeks when audio is played. 
+<p>
+<LI>audioclockchan-specifies the channel that has the streamer clock. 
+<p>
+<LI>enableaudiomask<B>-</B>specifies the channel enabled for audio at the beginning of the stream. This is necessary if you use audio in several channels. 
+<p>
+<LI>subscriber-specifies which subscribers are needed to play back the stream and their priorities relative to the application. 
+<p>
+<LI>file-specifies the name of a chunk file or stream file and how it is merged into the output stream. The priority argument specifies how the Weaver tool places chunks with identical timestamps into the output stream. The start-time argument specifies the output stream time at which the file's first data appear. You determine exactly where in the output stream a file's data begin.
+</UL>
+<H3>For more information</H3>
+A brief discussion of the Weaver script in this chapter is supplemented with more detailed information in later chapters. A manpage for each Weaver script command is included in <A HREF="../DataStreamRefF/cDSR.4.Weaver.html#XREF29327">Weaver Script Commands</A>of the <I>DataStreamer Programmer's Reference </I>that is part of this volume. <P>
+There are sample Weaver scripts on the Toolkit CD-ROM which include code to help you get oriented.<P>
+<A NAME="XREF41596"><H2>Using the Weaver tool</A></H2>
+The Weaver is an MPW tool that expects a script file and a number of data files as input and writes out a single stream file. Here's an example of invoking the Weaver tool with a script called NewMovieScript that weaves a video and an audio file. <P>
+<DL>
+<DD><CODE>weaver -o MyNewStream &lt; NewMovieScript</CODE><BR>
+</DL>
+<A NAME="XREF29645"><H2>Examining the output stream</A></H2>
+To make the stream you created with the Weaver tool run smoothly on the 3DO Station, you should first analyze it from your Macintosh. This section first discusses the basic stream format, then looks at an example stream. <P>
+<H3>Weaver output</H3>
+A stream file created by the Weaver tool has the following basic format:<P>
+<UL>
+<LI>File starts with a header describing the stream parameters 
+<LI>Next is a series of fixed-size blocks containing chunks of stream data
+<LI>Each data chunk consists of a small descriptor followed by data
+<LI>The descriptor contains fields identifying 
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>data type and a subtype
+<LI>timestamp
+<LI>data size
+</UL><BR>
+</DL>
+Individual subscribers can extend the descriptor to contain whatever information they require.<P>
+<H3>Available tools</H3>
+To look at a stream file, use the <CODE>dumpstream</CODE> MPW tool. <P>
+<H3>For more information</H3>
+<A HREF="./dsg5frst.html#XREF33525">Debugging and Optimization</A> provides more information about optimization techniques for stream files, such as reducing filler.<P>
+<P>

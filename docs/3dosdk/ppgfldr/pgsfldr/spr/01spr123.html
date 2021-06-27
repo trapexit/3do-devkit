@@ -1,0 +1,38 @@
+<TITLE>SendSignal</TITLE>
+<A NAME="XREF40028"><H1>SendSignal </A></H1>
+<A NAME="XREF22299"></A>Sends a signal to another task.<P>
+<H3>Synopsis</H3>
+<CODE>Err SendSignal( Item task, uint32 sigMask )</CODE><P>
+<H3>Description</H3>
+This procedure sends one or more signals to the specified task. See the description of <CODE>AllocSignal()</CODE> for more information about signals. <P>
+It is an error for a user task to send a system signal or a signal that has not been allocated by the receiving task. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>task
+<DD>The item number of the task to send signals to. If this parameter is 0, then the signals are sent to the calling task. This is sometimes useful to set initial conditions. 
+</DL>
+<DL>
+<DT>sigMask
+<DD>The signals to send. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if successful or an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>BADPRIV
+<DD>The task attempted to send a system signal. 
+</DL>
+<DL>
+<DT>ILLEGALSIGNAL
+<DD>The task attempted to send a signal to a task that was not allocated by that task, or bit 32 in the sigMask argument (which is reserved by the system software) was set. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr009.html#XREF39797"><CODE>AllocSignal</A>(), <A HREF="./01spr068.html#XREF37706">FreeSignal</A>(), <A HREF="./01spr070.html#XREF22129">GetCurrentSignals</A>(), <A HREF="./01spr133.html#XREF12306">WaitSignal</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF40028"></LINK></H1><HR>

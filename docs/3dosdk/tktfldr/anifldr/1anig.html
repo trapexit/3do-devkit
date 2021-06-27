@@ -1,0 +1,87 @@
+<TITLE>Setting nondefault cel characteristics</TITLE>
+<H1><LINK NAME="XREF22948"></LINK><LINK NAME="XREF15644">Setting nondefault cel characteristics</LINK></H1><HR>
+There are two ways in which you can apply nondefault cel characteristics 
+to a cel:<P>
+
+<UL>
+<LI><A HREF="#XREF19150">Loading previously prepared cel 
+characteristics</A>
+<LI><A HREF="#XREF26503">Creating custom settings for a cel</A>
+</UL>
+This section walks you through both methods.<P>
+<B>Note: </B>The 3DO Animator interface for creating custom settings is 
+intended for a team of a programmer and an artist. Documentation 
+explaining the flags is found in the <A HREF="../.././ppgfldr/ggsfldr/gpgfldr/00gpg1.html#XREF14194">3DO Graphics Programmer's Guide</A><P>
+<H2>Loading previously prepared cel 
+characteristics</A></H2>
+At times, you may want to use cel characteristics for several cels.To do 
+that, you can save them in one cel, then load them into another cel 
+following these steps:<P>
+<OL>
+<LI>From the 3DO Options menu, select Set CCB. 
+<P>The Load CCB Settings dialog appears.
+<P>
+
+<LI>Click the Load CCB Settings button and select the file whose settings 
+you want to use from the dialog that appears. 
+<P>The CCB settings are automatically loaded and the file name appears in 
+the CCB Loaded box.
+<P>
+
+<LI>Before you click OK, you still have the option of loading another 
+file's settings. Once you have the file and settings you want, click OK.
+</OL>
+<A NAME="XREF26503"><H2>Creating custom settings for a cel</A></H2>
+Creating custom settings is a task the programmer and the artist working 
+on a title should do together. A new tool that allows programmers to 
+change the different cel characteristics interactively is under 
+development:<P>
+To create custom CCB settings, follow these steps. <P>
+<OL>
+<LI>In the Save As dialog, click the 3DO button. 
+<P>The Cel Parameters dialog appears.
+<P>The dialog provides access to other dialogs so you can define cel 
+parameters. You cannot change the cel type, but you can set everything 
+else.
+<P>
+
+<LI>To save copyright, description, keyword, and credit information, check 
+the related checkboxes and enter the information in the appropriate text 
+boxes at the bottom of the dialog.<P>
+<LI>To set CCB flags, click the Flags button at the top of the 3DO Cel 
+Parameters dialog. 
+<P>The CCB Flags dialog appears (see Figure 1).
+<P>Each checkbox in the CCB Flags dialog corresponds to a flag for the 
+cel control block (CCB) for the cel you are creating. In most cases, the 
+Packed, BGND, and NOBLK options are the only relevant flags. For a 
+detailed explanation of each of the flags, see the <A 
+HREF="../.././ppgfldr/ggsfldr/gpgfldr/00gpg1.html#XREF14194">3DO Graphics Programmer's 
+Guide</A>.<P>
+
+
+<IMG SRC="Figures/ANICh1/FlagsDialog.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>CCB Flags dialog.</I><P>
+
+<LI>Set the flags as you like, and choose OK.
+<P>You are returned to the 3DO Cel Parameters dialog. 
+<P>
+
+<LI>If desired, set options in the first preamble word, by clicking the 
+PRE0 button in the 3DO Cel Parameters dialog. 
+<P>The preamble identifies the type of data in the source data: packed or 
+unpacked, coded or uncoded, the number of bits per pixel, and more. This 
+information tells the cel engine how to process the cel source data. VCNT, 
+Uncoded, REP8, and BPP are automatically set by the 3DO Animator.
+<P>
+
+<LI>If desired, set options in the second preamble word by clicking the 
+PRE1 button in the 3DO Cel Parameters dialog.
+<P>The Horizontal Pixel Count (TLHPCNT) and WOFFSET are set automatically 
+by 3DO Animator.
+<P>
+
+<LI>To save the cel settings, click Save CCB Settings in the Load CCB 
+Settings dialog and you're done.
+</OL>

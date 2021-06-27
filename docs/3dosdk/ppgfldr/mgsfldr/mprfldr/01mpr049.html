@@ -1,0 +1,27 @@
+<Title>GrabKnob</Title>
+<A NAME="XREF29402"><H1>GrabKnob </A></H1>
+<A NAME="XREF22000"></a> Gain direct access to one of an Instrument's knobs.<P>
+<H3>Synopsis</H3>
+<CODE>Item GrabKnob (Item Instrument, char *Name)</CODE><P>
+<H3>Description</H3>
+This function creates a Knob item that provides a fast connection between a task and one of an Instrument's parameters. You can then call <CODE>TweakKnob()</CODE>  or <CODE>TweakRawKnob()</CODE> to rapidly modify that parameter. <P>
+See the Instrument Template pages for complete listings of each Instrument Templates knobs. <P>
+Call <CODE>ReleaseKnob()</CODE> to relinquish access to this knob. All Knob Items grabbed for an Instrument are deleted when the Instrument is deleted. This can save you a bunch of calls to <CODE>ReleaseKnob()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>The item number of the instrument. 
+</DL>
+<DL>
+<DT>Name
+<DD>The name of the knob to grab. The knob name is matched case-insensitively. 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of the Knob (a positive value) if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr063.html#XREF20424"><CODE>ReleaseKnob</A>(), <A HREF="./01mpr079.html#XREF16593">TweakKnob</A>(), <A HREF="./01mpr080.html#XREF10802">TweakRawKnob</A>(), <A HREF="./01mpr047.html#XREF16856">GetKnobName</A>(), <A HREF="./01mpr048.html#XREF24622">GetNumKnobs</A>(), </CODE><P>
+</CODE><H3>Knob</H3>

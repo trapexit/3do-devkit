@@ -1,0 +1,27 @@
+<Title>AddTimes</Title>
+<A NAME="XREF17030"><H1>AddTimes </A></H1>
+<A NAME="XREF37425"></A>Adds two time values together.<P>
+<H3>Synopsis</H3>
+<CODE>void AddTimes(const TimeVal *tv1, const TimeVal *tv2,TimeVal *result);</CODE><P>
+<H3>Description</H3>
+Adds two time values together, yielding the total time for both. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tv1
+<DD>The first time value to add. 
+</DL>
+<DL>
+<DT>tv2
+<DD>The second time value to add. 
+</DL>
+<DL>
+<DT>result
+<DD>A pointer to the location where the resulting time value will be stored. This pointer can match either tv1 or tv2.
+</DL>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+time.h, clib.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./05spr005.html#XREF31407"><CODE>SubTimes</A>(), <A HREF="./05spr002.html#XREF39340">CompareTimes</A>() </CODE><P>
+</CODE>

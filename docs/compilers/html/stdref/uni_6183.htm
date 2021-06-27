@@ -1,0 +1,28 @@
+<HTML><TITLE>uninitialized_fill_n</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>uninitialized_fill_n</H2>
+<HR><PRE>     Memory Management</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Algorithm that uses the language feature placement new for setting values in a collection.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;memory></PRE>
+<PRE>
+template &#60;class ForwardIterator, 
+          class Size, class T>
+void <B>uninitialized_fill_n</B> (ForwardIterator first,
+                           Size n, const T&#38; x);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P><B><I>unitialized_fill_n</B></I> starts at the iterator <SAMP>first</SAMP> and initializes the first <SAMP>n</SAMP> items to the value <SAMP>x</SAMP>, using the language feature placement new.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="uni_0077.htm"><B><I>uninitialized_fill</B></I></A></P>
+<HR>
+<A HREF="uni_0077.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="uni_8586.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

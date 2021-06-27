@@ -1,0 +1,91 @@
+<TITLE>MIDI files and PIMap files</TITLE>
+<H1>MIDI files and PIMap files</H1><HR>
+To play a MIDI file on the 3DO Station, you need the following files:<P>
+<UL>
+<LI>The MIDI file itself
+<p>
+<LI>The PIMap (program-instrument map file), which tells the 3DO system how to match MIDI numbers with sounds
+<p>
+<LI>Compiled patches (.ins) or samples referred to in the PIMap
+</UL>
+This section discusses the PIMap file format, including the currently supported flags and an example file. <P>
+<H2>Working with PIMaps</H2>
+A PIMap associates MIDI program numbers with 3DO instruments. <P>
+<H3>Parts of a PIMap</H3>
+A PIMap consists of several lines, separated by carriage returns. Each line contains: <P>
+<UL>
+<LI>MIDI program number (1-128)
+<LI>Filename
+<p>
+<UL>
+<LI>If the filename ends in .aiff, .aif, or .aifc, it is considered to be the name of a sample file and the file is attached to the appropriate sample player instrument. 
+<p>
+<LI>If the filename does not end in .aiff, .aif, or .aifc, it is assumed to be an instrument name. For example, if the file ends in <I>.ins</I>, it is a compiled ARIA patch. 
+</UL><BR>
+<p>
+<LI>Optional flags 
+</UL>
+</UL>
+<H3>Currently supported flags</H3>
+The following table lists the flags that are currently supported as part of a PIMap:<P>
+<PRE>
+<B>Table 1: </B><I> Flags in a PIMap.</I>
+--------------------------------------------------------
+Flag   |Description                                     
+--------------------------------------------------------
+-f     |Play sample file using a fixed-rate sample      
+       |player that uses fewer ticks than a             
+       |variable-rate player would                      
+--------------------------------------------------------
+-m n   |Set maximum number of voices (default is 1)     
+--------------------------------------------------------
+-l n   |Set low note for a sample                       
+--------------------------------------------------------
+-b n   |Set base note for a sample                      
+--------------------------------------------------------
+-h n   |Set high note for a sample                      
+--------------------------------------------------------
+-p n   |Set priority for instrument, default = 100, max 
+       |= 200                                           
+--------------------------------------------------------
+-d     |Set a detune value. This works only on          
+       |instruments that use the default sample playback
+       |module (sampler.dsp); not on compiled ARIA      
+       |instruments.                                    
+--------------------------------------------------------
+</PRE>
+<P>
+<B>Note: </B>The base note is the "home" note of the sample and is not necessarily the lowest (bass) note. <P>
+<H3>PIMap example</H3>
+The example below shows a small PIMap file. The following points are of interest: <P>
+<UL>
+<LI>The PIMap file assigns the appropriate samples to the different ranges of the instrument. 
+<p>
+<LI>Each .aiff file covers no more than a half octave, as you can see when you look at the low notes, base notes, and high notes assigned to the different .aiff files.
+<p>
+<LI>The gong is fixed pitch.
+<p>
+<LI>The clarinet is set up as a multisample with octave spacing.
+<p>
+<LI>The organ has its MaxVoices set to 4 to make it possible to play chords.
+<p>
+<LI>The sample <I>bell.aiff</I> is played by the instrument <I>varmono16.dsp</I> because the instrument is specified before the sample is specified. 
+<p>
+<LI>The instrument ending in <I>.ins</I> (<I>windnoise.ins</I>) is a compiled ARIA instrument. 
+</UL>
+<B>Example 1: </B><I>PIMap example file.</I><P>
+<CODE>
+<PRE>
+1 clarinet1.aiff -l 30 -b 48 -h 53
+1 clarinet2.aiff -l 54 -b 60 -h 66
+1 clarinet3.aiff -l 67 -b 72 -h 84
+2 gong.aiff -f
+3 bass.aiff -p 150
+4 organ.aiff -m 4
+5 varmono16.dsp
+5 bell.aiff
+6 sawenv.dsp
+7 windnoise.ins
+</CODE>
+</PRE>
+<B>Note: </B>In addition to .aiff files, you can also use instruments you previously created in ARIA (.ins files). The last line of the example above illustrates this. <P>

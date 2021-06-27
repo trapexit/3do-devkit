@@ -1,0 +1,15 @@
+<HTML><HEAD><TITLE>Deque Operations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Deque Operations</H2>
+<P>A <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> is declared in the same fashion as a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>, and includes within the class the same type definitions as vector.</P>
+<P>The <SAMP>begin()</SAMP> and <SAMP>end()</SAMP> member functions return random access iterators, rather than bidirectional iterators, as they do for lists.</P>
+<P>An insertion (either <SAMP>insert(),</SAMP> <SAMP>push_front(),</SAMP> or <SAMP>push_back()</SAMP>) can potentially invalidate all outstanding iterators and references to elements in the deque.  As with the vector data type, this is a much more restrictive condition than insertions into a list.</P>
+<P>If the underlying element type provides a destructor, then the destructor will be invoked when a value is erased from a deque.</P>
+<P>Since the deque data type provides random access iterators, all the generic algorithms that operate with vectors can also be used with deques.</P>
+<P>A vector holds elements in a single large block of memory.  A deque, on the other hand, uses a number of smaller blocks.  This may be important on systems that restrict the size of memory blocks, as it will permit a deque to hold many more elements than a vector.</P>
+<P>As values are inserted, the index associated with any particular element in the collection will change.  For example, if a value is inserted into position 3, then the value formerly indexed by 3 will now be found at index location 4, the value formerly at 4 will be found at index location 5, and so on.</P>
+<HR>
+<A HREF="deq_0575.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="exa_6226.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

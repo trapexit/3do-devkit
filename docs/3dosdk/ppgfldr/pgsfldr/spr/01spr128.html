@@ -1,0 +1,42 @@
+<TITLE>UniversalInsertNode</TITLE>
+<A NAME="XREF27664"><H1>UniversalInsertNode </A></H1>
+<A NAME="XREF41554"></A>Inserts a node into a list.<P>
+<H3>Synopsis</H3>
+<CODE>void UniversalInsertNode( List *l, Node *n, bool (*f)(Node *n,Node *m) )</CODE><P>
+<H3>Description</H3>
+Every node in a list has a priority (a value from 0 to 255 that is stored in the n_Priority field of the node structure). When a new node is inserted with <CODE>InsertNodeFromHead()</CODE> or <CODE>InsertNodeFromTail()</CODE>, the position at which it is added is determined by its priority. The <CODE>UniversalInsertNode()</CODE> procedure allows tasks to arrange list nodes according to values other than priority. <P>
+ <CODE>UniversalInsertNode()</CODE> uses a comparison function provided by the calling task to determine where to insert a new node. It compares the node to be inserted with nodes already in the list, beginning with the first node. If the comparison function returns TRUE, the new node is inserted immediately before the node to which it was compared. If the comparison function never returns TRUE, the new node becomes the last node in the list. The comparison function, whose arguments are pointers to two nodes, can use any data in the nodes for the comparison. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the list into which to insert the node. 
+</DL>
+<DL>
+<DT>n
+<DD>A pointer to the node to insert. This same pointer is passed as the first argument to the comparison function. 
+</DL>
+<DL>
+<DT>f
+<DD>A comparison function provided by the calling task that returns TRUE if the node to be inserted (pointed to by the first argument to the function) should be inserted immediately before the node to which it is compared (pointed to by the second argument to the function). 
+</DL>
+<DL>
+<DT>m
+<DD>A pointer to the node in the list to which to compare the node to insert. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+A node can be included only in one list. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr002.html#XREF16640"><CODE>AddHead</A>(), <A HREF="./01spr003.html#XREF18583">AddTail</A>(), <A HREF="./01spr087.html#XREF20096">InsertNodeFromHead</A>(), <A HREF="./01spr088.html#XREF26607">InsertNodeFromTail</A>(), <A HREF="./01spr110.html#XREF15588">RemHead</A>(), <A HREF="./01spr111.html#XREF25186">RemNode</A>(), <A HREF="./01spr112.html#XREF23933">RemTail</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF27664"></LINK></H1><HR>

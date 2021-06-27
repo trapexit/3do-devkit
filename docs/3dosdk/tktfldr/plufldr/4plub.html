@@ -1,0 +1,27 @@
+<TITLE>VDL Options dialog</TITLE>
+<H1><LINK NAME="XREF40240">VDL Options dialog</LINK></H1><HR>
+
+<IMG SRC="Figures/PLU4.figs/VDLOptions.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>VDL-Options dialog.</I><P>
+To understand the options in the top part of the dialog, consult <A HREF="../../ppgfldr/ggsfldr/gpgfldr/2gpg.html#XREF34189">Understanding the Display Generator</A>.<P>
+Note that several of the options are useful only if SlipStream supplies a 
+video source to be superimposed on the existing image. This is not 
+possible in this release of the hardware. <P>
+<H2>The CLUT bypass option</H2>
+<UL>
+<LI>While converting the source art, you need to set the CLUT bypass 
+option for the image to force a standard VDL for any pixel for which the 
+high bit is set.
+<p>
+<LI>The program that displays the cel needs to set the high bit in the cel 
+using the <CODE>SetCEControl()</CODE> function.
+</UL>
+The frame buffer will now use the standard (system-supplied) VDL instead 
+of the custom VDL for each pixel that has the high bit set-that is, for 
+each pixel that is part of the specially prepared cel. <P>
+<B>Note: </B>You can have transparent and opaque cel pixels on top of an 
+image that uses a custom VDL. Translucent cels will not work correctly 
+even if you have turned on the CLUT bypass option because the cel engine 
+assumes a linear ascending CLUT. <P>

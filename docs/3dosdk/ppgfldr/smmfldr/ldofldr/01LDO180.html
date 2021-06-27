@@ -1,0 +1,26 @@
+<Title>TimerChangeUserdats</Title>
+<A NAME="XREF10071"><H1>TimerChangeUserdata </A></H1>
+ Changes user data values for a timer.<P>
+<H3>Synopsis</H3>
+<CODE>Err TimerChangeUserdata (TimerHandle thandle, uint32 userdata1, uint32 userdata2)</CODE><P>
+<H3>Description</H3>
+Changes the user data associated with a timer. The user data is delivered to you as part of the notification message for message-based timers. The user data is not meaningful for signal-based timers. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>thandle
+<DD>Handle for a timer created by one of the TimerMsg or TimerSignal functions. 
+</DL>
+<DL>
+<DT>userdata1
+<DD>Value passed back to you in the msg_DataPtr field of the notification message. 
+</DL>
+<DL>
+<DT>userdata2
+<DD>Value passed back to you in the msg_DataSize field of the notification message. 
+</DL>
+<H3>Return Value</H3>
+Zero on success or a negative error code. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>

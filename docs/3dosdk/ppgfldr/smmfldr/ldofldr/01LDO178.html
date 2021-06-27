@@ -1,0 +1,24 @@
+<Title>taModifyTextCel</Title>
+<A NAME="XREF42353"><H1>taModifyTextCel </A></H1>
+ Changes text cel attributes from tag args.<P>
+<H3>Synopsis</H3>
+<CODE>TextCel * taModifyTextCel (TextCel *tCel, TagArg *tags)</CODE><P>
+<H3>Description</H3>
+Changes attributes already in a text cel. You can set all configurable attributes of the text cel by specifying appropriate tags and values.   If you include TCEL_TAG_UPDATE_TEXT_STRING in the tags, the specified text is rendered into the cel after processing all other tags. <P>
+A negative return value is possible when the text cel size or format buffer attributes are changed and a memory allocation failure occurs. A positive non-zero return value is possible if TCEL_TAG_UPDATE_TEXT_STRING is specified and characters are clipped. Otherwise, the return value is zero. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>tags
+<DD>Pointer to an array of tags and associated values. 
+</DL>
+<H3>Return Value</H3>
+Negative on error, non-negative if successful. <P>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<CODE><CODE>SetTextCel...() functions </CODE><P>
+</CODE>

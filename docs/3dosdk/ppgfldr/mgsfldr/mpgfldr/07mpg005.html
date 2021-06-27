@@ -1,0 +1,54 @@
+<TITLE>Sound Spooler Function Calls</TITLE>
+<H1><LINK NAME="XREF40176">Sound Spooler Function Calls</LINK></H1><HR>
+The sound spooler currently includes these function calls, grouped here by the type of function that each performs.The calls can be broken down into four different categories:<P>
+<H2>Convenience calls</H2>
+The following two calls are convenience calls:<P>
+
+<UL>
+<LI><Code><A HREF="../mprfldr/02mpr109.html#XREF11288">ssplPlayData</A>() </CODE>Waits for next available buffer then sends a block full of data to the DSP.
+<LI><Code><A HREF="../mprfldr/02mpr118.html#XREF33759">ssplSpoolData</A>() </CODE>Send a block full of data.
+</UL>
+<H2>SoundSpooler management calls</H2>
+The following calls are used to manage the sound spooler:<P>
+
+<UL>
+<LI><Code><A HREF="../mprfldr/02mpr096.html#XREF40388">ssplAbort</A>() </CODE>Abort SoundSpooler.
+<LI><Code><A HREF="../mprfldr/02mpr098.html#XREF39302">ssplCreateSoundSpooler</A>() </CODE>Create a SoundSpooler data structure and initialize it.
+<LI><Code><A HREF="../mprfldr/02mpr099.html#XREF13890">ssplDeleteSoundSpooler</A>() </CODE>Delete a SoundSpooler data structure.
+<LI><Code><A HREF="../mprfldr/02mpr100.html#XREF16255">ssplDetachInstrument</A>() </CODE>Detach the current sample player instrument from the SoundSpooler.
+<LI><Code><A HREF="../mprfldr/02mpr105.html#XREF10988">ssplGetSpoolerStatus</A>() </CODE>Get SoundSpooler status flags.
+<LI><Code><A HREF="../mprfldr/02mpr108.html#XREF36471">ssplPause</A>() </CODE>Pauses the SoundSpooler.
+<LI><Code><A HREF="../mprfldr/02mpr110.html#XREF20300">ssplProcessSignals</A>() </CODE>Process completion signals that have been received.
+<LI><Code><A HREF="../mprfldr/02mpr112.html#XREF41034">ssplReset</A>() </CODE>Reset Sound Spooler.
+<LI><Code><A HREF="../mprfldr/02mpr113.html#XREF35532">ssplResume</A>() </CODE>Resume SoundSpooler playback. 
+<LI><Code><A HREF="../mprfldr/02mpr116.html#XREF16970">ssplSetSoundBufferFunc</A>() </CODE><A NAME="XREF14841">Install new SoundBufferFunc in SoundSpooler.</A>
+<LI><Code><A HREF="../mprfldr/02mpr119.html#XREF23431">ssplStartSpooler</A>() </CODE>Start SoundSpooler.
+<LI><Code><A HREF="../mprfldr/02mpr120.html#XREF31519">ssplStartSpoolerTags</A>() </CODE>Start SoundSpooler with tags.
+<LI><Code><A HREF="../mprfldr/02mpr121.html#XREF17770">ssplStopSpooler</A>() </CODE>Stop SoundSpooler.
+</UL>
+<H2>SoundBufferNode management calls</H2>
+The following calls help manage a SoundBufferNode:<P>
+
+<UL>
+<LI><Code><A HREF="../mprfldr/02mpr104.html#XREF11072">ssplGetSequenceNum</A>() </CODE>Get sequence number of a SoundBufferNode.
+<LI><Code><A HREF="../mprfldr/02mpr106.html#XREF17572">ssplGetUserData</A>()</CODE> Get user data from a SoundBufferNode.
+<LI><Code><A HREF="../mprfldr/02mpr111.html#XREF24497">ssplRequestBuffer</A>() </CODE>Asks for an available buffer.
+<LI><Code><A HREF="../mprfldr/02mpr114.html#XREF34520">ssplSendBuffer</A>() </CODE>Send a buffer full of data.
+<LI><Code><A HREF="../mprfldr/02mpr115.html#XREF33138">ssplSetBufferAddressLength</A>() </CODE>Attach sample data to a SoundBufferNode.
+<LI><Code><A HREF="../mprfldr/02mpr117.html#XREF18890">ssplSetUserData</A>() </CODE>Store user data in a SoundBufferNode.
+<LI><Code><A HREF="../mprfldr/02mpr122.html#XREF21344">ssplUnrequestBuffer</A>() </CODE>Return an unused buffer to the sound spooler.
+</UL>
+<H2>Low level calls</H2>
+The following low level calls help manage the sound spooler:<P>
+
+<UL>
+<LI><Code><A HREF="../mprfldr/02mpr097.html#XREF16411">ssplAttachInstrument</A>() </CODE>Attach new sample player to instrument SoundSpooler.
+<LI><Code><A HREF="../mprfldr/02mpr100.html#XREF16255">ssplDetachInstrument</A>() </CODE>Detach the current sample player instrument from the SoundSpooler.
+</UL>
+<H2>Callback routine</H2>
+The following call is used by spplProcessSignals():<P>
+
+<UL>
+<LI><Code><A HREF="../mprfldr/02mpr095.html#XREF25499">SoundBufferFunc</A> </CODE>SoundSpooler callback function typedef.
+<LI><Code><A HREF="../mprfldr/02mpr123.html#XREF33469">UserBufferProcessor</A></CODE>Callback function called by ssplProcessSignals().
+</UL>

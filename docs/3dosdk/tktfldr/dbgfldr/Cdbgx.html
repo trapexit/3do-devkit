@@ -1,0 +1,80 @@
+<TITLE>sysload</TITLE>
+<H1><LINK NAME="XREF32552">sysload</LINK></H1><HR><P>
+<A NAME="XREF27572"></A>Dynamically displays the system's CPU/memory 
+load.<P>
+<H3>Synopsis </H3>
+<CODE>sysload [-top &lt;top edge&gt;] [-height &lt;height&gt;] [-rate 
+&lt;update rate&gt;] [-barcolor &lt;color&gt;][-bordercolor &lt;color&gt;] 
+[-textcolor &lt;color&gt;] [-bgcolor &lt;color&gt;] [-dsp] [-nodsp] [-ram] 
+[-noram] [-quit]</CODE><P>
+<H3>Description</H3>
+Creates an overlay on top of any screen displayed on a 3DO station. The 
+overlay has a graph showing current CPU utilization, as well as four bar 
+graphs showing the number of DRAM pages used, VRAM pages used, DSP ticks 
+reserved, and DSP code used. <P>
+The overlay hovers on top of all other displays on the 3DO system. The 
+overlay is only visible if there are open screens in the system. Closing 
+all screens will close the overlay automatically, and it comes back 
+magically the next time a screen opens. <P>
+If sysload is already running in the system, and it is run again, any 
+command-line options you give are passed automatically to the running 
+version, which responds to them. The second version then exits.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-top &lt;top edge&gt; 
+<DD>Top edge of the overlay on the display. The supplied number specifies 
+the number of pixels from the top of the display where the overlay should 
+start. 
+</DL>
+<DL>
+<DT>-height &lt;height&gt;
+<DD>Total height of the overlay.
+</DL>
+<DL>
+<DT>-rate &lt;update rate&gt;
+<DD>Update rate to use in milliseconds. The default rate is 1000 
+milliseconds (1 second). 
+</DL>
+<DL>
+<DT>-barcolor &lt;color&gt;
+<DD>16-bit RGB value that is used to render the histograms and the graph. 
+</DL>
+<DL>
+<DT>-bordercolor &lt;color&gt;
+<DD>16-bit RGB value that is used to render the borders around the various 
+sections of the overlay display. 
+</DL>
+<DL>
+<DT>-textcolor &lt;color&gt;
+<DD>16-bit RGB value that is used to render any text on the overlay 
+display. 
+</DL>
+<DL>
+<DT> -bgcolor &lt;color&gt; 
+<DD>16-bit RGB value that is used to render the background of the overlay 
+display. 
+</DL>
+<DL>
+<DT>-dsp 
+<DD>Displays the DSP usage line. This is the default. 
+</DL>
+<DL>
+<DT>-nodsp
+<DD>Specifies that you do not want the DSP usage line displayed. 
+</DL>
+<DL>
+<DT>-ram
+<DD>Displays the RAM usage line displayed. This is the default. 
+</DL>
+<DL>
+<DT>-noram
+<DD>Specifies that you do not want the RAM usage line displayed.
+</DL>
+<DL>
+<DT>-quit
+<DD>Exits a previously started version of sysload. 
+</DL>
+<H3>Implementation </H3>
+Command implemented in V22. <P>
+<H3>Associated Files</H3>
+$c/sysload<P>

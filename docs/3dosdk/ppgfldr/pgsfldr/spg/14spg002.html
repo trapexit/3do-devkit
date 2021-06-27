@@ -1,0 +1,10 @@
+<TITLE>How the Compression Folio Works</TITLE>
+<H1><LINK NAME="XREF19700">How the Compression Folio Works</LINK></H1><HR>
+The sections below describe how to compress and decompress data.<P>
+<H2>Compressing Data</H2>
+To compress data, you must create a compression engine by calling <CODE>CreateCompressor()</CODE>. <P>
+You must also allocate a buffer of the correct size and supply a pointer to it with the <CODE>COMP_TAG_WORKBUFFER</CODE> tag and pass in a pointer to your output function. <P>
+Once you create the engine, call <CODE>FeedCompressor()</CODE> to have the engine compress the data you supply. <CODE>FeedCompressor()</CODE> then gives data to the compression engine, which in turn sends it to your output function, one word at a time. When the compression engine is finished compressing the data, call <CODE>DeleteCompressor()</CODE> to delete the engine and clean up.<P>
+<H2>Decompressing Data</H2>
+Decompression works almost the same as compressing data. First, you create a decompression engine with <CODE>CreateDecompressor()</CODE>. Then, allocate a buffer of the correct size and supply a pointer to it with the <CODE>COMP_TAG_WORKBUFFER</CODE> tag and provide a pointer to your output function.<P>
+Feed compressed data to the decompression engine with the <CODE>FeedDecompressorEngine()</CODE> call, which in turn sends it to the output call. Again when you are finished decompressing data, call <CODE>DeleteDecompressor()</CODE> to delete the engine and clean up. <A NAME="XREF15360"></A><P>

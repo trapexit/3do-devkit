@@ -1,0 +1,26 @@
+<Title>SetTextCelColors</Title>
+<A NAME="XREF27761"><H1>SetTextCelColors </A></H1>
+ Sets background and foreground colors for a cel.<P>
+<H3>Synopsis</H3>
+<CODE>void SetTextCelColors (TextCel *tCel, int32 bgColor,int32 fgColors[4])</CODE><P>
+<H3>Description</H3>
+Sets the background and foreground colors to use when the cel is drawn. This Function sets all four foreground colors; use it with features that allow multiple text colors within a single cel. Because of special internal logic that calculates scaled colors for anti-aliasing, you must use this function to change the colors, rather than manipulating the cel's PLUT directly. After you use this call to change the colors, the next <CODE>DrawCels()</CODE> call renders the contents already in the cel in new colors. <P>
+Colors follow the usual rules for 3DO cels. The bgColor and fgColor values are interpreted as RGB555 values. A color of 0,0,0 is transparent. To get opaque black, use MakeRGB15(0,0,1). If bgColor or any of the fgColors are passed as -1L, the corresponding values in the text cel remain unchanged. <P>
+When created, a TextCel has default colors of transparent for background, pure white for foreground pen 0, and no color (transparent) for foreground pens 1-3. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>bgColor
+<DD>Background color, used by zero-value pixels in the character bitmap. 
+</DL>
+<DL>
+<DT>fgColor
+<DD>Foreground colors, used by non-zero-value pixels in the character bitmap, according the TextCel's pen color value when the pixels were rendered. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO155.html#XREF24701">SetTextCelColor</A><P>

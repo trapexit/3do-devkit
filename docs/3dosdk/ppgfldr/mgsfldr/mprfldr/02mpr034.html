@@ -1,0 +1,27 @@
+<Title>LoadPIMap</Title>
+<A NAME="XREF17989"><H1>LoadPIMap </A></H1>
+<A NAME="XREF10222"></A> Loads a program-instrument map from a text file.<P>
+<H3>Synopsis</H3>
+<CODE>Err LoadPIMap( ScoreContext *scon, char *FileName )</CODE><P>
+<H3>Description</H3>
+This function reads the designated program-instrument map file (PIMap file) and writes appropriate values to the specified score context's PIMap.  It also assigns appropriate sampled sound instruments to samples listed in the PIMap file and imports all instrument templates listed in the PIMap file. <P>
+For information about the format of a PIMap file, read the "Playing MIDI Scores" chapter of the Portfolio Programmer's Guide. <P>
+Note that if you want to set a score context's PIMap entries directly, you can use <CODE>SetPIMapEntry()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>Pointer to a ScoreContext data structure. 
+</DL>
+<DL>
+<DT>FileName
+<DD>Pointer to the character string containing the name of the PIMap file. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr044.html#XREF35488"><CODE>SetPIMapEntry</A>(), <A HREF="./02mpr049.html#XREF11195">UnloadPIMap</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,41 @@
+<Title>SimpleDecompress</Title>
+<A NAME="XREF34120"><H1>SimpleDecompress </A></H1>
+<A NAME="XREF16571"></A>Decompresses some data in memory.<P>
+<H3>Synopsis</H3>
+<CODE>Err SimpleDecompress(void *source, uint32 sourceWords,void *result, uint32 resultWords);</CODE><P>
+<H3>Description</H3>
+Decompresses a chunk of memory to a different chunk of memory. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>source
+<DD>A pointer to memory containing the data to be decompressed. This pointer must be on a 4-byte boundary. 
+</DL>
+<DL>
+<DT>sourceWords
+<DD>The number of words of data to decompress. 
+</DL>
+<DL>
+<DT>result
+<DD>A pointer to where the decompressed data is to be deposited. 
+</DL>
+<DL>
+<DT>resultWords
+<DD>The number of words available in the result buffer. If the decompressed data is larger than this size, an overflow will be reported. 
+</DL>
+<H3>Return Value</H3>
+If positive, returns the number of words copied to the result buffer. If negative, returns an error code. Possible error codes include: <P>
+<DL>
+<DT>COMP_ERR_NOMEM
+<DD>There was not enough memory to initialize the decompressor. 
+</DL>
+<DL>
+<DT>COMP_ERR_OVERFLOW
+<DD>There was not enough room in the result buffer to hold all of the decompressed data. 
+</DL>
+<H3>Implementation</H3>
+Convenience call implemented in compression.lib V24. <P>
+<H3>Associated Files</H3>
+compression.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./08spr001.html#XREF24780"><CODE>SimpleCompress</A>() </CODE><P>
+</CODE>

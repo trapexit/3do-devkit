@@ -1,0 +1,77 @@
+<TITLE>The Cel Control Settings 
+dialog</TITLE>
+<H1><LINK NAME="XREF33703">The Cel Control Settings dialog</LINK></H1><HR>
+
+<IMG SRC="Figures/PLU4.figs/CelControlSettings.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<I>The Cel Control Settings dialog.</I><P>
+<B>Note: </B>The Cel Control Settings dialog is mostly useful for 
+programmers.<P>
+<H3>Make All Black Pixels Transparent (BGND)</H3>
+Prevents the cel engine from drawing black pixels to the frame buffer.<P>
+<H3>Make Cel Invisible from the Front (ACW)</H3>
+Causes the pixel projector to ignore pixels that are in portions of the 
+cel that are not reversed. Part of a cel can be reversed as a result of 
+manipulations of the pixel projector.<P>
+<H3>Make Cel Invisible from Behind (ACCW)</H3>
+Causes the pixel projector to ignore pixels that are in portions of the 
+cel that are reversed. Part of a cel can be reversed as a result of 
+manipulations of the pixel projector.<P>
+<H3>Replicate LSBs in RGB 8-bit Cel (Rep 8)</H3>
+Applies in the cel engine when an 8-bit uncoded cel is expanded to a 5-5-5 
+RGB value. The red and green components need another two bits, and the 
+blue component needs three bits. If this option is checked, the extra bits 
+are duplicated from the low bits of each component. Otherwise, the 
+component values are padded with zeros.<P>
+<H3>XOR the Two Data Sources (PXOR)</H3>
+Causes every pixel in the cel to Exclusive-OR (XOR) on top of a frame 
+buffer pixel. Animations benefit from having frames XORed to eliminate 
+redundant portions of consecutive frames. When the XORed frames are 
+packed, they take up much less room. The 3DO Animator tool can produce 
+XORed 3DO animations. <P>
+<H3>Pack Cel Data</H3>
+Causes the cel data to be packed using a run-length encoding scheme. The 
+packed data is unpacked inside the cel engine.<P>
+<H3>Turn Off Pixel Interpolation (MARIA)</H3>
+Disables the region fill operation in the cel engine. As a result, every 
+pixel in the source image will map to at most one pixel in the destination 
+area. If the cel is scaled 1:1 or smaller, the cel will look normal. If 
+the cel is scaled larger than 1:1, the effect will be a sparse array of 
+pixels suitable for certain types of explosion effects and other special 
+effects. The MARIA bit has nothing at all to do with interpolation.<P>
+<H3>Enable Cel Super Clipping (ACSC)</H3>
+Turns on cel clipping. If a cel will never be able to make it back to the 
+display, rendering is abandoned. Checking this option currently has no 
+effect. <P>
+<H3>Enable Line Super Clipping (ALSC)</H3>
+If super clipping (ACSC) is turned on, this option turns on line clipping. 
+If line clipping is on and a given line will never move back onto the 
+display (or never make it there at all), the cel engine terminates 
+processing of that line and the next line is started. Checking this option 
+currently has no effect. <P>
+<H3>Put Preamble Words in Data (CCBPRE)</H3>
+The preamble words are by default stored in the cel control block (CCB). 
+If you check this option, they are also stored at the beginning of the cel 
+data. This is useful if you are working on an animation with different 
+frame sizes, since the hardware won't have to search the CCB for the size 
+information. In other cases, this option can be left off. <P>
+<H3>Enable Second Corner Engine (ACE)</H3>
+Enables the second corner engine. Ideally, this processes the cels to the 
+frame buffer at twice the speed of one corner engine. The effect of this 
+is to speed up the rendering process, and so it should be generally 
+enabled.<P>
+<H3>Lock Corner Engines Together (LCE)</H3>
+The Lock Corner Engines (LCE) flag forces the two corner engines to 
+process source pixels at the same rate. Both the SCE and LCE flags are 
+required to be true for LRFORM cels, but software does not need to set the 
+bits in the case of LRFORM cels because the hardware sets the flags 
+internally. <P>
+At certain times it might be useful to lock the corner engines together to 
+allow for a more predictable path through the rendering process (normally 
+the engines operate asynchronously), but it is in general not necessary 
+and does impact rendering performance slightly.<P>
+<H3>Terminate Cel if Wrong Direction (TWD)</H3>
+Causes the cel engine to stop processing when the first backward pixel is 
+encountered. <P>
+<P>

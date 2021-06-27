@@ -1,0 +1,16 @@
+<TITLE>Minimizing filler</TITLE>
+<H1><LINK NAME="XREF15807">Minimizing filler</LINK></H1><HR>
+When the Weaver creates a stream file, it uses data chunks that contain no useful information to pad out stream blocks since each block has to be the same size. These chunks are of type FILL, or "filler."<P>
+Having filler in the stream essentially wastes data transfer bandwidth. For example, if half of a stream is filler, the effective data bandwidth for the stream is one half of the data device throughput. Minimizing filler is therefore critical when constructing a stream to allow seek covering. <P>
+<A NAME="XREF34993"><H2>Guidelines for minimizing filler</A></H2>
+Optimizing a stream file by minimizing filler is an empirical process. You need to experiment with different combinations to arrive at the best result. Consider yourself successful if the stream contains less than 10 percent filler; less that 6 percent is very good.<P>
+Use <CODE>dumpstream -stats</CODE> to calculate the average filler block. Keep in mind that with a stream header there is usually a lot of filler in the first block, which doesn't really affect performance. <P>
+Here are some guidelines for minimizing filler: <P>
+<UL>
+<LI>The more markers you place in your stream, the more filler is present, since the Weaver tool groups chunks to make them contiguous, not to achieve most efficient packing. 
+<p>
+<LI>It is often best to adjust the chunking factors on audio or to join data. Visual data tend to be irregularly sized, whereas audio or join data are less dependent on data framing. Reducing the size of an audio or join chunk increases the number of chunks present in the stream for a given source file. 
+<p>
+<LI>Having a large number of chunks decreases the efficiency of the stream. Since each chunk contains a bit of header data, the overall percentage of the stream allocated to header data goes up. 
+</UL>
+<B>Warning: </B>The block size used by the Weaver tool must match the buffer size used by the streaming libraries at runtime. Otherwise, the stream will not play properly.<P>

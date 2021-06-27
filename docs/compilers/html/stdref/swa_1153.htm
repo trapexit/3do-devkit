@@ -1,0 +1,66 @@
+<HTML><TITLE>swap_ranges</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>swap_ranges</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Exchange a range of values in one location with those in another</P>
+<PRE></PRE>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class ForwardIterator1, class ForwardIterator2>
+ForwardIterator2 <B>swap_ranges </B>(ForwardIterator1 first1,
+                              ForwardIterator1 last1,
+                              ForwardIterator2 first2);</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>swap_ranges</B></I> algorithm exchanges corresponding values in two ranges, in the following manner:</P>
+<P>For each non-negative integer <SAMP>n &#60; (last - first)</SAMP> the function exchanges <SAMP>*(first1 + n)</SAMP> with <SAMP>*(first2 + n))</SAMP>.  After completing all exchanges, <B><I>swap_ranges</B></I> returns an iterator that points to the end of the second container, i.e., <SAMP>first2 + (last1 -first1)</SAMP>.  The result of <B><I>swap_ranges</B></I> is undefined if the two ranges <SAMP>[first, last)</SAMP> and <SAMP>[first2, first2 + (last1 - first1))</SAMP> overlap. </P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// swap.cpp
+//
+ #include &#60;vector>
+ #include &#60;algorithm>
+ int main()
+ {
+   int d1[] = {6, 7, 8, 9, 10, 1, 2, 3, 4, 5};
+   // Set up a vector
+   vector&#60;int> v(d1,d1 + 10);
+   // Output original vector
+   cout &#60;&#60; "For the vector: ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));
+   // Swap the first five elements with the last five elements
+<B>   swap_ranges</B>(v.begin(),v.begin()+5, v.begin()+5);
+   // Output result
+   cout &#60;&#60; endl &#60;&#60; endl
+        &#60;&#60; "Swapping the first five elements "
+        &#60;&#60; "with the last five gives: "
+        &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));
+   return 0;
+ }
+Output :
+For the vector: 6 7 8 9 10 1 2 3 4 5
+Swaping the first five elements with the last five gives:
+     1 2 3 4 5 6 7 8 9 10
+Swaping the first and last elements gives:
+     10 2 3 4 5 6 7 8 9 1</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, you need to always supply the <SAMP>Allocator</SAMP> template argument. For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="ite_4254.htm"><B><I>iter_swap</B></I></A>, <A HREF="swa_4514.htm"><B><I>swap</B></I></A> </P>
+<HR>
+<A HREF="swa_4514.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="tim_4491.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

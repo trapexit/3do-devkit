@@ -1,0 +1,11 @@
+<TITLE>Opening an Item</TITLE>
+<H1><LINK NAME="XREF22495">Opening an Item</LINK></H1><HR>
+When a task uses a system- supplied item such as a device or a folio, it opens the item instead of creating it. To open an item, use these calls:<P>
+<DL>
+<DD><CODE>Item OpenItem( Item FoundItem, void *args )<BR>
+Item FindAndOpenItem( int32 cType, const TagArg *tags)<BR>
+Item FindAndOpenItemVA( int32 cType, uint32 tags, ...)</CODE><BR>
+</DL>
+<CODE>OpenItem()</CODE> accepts the item number of the resource to be opened (which is found with <CODE>FindItem()</CODE>) and a pointer. Currently, NULL should always be passed in for this argument. <P>
+<CODE>FindAndOpenItem()</CODE> finds an item and opens it with one call. It works just like <CODE>FindItem()</CODE>, except that it automatically opens the item before returning it to you.<P>
+<A NAME="XREF13211"></A>

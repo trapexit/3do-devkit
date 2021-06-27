@@ -1,0 +1,67 @@
+<HTML><TITLE>for_each</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>for_each</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Applies a function to each element in a range.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class InputIterator, class Function>
+ void <B>for_each</B>(InputIterator first, InputIterator last,
+               Function f);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>for_each</B></I> algorithm applies function <SAMP>f</SAMP> to all members of the sequence in the range <SAMP>[first, last)</SAMP>, where <SAMP>first</SAMP> and <SAMP>last</SAMP> are iterators that define the sequence.  Since this a non-mutating algorithm, the function <SAMP>f</SAMP> cannot make any modifications to the sequence, but it can achieve results through side effects (such as copying or printing).  If <SAMP>f</SAMP> returns a result, the result is ignored.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>The function <SAMP>f</SAMP> is applied exactly <SAMP>last - first</SAMP> times.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// for_each.cpp 
+//
+#include &#60;vector>
+#include &#60;algorithm>
+#include &#60;iostream.h>
+ // Function class that outputs its argument times x
+ template &#60;class Arg>
+ class out_times_x :  private unary_function&#60;Arg,void>
+ {
+   private:
+      Arg multiplier;
+   public:
+      out_times_x(const Arg&#38; x) : multiplier(x) { }
+      void operator()(const Arg&#38; x) 
+         { cout &#60;&#60; x * multiplier &#60;&#60; " " &#60;&#60; endl; }
+ };
+ int main()
+ {
+   int sequence[5] = {1,2,3,4,5};  
+   // Set up a vector
+   vector&#60;int> v(sequence,sequence + 5);
+   
+   // Setup a function object 
+   out_times_x&#60;int> f2(2);
+   <B>for_each</B>(v.begin(),v.end(),f2);   // Apply function
+   return 0;
+ }
+Output : 2 4 6 8 10</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance you'll have to write:</P>
+<PRE>vector&#60;int, allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Alg_5157.htm"><B><I>Algorithms</B></I></A>, <A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A></P>
+<HR>
+<A HREF="fin_2105.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="For_5773.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

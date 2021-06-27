@@ -1,0 +1,25 @@
+<Title>ClearCurrentSignal</Title>
+<A NAME="XREF29906"><H1>ClearCurrentSignals </A></H1>
+<A NAME="XREF19731"></A>Clears some received signal bits.<P>
+<H3>Synopsis</H3>
+<CODE>Err ClearCurrentSignals( int32 sigMask )</CODE><P>
+<H3>Description</H3>
+This macro resets the requested signal bits of the current task to 0. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sigMask
+<DD>A 32-bit word indicating which signal bits should be cleared. 
+</DL>
+<H3>Return Value</H3>
+Returns &gt; = 0 for success or a negative error code for failure.<P>
+<H3>Implementation</H3>
+Macro implemented in kernel.h V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>kernel.h
+<DD>ANSI C Macro definition 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr009.html#XREF39797"><CODE>AllocSignal</A>(), <A HREF="./01spr068.html#XREF37706">FreeSignal</A>(), <A HREF="./01spr123.html#XREF40028">SendSignal</A>(), <A HREF="./01spr133.html#XREF12306">WaitSignal</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF29906"></LINK></H1><HR>

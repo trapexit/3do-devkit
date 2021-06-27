@@ -1,0 +1,38 @@
+<Title>capture_audio</Title>
+<A NAME="XREF10302"><H1>capture_audio </A></H1>
+<A NAME="XREF19742"></A>Record the output from the DSPP to a host file.<P>
+<H3>Synopsis</H3>
+<CODE>capture_audio [&lt;num frames&gt;] [&lt;dest file&gt;]</CODE><P>
+<H3>Description</H3>
+Captures the output from the DSP into a file on the development station's 
+filesystem. It can be used to check the sound output of a program at 
+important points. <P>
+Once the output from the DSP has been captured, you can load it into 
+SoundHack and edit it as follows: <P>
+1. From the File menu in SoundHack, choose Open Any.<P>
+2. Select the file that was captured with capture_audio. <P>
+3. Use the Header Change command and set the captured file's header to a 
+rate of 44100, with 2 channels, and a format of 16-bit Linear. <P>
+4. Select Save As command and save the sound file as a 16-bit AIFF format 
+file.<P>
+You can then load the AIFF file you created and listen to the captured 
+sounds. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>num frames 
+<DD> Number of sample frames to capture. Defaults to 10000.
+</DL>
+<DL>
+<DT>dest file
+<DD>Name of the file to save the captured frames to. Defaults to 
+capture.raw.
+</DL>
+<H3>Caveats</H3>
+This program adds an instrument at priority 0. Because the execution order 
+of equal priority instruments depends isn't as predictable as those of 
+differing priority, this program may not be able to capture from other 
+instruments at priority 0. <P>
+<H3>Associated Files</H3>
+capture_audio.c<P>
+<H3>Location</H3>
+examples/Audio <P>

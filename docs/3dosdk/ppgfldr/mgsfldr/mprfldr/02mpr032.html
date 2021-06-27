@@ -1,0 +1,29 @@
+<Title>InterpretMIDIEvent</Title>
+<A NAME="XREF11636"><H1>InterpretMIDIEvent </A></H1>
+<A NAME="XREF23725"></A> Interprets MIDI events within a MIDI object.<P>
+<H3>Synopsis</H3>
+<CODE>Err InterpretMIDIEvent( Sequence *SeqPtr, MIDIEvent*MEvCur,ScoreContext *scon )</CODE><P>
+<H3>Description</H3>
+This function is the interpreter procedure for MIDI sequence objects created using <CODE>MFLoadSequence()</CODE> and <CODE>MFLoadCollection()</CODE>. It's an internal function that is called by the Juggler and, in turn, calls <CODE>InterpretMIDIMessage()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>SeqPtr
+<DD>Pointer to a sequence data structure. 
+</DL>
+<DL>
+<DT>MEvCur
+<DD>Pointer to the current MIDI event within the sequence. 
+</DL>
+<DL>
+<DT>scon
+<DD>Pointer to a ScoreContext data structure used for playback. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr033.html#XREF12999"><CODE>InterpretMIDIMessage</A>()</CODE><P>
+</CODE>

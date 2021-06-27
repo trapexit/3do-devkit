@@ -1,0 +1,34 @@
+<TITLE>InsertNodeFromTail</TITLE>
+<A NAME="XREF26607"><H1>InsertNodeFromTail </A></H1>
+<A NAME="XREF22437"></A>Inserts a node into a list.<P>
+<H3>Synopsis</H3>
+<CODE>void InsertNodeFromTail( List *l, Node *n )</CODE><P>
+<H3>Description</H3>
+This procedure inserts a new node into a list. The order of nodes in a list is determined by their priority. The procedure compares the priority of the new node to the priorities of nodes currently in the list, beginning at the tail of the list, and inserts the new node immediately before the nodes whose priority is lower. If there are no nodes in the list whose priority is lower, the node is added at the head of the list. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the list into which to insert the node. 
+</DL>
+<DL>
+<DT>n
+<DD>A pointer to the node to insert. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+To arrange the nodes in a list by a value or values other than priority, use <CODE>UniversalInsertNode()</CODE>. <P>
+A node can only be included in one list. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr002.html#XREF16640"><CODE>AddHead</A>(), <A HREF="./01spr003.html#XREF18583">AddTail</A>(), <A HREF="./01spr110.html#XREF15588">RemHead</A>(), <A HREF="./01spr111.html#XREF25186">RemNode</A>(), <A HREF="./01spr112.html#XREF23933">RemTail</A>(), <A HREF="./01spr087.html#XREF20096">InsertNodeFromHead</A>(), <A HREF="./01spr128.html#XREF27664">UniversalInsertNode</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF26607"></LINK></H1><HR>

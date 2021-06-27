@@ -1,0 +1,19 @@
+<TITLE>Pathnames and Filenames</TITLE>
+<H1><LINK NAME="XREF20013">Pathnames and Filenames</LINK></H1><HR>
+Gaining access to files is done by describing the files using pathnames. Pathnames provide a description of the location of files within a file system hiearchy. The 3DO file system uses pathnames akin to those used in UNIX. An absolute pathname is of the form:<P>
+<DL>
+<DD><CODE>/file system/dir1/dir2/dir3/(more)/dirN/filename</CODE><BR>
+</DL>
+Each task in Portfolio has a current directory associated with it. Relative pathnames describe a location relative to a known directory. An absolute pathname always starts with a backslash ( /), while a relative pathname never does.<P>
+A relative pathname can be in one of three forms:<P>
+<DL>
+<DD><CODE>filename  dir/filename   dir1/dir2/(more)/dirN/filename</CODE><BR>
+</DL>
+Relative pathnames can be used in either of two ways:<P>
+<UL>
+<LI>In the <CODE>OpenDiskFile()</CODE> call, pathnames specify a path relative to the current task's current directory. 
+<p>
+<LI>In the <CODE>OpenDiskFileInDir()</CODE> call, pathnames specify a path relative to a directory whose item is specified in the call.
+</UL>
+In addition, three special conventions are used to further describe the 3DO directory structure. A path component of a full stop (.) indicates the current directory. A path component of two full stops (..) indicates the parent directory. Finally, a caret (^) indicates the root of the file system.<P>
+Each pathname component should not be longer than 31 characters. In addition, certain characters are not allowed in component names. These illegal characters are backslash (/), dollar sign ($), left bracket ( { ), right bracket ( } ), and a pipe (|).<P>

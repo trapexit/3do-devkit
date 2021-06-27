@@ -1,0 +1,223 @@
+<TITLE>Integer to string conversion</TITLE>
+<H1><LINK NAME="XREF17234">Integer to string conversion</LINK></H1><HR>
+<H2>About this recipe</H2>
+This recipe shows you:<P>
+<UL>
+<LI>how to convert an integer to a string in ARM assembly language;<P>
+<LI>how to use a stack in an ARM assembly language program;<P>
+<LI>how to write a recursive function in ARM assembly language.
+</UL>
+This recipe refers to the program <B>utoa1.s </B>in the <B>examples</B> 
+directory. Its <B>dtoa</B> entry point converts a signed integer to a 
+string of decimal digits (possibly with a leading '-''); its <B>utoa</B> 
+entry point converts an unsigned integer to a string of decimal digits.<P>
+<H2>The algorithm</H2>
+To convert a signed integer to a decimal string: generate a '-' and negate 
+the number if it is negative; then convert the remaining unsigned value.<P>
+To convert a given unsigned integer to a decimal string, divide it by 10, 
+yielding a quotient and a remainder. The remainder is in the range 0-9 and 
+is used to create the last digit of the decimal representation. If the 
+quotient is non-zero it is dealt with in the same way as the original 
+number, creating the leading digits of the decimal representation; 
+otherwise the process has finished.<P>
+<H2>The implementation</H2>
+The implementation of <B>utoa</B> sketched below employs the register 
+naming and usage conventions of the <B>ARM Procedure Call Standard</B>: 
+a1-a4 are argument or scratch registers and a1 is the function result 
+register; v1-v5 are 'variable' registers (preserved across function 
+calls); sp is the stack pointer; at routine entry, lr holds the subroutine 
+call return address; and pc is the program counter.<P>
+<CODE>
+<PRE>
+utoa
+STMFD  sp!, {v1, v2, lr}                ;function entry - save some v-registers
+                                        ;and the return address.
+  MOV    v1, a1                         ; preserve arguments over following
+  MOV    v2, a2                         ; function calls
+
+  MOV    a1, a2
+  BL     udiv10                         ; a1 = a1 / 10
+
+  SUB    v2, v2, a1, LSL #3             ; number - 8*quotient
+  SUB    v2, v2, a1, LSL #1             ;  - 2*quotient = remainder
+
+  CMP    a1, #0                         ; quotient non-zero?
+  MOVNE  a2, a1                         ; quotient to a2...
+  MOV    a1, v1                         ; buffer pointer unconditionally to a1
+  BLNE   utoa                           ; conditional recursive call to utoa
+
+  ADD    v2, v2, #'0'                   ; final digit
+  STRB   v2, [a1], #1                   ; store digit at end of buffer
+
+  LDMFD  sp!, {v1, v2, pc}              ; function exit - restore and return
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+On entry, a2 contains the unsigned integer to be converted and a1 
+addresses a buffer to hold the character representation of it.<P>
+On exit, a1 points immediately after the last digit written.<P>
+Both the buffer pointer and the original number have to be saved across 
+the call to <B>udiv10</B>. This could be done by saving the values to 
+memory. However, it turns out to be more efficient to use two 'variable' 
+registers, v1 and v2 (which, in turn, have to be saved to memory).<P>
+(An instructive exercise for the reader is to rework this example with a1 
+and a2 saved to memory in the initial STMFD, rather than v1 and v2).<P>
+Because utoa calls other functions (<B>udiv10</B> and <B>utoa</B>) it must 
+save its return link address passed in lr. The function therefore begins 
+by stacking v1, v2 and lr using STMFD sp!, {v1,v2,lr}.<P>
+In the next block of code, a1 and a2 are saved (across the call to 
+<B>udiv10</B>) in v1 and v2 respectively and the given number (a2) is 
+moved to the first argument register (a1) before calling <B>udiv10</B> 
+with a BL (Branch with Link) instruction.<P>
+On return from <B>udiv10</B>, 10 times the quotient is subtracted from the 
+original number (preserved in v2) by two SUB instructions. The remainder 
+(in v2) is ready to be converted to character form (by adding ASCII '0') 
+and to be stored into the output buffer.<P>
+But first, <B>utoa</B> has to be called to convert the quotient, unless 
+that is zero. The next four instructions do this, comparing the quotient 
+(in a1) with 0, moving the quotient to the second argument register (a2) 
+if not zero, moving the buffer pointer to the first argument/result 
+register (a1), and calling <B>utoa</B> if the quotient is not zero.<P>
+Note that the buffer pointer is moved to a1 unconditionally: if 
+<B>utoa</B> is called recursively then a1 will be updated, but it will 
+still identify the next free buffer location; if <B>utoa</B> is not called 
+recursively, the next free buffer location is still needed in a1 by the 
+following code which plants the remainder digit and returns the updated 
+buffer location (via a1).<P>
+The remainder (in a2) is converted to character form by adding '0' and is 
+then stored in the location addressed by a1. A post-incrementing STRB is 
+used which stores the character and increments the buffer pointer in a 
+single instruction, leaving the result value in the result register a1.<P>
+Finally, the function is exited by restoring the saved values of v1 and v2 
+from the stack, loading the stacked link address into pc and popping the 
+stack using a single multiple load instruction LDMFD sp!, {v1,v2,pc}.<P>
+<H2>Creating a runnable example</H2>
+You can run the <B>utoa</B> routine described here under <B>armsd</B>. To 
+do this, you must assemble the example and the udiv10 function, compile a 
+simple test harness written in C, and link the resulting objects together 
+to create a runnable program.<P>
+Begin by setting your current directory to the <B>examples</B> directory 
+then use the following commands:<P>
+<CODE>
+<PRE>
+armasm utoa1.s -o utoa1.o -li
+armasm udiv10.s -o udiv10.o -li 
+armcc -c utoatest.c -apcs 3/32bit
+armlink -o utoatest utoa1.o udiv10.o utoatest.o <B>somewhere</B>/armlib.321
+</CODE>
+</PRE>
+where <B>somewhere</B> is the directory in which armlib.32l can be 
+found.<P>
+<H3>Explanation</H3>
+The first two <B>armasm</B> commands assemble the <B>utoa</B> function and 
+the <B>udiv10</B> function, creating relocatable object files 
+<B>utoa1.o</B> and <B>udiv10.o</B>. The -li flag tells <B>armasm</B> to 
+assemble for a little-endian memory. You can omit this flag if your 
+<B>armasm</B> has been configured for this default.<P>
+The <B>armcc</B> command compiles the test harness. The -c flag tells 
+<B>armcc</B> not to link its output with the C library; the -li flag tells 
+<B>armcc</B> to compile for a little-endian memory (as with 
+<B>armasm</B>).<P>
+The <B>armlink</B> command links your three relocatable objects with the 
+ARM C library to create a runnable program (here called 
+<B>utoatest</B>).<P>
+If you have installed your ARM development tools in a standard way then 
+you could use the following shorter command to do the compilation and 
+linking:<P>
+<CODE>
+<PRE>
+armcc utoatest.c utoa1.o udiv10.o -apcs 3/32bit -li
+</CODE>
+</PRE>
+<H2>Running the example</H2>
+You can run your example program under <B>armsd</B> using:<P>
+<CODE>
+<PRE>
+armsd -li utoatest
+</CODE>
+</PRE>
+Note that the -li and -apcs 3/32bit options can be omitted if the tools 
+have been configured appropriately.  <P>
+<A NAME="XREF30897"><H2>Stacks in assembly language</A></H2>
+In this example, three words are pushed on to the stack on entry to 
+<B>utoa</B> and popped off again on exit. By convention, ARM software uses 
+r13, usually called sp, as a stack pointer pointing to the last-used word 
+of a downward growing stack (a so-called 'full, descending' stack). 
+However, this is only a convention and the ARM instruction set supports 
+equally all four stacking possibilities: {full or empty} x {ascending or 
+descending}.<P>
+The instruction used to push values on the stack was:<P>
+<CODE>
+<PRE>
+STMFD  sp!, {v1, v2, lr}
+</CODE>
+</PRE>
+The action of this instruction is as follows:<P>
+<UL>
+<LI>subtract 4 * number-of-registers from sp;<P>
+<LI>store the registers named in {...} in ascending register number order 
+to memory at [sp], [sp,4], [sp,8] ...
+</UL>
+The matching pop instruction was:<P>
+<CODE>
+<PRE>
+LDMFD  sp!, {v1, v2, pc}
+</CODE>
+</PRE>
+Its action is:<P>
+<UL>
+<LI>load the registers named in {...} in ascending register number order 
+from memory at [sp], [sp,4], [sp,8] ...<P>
+<LI>add 4 * number-of-registers to sp.
+</UL>
+<H3>Discussion</H3>
+Many, if not most, register-save requirements in simple assembly language 
+programs can be met using this approach to stacks.<P>
+A more complete treatment of run-time stacks requires a discussion of:<P>
+<UL>
+<LI>stack-limit checking (and extension);<P>
+<LI>local variables and stack frames.
+</UL>
+In the <B>utoa</B> program, you must assume the stack is big enough to 
+deal with the maximum depth of recursion, as no one bothers to check this. 
+In practice, this assumption is OK. The biggest 32-bit unsigned integer is 
+about four billion, or ten decimal digits. This means that at most 10 x 3 
+registers = 120 bytes have to be stacked. Because the ARM Procedure Call 
+Standard (APCS) guarantees that there are at least 256 bytes of stack 
+available when a function is called and because we can guess (or know) 
+that <B>udiv10</B> uses no stack space, we can be confident that 
+<B>utoa</B> is quite safe if called by an APCS-conforming caller such as a 
+compiled-C test harness.<P>
+This discussion raises another delicacy. The stacking technique 
+illustrated here conforms to the ARM Procedure Call Standard only if the 
+function using it makes no function calls. <B>utoa</B> calls both 
+<B>udiv10</B> and itself; it really ought to establish a proper stack 
+frame (see <A HREF="../atsfldr/ats4frst.html#XREF28151">ARM Procedure Call 
+Standard</A>). If you really want to be safe and write functions that can 
+'plug and play together' you have to follow the APCS exactly.<P>
+However, when writing a whole program in assembly language you often know 
+much more than when writing a program fragment for general, robust 
+service. This allows you to gently break the APCS in the following way:<P>
+<UL>
+<LI>Any chain of function/subroutine calls can be considered compatible 
+with the APCS provided it uses less than 256 bytes of stack space.
+</UL>
+So the <B>utoa</B> example is compatible with the APCS even though it 
+doesn't conform to the APCS.<P>
+Note however: if you call any function whose stack use is unknown (but 
+which is believed to be APCS conforming), you court disaster unless you 
+establish a proper APCS call frame and perform APCS stack limit checking 
+on function entry. Please refer to <A 
+HREF="../atsfldr/ats4frst.html#XREF28151">ARM Procedure Call Standard</A> 
+for further details.<P>
+<H2>Related topics</H2>
+For more information about stacks, and conforming to the ARM Procedure 
+Call Standard see:<P>
+
+<UL>
+<LI><A HREF="./1acbd.html#XREF26996">Flexibility of load and store 
+multiple</A>;
+<LI><A HREF="./acb3frst.html#XREF41444">Interfacing Assembly Language and 
+C</A>;
+<LI><A HREF="./4acbc.html#XREF38409">Stack overflow checking</A>.
+</UL>

@@ -1,0 +1,91 @@
+<TITLE>Retargetting the library</TITLE>
+<H1><LINK NAME="XREF19991">Retargetting the library</LINK></H1><HR>
+<A NAME="XREF24503"><H2>Variant selection</A></H2>
+The following generic variants are available as 'tick box' options through the <I>options</I> file in the target directory:<P>
+<H3>fp_type</H3>
+
+<PRE>
+--------------------------------------------------------
+=linked   |causes the object module containing the      
+          |floating point emulator to be included in the
+          |library (and linked into any image), along   
+          |with a small interface module to take control
+          |of the illegal instruction vector on startup,
+          |and relinquish it on closedown.              
+--------------------------------------------------------
+=module   |floating point emulation is provided         
+          |externally in some way (present in ROM, for  
+          |example). In this case, if the               
+          |target-dependent kernel follows the code of  
+          |the riscos example, functions                
+          |__fp_initialise, __fp_finalise and           
+          |__fp_address_in_module must be provided.     
+--------------------------------------------------------
+</PRE>
+<H3>memcpy</H3>
+
+<PRE>
+--------------------------------------------------------
+=small    |memcpy, memmove and memset are implemented by
+          |generic C code (which attempts to do as much 
+          |as possible in word units): each occupies    
+          |about 100 bytes.                             
+--------------------------------------------------------
+=fast     |memmove and memcpy are implemented together  
+          |in assembler, which attempts to do the bulk  
+          |of the move 8 words at a time using LDM/STM  
+          |(about 1200 bytes). memset is implemented    
+          |similarly (about 200 bytes).                 
+--------------------------------------------------------
+</PRE>
+<H3>divide</H3>
+
+<PRE>
+--------------------------------------------------------
+=small     |the fully rolled implementations.           
+--------------------------------------------------------
+=unrolled  |unsigned and signed divide are unrolled 8   
+           |times for greater speed, but obviously use  
+           |more code. Complete unrolling of divide is  
+           |possible, but should be done with care since
+           |the significant size increase might give    
+           |decreased rather than increased performance 
+           |on a cached ARM. Whichever variant is       
+           |selected, fast unsigned and signed divide by
+           |10 are included.                            
+--------------------------------------------------------
+</PRE>
+<H3>stack=</H3>
+(see later subsection Address Space Model).<P>
+<H3>stdfile_redirection</H3>
+
+<PRE>
+--------------------------------------------------------
+=on  |_main extracts Unix-style stdstream connection    
+     |directives from the image's argument string (&lt;    
+     |, &gt;, &gt;&gt;, &gt;&amp;, 1&gt;&amp;2).           
+--------------------------------------------------------
+</PRE>
+<H3>backtrace</H3>
+
+<PRE>
+--------------------------------------------------------
+=on  |the default signal handler ends by producing a    
+     |call-stack traceback to stderr. (Use of this      
+     |variant is not encouraged, since it increases the 
+     |proportion of the library that is linked into all 
+     |images, while providing functionality better      
+     |obtained from a separate debugger).               
+--------------------------------------------------------
+</PRE>
+<H2>Basic choices</H2>
+After the tick box choices have been made, basic choices then have to be made about the address-space model and the I/O model the library will follow.<P>
+<H2>Address space model</H2>
+Two address space models are supported: contiguous stack and chunked stack.<P>
+
+<IMG SRC="Figures/ARR.gif" ALT="Graphic cannot be displayed">
+<P>
+A third variant, like the first, but with the stack outside of the heap and not under the application's control, can easily be synthesised. This may be a more appropriate variant if there is a skeletal operating system which implements an address-mapped stack segment.<P>
+<H2>I/O model</H2>
+The library, as supplied, only conveniently handles byte-stream files, (which is not to say that other file types can not be handled in the target-dependent IO support level, but such support may well be complicated; block stream files, for example, are simple to support in the absence of user-supplied buffers).<P>
+<P>

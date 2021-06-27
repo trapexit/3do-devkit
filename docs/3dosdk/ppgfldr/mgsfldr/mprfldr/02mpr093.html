@@ -1,0 +1,22 @@
+<Title>spStop</Title>
+<A NAME="XREF20856"><H1>spStop </A></H1>
+<A NAME="XREF13109"></A> Stops an SPPlayer<P>
+<H3>Synopsis</H3>
+<CODE>Err spStop (SPPlayer *player)</CODE><P>
+<H3>Description</H3>
+Stops reading and sound playback. <P>
+Clears all SP_STATUS_F_ flags. Can be called regardless of SPPlayer's current state. Multiple calls have no effect. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to SPPlayer to stop. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr092.html#XREF25186"><CODE>spStartReading</A>(), <A HREF="./02mpr091.html#XREF15941">spStartPlaying</A>(), <A HREF="./02mpr077.html#XREF27522">spGetPlayerStatus</A>() </CODE><P>
+</CODE>

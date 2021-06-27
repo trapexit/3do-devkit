@@ -1,0 +1,41 @@
+<HTML><HEAD><TITLE>Partial Sort</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Partial Sort</H2>
+<P>The generic algorithm <SAMP>partial_sort()</SAMP> sorts only a portion of a sequence.  In the first version of the algorithm, three iterators are used to describe the beginning, middle, and end of a sequence.  If <SAMP>n</SAMP> represents the number of elements between the start and middle, then the smallest <SAMP>n</SAMP> elements will be moved into this range  in order.  The remaining elements are moved into the second region.  The order of the elements in this second region is undefined.</P>
+<PRE>void partial_sort (RandomAccessIterator first, 
+   RandomAccessIterator middle, 
+   RandomAccessIterator last [ , Compare ]);
+</PRE>
+<P>A second version of the algorithm leaves the input unchanged.  The output area is described by a pair of random access iterators.  If <SAMP>n</SAMP> represents the size of this area, then the smallest <SAMP>n</SAMP> elements in the input are moved into the output in order.  If <SAMP>n</SAMP> is larger than the input, then the entire input is sorted and placed in the first <SAMP>n</SAMP> locations in the output.  In either case the end of the output sequence is returned as the result of the operation.</P>
+<PRE>RandomAccessIterator partial_sort_copy 
+   (InputIterator first, InputIterator last, 
+   RandomAccessIterator result_first, 
+   RandomAccessIterator result_last [, Compare ] );
+</PRE>
+<P>Because the input to this version of the algorithm is specified only as a pair of input iterators, the <SAMP>partial_sort_copy()</SAMP> algorithm can be used with any of the containers in the standard library.  In the example program it is used with a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A>.</P>
+<PRE>void partial_sort_example () 
+      // illustrate the use of the partial sort algorithm
+{
+      // make a vector of 15 random integers
+   vector&#60;int> aVec(15);
+   generate (aVec.begin(), aVec.end(), randomValue);
+
+      // partial sort the first seven positions
+   partial_sort (aVec.begin(), aVec.begin() + 7, aVec.end());
+
+      // make a list of random integers
+   list&#60;int> aList(15, 0);
+   generate (aList.begin(), aList.end(), randomValue);
+   
+      // sort only the first seven elements
+   vector&#60;int> start(7);
+   partial_sort_copy (aList.begin(), aList.end(),
+      start.begin(), start.end(), greater&#60;int>());
+}
+</PRE>
+
+<HR>
+<A HREF="sor_5132.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="nth_1433.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,78 @@
+<HTML><TITLE>Insert Iterators</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Insert Iterators</H2>
+<HR><PRE>     Insert Iterator</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Iterator adaptor that allows an iterator to insert into a container rather than overwrite elements in the container.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;iterator></PRE>
+<PRE>
+template &#60;class Container>
+class <B>insert_iterator</B> : public output_iterator;
+template &#60;class Container>
+class <B>back_insert_iterator</B>:public output_iterator;
+template &#60;class Container>
+class <B>front_insert_iterator</B> : public output_iterator;
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Insert iterators are iterator adaptors that let an iterator <I>insert</I> new elements into a collection rather than overwrite existing elements when copying to a container.  There are several types of insert iterator classes.</P>
+<UL><LI><P>The class<A HREF="bac_0189.htm"><B><I> back_insert_iterator</B></I></A> is used to insert items at the end of a collection.  The  function <SAMP>back_inserter</SAMP> can be used with an iterator inline, to create an instance of a<B><I> back_insert_iterator</B></I> for a particular collection type.</P>
+</LI>
+<LI><P>The class <A HREF="fro_0713.htm"><B><I>front_insert_iterator</B></I></A> is used to insert items at the start of a collection.  The function <SAMP>front_inserter</SAMP> creates an instance of a <B><I>front_insert_iterator</B></I> for a particular collection type. </P>
+</LI>
+<LI><P>An <A HREF="ins_0081.htm"><B><I>insert_iterator</B></I></A> inserts new items into a collection at a location defined by an iterator supplied to the constructor. Like the other insert iterators, <B><I>insert_iterator</B></I> has a helper function called <SAMP>inserter</SAMP>, which takes a collection and an iterator into that collection, and creates an instance of the <B><I>insert_iterator</B></I>.  </P>
+</LI>
+</UL>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class Container>
+ class insert_iterator : public output_iterator {
+
+public:
+   insert_iterator (Container&#38;, typename Container::iterator);
+   insert_iterator&#60;Container>&#38;
+    operator= (const typename Container::value_type&#38;);
+   insert_iterator&#60;Container>&#38; operator* ();
+   insert_iterator&#60;Container>&#38; operator++ ();
+   insert_iterator&#60;Container>&#38; operator++ (int);
+};
+template &#60;class Container>
+ class back_insert_iterator : public output_iterator {
+public:
+   explicit back_insert_iterator (Container&#38;);
+   back_insert_iterator&#60;Container>&#38;
+    operator= (const typename Container::value_type&#38;);
+   back_insert_iterator&#60;Container>&#38; operator* ();
+   back_insert_iterator&#60;Container>&#38; operator++ ();
+   back_insert_iterator&#60;Container> operator++ (int);
+};
+template &#60;class Container>
+ class front_insert_iterator : public output_iterator {
+public:
+   explicit front_insert_iterator (Container&#38;);
+   front_insert_iterator&#60;Container>&#38;
+    operator= (const typename Container::value_type&#38;);
+   front_insert_iterator&#60;Container>&#38; operator* ();
+   front_insert_iterator&#60;Container>&#38; operator++ ();
+   front_insert_iterator&#60;Container> operator++ (int);
+};
+ template &#60;class Container, class Iterator>
+ insert_iterator&#60;Container> inserter (Container&#38;, Iterator);
+ 
+ template &#60;class Container>
+ back_insert_iterator&#60;Container> back_inserter (Container&#38;);
+ template &#60;class Container>
+ front_insert_iterator&#60;Container> front_inserter (Container&#38;);
+</PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="bac_0189.htm"><B><I>back_insert_iterator</B></I></A>, <A HREF="fro_0713.htm"><B><I>front_insert_iterator</B></I></A></P>
+<HR>
+<A HREF="Inp_4853.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="ins_0081.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

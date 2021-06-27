@@ -1,0 +1,22 @@
+<TITLE>About Semaphores</TITLE>
+<H1><LINK NAME="XREF35496">About Semaphores</LINK></H1><HR>
+Tasks use special items known as <I>semaphores </I>to control access to shared resources. The following sections explain how they work.<P>
+<H2>The Problem: Sharing Resources Safely</H2>
+One job of a multitasking operating system like Portfolio is to provide safe, orderly ways for tasks to share resources. A classic problem in computing is allowing multiple tasks to share the same resource. The problem affects any resource, including memory or a disk file, whose state can be changed by the tasks that share it. If a task changes a resource before another task finishes using it, and the change violates an assumption the first task has about the resource's contents, then crashes and corruption can occur. <P>
+<H2>The Solution: Locking Shared Resources When Using Them</H2>
+To share a resource safely, a task must be able to lock the resource while it's using it and unlock it when it finishes using it. This is known as mutual exclusion: Other tasks are excluded from the resource until it is safe for them to use it.<P>
+<H2>The Implementation: Semaphores</H2>
+There are many techniques for enforcing mutual exclusion. One of the simplest and most effective techniques uses special data structures known as semaphores. A semaphore keeps track of how many tasks are using or waiting to use a shared resource. This approach-described in all good textbooks on operating systems-is the one Portfolio uses. Tasks using Portfolio semaphores use the routines provided by the kernel for creating semaphores, for deleting them, and for locking and unlocking the resources they control.<P>
+On 3DO systems, it is up to each task to ensure that any shared resources it owns-in particular, memory pages that other tasks can write to-are shared safely. (To learn how tasks can grant other tasks write access to their memory, see <A HREF="./05spg.html#XREF29389">Managing Memory</A>.) Although tasks are not required to use semaphores, you should always use them, or another mutual-exclusion mechanism, when your task shares any of its memory with another task.<P>
+<H2>Using Semaphores</H2>
+To control access to a shared resource it owns, a task<P>
+<UL>
+<LI>Creates a semaphore
+<p>
+<LI>Associates the semaphore with the resource
+<p>
+<LI>Tells the other tasks that share the resource there is a semaphore for controlling access to the resource
+</UL>
+Each task then must lock the semaphore before using the resource by calling <CODE>LockSemaphore()</CODE> and unlocks it as soon as it's done using it by calling <CODE>UnlockSemaphore()</CODE>. Except for creating the semaphore by calling <CODE>CreateSemaphore()</CODE>, sharing a resource requires the cooperation of the tasks that are involved. The tasks must agree on a way to communicate the information about the new semaphore, such as intertask messages or shared memory, and they need to agree on a format for this information. They must also agree to lock the semaphore before using the resource and unlock it when they're done.<P>
+If your task needs access to a shared resource and cannot continue without it, you can ask the kernel to put the task into wait state until the resource becomes available. You do this by including the <CODE>SEM_WAIT</CODE> flag in the <CODE>flags</CODE> argument of 
+<CODE>LockSemaphore()</CODE> discussed below.<P>

@@ -1,0 +1,111 @@
+<TITLE>ARM600page table generation</TITLE>
+<H1><LINK NAME=""XREF15620"> </LINK><LINK NAME="XREF10413"></LINK><LINK 
+NAME="XREF22282">ARM600 page</LINK> table generation</H1><HR>
+<H2>About this recipe</H2>
+This recipe tells you how to use:<P>
+<UL>
+<LI><B>armasm</B> repetitive assembly;
+<LI><B>armasm</B> conditional assembly;
+<LI><B>armasm</B> macros;
+<LI><B>armasm</B> and <B>armlink</B> to produce a plain binary output file 
+(containing only the bytes you describe in your source program).
+</UL>
+This recipe refers to the program pagetab.s in the <B>examples</B> 
+directory.  Although pagetab.s generates ARM600 page tables, it is not the 
+format of the page tables which is being discussed in this recipe, but how 
+they are generated using <B>armasm</B>.  To find out more about ARM600 
+page tables please refer to the ARM600 datasheet.<P>
+<H2>Repetitive assembly</H2>
+The following code fragment is taken from <I>pagetab.s</I>:<P>
+    <CODE>
+<PRE>
+           GBLA    counter
+counter    SETA 0
+
+           WHILE   counter &lt;= 3
+           L1Entry SECTION, (counter:SHL:20), 0, U_BIT+C_BIT+B_BIT, 
+SVC_RW
+counter    SETA counter+1
+           WEND
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+GBLA counter declares a global numeric variable called <I>counter 
+</I>which is initialized to zero using the SETA directive.<P>
+The WHILE ... WEND construct is then used to repeatedly assemble the lines 
+between WHILE and WEND.<P>
+In this example, the loop body is assembled for counter = 0, 1, 2 and 3, 
+but because the looping condition is checked at the top of the loop, it is 
+possible for code between a WHILE and a WEND never to be assembled. For 
+example, if <I>counter</I> were initialized to 4, the body of the WHILE 
+... WEND loop would not be assembled at all.<P>
+Each time around the loop the macro <I>L1Entry</I> is called (with 5 
+arguments), and then <I>counter</I> is incremented.<P>
+<H2>Macro usage and conditional assembly</H2>
+The following code fragment for L1Entry is also taken from 
+<I>pagetab.s</I>:<P>
+<CODE>
+<PRE>
+MACRO
+L1Entry $type, $addr, $dom, $ucb, $acc
+IF ($type=SECTION)
+    DCD ((($addr):AND:&amp;FFF00000):OR:(($acc):SHL:10) \
+        :OR:(($dom):SHL:5):OR:($ucb):OR:($type))
+    MEXIT
+ENDIF
+IF ($type=PAGE)
+    DCD ((($addr):AND:&amp;FFFFFC00):OR:(($dom):SHL:5) \
+        :OR:(($ucb):AND:U_BIT):OR:$type)
+ELSE
+    DCD 0 ; Invalid Level 1 Page Table Entry
+ENDIF
+MEND
+</CODE>
+</PRE>
+Note that a backslash breaks a logical line of assembly language across 
+two physical lines.  However, there must be no character after the 
+backslash on the line.<P>
+<H3>Explanation</H3>
+The macro definition is enclosed between MACRO and MEND. The first line of 
+the definition gives the macro's name and lists its parameters.<P>
+The body of the macro illustrates the use of IF ... ENDIF and IF ... ELSE 
+... ENDIF to assemble different code conditional on a value known at 
+assembly-time. In this example, the controlling expressions of the IFs 
+involve a macro parameter ($type) which gets its value when the macro is 
+called.<P>
+This macro definition also shows how the MEXIT directive can be used to 
+exit from processing a macro before the MEND directive is reached. You can 
+think of MEXIT as being like a <I>return</I> statement in a C function. <P>
+<H2>Assembling the page tables in plain binary format</H2>
+This section tells you how to create a file containing a plain binary 
+image of the page tables. In other words, a file containing just the bytes 
+you would need to load into memory <I>and nothing else</I> by way of 
+symbolic information, file content descriptors, load addresses, etc.<P>
+You create a plain binary image in two steps: first you create a 
+relocatable object file from your source file; then you use <I>armlink</I> 
+to make a plain binary version of the relocatable object.<P>
+<H3>Method</H3>
+Set your current directory to that containing the <I>pagetab.s</I> program 
+then assemble <I>pagetab.s</I> and link <I>pagetab.o</I> as follows:<P>
+<CODE>
+<PRE>
+armasm pagetab.s -o pagetab.o -li
+armlink -bin -o pagetab pagetab.o
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+As in earlier examples, the -li option tells <I>armasm</I> to assemble 
+code for a little-endian memory.  This need not be specified if the tools 
+have been <I>configured</I> for little-endian operation.<P>
+The -bin option tells <I>armlink</I> to make a plain binary output file 
+containing nothing but the bytes you described in your source program.<P>
+Because pagetab contains no position-dependent data, you do not need to 
+tell <I>armlink</I> where to base its output.  If there had been 
+position-dependent data or code, you would have had to use the -base<I> 
+address</I> option to tell <I>armlink</I> where to base its output and, of 
+course, you would only be able to use the output at that memory address.<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./1acbe.html#XREF21678">Loading constants into registers</A>.
+</UL>

@@ -1,0 +1,20 @@
+<Title>sampler.dsp</Title>
+<A NAME="XREF15193"><H1>sampler.dsp </A></H1>
+<A NAME="XREF20226"></A> Rate-variable sample player.<P>
+<H3>Function</H3>
+This instrument is a rate-variable 16-bit mono sample player.  It is identical to varmono16.dsp, except that you should use sampler.dsp if you are short on memory. <P>
+The instrument is limited to a pitch one octave above base pitch, if recorded at 44.1 kHz.  If it is recorded at 22 kHz, the pitch can go two octaves up.  A rate of 0x8000 corresponds to one data sample per DAC sample frame.  0xFFFF is the highest possible rate. <P>
+<H3>Knobs</H3>
+Frequency  -  units are fixed point phase increment.  $8000 equals the normal sample rate, with 1 sample per frame.  Thus, you can go from zero to one octave above the original. <P>
+Amplitude - 0  =&gt;  $7FFF <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+InFIFO <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 36 <P>
+N memory = 11 words <P>

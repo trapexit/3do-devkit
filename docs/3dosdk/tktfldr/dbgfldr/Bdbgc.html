@@ -1,0 +1,19 @@
+<TITLE>sendstr</TITLE>
+<H1><LINK NAME="XREF30658">sendstr</LINK></H1><HR>
+<A NAME="XREF36434"></A><A NAME="XREF16087"></A><A NAME="XREF30853"><H1>sendstr</A></H1>
+Sends a string from MPW to the 3DO Debugger.<P>
+<H3>Synopsis</H3>
+<CODE>sendstr</CODE><P>
+<H3>Description</H3>
+The <CODE>sendstr</CODE> tool sends any string from MPW to the 3DO Debugger application. Place the tool in the Tools folder of your MPW folder. When the Debugger receives a string, it sends it to the 3DO Station for execution.<P>
+You can use <CODE>sendstr</CODE> from the MPW worksheet or built into your makefile.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>None
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>None
+</DL>
+<H3>Caveats</H3>
+If you enter the tool name with no parameters, the tool indicates that not enough information was passed but identifies itself in the MPW worksheet and shows the formatting information. You need an MPW shell from version 3.3 or later because other version of the MPW shell don't work with AppleEvents. AppleEvents are used to communicate with the 3DO Debugger.<P>

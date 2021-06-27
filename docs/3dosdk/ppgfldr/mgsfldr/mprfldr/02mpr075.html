@@ -1,0 +1,21 @@
+<Title>spGetPlayerFromSound</Title>
+<A NAME="XREF12284"><H1>spGetPlayerFromSound </A></H1>
+<A NAME="XREF17528"></A> Get SPPlayer that owns an SPSound.<P>
+<H3>Synopsis</H3>
+<CODE>SPPlayer *spGetPlayerFromSound (const SPSound *sound)</CODE><P>
+<H3>Description</H3>
+Returns a pointer to the SPPlayer to which the specified SPSound was added. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to SPSound to interrogate. 
+</DL>
+<H3>Return Value</H3>
+Pointer to SPPlayer that owns this SPSound. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr063.html#XREF36046"><CODE>spAddSoundFile</A>(), <A HREF="./02mpr061.html#XREF17185">spAddMarker</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,28 @@
+<Title>SetTextCelFormatBuffer</Title>
+<A NAME="XREF19841"><H1>SetTextCelFormatBuffer </A></H1>
+ Attaches a format buffer to a text cel.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetTextCelFormatBuffer (TextCel *tCel, char *buffer, uint32 bufSize)</CODE><P>
+<H3>Description</H3>
+Attaches a text-formatting buffer to a TextCel. The buffer is used for printf-style formatting of text during rendering. If a text cel has a format buffer, text rendered into the cel passes first through <CODE>sprintf()</CODE> for formatting. If there is no format buffer attached to the cel (the default), <CODE>sprintf()</CODE> is not invoked at render time. <P>
+If the bufSize parameter is zero, any buffer already in the cel is removed, and if the buffer was acquired internally, it is released. <CODE>(DeleteTextCel()</CODE> also automatically releases an internally acquired buffer.) <P>
+If the bufSize parameter is non-zero, a format buffer is attached to the cel. In this case, if the buffer parameter is NULL, a buffer of the specified size is dynamically allocated internally. If the buffer parameter is non-NULL, it is a pointer to a buffer that you have either dynamically allocated or a static buffer within your application. When you specify your own buffer, you are responsible for releasing it; the library internals will not attempt to release a buffer you provided via a non-NULL buffer parameter. <P>
+A format buffer must be large enough to hold the largest possible formatted string that you try to render. Internally, at rendering time, the printf-style format string and arguments you supply are passed to <CODE>sprintf()</CODE> for formatting. If the resulting string is larger than the format buffer, the Debugger window displays a message, but memory beyond the end of the buffer has already been corrupted at that point. (This is a typical limitation of <CODE>sprintf()</CODE> processing.) <P>
+Many text cels can share the same format buffer to save memory. The buffer is only used while text is being rendered into the cel. Once <CODE>UpdateTextInCel()</CODE> returns, the buffer is no longer in use by that cel, and can be used in formatting the contents of another cel. The only time it is not safe to use the same format buffer for multiple text cels is in a multithreaded application where more than one thread might be calling <CODE>UpdateTextInCel()</CODE> simultaneously. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>buffer
+<DD>Pointer to a buffer to use for text formatting, or NULL to have a buffer dynamically allocated for you. 
+</DL>
+<DL>
+<DT>bufsize
+<DD>Size of the format buffer. 
+</DL>
+<H3>Return Value</H3>
+Zero if successful, or -1 if dynamic buffer allocation fails; that is, if there is not enough memory. <P>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

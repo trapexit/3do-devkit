@@ -1,0 +1,195 @@
+<TITLE>Creating an irregularly shaped 
+cel</TITLE>
+<H1><LINK NAME="XREF12880">Creating an irregularly</LINK> shaped cel</H1><HR>
+You'll want most cels to be the shape of the object that moves on the 
+screen, and not simply rectangular. This section steps you through 
+creating a packed and an unpacked irregularly shaped cel. Both processes 
+work by using a special background color that will then become transparent 
+when the cel is displayed via the 3DO system. <P>
+<B>Note: </B>When creating a packed irregularly shaped cel, you can use a 
+background color of your choice. When creating an unpacked irregularly 
+shaped cel, you have to use black as a background color and have to change 
+all black to almost black. <P>
+For information on the characteristics of packed and unpacked cels, see 
+<A HREF="../ginfldr/0ginfrst.html">Introduction to 3DO Graphics.</A>  <P>
+<H2>Creating a packed irregularly shaped cel</H2>
+This section steps you through creating a packed, irregularly shaped 8-bit 
+coded cel. The procedure has three parts: <P>
+
+<UL>
+<LI><A HREF="#XREF41420">Creating a cel</A>
+<LI><A HREF="#XREF39753">Filling the background with the background 
+color</A>
+<LI><A HREF="#XREF21912">Setting CCB flags</A>
+</UL>
+<A NAME="XREF41420"><H3>Creating a cel</A></H3>
+Before you can create an irregularly shaped cel, you need a rectangular 
+cel to start with. Follow the steps in <A 
+HREF="./1anic.html#XREF38335">Creating a simple coded cel</A> to create an 
+8-bit coded cel. <P>
+<A NAME="XREF39753"><H3>Filling the background with the background 
+color</A></H3>
+After you have prepared the cel, you need to make the area around the cel 
+object (the background) transparent. <P>
+To fill the background with the background color, follow these steps:<P>
+
+1. Follow these steps to tear off the paint palette (see Figure 1): 
+<P>
+<UL>
+<LI>Point to the color patch that displays the current paint palette color.
+<LI>Position the pointer at the edge of the palette.
+<LI>Drag the palette to the desired location on the screen.
+</UL><BR>
+</DL>
+
+<IMG SRC="Figures/ANICh1/Tear-off.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>3DO Animator tear-off palette.</I><P>
+
+2. Find a color in the palette that is not in the document by clicking on 
+colors in the tear-off palette. <P>
+
+If a color you click in the paint palette flashes in the cel, it is 
+being used and you should select another color. For this to work, you 
+should be using an 8-bit cel. <P>
+<B>Note: </B>The flashing does not currently work on all monitor 
+types. <BR><P>
+
+3. Once you've selected a color in the paint palette that is not being 
+used, click in the background area using the Magic Wand tool.<P> 
+
+4. Select the Fill tool (paint bucket) and click in the background area. <P>
+
+The background color fills the selected background area and appears as 
+the current color in the paint palette color patch.<P> 
+
+5. In the Set 3DO Object Type dialog, select the Background Color box. 
+Select the Color Picker tool (eye dropper) and click the background area. 
+<P>
+The color appears in the Background Color box. When you later save the 
+cel, all pixels in the background color are marked as transparent, and 
+displayed as transparent if the CCB flags are set correctly (discussed in 
+the next section). 
+
+<A NAME="XREF21912"><H3>Setting CCB flags</A></H3>
+Using a special background color to create an irregularly shaped cel only 
+works for a packed cel. This section steps you through setting the cel 
+control block (CCB) flags to work with the background color. <P>
+<OL>
+<LI>From the 3DO Options menu, select Set CCB. 
+
+<P>The Load CCB Settings dialog is displayed.
+<P>
+
+<IMG SRC="Figures/ANICh1/LoadCCBSettings.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Load CCB Settings dialog.</I><P>
+<B>Note: </B>If there are CCB settings you want to copy from another file, 
+click the Load CCB Settings button and select the file from the dialog 
+that appears. Click OK to complete the transfer.<P>
+
+<LI>Select the Packing On box, then choose OK. 
+<P>The cel is now saved in packed format.
+
+<H2>Creating an unpacked, irregularly shaped cel</H2>
+An unpacked, irregularly shaped cel takes advantage of the 3DO hardware's 
+ability to make black (RGB 0-0-0) pixels transparent, provided certain CCB 
+flags are set. <P>
+If you use this feature, you can't have black (RGB 0-0-0) as part of the 
+cel itself, because black pixels in the cel will also become transparent, 
+and your cel will have holes. <P>
+<H3>About this section</H3>
+This section first steps you through creating an unpacked irregularly 
+shaped cel by explaining the following procedures: <P>
+
+<UL>
+<LI><A HREF="#XREF30311">Creating a cel with no black</A>
+<LI><A HREF="#XREF13388">Creating a black background</A>
+<LI><A HREF="#XREF35189">Setting CCB flags</A>
+</UL>
+<A NAME="XREF30311"><H3>Creating a cel with no black</A></H3>
+Since you will save the irregularly shaped, unpacked cel using flag 
+settings that make black (RGB 0-0-0) pixels transparent, you need to 
+replace all black pixels in the cel with almost black (RGB 0-0-8). This 
+prevents the cel from having unwanted transparent areas.<P>
+To create a cel with no black, follow these steps: <P>
+<OL>
+<LI>Follow the steps in <A HREF="./1anic.html#XREF38335">Creating a simple 
+coded cel</A> to create an 8-bit coded cel.<P>
+
+<LI>Position the tear-off paint palette at a convenient place on the 
+screen, as explained above. <P>
+<LI>Click on colors in the top row of the paint palette that appear to be 
+black (RGB 0-0-0 through RGB 0-0-7) and note which shades between 0-0-0 
+and 0-0-7 are included. 
+<P>The RGB values of the selected color appear beneath the color bars on 
+the Set 3DO Object Type dialog.
+<P>
+
+<LI>From the Color menu, choose Replace Colors. 
+<P>
+The Replace Colors dialog appears.
+<P>
+
+<LI>Click the 0-0-0 color in the paint palette. 
+<P>
+It is moved into the first box in the Old: color grid in the Replace 
+Colors dialog.
+<P>
+
+<LI>Click the first box in the New color grid in the Replace Colors 
+dialog, then click on the RGB 0-0-8 color in the paint palette. <P>
+<LI>Click "Replace old with new," making sure you select All the Frames if 
+you are working with an animation.<P>
+<LI>Repeat steps 5 and 6 replacing colors ranging from RGB 0-0-1 to RGB 
+0-0-7 with RGB 0-0-8.
+</OL>
+<A NAME="XREF13388"><H3>Creating a black background</A></H3>
+To take advantage of the hardware facility of displaying black (RGB 0-0-0) 
+pixels as transparent, you have to create a black background that will 
+form a transparent mask. Follow these steps:<P>
+<OL>
+<LI>Click on black in the paint palette to make it the current color. 
+<P>Black appears in the palette color patch and defines it as the fill 
+color.
+<P>
+
+<LI>Select the background with the Magic Wand tool.<P>
+<LI>Fill the background with the Fill tool (paint bucket). 
+</OL>
+<A NAME="XREF35189"><H3>Setting CCB flags</A></H3>
+The final step in creating an irregularly shaped, unpacked cel is to set 
+the appropriate CCB flags. The CCB flags inform the 3DO hardware of the 
+settings for the cel. <P>
+<OL>
+<LI>From the 3DO Options menu, select Set CCB. 
+<P>The Load CCB Settings dialog appears.
+<P>
+
+<IMG SRC="Figures/ANICh1/LoadCCBSettings.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>The Load CCB Settings dialog.</I><P>
+
+<LI>Make sure that Packing On is not checked. <P>
+<LI>Click the More Options button. 
+<P>The 3DO Cel Parameters dialog appears.<P>
+
+
+<LI>Click the Flags button near the top of the dialog.<P>
+
+<IMG SRC="Figures/ANICh1/CelParameters.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 4 : </B><I>3DO Cel Parameters dialog</I><P>
+
+<LI>In the CCB Flags dialog that appears, check BGND-allows setting of the 
+NOBLK flag- and NOBLK-makes black pixels in the cel transparent. 
+</OL><P>
+
+<IMG SRC="Figures/ANICh1/CCBFlags.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 5: </B><I>CCB Flags dialog.</I><P>
+<B>Note: </B> Packed must be off (no x) for this procedure to be 
+successful.<P>

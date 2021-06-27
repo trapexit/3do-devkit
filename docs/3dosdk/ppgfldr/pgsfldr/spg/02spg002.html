@@ -1,0 +1,58 @@
+<TITLE>Starting and Ending Tasks</TITLE>
+<H1><LINK NAME="XREF30911">Starting and Ending Tasks</LINK></H1><HR>
+A user task on a CD can start on boot-up if it's named "LaunchMe." The operating system loads on boot-up and runs the executable code in LaunchMe, which starts a task that becomes the child of the shell-a user task. Once the user task is running, it can spawn child tasks in a manner similar to someone running a program from a terminal-the original user task uses a filesystem call to supply the filename of a file containing the executable code of a second task. The kernel launches the second task as a child of the first task.<P>
+<H2>Creating a Task</H2>
+Each task is an item in the system. Tasks are created through the <CODE>CreateItem()</CODE> function call, a low-level call that returns the item number of the new task. (<CODE>CreateItem()</CODE> is discussed in <A HREF="./06spg.html#XREF29474">Managing Items</A>.)<P>
+Each task has a TCB (task control block) associated with it. The TCB data structure is created and maintained by the kernel; a user task can't write to the TCB directly. The settings of the various fields in the TCB are determined by the kind of task (privileged or non-privileged), the parameters passed to the kernel when the task is started, and changes made to the task while it runs. The kernel uses the TCB to allocate and control task resources, memory usage, and so on.<P>
+While you can create a task using <CODE>CreateItem()</CODE>, it's easier to use the following File folio calls which in turn call <CODE>CreateItem()</CODE>:<P>
+<DL>
+<DD><CODE>Item LoadProgram( char *path )<BR>
+Item LoadProgramPrio( char *path, int32 prio )</CODE><BR>
+</DL>
+<CODE>LoadProgram()</CODE> launches a child task that has the same priority as the launching, or parent, task. The <CODE>path</CODE> argument for <CODE>LoadProgram()</CODE> contains the pathname for the file containing the executable code for the task. This parameter can also include arguments for the application, if arguments are required. Specifying the <CODE>path</CODE> argument is very much like specifying a program to run, with arguments, on a UNIX system.<P>
+<CODE>LoadProgramPrio()</CODE> allows you to specify a priority for the task. As with <CODE>LoadProgram(),</CODE> you include a <CODE>path</CODE> argument that specifies your program file 
+and any arguments that you wish to pass to the task when it begins. The second argument, <CODE>priority</CODE>, specifies a new priority for the child task so it can run at a higher or lower priority than the parent task. <P>
+Both <CODE>LoadProgram()</CODE> and <CODE>LoadProgramPrio()</CODE> return the item number of the 
+newly started task. Example 1 shows how to set up a text string for your program and launch it: <P>
+<B>Example 1: </B><I>Setting up a text string and launching it as a task.</I><P>
+<CODE>
+<PRE>
+char *cmdline = "mysrc/testprogram arg1 arg2"
+Item    task_id
+...
+{
+...
+task_id = LoadProgram(cmdline);
+...
+}
+</CODE>
+</PRE>
+<H3>Setting Priority</H3>
+If you use <CODE>LoadProgramPrio()</CODE>, you should get the parent task's priority   before setting up a new priority value for the child task. You can read the current task's priority by reading the <CODE>n_Priority</CODE> field of the ItemNode data structure that's embedded in the TCB of each task- <CODE>CURRENTTASK-&gt;t.n_Priority</CODE> as shown in Example 2:<P>
+<B>Example 2: </B><I>Getting a parent task's priority.</I><P>
+<CODE>
+<PRE>
+/* Determine the priority of the current task. */
+Priority = CURRENTTASK-&gt;t.n_Priority;
+</CODE>
+</PRE>
+<H3>The Life of a Task</H3>
+Child tasks created through <CODE>LoadProgram()</CODE> or <CODE>LoadProgramPrio()</CODE> allocate completely separate memory areas for the parent task and its child tasks. Once a child task is launched, it remains in the system as an item until:<P>
+<UL>
+<LI>The parent task naturally ends (the program completes its function and dies)
+<LI>The parent task quits (if it still owns the child task)
+<LI>The task that owns the child task explicitly deletes it using <CODE>DeleteItem()</CODE>  
+</UL>
+The launching task remains the owner of the child task throughout the life of the child task unless it passes ownership to another task.<P>
+<H2>Ending a Task</H2>
+Typically, a child task ends when its parent task ends. It's good practice to end a child task, before the parent task quits, if you no longer need it to free up resources. To end a task, use <CODE>DeleteItem(),</CODE> passing in the task's item number. An error code (a negative number) is returned if an error occurs.<P>
+<DL>
+<DD><CODE>Err DeleteItem( Item i )</CODE><BR>
+</DL>
+Alternatively, a child task can end itself by calling <CODE>exit()</CODE> or just return:<P>
+<DL>
+<DD><CODE>void exit (int status)</CODE><BR>
+</DL>
+The function <CODE>exit()</CODE> never returns.<P>
+<B>Note: </B>The return or exit status can be passed on to the parent task through an exit message if the child was created with <CODE>CREATETASK_TAG_MSGFROMCHILD</CODE>.<P>
+Deleting the child task lets the kernel clean up all the task's allocated resources, freeing that space for other tasks.<P>

@@ -1,0 +1,42 @@
+<TITLE>Event Broker Convenience Calls</TITLE>
+<H1><LINK NAME="XREF21364">Event Broker Convenience Calls</LINK></H1><HR>
+Portfolio provides a set of convenience calls that allow a task to easily monitor events on controller pads or mice.<P>
+<B>Note: </B>The convenience calls are "single threaded." Only one thread within any application can use them at a time.<P>
+<H2>Connecting to the Event Broker</H2>
+This call connects the task to the event broker, sets the task's focus interest, and determines how many controller pads and mice the task wants to monitor:<P>
+<DL>
+<DD><CODE>Err InitEventUtility(int32 numControlPads, int32 numMice,int32 focusListener);</CODE><BR>
+</DL>
+Where:<P>
+<UL>
+<LI><CODE>numControlPads</CODE> sets the maximum number of controller pads the task wants to monitor. 
+<p>
+<LI><CODE>numMice</CODE> sets the maximum number of mice the task wants to monitor. These values should be an integer of 0 or higher.
+<p>
+<LI><CODE>focusListener</CODE> is a Boolean value that sets the focus of the task when it is connected as a listener. If the parameter is true (nonzero), the task is connected as a focus-dependent listener. If the parameter is false (0), the task is connected as a focus-independent listener.
+</UL>
+When the call executes, it creates a reply port and a message, sends a configuration message to the event broker that asks the event broker to report appropriate mouse and controller pad events, and deals with the event broker's configuration reply. The call returns 0 if successful, and a negative number (an error code) if unsuccessful.<P>
+<H2>Monitoring a Control Pad or a Mouse</H2>
+This call specifies a controller pad or mouse to monitor, specifies whether the event broker should respond immediately or wait until something happens on the controller pad, and provides a data structure for data from the controller pad:<P>
+<DL>
+<DD><CODE>Err GetControlPad(int32 padNumber, int32 wait, ControlPadEventData *data);</CODE><BR>
+</DL>
+<UL>
+<LI><CODE>padNumber</CODE> sets the number of the generic controller pad on the control port (i.e., the first, second, third, and so on, pad in the control port daisy chain, counting out from the 3DO unit) that the task wants to monitor. The first pad is 1, the second is 2, and so on.
+<p>
+<LI><CODE>wait</CODE> is a Boolean value that specifies the event broker's response to this call. If it is true (nonzero), the event broker waits along with the task until an event occurs on the specified pad, and returns data only when there is a change in the pad. If it is false (0), the event broker immediately returns with the status of the pad.
+<p>
+<LI><CODE>data</CODE> is a pointer to a ControlPadEventData structure that shows where memory was allocated for the returned control pad data to be stored. (The task must create an instance of this data structure before it executes <CODE>GetControlPad()</CODE>).
+</UL>
+When the call executes, it either returns immediately with event information, or waits to return with event information until there is a change in the controller pad. It returns a 1 if an event has occurred on the pad, a 0 if no event has occurred on the pad, or a negative number (an error code) if there was a problem retrieving an event. If an event has occurred, the task must check the ControlPadEventData data structure for details about the event.<P>
+This call performs the same function as <CODE>GetControlPad()</CODE>, but gets events from a specified mouse instead of a specified controller pad:<P>
+<DL>
+<DD><CODE>Err GetMouse(int32 mouseNumber, int32 wait, MouseEventData *data);</CODE><BR>
+</DL>
+Its parameters are the same as those for <CODE>GetControlPad(),</CODE> but <CODE>mouseNumber</CODE> specifies a mouse on the control port instead of a controller pad, and the pointer data is now a pointer to a data structure for storing mouse event data instead of controller pad event data.<P>
+<H2>Disconnecting From the Event Broker</H2>
+This call disconnects a task that was connected to the event broker with the <CODE>InitEventUtility()</CODE> call:<P>
+<DL>
+<DD><CODE>Err KillEventUtility(void);</CODE><BR>
+</DL>
+When executed, it disconnects the task from the event broker, closes the reply port, and frees all resources used for the connection. It returns 0 if successful, and a negative number (error code) if unsuccessful.<A NAME="XREF21566"></A><P>

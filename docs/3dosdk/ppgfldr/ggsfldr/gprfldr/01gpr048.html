@@ -1,0 +1,18 @@
+<Title>OpenGraphicsFolio </Title>
+<A NAME="XREF33578"><H1>OpenGraphicsFolio </A></H1>
+<A NAME="XREF18722"> Opens the Graphics folio for use by the calling task.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err OpenGraphicsFolio (void)</CODE><P>
+<H3>Description</H3>
+OpenGraphicsFoli<CODE>o()</CODE> issues an <CODE>OpenItem()</CODE> call to open the Graphics folio for use by the calling task. If the Graphics folio is successfully opened, this call sets the global variable GrafFolioNum to the item number of the Graphics folio item. It also sets the global variable GrafBase to the pointer to the Graphics folio's GrafFoliostructure. GrafBase must be properly initialized before calling any of the Graphics folio calls. <P>
+This call is a convenience call that is provided in the graphics.lib, and is not part of the Graphics folio. <P>
+After the Graphics folio is opened, the task can use any of the other Graphics folio calls. <P>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in graphics.lib V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr004.html#XREF20544"><CODE>CloseGraphicsFolio</A>() </CODE><P>
+</CODE>

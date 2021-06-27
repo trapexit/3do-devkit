@@ -1,0 +1,35 @@
+<Title>ReadDoneBlockFile</Title>
+<A NAME="XREF37614"><H1>ReadDoneBlockFile</A></H1>
+<A NAME="XREF30872"></A>Returns status of block file read.<P>
+<H3>Synopsis</H3>
+<CODE>bool ReadDoneBlockFile (Item ioreqItem)</CODE><P>
+<H3>Description</H3>
+Returns the status of the specified block file read. 
+<CODE>ReadDoneBlockFile()</CODE> calls <CODE>CheckIO()</CODE> directly to 
+determine whether the Portfolio I/O request is complete.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>ioreqItem</CODE>
+<DD>Item of the I/O request.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT><CODE>TRUE</CODE>
+<DD>The request has completed
+<DD>
+</DL>
+<DL>
+<DT><CODE>FALSE</CODE>
+<DD>The request is still in progress
+<DD>
+</DL>
+<H3>Associated Files</H3>
+BlockFile.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR003.html#XREF21649">AsynchReadBlockFile</A>,
+<A HREF="../../ppgfldr/pgsfldr/sprfldr/001spr013.html#XREF25810">CheckIO</A><P>

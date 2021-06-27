@@ -1,0 +1,8 @@
+msg_level_warning:Warning: 
+msg_level_error:Error: 
+msg_level_serious:Serious error: 
+msg_level_fatal:Fatal error: 
+msg_where_lineno:\"%s\", line %ld: %s
+msg_where_nolineno:\"%s\": %s
+msg_where_nofile:%s
+msg_loadfail:Can't load %s\n

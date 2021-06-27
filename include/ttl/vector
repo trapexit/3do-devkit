@@ -1,0 +1,313 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_VECTOR_INCLUDED
+#define TTL_VECTOR_INCLUDED
+
+#include "stdlib.h"
+
+#include "memory"
+
+
+template<typename T>
+class vector_impl
+{
+public:
+  typedef unsigned int size_type;
+  typedef signed int   difference_type;
+  typedef T            value_type;
+  typedef T&           reference;
+  typedef const T&     const_reference;
+  typedef T*           pointer;
+  typedef const T*     const_pointer;
+  typedef T*           iterator;
+  typedef const T*     const_iterator;
+
+public:
+  vector_impl()
+    : _buf(0),
+      _size(0),
+      _bufsize(0)
+  {
+  }
+
+  vector_impl(const size_type size_)
+    : _buf(0),
+      _size(0),
+      _bufsize(0)
+  {
+    resize(size_);
+  }
+
+  ~vector_impl()
+  {
+    clear();
+    free(_buf);
+  }
+
+public:
+  iterator
+  begin()
+  {
+    return _buf;
+  }
+
+  const_iterator
+  begin() const
+  {
+    return _buf;
+  }
+
+  iterator
+  end()
+  {
+    return addressof(_buf[_size]);
+  }
+
+  const_iterator
+  end() const
+  {
+    return addressof(_buf[_size]);
+  }
+
+public:
+  const_iterator
+  cbegin() const
+  {
+    return _buf;
+  }
+
+  const_iterator
+  cend() const
+  {
+    return addressof(_buf[_size]);
+  }
+
+private:
+  void
+  expand(size_type size_)
+  {
+    T x;
+    _buf = (T*)realloc(_buf,(size_*sizeof(T)));
+    for(size_type i = _size; i < size_; i++)
+      __construct(&_buf[i],x);
+
+    _bufsize = size_;
+  }
+
+  void
+  shrink(size_type size_)
+  {
+    for(size_type i = size_; i < _size; i++)
+      destroy_at(&_buf[i]);
+
+    _size = size_;
+  }
+
+public:
+  void
+  push_back(const T &obj_)
+  {
+    if((_size + 1) > _bufsize)
+      {
+        _buf = (T*)realloc(_buf,((_size+1)*sizeof(T)));
+        _bufsize = _size + 1;
+      }
+
+    __construct(&_buf[_size],obj_);
+    _size++;
+  }
+
+  template<typename V>
+  void
+  emplace_back(const typename V &val_)
+  {
+    __construct(&_buf[_size],val_);
+    _size++;
+  }
+
+  template<typename V1,
+           typename V2>
+  void
+  emplace_back(const typename V1 &val1_,
+               const typename V2 &val2_)
+  {
+    __construct(&_buf[_size],val1_,val2_);
+    _size++;
+  }
+
+  template<typename X>
+  iterator
+  emplace(iterator          pos_,
+          const typename X &val_)
+  {
+    iterator i;
+
+    if(pos_ == end())
+      {
+        i = end();
+        _size++;
+      }
+    else
+      {
+        i = addressof(*pos_);
+        destroy_at(i);
+      }
+
+    __construct(i,val_);
+
+    return i;
+  }
+
+  void
+  pop_back(void)
+  {
+    destroy_at(&_buf[--_size]);
+  }
+
+  void
+  clear(void)
+  {
+    resize(0);
+  }
+
+  T&
+  operator[](const size_type pos_)
+  {
+    return _buf[pos_];
+  }
+
+  const
+  T&
+  operator[](const size_type pos_) const
+  {
+    return _buf[pos_];
+  }
+
+  reference
+  at(const size_type pos_)
+  {
+    return _buf[pos_];
+  }
+
+  const_reference
+  at(const size_type pos_) const
+  {
+    return _buf[pos_];
+  }
+
+  const
+  T&
+  front(void) const
+  {
+    return _buf[0];
+  }
+
+  T&
+  front(void)
+  {
+    return _buf[0];
+  }
+
+  const
+  T&
+  back(void) const
+  {
+    return _buf[_size - 1];
+  }
+
+  T&
+  back(void)
+  {
+    return _buf[_size - 1];
+  }
+
+  pointer
+  data()
+  {
+    return _buf;
+  }
+
+  const_pointer
+  data() const
+  {
+    return _buf;
+  }
+
+  bool
+  empty(void) const
+  {
+    return (_size == 0);
+  }
+
+  size_type
+  size(void) const
+  {
+    return _size;
+  }
+
+  size_type
+  capacity(void) const
+  {
+    return _bufsize;
+  }
+
+  void
+  reserve(const size_type size_)
+  {
+    if(size_ <= _bufsize)
+      return;
+
+    _buf     = (T*)realloc(_buf,(size_*sizeof(T)));
+    _bufsize = size_;
+  }
+
+  void
+  resize(const size_type size_)
+  {
+    if(size_ == _size)
+      return;
+    if(size_ > _bufsize)
+      expand(size_);
+    else
+      shrink(size_);
+  }
+
+  void
+  shrink_to_fit(void)
+  {
+    resize(_size);
+    if(_size != _bufsize)
+      {
+        _buf     = (T*)realloc(_buf,(_size*sizeof(T)));
+        _bufsize = _size;
+      }
+  }
+
+private:
+  pointer   _buf;
+  size_type _size;
+  size_type _bufsize;
+};
+
+template<typename T>
+class vector : public ::vector_impl<T>
+{
+};
+
+#endif

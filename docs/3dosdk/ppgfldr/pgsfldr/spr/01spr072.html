@@ -1,0 +1,31 @@
+<TITLE>GetMemAllocAlignment</TITLE>
+<A NAME="XREF36650"><H1>GetMemAllocAlignment </A></H1>
+<A NAME="XREF40396"></A>Gets the memory-allocation alignment size<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetMemAllocAlignment( uint32 memflags )</CODE><P>
+<H3>Description</H3>
+This function returns the alignment guaranteed by AllocMem() and friends, and required by FreeMem() and friends. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>memflags
+<DD>Similar to the usage in GetPageSize(); different allocators may be in use for different kinds of memory, which may have different alignment guarantees and restrictions. 
+</DL>
+<H3>Return Value</H3>
+The return value is the alignment modulus for the memory specified; for example, if AllocMem() guarantees (and FreeMem() requires) long-word alignment, it returns 4. If no alignment is guaranteed or required, it returns 1. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V22. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveat</H3>
+Note that <CODE>malloc()</CODE> does not necessarily provide same alignment guarantee as AllocMem(), as <CODE>malloc()</CODE> reserves some space at the front of the block it gets from AllocMem() to contain the size of the block allocated. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr074.html#XREF40631"><CODE>GetMemType</A>(), <A HREF="./01spr004.html#XREF40501">AllocMem</A>(), <A HREF="./01spr064.html#XREF31542">FreeMem</A>(), <A HREF="./01spr100.html#XREF14880">malloc</A>(), <A HREF="./01spr063.html#XREF19159">free</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF36650"></LINK></H1><HR>

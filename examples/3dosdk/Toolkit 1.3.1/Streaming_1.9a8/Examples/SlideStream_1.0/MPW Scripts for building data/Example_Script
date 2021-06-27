@@ -1,0 +1,14 @@
+#	Script to build an audio stream from the raw AIFF file
+#	and to convert all image files in the current directory
+#	to streamed format for use with the SlideStream example
+#	program.
+
+#	Convert raw AIFF sound file to stream data
+
+	BuildSlideStreamAudio
+
+#	Process all image files and weave the results
+#	with the audio we just converted.
+
+	BuildSlideStream slide.weave 5 slide.stream
+

@@ -1,0 +1,22 @@
+<Title>ItemDesc</Title>
+<A NAME="XREF33367"><H1>ItemDesc</A></H1>
+<A NAME="XREF30256"></A>Item entry element in an ItemPool. <P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct ItemDesc {
+   struct ItemDesc* next;
+   Item item;
+} ItemDesc, *ItemDescPtr</CODE></pre><P>
+<H3>Description</H3>
+Used internally by the ItemPool module to keep track of items available in the pool.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>next</CODE>
+<DD>Pointer to next in the list. 
+</DL>
+<DL>
+<DT><CODE>item</CODE>
+<DD>Item number of a free item. 
+</DL>
+<H3>Associated Files</H3>
+ItemPool.h<P>

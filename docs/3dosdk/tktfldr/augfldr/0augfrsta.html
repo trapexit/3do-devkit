@@ -1,0 +1,50 @@
+<TITLE>ARM tool release components</TITLE>
+<H1><LINK NAME="XREF16886">ARM tool release components</LINK></H1><HR>
+The ARM Software Development Toolkit consists of the following three main release components:<P>
+
+<UL>
+<LI><A HREF="#XREF20147">Programming and modelling tools</A>
+<LI><A HREF="#XREF38915">Retargetable libraries</A>
+<LI><A HREF="#XREF19888">Documentation</A>
+</UL>
+<A NAME="XREF20147"><H2>Programming and modelling tools</A></H2>
+The following programming tools are included in this toolkit release:<P>
+<PRE>
+<B>Table 1: </B><I> </I>
+--------------------------------------------------------
+Tool                 |Description                       
+--------------------------------------------------------
+armcc                |The ARM C compiler                
+--------------------------------------------------------
+armasm               |The ARM Assembler                 
+--------------------------------------------------------
+armlink              |The ARM Linker                    
+--------------------------------------------------------
+armsd                |The ARM Symbolic Debugger         
+--------------------------------------------------------
+armwd                |The ARM Windowing Debugger        
+--------------------------------------------------------
+armlib               |The ARM Librarian                 
+--------------------------------------------------------
+decaof               |The ARM Object File Decoder       
+--------------------------------------------------------
+topcc                |A PCC to ANSI C dialect conversion
+                     |tool                              
+--------------------------------------------------------
+reconfig             |The ARM Tools reconfiguation      
+                     |utility                           
+--------------------------------------------------------
+armmake              |The ARM Make Utility (PC release  
+                     |only)                             
+--------------------------------------------------------
+</PRE>
+<P>
+A brief description of each of these tools together with details on how to invoke them is given in <A HREF="./cAUG.1.armcc.html#XREF20531">The ARM C Compiler</A>.<P>
+<A NAME="XREF38915"><H2>Retargetable libraries</A></H2>
+Two retargetable libraries are supplied:<P>
+<UL>
+<LI>The ARM ANSI C Library, supplied in both source form and as object libraries ready to be used with armsd and pisd.
+<LI>The minimal standalone C runtime support system.  This is supplied as ARM Assembler, and is all that is needed to support unhosted, ARM targetted C.
+</UL>
+For example usage of the retargetable libraries refer to the ARM Software Tools Cookbook.  A further introduction to them is given in <A HREF="./cAUG.6.libraries.html#XREF35822">An Introduction to the Run-Time Libraries</A>. Detailed information on porting the ARM targetted ANSI C Library is given in the chapter <A HREF="../ARM.Ref/cARR.2.clib.html#XREF29547">ARM C Library Porting Guide</A> of the Reference Manual.<P>
+<P>

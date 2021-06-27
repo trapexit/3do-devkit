@@ -1,0 +1,10 @@
+TraceDumpTemplate and TraceStatsTemplate are InControl Documents
+and are only useful if you have InControl.  These templates are
+provided to facilitate the viewing of trace dumps.
+
+How to use the templates:
+1)	Convert the linefeeds in the raw trace dump to carriage returns. 
+2)	Use the MPW tool canon to convert the trace codes to text:
+	canon SAudioTrace.dict < SATraceRawDump.txt > SATrace.txt. 
+From the InControl application, copy and paste the trace dump into the template.
+You can use the sort and search functions to analyze the data.

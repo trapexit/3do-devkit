@@ -1,0 +1,91 @@
+<HTML><TITLE>Bidirectional Iterators</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Bidirectional Iterators</H2>
+<HR><PRE>     Iterator</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>An iterator that can both read and write and can traverse a container in both directions</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Key to Iterator Requirements"><LI>Key to Iterator Requirements</LI></A>
+<A HREF="#Requirements for Bidirectional Iterators"><LI>Requirements for Bidirectional Iterators</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Description"><H3>Description</H3></A>
+<HR><STRONG><P>For a complete discussion of iterators, see the <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A> section of this reference.</P></STRONG><HR>
+<P>Iterators are a generalization of pointers that allow a C++ program to uniformly interact with different data structures.  Bidirectional iterators can move both forwards and backwards through a container, and have the ability to both read and write data.  These iterators satisfy the requirements listed below.</P>
+<A NAME="Key to Iterator Requirements"><H3>Key to Iterator Requirements</H3></A>
+<P>The following key pertains to the iterator descriptions listed below: </P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD><SAMP>a </SAMP>and<SAMP> b</SAMP></TD>
+<TD>values of type <SAMP>X</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>n</SAMP></TD>
+<TD>value of <SAMP>distance</SAMP> type</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>u, Distance, tmp </SAMP>and<SAMP> m</SAMP></TD>
+<TD>identifiers</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r</SAMP></TD>
+<TD>value of type <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>t</SAMP></TD>
+<TD>value of type <SAMP>T</SAMP></TD></TR>
+</TABLE></CENTER>
+<A NAME="Requirements for Bidirectional Iterators"><H3>Requirements for Bidirectional Iterators</H3></A>
+<P>A bidirectional iterator must meet all the requirements listed below.  Note that most of these requirements are also the requirements for forward iterators.</P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD><SAMP>X u</SAMP></TD>
+<TD><SAMP>u</SAMP> might have a singular value</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X()</SAMP></TD>
+<TD><SAMP>X()</SAMP> might be singular</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X(a)</SAMP></TD>
+<TD>copy constructor, <SAMP>a == X(a)</SAMP>.</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X u(a)</SAMP></TD>
+<TD>copy constructor, <SAMP>u == a</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X u = a</SAMP></TD>
+<TD>assignment, <SAMP>u == a</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a == b, a != b</SAMP></TD>
+<TD>return value convertable to <SAMP>bool</SAMP></TD></TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="104pt"><COLSPEC colnum="2" colname="col2" colwidth="180pt">
+<TR VALIGN=top>
+<TD><SAMP>a->m</SAMP></TD>
+<TD>equivalent to <SAMP>(*a).m</SAMP></TD></TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="104pt"><COLSPEC colnum="2" colname="col2" colwidth="184pt">
+<TR VALIGN=top>
+<TD><SAMP>*a</SAMP></TD>
+<TD>return value convertable to <SAMP>T&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>++r</SAMP></TD>
+<TD>returns <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r++</SAMP></TD>
+<TD>return value convertable to const <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>*r++</SAMP></TD>
+<TD>returns <SAMP>T&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>--r</SAMP></TD>
+<TD>returns <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r--</SAMP></TD>
+<TD>return <SAMP>value</SAMP> convertable to <SAMP>const</SAMP> <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>*r--</SAMP></TD>
+<TD>returns <SAMP>T&#38;</SAMP></TD></TR>
+</TABLE></CENTER>
+<P>Like forward iterators, bidirectional iterators have the condition that <SAMP>a == b</SAMP> implies <SAMP>*a== *b</SAMP>.</P>
+<P>There are no restrictions on the number of passes an algorithm may make through the structure.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Con_2487.htm"><B><I>Containers</B></I></A>, <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A></P>
+<HR>
+<A HREF="bas_0007.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="bin_7851.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

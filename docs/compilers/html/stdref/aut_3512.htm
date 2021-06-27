@@ -1,0 +1,115 @@
+<HTML><TITLE>auto_ptr </TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>auto_ptr </H2>
+<HR><PRE>     Memory Management</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>A simple, smart pointer class.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Constructors and Destructors"><LI>Constructors and Destructors</LI></A>
+<A HREF="#Operators"><LI>Operators</LI></A>
+<A HREF="#Member Functions"><LI>Member Functions</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;memory></PRE>
+<PRE>template &#60;class X> class auto_ptr;</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The template class <B><I>auto_ptr</B></I> holds onto a pointer obtained via <SAMP>new</SAMP> and deletes that object when the <B><I>auto_ptr</B></I> object itself is destroyed (such as when leaving block scope).  <B><I>auto_ptr</B></I> can be used to make calls to operator <SAMP>new</SAMP> exception-safe.  The <B><I>auto_ptr</B></I> class provides semantics of strict ownership:  an object may be safely pointed to by only one <B><I>auto_ptr</B></I>, so copying an <B><I>auto_ptr</B></I> copies the pointer <I>and</I> transfers ownership to the destination. </P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class X> class auto_ptr {</PRE>
+<PRE>
+   public:
+     // constructor/copy/destroy
+     explicit auto_ptr (X* = 0);
+     auto_ptr (const auto_ptr&#60;X>&#38;);
+     void operator= (const auto_ptr&#60;X>&#38;);
+     ~auto_ptr ();
+     // members
+     X&#38; operator* () const;
+     X* operator-> () const;
+     X* get () const;
+     X* release ();
+     void reset (X* = 0);
+ };</PRE>
+<A NAME="Constructors and Destructors"><H3>Constructors and Destructors</H3></A>
+<PRE>explicit 
+<B>auto_ptr </B>(X* p = 0);</PRE>
+<UL><P>Constructs an object of class <SAMP>auto_ptr&#60;X></SAMP>, initializing the held pointer to <SAMP>p</SAMP>.  Requires that <SAMP>p</SAMP> points to an object of class <SAMP>X</SAMP> or a class derived from <SAMP>X</SAMP> for which <SAMP>delete p</SAMP> is defined and accessible, or that <SAMP>p</SAMP> is a null pointer.</P>
+</UL>
+<PRE><B>auto_ptr </B>(const auto_ptr&#60;X>&#38; a);</PRE>
+<UL><P>Copy constructor. Constructs an object of class <SAMP>auto_ptr&#60;X></SAMP>, and copies the argument <SAMP>a</SAMP> to <SAMP>*this</SAMP>.  <SAMP>*this</SAMP> becomes the new owner of the underlying pointer.</P>
+</UL>
+<PRE>~<B>auto_ptr</B> ();</PRE>
+<UL><P>Deletes the underlying pointer.</P>
+</UL>
+<A NAME="Operators"><H3>Operators</H3></A>
+<PRE>void 
+<B>operator=</B> (const auto_ptr&#60;X>&#38; a);</PRE>
+<UL><P>Assignment operator.  Copies the argument <SAMP>a</SAMP> to <SAMP>*this</SAMP>.  <SAMP>*this</SAMP> becomes the new owner of the underlying pointer.  If <SAMP>*this</SAMP> already owned a pointer, then that pointer is deleted first.</P>
+</UL>
+<PRE>X&#38; 
+<B>operator*</B> () const;</PRE>
+<UL><P> Returns a reference to the object to which the  underlying pointer points.</P>
+</UL>
+<PRE>X* 
+<B>operator-> </B>() const;</PRE>
+<UL><P>Returns the underlying pointer.</P>
+</UL>
+<A NAME="Member Functions"><H3>Member Functions</H3></A>
+<PRE>X* 
+<B>get</B> () const;</PRE>
+<UL><P>Returns the underlying pointer.</P>
+</UL>
+<PRE>X*
+<B>release</B>();</PRE>
+<UL><P>Releases ownership of the underlying pointer.  Returns that pointer.</P>
+</UL>
+<PRE>void 
+<B>reset</B> (X* p = 0);</PRE>
+<UL><P>Requires that <SAMP>p</SAMP> points to an object of class <SAMP>X</SAMP> or a class derived from<SAMP> X</SAMP> for which <SAMP>delete p </SAMP>is defined and accessible, or <SAMP>p </SAMP>is a null pointer.   Deletes the current underlying pointer, then resets it to <SAMP>p</SAMP>.</P>
+</UL>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>   //
+   // auto_ptr.cpp
+   //
+   #include &#60;iostream.h>
+   #include &#60;memory>
+   //
+   // A simple structure.
+   //
+   struct X
+   {
+       X (int i = 0) : m_i(i) { }
+       int get() const { return m_i; }
+       int m_i;
+   };
+   int main ()
+   {
+      //
+      // b will hold a pointer to an X.
+      //
+      auto_ptr&#60;X> b(new X(12345));
+      //
+      // a will now be the owner of the underlying pointer.
+      //
+      auto_ptr&#60;X> a = b;
+      //
+      // Output the value contained by the underlying pointer.
+      //
+      cout &#60;&#60; a->get() &#60;&#60; endl;
+      //
+      // The pointer will be deleted when a is destroyed on 
+      // leaving scope.
+      //
+      return 0;
+   }
+Output : 
+12345</PRE>
+<HR>
+<A HREF="Ass_0034.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="bac_0189.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

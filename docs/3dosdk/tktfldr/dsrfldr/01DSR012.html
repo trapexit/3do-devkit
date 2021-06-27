@@ -1,0 +1,20 @@
+<Title>DeleteMemPool</Title>
+<A NAME="XREF28049"><H1>DeleteMemPool</A></H1>
+<A NAME="XREF19495">Deletes a memory pool.</A><P>
+<H3>Synopsis</H3>
+<CODE>void DeleteMemPool (MemPoolPtr memPool)</CODE><P>
+<H3>Description</H3>
+Deletes the specified memory pool. <CODE>DeleteMemPool()</CODE> deletes the memory pool by calling <CODE>free()</CODE> to deallocate the block of memory reserved for the memory pool. Any data in the memory pool is flushed by the Portfolio kernel.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>memPool</CODE>
+<DD>Pointer to the memory pool that is deleted.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>None
+</DL>
+<H3>Associated Files</H3>
+MemPool.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR009.html#XREF27957"><CODE>CreateMemPool</A></CODE><P>

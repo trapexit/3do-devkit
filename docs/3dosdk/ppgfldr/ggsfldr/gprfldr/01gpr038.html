@@ -1,0 +1,29 @@
+<Title>MakeCLUTBackgroundEntry </Title>
+<A NAME="XREF15378"><H1>MakeCLUTBackgroundEntry </A></H1>
+<A NAME="XREF24346">Constructs a color entry to set the background color of the </A>display.<P>
+<H3>Synopsis</H3>
+<CODE>VDLEntry MakeCLUTBackgroundEntry (uint8 r,uint8 g,uint8 b)</CODE><P>
+<H3>Description</H3>
+This macro constructs a VDL color entry that sets the background color of the display according to the specified red, green, and blue components. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>r
+<DD>An unsigned byte specifying the red component of the color to be built, with a value in the range of 0-255. 
+</DL>
+<DL>
+<DT>g
+<DD>An unsigned byte specifying the green component of the color to be built, with a value in the range of 0-255. 
+</DL>
+<DL>
+<DT>b
+<DD>An unsigned byte specifying the blue component of the color to be built, with a value in the range of 0-255. 
+</DL>
+<H3>Return Value</H3>
+The macro returns a 32-bit color entry value. <P>
+<H3>Implementation</H3>
+Macro implemented in graphics.h V20. <P>
+<H3>Associated File</H3>
+graphics.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr065.html#XREF17003"><CODE>SetScreenColor</A>(), <A HREF="./01gpr041.html#XREF36080">MakeCLUTGreenEntry</A>(), <A HREF="./01gpr039.html#XREF38531">MakeCLUTBlueEntry</A>(), <A HREF="./01gpr042.html#XREF20626">MakeCLUTRedEntry</A>(), <A HREF="./01gpr040.html#XREF18008">MakeCLUTColorEntry</A>() </CODE><P>
+</CODE>

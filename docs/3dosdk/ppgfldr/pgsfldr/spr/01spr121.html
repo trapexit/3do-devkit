@@ -1,0 +1,60 @@
+<TITLE>SendIO</TITLE>
+<A NAME="XREF16419"><H1>SendIO </A></H1>
+<A NAME="XREF16261"></A>Requests asynchronous I/O.<P>
+<H3>Synopsis</H3>
+<CODE>Err SendIO( Item ior, const IOInfo *ioiP )</CODE><P>
+<H3>Description</H3>
+This procedure sends an I/O request that is to be executed asynchronously. Because the request is asynchronous, control returns to the calling task as soon as the request is sent (unlike synchronous I/O, where control doesn't return until after the request has been completed). <P>
+Call this procedure after creating the necessary IOReq item (for the ior argument, created by calling <CODE>CreateIOReq()</CODE> ) and an IOInfo structure (for the ioiP argument). The IOReq item specifies the device to which to send the request and the reply port, if any, while the IOInfo structure includes the I/O command to be executed and a variety of other information. For descriptions of the IOReq and IOInfo data structures, see the Data Structures and Variable Type's chapter.<P>
+To request quick I/O, set the IO_QUICK flag in the ioi_Flags field of the IOInfo structure. Quick I/O works as follows: The kernel tries to perform the I/O operation immediately; if it is successful, it sends back the resulting IOReq item immediately without setting any signal bits or sending a message. If quick I/O was successful, the IO_QUICK bit in the io_Flags field of the IOReq is set. If quick I/O was not successful, the kernel performs normal asynchronous I/O and notifies the task with a signal or message when the I/O request is complete. <P>
+The IOInfo structure must be fully initialized before calling this function. You can use the ioi_User field of the IOInfo structure to contain whatever you want. This is a useful place to store a pointer to contextual data that needs to be associated with the I/O request. If you use message-based notification for your I/O requests, the msg_DataSize field of the notification messages will contain the value of ioi_User from the IOInfo structure. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ior
+<DD>The item number of the IOReq structure for the request. This structure is normally created by calling CreateIOReq(). 
+</DL>
+<DL>
+<DT>ioiP
+<DD>A pointer to an IOInfo structure. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 1 if the I/O was completed immediately or 0 if the I/O request is still in progress (the task will be notified with either a signal or message when the request is complete, depending on what you specified when you called <CODE>CreateIOReq())</CODE>. It returns an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>BADITEM
+<DD>The ior argument does not specify an IOReq. 
+</DL>
+<DL>
+<DT>NOTOWNER
+<DD>The I/O request specified by the ior argument is not owned by this task. 
+</DL>
+<DL>
+<DT>ER_IONotDone
+<DD>The I/O request is already in progress. 
+</DL>
+<DL>
+<DT>BADPTR
+<DD>A pointer is invalid: Either the IOInfo structure specified by the ioiP argument is not entirely within the task's memory, the IOInfo receive buffer (specified by the ioi_Recv field in the IOInfo structure) is not entirely within the task's memory, or the IOInfo send buffer (specified by the ioi_Send field in the IOInfo structure) is not in legal memory. 
+</DL>
+<DL>
+<DT>BADIOARG
+<DD>One or more reserved I/O flags are set (either reserved flags in the ioi_Flags field of the IOInfo structure or any of the flags in the ioi_Flags2 field of the IOInfo structure). 
+</DL>
+<DL>
+<DT>BADUNIT
+<DD>The unit specified by the ioi_Unit field of the IOInfo structure is not supported by this device. 
+</DL>
+If quick I/O occurs, the IO_QUICK flag is set in the io_Flags field of the IOReq structure. <P>
+If the ior and ioiP arguments were valid but an error occurred during the I/O operation, an error code is returned in the io_Error field of the IOReq structure. If <CODE>SendIO()</CODE> returns 0 and a error occurs during I/O, the IOReq is returned as if it were completed, and it contains the error code in io_Error of the IOReq structure. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>io.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Caveats</H3>
+ <CODE>SendIO()</CODE> returns only BADITEM, NOTOWNER, and ER_IONotDone. All other errors codes are returned in the io_Error field of the IOReq. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr001.html#XREF20829"><CODE>AbortIO</A>(), <A HREF="./01spr013.html#XREF25810">CheckIO</A>(), <A HREF="./01spr038.html#XREF37111">DoIO</A>(), <A HREF="./01spr131.html#XREF35365">WaitIO</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF16419"></LINK></H1><HR>

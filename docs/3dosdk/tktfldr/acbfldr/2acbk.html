@@ -1,0 +1,370 @@
+<TITLE>ARM assembly programming performance issues</TITLE>
+<H1>ARM assembly programming performance issues</H1><HR>
+<H2>About this recipe</H2>
+This recipe outlines many performance related issues which the ARM 
+Assembly Language Programmer should be aware of.  Many of these issues are 
+dealt with more fully elsewhere in the Cookbook, but are mentioned here 
+for completeness.  This recipe is also useful background for C programmers 
+using <B>armcc</B>, as some of these issues can also apply to programming 
+in C.<P>
+<H2>Performance issues</H2>
+Not all of the issues in this recipe apply to every ARM processor based 
+system.  However, unless otherwise stated, all issues relate to processors 
+based on ARM6 and ARM7, with or without cache and/or write buffer.<P>
+<H3>LDM / STM</H3>
+Use LDM and STM instead of a sequence of LDR or STR instructions wherever 
+possible.  This provides several benefits:<P>
+<UL>
+<LI>The code is smaller (and thus will cache better on an ARM processor 
+with a cache);<P>
+<LI>An instruction fetch cycle and a register copy back cycle is saved for 
+each LDR or STR eliminated;<P>
+<LI>On an uncached ARM processor (for LDM) or an unbuffered ARM processor 
+(for STM), non-sequential memory cycles can be turned into faster memory 
+sequential cycles.
+</UL>
+For a more detailed discussion of LDM and STM  see <A 
+HREF="./1acbd.html#XREF26996">Flexibility of load and store 
+multiple</A>.<P>
+<H3>Conditional execution</H3>
+In many situations, branches around short pieces of code can be avoided by 
+using conditionally executed instructions.  This reduces the size of code 
+and may avoid a pipeline break.<P>
+For a more detailed explanation of the Conditional Execution of ARM 
+Instructions see <A HREF="./1acbb.html#XREF38287">Making the most of 
+conditional execution</A>.<P>
+<H3>Using the Barrel Shifter</H3>
+Combining shift operations with other operations can significantly 
+increase the code density (and thus performance) of much ARM code.  An 
+explanation of how to use the ARM's barrel shifter is given in <A 
+HREF="./1acbc.html#XREF32971">Using the Barrel Shifter</A>.<P>
+Many other recipes also demonstrate good use of the barrel shifter.<P>
+<H3>Addressing modes</H3>
+The ARM instruction set provides a useful selection of addressing modes, 
+which can often be used to improve the performance of code. eg. using LDR 
+or STR pre- or post-indexed with a non zero offset increments the base 
+register and performs the data transfer.  For full details of the 
+addressing modes available refer to the appropriate ARM datasheet.<P>
+<H3>Multiplication</H3>
+Be aware of the time taken by the ARM multiply and multiply accumulate 
+instructions.  Making the best use of the multiplier is discussed in <A 
+HREF="./2acbe.html#XREF40554">ARM6 multiplier performance issues</A>.<P>
+When multiplying by a constant value note that using the multiply 
+instruction is often not the optimal solution.  The issues involved are 
+discussed in <A HREF="./2acbb.html#XREF38728">Multiply by a 
+constant</A>.<P>
+<H3>Optimise register usage</H3>
+Examine your code and see if registers can be reused for another value 
+during parts of a long calculation which uses many registers.  Doing this 
+will reduce the amount of 'register spillage', ie. the number of times a 
+value has to be reloaded or an intermediate value saved and then 
+reloaded.<P>
+Notice that because data processing is cheap (much can be achieved in a 
+single instruction), keeping a calculated result in a register for use 
+some considerable time later may be less efficient than recalculating it 
+when it is next needed.  This is because it may allow the register so 
+freed to be used for another purpose in the meantime, thus reducing the 
+amount of register spillage. <P>
+For example code which takes great care to optimise register usage see 
+some of the examples in <A HREF="./2acbe.html#XREF29872">Digital signal 
+processing on the ARM</A>.<P>
+<A NAME="XREF13443"><H3>Loop unrolling</A></H3>
+Loop unrolling involves using more than one copy of the inner loop of an 
+algorithm.  The following benefits may be gained by loop unrolling:<P>
+<UL>
+<LI>the branch back to the beginning of the loop is executed less 
+frequently;<P>
+<LI>it may be possible to combine some of one iteration with some of the 
+next iteration, and thereby significantly reduce the cost of each 
+iteration.<P>
+<LI>A common case of this is combining LDR or STR instructions from two or 
+more iterations into single LDM or STM instructions.  This reduces code 
+size, the number of instruction fetches, and in the case of LDM, the 
+number of register writeback cycles.
+</UL>
+As an example to illustrate the issues involved in loop unrolling, let us 
+consider calculating the following over an array: x[i] = y[i] - y[i+1].  
+Below is a code fragment which performs this:<P>
+    <CODE>
+<PRE>
+    LDR    R2, [R0]                                 ; Preload y[i]
+Loop
+    LDR    R3, [R0, #4]!!                           ; Load y[i+1]
+    SUB    R2, R2, R3                               ; x[i] = y[i] - y[i+1]
+    STR    R2, [R1], #4                             ; Store x[i]
+    MOV    R2, R3                                   ; y[i+1] is the next y[i]
+    CMP    R0, R4                                   ; Finished ?
+    BLT    Loop  
+</CODE>
+</PRE>
+Let us consider the number of execution cycles this will take on an ARM6 
+based processor.  IF stands for Instruction Fetch, WB stands for Register 
+Write Back, R stands for Read, and W stands for Write.<P>
+The loop will execute in the following cycles: 6 IF, 1 R, 1 WB, 1 W, and 
+the branch costs an additional 2 IF cycles.  Therefore the total cycle 
+count for processing a 100 element x[] array is:<P>
+<CODE>
+<PRE>
+799 IF (198 caused by branching), 101 R, 101 WB, 100 W (1198 cycles)
+Code size: 7 instructions
+</CODE>
+</PRE>
+Now consider the effects of unrolling this loop:<P>
+<UL>
+<LI>Branch overhead cycles<P>
+<LI>In the above example there are 198 IF's caused by branching.  
+Unrolling the loop can clearly reduce this, and the table below shows how 
+progressively unrolling the loop gives reducing returns for the increase 
+in code size:
+<PRE>
+--------------------------------------------------------
+Times       |IF's caused by      |IF saving             
+Unrolled    |Branching           |                      
+--------------------------------------------------------
+2           |98                  |100                   
+--------------------------------------------------------
+3           |66                  |134                   
+--------------------------------------------------------
+4           |48                  |150                   
+--------------------------------------------------------
+5           |38                  |160                   
+--------------------------------------------------------
+10          |18                  |180                   
+--------------------------------------------------------
+100         |0                   |198                   
+--------------------------------------------------------
+</PRE>
+</UL>
+
+<P>Therefore if code size is an issue of any importance, unrolling any 
+more than around 3 times is unlikely to pay off with regard to branch 
+overhead elimination.
+<P>
+<UL>
+<LI>Combining LDR's and STR's into LDM and STM
+
+<P>The number of LDR's or STR's which can be combined into a single LDM 
+or STM is restricted by the number of available registers.  In this 
+instance 10 registers is the most which are likely to be usable.  This 
+would result in unrolling the loop 10 times for the above example.  
+Another case to consider is unrolling 3 times, as this seems to be a good 
+compromise for branch overhead reduction.
+</UL>
+<UL>
+<LI>Other optimisations
+<P>Upon examining the unrolled code below, it can be seen that it is only 
+necessary to execute the MOV once per loop, thus saving another 2 IF 
+cycles per loop for the 3 times unrolled code, and another 9 IF cycles per 
+loop for the 10 times unrolled code.
+</UL>
+<P>Here is the code unrolled three times and then optimised as described 
+above:<P>
+    <CODE>
+<PRE>
+    LDR     R2, [R0], #4                          ; Preload y[i]
+Loop
+    LDMIA   R0!, {R3-R5}                          ; Load y[i+1] to y[i+3]
+    SUB     R2, R2, R3                            ; x[i]   = y[i]   - y[i+1]
+    SUB     R3, R3, R4                            ; x[i+1] = y[i+1] - y[i+2]
+    SUB     R4, R4, R5                            ; x[i+2] = y[i+2] - y[i+3]
+    STMIA   R1!, {R2-R4}                          ; Store x[i] to x[i+2]
+    MOV     R2, R5                                ; y[i+3] is the next y[i]
+    CMP     R0, R6                                ; Finished ?
+    BLT     Loop
+</CODE>
+</PRE>
+Analysing how this code executes for a y[] array of size 100, as described 
+above for the unrolled code produces the following results:<P>
+<CODE>
+<PRE>
+339 IF (66 caused by branching), 101 R, 34 WB, 100 W (574 cycles)
+Code size: 9 instructions
+Saving over unrolled code: 460 IF, 67 WB
+</CODE>
+</PRE>
+Here is the code unrolled ten times and then optimised in the same way:<P>
+    <CODE>
+<PRE>
+    LDR     R2, [R0], #4                               ; Preload y[i]
+Loop
+    LDMIA   R0!, {R3-R12}                              ; Load y[i+1] to y[i+10]
+    SUB     R2,  R2,  R3                               ; x[i]   = y[i]   - y[i+1]
+    SUB     R3,  R3,  R4                               ; x[i+1] = y[i+1] - y[i+2]
+    SUB     R4,  R4,  R5                               ; x[i+2] = y[i+2] - y[i+3]
+    SUB     R5,  R5,  R6                               ; x[i+3] = y[i+3] - y[i+4]
+    SUB     R6,  R6,  R7                               ; x[i+4] = y[i+4] - y[i+5]
+    SUB     R7,  R7,  R8                               ; x[i+5] = y[i+5] - y[i+6]
+    SUB     R8,  R8,  R9                               ; x[i+6] = y[i+6] - y[i+7]
+    SUB     R9,  R9,  R10                              ; x[i+7] = y[i+7] - y[i+8]
+    SUB     R10, R10, R11                              ; x[i+8] = y[i+8] - y[i+9]
+    SUB     R11, R11, R12                              ; x[i+9] = y[i+9] - y[i+10]
+    STMIA   R1!, {R2-R11}                              ; Store x[i] to x[i+9]
+    MOV     R2,  R12                                   ; y[i+10] is the next y[i]
+    CMP     R0,  R13                                   ; Finished ?
+    BLT     Loop
+</CODE>
+</PRE>
+Analysing how this code executes for a y[] array of size 100, produces the 
+following results:<P>
+<CODE>
+<PRE>
+169 IF (18 caused by branching), 101 R, 10 WB, 100 W (380 cycles)
+Code size: 16 instructions
+Saving over unrolled code: 630 IF, 91 WB
+</CODE>
+</PRE>
+Thus for this problem, unless the extra seven instructions make the code 
+too large unrolling ten times is likely to be the optimum solution.<P>
+However, loop unrolling is not always a good idea, especially when the 
+optimisation between one iteration and the next is small.  Consider the 
+following loop which copies an area of memory:<P>
+<CODE>
+<PRE>
+Loop
+    LDMIA  R0!,{R3-R14}
+    STMIA  R1!,{R3-R14}
+    CMP    R0, #LimitAddress
+    BNE    Loop
+</CODE>
+</PRE>
+This could be unrolled as follows:<P>
+<CODE>
+<PRE>
+Loop
+    LDMIA  R0!,{R3-R14}
+    STMIA  R1!,{R3-R14}
+    LDMIA  R0!,{R3-R14}
+    STMIA  R1!,{R3-R14}
+    LDMIA  R0!,{R3-R14}
+    STMIA  R1!,{R3-R14}
+    LDMIA  R0!,{R3-R14}
+    STMIA  R1!,{R3-R14}
+    CMP    R0, #LimitAddress
+    BLT    Loop
+</CODE>
+</PRE>
+In this code the CMP and BNE will be executed only a quarter as often, but 
+this will  give only a small saving.  However, other issues should be 
+taken into account:<P>
+<UL>
+<LI>If in the above case the amount of data to be transferred was not a 
+multiple of 48, then this amount of loop unrolling will copy too much 
+data.  This may be catastrophic, or may merely be inefficient.<P>
+<LI>On a cached ARM processor, the larger the inner loop, the more likely 
+it is that the loop will not stay entirely in the cache.  In this case, it 
+is not obvious at what point the performance gain due to unrolling is 
+offset by the performance loss due to cache misses, or the disadvantage of 
+larger code.<P>
+<LI>On an ARM processor with a write buffer, the loop unrolling in the 
+above example is unlikely to help.  If the data being copied is not in the 
+cache, then  every LDMIA will be stalled while the write buffer empties.  
+Thus the time the CMP and BNE take is irrelevent, as the processor will be 
+stalled on the following LDMIA.
+</UL>
+Loop unrolling can be a useful technique, but be warned that it doesn't 
+always gain anything, and in some situations can reduce performance - 
+detailed analysis is often necessary.<P>
+<H3>Write buffer stalling</H3>
+On ARM processors with a write buffer, performance can be maximised by 
+writing code which avoids stalling due to the write buffer.  For a write 
+buffer with 2 tags and 8 words such as the ARM610, no three STR or STM 
+instructions should be close together (as the third will be stalled until 
+the first has finished).  Similarly no two STR or STM instructions which 
+together store more than 8 words should be close together, as the second 
+will be stalled until there is space in the write buffer.<P>
+Rearranging code so that the write buffer does not cause a stall in this 
+way is often hard, but is frequently worth the effort, and in any case it 
+is always wise to be aware of this performance factor.<P>
+<H3>16-bit data</H3>
+If possible treat 16-bit data as 32-bit data.  However, if this is not 
+possible, then be aware that it is possible to make use of the barrel 
+shifter and non word-aligned LDR's in order to make working with 16-bit 
+data more efficient than might be initially imagined.  See  for a full 
+discussion of this topic.<P>
+<H3>8-bit data</H3>
+When processing a sequence of byte sized objects (eg. strings), the number 
+of loads and stores can be reduced if the data is loaded a word at a time 
+and then processed a byte at a time by extracting the bytes using the 
+barrel shifter.<P>
+<H3>The floating point emulator</H3>
+If the software-only floating point emulator is being used then floating 
+point instructions should placed sequentially, as the floating point 
+emulator will detect that the next instruction is also a floating point 
+instruction, and will emulate it without leaving the undefined instruction 
+code.<P>
+Note that this advice is not applicable to systems which use the ARM FPA 
+co-processor.<P>
+<H3>Make full use of cache lines</H3>
+In order to help the cache on a cached ARM processor maintain a high hit 
+rate for data, place frequently accessed data values together so that the 
+are loaded into the same cache line, rather scattering them around memory, 
+as this will require more cache lines to be loaded, and kept in the 
+cache.<P>
+In a similar vein, commonly called subroutines (especially short ones) 
+will often run more quickly on a cached ARM processor if the entry address 
+is aligned so that it will be loaded into the first word of a cache line.  
+On the ARM610, for example this means quad-word aligned.  This ensures 
+that all four words of the first line fetch will be subsequently used by 
+instruction fetches before another line fetch is caused by an instruction 
+fetch.  This technique is most useful for large programs which do not 
+cache well, as the number of times the code will have to feteched from 
+memory is not likely to be significant if the program does cache well.<P>
+<H3>Minimise non-sequential cycles</H3>
+This technique is only appropriate to un-cached ARM processors, and is 
+intended for memory systems in which non-sequential memory accesses take 
+longer than sequential memory accesses.<P>
+Consider such a system in which the length of memory bursts is B.  That 
+is, if executing a long sequence of data operations, the memory accesses 
+which result are: one non-sequential memory cycle followed by B-1 
+sequential memory cycles.  eg. DRAM controlled by the ARM memory manager 
+MEMC1a.<P>
+This sequence of memory accesses will be broken up by several ARM 
+instruction types: Load or Store (single or multiple), Data Swap, Branch 
+instructions, SWI's and other instructions which modify the PC.<P>
+By placing these instructions carefully, so that they break up the normal 
+sequence of memory cycles only where a non-sequential cycle was about to 
+occur anyway, the number of sequential cycles which are turned into longer 
+non-sequential cycles can be minimised.<P>
+For a memory system in which has memory bursts of length B, the optimal 
+position for instructions which break up the memory cycle sequence is 3 
+words before the next B-word boundary.<P>
+To help explain this consider a memory system with memory bursts of length 
+4 (ie. quad word bursts), the optimal position for these break-up 
+instructions is 16-12=4 bytes from a quad-word offset.  To demonstrate 
+this is the case imagine executing the following code in this system:<P>
+<CODE>
+<PRE>
+0x0000  Data Instr 1
+0x0004  STR
+0x0008  Data Instr 2
+0x000C  Data Instr 3
+0x0010  Data Instr 4
+</CODE>
+</PRE>
+The memory cycles executing this code will produce are (taking into 
+account the ARM instruction pipeline):<P>
+<CODE>
+<PRE>
+Instruction Fetch 0x0000 (Non Seq)
+Instruction Fetch 0x0004 (Seq)
+Instruction Fetch 0x0008 (Seq)      + Execute Data Instr 1
+Instruction Fetch 0x000C (Seq)      + Execute STR
+Data Write               (Non Seq)
+Instruction Fetch 0x0010 (Non Seq)  + Execute Data Instr 2
+Instruction Fetch 0x0014 (Seq)      + Execute Data Instr 3
+</CODE>
+</PRE>
+The instruction fetch after the Data Write cycle had to be non-sequential 
+cycle, but since the instruction fetch was of a quad-word aligned address 
+it had to be non-sequential anyway.  Hence the STR is optimally positioned 
+to avoid changing sequential instruction fetches into non-sequential 
+instruction fetches.<P>
+<H3>Use an efficient algorithm</H3>
+Despite all these techniques for optimising ARM Assembly Language, it is 
+important that care is taken to start off with an efficient algorithm - 
+all the optimisations in the world won't turn bubble sort into an 'n log 
+n' sorting algorithm!<P>
+<H2>Related topics</H2>
+Most of the recipes in this chapter are likely to have some relevance. 
+Specific references have been indicated above for particular topics.<P>
+<P>

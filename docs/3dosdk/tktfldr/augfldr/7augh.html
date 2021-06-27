@@ -1,0 +1,15 @@
+<TITLE>Conditional assembly </TITLE>
+<H1><LINK NAME="XREF11233">Conditional assembly </LINK></H1><HR>
+Sections of a source file may be assembled conditionally, only if certain conditions are true. The [ and<I> </I>] (if and endif) directives are used to mark their start and finish; | provides an else construct. The syntax is:<P>
+<CODE>
+<PRE>
+[ logical-expression
+...code...
+|
+...code...
+]
+</CODE>
+</PRE>
+Note that [, | and ] may not be the first character of a line. If the logical-expression is true, the section will be assembled; if it is false, the second piece of code, the beginning of which is marked by | and the end of which is marked by ], will be assembled instead. Lines of code skipped during conditional assembly will not be listed unless the assembler is switched from its default TERSE mode by the -NOTERSE command-line switch.<P>
+The directives IF, ELSE and ENDIF may be used instead of [, | and ] respectively.<P>
+<P>

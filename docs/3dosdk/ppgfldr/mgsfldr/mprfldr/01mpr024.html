@@ -1,0 +1,38 @@
+<Title>DefineInsTemplate</Title>
+<A NAME="XREF26906"><H1>DefineInsTemplate </A></H1>
+<A NAME="XREF39997"></a> Creates an instrument template from a .dsp file.<P>
+<H3>Synopsis</H3>
+<CODE>Item DefineInsTemplate (uint8 *Definition, int32 NumBytes, Item Device, char *Name)</CODE><P>
+<H3>Description</H3>
+This function defines an instrument template from a .dsp file image that has been loaded into RAM. The function is intended for use with streaming data applications, or any other application where calling <CODE>LoadInsTemplate()</CODE>, which reads DSP files off disc, at instrument template creation time is impractical. <P>
+When you are finished with the template, you should call <CODE>UnloadInsTemplate()</CODE>  to deallocate the resources. After you have called <CODE>DefineInsTemplate()</CODE>, the image that you have read is no longer needed and can be freed.<P>
+See <CODE>CreateInsTemplate()</CODE> for a more general solution to creating instrument templates. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Definition
+<DD>A pointer to the DSP instrument template file image in memory. This memory does not need to remain valid after the Template has been created. 
+</DL>
+<DL>
+<DT>NumBytes
+<DD>The length of the file image pointed to by Definition. 
+</DL>
+<DL>
+<DT>Device
+<DD>The item number of the device on which you want to play instruments created with the template. 0 indicates the default audio device, the DSP, which is the only valid audio device item at the present time. 
+</DL>
+<DL>
+<DT>Name
+<DD>The name of the instrument template file image. Ignored. 
+</DL>
+<H3>Return Value</H3>
+This returns the Item number of the Template (a positive value) or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Caveats</H3>
+Ideally there should be a <CODE>DeleteInsTemplate()</CODE> function, but there isn't one yet. Sorry for any confusion that might arise from pairing <CODE>DefineInsTemplate() </CODE> with <CODE>UnloadInsTemplate()</CODE>. <P>
+The name argument is ignored. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr081.html#XREF38811"><CODE>UnloadInsTemplate</A>(), <A HREF="./01mpr018.html#XREF32118">CreateInsTemplate</A>(), <A HREF="./01mpr051.html#XREF12263">LoadInsTemplate</A>(), <A HREF="./01mpr025.html#XREF29821">DefineSampleHere</A>() </CODE><P>
+</CODE>

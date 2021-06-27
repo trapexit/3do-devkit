@@ -1,0 +1,242 @@
+<HTML><HEAD><TITLE>Example Programs</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Example Programs</H2>
+<p>We present three example programs that illustrate the use of maps and multimaps.  These are a telephone database, graphs, and a concordance.</P>
+<A NAME="atelephonedatabase"><H3>A Telephone Database</H3></A>
+<A HREF="sidebar.htm#sidebar32"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>A maintenance program for a simple telephone database is a good application for a map.  The database is simply an indexed structure, where the name of the person or business (a string) is the key value, and the telephone number (a long) is the associated entry.  We might write such a class as follows:</P>
+<PRE>typedef map&#60;string, long, less&#60;string> > friendMap;
+typedef friendMap::value_type entry_type;
+
+class telephoneDirectory {
+public:
+   void addEntry (string name, long number)   // add new entry to
+                                              // database
+      { database[name] = number; }
+      
+   void remove (string name)   // remove entry from database
+      { database.erase(name); }
+   
+   void update (string name, long number)   // update entry
+      { remove(name); addEntry(name, number); }
+      
+   void displayDatabase()   // display entire database
+      { for_each(database.begin(), database.end(), printEntry); }
+   
+   void displayPrefix(int);   // display entries that match prefix
+   
+   void displayByPrefix();   // display database sorted by prefix
+   
+private:
+   friendMap database;
+};
+</PRE>
+<P>Simple operations on our database are directly implemented by map commands.  Adding an element to the database is simply an <SAMP>insert</SAMP>, removing an element is an <SAMP>erase</SAMP>, and updating is a combination of the two.  To print all the entries in the database we can use the <SAMP>for_each()</SAMP> algorithm, and apply the following simple utility routine to each entry:</P>
+<PRE>void printEntry(const entry_type &#38; entry)
+   { cout &#60;&#60; entry.first &#60;&#60; ":" &#60;&#60; entry.second &#60;&#60; endl; }
+</PRE>
+<P>We will use a pair of slightly more complex operations to illustrate how a few of the algorithms described in <a href="gen_9895.htm">Chapter 13</a> can be used with maps.  Suppose we wanted to display all the phone numbers with a certain three digit initial prefix<A HREF="endnote.htm#fn1">[1]</A></FOOTNOTE> .  We will use the <SAMP>find_if()</SAMP> function (which is different from the <SAMP>find()</SAMP> member function in class map) to locate the first entry.  Starting from this location, subsequent calls on <SAMP>find_if()</SAMP> will uncover each successive entry.</P>
+<PRE>void telephoneDirectory::displayPrefix(int prefix)
+{
+   cout &#60;&#60; "Listing for prefix " &#60;&#60; prefix &#60;&#60; endl;
+   friendMap::iterator where;
+   where = 
+      find_if (database.begin(), database.end(),
+             checkPrefix(prefix));
+   while (where != database.end()) {
+      printEntry(*where);
+      where = find_if (++where, database.end(),
+             checkPrefix(prefix));
+      }
+   cout &#60;&#60; "end of prefix listing" &#60;&#60; endl;
+}
+</PRE>
+<P>For the predicate to this operation, we require a boolean function that takes only a single argument (the pair representing a database entry), and tells us whether or not it is in the given prefix.  There is no obvious candidate function, and in any case the test prefix is not being passed as an argument to the comparison function.  The solution to this problem is to employ a technique that is commonly used with the standard library, defining the predicate function as an instance of a class, and storing the test predicate as an instance variable in the class, initialized when the class is constructed.  The desired function is then defined as the function call operator for the class:</P>
+<PRE>int prefix(const entry_type &#38; entry)
+   { return entry.second / 10000; }
+
+class checkPrefix {
+public:
+   checkPrefix (int p) : testPrefix(p) { }
+   int testPrefix;
+   bool operator () (const entry_type &#38; entry)
+      { return prefix(entry) == testPrefix; }
+};
+</PRE>
+<P>Our final example will be to display the directory sorted by prefix.  It is not possible to alter the order of the maps themselves.  So instead, we create a new map with the element types reversed, then copy the values into the new map, which will order the values by prefix.  Once the new map is created, it is then printed.</P>
+<PRE>typedef map&#60;long, string, less&#60;long> > sortedMap;
+typedef sortedMap::value_type sorted_entry_type;
+
+void telephoneDirectory::displayByPrefix()
+{
+   cout &#60;&#60; "Display by prefix" &#60;&#60; endl;
+   sortedMap sortedData;
+   friendMap::iterator itr;
+   for (itr = database.begin(); itr != database.end(); itr++)
+      sortedData.insert(sortedMap::value_type((*itr).second, 
+            (*itr).first));
+   for_each(sortedData.begin(), sortedData.end(),
+            printSortedEntry);
+}
+</PRE>
+<P>The function used to print the sorted entries is the following:</P>
+<PRE>void printSortedEntry (const sorted_entry_type &#38; entry) 
+      { cout &#60;&#60; entry.first &#60;&#60; ":" &#60;&#60; entry.second &#60;&#60; endl; }
+</PRE>
+
+<A NAME="graphs"><H3>Graphs</H3></A>
+<A HREF="sidebar.htm#sidebar33"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>A <A HREF="../stdref/map_8018.htm"><B><I>map</I></B></A> whose elements are themselves <B><I>map</I></B>s are a natural representation for a directed graph.  For example, suppose we use strings to encode the names of cities, and we wish to construct a map where the value associated with an edge is the distance between two connected cities. We could create such a graph as follows:</P>
+<PRE>typedef map&#60;string, int> stringVector;
+typedef map&#60;string, stringVector> graph;
+
+const string pendleton("Pendleton");   // define strings for 
+                                       // city names
+const string pensacola("Pensacola");
+const string peoria("Peoria");
+const string phoenix("Phoenix");
+const string pierre("Pierre");
+const string pittsburgh("Pittsburgh");
+const string princeton("Princeton");
+const string pueblo("Pueblo");
+
+graph cityMap;      // declare the graph that holds the map
+
+cityMap[pendleton][phoenix] = 4;   // add edges to the graph
+cityMap[pendleton][pueblo] = 8;
+cityMap[pensacola][phoenix] = 5;
+cityMap[peoria][pittsburgh] = 5;
+cityMap[peoria][pueblo] = 3;
+cityMap[phoenix][peoria] = 4;
+cityMap[phoenix][pittsburgh] = 10;
+cityMap[phoenix][pueblo] = 3;
+cityMap[pierre][pendleton] = 2;
+cityMap[pittsburgh][pensacola] = 4;
+cityMap[princeton][pittsburgh] = 2;
+cityMap[pueblo][pierre] = 3;
+</PRE>
+<P>The type <B><I>stringVector</I></B> is a map of integers indexed by strings.  The type <B><I>graph</I></B> is, in effect, a two-dimensional sparse array, indexed by strings and holding integer values.  A sequence of assignment statements initializes the graph.</P>
+<P>A number of classic algorithms can be used to manipulate graphs represented in this form.  One example is Dijkstra's shortest-path algorithm.  Dijkstra's algorithm begins from a specific city given as an initial location.  A <A HREF="../stdref/pri_2327.htm"><B><I>priority_queue</I></B></A> of distance/city pairs is then constructed, and initialized with the distance from the starting city to itself (namely, zero).  The definition for the distance pair data type is as follows:</P>
+<PRE>struct DistancePair {
+   unsigned int first;
+   string second;
+   DistancePair() : first(0) { }
+   DistancePair(unsigned int f, const string &#38; s)
+      : first(f), second(s) { }
+};
+
+bool operator &#60; (const DistancePair &#38; lhs, const DistancePair &#38; rhs)
+   { return lhs.first &#60; rhs.first; }
+</PRE>
+<P>In the algorithm that follows, note how the conditional test is reversed on the priority queue, because at each step we wish to pull the smallest, and not the largest, value from the collection.  On each iteration around the loop we pull a city from the queue.  If we have not yet found a shorter path to the city, the current distance is recorded, and by examining the graph we can compute the distance from this city to each of its adjacent cities.  This process continues until the priority queue becomes exhausted.</P>
+<PRE>void shortestDistance(graph &#38; cityMap, 
+      const string &#38; start, stringVector &#38; distances)
+{
+   // process a priority queue of distances to cities
+   priority_queue&#60;DistancePair, vector&#60;DistancePair>, 
+                  greater&#60;DistancePair> > que;
+   que.push(DistancePair(0, start));
+   
+   while (! que.empty()) {
+      // pull nearest city from queue
+      int distance = que.top().first;
+      string city = que.top().second;
+      que.pop();
+              // if we haven't seen it already, process it
+      if (0 == distances.count(city)) {
+                // then add it to shortest distance map
+         distances[city] = distance;
+                // and put values into queue
+         const stringVector &#38; cities = cityMap[city];
+         stringVector::const_iterator start = cities.begin();
+         stringVector::const_iterator stop = cities.end();
+         for (; start != stop; ++start) 
+            que.push(DistancePair(distance + (*start).second,
+                                 (*start).first));
+         }
+      }
+}
+</PRE>
+<P>Notice that this relatively simple algorithm makes use of <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>s, <A HREF="../stdref/map_8018.htm"><B><I>map</I></B></A>s, <A HREF="../stdref/str_8586.htm"><B><I>string</I></B></A>s and <A HREF="../stdref/pri_2327.htm"><B><I>priority_queue</I></B></A>s.  <B><I>priority_queue</I></B>s are described in greater detail in <a href="pri_2327.htm">Chapter 11</a>.</P>
+
+<A NAME="aconcordance"><H3>A Concordance</H3></A>
+<A HREF="sidebar.htm#sidebar34"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>A concordance is an alphabetical listing of words in a text, that shows the line numbers on which each word occurs.  We develop a concordance to illustrate the use of the <A HREF="../stdref/map_8018.htm"><B><I>map</I></B></A> and <A HREF="../stdref/mul_8396.htm"><B><I>multimap</I></B></A> container classes.  The data values will be maintained in the concordance by a multimap, indexed by strings (the words) and will hold integers (the line numbers).  A multimap is employed because the same word will often appear on multiple different lines; indeed, discovering such connections is one of the primary purposes of a concordance.  Another possibility would have been to use a <B><I>map</I></B> and use a <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> of integer elements as the associated values.</P>
+<PRE>class concordance {
+   typedef multimap&#60;string, int less &#60;string> > wordDictType;
+public:
+   void addWord (string, int);
+   void readText (istream &#38;);
+   void printConcordance (ostream &#38;);
+   
+private:
+   wordDictType wordMap;
+};
+</PRE>
+<P>The creation of the concordance is divided into two steps: first the program generates the concordance (by reading lines from an input stream), and then the program prints the result on the output stream.  This is reflected in the two member functions <SAMP>readText()</SAMP> and <SAMP>printConcordance().</SAMP>  The first of these, <SAMP>readText(),</SAMP> is written as follows:</P>
+<PRE>void concordance::readText (istream &#38; in)
+{
+   string line;
+   for (int i = 1; getline(in, line, '\n'); i++) {
+      allLower(line);
+      list&#60;string> words;
+      split (line, " ,.;:", words);
+      list&#60;string>::iterator wptr;
+      for (wptr = words.begin(); wptr != words.end(); ++wptr)
+         addWord(*wptr, i);
+      }
+}
+</PRE>
+<P>Lines are read from the input stream one by one.  The text of the line is first converted into lower case, then the line is split into words, using the function <SAMP>split()</SAMP> described in <a href="exa_5786.htm">Chapter 19 (<i>Example Program of auto_ptr</i>)</a>.  Each word is then entered into the concordance.  The method used to enter a value into the concordance is as follows:</P>
+<PRE>void concordance::addWord (string word, int line)
+{
+   // see if word occurs in list 
+   // first get range of entries with same key
+   wordDictType::iterator low = wordMap.lower_bound(word);
+   wordDictType::iterator high = wordMap.upper_bound(word);
+   // loop over entries, see if any match current line
+   for ( ; low != high; ++low)
+      if ((*low).second == line)
+         return;
+   // didn't occur, add now
+   wordMap.insert(wordDictType::value_type(word, line));
+}
+</PRE>
+<P>The major portion of <SAMP>addWord()</SAMP> is concerned with ensuring values are not duplicated in the word map if the same word occurs twice on the same line.  To assure this, the range of values matching the key is examined, each value is tested, and if any match the line number then no  insertion is performed.  It is only if the loop terminates without discovering the line number that the new word/line number pair is inserted.</P>
+<P>The final step is to print the concordance.  This is performed in the following fashion:</P>
+<PRE>void concordance::printConcordance (ostream &#38; out)
+{
+   string lastword("");
+   wordDictType::iterator pairPtr;
+   wordDictType::iterator stop = wordMap.end();
+   for (pairPtr = wordMap.begin(); pairPtr != stop; ++pairPtr)
+         // if word is same as previous, just print line number
+      if (lastword == (*pairPtr).first)
+         out &#60;&#60; " " &#60;&#60; (*pairPtr).second;
+      else {   // first entry of word
+         lastword = (*pairPtr).first;
+         cout &#60;&#60; endl &#60;&#60; lastword &#60;&#60; ": " &#60;&#60; (*pairPtr).second;
+         }
+   cout &#60;&#60; endl; // terminate last line
+}
+</PRE>
+<P>An iterator loop is used to cycle over the elements being maintained by the word list.  Each new word generates a new line of output - thereafter line numbers appear separated by spaces.  If, for example, the input was the text:</P>
+<P><SAMP>It was the best of times, </SAMP></P>
+<P><SAMP>it was the worst of times.</SAMP></P>
+<P>The output, from best to worst, would be:</P>
+<P><SAMP>   best: 1 </SAMP></P>
+<P><SAMP>   it: 1 2 </SAMP></P>
+<P><SAMP>   of: 1 2 </SAMP></P>
+<P><SAMP>   the: 1 2 </SAMP></P>
+<P><SAMP>   times: 1 2 </SAMP></P>
+<P><SAMP>   was: 1 2 </SAMP></P>
+<P><SAMP>   worst: 1</SAMP> </P>
+
+<HR>
+<A HREF="map_8354.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="sta_2474.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

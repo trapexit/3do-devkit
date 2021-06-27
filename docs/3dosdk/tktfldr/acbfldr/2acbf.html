@@ -1,0 +1,404 @@
+<TITLE>Using 16-bit data on the ARM</TITLE>
+<H1><LINK NAME="XREF39169">Using 16-bit data on the ARM</LINK></H1><HR>
+<H2>About this recipe</H2>
+This recipe covers several different approaches to 16-bit data 
+manipulation:<P>
+<UL>
+<LI>Converting the 16-bit data to 32-bit data, and from then on treating 
+it as 32-bit data.<P>
+<LI>Converting 16-bit data into 32-bit data when loading and storing, but 
+using 32-bit data within ARM's registers.<P>
+<LI>Load 16-bit data into the top 16-bits of ARM registers, and processing 
+it as 16-bit data (ie. keeping the bottom 16-bits clear at all times).
+</UL>
+Useful code fragments are given which can be used to help implement these 
+different approaches efficiently.<P>
+<H2>Introduction</H2>
+Since the ARM is a 32-bit processor, and does not have half-word load and 
+store instructions in its instruction set, at first glance the ARM may 
+look unsuitable for processing 16-bit data.<P>
+This recipe is intended to show that the ARM is quite capable of handling 
+16-bit data efficiently, and in several different ways, depending on the 
+what is needed for a particular application.<P>
+<H2>How "16-bit" is my data ?</H2>
+Just because data is 16-bit in size does not mean that it cannot be 
+considered as 32-bit data by the ARM, and thus be manipulated using the 
+ARM instruction set in the normal way.<P>
+Clearly any unsigned 16-bit value can be held as a 32-bit value in which 
+the top 16 bits are all zero.  Similarly any signed 16-bit value can be 
+held as a 32-bit value with the top 16 bits sign extended (ie. copied from 
+the top bit of the 16-bit value).<P>
+The main disadvantage of storing 16-bit data as 32-bit data in this way 
+for ARM based systems is that it takes up twice as much space in memory or 
+on disk.  If the amount of memory taken up by the 16-bit data is small, 
+then simply treating it as 32-bit data is likely to be the easiest and 
+most efficient technique.  ie. converting the data to 32-bit format and 
+from then on treating it as 32-bit data.<P>
+When the space taken by 16-bit data in memory or on disk is not small, an 
+alternative method can be used:  The 16-bit data is loaded and converted 
+to be 32-bit data for use within the ARM, and then when processed, can 
+either be output as 32-bit or 16-bit data.  Useful code fragments are 
+given to perform the necessary conversions for this approach in section <A 
+HREF="#XREF37235">Little endian loading recipes</A> to section <A 
+HREF="#XREF36059">Big endian storing recipes</A>.<P>
+An issue which may arise when 16-bit data is converted to 32-bit data for 
+use in the ARM and then stored back out as 16-bit data is detecting 
+whether the data is still 16-bit data, ie. whether it has 'overflowed' 
+into the top 16 bits of the ARM register.  Code fragments which detect 
+this are given in the section <A HREF="#XREF20082">Detecting overflow into the 
+top 16 bits</A>.<P>
+Another approach which avoids having to use explicit code to check whether 
+results have overflowed into the top 16-bits is to keep 16-bit data as 
+16-bit data all the time, by loading it into the top half of ARM 
+registers, and ensuring that the bottom 16 bits are always 0.   Useful 
+code sequences, and the issues involved when taking this approach are 
+described in <A HREF="#XREF25622">Using ARM registers as 16-bit 
+registers</A>.<P>
+<A NAME="XREF37235"><H2>Little endian loading recipes</A></H2>
+Code fragments in this section which transfer a single 16-bit data item 
+transfer it to the least significant 16 bits of an ARM register.  The 
+<I>byte offset</I> referred to is the byte offset within a word at the  
+load address. eg. the address 0x4321 has a byte offset of 1.<P>
+<H3>One data item</H3>
+The following code fragment loads a 16-bit value into a register, whether 
+the data is byte, half-word or word aligned in memory, by using the ARM's 
+load byte instruction.<P>
+This code is also optimal for the common case where the 16-bit data is 
+half word aligned, ie. at either byte offset 0 or 2 (but the same code is 
+required to deal with both cases).  Optimisations can be made when it is 
+known that the data is at at byte offset 0, and also when it is known to 
+be at byte offset 2 (but not when it could be at either offset).<P>
+<CODE>
+<PRE>
+    LDRB   R0, [R2, #0] ;             16-bit value is loaded from the
+    LDRB   R1, [R2, #1] ;             address in R2, and put in R0
+    ORR    R0, R0, R1, LSL #8;        R1 is required as a
+;   MOV    R0, R0, LSL #16;           temporary register
+;   MOV   R0, R0, ASR #16
+</CODE>
+</PRE>
+The two MOV instructions are only required if the 16-bit value is signed, 
+and it may be possible to combine the second MOV with another data 
+processing operation by specifying the second argument as "R0, ASR, #16" 
+rather than just R0.<P>
+<H3>One data item</H3>
+If the data is aligned on a half word boundary, but not a word boundary, 
+ie. the byte offset is 2, then the following code fragment can be used 
+(which is clearly much more efficient than the general case given 
+above):<P>
+<CODE>
+<PRE>
+LDR    R0, [R2, #-2];             16-bit data is loaded from address in
+MOV    R0, R0, LSR #16;           R2 into R0 (R2 has byte offset 2)
+</CODE>
+</PRE>
+The "LSR" should be replaced with "ASR" if the data is signed.  Note that 
+as in the previous example it may be possible to combine the MOV with 
+another data processing operation.<P>
+<H3>One data item</H3>
+If the data is on a word boundary, then the following code fragment will 
+load a 16-bit value (again a significant improvement over the general 
+case):<P>
+<CODE>
+<PRE>
+LDR    R0, [R2, #0];             16-bit value is loaded from the word
+MOV    R0, R0, LSL #16;          aligned address in R2 into R0.
+MOV    R0, R0, LSR #16
+</CODE>
+</PRE>
+As before, "LSR" should be replaced with "ASR" if the data is signed. 
+Also, it may be possible to combine the second MOV with another data 
+processing operation.<P>
+This code can be further optimised if non-word-aligned word-loads are 
+permitted (ie. Alignment faults are not enabled).  This makes use of the 
+way ARM rotates data into a register for non-word-aligned word-loads, see 
+the appropriate ARM Datasheet for more information:<P>
+<CODE>
+<PRE>
+LDR    R0, [R2, #2] ;             16-bit value is loaded from the word
+MOV    R0, R0, LSR #16;           aligned address in R2 into R0.
+</CODE>
+</PRE>
+<H3>Two data items</H3>
+Two 16-bit values stored in one word can be loaded more efficient;y than 
+two separate values. The following code loads two unsigned 16-bit data 
+items into two registers from a word aligned address:<P>
+<CODE>
+<PRE>
+LDR    R0, [R2, #0];                 2 unsigned 16-bit values are loaded
+MOV    R1, R0, LSR #16 ;             from one word of memory [R2}. The
+BIC    R0, R0, R1, LSL #16;          1st is put in R0, 2nd in R1.
+</CODE>
+</PRE>
+The version of this for signed data is:<P>
+<CODE>
+<PRE>
+LDR    R0, [R2, #0]       ; 2 signed 16-bit values are loaded
+MOV    R1, R0, ASR #16    ; from one word of memory [R2].  The
+MOV    R0, R0, LSL #16    ; 1st is put in R0, 2nd in R1.
+MOV    R0, R0, ASR #16
+</CODE>
+</PRE>
+The address in R2 should be word aligned (byte offset 0), in which case 
+these code fragments load the data item in bytes 0-1 into R0, and the data 
+item in bytes 2-3 into R1.<P>
+<H2>Little endian storing recipes</H2>
+The code fragment in this section which transfers a single 16-bit data 
+item transfers it from the least significant 16 bits of an ARM register.  
+The byte offset referred to is the byte offset from a word address of the 
+store address. eg. the address 0x4321 has a byte offset of 1.<P>
+<H3>One data item</H3>
+The following code fragment saves a 16-bit value to memory, whatever the 
+alignment of the data address, by using the ARM's byte saving 
+instructions:<P>
+<CODE>
+<PRE>
+   STRB   R0, [R2, #0]       ; 16-bit value is stored to the address
+   MOV    R0, R0, ROR #8     ; in R2.STRB   R0, [R2, #1]
+;  MOV    R0, R0, ROR #24
+</CODE>
+</PRE>
+The second MOV instruction is not needed if the data is no longer needed 
+after the data is stored.<P>
+Unlike load operations, knowing the alignment of the destination address 
+does not make optimisations possible.<P>
+<H3>Two data items</H3>
+Two unsigned 16-bit values in two registers can be packed into a single 
+word of memory very efficiently, as the following code fragment 
+demonstrates:<P>
+<CODE>
+<PRE>
+ORR    R3, R0, R1, LSL #16      ;Two unsigned 16-bit values
+STR    R3, [R2, #0]             ;in R0 and R1 are packed into
+                                ;the word addressed by R2
+                                ;R3 is used as a temporary register
+</CODE>
+</PRE>
+If the values in R0 and R1 are not needed after they are saved, then R3 
+need not be used as a temporary register (one of R0 or R1 can be used 
+instead).<P>
+The version for signed data is:<P>
+<CODE>
+<PRE>
+    MOV    R3, R0, LSL #16       ; Two signed 16-bit values
+    MOV    R3, R3, LSR #16       ; in R0 and R1 are packed into
+    ORR    R3, R3, R1, LSL #16   ; the word addressed by R2
+    STR    R3, [R2, #0]          ; R3 is a temporary register
+</CODE>
+</PRE>
+Again, if the values in R0 and R1 are not needed after they are saved, 
+then R3 need not be used as a temporary register (R0 can be used 
+instead).<P>
+<H2>Big endian loading recipes</H2>
+Code fragments in this section which transfer a single 16-bit data item 
+transfer it to the least significant 16 bits of an ARM register.  The 
+<I>byte offset</I> referred to is the byte offset within a word at the  
+load address. eg. the address 0x4321 has a byte offset of 1.<P>
+<H3>One data item</H3>
+The following code fragment loads a 16-bit value into a register, whether 
+the data is byte, half-word or word aligned in memory, by using the ARM's 
+load byte instruction.<P>
+This code is also optimal for the common case where the 16-bit data is 
+half word aligned, ie. at either byte offset 0 or 2 (but the same code is 
+required to deal with both cases).  Optimisations can be made when it is 
+known that the data is at at byte offset 0, and also when it is known to 
+be at byte offset 2 (but not when it could be at either offset).<P>
+<CODE>
+<PRE>
+    LDRB   R0, [R2, #0]         ; 16-bit value is loaded from the
+    LDRB   R1, [R2, #1]         ; address in R2, and put in R0
+    ORR    R0, R1, R0, LSL #8   ; R1 is a temporary register
+;   MOV    R0, R0, LSL #16
+;   MOV    R0, R0, ASR #16
+</CODE>
+</PRE>
+The two MOV instructions are only required if the 16-bit value is signed, 
+and it may be possible to combine the second MOV with another data 
+processing operation by specifying the second argument as "R0, ASR, #16" 
+rather than just R0.<P>
+<H3>One data item</H3>
+If the data is aligned on a word boundary, then the following code 
+fragment can be used (which is clearly much more efficient than the 
+general case given above):<P>
+<CODE>
+<PRE>
+    LDR    R0, [R2, #0]            ; 16-bit value is loaded from the word
+    MOV    R0, R0, LSR #16         ; aligned address in R2 into R0.
+</CODE>
+</PRE>
+The "LSR" should be replaced with "ASR" if the data is signed.  Note that 
+as in the previous example it may be possible to combine the MOV with 
+another data processing operation.<P>
+<H3>One data item</H3>
+If the data is aligned on a half word boundary, but not a word boundary, 
+ie. the byte offset is 2, then the following code fragment can be used 
+(again a significant improvement over the general case):<P>
+<CODE>
+<PRE>
+    LDR    R0, [R2, #-2]          ; 16-bit value is loaded from the
+    MOV    R0, R0, LSL #16        ; address in R2 into R0.  R2 is
+    MOV    R0, R0, LSR #16        ; aligned to byte offset 2
+</CODE>
+</PRE>
+As before, "LSR" should be replaced with "ASR" if the data is signed. 
+Also, it may be possible to combine the second MOV with another data 
+processing operation.<P>
+This code can be further optimised if non-word-aligned word-loads are 
+permitted (ie. Alignment faults are not enabled).  This makes use of the 
+way ARM rotates data into a register for non-word-aligned word-loads, see 
+the appropriate ARM Datasheet for more information:<P>
+<CODE>
+<PRE>
+    LDR    R0, [R2, #0]            ; 16-bit value is loaded from the
+    MOV    R0, R0, LSR #16         ; address in R2 into R0.  R2 is
+                                   ; aligned to byte offset 2
+</CODE>
+</PRE>
+<H3>Two data items</H3>
+Two 16-bit values stored in one word can be loaded more efficient;y than 
+two separate values. The following code loads two unsigned 16-bit data 
+items into two registers from a word aligned address:<P>
+<CODE>
+<PRE>
+    LDR    R0, [R2, #0]            ; 2 unsigned 16-bit values are
+    MOV    R1, R0, LSR #16         ; loaded from one word of memory
+    BIC    R0, R0, R1, LSL #16     ; 1st goes in R0, the 2nd in R1.
+</CODE>
+</PRE>
+The version of this for signed data is:<P>
+<CODE>
+<PRE>
+    LDR    R0, [R2, #0]            ;2 signed 16-bit values are loaded 
+    MOV    R1, R0, ASR #16         ;from one word of memory (address 
+    MOV    R0, R0, LSL #16         ;in R2). The first is put in R0, and 
+    MOV    R0, R0, ASR #16         ;the second into R1.
+</CODE>
+</PRE>
+<A NAME="XREF36059"><H2>Big endian storing recipes</A></H2>
+The code fragment in this section which transfers a single 16-bit data 
+item transfers it from the least significant 16 bits of an ARM register.  
+The byte offset referred to is the byte offset from a word address of the 
+store address. eg. the address 0x4321 has a byte offset of 1.<P>
+<H3>One data item</H3>
+The following code fragment saves a 16-bit value to memory, whatever the 
+alignment of the data address:<P>
+<CODE>
+<PRE>
+    STRB   R0, [R2, #1]           ; 16-bit value is stored to the
+    MOV    R0, R0, ROR #8         ; address in R2.
+    STRB   R0, [R2, #0]
+;   MOV    R0, R0, ROR #24
+</CODE>
+</PRE>
+The second MOV instruction is not needed if the data is no longer needed 
+after the data is stored.<P>
+Unlike load operations, knowing the alignment of the destination address 
+does not make optimisations possible.<P>
+<H3>Two data items - byte offset 0</H3>
+Two unsigned 16-bit values in two registers can be packed into a single 
+word of memory very efficiently, as the following code fragment 
+demonstrates:<P>
+<CODE>
+<PRE>
+    ORR    R3, R0, R1, LSL #16   ; Two unsigned 16-bit values in
+    STR    R3, [R2, #0]          ; R0 and R1 are packed into the
+                                 ; word addressed by R2
+                                 ; R3 is a temporary register
+</CODE>
+</PRE>
+If the values in R0 and R1 are not needed after they are saved, then R3 
+need not be used as a temporary register (one of R0 or R1 can be used 
+instead).<P>
+The version for signed data is:<P>
+<CODE>
+<PRE>
+    MOV    R3, R0, LSL #16        ; Two signed 16-bit values in
+    MOV    R3, R3, LSR #16        ; R0 and R1 are packed into the
+    ORR    R3, R3, R1, LSL #16    ; word addressed by R2.  
+    STR    R3, [R2, #0]           ; R3 is a temporary register
+</CODE>
+</PRE>
+Again, if the values in R0 and R1 are not needed after they are saved, 
+then R3 need not be used as a temporary register (R0 can be used 
+instead).<P>
+<A NAME="XREF20082"></A><H2>Detecting overflow into the top 16 
+bits</A></H2>
+If 16-bit data is converted to 32-bit data for use in the ARM, it may 
+sometimes be necessary to check explicitly whether the result of a 
+calculation has 'overflowed' into the top 16 bits of an ARM register. This 
+is likely to be necessary because the ARM does not set its processor 
+status flags when this happens.<P>
+The following instruction sets the Z flag if the value in R0 is a 16-bit 
+unsigned value.  R1 is used as a temporary register.<P>
+<CODE>
+<PRE>
+    MOVS   R1, R0, LSR #16
+</CODE>
+</PRE>
+The following instructions set the Z flag if the value in R0 is a valid 
+16-bit signed value (ie. bit 15 is the same as the sign extended bits). R1 
+is used as a temporary register.<P>
+<CODE>
+<PRE>
+    MOVS   R1, R0, ASR #15
+    CMNNE  R1, R1, #1
+</CODE>
+</PRE>
+<A NAME="XREF25622"><H2>Using </A>ARM registers as 16-bit 
+registers</A></H2>
+Instead of holding 16-bit data as 32-bit data within the ARM it can be 
+held as 16-bit data.  This is done by positioning it in the top 16-bits of 
+the ARM registers as opposed to the bottom 16 bits as has been described 
+so far.<P>
+The advantages of this approach are:<P>
+<UL>
+<LI>Some 16-bit data load instruction sequences are shorter.  The loading 
+and storing sequences shown above will have to be modified, and in some 
+cases shorter instruction sequences will be possible.  In particular, 
+handling signed data will often be more efficient, as the top bit does not 
+have to be copied into the top 16 bits of the register.  Note that it is, 
+however, necessary to ensure that the bottom 16 bits are all clear.<P>
+<LI>The ARM processor status flags will be set if the 'S' bit of a data 
+processing  instruction is set and overflow or carry occurs out of the 
+16-bit value.  Thus explicit 'overflow' checking instructions are not 
+needed.<P>
+<LI>Pairs of signed 16-bit integers can be saved more efficiently than in 
+the the previous approach, since the sign extended bits do not have to be 
+cleared out before the two values are combined.
+</UL>
+The disadvantages of this approach are:<P>
+<UL>
+<LI>Instructions such as add with carry cannot be used. eg. the instruction
+</UL>
+    <CODE>
+<PRE>
+                  ADC    R0, R0, #0
+</CODE>
+</PRE>
+<UL>
+<LI>to increment R0 if Carry is set should be replaced by
+</UL>
+    <CODE>
+<PRE>
+                  ADDCS R0, R0, #&amp;10000
+</CODE>
+</PRE>
+Having to use this form of instruction reduces the chance of being able to 
+combine several data processing operations into one by making use of the 
+barrel shifter.<P>
+<UL>
+<LI>Before multiplying two 16-bit values in the top half of the registers, 
+the values must be shifted into the bottom half of the register.<P>
+<LI>Before combining a 16-bit value with a 32-bit value, the 16-bit value 
+must be shifted into the bottom half of the register.  Note, however, that 
+this may cost nothing if the barrel shifter can be used in parallel.  
+</UL>
+The recipes given above for loading and storing 16-bit data into the 
+bottom half of ARM registers can be easily adapted to load the data into 
+the top half of the registers (and ensure the bottom half is all zero), or 
+save the data from the top half of the registers.<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./1acbc.html#XREF32971">Using the Barrel Shifter</A>;
+</UL>

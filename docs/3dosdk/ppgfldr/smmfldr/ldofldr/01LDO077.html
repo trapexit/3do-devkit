@@ -1,0 +1,21 @@
+<Title>GetCelDataBufferSize</Title>
+<A NAME="XREF19636"><H1>GetCelDataBufferSize </A></H1>
+ Returns a cel's data buffer size.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetCelDataBufferSize(CCB *cel)</CODE><P>
+<H3>Description</H3>
+Calculates the size needed for a cel data buffer based on the values found in the cel's preamble words.The calculations take into account the cel's bits per pixel and source width values, and padding for the cel engine's alignment, and look ahead requirements. <P>
+The return value is the size needed for the buffer, and not necessarily the size of the buffer currently attached to the cel. For example, using this function on a SubRect cel would return the size needed for the sub-rectangle, not the size currently used by the full-size source data attached to the cel. <P>
+This function can be called when the cel has no buffer yet, providing that the CCB_CCBPRE flag is set. In this sense, it can be useful for calculating how big a data buffer to allocate. <P>
+This function exists primarily to support library internals, but may be useful for applications as well. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to a cel. 
+</DL>
+<H3>Return Value</H3>
+Bytes needed for the buffer. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>

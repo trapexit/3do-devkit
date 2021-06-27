@@ -1,0 +1,21 @@
+<Title>maus</Title>
+<A NAME="XREF21620"><H1>maus </A></H1>
+<A NAME="XREF39384"></A>Uses the event broker to read events from the first 
+mouse.<P>
+<H3>Synopsis</H3>
+<CODE>maus [anything]</CODE><P>
+<H3>Description</H3>
+Uses the event broker to monitor and report activity for the first mouse 
+plugged in to the control port. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>anything
+<DD>If you supply no arguments to this program, it asks GetMouse() to put 
+the task to sleep when waiting for an event. If you supply an argument, 
+GetMouse() will not put the task to sleep, and the program will poll the 
+mouse. 
+</DL>
+<H3>Associated Files</H3>
+maus.c<P>
+<H3>Location</H3>
+examples/EventBroker/Event_Broker_Tests<P>

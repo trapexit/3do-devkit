@@ -1,0 +1,142 @@
+<TITLE>Testing the CD-ROM Disc Using the Debugger</TITLE>
+<H1><LINK NAME="XREF17527">Testing the CD-ROM Disc Using the 
+Debugger</LINK></H1><HR>
+You have to test your title on the CD-ROM in two ways, discussed in this 
+section:<P>
+
+<UL>
+<LI><A HREF="#XREF13341">Testing the CD-ROM in Minimum Memory 
+Configuration</A>.
+<P>
+<LI><A HREF="#XREF34334">Testing the CD-ROM Disc on a Testing Station</A>. 
+This in effect simulates the end-user playing the title, as discussed in 
+the next section. 
+</UL>
+<A NAME="XREF13341"><H2>Testing the CD-ROM in Minimum Memory 
+Configuration</A></H2>
+Testing the CD-ROM involves two steps, which are discussed in the next two 
+sections: <P>
+
+<UL>
+<LI><A HREF="#XREF12826">Setting up the System for Testing an Unencrypted 
+CD-ROM</A> 
+<LI><A HREF="#XREF12437">Running the CD-ROM in the Minimum Memory 
+Configuration</A>
+</UL>
+<B>Note: </B>Be sure to perform all tests on a Station with a low memory 
+detection board. For more information, see <A 
+HREF="./02CDM003.html#XREF27784">Checking for Low Memory Pointers</A>.<P>
+<A NAME="XREF12826"><H3>Setting up the System for Testing an Unencrypted 
+CD-ROM</A></H3>
+To run your title from a CD-ROM using the Debugger, do the following to 
+set up your environment: <P>
+<OL>
+<LI>Delete or rename any cdrom.image files on your Macintosh.
+<P>
+<LI>Move or rename any executable or data files in /remote.
+<P>
+<LI>Since the title resides on an unencrypted CD-ROM, set up the hardware 
+as follows:
+</OL> 
+<PRE>
+--------------------------------------------------------
+Hardware             |Setup                             
+--------------------------------------------------------
+3DO Development      |Make sure the MEMORY and DEBUG    
+Station              |switches on the prototype are in  
+                     |the "up" position and the         
+                     |ENCRYPTED switch is in the "down" 
+                     |position.                         
+--------------------------------------------------------
+3DO International    |In the Debugger Preferences       
+Station or           |dialog, make sure the ROM pop-up  
+Development Card     |is set to Debugger.               
+--------------------------------------------------------
+</PRE>
+
+<p><B>Note: </B>If you test your CD-ROM from the Debugger, 
+<CODE>printf()</CODE> statements in the program are displayed in the 
+Terminal window on the Macintosh. This helps you debug your title.<P>
+<A NAME="XREF12437"><H3>Running the CD-ROM in the Minimum Memory 
+Configuration</A></H3>
+
+To run your title from the CD-ROM disc in the minimum memory 
+configuration, follow these steps: <P>
+<OL>
+<LI>Insert the Master CD-ROM into the tray on the 3DO Development Station 
+(or the CD-ROM drive attached to the 3DO Development Card).
+<p>
+<LI>Launch the 3DO Debugger on the Macintosh (or select Hardware Reset 
+from the Execution menu if the Debugger is already running).
+<p>
+<LI>Execute the boot script.   
+<p>
+<LI>Press Command-G to start the operating system.
+<p>
+<LI>When you see the Mac-&gt; prompt in the Debugger Terminal window, type:
+<p>
+<CODE><DL>
+<DD><CODE>minmem</CODE> </CODE><BR>
+</DL>
+<p>
+<LI>To set the alias<CODE> boot</CODE> to /cd-rom, type:
+<p>
+<DL>
+<DD><CODE>alias boot /cd-rom</CODE><BR>
+</DL>
+<p>
+<LI>To run your title from the CD-ROM, type:
+<p>
+<DL>
+<DD><CODE>$boot/launchme</CODE><BR>
+</DL>
+</OL>
+<H2>Debugging Hints</H2>
+This section discusses what you can do if you have problems running your 
+title from the newly mastered CD-ROM disc: <P>
+
+<UL>
+<LI><A HREF="#XREF23074">Stepping Through the Title on the CD-ROM Disc</A> 
+<LI><A HREF="#XREF32919">Pulling Files Off the CD-ROM</A>
+</UL>
+<A NAME="XREF23074"><H3>Stepping Through the Title on the CD-ROM 
+Disc</A></H3>
+If a Symbols file for the title is still available in the /remote 
+directory, you can step through the title on your CD-ROM disc using the 
+Debugger. <P>
+The <I>3DO Debugger Programmer's Guide </I>describes this process in more 
+detail.<P>
+<A NAME="XREF32919"><H3>Pulling Files Off the CD-ROM</A></H3>
+If you are unsure which version of your executable you have placed on the 
+disc, or if you need to pull files off the CD-ROM for some other reason, 
+use the <CODE>copy2mac</CODE> utility to copy files from the CD to your 
+Macintosh.<P>
+<B>Note: </B>The copy2mac utility does not accept filenames with spaces. 
+<P>
+You can pull individual files from the CD-ROM disc and place them on your 
+Macintosh for inspection by typing the following at the Terminal window:<P>
+<DL>
+<DD><CODE>copy2mac &lt;source&gt; &lt;destination&gt;</CODE><BR>
+</DL>
+For example, to place the file myfile in the /temp folder on the volume 
+TheMaster, type the following:<P>
+<DL>
+<DD><CODE>copy2mac /cd-rom/myfile TheMaster:temp:myfile</CODE><BR>
+</DL>
+<B>Note: </B>The source filename has a leading slash (/); the destination 
+filename does not unless you specify a file inside /remote<P>
+<A NAME="XREF34334"><H2>Testing the CD-ROM Disc on a Testing 
+Station</A></H2>
+If your title has executed successfully under the minimum memory 
+configuration, on a 3DO Station with a low memory detection board, you 
+should test it on a testing station. Running the title on a testing 
+station simulates what the end-user will experience on a 3DO Interactive 
+Multiplayer system. <P>
+The 3DO Testing Station is a version of the 3DO Interactive Multiplayer 
+system that has been modified so you can switch between encrypted and 
+unencrypted CD-ROMs. This allows you to play both encrypted discs and 
+unencrypted discs on the same station.<P>
+The only external difference to the Interactive Multiplayer is the ROM 
+switch located at the rear of the player. In the DOWN position, the player 
+reads and plays unencrypted discs. In the UP position, it reads and plays 
+encrypted discs.<P>

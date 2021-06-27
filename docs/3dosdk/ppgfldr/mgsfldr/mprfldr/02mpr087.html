@@ -1,0 +1,31 @@
+<Title>spSetBranchAction</Title>
+<A NAME="XREF19779"><H1>spSetBranchAction </A></H1>
+<A NAME="XREF35557"></A> Set up an SPAction to branch to the specified marker.<P>
+<H3>Synopsis</H3>
+<CODE>Err spSetBranchAction (SPAction *action, SPSound *toSound, const char *toMarkerName)</CODE><P>
+<H3>Description</H3>
+Sets up the SPAction to cause a branch to the specified marker as the resulting action of a decision function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>action
+<DD>Pointer to an SPAction to fill out. This must be the pointer passed to your decision function. 
+</DL>
+<DL>
+<DT>toSound
+<DD>Pointer to SPSound containing marker to branch to. This SPSound must belong to the same SPPlayer as the SPMarker for which the decision function was called. 
+</DL>
+<DL>
+<DT>toMarkerName
+<DD>Name of marker to in toSound branch to. All markers except markers at the end of sounds are considered valid "to" markers. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Outputs</H3>
+On success, fills out SPAction to cause a branch to the specified marker. On failure, nothing is written to the SPAction. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr069.html#XREF41344"><CODE>SPDecisionFunction</A>, <A HREF="./02mpr090.html#XREF22533">spSetStopAction</A>(), <A HREF="./02mpr064.html#XREF40639">spBranchAtMarker</A>() </CODE><P>
+</CODE>

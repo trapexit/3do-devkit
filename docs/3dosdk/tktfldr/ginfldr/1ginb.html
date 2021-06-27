@@ -1,0 +1,152 @@
+<TITLE>How the 3DO hardware processes images 
+and cels</TITLE>
+<H1><LINK NAME="XREF33517">How the 3DO hardware processes images and cels</LINK></H1><HR>
+This section explains how the 3DO hardware processes images and cels. 
+Understanding these concepts helps you choose appropriately among image 
+and cel types and take advantage of the 3DO hardware's special effects 
+capabilities. <P>
+This section provides more information about images and cels, discussing 
+the following topics: <P>
+
+<UL>
+<LI><A HREF="#XREF28674">What are images and cels?</A>
+<LI><A HREF="#XREF37168">What is a 3DO cel?</A>
+<LI><A HREF="#XREF42614">Where does the color come from?</A>
+<LI><A HREF="#XREF18397">Where do the special effects come from?</A>
+<LI><A HREF="#XREF18348">Where does the cel's shape come from?</A>
+</UL>
+<A NAME="XREF28674"><H2>What are images and cels?</A></H2>
+Cels and images are graphics formats that take advantage of the 3DO 
+hardware. Images and cels differ in how they are treated by the 3DO 
+hardware:<P>
+<UL>
+<LI>Images are projected directly onto the frame buffer, processed by the 
+display generator and then displayed on the TV screen. <P>
+<LI>Cels are first processed by the cel engine, then projected onto the 
+frame buffer, passed to the display generator, and displayed on the TV 
+screen. 
+</UL>
+Figure 1 shows how a cel moves through the cel engine onto the frame buffer, 
+is processed by the display generator, and is then displayed on the TV 
+screen. <P>
+
+<IMG SRC="Figures/Ch1GCB/Engine - NTSC.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>How the 3DO hardware processes a cel. </I><P>
+As a result of the additional processing a cel receives, images and cels 
+have different characteristics:<P>
+<UL>
+<LI>Images are static, well-suited for a background. They have to start 
+out at the size of the screen. Because there's no processing overhead 
+involved, a relatively big image file can be displayed relatively 
+quickly. <P>
+<LI>Cels are dynamic. The can be moved, distorted, and zoomed, and can use 
+special effects, as explained below.
+</UL>
+<A NAME="XREF37168"><H2>What is a 3DO cel?</A></H2>
+A 3DO cel is really just another file format, like PICT or TIFF. A cel 
+consists of data data organized in a particular way. Each cel consists of 
+the following pieces: <P>
+<UL>
+<LI>CCB (cel control block)-has information about the cel's position and 
+distortion. These values are usually set by the program. <P>
+<LI>Palette-contains the colors. The artist can determine the palette with 
+one of the tools listed in <A HREF="./gin2frst.html#XREF21202">Tools for 
+3DO Art Production</A>.<P>
+<LI>Bitmap. 
+</UL>
+<A NAME="XREF42614"><H2>Where does the color come from?</A></H2>
+Color for both images and cels comes from a color lookup table or CLUT. 
+The CLUT is inside the hardware; it is the master palette for the display, 
+and consists of registers filled with 15-bit values. <P>
+For images and for uncoded cels, every pixel has to have its own 15-bit 
+value to specify the exact color in the CLUT. As a result, an image or an 
+uncoded cel is large and uses a lot of RAM but the color is precise. <P>
+<B>Note: </B>On the 3DO system, an 8-bit cel has the same resolution but 
+fewer colors than a 16-bit cel. <P>
+<H3>Color for coded cels</H3>
+Coded cels use less disk space than uncoded cels. In many cases, this 
+happens without a visible deterioration of the visual quality. In a coded 
+cel, each pixel has a maximum of 5 bits available to carry color 
+information or other information. Those bits point to a <I>Palette Lookup 
+Table</I> or PLUT. This PLUT acts as an intermediary between the color 
+lookup table (CLUT) and the cel. <P>
+Figure 2 illustrates how an uncoded cel and a coded cel access the CLUT: the 
+uncoded cel needs to provide 16 pixels of information for each 16-bit 
+color value in the system color table. The coded cel, on the other hand, 
+needs only 5 pixels of information. Those five pixels point to a 16-bit 
+value in the PLUT that in turn points to the 16-bit value in the PLUT. 
+Since one PLUT is used for all the pixels in the cel, the cel can be a lot 
+smaller.<P>
+
+<IMG SRC="Figures/Ch1GCB/CLUT Diagram.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>How uncoded and coded cels use the system color 
+table.</I><P>
+Here's some detail on why coded cels are used frequently:<P>
+<UL>
+<LI>Coded cels do allow special effects, just as uncoded cels.<P>
+<LI>Coded cel have individual PLUTs. If you use coded cels, you can still 
+have a lot of colors on screen since <I>each</I> cel has its own PLUT. <P>
+<LI>Coded cels are smaller than uncoded cels. The smaller the cel, the 
+faster the response of the title, the better the frame rate of the 
+animation, and the better the quality of music you can add. 
+</UL>
+<A NAME="XREF18348"><H2>Where does the cel's shape come from?</A></H2>
+Most titles don't move rectangular shapes around a screen, but rather 
+creatures, vehicles, or other objects. You therefore need to make the 
+region around the object transparent.<P>
+The 3DO hardware lets you specify transparent regions in a cel in two 
+ways:<P>
+<UL>
+<LI>Specify transparent regions using a black Transparency mask (3DO 
+CelWriter, 3DO Coded8 CelWriter, 3DO Animator). No true black (RGB 0-0-0) 
+is possible for any pixel in the cel; you have to use RGB 0-0-9. <P>
+<LI>Specify transparent regions using a special background color (3DO 
+Animator, 3DO Coded-8 CelWriter). True black (RGB 0-0-0) can be used the 
+cel.
+</UL>
+For information on creating irregularly shaped cels, see the relevant 
+sections in the manuals for the individual tools. <P>
+<A NAME="XREF18397"><H2>Where do the special effects come from?</A></H2>
+Special effects are possible for any kind of cel, and are determined by a 
+part of the cel called the PIXC. In the simplest case, the PIXC determines 
+whether each pixel in the cel is displayed as opaque (the default), with 
+enhanced or reduced luminance, or mixed with the background. <P>
+By default, each pixel in the cel is processed using the settings in 
+Figure 3. The figure actually shows the left half of the Effects Editor of 
+the 3DO PostPro tool-more about the right half later. <P>
+
+<IMG SRC="Figures/Ch1GCB/PIXCSettings.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>PIXC settings specification.</I><P>
+Note how just using one set of PIXC options, you can multiply or divide 
+the pixels in a cel by a different number (resulting in enhanced or 
+reduced luminance) or mix it with the background picture in the frame 
+buffer using the Pixel Source 2 pop-up menu. Consider experimenting with 
+these settings for best results. <P>
+<H3>Using two PIXC settings in one cel</H3>
+In addition to changing the display for the whole cel, you can also change 
+the display for only part of the cel, for example, display most of the cel 
+as opaque and a window as translucent, or a light as more luminous. <P>
+To do that, you specify two groups of pixels in the cel. One group of uses 
+one set of pixel settings, the other a second, different set:<P>
+<UL>
+<LI>All pixels that are not masked (or don't use a special color) use the 
+settings on the left, as explained above. This group of PIXC settings is 
+also referred to as P-Mode B or P-Mode 1.<P>
+<LI>All masked pixels (for example, all stained glass window pixels) use 
+the settings on the right. This group of PIXC settings is also referred to 
+as P-Mode A or P-Mode 0.
+</UL>
+Figure 4 shows the two different paths each pixel in the cel has to choose 
+from: Either the path on the left-the group of PIXC settings called P-Mode 
+A-or the path on the right-the group of PIXC settings called P-Mode B.<P>
+
+<IMG SRC="Figures/Ch1GCB/Effects.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 4: </B><I>PIXC settings for two different groups of pixels. 
+</I><P>

@@ -1,0 +1,92 @@
+<HTML><HEAD><TITLE>Removal Algorithms</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Removal Algorithms</H2>
+<A HREF="sidebar.htm#sidebar64"><IMG SRC="images/note.gif" BORDER=0> <STRONG>What is a Name?</STRONG></A>
+
+<P>The following two algorithms can be somewhat confusing the first time they are encountered.  Both claim to remove certain values from a sequence.  But, in fact, neither one reduces the size of the sequence.  Both operate by moving the values that are to be <I>retained</I> to the front of the sequence, and returning an iterator that describes where this sequence ends.  Elements after this iterator are simply the original sequence values, left unchanged.  This is necessary because the generic algorithm has no knowledge of the container it is working on.  It only has a generic iterator.  This is part of the price we pay for generic algorithms.  In most cases the user will want to use this iterator result as an argument to the <SAMP>erase()</SAMP> member function for the container, removing the values from the iterator to the end of the sequence.</P>
+<P>Let us illustrate this with a simple example.  Suppose we want to remove the even numbers from the sequence 1 2 3 4 5 6 7 8 9 10, something we could do with the <SAMP>remove_if()</SAMP> algorithm.  The algorithm <SAMP>remove_if()</SAMP> would leave us with the following sequence:</P>
+<P>1 3 5 7 9 <B>|</B> 6 7 8 9 10</P>
+<P>The vertical bar here represents the position of the iterator returned by the <SAMP>remove_if()</SAMP> algorithm.  Notice that the five elements before the bar represent the result we want, while the five values after the bar are simply the original contents of those locations.  Using this iterator value along with the end-of-sequence iterator as arguments to <SAMP>erase(),</SAMP> we can eliminate the unwanted values, and obtained the desired result.</P>
+<P>Both the algorithms described here have an alternative <I>copy</I> version.  The copy version of the algorithms leaves the original unchanged, and places the preserved elements into an output sequence.</P>
+
+<A NAME="removeunwantedelements"><H3>Remove Unwanted Elements</H3></A>
+<A HREF="sidebar.htm#sidebar65"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Source</STRONG></A>
+<P>The algorithm <SAMP>remove()</SAMP> eliminates unwanted values from a sequence.  As with the <SAMP>find()</SAMP> algorithm, these can either be values that match a specific constant, or values that satisfy a given predicate.  The declaration of the argument types is as follows:</P>
+<PRE>ForwardIterator remove 
+   (ForwardIterator first, ForwardIterator last, const T &#38;);
+ForwardIterator remove_if 
+   (ForwardIterator first, ForwardIterator last, Predicate);
+</PRE>
+<P>The algorithm<SAMP> remove()</SAMP> copies values to the front of the sequence, overwriting the location of the removed elements.  All elements not removed remain in their relative order.  Once all values have been examined, the remainder of the sequence is left unchanged. The iterator returned as the result of the operation provides the end of the new sequence.  For example, eliminating the element 2 from the sequence 1 2 4 3 2 results in the sequence 1 4 3 3 2, with the iterator returned as the result pointing at the second 3. This value can be used as argument to <SAMP>erase()</SAMP> in order to eliminate the remaining elements (the 3 and the 2), as illustrated in the example program.</P>
+<P>A copy version of the algorithms copies values to an output sequence, rather than making transformations in place.</P>
+<PRE>OutputIterator remove_copy 
+         (InputIterator first, InputIterator last,
+         OutputIterator result, const T &#38;);
+
+OutputIterator remove_copy_if 
+         (InputIterator first, InputIterator last,
+         OutputIterator result, Predicate);
+</PRE>
+<P>The use of <SAMP>remove()</SAMP> is shown in the following program.</P>
+<PRE>void remove_example ()
+   // illustrate the use of the remove algorithm
+{
+   // create a list of numbers
+   int data[] = {1, 2, 4, 3, 1, 4, 2};
+   list&#60;int> aList;
+   copy (data, data+7, inserter(aList, aList.begin()));
+
+      // remove 2's, copy into new list
+   list&#60;int> newList;
+   remove_copy (aList.begin(), aList.end(), 
+      back_inserter(newList), 2);
+
+      // remove 2's in place
+   list&#60;int>::iterator where;
+   where = remove (aList.begin(), aList.end(), 2);
+   aList.erase(where, aList.end());
+
+      // remove all even values
+   where = remove_if (aList.begin(), aList.end(), isEven);
+   aList.erase(where, aList.end());
+}
+</PRE>
+
+<A NAME="removerunsofsimilarvalues"><H3>Remove Runs of Similar Values</H3></A>
+<P>The algorithm <SAMP>unique()</SAMP> moves through a linear sequence, eliminating all but the first element from every consecutive group of equal elements.  The argument sequence is described by forward iterators.</P>
+<PRE>ForwardIterator unique (ForwardIterator first, 
+   ForwardIterator last [, BinaryPredicate ] );
+</PRE>
+<P>As the algorithm moves through the collection, elements are moved to the front of the sequence, overwriting the existing elements.  Once all unique values have been identified, the remainder of the sequence is left unchanged.  For example, a sequence such as 1 3 3 2 2 2 4 will be changed into 1 3 2 4 <B>|</B> 2 2 4.  We have used a vertical bar to indicate the location returned by the iterator result value.  This location marks the end of the unique sequence, and the beginning of the left-over elements.  With most containers the value returned by the algorithm can be used as an argument in a subsequent call on <SAMP>erase()</SAMP> to remove the undesired elements from the collection.  This is illustrated in the example program.</P>
+<P>A copy version of the algorithm moves the unique values to an output iterator, rather than making modifications in place.  In transforming a list or multiset, an insert iterator can be used to change the copy operations of the output iterator into insertions.  </P>
+<PRE>OutputIterator unique_copy 
+      (InputIterator first, InputIterator last,
+       OutputIterator result [, BinaryPredicate ] );
+</PRE>
+<P>These are illustrated in the sample program:</P>
+<PRE>void unique_example ()
+   // illustrate use of the unique algorithm
+{
+      // first make a list of values
+   int data[] = {1, 3, 3, 2, 2, 4};
+   list&#60;int> aList;
+   set&#60;int> aSet;
+   copy (data, data+6, inserter(aList, aList.begin()));
+
+      // copy unique elements into a set
+   unique_copy (aList.begin(), aList.end(),
+      inserter(aSet, aSet.begin()));
+
+      // copy unique elements in place
+   list&#60;int>::iterator where;
+   where = unique(aList.begin(), aList.end());
+
+      // remove trailing values
+   aList.erase(where, aList.end());
+}</PRE>
+
+<HR>
+<A HREF="inp_4704.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="sca_1926.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

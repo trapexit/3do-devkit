@@ -1,0 +1,42 @@
+<Title>GetFirstDisplayInfo </Title>
+<A NAME="XREF41500"><H1>GetFirstDisplayInfo </A></H1>
+<A NAME="XREF24684">Retrieves information about display modes supported by </A>the system.<P>
+<H3>Synopsis</H3>
+<CODE>DisplayInfo *GetFirstDisplayInfo (void)</CODE><P>
+<H3>Description</H3>
+GetFirstDisplayInf<CODE>o()</CODE> returns a pointer to a DisplayInfo structure, which describes the characteristics of the display modes available to applications. <P>
+The display characteristics are represented as an array of tag arguments (to allow for future expansion). You can search the array for the tag value representing the characteristic in which you're interested; the associated argument is the value of that characteristic. <P>
+The DisplayInfo structure is a list node; you can traverse the list using the kernel list traversal calls <CODE>(NEXTNODE()</CODE>, and so on). Graphics can support any number of display modes. <P>
+<H3>Tag Arguments</H3>
+<DL>
+<DT>The tag values found in the DisplayInfo tag array are: 
+</DL>
+<UL>
+<LI>DI_TYPE- int32.   The type identifier of the display mode. This is the value passed to <CODE>CreateScreenGroup()</CODE> as the argument to the CSG_TAG_DISPLAYTYPE tag to create a screen of that type. The currently defined (and ever-expanding) list of DI_TYPE values are: 
+</UL>
+<UL>
+<LI>DI_TYPE_NTSC- Standard 320 * 240 display. 
+<LI>DI_TYPE_PAL1- Narrow PAL display (320 * 288). 
+<LI>DI_TYPE_PAL2-Normal (wide) PAL display (384 * 288). 
+<LI>DI_WIDTH- int32 - The width of this display mode, in pixels. 
+<LI>DI_HEIGHT- int32. - The height of this display mode, in pixels. 
+<LI>DI_FIELDTIME- int32 - Duration of a single field of video, in microseconds. 
+<LI>DI_FIELDFREQ- int32 - Number of fields of video per second. 
+<LI>DI_ASPECT- frac16. - Aspect ratio of this display mode's pixels.
+<LI>DI_ASPECTW- int32. -  Width component of this display mode's pixel aspect ratio.
+<LI>DI_HEIGHT- int32 -  Height component of this display mode's pixel aspect ratio.
+<LI>DI_NOINTERLACE- int32. - Boolean value: non-zero if this display mode does not support interlaced video. 
+<LI>DI_NOSTEREO- int32 -   Boolean value: non-zero if this display mode does not support stereoscopic displays. 
+</UL>
+<H3>Return Value</H3>
+Returns a pointer to the first DisplayInfo structure in the list. <P>
+<H3>Notes</H3>
+This call is useful to individuals wishing to have "auto-sensing" applications that work in international markets. <P>
+Do not, under any circumstances, make assumptions about the layout of the tag argument array in the DisplayInfo structure. You must perform explicit searches through the array for the information in which you are interested.<P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V22. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr049.html#XREF27199"><CODE>QueryGraphics</A>(), <A HREF="./01gpr050.html#XREF22949">QueryGraphicsList</A>() </CODE><P>
+</CODE>

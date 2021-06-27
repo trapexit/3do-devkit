@@ -1,0 +1,15 @@
+<TITLE>Using the Sound Spooler</TITLE>
+<H1><LINK NAME="XREF23959">Using the Sound Spooler</LINK></H1><HR>
+This chapter describes the sound spooler function calls and tells you how to incorporate them into your application.<P>
+This chapter contains the following topics:<P>
+
+<UL>
+<LI><A HREF="./07mpg001.html#XREF24856">How the Sound Spooler Works</A>
+<LI><A HREF="./07mpg002.html#XREF15360">How to Use the Sound Spooler</A>
+<LI><A HREF="./07mpg003.html#XREF23959">An Example</A>
+<LI><A HREF="./07mpg004.html#XREF35961">Convenience Functions</A>
+<LI><A HREF="./07mpg005.html#XREF40176">Sound Spooler Function Calls</A>
+</UL>
+The sound spooler lets you create a custom sound file player or  spool sound coming from anywhere other than an AIFF file; for example, a movie file. By including a sound spooler in your application you can spool blocks of sample audio data to the audio digital signal processor (DSP). The sound spooler manages a queue of audio buffers and controls the Audio folio. <P>
+<B>Note: </B>The sound spooler is a low level support system that is used in the sound file player and advanced sound player. In most cases, you use the existing sound file player (see <CODE>ServiceSoundFile()</CODE>) for AIFF files, or the 3DO DataStreamer mixed video and audio files instead of creating your own. However, if you want to play samples that are too large to fit in memory or play files that must be spooled from disc ANDyou cannot use existing higher-level tools, you need to create a new player.<P>
+<A NAME="XREF24856"></A>

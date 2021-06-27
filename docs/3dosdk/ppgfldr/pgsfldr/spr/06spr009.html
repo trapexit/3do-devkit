@@ -1,0 +1,80 @@
+<Title>intlTransliterateString </Title>
+<A NAME="XREF20802"></A><H1>intlTransliterateString </A></H1>
+Converts a string between character sets.<P>
+<H3>Synopsis</H3>
+<CODE>int32 intlTransliterateString(const void *string,CharacterSets stringSet,void *result,CharacterSets resultSet,uint32 resultSize,uint8 unknownFiller);</CODE><P>
+<H3>Description</H3>
+Converts a string between two character sets. This is typically used to convert a string from or to UniCode. The conversion is done as well as possible. If certain characters from the source string cannot be represented in the destination character set, the unknownFiller byte will be inserted in the result buffer in their place. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>string
+<DD>The string to transliterate. 
+</DL>
+<DL>
+<DT>stringSet
+<DD>The character set of the string to transliterate. This describes the interpretation of the bytes in the source string. 
+</DL>
+<DL>
+<DT>result
+<DD>A memory buffer where the result of the transliteration can be put. 
+</DL>
+<DL>
+<DT>resultSet
+<DD>The character set to use for the resulting string. 
+</DL>
+<DL>
+<DT>resultSize
+<DD>The number of bytes available in the result buffer. This limits the number of bytes that are put into the buffer. 
+</DL>
+<DL>
+<DT>unknownFiller
+<DD>If a character sequence cannot be adequately converted from the source character set,
+then this byte will be put into the result buffer in place of the 
+character sequence. When converting to a 16-bit character set, 
+then this byte will be extended to 16-bits and inserted.</DL>
+<H3>Return Value</H3>
+If positive, returns the number of characters in the result buffer. If negative, returns an error code. <P>
+<DL>
+<DT>&gt; = 0
+<DD>Number of characters in the result buffer.
+</DL>
+<DL>
+<DT>INTL_ERR_BADSOURCEBUFFER
+</DL>
+<DL>
+<DT>The string pointer supplied was bad. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADCHARACTER
+</DL>
+<DL>
+<DT>SET
+<DD>The "stringSet" or "resultSet" arguments did not specify valid character sets. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADRESULTBUFFER
+</DL>
+<DL>
+<DT>The result buffer pointer was NULL or wasn't invalid writable memory.
+</DL>
+<DL>
+<DT>INTL_ERR_BUFFERTOOSMALL
+</DL>
+<DL>
+<DT>There was not enough room in the result buffer. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADITEM
+<DD>locItem was not an existing locale item.
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in international folio V24. <P>
+<H3>Caveats</H3>
+This function is not as smart as it could be. When converting from UniCode to 
+ASCII, characters not in the first UniCode page (codes greater than
+0x00ff) are never converted and always replaced with the unknownFiller byte. 
+The upper pages of the UniCode set contain many characters which could be 
+converted to equivalent ASCII characters, but these are not supported at 
+this time.
+<H3>Associated Files</H3>
+intl.h<A NAME="XREF31514"></A><P>

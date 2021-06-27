@@ -1,0 +1,31 @@
+<TITLE>UnlockItem</TITLE>
+<A NAME="XREF25491"><H1>UnlockItem </A></H1>
+<A NAME="XREF26971"></A>Unlocks a locked item.<P>
+<H3>Synopsis</H3>
+<CODE>Err UnlockItem( Item s )</CODE><P>
+<H3>Description</H3>
+This procedure unlocks the specified item. <P>
+<B>Note: </B> Currently, semaphores are the only items that can be locked. You can also unlock semaphores by calling <CODE>UnlockSemaphore()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>s
+<DD>The item number of the item to be unlocked. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if successful or an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>NOTOWNER
+<DD>The item specified by the s argument is not owned by the task. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+This is the same SWI as <CODE>UnlockSemaphore()</CODE>. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr032.html#XREF18938"><CODE>DeleteItem</A>(), <A HREF="./01spr097.html#XREF32838">LockItem</A>(), <A HREF="./01spr130.html#XREF20743">UnlockSemaphore</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF25491"></LINK></H1><HR>

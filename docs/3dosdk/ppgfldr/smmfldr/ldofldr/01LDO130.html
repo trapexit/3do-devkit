@@ -1,0 +1,23 @@
+<Title>MapCelToCRect</Title>
+<A NAME="XREF39397"><H1>MapCelToCRect </A></H1>
+ Maps a cel to a CRect.<P>
+<H3>Synopsis</H3>
+<CODE>void MapCelToCRect (CCB *cel, CRect *rect)</CODE><P>
+<H3>Description</H3>
+This function maps a single cel to the specified rectangle. It is much faster than a standard <CODE>MapCel()</CODE> call because it only has to calculate a simple rectangular projection. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to the cel to be mapped. 
+</DL>
+<DL>
+<DT>rect
+<DD>Pointer to the CRect to which the cel is to be mapped. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO133.html#XREF37797"><CODE>MapCelToSRect</A>, <A HREF="./01LDO120.html#XREF38068">MapAACelToCRect</A>, <A HREF="./01LDO125.html#XREF32555">MapCelListToCRect</A></CODE><P>
+</CODE>

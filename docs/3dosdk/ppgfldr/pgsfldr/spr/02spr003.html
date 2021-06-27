@@ -1,0 +1,21 @@
+<Title>CloseDiskFile</Title>
+<A NAME="XREF14825"><H1>CloseDiskFile </A></H1>
+<A NAME="XREF17432"></A> Closes a file.<P>
+<H3>Synopsis</H3>
+<CODE>int32 CloseDiskFile( Item fileItem )</CODE><P>
+<H3>Description</H3>
+Closes a disk file that was opened with a call to <CODE>OpenDiskFile()</CODE> or <CODE>OpenDiskFileInDir()</CODE>. The specified item may not be used after successful completion of this call. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fileItem
+<DD>The item number of the disk file to close. 
+</DL>
+<H3>Return Value</H3>
+The function returns a value greater than or equal to 0 if successful or a negative error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr016.html#XREF10715"><CODE>OpenDiskFile</A>(), <A HREF="./02spr017.html#XREF22921">OpenDiskFileInDir</A>() </CODE><P>
+</CODE>

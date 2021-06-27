@@ -1,0 +1,44 @@
+; $Id: eqnoise.patch,v 1.1 1994/03/19 00:26:44 peabody Exp $
+; make an eq out of svfilter.dsp
+
+LoadInstrument  mixer   submixer4x2.dsp
+LoadInstrument  src     noise.dsp               ; using white noise here.  can substitute any other sound source here.
+
+LoadInstrument  band1   svfilter.dsp
+LoadInstrument  band2   svfilter.dsp
+LoadInstrument  band3   svfilter.dsp
+LoadInstrument  band4   svfilter.dsp
+LoadInstrument  out     directout.dsp
+
+    ; connect source to filters
+Connect src Output band1 Input
+Connect src Output band2 Input
+Connect src Output band3 Input
+Connect src Output band4 Input
+
+    ; connect filter to submixer
+    ; . using left mixer channel only to provide simpler control of volume of each stage.
+Connect band1 BandPass mixer Input0
+Connect band2 BandPass mixer Input1
+Connect band3 BandPass mixer Input2
+Connect band4 BandPass mixer Input3
+
+    ; connect submixer to output
+Connect mixer LeftOutput  out InputLeft
+Connect mixer RightOutput out InputRight
+
+    ; set band frequencies and resonances
+Tweak band1 Frequency 467               ; 100Hz
+Tweak band2 Frequency 1541              ; 330Hz
+Tweak band3 Frequency 4665              ; 1kHz
+Tweak band4 Frequency 15265             ; 3.3kHz
+Tweak band1 Resonance 32767
+Tweak band2 Resonance 32767
+Tweak band3 Resonance 32767
+Tweak band4 Resonance 32767
+
+    ; preset levels
+Tweak mixer LeftGain0 8192              ; Band1 volume
+Tweak mixer LeftGain1 8192              ; Band2 volume
+Tweak mixer LeftGain2 8192              ; Band3 volume
+Tweak mixer LeftGain3 8192              ; Band4 volume

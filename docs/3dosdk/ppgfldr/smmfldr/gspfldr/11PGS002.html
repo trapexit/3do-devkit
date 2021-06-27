@@ -1,0 +1,38 @@
+<TITLE>Sample Programs </TITLE>
+<H1><LINK NAME="XREF33834">Sample Programs </LINK></H1><HR>
+This section describes five sample programs for the mouse peripheral 
+provided with the Portfolio operating system software.<P>
+Sample programs are included in the operating system software (in the 
+<I>3DO:examples:Eventbroker</I> folder) and are installed automatically 
+with the operating system. Updates are provided on the 3DO 
+InfoServer bulletin board (415.261.3405). Contact the Developer Technical 
+Support staff on the InfoLine (415.261.3400) for additional 
+information.<P>
+<CODE>cpdump.c</CODE><P>
+Sends the event broker several requests for information and interprets the 
+replies. Asks for (and prints) a list of control port devices currently 
+hooked up to the bus, as well as a list of listeners.<P>
+<CODE>focus.c</CODE><P>
+Asks the event broker to tell it which listener has the "focus of 
+attention," or instructs the event broker to take the focus of attention 
+away from one listener and assign it to another.<P>
+<CODE>lookie.c</CODE><P>
+Uses the direct (low-level) interface to the event broker. Asks the event 
+broker to send it a large class of events, including most of the control 
+pad events, most of the mouse events, as well as several miscellaneous 
+events; for example, change of the control port configuration and loss of 
+events. Whenever <CODE>lookie</CODE> receives an event message from the 
+event broker, it scans the message and prints the contents of each event 
+frame.<P>
+<CODE>luckie.c</CODE><P>
+Uses the event broker's "convenience interface" to watch for and print the 
+button settings of the first control pad whenever they change. The code 
+registers with the convenience interface, then calls 
+<CODE>GetControlPad</CODE> ("go to sleep until the settings for control 
+pad #1 change, then return the settings to me"). Whenever the call to 
+<CODE>GetControlPad</CODE> returns, <CODE>luckie</CODE> prints the 
+settings and calls <CODE>GetControlPad</CODE> again.<P>
+<CODE>maus.c</CODE><P>
+Similar to <CODE>luckie,</CODE> but monitors first mouse. Prints current 
+mouse position each time the event broker reports it has changed.<P>
+<P>

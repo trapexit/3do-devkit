@@ -1,0 +1,26 @@
+<Title>ffs</Title>
+<A NAME="XREF39487"><H1>ffs </A></H1>
+<A NAME="XREF39970"></A>Finds the first set bit.<P>
+<H3>Synopsis</H3>
+<CODE>int ffs( uint32 mask )</CODE><P>
+<H3>Description</H3>
+ffs finds the lowest-numbered bit that is set in the argument. The least-significant bit is bit number 1, and the most-significant bit is bit 32. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>flags
+<DD>The 32-bit word to check 
+</DL>
+<H3>Return Value</H3>
+ffs returns zero if no bits are set in the parameter, or the bit index of the first bit is set in the parameter. For example, ffs returns 1 if the value of the argument is 1 or 3 or 7; and 3 if the value of the argument is 4 or 12. If no bits are set, ffs returns 0. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+This entry point is provided for portability and compatibility only; code written specifically for Portfolio should use FindLSB() or FindMSB() to reduce any ambiguity over whether the least-significant or most-significant bit is desired. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr052.html#XREF26766"><CODE>FindMSB</A>(), <A HREF="./01spr051.html#XREF19357">FindLSB</A>() </CODE></CODE><P>
+<HR>

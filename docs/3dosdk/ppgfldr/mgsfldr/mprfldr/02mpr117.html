@@ -1,0 +1,29 @@
+<Title>ssplSetUserData</Title>
+<A NAME="XREF18890"><H1>ssplSetUserData </A></H1>
+<A NAME="XREF41865"></A> Store user data in a SoundBufferNode.<P>
+<H3>Synopsis</H3>
+<CODE>void ssplSetUserData ( SoundSpooler *sspl, SoundBufferNode *sbn, void *UserData )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplSetUserData()</CODE> stores user data pointer in a SoundBufferNode. This can be used to attach any extra data of your choosing to a SoundBufferNode. The user data pointer can be retrieved from a SoundBufferNode by calling <CODE>ssplGetUserData()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<DL>
+<DT>sbn
+<DD>Pointer to a sound buffer node. 
+</DL>
+<DL>
+<DT>UserData
+<DD>User data pointer to store in SoundBufferNode.  Can be NULL. 
+</DL>
+<H3>Return Value</H3>
+None <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr106.html#XREF17572"><CODE>ssplGetUserData</A>(), <A HREF="./02mpr118.html#XREF33759">ssplSpoolData</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,16 @@
+<Title>GetDSErrorText</Title>
+<A NAME="XREF25760"><H1>GetDSErrorText</A></H1>
+<A NAME="XREF21080"></A>Translates data streaming error code to text error message.<P>
+<H3>Synopsis</H3>
+<CODE>getdserrortext &lt;error_code&gt;</CODE><P>
+<H3>Description</H3>
+MPW tool to translate a 3DO data streaming error code to text error message.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>error_code
+<DD>Negative integer expressed in decimal, octal, hexadecimal, or binary.
+</DL>
+<H3>Examples</H3>
+Here is a typical command line and its output:<P>
+<B>Command Line: </B><CODE>getdserrortext -998</CODE><P>
+<B>Output:</B> <CODE>kDSWasFlushedErr-buffer was flushed: 0xFFFFFC1A (-998)</CODE><P>

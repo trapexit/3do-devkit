@@ -1,0 +1,46 @@
+<TITLE>Command line options</TITLE>
+<H1><LINK NAME="XREF15633">Command line options</LINK></H1><HR>
+The format of the armlib command is:<P>
+<CODE>
+<PRE>
+armlib &lt;options&gt; &lt;library&gt; [file-list | member-list]
+</CODE>
+</PRE>
+The wildcards '*' and '?' may be used in  <I>file-list</I> and <I>member-list</I>.<P>
+<I>options</I> can be any of the following<CODE>:<P>
+<PRE>
+--------------------------------------------------------
+Option        |Description                              
+--------------------------------------------------------
+-h or -help   |give on-line details of the armlib       
+              |command;                                 
+--------------------------------------------------------
+-c            |create a new library containing files in 
+              |file-list;                               
+--------------------------------------------------------
+-i            |insert files in file-list into the       
+              |library.  Existing members of the library
+              |are replaced by mermbers of the same     
+              |name;                                    
+--------------------------------------------------------
+-d            |delete members in member-list            
+--------------------------------------------------------
+-e            |extract members in member-list, placing  
+              |them  in files of the same name;         
+--------------------------------------------------------
+-o            |add an external symbol table to an object
+              |library;                                 
+--------------------------------------------------------
+-l            |list library.  This may be specified     
+              |together with any other option;          
+--------------------------------------------------------
+-s            |list symbol table.  This may be specified
+              |together with any other option;\         
+--------------------------------------------------------
+-v            |Additional arguments are read in from a  
+&lt;file&gt;        |via file, in the same way as the armlink 
+              |-via option.                             
+--------------------------------------------------------
+</PRE>
+</CODE><P>
+<P>

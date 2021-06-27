@@ -1,0 +1,40 @@
+<TITLE>Working with PatchDemo scripts</TITLE>
+<H1><LINK NAME="XREF21362">Working with PatchDemo scripts</LINK></H1><HR>
+PatchDemo is a program that runs on the 3DO development system. It lets 
+you experiment with DSP instruments in a fast and interactive way. Use 
+this program to listen to and prototype complicated DSP instrument 
+configurations for later use in a 3DO title.<P>
+Using PatchDemo and writing PatchDemo scripts is described in 
+<A HREF="sdt3first.html#XREF36060">Creating Patches with ARIA</A>.<P>
+<H2>How to use PatchDemo scripts with ARIA</H2>
+ARIA lets you work with PatchDemo in two ways: <P>
+<UL>
+<LI>Write a PatchDemo script, then import it into ARIA and modify the 
+blocks to suit your needs.
+<p>
+<LI>Create a patch in ARIA, then export it as a PatchDemo script. Load the 
+script into PatchDemo and work with the patch there. 
+</UL>
+You can work with a PatchDemo script as follows: <P>
+<PRE>
+--------------------------------------------------------
+To...                |Do this...                        
+--------------------------------------------------------
+Import a PatchDemo   |From the File menu, choose Import 
+script               |PatchDemo Script. ARIA creates and
+                     |connects the blocks corresponding 
+                     |to the script.                    
+--------------------------------------------------------
+Export a PatchDemo   |From the File menu, choose Export 
+script               |PatchDemo Script. ARIA creates a  
+                     |script that corresponds to the    
+                     |block structure of the current    
+                     |patch.                            
+--------------------------------------------------------
+</PRE>
+<P>
+<H3>Caveats</H3>
+ARIA supports envelope blocks and PatchDemo does not. You therefore can't 
+export patches containing envelope blocks. <P>
+PatchDemo supports delay lines and ARIA does not. You therefore can't 
+import PatchDemo scripts referring to delay lines. <P>

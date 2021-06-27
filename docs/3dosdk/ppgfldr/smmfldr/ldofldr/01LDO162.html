@@ -1,0 +1,19 @@
+<Title>SetTextCelPenNumber</Title>
+<A NAME="XREF39336"><H1>SetTextCelPenNumber </A></H1>
+ Sets pen number for text rendering.<P>
+<H3>Synopsis</H3>
+<CODE>void SetTextCelPenNumber (TextCel *tCel, int32 penNumber)</CODE><P>
+<H3>Description</H3>
+Sets the pen number used for subsequent text rendering. The pen number, which must be in the range of 0 through 3, indexes to one of the four possible foreground colors. <P>
+When you create a text cel, only pen 0 has a default color assigned; other pens are initialized to no color (transparent). Therefore you must use <CODE>SetTextCelColors()</CODE> and specify nontransparent colors for pens 1-3 before text you render with those pens will appear. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>penNumber
+<DD>Pen number to use for text subsequently rendered into the cel. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

@@ -1,0 +1,30 @@
+<Title>CreateSoundFilePlayer</Title>
+<A NAME="XREF42166"><H1>CreateSoundFilePlayer </A></H1>
+<A NAME="XREF37615"> </A> Creates a SoundFilePlayer data structure to play sound files.<P>
+<H3>Synopsis</H3>
+<CODE>SoundFilePlayer *CreateSoundFilePlayer( int32 NumBuffers,int32 BufSize, void *Buffers[] )</CODE><P>
+<H3>Description</H3>
+This function creates a SoundFilePlayer data structure and initializes it.  A SoundFilePlayer can be used to play several sound files, one at a time.  The Buffers argument is a pointer to an array of pointers to preallocated audio data buffers, all the same size.  If Buffers is NULL, then this function allocates the memory for you.  The memory for this must be of type MEMTYPE_AUDIO. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>NumBuffers
+<DD>A value indicating the number of audio data buffers. 
+</DL>
+<DL>
+<DT>BufSize
+<DD>A value indicating the size of the audio data buffers. 
+</DL>
+<DL>
+<DT>Buffers
+<DD>A pointer to an array of pointers to preallocated audio data buffers. 
+</DL>
+<H3>Return Value</H3>
+This function returns a pointer to the SoundFilePlayer data structure if all went well or a NULL if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Caveats</H3>
+Buffer size must be a multiple of the file's block size (see <CODE>LoadSoundFile()</CODE> for complete reason). <P>
+<H3>Associated Files</H3>
+soundfile.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr054.html#XREF26861"><CODE>OpenSoundFile</A>(), <A HREF="./02mpr050.html#XREF25761">CloseSoundFile</A>(),<A HREF="./02mpr052.html#XREF37655">DeleteSoundFilePlayer</A>() <A HREF="./02mpr053.html#XREF30905">LoadSoundFile</A>(),  <A HREF="./02mpr055.html#XREF26293">ReadSoundFile</A>(), <A HREF="./02mpr056.html#XREF37577">RewindSoundFile</A>(), <A HREF="./02mpr057.html#XREF11879">ServiceSoundFile</A>(), <A HREF="./02mpr058.html#XREF32478">StartSoundFile</A>(), <A HREF="./02mpr059.html#XREF24025">StopSoundFile</A>(), <A HREF="./02mpr060.html#XREF41161">UnloadSoundFile</A>()</CODE></CODE><P>

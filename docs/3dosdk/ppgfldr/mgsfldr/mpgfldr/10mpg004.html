@@ -1,0 +1,60 @@
+<TITLE>Audio Samples</TITLE>
+<H1><LINK NAME="XREF34048">Audio Samples</LINK></H1><HR>
+<H2>Available RAM for Sampling</H2>
+<B>Q: </B>How much RAM is available for sampled instruments?<P>
+<B>A: </B>You can use any of the memory for audio samples; but you have to decide how much you want to commit to audio. The technical limit of the address bus is 16 MB.<P>
+<H2>Looping Stereo and Mono Sound</H2>
+<B>Q: </B>How well do AIFF files loop?<P>
+<B>A:</B> Loops can be set at any 32-bit boundary, so stereo 16-bit data can loop at any frame. Mono samples can loop at any even-numbered frame. It does not matter whether the sample is streaming off the disc from a sound file or is in memory.<P>
+<H2>Looping AIFFs</H2>
+<B>Q:</B>   I need to play a looping AIFF file in my title, and I am having a little trouble. It is a rain sound effect and I need it to play constantly until I stop it. I have loaded the AIFF in SoundHack, and looked at the Markers section, and the loop information is there and correct. The problem is when I load it in my title. <CODE>LoadSample()</CODE> returns all these "can't parse AIFF" type of messages. Is this even supported? Do I have to somehow manually loop it?<P>
+<B>A:  </B> "Can't parse AIFF" is a really generic error that the Audio folio reports when it cannot access a sample for some reason. This could even mean that the sample is not on the path that you specified. Does the sample load with no loop points enabled?<P>
+Old versions of the Audio folio (before V24) had a problem reading looped files from old versions of SoundHack (before 2.10). If you passed the file through SoundDesigner, that fixed the problem. The problem was due to the MARK+INST chunk being in the wrong order.<P>
+<H2>Translating PC VOX files</H2>
+<B>Q: </B>  Can I translate PC VOX files to AIFF files with SoundHack?<P>
+<B>A:</B>   No. SoundHack can convert between 10 different formats, including IRCAM format, but PC VOX is not supported. The new SoundHack V0.70 does, however, support Microsoft WAV format files. If you convert from PC VOX to WAV using some PC based tool, you could convert from WAV to AIFF using SoundHack V0.70. Another alternative is to convert your files to RAW binary data files, then read them using SoundHack, set the header info to 8 bit, 22,050 Hertz, then write them out as AIFF files. <P>
+<H2>Loading Multiple Sound Files</H2>
+<B>Q: </B>  My game has dozens of digitized sound files that I must frequently load from the CD-ROM and subsequently unload to make space for something else.<P>
+Although the CD-ROM loads at the fairly adequate speed of 300 KB/s, the seek-to-read time is very long. Loading ten digitized sound files from CD-ROM at the beginning of a screen takes a long time. <P>
+<UL>
+<LI>I need a way to load multiple concatenated digitized sound files at once to get around the seek time. This would allow us to manage our memory better.
+<p>
+<LI>After long runs I seem to experience memory fragmentation problems, and so would like to be able to supply to the sample loader routines the address of a buffer to use. Memory does not have a chance to fragment if the same buffer is reused each time.
+</UL>
+<B>A:  </B> You do not need to load files in AIFF format. You can load them using your own optimized loader, then make them available to the Audio folio by calling <CODE>CreateSample()</CODE>. You can then determine their placement in memory any way you choose.<P>
+<H2>Audio Samples and Pre-specified Memory</H2>
+<B>Q:</B>   How can I load audio samples into memory I have allocated myself? The <CODE>LoadSample()</CODE> function of the Audio folio allocates memory and determines its location. I want to load the sample into memory that I allocate.<P>
+<B>A:</B>   Use the <CODE>LoadSampleHere()</CODE> function, which lets you allocate the memory into which the sample is loaded. If you write your own loader and have the samples in memory, you can call <CODE>CreateSample()</CODE> to turn it into an Audio folio compatible sample item.<P>
+<A NAME="XREF28375"><H2>Playback Rate</A></H2>
+<B>Q:</B>   How do you play an audio sample recorded at 11,025 Hertz using a <CODE>sampler.dsp</CODE>. I am using AF_TAG_FREQUENCY but cannot get the proper playback rate. <P>
+<B>A: </B>  You should use AF_TAG_RATE. The tag value, Rate, is calculated as follows:<P>
+<CODE>
+<PRE>
+#define NORMAL_RATE (0x8000)
+#define SAMPLE_RATE (44100)
+RecordedRate = 11025;
+PlaybackRate = (RecordedRate * NORMAL_RATE) / SAMPLE_RATE;
+</CODE>
+</PRE>
+The PlaybackRate in this case would be 0x2000 which is one fourth of the nominal playback rate of 0x8000. The rate can range from 0 to 0xFFFF.<P>
+As an alternative, if you would like the Audio folio to do the calculations in a more hardware independent fashion, you could do the following:<P>
+<OL>
+<LI>Call <CODE>CreateSample()</CODE> using the following TagArgs:
+<CODE>
+<PRE>
+#define PITCH_MIDDLE_C (60)
+{ AF_TAG_SAMPLE_RATE,   (void *) Convert32_F16(11025) },
+{ AF_TAG_BASENOTE,   (void *) PITCH_MIDDLE_C }, 
+</CODE>
+</PRE>
+
+<LI>Play the note using StartInstrument() with the tag:
+<CODE>
+<PRE>
+     { AF_TAG_PITCH, (void *) PITCH_MIDDLE_C }
+</CODE>
+</PRE>
+<p>
+<p>Because the playback pitch matches the BASENOTE, the Audio folio plays the sample at its original pitch taking into account the recorded sample rate. This works even if the DSP sample rate is not 44,100 Hertz.
+<p>
+</OL>

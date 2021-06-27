@@ -1,0 +1,73 @@
+<Title>WaitForMsg</Title>
+<A NAME="XREF33449"><H1>WaitForMsg</A></H1>
+<A NAME="XREF41466"></A>Waits for a message.<P>
+<H3>Synopsis</H3>
+<CODE>int32 WaitForMsg (Item msgPortItem, Item* msgItemPtr, Message** 
+pMsgPtr, void** pMsgDataPtr, Item waitMsgItem)</CODE><P>
+<H3>Description</H3>
+Waits for and retrieves a message from the specified message port. 
+<CODE>WaitForMsg()</CODE> is normally used to wait for reply messages from 
+threads to which a message has already been sent.<P>
+<CODE>PollForMsg()</CODE> calls<CODE> WaitPort()</CODE> to wait for and 
+retrieve the message and then <CODE>LookupItem()</CODE> to find the 
+pointer to the message. <CODE>WaitForMsg()</CODE> does not return until it 
+receives a message from the specified message port.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>msgPortItem</CODE>
+<DD>Item of the message port from which the message is retrieved.
+</DL>
+<DL>
+<DT><CODE>msgItemPtr</CODE>
+<DD>Pointer assigned to the item of the retrieved message. If 
+<CODE>NULL</CODE>, no pointer is assigned.
+</DL>
+<DL>
+<DT><CODE>pMsgPtr</CODE>
+<DD>Pointer assigned to the retrieved message. If <CODE>NULL</CODE>, no 
+pointer is assigned.
+</DL>
+<DL>
+<DT><CODE>pMsgDataPtr</CODE>
+<DD>Pointer assigned to data buffer of the retrieved message. If 
+<CODE>NULL</CODE>, no pointer is assigned.
+</DL>
+<DL>
+<DT><CODE>waitMsgItem</CODE>
+<DD>Item of the specific message to wait for. If zero, 
+<CODE>WaitForMsg()</CODE> accepts any message from the specified message 
+port.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT>0
+<DD>None
+<DD>
+</DL>
+<DL>
+<DT>-1
+<DD><CODE>LookupItem()</CODE> failed) for the item of the message port 
+<DD>
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>WaitPort()</CODE> failed
+<DD>
+</DL>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for 
+error messages returned by <CODE>LookupItem()</CODE> or 
+<CODE>WaitPort()</CODE>.<P>
+<H3>Associated Files</H3>
+MsgUtils.h<P>
+<H3>See Also</H3>
+<A HREF="../../ppgfldr/pgsfldr/sprfldr/001spr075.html#XREF37256">GetMsg</A>,
+<A HREF="../../ppgfldr/pgsfldr/sprfldr/001spr083.html#XREF31956">GetThisMsg</A>, 
+<A HREF="./01DSR055.html#XREF20550">PollForMsg</A>, 
+<A HREF="../../ppgfldr/pgsfldr/sprfldr/001spr113.html#XREF31623">ReplyMsg</A>
+<A HREF="../../ppgfldr/pgsfldr/sprfldr/001spr114.html#XREF39369">ReplySmallMsg</A> 
+<P>

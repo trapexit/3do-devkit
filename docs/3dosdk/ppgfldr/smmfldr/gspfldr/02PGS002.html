@@ -1,0 +1,155 @@
+<TITLE>Initialization and Shutdown in a 3DO Program</TITLE>
+<H1><LINK NAME="XREF16988">Initialization and Shutdown in a 3DO Program</LINK></H1><HR>
+Creating a 3DO application has more in common with programming "high-end" game machines-the PC and the Macintosh-than with programming the Nintendo or Sega machines. In particular, you have to perform some setup and initialization that wouldn't be necessary on a cartridge machine. <P>
+All Jumpstart2 examples have an initialization and a shutdown routine discussed in this section. <P>
+<H2>Initialization</H2>
+The initialization function first allocates and prepares all global resources. What is actually needed depends on what the individual program uses. The table beloow lists the items required in jsshowcel. <P>
+<PRE>
+<B>Table 1: </B><I> Element needed in a simple 3DO program.</I>
+--------------------------------------------------------
+What's needed     |And Why                              
+--------------------------------------------------------
+Background image  |Needed as background for cels.       
+--------------------------------------------------------
+One or more cels  |Cels and/or animation can be moved   
+                  |around.                              
+--------------------------------------------------------
+Screen context    |Need screen context                  
+handling two      |                                     
+screens           |                                     
+--------------------------------------------------------
+A VBLIOReq or     |To use for timing. Helps you make    
+other structure   |sure you're drawing to the off-screen
+                  |buffer.                              
+--------------------------------------------------------
+</PRE>
+<P>
+The initialization function also has to open the folios the program needs. In the case of jsshowcel, only the graphics folio has to be opened. See the Associated Files field of the function description for any function for information on where that function comes from. <P>
+Finally, the initialization function loads the required art, in this case, one background image and one cel. <P>
+The example below shows the initialization function from jsshowcel. Note that like all other functions in the Jumpstart2 example set, this function returns zero if successful, 1 otherwise. <P>
+<B>Example 1: </B><I>Example for an initialization function</I><P>
+<CODE>
+<PRE>
+int32 Initialize( void )
+/*
+    Allocate and prepare all of the program's global resources.
+    These are:
+
+    - An I/O request for SPORT transfers.
+    - A single screen context for handling 2 screens.
+    - The event utility used for control pad input.
+    - A background image.
+    - A cel.
+
+    Returns 0 if all operations are performed successfully, 
+    otherwise a negative value.
+*/
+
+{
+    int32 retValue = -1;
+    
+    /* Get a VRAM I/O Request to use for all of our SPORT calls */
+    gVRAMIOReq = CreateVRAMIOReq();
+    if (gVRAMIOReq &lt; 0)
+    {
+        PRT(("Can't get a VRAM I/O Request\n"));
+        goto DONE;
+    }
+
+    /*    Allocate memory for the screenContext */
+    gScreenContext = (ScreenContext *) AllocMem 
+
+                        ( sizeof(ScreenContext), MEMTYPE_ANY );
+    if (gScreenContext == NULL)
+    {
+        PRT(("Can't allocate memory for ScreenContext\n"));
+        goto DONE;
+    }
+
+    /* Open the graphics folio and set up the screen context */
+    if ( (gDisplayItem = CreateBasicDisplay
+                    (gScreenContext, DI_TYPE_DEFAULT, 2)) &lt; 0 )
+        {
+        PRT( ("Can't initialize display\n") );
+        goto DONE;
+        }
+
+    /* Set the index of the screen we'll be using */
+    gScreenContext-&gt;sc_curScreen = 0;
+
+    if ( InitControlPad( 2 ) &lt;  0 )
+    {
+        PRT( ("Can't initialize the control pad\n") );
+        goto DONE;
+    }
+
+    /* Load the background image */
+    if ((gBackgroundImage = (ubyte *) LoadImage
+        (gImageName, NULL, NULL, gScreenContext)) == NULL)
+    {
+        PRT(("Can't load the background image\n"));
+        goto DONE;
+    }
+
+    /* Load the foreground cel and ensure that it's the last CCB */
+    if ( (gCcb = LoadCel(gCelName, MEMTYPE_CEL) ) == NULL )
+    {
+        PRT(("Can't load the foreground cel\n"));
+        goto DONE;
+    }
+    LAST_CEL(gCcb);
+
+/* Compare cel resizing and distortion with this bit on:
+    SetFlag( gCcb-&gt;ccb_Flags, CCB_MARIA);
+*/
+    retValue = 0;
+
+DONE:
+    return retValue;
+}
+</CODE>
+</PRE>
+<H2>Cleanup</H2>
+To have the maximum possible number of resources available at any time, each program needs to clean up after itself. That means it has to free resources it allocated during initialization, as shown in the example below.<P>
+<B>Example 2: </B><I>Example for a cleanup function.</I><P>
+<CODE>
+<PRE>
+void Cleanup( void )
+/*
+    Dispose all global resources used by the program.  This 
+    mirrors the Initialize function:
+
+    - Disposes of the background image.
+    - Disposes of the cel.
+    - Disposes the screen context.
+    - Deletes the I/O request for vertical blank waiting.
+*/
+{
+    UnloadCel( gUFO_CCB );
+    UnloadImage( gBackgroundImage );
+    
+    if ( gDisplayItem &gt;= 0 )
+        DeleteBasicDisplay( gScreenContext );
+
+    DeleteVBLIOReq( gVBLIOReq );
+
+</CODE>
+</PRE>
+The table below provides a list of functions you may use during initialization and shutdown<P>
+<PRE>
+<B>Table 2: </B><I> Functions used during initialization and shutdown.</I>
+--------------------------------------------------------
+Initialization           |Shutdown                      
+--------------------------------------------------------
+InitEventUtility         |KillEventUtility              
+--------------------------------------------------------
+LoadImage, LoadCel,      |UnloadImage, UnloadCel,       
+LoadAnim                 |UnloadAnim                    
+--------------------------------------------------------
+CreateBasicDisplay       |DeleteBasicDisplay            
+--------------------------------------------------------
+CreateItem (for any item |DeleteItem (for any item type)
+type)                    |                              
+--------------------------------------------------------
+</PRE>
+: <P>

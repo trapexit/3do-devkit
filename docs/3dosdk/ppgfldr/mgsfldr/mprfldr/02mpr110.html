@@ -1,0 +1,36 @@
+<Title>ssplProcessSignals</Title>
+<A NAME="XREF20300"><H1>ssplProcessSignals </A></H1>
+<A NAME="XREF40450"></A> Process completion signals that have been received.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ssplProcessSignals ( SoundSpooler *sspl,int32 SignalMask, void (*UserBufferProcessor) ( SoundSpooler *,SoundBufferNode * ) )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplProcessSignals()</CODE> informs the spooler about which buffers have finished, so the spooler can move them to the free buffer queue. <P>
+If a SoundBufferFunc in installed, a SSPL_SBMSG_COMPLETE message is sent to it with each completed SoundBufferNode removed from the active queue. Also, a SSPL_SBMSG_LINK_START message is sent with the next buffer in the active queue.  If UserBufferProcessor is non-NULL, each completed SoundBufferNode removed from the active queue is passed to it. If both a SoundBufferFunc and UserBufferProcessor are supplied, <CODE>ssplProcessSignals()</CODE> fails and returns ML_ERR_BAD_ARG. <P>
+In SoundBufferFunc fails, <CODE>ssplProcessSignals()</CODE> fails immediately and returns the error code returned by SoundBufferFunc without processing the rest of the signals.  Calling <CODE>ssplProcessSignals()</CODE> again with the same signal set picks up where it left off. <P>
+Clears SSPL_STATUS_F_ACTIVE when all of the active buffers have completed (i.e. the flag is cleared when this function has processed the completion signals for all of the buffers that were in the active queue at the time that this function was called). You can use this to detect when the last submitted buffer has finished. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<DL>
+<DT>SignalMask
+<DD>Signals received from <CODE>WaitSignal()</CODE>. 
+</DL>
+<DL>
+<DT>UserBufferProcessor
+<DD>Function for each completed SoundBufferNode, or NULL. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success indicating number of completed buffers removed from the active queue, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>Notes</H3>
+<CODE>ssplProcessSignals()</CODE>  synchronizes the sound spooler's queues to the set of signals collected at the last <CODE>WaitSignal()</CODE>. Many of the other sound spooler functions assume that the sound spooler has been synchronized in this way (in particular <CODE>ssplSendBuffer()</CODE>). Do not call any sound spooler functions between a <CODE>WaitSignal()</CODE> involving sound spooler signals and <CODE>ssplProcessSignals()</CODE>. <P>
+<H3>Caveats</H3>
+In the case where SoundBufferFunc(SSPL_SBMSG_COMPLETE) returns an error cod e, SoundBufferFunc(SSPL_SBMSG_LINK_START) isn't called for the next buffer in the active queue, because processing terminates immediately on receipt of the failure of SoundBufferFunc(SSPL_SBMSG_COMPLETE) even when <CODE>ssplProcessSignals()</CODE>  is called again. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr114.html#XREF34520"><CODE>ssplSendBuffer</A>(), <A HREF="./02mpr096.html#XREF40388">ssplAbort</A>(), <A HREF="./02mpr095.html#XREF25499">SoundBufferFunc</A>(), <A HREF="./02mpr123.html#XREF33469">UserBufferProcessor</A>(), <A HREF="./02mpr105.html#XREF10988">ssplGetSpoolerStatus</A>() </CODE><P>
+</CODE>

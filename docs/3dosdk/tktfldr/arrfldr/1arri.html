@@ -1,0 +1,207 @@
+<TITLE>Machine-specific features </TITLE>
+<H1><LINK NAME="XREF20143">Machine-specific features </LINK></H1><HR>
+<A NAME="XREF38246"><H2>Pragma directives </A></H2>
+Pragmas are recognised by the compiler in two forms:<P>
+<CODE>
+<PRE>
+#pragma -LetterOptional digit
+#pragma [no]feature-name
+</CODE>
+</PRE>
+A short-form pragma given without a digit resets that pragma to its default state; otherwise to the state specified.<P>
+For example:<P>
+<CODE>
+<PRE>
+#pragma -s1
+#pragma nocheck_stack
+
+#pragma -p2
+#pragma profile_statements
+</CODE>
+</PRE>
+The list of recognised pragmas is:<P>
+<PRE>
+---------------------------------------------------------
+Pragma Name               |Short Form |`no' Form         
+---------------------------------------------------------
+warn_implicit_fn_decls    |a1 *       |a0                
+---------------------------------------------------------
+check_memory_accesses     |c1         |c0 *              
+---------------------------------------------------------
+warn_deprecated           |d1 *       |d0                
+---------------------------------------------------------
+continue_after_hash_error |e1         |e0 *              
+---------------------------------------------------------
+FP register variable      |f1-f4      |f0 *              
+---------------------------------------------------------
+include_only_once         |i1         |i0 *              
+---------------------------------------------------------
+optimise_crossjump        |j1 *       |j0                
+---------------------------------------------------------
+optimise_multiple_loads   |m1 *       |m0                
+---------------------------------------------------------
+profile                   |p1         |p0 *              
+---------------------------------------------------------
+profile_statements        |p2         |p0 *              
+---------------------------------------------------------
+integer register variable |r1-r7      |r0 *              
+---------------------------------------------------------
+check_stack               |s0 *       |s1                
+---------------------------------------------------------
+force_top_level           |t1         |t0 *              
+---------------------------------------------------------
+check_printf_formats      |v1         |v0 *              
+---------------------------------------------------------
+check_scanf_formats       |v2         |v0 *              
+---------------------------------------------------------
+side_effects              |y0 *       |y1                
+---------------------------------------------------------
+optimise_cse              |z1 *       |z0                
+---------------------------------------------------------
+</PRE>
+<P>
+In each case, the default setting is starred.<P>
+<H2>Specifying pragmas from the command line </H2>
+Any pragma can be specified from the compiler's command line using:<P>
+<CODE>
+<PRE>
+-zpLetterDigit
+</CODE>
+</PRE>
+Certain of the pragmas give more local control over what can be controlled per compilation unit, from the command line. For example: <P>
+<PRE>
+--------------------------------------------------------
+Pragma Name                |Command Line Form           
+--------------------------------------------------------
+nowarn_implicit_fn_decls   |-Wf                         
+--------------------------------------------------------
+nowarn_deprecated          |-Wd                         
+--------------------------------------------------------
+profile                    |-p                          
+--------------------------------------------------------
+profile_statements         |-px                         
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Pragmas controlling the preprocessor</H2>
+The pragma <I>continue_after_hash_error</I> in effect implements a #warning "..." preprocessor directive. Pragma <I>include_only_once</I> asserts that the containing #include file is to be included only once, and that if its name recurs in a subsequent #include directive then the directive is to be ignored.<P>
+Pragma <I>force_top_level</I> asserts that the containing #include file should only be included at the top level of a file. A syntax error will result if the file is included, say, within the body of a function.<P>
+<H2>Pragmas controlling printf/scanf argument checking </H2>
+Pragmas <I>check_printf_formats</I> and <I>check_scanf_formats</I> control whether the actual arguments to printf and scanf, respectively, are type-checked against the format designators in a literal format string. Of course, calls using non-literal format strings cannot be checked. By default, all calls involving literal format strings are checked.<P>
+<H2>Pragmas controlling optimisation </H2>
+Pragmas <I>optimise_crossjump</I>, <I>optimise_multiple_loads</I> and <I>optimise_cse</I> give fine control over where these optimisations are applied. For example, it is sometimes advantageous to disable cross-jumping (the 'common tail' optimisation) in the critical loop of an interpreter; and it may be helpful in a timing loop to disable common subexpression elimination and the opportunistic optimisation of multiple load instructions to load multiples. Note that correct use of the <I>volatile</I> qualifier should remove most of the more obvious needs for this degree of control (and <I>volatile</I> is also available in the ARM C compiler's -pcc mode unless -strict is specified).<P>
+By default, functions are assumed to be impure, so function invocations are not candidates for common subexpression elimination. Pragma <I>noside_effects</I> asserts that the following function declarations (until the next #pragma <I>side_effects</I>) describe pure functions, invocations of which can be CSEs.  See also <A HREF="#XREF36388">__pure</A>.<P>
+<A NAME="XREF41946"><H2>Pragmas Controlling Code Generation</A></H2>
+<UL>
+<LI>Stack-limit checking.
+<LI>Memory access checking.
+<LI>Global (program-wide) register variables.
+</UL>
+If the compiler is configured to compile code for the explicit stack limit variant of the ARM Procedure Call Standard (documented in <A HREF="../atsfldr/ats4frst.html#XREF28151">ARM Procedure Call Standard</A>), then #pragma <I>nocheck_stack</I> disables the generation of code at function entry which checks for stack limit violation. In reality there is little advantage to turning off this check: it typically costs only two instructions and two machine cycles per function call. The one circumstance in which <I>nocheck_stack</I> must be used is in writing a signal handler for the SIGSTAK event. When this occurs, stack overflow has already been detected, so checking for it again in the handler would result in a fatal circular recursion.<P>
+The pragma <I>check_memory_accesses</I> instructs the compiler to precede each access to memory by a call to the appropriate one of:<P>
+<CODE>
+<PRE>
+__rt_rd?chk   (?=1,2,4 for byte, short, long reads, respectively) 
+__rt_wr?chk   (?=1,2,4 for byte, short, long writes, respectively)
+</CODE>
+</PRE>
+It is up to your library implementation to check that the address given is reasonable.<P>
+The pragmas f0-f4 and r0-r7 have no long form counterparts. Each introduces or terminates a list of <I>extern</I>, file-scope variable declarations. Each such declaration declares a name for the <I>same</I> register variable. For example:<P>
+<CODE>
+<PRE>
+#pragma r1                    /* 1st global register */
+extern int *sp;
+#pragma r2                    /* 2nd global register */
+extern int *fp, *ap;                    /* synonyms */
+#pragma r0                    /* end of global declaration */
+#pragma f1
+extern double pi;                    /* 1st global FP register */
+#pragma f0
+</CODE>
+</PRE>
+Any type that can be allocated to a register (see <A HREF="./1arre.html#XREF42370">Registers</A>), can be allocated to a global register. Similarly, any floating point type can be allocated to a floating point register variable.<P>
+Global register r1 is the same as register v1 in the ARM Procedure Call Standard (APCS); similarly r2 equates to v2, etc. Depending on the APCS variant, between 5 and 7 integer registers (v1-v7, machine registers R4-R10) and 4 floating point registers (F4-F7) are available as register variables. In practice it is probably unwise to use more than 3 global integer register variables and 2 global floating-point register variables.<P>
+Provided the same declarations are made in each separate compilation unit, a global register variable may exist program-wide.<P>
+Otherwise, because a global register variable maps to a callee-saved register, its value will be saved and restored across a call to a function in a compilation unit which does not use it as a global register variable, such as a library function.<P>
+A corollary of the safety of direct calls out of a global-register-using compilation unit, is that calls back into it are dangerous. In particular, a global-register-using function called from a compilation unit which uses that register as a compiler-allocated register, will probably read the wrong values from its supposed global register variables.<P>
+Currently, there is no link-time check that direct calls are sensible. And even if there were, indirect calls via function arguments pose a hazard which is harder to detect. This facility must be used with care.  Preferably, the declaration of the global register variable should be made in each compilation unit of the program.  See also <A HREF="#XREF30983">__global_reg(n)</A>.<P>
+<H2>Special function declaration keywords</H2>
+Several special function declaration options are available to tell <I>armcc</I> to treat that function in a special way.  None of these are portable to other C compilers.<P>
+<H3>__value_in_regs</H3>
+This allows the compiler to return a structure in registers rather than returning a pointer to the structure. eg.<P>
+<CODE>
+<PRE>
+typedef struct int64_structt {
+  unsigned int lo;
+  unsigned int hi;
+} int64;
+
+__value_in_regs extern int64 mul64(unsigned a, unsigned b);
+</CODE>
+</PRE>
+See <A HREF="../atsfldr/ats4frst.html#XREF28151">ARM Procedure Call Standard</A> for details of the default way in which structures are passed and returned.<P>
+<H3>__swi and __swi_indirect</H3>
+A SWI taking up to four arguments (in registers 0 to argcount-1) and returning up to four results (in registers 0 to resultcount-1) can be described by a C function declaration, which causes uses of the function to be compiled inline as a SWI SWI. For a SWI returning 0 results use:<P>
+<CODE>
+<PRE>
+void __swi(swi_number) swi_name(int arg1, ..., int argn);
+</CODE>
+</PRE>
+for example<P>
+<CODE>
+<PRE>
+void __swi(42) terminate_process(int arg1, ..., int argn);
+</CODE>
+</PRE>
+For a swi returning 1 result, use:<P>
+<CODE>
+<PRE>
+int __swi(swi_number) swi_name(int arg1, ..., int argn);
+</CODE>
+</PRE>
+For a swi returning more than 1 result<P>
+<CODE>
+<PRE>
+struct { int res1, ... resn }
+  __value_in_regs
+    __swi(swi_number) swi_name(int arg1, ... int argn);
+</CODE>
+</PRE>
+Note that __value_in_regs is needed to specify that a (short) structure value is returned in registers, rather than by the usual indirection mechanism specified in the ARM Procedure Call Standard.<P>
+If there is an indirect SWI (taking the number of a SWI to call as an argument in r12), calls through this SWI can similarly be described by a C function declaration such as:<P>
+<CODE>
+<PRE>
+int __swi_indirect(swi_indirect_number)
+    swi_name(int real_swi_number, int arg1, ... argn);
+</CODE>
+</PRE>
+For example,<P>
+<CODE>
+<PRE>
+int __swi_indirect(0) ioctl(int swino, int fn, void *argp);
+</CODE>
+</PRE>
+This might be called as:<P>
+<CODE>
+<PRE>
+ioctl(IOCTL+4, RESET, NULL);
+</CODE>
+</PRE>
+<H3>__irq</H3>
+This allows a C function to be used as an interrupt routine.  All registers (excluding floating point registers) are preserved (not just those normally presefved under the APCS).  Also the function is exited by setting the pc to lr-4 and the psr is set to its original value.<P>
+<A NAME="XREF36388"><H3>__pure</A></H3>
+By default, functions are assumed to be <I>impure</I> (ie they have side effects), so function invocations are not candidates for common subexpression elimination.  __pure has the same effect as pragma <I>noside_effects</I>, and asserts that the function declared is a <I>pure</I> function, invocations of which can be CSEs.<P>
+<H2>Special variable declaration keywords</H2>
+<A NAME="XREF30983"><H3>__global_reg(n)</A></H3>
+Allocates the declared variable to a global integer register variable, in the same way as #pragma r<I>n. </I> The variable must have an integral or pointer type.  See also <A HREF="#XREF41946">Pragmas Controlling Code Generation</A>.<P>
+<H3>__global_freg(n)</H3>
+Allocates the declared variable to a global floating point regioster variable, in the same way as #pragma f<I>n</I>.  The variable must have type float or double.  See also <A HREF="#XREF41946">Pragmas Controlling Code Generation</A>.<P>
+Note that the global register, whether specified by keyword or pragmas, musr be specified in all declarations of the same variable.  Thus<P>
+<CODE>
+<PRE>
+int x;
+__global_reg(1) x;
+</CODE>
+</PRE>
+is an error.<P>
+<P>

@@ -1,0 +1,34 @@
+<Title>DrawTo </Title>
+<A NAME="XREF12426"><H1>DrawTo </A></H1>
+<A NAME="XREF21740"> Draws a line from the GrafCon current position to a </A>specified position.<P>
+<H3>Synopsis</H3>
+<CODE>Err DrawTo (Item bitmapItem,GrafCon *grafcon,Coord x, Coord y)</CODE><P>
+<H3>Description</H3>
+The call draws a line from the current pen position to the specified x and y coordinates. On completion, the endpoint becomes the new current pen position. <P>
+Note that this call draws a line that includes both the start and end points. This call uses the cel hardware. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>The item number of the bitmap. 
+</DL>
+<DL>
+<DT>grafcon
+<DD>Pointer to a GrafCon structure. 
+</DL>
+<DL>
+<DT>x
+<DD>The column of the line's endpoint. 
+</DL>
+<DL>
+<DT>y
+<DD>The row of the line's endpoint.
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr047.html#XREF21217"><CODE>MoveTo</A>() </CODE><P>
+</CODE>

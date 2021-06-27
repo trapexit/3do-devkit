@@ -1,0 +1,26 @@
+<TITLE>Cleaning Up</TITLE>
+<H1><LINK NAME="XREF22304">Cleaning Up</LINK></H1><HR>
+When a task finishes playing a MIDI score and does not need the MIDI environment anymore, it should clean up behind itself. It should free allocated amplitude, disown the audio clock and reset it to its original rate, get rid of the score context and associated data structures, delete any instrument templates previously loaded (thus freeing any instruments associated with them), destroy the MIDI objects created to hold the score, terminate the Juggler, and then close the Math and Audio folios.<P>
+To free amplitude allocated for the MIDI mixer, use <CODE>FreeAmplitude()</CODE>, which is described in <A HREF="./03mpg.html#XREF22719">Preparing Instruments</A>."  To reset the audio clock use <CODE>SetAudioRate()</CODE>. And to disown the audio clock, use <CODE>DisownAudioClock()</CODE>. 
+Both clock calls are described in <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>."<P>
+If your task loaded instrument templates using the <CODE>LoadPIMap()</CODE> call, you can delete those instrument templates using this call:<P>
+<DL>
+<DD><CODE>int32 UnloadPIMap( ScoreContext *scon )</CODE><BR>
+</DL>
+It accepts a single argument: <CODE>*scon</CODE>, a pointer to the score context using the PIMap. When it executes, it deletes all the instrument templates listed in the PIMap. By deleting all the instrument templates, it also deletes any instruments that were created using those templates. If successful, the call returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+To delete a Juggler sequence used to store a format 0 MIDI score, use <CODE>DestroyObject()</CODE>. To delete a Juggler collection used to store a Format 1 MIDI score (along with all sequences contained in the collection), use this call:<P>
+<DL>
+<DD><CODE>int32 MFUnloadCollection( Collection *ColPtr )</CODE><BR>
+</DL>
+The call accepts one argument: <CODE>*ColPtr</CODE>, a pointer to the collection to be deleted. When it executes, it destroys the collection and any sequences defined as part of the collection. If successful, the call returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+To delete the mixer instrument template (and the mixer instrument) used to mix the voices of a score context, use this call:<P>
+<DL>
+<DD><CODE>int32 TermScoreMixer( ScoreContext *ScoreCon )</CODE><BR>
+</DL>
+It accepts one argument: <CODE>*Scorecon</CODE>, a pointer to the score context using the mixer. When it executes, it deletes the instrument template of the mixer specified by the score context, which also deletes the mixer instrument created using the template. If successful, the call returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+To delete a score context, use this call:<P>
+<DL>
+<DD><CODE>int32 DeleteScoreContext( ScoreContext *scon )</CODE><BR>
+</DL>
+It accepts one argument: <CODE>*scon</CODE>, a pointer to the score context to be deleted. When it executes, it deletes the score context and all of its attendant data structures, including <CODE>NoteTrackers</CODE>. If successful, the call returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+To terminate the Juggler, use the <CODE>TermJuggler()</CODE> call (see <A HREF="./08mpg.html#XREF34225">Creating and Playing Juggler Objects</A>"). To close the Math and Audio folios, use the <CODE>CloseAudioFolio()</CODE> and <CODE>CloseMathFolio()</CODE> calls.<A NAME="XREF36723"></A><P>

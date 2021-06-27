@@ -1,0 +1,54 @@
+<TITLE>Creating cels with the Anti-Alias CelWriterx</TITLE>
+<H1><LINK NAME="XREF37703">Creating cels with the Anti-Alias 
+CelWriter<LINK NAME="XREF37703"></H1><HR>
+The Anti-Alias CelWriter lets you create smooth anti-aliased cels and 
+animations for the 3DO Station. When you export source art with this 
+plug-in, it saves one file that contains two cels: a source cel and a mask 
+cel. The mask is partly translucent, averaging the background with the 
+source cel.<P>
+The program that displays the cel on the 3DO system has to display both 
+the cel and the mask. <P>
+This section discusses:<P>
+
+<UL>
+<LI><A HREF="#XREF20243">How to create an anti-aliased cel</A>
+<LI><A HREF="#XREF24648">How to display an anti-aliased cel</A>
+</UL>
+<A NAME="XREF20243"><H2>How to create an anti-aliased cel</A></H2>
+To convert the source art to a cel and to create the mask cel, follow 
+these steps:<P>
+<OL>
+<LI>Open the picture you want to convert in Adobe Photoshop. 
+<P>
+<LI>Select the background with the Magic Wand tool. 
+<P>
+<LI>From the Select menu, choose Inverse to invert the selection, then 
+choose Save Selection to save it. 
+<p>
+<p>Adobe Photoshop creates a new channel in which it places the selection.
+<p>
+
+<LI>From the File menu, choose Export, then 3DO Anti-Alias CelWriter from 
+the submenu. 
+<p>
+<p>The plug-in writes a file containing two cels: 
+<UL>
+<p>
+<LI>A 16-bit packed uncoded cel containing the source art
+<p>
+<LI>A 4-bit packed coded cel containing the mask with an edge that's 
+averaged from black to white over 16 levels; this will show up as 16 
+levels of translucency on the 3DO Station. 
+</UL><BR>
+<p>
+<p><B>Note: </B>You can use the Anti-Alias Cel Writer as a plug-in to the 
+DeBabelizer tool to batch process all files in an animation.<BR>
+<p>
+</OL>
+<A NAME="XREF24648"><H2>How to display an anti-aliased cel</A></H2>
+After you have converted the cel, the program that renders it has to 
+display first the mask and then the cel on top. An example using animation 
+that consists of several anti-aliased cels is included in the aaPlayer 
+folder on the release CD.<P>
+<B>Note: </B>You can't preview an anti-aliased cel on the Macintosh, since 
+there is no Anti-Alias CelReader. <P>

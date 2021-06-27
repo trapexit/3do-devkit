@@ -1,0 +1,20 @@
+<Title>DetachTextCelCCB</Title>
+<A NAME="XREF33029"><H1>DetachTextCelCCB </A></H1>
+ Releases text-related resources, retaining rendered pixels.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * DetachTextCelCCB (TextCel *tCel)</CODE><P>
+<H3>Description</H3>
+Releases resources required for rendering new text into a cel, but retains pixels already rendered. In addition to freeing resources, this function removes the reference to the FontDescriptor. You can safely unload a font after calling this function, and still retain text you've already rendered for drawing to the screen later when needed. <P>
+Use <CODE>DeleteCel()</CODE> or <CODE>DeleteCelList()</CODE> to dispose of the CCB and cel data buffer when you no longer need them. You cannot use <CODE>DeleteTextCel()</CODE> on the cel after calling this function, since the TextCel structure has been discarded. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>CCB
+<DD> CCB for which resources were released.
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

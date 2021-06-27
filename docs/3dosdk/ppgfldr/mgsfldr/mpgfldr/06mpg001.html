@@ -1,0 +1,83 @@
+<TITLE>Overview of the Advanced Sound Player</TITLE>
+<H1><LINK NAME="XREF11557">Overview of the Advanced Sound Player</LINK></H1><HR>
+The advanced sound player contains a superset of the features of the original sound file player described in Chapter 5, "Playing Sound Files". In addition to the basic features offered by the original sound file player, playback of an AIFF file, the advanced sound player does the following:<P>
+<UL>
+<LI>permits sound files to be looped seamlessly (no audible pops or silent gaps)
+<LI>allows multiple sound files to be linked together seamlessly
+<LI>permits branching between markers in sound files
+<LI>allows playback of in-memory samples as if they were sound files
+</UL>
+Even though the advanced sound player completely supersedes the original sound file player, it does have slightly more code overhead than the original sound file player. This means that you may still wish to use the original sound file player if you simply want to play a single AIFF file once and have tight memory restrictions. Be aware, though, that the advanced sound player is more actively supported with regard to future enhancements than the original sound file player.<P>
+It is worth reading the discussion of spooling sound from disc in Chapter 5, as the same concepts apply to the advanced sound player.<P>
+<H2>Simple Advanced Sound Player Example</H2>
+This annotated advanced sound player example demonstrates how to play an AIFF sound file through once. Error checking was eliminated for brevity. More complicated examples are built from this one later in this chapter. <P>
+<OL>
+<LI>Preparation. Note that this step makes a number of assumptions about the kinds of sounds that are going to be played and how to direct the output signal to the 3DO audio output. In this case, we are expecting to play a monophonic 16-bit 44KHz sample and are connecting it directly to the audio output. In practice, you may need to select a different sample player instrument or an alternate method of directing the output.
+<p>
+
+<DL>
+<DD><CODE>samplerins = LoadInstrument ("fixedmonosample.dsp", 0, 100);<BR>
+outputins = LoadInstrument ("directout.dsp", 0, 100);<BR>
+ConnectInstruments (samplerins, "Output", outputins, "InputLeft");<BR>
+ConnectInstruments (samplerins, "Output", outputins, "InputRight");<BR>
+StartInstrument (outputins);</CODE><BR>
+</DL>
+<p>
+<LI>Create a player.
+<p>
+<DL>
+<DD><CODE>spCreatePlayer (&amp;player, samplerins, NUMBUFFS, BufSize, NULL);</CODE><BR>
+</DL>
+<p>
+<LI>Specify an AIFF sound file to play.
+<p>
+<DL>
+<DD><CODE>spAddSoundFile (&amp;sound, player, filename);</CODE><BR>
+</DL>
+<p>
+
+<LI>Set up branches. In this example, there are no branches to set up, so this step is simply a placeholder. <A HREF="./06mpg002.html#XREF16410">Examples of looping and branching</A> shows how to modify this example to do more interesting kinds of playback.
+<p>
+<LI>Start reading sound. This step prefills the spooler with sound data so that the next step can begin producing sound immediately.
+<p>
+<DL>
+<DD><CODE>spStartReading (sound1, SP_MARKER_NAME_BEGIN);</CODE><BR>
+</DL>
+<p>
+
+<LI>Start playing sound.
+<p>
+<DL>
+<DD><CODE>spStartPlayingVA (player,<BR>
+                  AF_TAG_AMPLITUDE, 0x7fff,<BR>
+                  TAG_END);</CODE><BR>
+</DL>
+<p>
+
+<LI>Service the player by receiving its signals and calling <CODE>spService()</CODE>. Stay in this loop until sound playback is complete.
+<p>
+
+<DL>
+<DD><CODE>const int32 playersigs = spGetPlayerSignalMask (player);<BR>
+<BR>
+while (spGetPlayerStatus(player) &amp; SP_STATUS_F_BUFFER_ACTIVE)<BR>
+{<BR>
+    const int32 sigs = WaitSignal (playersigs);<BR>
+    spService (player, sigs);<BR>
+}</CODE><BR>
+</DL>
+<p>
+
+<LI>Clean up. Note that <CODE>spDeletePlayer()</CODE> takes care of cleaning 
+up anything that was given to it (e.g. the sound file added in step 3). 
+This is more completely described in 
+<A HREF="../mprfldr/02mpr070.html#XREF29915">spDeletePlayer</A>
+in  <A HREF="../mprfldr/02mpr.html#XREF20449">Music Library Calls</A>.
+<p>
+<DL>
+<DD><CODE>spStop (player);<BR>
+spDeletePlayer (player);<BR>
+UnloadInstrument (outputins);<BR>
+UnloadInstrument (samplerins);<A NAME="XREF21933"></A></CODE><BR>
+</DL>
+</OL>

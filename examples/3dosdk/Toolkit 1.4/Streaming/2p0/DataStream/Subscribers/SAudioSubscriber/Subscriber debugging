@@ -1,0 +1,27 @@
+Use the MPW tool ProtoTestData to generate some test data:
+	prototestdata -nc 50 -o proto.chunky
+
+Use the Weaver to make a fully qualified stream:
+	weaver -o proto.stream <proto.weavescript
+	
+	The weavescript only needs to contain the following command:
+			File	proto.chunky	0	0
+
+Use 3DODebug to run the ProtoPlayer:
+	ProtoPlayer /remote/proto.stream
+
+After you quit, the subscriber will have dumped two files into
+/remote.  The first, "ProtoTraceRawDump.txt" contains the raw
+trace events; and the second, "ProtoTraceStats.txt" some timing
+statistic about how long it took to consume the data.  
+
+First convert the linefeeds in the raw trace dump to carriage 
+returns.  I do this by opening the file in Alpha and re-saving
+it in Mac format.
+
+Finally, use the MPW tool canon to convert the trace codes to text:
+	canon ProtoTrace.dict <ProtoTraceRawDump.txt >ProtoTrace.txt
+
+If you have InControl, you can copy and paste the trace dump into
+the template I've provided.  This makes viewing much easier.  Then
+you can use the sort and search functions to analyze the data.

@@ -1,0 +1,267 @@
+<TITLE>Monitoring Events Through the Event Broker</TITLE>
+<H1><LINK NAME="XREF20902">Monitoring Events Through the Event Broker</LINK></H1><HR>
+<H2>Waiting for Event Messages on the Reply Port</H2>
+After a task is connected as a listener, it can choose either of the following methods for event notification:<P>
+<UL>
+<LI>The task can enter the wait state until it receives an event broker message on the reply port (synchronous I/O).
+<p>
+<LI>The task can continue to execute, and pay attention to the event broker only when the task receives notification of a message received on the reply port (asynchronous I/O).
+</UL>
+<A NAME="XREF21113"><H3>The Event Broker Trigger Mechanism</A></H3>
+While listeners wait for event notification, the event broker checks the pods once per field for events. The event broker checks occurring events against the trigger mask of each connected listener. If an event matches a set bit in a listener's trigger mask and the listener has the input focus (if required), the event broker sends an event notification to the listener.<P>
+When the event broker sends an event notification, it uses its own event messages, which it creates as necessary. After the event broker creates an event message, it copies the information into the message's data block. The information contains a report of the status of each event type that matches a set bit in either the listener of the trigger or capture masks. You can think of the event message data block as a snapshot of the status of all listener-specified events during the field. Only events specified in the trigger mask can trigger the snapshot, but the status of all events specified in either mask is reported in the message.<P>
+For example, consider a listener that specifies the "Gun Button Pressed" event type in its trigger mask, and the "Control Button Update" and "Keyboard Update" event types in its capture mask. When any gun attached to the control port is pressed during a field, the event broker prepares an event message for the listener. The event message's data field reports a gun button press and the status of the Control Button Update and Keyboard Update events (indicating whether or not either of those events occurred during the field). If the "gun button pressed" event had not occurred, the event broker would not have sent an event message to the listener, even if keyboard or controller pad button updates occurred, because those event types were in the capture mask but not in the trigger mask.<P>
+<H3>Retrieving and Replying to Event Messages</H3>
+After a listener has been notified of an incoming event message from the event broker, it must retrieve the message to read the reported events. To do so, it uses the <CODE>GetMsg()</CODE> call. The listener can then read the message's data block (described in <A HREF="#XREF14481">Reading an Event Message Data Block</A> below), and either act on the data or store it for later use.<P>
+After a listener has processed the event data in an event message, the listener must reply to the event broker. Its reply tells the event broker that the event message is once again free for use. If the listener does not reply to an event message, the event broker assumes that the message was not processed. Each unprocessed event message is one element in the listener's event queue. When the number of unprocessed event messages exceeds the maximum event queue depth, the event broker stops reporting events to the listener. Consequently, the listener loses events until it can process and free up messages in its queue. If the listener asks to be notified of an event queue overflow, the event broker reports it as soon as an event message is free. The update event types (<CODE>EB_ControlButtonUpdate</CODE>, <CODE>EB_MouseUpdate</CODE>, and so on) are all reported as occurring, because an event queue overflow is considered an update.<P>
+To reply to an event message and return it to the event broker, a listener uses the <CODE>ReplyMsg()</CODE> call. Always pass NULL as the data pointer, and 0 as the data size parameter to <CODE>ReplyMsg()</CODE>.<P>
+<A NAME="XREF14481"><H2>Reading an Event Message Data Block</A></H2>
+When a listener receives an event message from the event broker, a pointer to the event data block is in the <CODE>msg_DataPtr</CODE> field of the message structure, and the size in bytes of the data block in the <CODE>msg_DataSize</CODE> field. To interpret the event data stored in the event message, the listener task must be able to read the data structures used in the data block.<P>
+<H3>Event Data Block Structure</H3>
+When the event broker reports events in an event data block, it can report one or more events. Therefore, it must have a flexible data arrangement within the data block to report any number of events. An event data block starts with an EventBrokerHeader structure that specifies the message flavor as <CODE>EB_EventRecord</CODE> and follows with one or more <CODE>EventFrame</CODE> structures, each containing the report of a single event. (Each event report is called an <I>event frame</I>.) The final structure in the data block is a degenerate EventFrame data structure, which indicates the end of the event frames.<P>
+<H3>The EventFrame Data Structure</H3>
+The EventFrame data structure is defined in <I>event.h</I> as follows:<P>
+<CODE>
+<PRE>
+typedef struct EventFrame
+{
+    uint32            ef_ByteCount;                        /* total size of EventFrame */
+    uint32            ef_SystemID;                        /* 3DO machine ID, or 0=local */
+    uint32            ef_SystemTimeStamp;                        /* event-count timestamp */
+    int32            ef_Submitter;                        /* Item of event sender, or 0 */
+    uint8            ef_EventNumber;                        /* event code, [0,255] */
+    uint8            ef_PodNumber;                        /* CP pod number, or 0 */
+    uint8            ef_PodPosition;                        /* CP position on daisychain, or 0 */
+    uint8            ef_GenericPosition;                        /* Nth generic device of type, or 0 */
+    uint8            ef_Trigger;                        /* 1 for trigger, 0 for capture */
+    uint8            rfu1[3];
+    uint32            rfu2;
+    uint32            ef_EventData[1];                        /* first word of event data */
+} EventFrame;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>ef_ByteCount</CODE> gives the total size of the <CODE>EventFrame</CODE> in bytes. Because the event data at the end of the frame varies in size depending on the event, this value changes from frame to frame.
+<p>
+<LI><CODE>ef_SystemID</CODE> reports the ID number of the 3DO unit where this event occurred. This value is useful if two or more 3DO units are linked together (as they might be for networked games). If the event occurred on the local 3DO unit, this value is set to 0.
+<p>
+<LI><CODE>ef_SystemTimeStamp</CODE> is the exact system time the event broker recorded this event. This time value corresponds to the current vblank count value as provided by the timer device's <CODE>TIMER_UNIT_VBLANK</CODE> unit.
+<p>
+<LI><CODE>ef_Submitter</CODE> gives the item number of the event sender. This value is important when multiple listener tasks tied into the event broker send events to each other. This item number is the item number of the sending task. If the event comes from a pod and not a task, this field is set to 0.
+<p>
+<LI><CODE>ef_EventNumber</CODE> is an event code from 0 to 255 that identifies the generic type of event. These event types are the same as the event types identified within a configuration event mask. The include file <I>event.h</I> defines a constant for each type as shown in Table 2.
+<p>
+<LI><CODE>ef_PodNumber</CODE> gives the unique pod number of the pod where an event originated. This number is constant and is assigned when a pod is first plugged into the 3DO unit. It does not change if the pod changes its position in the control port daisy chain. This value is set to 0 if the event did not originate in a pod (for example, an event generated by another task or the CD-ROM drive).
+<p>
+<LI><CODE>ef_PodPosition</CODE> gives the position of the event-reporting pod in the control port daisy chain. Numbering starts with 1 for the first pod, and continues consecutively the further the chain extends from the 3DO unit. If the event did not originate in a pod, this value is set to 0.
+<p>
+<LI><CODE>ef_GenericPosition</CODE>, gives the daisy-chain position of the event-reporting pod among identical generic device types in the daisy chain. A generic device type is a functional description of the pod or part of the pod, and currently includes the following defined types:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI><CODE>POD_IsControlPad</CODE>
+<LI><CODE>POD_IsMouse</CODE>
+<LI><CODE>POD_IsGun</CODE>
+<LI><CODE>POD_IsGlassesCtlr</CODE>
+<LI><CODE>POD_IsAudioCtlr</CODE>
+<LI><CODE>POD_IsKeyboard</CODE>
+<LI><CODE>POD_IsLightGun</CODE>
+<LI><CODE>POD_IsStick</CODE>
+<LI><CODE>POD_IsIRController
+</UL><BR>
+</DL>
+<UL>
+<LI>For example, an event occurs in the second controller pad in the daisy chain, in which case this value is 2, or in the fourth photo-optic gun in the daisy chain, in which case this value is 4. This value is set to 0 if the event did not occur in a generic device.</CODE>
+<LI>A single pod attached to the 3DO unit can have more than one generic device type. For example, a single pod can be a combination control pad and audio controller. In that case, when an event occurs on its control pad buttons, the generic position listed in the event frame is that of a control pad among other control pads connected to the 3DO unit.
+</UL>
+<UL>
+<LI><CODE>ef_Trigger</CODE> identifies an event as one that triggered the event notification or as a captured event that did not trigger the notification. If the value is 1, the event was a triggering event; if the value is 0, the event is a captured event.
+<p>
+<LI><CODE>ef_EventData</CODE> is the first word of a data structure that contains data about an event. The rest of the data structure follows this field in memory. The definition of the data structure depends entirely on the generic device where the event occurred. The data structures are described in <A HREF="#XREF36674">Reading Event Data</A>. 
+</UL>
+<H3>The Final (Degenerate) Event Frame</H3>
+The final event frame within an event data block must be a degenerate event frame, which contains the value 0 for the <CODE>ef_ByteCount</CODE> field. The rest of the EventFrame data structure cannot be present.<P>
+<A NAME="XREF36674"><H2>Reading Event Data</A></H2>
+The event data array at the end of each full event frame is a data structure that determines the type of device reporting the event. For example, an event occurring on a controller pad uses a structure designed to report control pad data. An event occurring on a mouse uses a structure designed to report mouse data.<P>
+<H3>Control Pad Data Structure</H3>
+The data structure that reports control pad data is <CODE>ControlPadEventData</CODE>, defined in <I>event.h</I> as follows:<P>
+<CODE>
+<PRE>
+typedef struct ControlPadEventData
+{
+  uint32 cped_ButtonBits;  /* left justified, zero fill */
+} ControlPadEventData;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>cped_ButtonBits</CODE> contains a value whose bits tell the status of each controller pad button during the field. The constants defining these flag bits are as follows:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI><CODE>ControlDown</CODE> - the down arm of the joypad cross.
+<LI><CODE>ControlUp</CODE><B> </B>- the up arm of the joypad cross.
+<LI><CODE>ControlRight</CODE><B> </B>- the right arm of the joypad cross.
+<LI><CODE>ControlLeft</CODE><B> </B>-the left arm of the joypad cross.
+<LI><CODE>ControlA</CODE><B> </B>-the A button.
+<LI><CODE>ControlB</CODE><B> </B>- the B button.
+<LI><CODE>ControlC</CODE><B> </B>- the C button.
+<LI><CODE>ControlStart</CODE> - the P (play/pause) button.
+<LI><CODE>ControlX</CODE><B> </B>-the X (stop) button.
+<LI><CODE>ControlLeftShift</CODE><B> </B>- the left shift button.
+<LI><CODE>ControlRightShift</CODE><B> </B>- the right shift button.
+</UL><BR>
+</DL>
+<UL>
+<LI>The meaning of these bits varies for each type of control pad event:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>For the <CODE>EVENTNUM_ControlButtonPressed</CODE> event, 1 means the button was pressed since the last field, 0 means the button was not pressed.
+<p>
+<LI>For the <CODE>EVENTNUM_ControlButtonReleased</CODE> event, 1 means the button was released since the last field, 0 means the button was not released.
+<p>
+<LI>For the <CODE>EVENTNUM_ControlButtonUpdat </CODE>event, 1 means the button is down; 0 means the button is up.
+<p>
+<LI>For the <CODE>EVENTNUM_ControlButtonArrived</CODE> event, 1 means the button is down; 0 means the button is up.
+</UL><BR>
+</DL>
+<H3>Mouse and Trackball Data</H3>
+The data structure used to report mouse and trackball data is <CODE>MouseEventData</CODE>, defined in <I>event.h</I> as follows:<P>
+<CODE>
+<PRE>
+typedef struct MouseEventData
+{
+  uint32    med_ButtonBits;   /* left justified, zero fill */
+  int32     med_HorizPosition;
+  int32     med_VertPosition;
+} MouseEventData;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>med_ButtonBits</CODE> contains a value whose bits tell which mouse button (or buttons) generated the event. The constants defining these flag bits are as follows:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI><CODE>MouseLeft</CODE> - the left mouse button.
+<p>
+<LI><CODE>MouseMiddle</CODE> - the middle mouse button.
+<p>
+<LI><CODE>MouseRight</CODE><B> -</B> the right mouse button.
+<p>
+<LI><CODE>MouseShift</CODE> - the mouse's shift button.
+</UL><BR>
+</DL>
+<UL>
+<LI>3DO mice currently have three buttons: left, middle, and right. The fourth constant provides for an extra shift button if one ever appears on 3DO mice.
+<p>
+<LI>The meaning of the above bits varies for each type of mouse event:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>For the <CODE>EVENTNUM_MouseButtonPressed</CODE> event, 1 means the button was pressed since the last field; 0 means the button was not pressed.
+<p>
+<LI>For the <CODE>EVENTNUM_MouseButtonReleased</CODE> event; 1 means the button was released since the last field, 0 means the button was not released.
+<p>
+<LI>For the <CODE>EVENTNUM_MouseUpdate</CODE> evenly; 1 means the button is down, a 0 means the button is up.
+<p>
+<LI>For the <CODE>EVENTNUM_MouseDataArrived</CODE> event; 1 means the button is down, a 0 means the button is up.
+<p>
+<LI>For the <CODE>EVENTNUM_MouseMoved</CODE> event; 1 means the button is down, 0 means the button is up.
+</UL><BR>
+</DL>
+<UL>
+<LI><CODE>med_HorizPosition</CODE> and <CODE>med_VertPosition</CODE> report the mouse's current position in absolute space. That position is reckoned from an origin (0,0) that is set when the mouse is first plugged in, and uses units that will typically (depending on the mouse) measure 100, 200, or 400 increments per inch. It is up to the task to interpret the absolute position of the mouse to a pointer position on the display.
+</UL>
+<H3>Light Gun Data Structure</H3>
+The data structure that reports light gun data is LightGunData, defined in <I>event.h</I> as follows:<P>
+<CODE>
+<PRE>
+typedef struct LightGunEventData
+{
+  uint32  lged_ButtonBits;      /* left justified, zero fill */
+  uint32  lged_Counter;         /*cunter at top-center of hit */
+  uint32  lged_LinePulseCount;   /* # of scan lines which were hit */
+} LightGunEventData;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>lged_ButtonBits</CODE> contains a value whose bits tell the state of the various triggers, buttons, and other pushable or flippable controls on a light gun. Most light guns have one trigger and one auxiliary button. The only flag bit currently defined for this field is:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI><CODE>LightGunTrigger</CODE> - the main light gun trigger.
+</UL><BR>
+</DL>
+<UL>
+<LI><CODE>lged_Counter</CODE> contains a value which specifies the number of times that the light gun's internal clock (nominally 20 MHz) counted up, between the time it was reset (during vertical blanking) and the time that the light gun's optical sensor "saw" a flash of light from the display as the display's electron beam passed through its field of view. The beam travels left to right along each line, and downwards from line to line.
+<p>
+<LI><CODE>lged_LinePulseCount</CODE> contains the value 0 if the light gun sensor did not detect a sufficiently strong pulse of light while scanning the video field. In this case, the <CODE>lged_Counter</CODE> value may or may not be valid. If the light gun sensor detected a sufficiently strong pulse of light, <CODE>lged_LinePulseCount</CODE> contains a nonzero value. Some light guns can actually count the number of successive horizontal scan lines during a pulse and return that value in this field. For light guns of this sort, the <CODE>lged_LinePulseCount</CODE> is considered a "quality of signal" indicator. Other light guns simply return a constant value (typically 15) to indicate that their sensor detected at least one pulse that was strong enough to trip the sensor.
+</UL>
+<H3>Joystick Data</H3>
+The data structure used to report joystick data is <CODE>StickEventData</CODE>, defined in <I>event.h</I> as follows:<P>
+<CODE>
+<PRE>
+typedef struct StickEventData
+{
+  uint32            stk_ButtonBits;                  /* left justified, zero fill */
+  int32            stk_HorizPosition;
+  int32            stk_VertPosition;
+  int32            stk_DepthPosition;
+} StickEventData;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>stk_ButtonBits</CODE> contains a value that identifies which joystick button (or buttons) generated the event. The constants defining these flag bits are as follows:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI><CODE>StickCapability</CODE> - the AND of <CODE>Stick4Way</CODE> and <CODE>StickTurbulence.</CODE>
+<LI><CODE>Stick4Way</CODE><B> </B>- determines how many buttons the stick has.
+<LI><CODE>StickTurbulence</CODE> - indicates whether or not the stick understands output commands.
+<LI><CODE>StickButtons</CODE> - the stick buttons.
+<LI><CODE>StickFire</CODE> - the joystick was fired.
+<LI><CODE>StickA</CODE><B> </B>- the A button.
+<LI><CODE>StickB</CODE> - the B button.
+<LI><CODE>StickC</CODE> - the C button.
+<LI><CODE>StickUp</CODE> - the up button of the stick.
+<LI><CODE>StickDown</CODE> - the down button of the stick.
+<LI><CODE>StickRight</CODE> - the right button of the stick.
+<LI><CODE>StickLeft</CODE> - the left button of the stick.
+<LI><CODE>StickPlay</CODE> - the play button of the stick.
+<LI><CODE>StickStop</CODE> - the stop button of the stick.
+<LI><CODE>StickLeftShift</CODE><B> </B>- the left-shift button of the stick.
+<LI><CODE>StickRightShift</CODE> - the right-shift button of the stick.
+</UL><BR>
+</DL>
+<UL>
+<LI><CODE>stk_HorizPosition</CODE>, <CODE>stk_VertPosition</CODE>, and <CODE>stk_DepthPosition </CODE>contain binary numbers and return a value between 0 through 1023. A value of 0 means the joystick is pushed left or all of the way down. A value of 1023 means the joystick is pushed right or all the way up. Keep in mind that some joysticks cannot go all the way to 0 or 1023.
+</UL>
+<A NAME="XREF25666"><H3>Device State Data Structure</A></H3>
+When media is inserted or removed from a device, <CODE>EVENTNUM_DeviceOnline</CODE> or <CODE>EVENTNUM_DeviceOffline</CODE> respectively, the DeviceStateEventData structure contains the Item number of the device, and the unit number within the device that has gone on-line or off-line. The <CODE>DeviceStateEventData</CODE> structure is defined as follows:<P>
+<CODE>
+<PRE>
+typedef struct DeviceStateEventData
+{
+  Item    dsed_DeviceItem;
+  uint32  dsed_DeviceUnit;
+} DeviceStateEventData;
+</CODE>
+</PRE>
+<H3>Filesystem State Data Structure</H3>
+When a filesystem is mounted, dismounted, or placed off-line, <CODE>EVENTNUM_FilesystemMounted</CODE>, <CODE>EVENTNUM_FilesystemDismounted</CODE>, or <CODE>EVENTNUM_FilesystemOffline</CODE>, the FileSystemEventData structure contains the Item number of the Filesystem node, and the name of the filesystem which is changing state. The FileSystemEventData structure is defined as follows:<P>
+<CODE>
+<PRE>
+typedef struct FilesystemEventData
+{
+  Item  fsed_FilesystemItem;
+  char  fsed_Name[FILESYSTEM_MAX_NAME_LEN];
+} FilesystemEventData;
+</CODE>
+</PRE>

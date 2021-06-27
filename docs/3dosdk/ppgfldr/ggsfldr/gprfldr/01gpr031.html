@@ -1,0 +1,32 @@
+<Title>FillRect </Title>
+<A NAME="XREF19136"><H1>FillRect </A></H1>
+<A NAME="XREF29073"> Draws a filled rectangle.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err FillRect (Item bitmapItem,GrafCon *gc,Rect *r)</CODE><P>
+<H3>Description</H3>
+FillRect() draws a rectangle to the display. <P>
+The right and bottom edges of the rectangle are not drawn, to allow multiple rectangles to be rendered without unnecessary overstriking of the boundary pixels (cel engine emulation). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>The item number of the bitmap. 
+</DL>
+<DL>
+<DT>gc
+<DD>Pointer to a GrafCon structure. 
+</DL>
+<DL>
+<DT>r
+<DD>Pointer to a Rect structure that describes the rectangle to be rendered. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Notes</H3>
+This call will be changed to draw the entire rectangle, including the specified right and bottom edges. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr073.html#XREF26683"><CODE>WritePixel</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,41 @@
+<Title>ConvertShiftJIS2ASCII</Title>
+<A NAME="XREF28461"><H1>ConvertShiftJIS2ASCII </A></H1>
+<A NAME="XREF12521"></A>Converts a Shift-JIS string to ASCII.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ConvertShiftJIS2ASCII(const char *string,char *result, uint32 resultSize,uint8 unknownFiller);</CODE><P>
+<H3>Description</H3>
+Converts a string from Shift-JIS to ASCII. The conversion is done as well as possible. If certain characters from the source string cannot be represented in ASCII, the unknownFiller byte will be inserted in the result buffer in their place. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>string
+<DD>The string to convert. 
+</DL>
+<DL>
+<DT>result
+<DD>A memory buffer where the result of the conversion can be put. 
+</DL>
+<DL>
+<DT>resultSize
+<DD>The number of bytes available in the result buffer. This limits the number of bytes that are put into the buffer. 
+</DL>
+<DL>
+<DT>unknownFiller
+<DD>If a character sequence cannot be adequately converted, then this byte will be put into the result buffer in place of the character sequence. 
+</DL>
+<H3>Return Value</H3>
+If positive, then the number of characters in the result buffer. If negative, then an error code. <P>
+<DL>
+<DT>&gt; = 0
+<DD>Number of characters in the result buffer.
+</DL>
+<DL>
+<DT>JSTR_ERR_BUFFERTOO
+</DL>
+<DL>
+<DT>SMALL
+<DD>There was not enough room in the result buffer. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in jstring folio V24. <P>
+<H3>Associated Files</H3>
+jstring.h<P>

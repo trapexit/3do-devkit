@@ -1,0 +1,34 @@
+<Title>ChangeScorePitchBend</Title>
+<A NAME="XREF24439"><H1>ChangeScorePitchBend </A></H1>
+<A NAME="XREF18317"></A Changes a channel's pitch bend value.<P>
+<H3>Synopsis</H3>
+<CODE>Err ChangeScorePitchBend( ScoreContext *scon,int32 Channel, int32 Bend )</CODE><P>
+<H3>Description</H3>
+This function changes the current MIDI pitch bend value used to alter the pitch values of all instruments in the channel.  The function is the equivalent of a MIDI Pitch Bend message. <P>
+The Bend argument ranges from 0x0 to 0x3FFF.  A setting of 0x2000 means that instrument pitch values aren't bent up or down.  A setting of 0x0 means that instrument pitches are bent as far down as possible.  A setting of 0x3FFF means that instrument pitches are bent as far up as possible. <P>
+The pitch bend value supplied by <CODE>ChangeScorePitchBend()</CODE> works within a pitch bend range, which is contained in the score context.  If the range is 8 semitones, for example, the score voices can be bent up a maximum of 8 semitones or down a minimum of 8 semitones.  You can set the pitch bend range using <CODE>SetScoreBendRange()</CODE> and read the current pitch bend range using <CODE>GetScoreBendRange()</CODE>. <P>
+Note that <CODE>ChangeScorePitchBend()</CODE> only affects notes whose pitches are specified by MIDI note values (0127).  It doesn't affect the pitch of notes specified by frequency. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ScoreCon
+<DD>Pointer to a ScoreContext data structure controlling playback. 
+</DL>
+<DL>
+<DT>Channel
+<DD>The number of the MIDI channel for which to change the pitch bend value. 
+</DL>
+<DL>
+<DT>Bend
+<DD>The new pitch bend setting (0x00x3FFF). 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>Caveats</H3>
+Pitch can't be bent beyond the range of the instrument. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr021.html#XREF34990"><CODE>ChangeScoreControl</A>(), <A HREF="./02mpr023.html#XREF39934">ChangeScoreProgram</A>(), <A HREF="./02mpr024.html#XREF30500">ConvertPitchBend</A>(), <A HREF="./02mpr029.html#XREF32740">GetScoreBendRange</A>(), <A HREF="./02mpr033.html#XREF12999">InterpretMIDIMessage</A>(), <A HREF="./02mpr046.html#XREF33263">StartScoreNote</A>(), <A HREF="./02mpr045.html#XREF21010">SetScoreBendRange</A>() </CODE><P>
+</CODE>

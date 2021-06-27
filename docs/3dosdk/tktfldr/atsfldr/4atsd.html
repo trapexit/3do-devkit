@@ -1,0 +1,79 @@
+<TITLE>Some examples</TITLE>
+<H1>Some examples</H1><HR>
+This section is not intended to be a general guide to the writing of code generators, but it seems worthwhile to highlight some of the optimisations that appear particularly relevant to the ARM and to this standard.<P>
+In order to make effective use of the APCS, compilers must compile code a procedure at a time. Line at a time compilation is insufficient.<P>
+In the case of leaf functions, much of the standard entry sequence can be omitted. In very small functions, such as those that frequently occur implementing data abstractions, the function-call overhead can be tiny. Consider:<P>
+<CODE>
+<PRE>
+typedef struct {...; int a; ...} foo;
+int foo_get_a(foo* f) {return(f-a);}
+</CODE>
+</PRE>
+The function foo_get_a can compile to just:<P>
+<CODE>
+<PRE>
+LDR    a1, [a1, #aOffset]
+MOV    pc, lr                                    ; MOVS in 26-bit modes
+</CODE>
+</PRE>
+In functions with a conditional as the top level statement, in which one or other arm of the conditional is leaf (calls no functions), the formation of a stack frame can be delayed. For example, the C function:<P>
+<CODE>
+<PRE>
+int get(Stream *s
+{
+    if (s-&gt;cnt &gt; 0)
+    {    --s;
+        return *(s-p++);
+    }
+    else
+    {
+        ...
+    }
+}
+</CODE>
+</PRE>
+... could be compiled (non-reentrantly) into:<P>
+<CODE>
+<PRE>
+get MOV    a3, a1
+; if (s-&gt;cnt &gt; 0)
+    LDR    a2, [a3, #cntOffset]
+    CMPS   a2, #0
+; try the fast case,frameless and heavily conditionalized
+    SUBGT  a2, a2, #1
+    STRGT  a2, [a3, #cntOffset]
+    LDRGT  a2, [a3, #pOffset]
+    LDRBGT a1, [a2], #1
+    STRGT  a2, [a3, #pOffset]
+    MOVGT  pc, lr
+; else, form a stack frame and handle the rest as normal code.
+    MOV    ip, sp
+    STMDB  sp!, {v1-v3, fp, ip, lr, pc}
+    CMP    sp, sl
+    BLLT   |__rt_stkovf_split_small|
+    ...
+    LDMEA  fp, {v1-v3, fp, sp, pc}
+</CODE>
+</PRE>
+This is only worthwhile if the test can be compiled using any spare of a1-a4 and ip, as scratch registers. This technique can significantly accelerate certain speed-critical functions, such as read and write character.<P>
+Finally, it is often worth applying the tail call optimisation, especially to procedures which need to save no registers. For example:<P>
+<CODE>
+<PRE>
+extern void *malloc(size_t n)
+{
+    return primitive_alloc(NOTGCABLEBIT, BYTESTOWORDS(n));
+}
+</CODE>
+</PRE>
+...is compiled (non-reentrantly) by the C compiler into:<P>
+<CODE>
+<PRE>
+malloc
+    ADD    a1, a1, #3                                    ; 1S
+    MOV    a2, a1, LSR #2                                    ; 1S - BITESTOWORDS(n)
+    MOV    a1, #1073741824                                    ; 1S - NOTGCABLEBIT
+    B      primitive_alloc                                    ; 1N+2S = 4S
+</CODE>
+</PRE>
+In this case, the optimisation avoids saving and restoring the call-frame registers and saves 5 instructions (and many cycles-17 S cycles on an uncached ARM with N=2S).<P>
+<P>

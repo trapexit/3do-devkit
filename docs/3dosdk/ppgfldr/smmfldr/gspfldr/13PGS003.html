@@ -1,0 +1,23 @@
+<A NAME="XREF23856"><H1>KillControlPad </A></H1>
+<A NAME="XREF31940"> </A>Disconnects the task from the event broker and frees 
+resources.<P>
+<H3>Synopsis</H3>
+<CODE>int32 KillControlPad (void)</CODE><P>
+<H3>Description</H3>
+Deletes all resources that were created for interacting with the event 
+broker. These resources include the array of previous button states, and 
+the message ports, messages, etc., created by 
+<CODE>InitEventUtility()</CODE>. <P>
+<H3>Return Value</H3>
+Returns 0 if successful or a negative error code if an error occurs. <P>
+<H3>Caveats</H3>
+This function MUST be called upon the main tasks completion. It should be 
+called ONCE and ONLY ONCE per initialization. It must be called by the 
+same task that called <CODE>InitControlPad()</CODE>. <P>
+<H3>Associated Files</H3>
+controlpad.c, controlpad.h<P>
+<H3>Location</H3>
+examples/ExampleLib <P>
+<H3>See Also</H3>
+<A HREF="./13PGS002.html#XREF22018"><CODE>InitControlPad</A>, <A 
+HREF="./13PGS003.html#XREF23856">KillControlPad</A> </CODE><P>

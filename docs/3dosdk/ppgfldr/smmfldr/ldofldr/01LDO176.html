@@ -1,0 +1,28 @@
+<Title>SRectIntersection</Title>
+<A NAME="XREF23409"><H1>SRectIntersection </A></H1>
+ Calculates the intersection of two SRects.<P>
+<H3>Synopsis</H3>
+<CODE>SRect * SRectIntersection (SRect *dst, SRect *rect1, SRect *rect2)</CODE><P>
+<H3>Description</H3>
+Calculates the intersection of two rectangles, returning a rectangle that describes the common area. The dst rectangle can be the same as either source rectangle. If there is no common area between the two source rectangles, the function return value is NULL, but the values in *dst are still modified. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to an SRect where the results are to be stored. 
+</DL>
+<DL>
+<DT>rect1
+<DD>Pointer to one of the source SRects. 
+</DL>
+<DL>
+<DT>rect2
+<DD>Pointer to the other source SRect. 
+</DL>
+<H3>Return Value</H3>
+The input parameter dst, or NULL if there is no common area between the source rectangles. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO172.html#XREF40279"><CODE>SRectBounds</A>, <A HREF="./01LDO051.html#XREF41232">CRectIntersection</A> </CODE><P>

@@ -1,0 +1,126 @@
+<TITLE>Rendering Into a Screen</TITLE>
+<H1><LINK NAME="XREF22392">Rendering Into a Screen</LINK></H1><HR>
+You can render into a screen by projecting a cel, drawing a graphics primitive, 
+or rendering text. To project a cel, use either <CODE>DrawScreenCels()</CODE> 
+or <CODE>DrawCels()</CODE>. The first call projects a cel (or cel group) into 
+a full screen even across multiple bitmaps if the screen has them. 
+The second call restricts cel projection to a single bitmap, which is 
+not restriction for single bitmap screens, but can create interesting 
+effects in multiple bitmap screens. You'll find more details about both cel 
+calls in "<A HREF="./5gpg.html#XREF33646">Using the Cel Engine</A>."<P>
+To draw directly to a screen's bitmaps without the cel engine, use the Graphics folio's drawing and text calls.<P>
+<H2>Creating a Graphics Context</H2>
+Before a task can use drawing and text calls, it must first create a graphics context data structure (known as a <I>GrafCon</I>), defined below:<P>
+<CODE>
+<PRE>
+/* Graphics Context structure */
+typedef struct GrafCon
+    {
+    Node  gc;
+    Color gc_FGPen;
+    Color gc_BGPen;
+    Coord gc_PenX;
+    Coord gc_PenY;
+    ulong gc_Flags;
+    } GrafCon;
+</CODE>
+</PRE>
+GrafCon keeps track of the current status of the pen, an invisible cursor that moves through a bitmap as calls draw graphics primitives or render text. The pen has two colors: a foreground color and a background color, both specified as a 3DO RGB value in the low 15 bits of a 32-bit integer (the upper 17 bits are set to 0). The foreground color is stored in <CODE>gc_FGPen</CODE>; the background color is stored in <CODE>gc_BGPen</CODE>. The pen also has a position, specified in x and y coordinates stored in <CODE>gc_PenX</CODE> and <CODE>gcPenY</CODE>. These two values are each 32-bit integers that are read in either 16.16 or 17.15 format. The field <CODE>gc_Flags</CODE> isn't currently defined.<P>
+The colors and the coordinates of the GrafCon's pen are stored independently, and aren't connected to any specific bitmap or screen. When a task uses a drawing or text call, it specifies a bitmap where it wishes to render, and then points to a GrafCon to use the values stored there. When the call executes, it often changes the GrafCon values when finished. For example, a line-drawing command uses a GrafCon's pen position to start the line and draw the line, and then changes the GrafCon's pen position to the point of the line's end. A text-rendering routine advances the pen position beyond the character just rendered.<P>
+A task can use as few or as many GrafCons as are useful. For example, one GrafCon can render to multiple bitmaps; the last-used GrafCon values in one bitmap become the first-used GrafCon values in a new bitmap when a call switches bitmaps but not GrafCons. A task can also create a separate GrafCon for each bitmap and switch to the appropriate GrafCon whenever it switches rendering to a new bitmap. A task can also create more than one GrafCon for a single bitmap and use the multiple GrafCons to store multiple pen positions and colors within the bitmap, switching GrafCons whenever it wishes to switch pen states.<P>
+<H3>Setting Pen Colors</H3>
+When a GrafCon structure is first created, you can, of course, set it to whatever background and foreground pen colors you wish. To set new pen colors in the GrafCon, use these calls:<P>
+<CODE>
+<PRE>
+void SetFGPen( GrafCon *grafcon, Color color )
+void SetBGPen( GrafCon *grafcon, Color color )
+</CODE>
+</PRE>
+Each call accepts a pointer to the GrafCon and a 15-bit 3DO color stored in the low 15 bits of a 32-bit integer. (The 3DO system stores color as 5 bits of red value, 5 bits of green value, and 5 bits of blue value.) When executed, <CODE>SetFGPen()</CODE> changes the GrafCon's foreground pen color to the specified value; <CODE>SetBGPen()</CODE> changes the GrafCon's background pen color to the specified value.<P>
+If you have a 24-bit RGB color that you'd like to turn into a 15-bit 3DO RGB color value, use this convenience call:<P>
+<CODE>
+<PRE>
+int32 MakeRGB15( red, green, blue )
+</CODE>
+</PRE>
+It accepts a red value, a green value, and a blue value (which you can supply from a 24-bit RGB value by breaking it into three 8-bit values). <CODE>MakeRGB15()</CODE> takes the <I>lowest</I> five bits from each value and combines them to create a 15-bit RGB value.<P>
+<H3>Setting Pen Position</H3>
+The GrafCon's stored pen position always specifies a point that is figured from the origin of whatever bitmap is specified by a graphics call. That position is often changed by the Graphics folio after executing a drawing or text call. If you'd like to change the pen position without drawing or rendering text, use this call: <P>
+<CODE>
+<PRE>
+void MoveTo( GrafCon *grafcon, Coord x, Coord y )
+</CODE>
+</PRE>
+<CODE>MoveTo()</CODE> accepts a pointer to the GrafCon whose pen position you want to change, as well as a 32-bit x and a 32-bit y value. When executed, it writes the new pen position into the specified GrafCon so that the next call referring to that GrafCon uses the new position as its starting pen position. The coordinates are in display buffer pixel resolution, not 16:16 or 17:15.<P>
+<H2>Drawing Graphics Primitives</H2>
+Once a GrafCon is set up with proper pen colors and coordinates and you have the item number for the bitmap in which you wish to draw, you can use the graphics folio's drawing calls. The simplest is this call:<P>
+<CODE><DL>
+<DD><CODE>int32 WritePixel( Item bitmapItem, GrafCon *grafcon, Coord x, Coord y )</CODE><BR>
+</DL>
+</CODE><CODE>WritePixel()</CODE> accepts the item number of the bitmap to which you want to render, and a pointer to the GrafCon whose pen values you want to use. It also accepts x and y coordinates (each in a 32-bit integer). When executed, it writes the current foreground pen color into the pixel at the specified coordinates in the bitmap. Because <CODE>WritePixel</CODE>() has its own coordinates, it ignores the GrafCon's stored pen position. When the call is finished, it writes its own coordinates into the GrafCon to be used as the starting pen position for the next call.<P>
+To draw a line, use this call:<P>
+<CODE><DL>
+<DD><CODE>void DrawTo( Item bitmapItem, GrafCon *grafcon, Coord x, Coord y )</CODE><BR>
+</DL>
+</CODE><CODE>DrawTo()</CODE> accepts the item number of the bitmap to which you want to render, a pointer to the GrafCon you want to use, and x and y coordinates to the end of the line. When executed, this call draws a line from the GrafCon's pen position to the position specified in its arguments. It uses the foreground pen color, and when finished, it writes the line end's coordinates into the GrafCon as the starting pen position for the next call.<P>
+Note that <CODE>DrawTo()</CODE> renders pixels at both the starting and ending locations in the line it draws.<P>
+To draw a filled rectangle in a bitmap, use this call:<P>
+<CODE><DL>
+<DD><CODE>int32 FillRect( Item bitmapItem, GrafCon *grafcon,Rect *boundary )</CODE><BR>
+</DL>
+</CODE>DrawTo(), as other calls, accepts a bitmap item number and a pointer to a GrafCon. It then accepts a pointer to a Rect data structure which defines the rectangle. Rect is defined as follows:<P>
+<CODE>
+<PRE>
+typedef struct Rect
+       {
+       Coord rect_XLeft;
+       Coord rect_YTop;
+       Coord rect_XRight;
+       Coord rect_YBottom;
+       } Rect;
+</CODE>
+</PRE>
+The four coordinates (each a 32-bit integer) define the left, top, right, and bottom boundaries of the rectangle. The left and right boundaries are x coordinates; the top and bottom boundaries are y coordinates.<P>
+<H2>Finding a Pixel's Color and Address</H2>
+To find the color contents of a single pixel within a bitmap, use this call:<P>
+<CODE><DL>
+<DD><CODE>Color ReadPixel( Item bitmapItem, GrafCon *grafcon, Coord x, Coord y)</CODE><BR>
+</DL>
+</CODE>This call accepts the item number of the bitmap where the pixel is located, a pointer to a GrafCon, and x and y coordinates of a pixel within the bitmap. When <CODE>ReadPixel()</CODE> executes, it returns the 3DO RGB color value of the specified pixel. It then changes the pen position of the GrafCon to the new x and y coordinates.<P>
+To find the absolute address of a pixel within a screen (regardless of which bitmap it's in), use this call:<P>
+<CODE><DL>
+<DD><CODE>void *GetPixelAddress( Item screenItem, Coord x, Coord y )</CODE><BR>
+</DL>
+</CODE>The call accepts the item of the screen or bitmap in which the pixel is located, and x and y screen coordinates (figured from the screen's origin) of the pixel. When the call executes, it goes to the bitmap where the point specified by the coordinates is located, and finds the absolute address of the pixel there, which it returns.<P>
+This call is particularly useful for cel projection when the cel's source data is a subrectangle extracted from a screen.  This call can find the address needed to set up the necessary offsets in the preamble to the source data.<P>
+<H2>Rendering Text</H2>
+To render text in a bitmap, the Graphics folio's text calls depend on a font table, a set of 1-bit deep patterns that define each character within a character set. The structure of a font table hasn't been set in this release. Within a font table, the pattern for each character is called a <I>character block. </I>A character block is a rectangle of 1-bit pixels that uses 1s for pixels that are part of the character and zeros for pixels that are background to the character.<P>
+<H2>Placing Characters</H2>
+Once you've set the font you want, you can place a single character in a bitmap with this call:<P>
+<CODE><DL>
+<DD><CODE>int32 DrawChar( GrafCon *gcon, Item bitmapItem, uint32 character )</CODE><BR>
+</DL>
+</CODE>It accepts a pointer to a GrafCon and an item number for a bitmap to establish the graphics context and the bitmap to which you want to render. It also accepts an unsigned 32-bit integer that contains the code number of the character within the font table that you want to render. For English applications, this value will probably be a 7- or 8-bit ASCII code placed in the low-order bits of the integer (all other bits are set to 0). For international applications, this value will probably be a 16-bit Unicode number (or another standard).<P>
+When executed, <CODE>DrawChar()</CODE> renders the character block of the specified character into the bitmap using the pen position to set the upper-left corner of the block, using the foreground pen color for the character bits, and using the background pen color for the background bits. After execution, it resets the GrafCon's pen position by adding the width of the character just rendered to the pen's x coordinate. The call returns a 0 if successful, and a negative number (an error code) if unsuccessful.<P>
+To place a string of 8-bit text, use this call:<P>
+<CODE><DL>
+<DD><CODE>int32 DrawText8( GrafCon *gcon, Item bitmapItem,uint8 *text )</CODE><BR>
+</DL>
+</CODE>It accepts a GrafCon and bitmap, and also accepts a pointer to a text string. The text string contains characters that are all defined in an 8-bit code such as ASCII, and are contained in memory one character per byte. <P>
+<H2>Setting a Clipping Rectangle</H2>
+Whenever the Graphics folio projects cels or draws directly into a bitmap, it can write anywhere in the entire bitmap. If you wish to restrict cel projection and rendering to a subrectangle of the bitmap, you can do so with these calls:<P>
+<CODE><DL>
+<DD><CODE>int32 SetClipHeight( Item bitmapItem, ulong clipHeight )<BR>
+</CODE><CODE>int32 SetClipWidth( Item bitmapItem, ulong clipWidth )</CODE><BR>
+</DL>
+</CODE>The two calls together set the dimensions of a clipping rectangle within the specified bitmap. The first, <CODE>SetClipHeight()</CODE>, sets the number of rows within the clipping rectangle; the second, <CODE>SetClipWidth()</CODE>, sets the number of columns within the clipping rectangle. Each call accepts the item number of a bitmap within which you wish to set a clipping rectangle, and a 32-bit unsigned integer containing the appropriate rectangle dimension in pixels.<P>
+If the height or width of the clipping rectangle is equal to or larger than the height or width of the bitmap, then there is no clipping in that direction. If one of the dimensions is set without the other, the unset dimension is set to the full width or height of the bitmap.<P>
+When executed, these two calls create a clipping rectangle within a bitmap. Any cel projections or bitmap renderings (including text) that fall outside of the rectangle are clipped, and aren't written to the bitmap. The calls both return 0 if the call was successful, or a negative number (an error code) if unsuccessful.<P>
+When a clipping rectangle's dimensions are set, the clipping rectangle's upper-left corner is located in the upper-left corner of the bitmap. To set the clipping rectangle in a different location within the bitmap, use this call:<P>
+<CODE><DL>
+<DD><CODE>int32 SetClipOrigin( Item bitmapItem, Coord x, Coord y )</CODE><BR>
+</DL>
+</CODE>This call accepts the item number of the bitmap in which you want to move the clipping rectangle; it also accepts the x and y coordinates of the point within that bitmap where you want to move the clipping rectangle's origin.<P>
+When <CODE>SetClipOrigin()</CODE> executes, it moves the clipping rectangle so that its origin falls on the specified point. It returns a 0 if successful, or a negative number (an error code) if unsuccessful.<P>
+If you move a clipping rectangle so that any of its boundaries fall beyond the bitmap boundaries, it is an error. It's wise, therefore, when you're reducing a clipping rectangle size to first set the height and width and then set the origin. If you're enlarging the clipping rectangle, you should first set the origin to a new (and safe) location, and then set the height and width. And if you don't know what size the current clipping rectangle is or where it's located, you should first set the origin to 0,0 and set the new height and width; only then reset the origin where you want it.<P>
+<A NAME="XREF14552"></A>

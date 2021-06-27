@@ -1,0 +1,32 @@
+<Title>MemPool</Title>
+<A NAME="XREF32433"><H1>MemPool</A></H1>
+<A NAME="XREF19285"></A>Memory pool structure.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct MemPool {
+   long numItemsInPool;
+   long numFreeInPool;
+   MemPoolEntryPtr availList;
+   char data[4];
+} MemPool, *MemPoolPtr</CODE></pre><P>
+<H3>Description</H3>
+A structure for keeping track of the state of a group of related blocks of memory<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>numItemsInPool</CODE>
+<DD>Total number allocated. 
+</DL>
+<DL>
+<DT><CODE>numFreeInPool</CODE>
+<DD>Current number of free entries. 
+</DL>
+<DL>
+<DT><CODE>availList</CODE>
+<DD>Pointer to first available entry. 
+</DL>
+<DL>
+<DT><CODE>data</CODE>
+<DD>Start of user data blocks. 
+</DL>
+<H3>Associated Files</H3>
+MemPool.h<P>

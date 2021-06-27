@@ -1,0 +1,30 @@
+<Title>MakeRGB15Pair </Title>
+<A NAME="XREF39620"><H1>MakeRGB15Pair </A></H1>
+<A NAME="XREF25402">Creates a double 3DO RGB value out of separate red, </A>green, and blue values.<P>
+<H3>Synopsis</H3>
+<CODE>uint32 MakeRGB15Pair (r, g, b)</CODE><P>
+<H3>Description</H3>
+This macro creates a double 15-bit 3DO RGB value out of separate red, green, and blue values. The double part of the value comes from creating a 16-bit value and then merging it with a copy of itself shifted over 16 bits. The composite double RGB value this macro creates can be used as an argument <CODE>to</CODE><CODE> <A HREF="./01gpr068.html#XREF23837">SetVRAMPages</A>()</CODE>, or anywhere else that the double RGB data type is required. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>r
+<DD>The red value to be included in the RGB composite. This can be any integer value; the value is coerced by the macro to a uint32 value. 
+</DL>
+<DL>
+<DT>g
+<DD>The green value to be included in the RGB composite. This can be any integer value; the value is coerced by the macro to a uint32 value. 
+</DL>
+<DL>
+<DT>b
+<DD>The blue value to be included in the RGB composite. This can be any integer value; the value is coerced by the macro to a uint32 value. 
+</DL>
+The r, g, and b values must all be in the range 0-31. <P>
+<H3>Return Value</H3>
+The macro returns a composite-double RGB15 value. <P>
+<H3>Implementation</H3>
+Macro implemented in graphics.h V20. <P>
+<H3>Associated File</H3>
+graphics.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr043.html#XREF27404"><CODE>MakeRGB15</A>() </CODE><P>
+</CODE>

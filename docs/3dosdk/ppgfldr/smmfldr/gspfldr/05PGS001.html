@@ -1,0 +1,76 @@
+<TITLE>Fundamentals of Cel Manipulation</TITLE>
+<H1><LINK NAME="XREF24629">Fundamentals of Cel Manipulation</LINK></H1><HR>
+This section summarizes some background information about 3DO cels. It 
+discusses: <P>
+
+<UL>
+<LI><A HREF="#XREF34593">The CCB Structure</A>
+<LI><A HREF="#XREF40214">Frequently Accessed CCB Fields</A>
+</UL>
+<H3>For More Information</H3>
+To successfully work with cels, it is essential you read the relevant 
+chapters in the <I>3DO Graphics Programmer's Guide</I>. <P>
+<A NAME="XREF34593"><H2>The CCB Structure</A></H2>
+The example below shows the structure definition for a CCB, taken from 
+graphics.h (part of the 3DO development environment #include files). The 
+comments explaining the different types are not in the header file, but 
+are included here for your information.<P>
+<B>Caution: </B>The datatypes of the different fields differ; a common 
+source of programming problems. <P>
+<B>Example 1: </B><I>The CCB structure</I><P>
+<CODE>
+<PRE>
+typedef struct CCB {
+    uint32 ccb_Flags;
+    struct CCB *ccb_NextPtr;
+    CelData *ccb_SourcePtr;
+    void *ccb_PLUTPtr;
+
+    Coord ccb_XPos;                        /*16.16 (not int32!)*/
+    Coord ccb_YPos;                        /*16.16 (not int32!)*/
+    int32 ccb_HDX;                        /*12.20*/
+    int32 ccb_HDY;                        /*12.20*/
+    int32 ccb_VDX;                        /*16.16*/
+    int32 ccb_VDY;                        /*16.16*/
+    int32 ccb_HDDX;                        /*12.20, increment for drawing 
+*/
+    int32 ccb_HDDY;                        /*12.20, increment for drawing 
+*/
+    uint32 ccb_PIXC;                        /*P-Mode bit*/
+
+    uint32 ccb_PRE0;                        /*preamble*/
+    uint32 ccb_PRE1;                        /**preamble*/
+
+    int32 ccb_Width;                    /*don't change, change position 
+instead*
+    int32 ccb_Height;                    /*don't change, change position 
+instead*/
+} CCB;
+</CODE>
+</PRE>
+<H3>For More Information</H3>
+A detailed discussion of the CCB is provided in Chapter 5, "Using the Cel 
+Engine," of the <I>3DO Portfolio Graphics Programmer's Guide</I>. <P>
+<A NAME="XREF40214"><H2>Frequently Accessed CCB Fields</A></H2>
+About one-third of the fields in the CCB pertain to the cel's basic source 
+data. <P>
+<UL>
+<LI><CODE>ccb_SourcePtr</CODE>-a pointer to the data 
+<p>
+<LI><CODE>ccb_PLUTPtr</CODE>-a pointer to the palette
+<p>
+<LI><CODE>ccb_PRE0</CODE> and <CODE>ccb_PRE1</CODE>-two possible "preamble 
+words" that store extra data in some cel formats
+<p>
+<LI><CODE>ccb_Width</CODE> and <CODE>ccb_Height</CODE>-the width and 
+height of the source data
+<p>
+<LI><CODE>ccb_XPos</CODE> and <CODE>ccb_YPos</CODE>-the location of the 
+upper-left corner of the cel
+</UL>
+You can do a lot of cel manipulation by directly setting the values of the 
+fields. For example, you can use a simple graphic of two parallel lines to 
+create a laser beam effect. The program stretches the parallel lines from 
+the origin to the bottom left and right corners of the screen by changing 
+the value of <CODE>ccB_Width</CODE> and <CODE>ccB_Height</CODE>. This 
+gives the illusion of the beam in the jsanimation program.<P>

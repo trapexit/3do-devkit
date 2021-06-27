@@ -1,0 +1,215 @@
+<TITLE>The File menu</TITLE>
+<H1><LINK NAME="XREF20598">The File menu</LINK></H1><HR>
+This section discusses File menu commands that have unique functionality 
+in 3DO Animator. Figure 1 shows all commands in the File menu: <P>
+
+<IMG SRC="Figures/ANICh5/Filemenu.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>File menu.</I><P>
+<H2>File menu commands discussed in this section</H2>
+The following File menu commands are discussed in this section: <P>
+<UL>
+<LI>New
+<LI>Open
+<LI>Open As...
+<LI>Save As...
+<LI>Build an Animation
+<LI>Build an Animation As...
+</UL>
+<H2>New command</H2>
+When you select New from the File menu, 3DO Animator displays the New 
+document dialog (see Figure 2) that lets you specify size, dimensions, and 
+other characteristics of the new document. The defaults displayed in the 
+dialog depend on the current Preferences settings. Preferences settings 
+are discussed in the Studio/32 manual. <P>
+
+<IMG SRC="Figures/ANICh5/FileNew.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>New Document dialog.</I><P>
+<H2>Open command</H2>
+Keyboard Shortcut: Command - O <P>
+When you select Open from the File menu, 3DO Animator displays the Open 
+File dialog, which is a Macintosh standard file dialog with additional 
+file format options, a Create Picture Preview button, and a Picture 
+Preview window.<P>
+
+<IMG SRC="Figures/ANICh5/FileOpen.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 3: </B><I>Open File dialog.</I><P>
+To open a file, click on the filename and then select Open, or 
+double-click on the filename. Click Cancel to exit the dialog.<P>
+Thefollowing options not available in the standard Macintosh file 
+selection dialog.<P>
+<H3>File Types </H3>
+
+<IMG SRC="Figures/ANICh5/FileTypes.gif" ALT="Graphic cannot be displayed">
+<P>
+Provides a selection of file formats from which you can choose. The File 
+window in the dialog shows only files that are in the format you have 
+checked.<P>
+3DO Animator supports the following formats:<P>
+<UL>
+<LI>PICT<B>-</B>Macintosh file format for exchanging files between 
+different paint programs.
+<LI><B></B>VDAN<B>-</B>3DO Animator-specific format for 8-bit to 32-bit 
+animations.
+<LI><B></B>S1AN<B>-</B>Animations from Studio/1.
+<LI>MooV<B>-</B>QuickTime movie files.
+<LI>ILBM<B>-</B>Animations from Deluxe Paint Amiga or ILBM pictures. 
+<LI>TIFF<B> </B>(Tag Image File Format)<B>-</B>Format supported by most 
+scanner manufacturers and page layout programs. 3DO Animator <I>reads</I> 
+and <I>writes</I> 8- and 24-bit color, JPEG, and grayscale TIFF files.
+<LI>EPSF (Encapsulated PostScript File)-If an EPSF file contains a PICT 
+Preview portion, 3DO Animator can read that portion (only). 3DO Animator 
+cannot read an EPSF file that doesn't have a PICT Preview portion.
+<LI><B></B>MacPaint<B>-</B>MacPaint file.
+<LI>3DO<B>-</B>A file in 3DO file format. 
+</UL>
+<H3>Picture Preview window</H3>
+The Picture Preview window displays a miniature 8-bit version of a 
+selected PICT or TIFF document or an animation. The width and height (in 
+pixels) of the picture appears below the Picture Preview window. If the 
+selected PICT or TIFF file was not saved with a picture preview, click the 
+Create Picture Preview button to build one. The next time you open that 
+file, a picture preview appears in the Picture Preview window.<P>
+The Picture Preview window automatically displays reduced versions of PICT 
+files. It shows previews of TIFF files only after you've saved them in 3DO 
+Animator. <P>
+<A NAME="XREF29252"><H2>Open As command</A></H2>
+When you select Open As from the File menu, 3DO Animator lets you open a 
+PICT or VDAN file and change the dimensions and other characteristics of 
+the file as you load it. The new document opens as Untitled.<P>
+You can open the document using different dimensions, DPI (dots per inch), 
+or number of colors (bit depth). Using Open As is an easy way to open a 
+32-bit document as an 8-bit document, for example, or to adjust the DPI so 
+the document prints differently. <P>
+When you select Open As, 3DO Animator first displays a standard file 
+dialog. After you have selected a file, the Open As dialog 
+appears.<P>
+
+<IMG SRC="Figures/ANICh5/FileOpenAs.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 4: </B><I>Open As dialog.</I><P>
+The Open As dialog lets you modify the original document using the 
+following options:<P>
+<H3>Original Settings</H3>
+Shows horizontal and vertical dimensions, DPI, and number of colors the 
+document can support. <P>
+Any of these settings can be changed in the New Settings box.<P>
+<H3>Space Adjustments</H3>
+
+<IMG SRC="Figures/ANICh5/SpaceAdjust.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+Lets you resize the document and change the depth of the document.<P>
+<UL>
+<LI>Scale-3DO Animator preserves the aspect ratio of the original 
+document. For example, if the original document (image) was 640 x 480 
+pixels, and the new document is 400 x 300 pixels, the new document has the 
+same 4 to 3 ratio as the original. If the new document does not have the 
+same ratio as the original, the program creates an image that preserves 
+the aspect ratio (in our example, 4 to 3) and fills the rest of the 
+document with white space. <P>
+<LI>Fit-Forces (compresses or stretches) the entire original document into 
+the dimensions of the new document. If the new dimension settings are not 
+the same ratio as the original, some distortion of the image results.<P>
+<LI>Clip-Lets you define the size of the document. Before selecting Clip, 
+specify the new dimensions of the document by typing in H and V values in 
+the Open As dialog. If the new document is much smaller than the original, 
+it will be completely filled with what appears at the center of the 
+original document. The edges of the original will be lost in the new 
+document. You can move the outline to select a different part of the 
+original image. If the new document is larger than the original, 3DO 
+Animator places the original in the center of the new document and 
+surrounds it with white space. 
+</UL>
+<H3>Memory</H3>
+Displays the RAM required by the original document. If you change the 
+dimensions of the original, Memory displays the RAM required for the new 
+document settings. <P>
+<B>Note: </B>Note: This is for PICT files only.<P>
+<H3>Number of Colors</H3>
+Lets you choose the bit depth for the new document. <P>
+You can check Use Dithering when you open a 32-bit document in either 256 
+(8-bit) mode, or Thousands (16-bit) mode. The colors available in the 
+current palette determine the quality of the dithering. If you open a 
+32-bit document and don't change the number of colors, Use Dithering is 
+dimmed, because dithering is unnecessary with true color.<P>
+The Palette button lets you choose a palette for remapping if you open a 
+document using 256 colors.<P>
+<H2>Save As command</H2>
+When you select Save As from the File menu, 3DO Animator displays the Save 
+As dialog. <P>
+
+<IMG SRC="Figures/ANICh5/FileSaveAs.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 5: </B><I>Save As dialog.</I><P>
+The Save As dialog is a standard Macintosh Save As dialog with several 
+additional options discussed in below. When the dialog appears, the 
+current name of the document (which may be Untitled) is highlighted. You 
+can rename the document by typing a new name.<P>
+The following options are supported:<P>
+<H3>File Type</H3>
+
+<IMG SRC="Figures/ANICh5/FileTypeSaveAs.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+Lets you select the file format for the image or cel. The format you 
+select becomes the default until you redefine it using the Save As 
+procedure. <P>
+You can save files in the following formats: <P>
+<UL>
+<LI>3DO-Cel/Anim-3DO cel or a 3DO animation.
+<LI><B></B>3DO-Image/Anim<B>-</B> 3DO image. 
+<LI>PICT-Apple's preferred file format for exchanging files between 
+different paint programs.
+<LI>TIFF<B>-</B>TIFF (Tag Image File Format) format, supported by most 
+scanner manufacturers and page layout programs. 
+<LI><B></B>EPSF<B>-</B>EPSF (Encapsulated PostScript File) format. If an 
+EPSF file has a PICT Preview portion, 3DO Animator can read that portion 
+(only). 
+<LI>VDAN<B>-</B>3DO Animator animation file format.
+<LI>ILBM<B>-</B>Deluxe Paint Amiga format (picture or animation).
+<LI><B></B>MooV<B>-</B>QuickTime movie format. The standard QuickTime 
+dialog for setting the compression parameters is displayed.<B>Make 
+sure the Frames per Second number is set correctly</B>
+</UL>
+<H3>3DO...</H3>
+Only available if you select one of the 3DO formats. You can use this 
+button to set a number of flags and other options for the cel you are 
+saving. <P>
+<H3>Save Anim in Raw Format</H3>
+After you have selected the file type (any type but VDAN), you can save 
+each frame of an animation separately by checking the Save Anim in Raw 
+Format checkbox. 3DO Animator saves each frame under the chosen name with 
+the number of the frame as a suffix.<P>
+<H3>LZW File Compression</H3>
+Only available when you're saving TIFF files. LZW's guaranteed "lossless" 
+compression routine can make a file as much as 50 percent smaller than its 
+noncompressed version. However, when a file is saved using LZW, 3DO 
+Animator takes longer to open and save it.<P>
+<H3>No Preview</H3>
+Conserves disk space without loss in performance by eliminating the 
+picture preview from the save. This is especially useful if you're saving 
+a document for use with a HyperCard stack. Since the stack doesn't require 
+or support a preview function, any file you save without checking the No 
+Preview box would waste the memory required to create the preview. No 
+Preview is the default setting for 3DO files.<P>
+<H2>Build an Animation command</H2>
+When you select Build an Animation from the File menu, 3DO Animator 
+displays a file selection dialog. All the pictures in the folder you 
+select are displayed in alphabetical order. Select the directory (folder) 
+containing the frames included in the animation. Click Select Current 
+Directory to build the animation.<P>
+
+<IMG SRC="Figures/ANICh5/BuildAnimation.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 6: </B><I>File selection dialog for building an animation. 
+</I><P>
+<H2>Build an Animation As command</H2>
+When you select Build an Animation from the File menu, 3DO Animator 
+prompts you for a folder to select (as described for Build an Animation) 
+and in addition offers the options of the <A HREF="#XREF29252">Open As 
+command</A>  after you have selected a directory.<P>
+<P>

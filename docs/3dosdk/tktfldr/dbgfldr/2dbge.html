@@ -1,0 +1,37 @@
+<TITLE>The BreakPoints window</TITLE>
+<H1><LINK NAME="XREF34004">The BreakPoints window</LINK></H1><HR>
+The BreakPoints window lists all currently defined software breakpoints.<P>
+
+<IMG SRC="Figures/002.Ch2Pics/BreakPointsWin.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>BreakPoints window</I><P>
+<H2>Working with the BreakPoints window</H2>
+The following table lists different operations you can perform in a BreakPoints window.<P>
+<PRE>
+<B>Table 1: </B><I> Working with the Breakpoints window.</I>
+------------------------------------------------------
+To...           |Do this...                           
+------------------------------------------------------
+Open the window |Press Command-U, or select           
+                |BreakPoints from the View menu.      
+------------------------------------------------------
+Set a breakpoint|Enter the breakpoint address or a    
+                |function name into the edit box to   
+                |the right of the Set button, then    
+                |click Set. The source line or        
+                |disassembly line is marked with a    
+                |bullet ().                           
+------------------------------------------------------
+Remove a        |Click on a breakpoint in the list to 
+breakpoint      |select it, then click Clear. The     
+                |bullet in the left margin of the     
+                |Source or Disassembly window is      
+                |replaced with a pound sign (#).      
+------------------------------------------------------
+Set conditional |Click on the Condition box.See Using 
+breakpoints     |conditional breakpoints from the     
+                |Source window.                       
+------------------------------------------------------
+</PRE>
+<P>
+<B>Note: </B>You can place hard-coded breakpoints into the source code if you include debug.h in that file. Putting a Debugger()<I>;</I> statement anywhere in the code will then cause a breakpoint. Use Ignore Software Breakpoints in the Preferences dialog if you want to run your program without stopping at these breakpoints.<P>

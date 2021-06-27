@@ -1,0 +1,55 @@
+<TITLE>Application Size Limitations</TITLE>
+<H1><LINK NAME="XREF42095">Application Size Limitations</LINK></H1><HR>
+This section helps you work with application size limitations, discussing 
+the following topics: <P>
+
+<UL>
+<LI><A HREF="#XREF40865">Factors Influencing Available Space</A>
+<LI><A HREF="#XREF41706">Determining Available Space for Your 
+Application</A>
+</UL>
+<A NAME="XREF40865"><H2>Factors Influencing Available Space</A></H2>
+CD-ROM discs can hold up to 640 MB of information, which must include:<P>
+<p>
+<UL>
+<LI>The title's program and art files
+<LI>System files
+<LI>CD-ROM access information generated during the CD layout process
+</UL><BR>
+<p>
+In most cases, your title can use approximately 600 MB on the disc. The 
+exact portion of the 640 MB for your application data is variable and 
+depends in part on these factors:<P>
+<UL>
+<LI>How much space on the disc does the system require?
+<p>
+<LI>How large are the individual developer files?
+<p>
+<LI>How many avatars (instances) of the root, label, and directory files 
+does the layout tool place on the disc?
+<p>
+<LI>Default numbers are: 3 directory avatars, 7 root avatars, and 2 label 
+avatars. The <I>cdrom.tcl</I> file contains information on how to safely 
+change the defaults. 
+</UL>
+<A NAME="XREF41706"><H2>Determining Available Space for Your 
+Application</A></H2>
+The only reliable way to determine exactly how large an application can 
+fit on the disc is to run through the normal layout procedure described 
+briefly below and in detail in the <A 
+HREF="./03CDM003.html#XREF29116">Preparing Simple cdrom.image 
+Files</A>: <P>
+<OL>
+<LI>Place the executable and data files in the <I>/cdrommaster/takeme</I> 
+folder 
+<p>
+<LI>Set the <I>cdrom.image</I> file size in the <I>cdrom.tcl </I>file to 
+640 
+<p>
+<LI>Run the layout tool
+</OL>
+You can include the maximum amount of data when, in the <I>cdrom.tcl 
+</I>file, image file size is set to 640 and the number of directory, root, 
+and label avatars are all set to two. If you do this and the layout tool 
+produces the error "Could not assign avatars for ...," you need to reduce 
+your title's content. <P>

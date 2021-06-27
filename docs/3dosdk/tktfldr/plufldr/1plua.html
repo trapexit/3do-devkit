@@ -1,0 +1,96 @@
+<TITLE>Creating a basic image</TITLE>
+<H1><LINK NAME="XREF11040">Creating a basic image</LINK></H1><HR>
+Converting source art to 3DO image format involves two steps, discussed in 
+this section: <P>
+
+<UL>
+<LI><A HREF="#XREF28979">Resizing source art</A>.
+<LI><A HREF="#XREF22813">Exporting source art with the 3DO Image 
+Writer</A>.
+</UL>
+<H3>For more information</H3>
+If your source has a lot of its colors at one end of the spectrum, 
+consider creating an image with a custom VDL (see <A 
+HREF="./1plub.html#XREF25885">Creating images with custom VDLs</A>). <P>
+<A NAME="XREF28979"><H2>Resizing source art</A></H2>
+To save images in the proper size, you have to consider the following 
+issues: <P>
+<UL>
+<LI>On NTSC screens, the maximum display size for a 3DO image 320 x 240.
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>If the image is larger, only the upper-left area is displayed.
+<p>
+<LI>If the image is smaller, it is displayed in the upper-left corner and 
+the areas not used are displayed in black. 
+</UL><BR>
+</DL>
+<UL>
+<LI>The PAL screen centers smaller images on a black background. 
+</UL>
+<H3>How to resize source art</H3>
+To resize source art, follow these steps:<P>
+<OL>
+<LI>From the Image menu, choose Image Size.<P>
+
+<IMG SRC="Figures/PLU1.figs/ImageSize.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Dialog for resizing an image in Photoshop.</I><P>
+
+<LI>In the dialog, change the units to pixels and specify either height or 
+width, using the appropriate numbers for NTSC (320 x 240) or PAL (384 x 
+288). Make sure that Resolution is 72 pixels/inch and that Constrain 
+Proportions is checked and Constrain File Size is not checked, and choose 
+OK. 
+<p>
+<p>Photoshop scales the source art to the specified size. If you prefer 
+to crop the source art, use the Canvas Size command. 
+<p>
+</OL>
+<A NAME="XREF22813"><H2>Exporting source art with the 3DO Image 
+Writer</A></H2>
+To export source art with the 3DO Image Writer, follow these steps:<P>
+<OL>
+<LI>From the File menu, choose Export &gt; 3DO ImageWriter.
+<p>
+<p><B>Note: </B>To generate a PAL image (384 x 288), choose Export &gt; 
+PAL Image Writer.<BR>
+<p>
+
+<LI>Specify the name of the image. Using the extension .img is recommended.
+<p>
+<p>The dialog shown in the figure below lets you choose the export 
+options for the image.
+<p>
+
+<IMG SRC="Figures/PLU1.figs/ImageWriter.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>3DO Image Writer dialog.</I><P>
+
+<LI>In the VDL Type box, choose Standard.
+<p>
+<LI>Next, decide the type of standard VDL you want to use:
+<p>
+<UL>
+<LI>Standard 5-5-5 uses five bits each for red, green, and blue. 
+<p>
+<LI>Standard 5-5-4-0 uses five bits each for red and green but leaves the 
+lowest bit of blue for cornerweighting. 
+</UL><BR>
+<p><B>Note: </B>If the original image has 24 bits per pixel, the tool 
+discards the bottom three bits of the red, green, and blue part to prepare 
+the image for the frame buffer and the image will not look exactly as it 
+did on the Macintosh screen. A custom VDL, discussed below, may be helpful 
+in this situation.<BR>
+<p>
+
+<LI>Choose OK to save the image. 
+<p>
+<p>You can check the Suppress Warnings box if you anticipate warnings 
+during the conversion process and don't want to see them. 
+
+</OL>

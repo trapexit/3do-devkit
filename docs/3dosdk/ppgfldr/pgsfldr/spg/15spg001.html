@@ -1,0 +1,3 @@
+<TITLE>Dealing With Overflow</TITLE>
+<H1><LINK NAME="XREF31768">Dealing With Overflow</LINK></H1><HR>
+Most Math folio function calls do not detect overflow. When overflow occurs, the result is most often a garbage value. The exceptions to this rule are many division calls.   If overflow occurs when using an unsigned division call, the call normally returns a value with all bits set (the maximum possible value). When overflow occurs using a signed division call, the call returns either a value with all bits set (the smallest possible negative value), or all bits clear except the least-significant bit (the smallest positive value).<P>

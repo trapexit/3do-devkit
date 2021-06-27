@@ -1,0 +1,186 @@
+<HTML><HEAD><TITLE>Initialization Algorithms</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Initialization Algorithms</H2>
+<A HREF="sidebar.htm#sidebar51"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the source</STRONG></A>
+
+<P>The first set of algorithms we will cover are those that are chiefly, although not exclusively, used to initialize a newly created sequence with certain values.  The standard library provides several initialization algorithms.  In our discussion we'll provide examples of how to apply these algorithms, and suggest how to choose one algorithm over another.</P>
+<A NAME="fillasequencewithaninitialvalue"><H3>Fill a Sequence with An Initial Value</H3></A>
+<P>The <SAMP>fill()</SAMP> and <SAMP>fill_n()</SAMP> algorithms are used to initialize or reinitialize a sequence with a fixed value.  Their declarations are as follows:</P>
+<PRE>void fill (ForwardIterator first, ForwardIterator last, const T&#38;);
+void fill_n (OutputIterator, Size, const T&#38;);
+</PRE>
+
+<A HREF="sidebar.htm#sidebar52"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Different Initialization Algorithms</STRONG></A>
+
+<P>The example program illustrates several uses of the algorithm:</P>
+<PRE>void fill_example ()
+   // illustrate the use of the fill algorithm
+{
+      // example 1, fill an array with initial values
+   char buffer[100], * bufferp = buffer;
+   fill (bufferp, bufferp + 100, '\0');
+   fill_n (bufferp, 10, 'x');
+
+      // example 2, use fill to initialize a list
+   list&#60;string> aList(5, "nothing");
+   fill_n (inserter(aList, aList.begin()), 10, "empty");
+
+      // example 3, use fill to overwrite values in list
+   fill (aList.begin(), aList.end(), "full");
+
+      // example 4, fill in a portion of a collection
+   vector&#60;int> iVec(10);
+   generate (iVec.begin(), iVec.end(), iotaGen(1));
+   vector&#60;int>::iterator &#38; seven = 
+         find(iVec.begin(), iVec.end(), 7);
+   fill (iVec.begin(), seven, 0);
+}
+</PRE>
+<P>In example 1, an array of character values is declared.  The <SAMP>fill()</SAMP> algorithm is invoked to initialize each location in this array with a null character value.  The first 10 positions are then replaced with the character <SAMP>'x'</SAMP> by using the algorithm <SAMP>fill_n().</SAMP>  Note that the <SAMP>fill()</SAMP> algorithm requires both starting and past-end iterators as arguments, whereas the <SAMP>fill_n()</SAMP> algorithm uses a starting iterator and a count.</P>
+<P>Example 2 illustrates how, by using an <I>insert iterator</I> (<i>see <a href="ins_0332.htm">Chapter 2: Insert Iterators</a></i>), the <SAMP>fill_n()</SAMP> algorithm can be used to initialize a variable length container, such as a list.  In this case the list initially contains five elements, all holding the text <SAMP>"nothing".</SAMP>  The call on <SAMP>fill_n()</SAMP> then inserts ten instances of the string <SAMP>"empty".</SAMP>  The resulting list contains fifteen elements.</P>
+<P>The third and fourth examples illustrate how <SAMP>fill()</SAMP> can be used to change the values in an existing container.  In the third example each of the fifteen elements in the list created in example 2 is replaced by the string <SAMP>"full".</SAMP>  </P>
+<P>Example 4 overwrites only a portion of a list.  Using the algorithm <SAMP>generate</SAMP> and the function object<B><I> </I></B><B><I>iotaGen</I></B>, which we will describe in the next section, a vector is initialized to the values 1 2 3 ... 10.  The <SAMP>find()</SAMP> algorithm (<i><a href="sea_9743.htm">Chapter 13: Searching Operations</a></i>) is then used to locate the position of the element 7, saving the location in an iterator appropriate for the <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> data type.  The<SAMP> fill()</SAMP> call then replaces all values up to, but not including, the 7 entry with the value 0.  The resulting vector has six zero fields, followed by the values 7, 8, 9 and 10.</P>
+<P>The <SAMP>fill()</SAMP> and<SAMP> fill_n()</SAMP> algorithm can be used with all the container classes contained in the standard library, although insert iterators must be used with ordered containers, such as a <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A>.</P>
+
+<A NAME="copyonesequenceintoanothersequence"><H3>Copy One Sequence Into Another Sequence</H3></A>
+<A HREF="sidebar.htm#sidebar53"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Appending Several Copies</STRONG></A>
+
+<P>The algorithms <SAMP>copy()</SAMP> and <SAMP>copy_backward()</SAMP> are versatile functions that can be used for a number of different purposes, and are probably the most commonly executed algorithms in the standard library.  The declarations for these algorithms are as follows:</P>
+<PRE>OutputIterator copy (InputIterator first, InputIterator last, 
+         OutputIterator result);
+
+BidirectionalIterator copy_backward 
+   (BidirectionalIterator first, BidirectionalIterator last,
+    BidirectionalIterator result);
+</PRE>
+<P>Uses of the copy algorithm include:</P>
+<UL>
+<LI>Duplicating an entire sequence by copying into a new sequence</LI>
+<LI>Creating subsequences of an existing sequence</LI>
+<LI>Adding elements into a sequence</LI>
+<LI>Copying a sequence from input or to output</LI>
+<LI>Converting a sequence from one form into another</LI>
+</UL>
+<P>These are illustrated in the following sample program.</P>
+<PRE>void copy_example()
+   // illustrate the use of the copy algorithm
+{
+   char * source = "reprise";
+   char * surpass = "surpass";
+   char buffer[120], * bufferp = buffer;
+
+      // example 1, a simple copy
+   copy (source, source + strlen(source) + 1, bufferp);
+
+      // example 2, self copies
+   copy (bufferp + 2, bufferp + strlen(buffer) + 1, bufferp);
+   int buflen = strlen(buffer) + 1;
+   copy_backward (bufferp, bufferp + buflen, bufferp + buflen + 3);
+   copy (surpass, surpass + 3, bufferp);
+
+      // example 3, copy to output
+   copy (bufferp, bufferp + strlen(buffer), 
+            ostream_iterator&#60;char>(cout));
+   cout &#60;&#60; endl;
+
+      // example 4, use copy to convert type
+   list&#60;char> char_list;
+   copy (bufferp, bufferp + strlen(buffer), 
+            inserter(char_list, char_list.end()));
+   char * big = "big ";
+   copy (big, big + 4, inserter(char_list, char_list.begin()));
+
+   char buffer2 [120], * buffer2p = buffer2;
+   * copy (char_list.begin(), char_list.end(), buffer2p) = '\0';
+   cout &#60;&#60; buffer2 &#60;&#60; endl;
+}
+</PRE>
+<P>The first call on <SAMP>copy(),</SAMP> in example 1, simply copies the string pointed to by the variable <SAMP>source</SAMP> into a buffer, resulting in the buffer containing the text <SAMP>"reprise".</SAMP>  Note that the ending position for the copy is one past the terminating null character, thus ensuring the null character is included in the copy operation.</P>
+<P>The <SAMP>copy()</SAMP> operation is specifically designed to permit self-copies, i.e., copies of a sequence onto itself, as long as the destination iterator does not fall within the range formed by the source iterators.  This is illustrated by example 2.  Here the copy begins at position 2 of the buffer and extends to the end, copying characters into the beginning of the buffer.  This results in the buffer holding the value <SAMP>"prise".</SAMP>  </P>
+<P>The second half of example 2 illustrates the use of the <SAMP>copy_backward()</SAMP> algorithm.  This function performs the same task as the <SAMP>copy()</SAMP> algorithm, but moves elements from the end of the sequence first, progressing to the front of the sequence.  (If you think of the argument as a string, characters are moved starting from the right and progressing to the left.)  In this case the result will be that buffer will be assigned the value <SAMP>"priprise".</SAMP>  The first three characters are then modified by another <SAMP>copy()</SAMP> operation to the values <SAMP>"sur",</SAMP> resulting in buffer holding the <SAMP>value "surprise".</SAMP></P>
+
+<A HREF="sidebar.htm#sidebar54"><IMG SRC="images/note.gif" BORDER=0> <STRONG>copy_backwards</STRONG></A>
+
+<P>Example 3 illustrates <SAMP>copy()</SAMP> being used to move values to an output stream.  (<i>See <a href="str_7181.htm">Chapter 2: Stream Iterators</a></i>).  The target in this case is an <SAMP>ostream_iterator</SAMP> generated for the output stream<SAMP> cout</SAMP>.  A similar mechanism can be used for input values.  For example, a simple mechanism to copy every word in the input stream into a list is the following call on <SAMP>copy():</SAMP></P>
+<PRE>list&#60;string> words;
+istream_iterator&#60;string, ptrdiff_t> in_stream(cin), eof;
+
+copy(in_stream, eof, inserter(words, words.begin()));
+</PRE>
+<P>This technique is used in the spell checking program described in <a href="exa_2257.htm">Chapter 8 (<i>Example Program - A Spelling...</i>)</a>.</P>
+<P>Copy can also be used to convert from one type of stream to another.  For example, the call in example 4 of the sample program copies the characters held in the buffer one by one into a list of characters.  The call on <SAMP>inserter()</SAMP> creates an insert iterator, used to insert values into the list.  The first call on <SAMP>copy()</SAMP> places the string <SAMP>surprise</SAMP>, created in example 2, into the list.  The second call on <SAMP>copy()</SAMP> inserts the values from the string <SAMP>"big "</SAMP> onto the front of the list, resulting in the list containing the characters <SAMP>big surprise</SAMP>.  The final call on <SAMP>copy()</SAMP> illustrates the reverse process, copying characters from a list back into a character buffer.</P>
+
+<A NAME="initializeasequencewithgeneratedvalues"><H3>Initialize a Sequence with Generated Values</H3></A>
+<P>A <I>generator</I> is a function that will return a series of values on successive invocations.  Probably the generator you are most familiar with is a random number generator.  However, generators can be constructed for a variety of different purposes, including initializing sequences.</P>
+<P>Like <SAMP>fill()</SAMP> and <SAMP>fill_n(),</SAMP> the algorithms <SAMP>generate()</SAMP> and <SAMP>generate_n()</SAMP> are used to initialize or reinitialize a sequence.  However, instead of a fixed argument, these algorithms draw their values from a generator.  The declarations of these algorithms are as follows:</P>
+<PRE>void generate (ForwardIterator, ForwardIterator, Generator);
+void generate_n (OutputIterator, Size, Generator);
+</PRE>
+<P>Our example program shows several uses of the generate algorithm to initialize a sequence.</P>
+<PRE>string generateLabel () {
+   // generate a unique label string of the form L_ddd
+   static int lastLabel = 0;
+   char labelBuffer[80];
+   ostrstream ost(labelBuffer, 80);
+   ost &#60;&#60; "L_" &#60;&#60; lastLabel++ &#60;&#60; '\0';
+   return string(labelBuffer);
+}
+
+void generate_example ()
+   // illustrate the use of the generate and generate_n algorithms
+{
+      // example 1, generate a list of label values
+   list&#60;string> labelList;
+   generate_n (inserter(labelList, labelList.begin()), 
+         4, generateLabel);
+
+      // example 2, generate an arithmetic progression
+   vector&#60;int> iVec(10);
+   generate (iVec.begin(), iVec.end(), iotaGen(2));
+   generate_n (iVec.begin(), 5, iotaGen(7));
+   }
+</PRE>
+<P>A generator can be constructed as a simple function that "remembers" information about its previous history in one or more static variables.  An example is shown in the beginning of the example program, where the function <SAMP>generateLabel()</SAMP> is described.  This function creates a sequence of unique string labels, such as might be needed by a compiler.  Each invocation on the function <SAMP>generateLabel()</SAMP> results in a new string of the form <SAMP>L_ddd</SAMP>, each with a unique digit value.  Because the variable named <SAMP>lastLabel</SAMP> is declared as <SAMP>static</SAMP>, its value is remembered from one invocation to the next.  The first example of the sample program illustrates how this function might be used in combination with the <SAMP>generate_n()</SAMP> algorithm to initialize a list of four label values.</P>
+<P>As we described in Chapter 3, in the Standard Library a function is any object that will respond to the function call operator.  Using this fact, classes can easily be constructed as functions.  The class <B><I>iotaGen</I></B><B><I>,</I></B> which we described in <a href="fun_0476.htm">Chapter 3 (<i>Functions</i>)</a>, is an example.  The <B><I>iotaGen </I></B>function object creates a generator for an integer arithmetic sequence.  In the second example in the sample program, this sequence is used to initialize a vector with the integer values 2 through 11.  A call on <SAMP>generate_n()</SAMP> is then used to overwrite the first 5 positions of the vector with the values 7 through 11, resulting in the vector 7 8 9 10 11 7 8 9 10 11.</P>
+
+<A NAME="swapvaluesfromtwoparallelranges"><H3>Swap Values from Two Parallel Ranges</H3></A>
+<P>The template function <SAMP>swap()</SAMP> can be used to exchange the values of two objects of the same type.  It has the following definition:</P>
+<PRE>template &#60;class T> void swap (T&#38; a, T&#38; b)
+{
+   T temp(a);
+   a = b;
+   b = temp;
+}
+</PRE>
+<P>The function is generalized to iterators in the function named <SAMP>iter_swap().</SAMP>  The algorithm <SAMP>swap_ranges()</SAMP> then extends this to entire sequences.  The values denoted by the first sequence are exchanged with the values denoted by a second, parallel sequence.  The description of the <SAMP>swap_ranges()</SAMP> algorithm is as follows:</P>
+<PRE>ForwardIterator swap_ranges 
+   (ForwardIterator first, ForwardIterator last, 
+         ForwardIterator first2);
+</PRE>
+
+<A HREF="sidebar.htm#sidebar55"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Parallel Sequences</STRONG></A>
+
+<P>The second range is described only by a starting iterator.  It is assumed (but not verified) that the second range has at least as many elements as the first range.  We use both functions alone and in combination in the example program.</P>
+<PRE>void swap_example () 
+       // illustrate the use of the algorithm swap_ranges
+{
+      // first make two parallel sequences
+   int data[] = {12, 27, 14, 64}, *datap = data;
+   vector&#60;int> aVec(4);
+   generate(aVec.begin(), aVec.end(), iotaGen(1));
+
+      // illustrate swap and iter_swap
+   swap(data[0], data[2]);
+   vector&#60;int>::iterator last = aVec.end(); last--;
+   iter_swap(aVec.begin(), last);
+
+      // now swap the entire sequence
+   swap_ranges (aVec.begin(), aVec.end(), datap);
+}
+</PRE>
+
+<HR>
+<A HREF="ove_2014.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="sea_9743.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

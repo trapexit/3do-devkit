@@ -1,0 +1,269 @@
+<TITLE>Loading and Attaching Samples</TITLE>
+<H1><LINK NAME="XREF41487">Loading and Attaching Samples</LINK></H1><HR>
+A sampled sound instrument must have a sample attached to it or it cannot play. And before a sample can be attached to a sampled sound instrument, it must first be loaded from disc into RAM or defined within RAM. The Audio folio offers sample calls to load, define, attach, detach, and unload samples.<P>
+<H2>Loading Samples from Disk</H2>
+The Audio folio can load only samples stored in either the AIFF or AIFC file format, so sampled sounds stored on disc should be stored in either of those formats. (You <I>can</I> store sampled sounds in other formats if you're willing to write your own loader and pass the sample on to the Audio folio.)  The AIFF format, which is a subset of the AIFC format, supports only uncompressed sampled sounds. An AIFC file can contain either a compressed or an uncompressed sampled sound. You can create these files using sound development tools such as AudioMedia, Alchemy, CSound, and SoundHack.<P>
+An AIFF or AIFC file contains the sample data for a sampled sound along with other important auxiliary information such as the sample size (8 or 16 bits), recording sampling rate, looping points, and whether the sample is in stereo or mono. When the sample is loaded, it becomes a sample item. The sample data goes into the task's own memory, while the auxiliary sample information is stored as part of the item in system memory.<P>
+<H3>Simple Loading</H3>
+The simplest sample loading audio call is this:<P>
+<DL>
+<DD><CODE>Item LoadSample( char *Name )</CODE><BR>
+</DL>
+The call accepts a pointer (<CODE>*Name</CODE>) to a string containing the filename of the AIFF or AIFC file containing the sampled sound. When executed, <CODE>LoadSample()</CODE> finds the file, allocates task memory for the sample data, and loads the sample sound data there. It reads the auxiliary sample data, and creates a sample item that contains settings to match the auxiliary data. If successful, the call returns the item number of the loaded sample. If unsuccessful, it returns a negative value (an error code).<P>
+<H3>Loading a Partial Sample</H3>
+There are times when a sampled sound file is too large to be loaded into available memory. If so, this call will truncate the sample data to a specified size so it can be loaded:<P>
+<DL>
+<DD><CODE>Item ScanSample( char *Name, int32 BufferSize )</CODE><BR>
+</DL>
+The call accepts a pointer (<CODE>*Name</CODE>) to a string containing the filename of the AIFF or AIFC file containing the sampled sound. It also accepts a buffer size (<CODE>BufferSize</CODE>) in bytes.<P>
+When it executes, <CODE>ScanSample()</CODE> allocates a buffer of the specified size in the task's memory. It then starts at the beginning of the sample data and loads as many of the samples as will fit into the buffer. It truncates the rest of the sample and creates a sample item. If successful, the call returns the item number of the loaded sample. If unsuccessful, it returns a negative value (an error code).<P>
+<B>Note: </B>In the Opera Portfolio, <CODE>ScanSample()</CODE> will reject samples with markers outside the portion that is loaded into memory.<P>
+<H3>Loading a Sample in Specified Memory</H3>
+Both <CODE>LoadSample()</CODE> and <CODE>ScanSample()</CODE> automatically allocate RAM in the calling task's memory and then load the sample data into the allocated RAM. To load sample data into memory allocated by the task itself (which provides more control over where the sample data resides), use this call:<P>
+<DL>
+<DD><CODE>Item LoadSampleHere( char *Name , void * (*CustomAllocMem)(), void (*CustomFreeMem)() )</CODE><BR>
+</DL>
+The call accepts three arguments. The first, <CODE>*Name</CODE>, is a pointer to a string containing the filename of the AIFF or AIFC file containing the sampled sound. The second, <CODE>*(*CustomAllocMem)()</CODE>, is the name of a custom memory allocation function that the task must provide. The third, <CODE>(*CustomFreeMem)()</CODE>, is the name of a custom memory-freeing function that the task must also provide.<P>
+When executed, <CODE>LoadSampleHere()</CODE> calls the custom memory allocation function, and passes the parameters<CODE> int32 NumBytes</CODE> and <CODE>uint32 MemType</CODE>, which provide the size and type of memory to be allocated. The custom function allocates the memory and returns a DataPtr to the allocated memory if successful, or a NULL if unsuccessful. If allocation is successful, <CODE>LoadSampleHere()</CODE> loads the sample data into the allocated memory, creates a sample item, and returns the item number of the sample. If unsuccessful, the call returns a negative value (an error code).<P>
+The custom memory-freeing function is not called until the loaded sample is unloaded later with the <CODE>UnloadSample()</CODE> call. At that time, <CODE>UnloadSample()</CODE> calls the memory-freeing function and passes the parameters <CODE>(</CODE> <CODE>void *DataPtr, int32 NumBytes</CODE> <CODE>)</CODE>, which provide a pointer to the sample memory block and the size of the block. The custom call then frees the memory.<P>
+<H3>Creating an Empty Sample</H3>
+<CODE>CreateSample()</CODE> can also create an empty sample. You must allocate memory for the sample and then fill it using any technique you choose. This is useful if you want to buffer parts of a large AIFF sample file in memory, synthesize a sample from scratch, or use a custom decompression technique to load a sample from disc. Once created, the sample can be used like any other sample. An example of using <CODE>CreateSample()</CODE> is shown in Example 1.<P>
+<B>Example 1: </B><I>Creating an empty sample.</I><P>
+<CODE>
+<PRE>
+/*Allocate data from memory accessible to audio DMA. * /
+SampleData = (int16  *) AllocMem( NumBytes, MEMTYPE_AUDIO);
+If (SampleData == NULL)
+{
+    ERR(("Could not allocated sample data.\n"));
+    goto cleanup;
+}
+/* Use tags to define sample format and location. */
+
+    Tags[0].ta_Tag = AF_TAG_ADDRESS;
+    Tags[0].ta_Arg = (int32 *) Data;
+    Tags[1].ta_Tag = AF_TAG_NUMBYTES;
+    Tags[1].ta_Arg = (int32 *) NumBytes;
+    Tags[2].ta_Tag = AF_TAG_CHANNELS;
+    Tags[2].ta_Arg = (int32 *) 2;       /* stereo, optional */
+    Tags[3].ta_Tag = TAG_END;
+SampleItem = CreateSample (Tags);
+CHECKRESULT(SampleItem, "CreateSample");
+</CODE>
+</PRE>
+The tags AF_TAG_ADDRESS and either AF_TAG_FRAMES or AF_TAG_NUMBYTES are mandatory.<P>
+<B>Note: </B>CreateSample( ) replaces MakeSample(). Do not use MakeSample() in your applications as the API was such that it is open to misuse.<P>
+To use <CODE>CreateSample()</CODE>, you create a list of tag arguments. 
+The possible tags are shown in Table 1.<P>
+<PRE>
+<B>Table 1: </B><I> Tag arguments that define the characteristics of a sampled sound.</I>
+-------------------------------------------------------------------
+Tag Name                |Description                               
+-------------------------------------------------------------------
+AF_TAG_ADDRESS          |Pointer to sample data. If this tag is not
+                        |specified on creation, memory is allocated
+                        |based on AF_TAG_NUMBYTES or AF_TAG_WIDTH. 
+-------------------------------------------------------------------
+AF_TAG_ALLOC_FUNCTION   |Sets custom memory allocation function to 
+                        |be called during sample creation. Mutually
+                        |exclusive with AF_TAG_DELAY_LINE.         
+-------------------------------------------------------------------
+AF_TAG_BASEFREQ         |The frequency of the sample (in 16.16 Hz) 
+                        |when played at the original sample rate.  
+                        |This is derived from the AF_TAG_BASENOTE  
+                        |value.                                    
+-------------------------------------------------------------------
+AF_TAG_BASENOTE         |MIDI note number for this sample when     
+                        |played at the original sample rate. This  
+                        |defines the frequency conversion reference
+                        |note for the StartInstrument()            
+                        |AF_TAG_PITCH tag. Default is 60.          
+-------------------------------------------------------------------
+AF_TAG_CHANNELS         |Number of channels (or samples per sample 
+                        |frame). For stereo, this would be 2.      
+-------------------------------------------------------------------
+AF_TAG_COMPRESSIONRATIO |Compression ratio of sample data.         
+                        |Uncompressed data has a value of 1.       
+                        |Default is 1.                             
+-------------------------------------------------------------------
+AF_TAG_COMPRESSIONTYPE  |32-bit ID representing AIFC compression   
+                        |type of sample data (e.g. ID_SDX2). 0 for 
+                        |no compression.                           
+-------------------------------------------------------------------
+AF_TAG_DATA_OFFSET      |Byte offset in sample file of the         
+                        |beginning of the sample data.             
+-------------------------------------------------------------------
+AF_TAG_DATA_SIZE        |Size of sample data in sample file in     
+                        |bytes. Note that this may differ from the 
+                        |length of the sample as loaded into       
+                        |memory.                                   
+-------------------------------------------------------------------
+AF_TAG_DELAY_LINE       |Creates a delay line consisting of ta_Arg 
+                        |bytes (not frames). Mutually exclusive    
+                        |with AF_TAG_IMAGE_ADDRESS and AF_TAG_NAME.
+                        |                                          
+-------------------------------------------------------------------
+AF_TAG_DETUNE           |Amount to detune the MIDI base note in    
+                        |cents to reach the original pitch. Must be
+                        |in the range of -100 to 100. Default is 0.
+-------------------------------------------------------------------
+AF_TAG_FRAMES           |Length of sample expressed in frames. For 
+                        |a stereo sample, this is the number of    
+                        |stereo pairs in the sample. When setting, 
+                        |this tag is mutually exclusive with       
+                        |AF_TAG_NUMBYTES.                          
+-------------------------------------------------------------------
+AF_TAG_FREE_FUNCTION    |Sets custom memory free function to be    
+                        |called during sample deletion. Defaults to
+                        |FreeMem(). Mutually exclusive with        
+                        |AF_TAG_DELAY_LINE.                        
+-------------------------------------------------------------------
+AF_TAG_HIGHNOTE         |Highest MIDI note number at which to play 
+                        |this sample when  part of a multisample.  
+                        |Range is 0 to 127. Default is 127.        
+-------------------------------------------------------------------
+AF_TAG_HIGHVELOCITY     |Highest MIDI note on velocity at which to 
+                        |play this sample  when part of a          
+                        |multisample. Range is 0 to 127. Default is
+                        |127.                                      
+-------------------------------------------------------------------
+AF_TAG_IMAGE_ADDRESS    |Specifies a memory location containing an 
+                        |AIFF file image from which to read sample.
+                        |Must use in conjunction with              
+                        |AF_TAG_IMAGE_LENGTH. Mutually exclusive   
+                        |with AF_TAG_DELAY_LINE and AF_TAG_NAME.   
+-------------------------------------------------------------------
+AF_TAG_IMAGE_LENGTH     |Specifies number of bytes in AIFF file    
+                        |image pointed to by AF_TAG_IMAGE_ADDRESS. 
+-------------------------------------------------------------------
+AF_TAG_LOWNOTE          |Lowest MIDI note number at which to play  
+                        |this sample when  part of a multisample.  
+                        |Range is 0 to 127. Default is 0.          
+-------------------------------------------------------------------
+AF_TAG_LOWVELOCITY      |Lowest MIDI note on velocity at which to  
+                        |play this sample  when part of a          
+                        |multisample. Range is 0 to 127. Default is
+                        |0.                                        
+-------------------------------------------------------------------
+AF_TAG_NAME             |Name of AIFF file to load. Mutually       
+                        |exclusive with AF_TAG_DELAY_LINE and      
+                        |AF_TAG_ADDRESS.                           
+-------------------------------------------------------------------
+AF_TAG_NUMBITS          |Number of bits per sample (uncompressed). 
+                        |On creation, defaults to value from file  
+                        |or 16. When setting, is mutually exclusive
+                        |with AF_TAG_WIDTH. Default is 16.         
+-------------------------------------------------------------------
+AF_TAG_NUMBYTES         |Length of sample expressed in bytes. This 
+                        |tag is supported for all operations for   
+                        |non-delay line samples. When setting, this
+                        |tag is mutually exclusive with            
+                        |AF_TAG_FRAMES.                            
+-------------------------------------------------------------------
+AF_TAG_RELEASEBEGIN     |Frame index of the first frame of the     
+                        |release loop (0..NumFrames-1), or -1 if no
+                        |release loop. Must be used in conjunction 
+                        |with AF_TAG_RELEASEEND. Default is -1.    
+-------------------------------------------------------------------
+AF_TAG_RELEASEEND       |Frame index of the first frame after the  
+                        |last frame in the release loop when       
+                        |(1..NumFrames), or -1 if no release loop. 
+                        |Must be used in conjunction with          
+                        |AF_TAG_RELEASEBEGIN. Default is -1.       
+-------------------------------------------------------------------
+AF_TAG_SAMPLE           |Internal use only.                        
+-------------------------------------------------------------------
+AF_TAG_SAMPLE_RATE      |Original sample rate for sample expressed 
+                        |in 16.16 fractional Hz. Default is        
+                        |44100.000                                 
+-------------------------------------------------------------------
+AF_TAG_SCAN             |Selects scan mode and specifies number of 
+                        |sample data bytes to load from AIFF file  
+                        |(see ScanSample()).                       
+-------------------------------------------------------------------
+AF_TAG_SUSTAINBEGIN     |Frame index of the first frame of the     
+                        |sustain loop (0..NumFrames-1), or -1 if no
+                        |sustain loop. Must be used in conjunction 
+                        |with AF_TAG_SUSTAINEND. Default is -1.    
+-------------------------------------------------------------------
+AF_TAG_SUSTAINEND       |Frame index of the first frame after the  
+                        |last frame in the sustain loop            
+                        |(1..NumFrames), or -1 if no sustain loop. 
+                        |Must  be used in conjunction with         
+                        |AF_TAG_SUSTAINBEGIN. Default is -1.       
+-------------------------------------------------------------------
+AF_TAG_WIDTH            |Number of bytes per sample (uncompressed).
+                        |When setting, is mutually exclusive with  
+                        |AF_TAG_NUMBITS. Default is 2.             
+-------------------------------------------------------------------
+</PRE>
+<P>
+The tag argument list is terminated with TAG_END or NULL. Any of the tags listed above that you do not supply are filled in with default values. Note that a sample frame is the set of data sent to the DSP for one DSP frame. In a stereo sample, that's two samples. A frame index is an offset from the first frame of the sample data. Thus, the first frame has a frame index of 0.<P>
+<H3>Making a Sample from Existing Sample Data</H3>
+If you already have sample data in memory that you would like to turn into a sample item using <CODE>MakeSample()</CODE>, you can simply provide a <CODE>NumBytes</CODE> value of 0, which asks the call not to allocate any sample buffer. You then provide a pointer to your sample data with the tag argument AF_TAG_ADDRESS and define the size of the data using the tag argument AF_TAG_NUMBYTES. <CODE>MakeSample()</CODE> then creates a sample item from your existing sample data.<P>
+<H2>Defining a Data-Streamed Sample</H2>
+If your task uses data streaming to import file images to RAM, it can include sample files in the data stream. To use the sample files, you must define a sample from the sample file image. To do so, use this call:<P>
+<DL>
+<DD><CODE>Item DefineSampleHere( uint8 *AIFFImage, int32 NumBytes, void *(*CustomAllocMem)(), void (*CustomFreeMem)() )</CODE><BR>
+</DL>
+The call accepts four arguments: <CODE>*AIFFImage</CODE>, which is a pointer to the beginning of the sample file image; <CODE>NumBytes</CODE>, which is the size of the sample file image in bytes; <CODE>*(*CustomAllocMem)()</CODE>, which is the name of a custom memory allocation function the task must provide; and <CODE>(*CustomFreeMem)()</CODE>, which is the name of a custom memory-freeing function the task must also provide.<P>
+When it executes, <CODE>DefineSampleHere()</CODE> calls the custom memory-allocation function and passes the parameters <CODE>int32 NumBytes</CODE> and <CODE>uint32 MemType</CODE>, which provide the size and the type of memory to be allocated. The custom function allocates the memory and returns a DataPtr to the allocated memory if successful or NULL if unsuccessful. If allocation is successful, <CODE>DefineSampleHere()</CODE> loads the sample data from the file image into the allocated memory, creates a sample item, and returns the item number of the sample. If unsuccessful, the call returns a negative value (an error code).<P>
+The custom memory-freeing function is not called until the loaded sample is unloaded later (as described previously in the section on <CODE>LoadSampleHere()</CODE>).<P>
+<H2>Sample Loops</H2>
+Four of the sample tag arguments set loops in the sample data. A loop defines a section of the sample that is played over and over until released or stopped. Audio folio samples can contain one, two, or no loops. The two possible loops are:<P>
+<UL>
+<LI>The <I>sustain loop</I> loops after a note has started and before it has been released.
+<LI>The <I>release loop</I> loops after a note has been released.
+</UL>
+The sustain loop is defined by the two tag arguments AF_TAG_SUSTAINBEGIN and AF_TAG_SUSTAINEND. These tag arguments set the beginning and end of the loop; each is an index from the beginning sample frame of the sample data. (Index 0 falls just before the first sample frame.)  If you want the sustain loop to extend from the 189th sample frame of the envelope to the 4486th sample frame, AF_TAG_SUSTAINBEGIN should equal 188 and AF_TAG_SUSTAINEND should equal 4486. (It helps to think of an index as a point between samples. Index 188 is just before the 189th sample; index 4486 is just after the 4486th sample.)<P>
+The minimum loop size is 8 bytes because of DMA restrictions. Your loop points should fall on word boundaries if you want precise loop definitions because Opera DMA works on 32-bit (4 byte) quantities.<P>
+The release loop, like the sustain loop, is defined with two sample tag arguments: AF_TAG_RELEASEBEGIN and AF_TAG_RELEASEEND. These tag arguments serve the same purpose for the release loop as the SUSTAIN tag arguments do for the sustain loop.<P>
+<H2>Sample Trigger Points</H2>
+When you define a sample with loops, it helps to know which points of the sample play during different stages of note play. The Audio folio offers three calls that trigger different stages of a note. Those stages (along with their functions in sample playback) are<P>
+<UL>
+<LI><I>Start</I> starts playback of the sample from the first sample frame. Playback continues into the sustain loop (if defined), which loops until released. If there is no sustain loop, playback continues into the release loop. If there are no loops, playback continues to the end of the sample.
+<p>
+<LI><I>Release</I> asks that the sustain loop (if defined) finish its current iteration and that sample playback then continue beyond the sustain loop's end point into the release loop (if defined) or to the end of the sample if there is no release loop.
+<p>
+<LI><I>Stop</I> asks the sample to stop playing, no matter where playback is located in the sample data.
+</UL>
+If an instrument with a sustain loop is released before playback enters the sustain loop, the sustain loop plays only once. An instrument with a sustain loop loops indefinitely without a release or a stop; an instrument with a release loop loops indefinitely without a stop.<P>
+<H2>Attaching a Sample to an Instrument</H2>
+Once you have loaded (or defined) a sample, you must attach it to a sampled sound instrument before you can play the sample. To do so, use this call:<P>
+<DL>
+<DD><CODE>Item AttachSample( Item InstrumentItem, Item SampleItem, char *FIFOName )</CODE><BR>
+</DL>
+The call takes three arguments: <CODE>InstrumentItem</CODE>, which is the item number of an instrument; <CODE>SampleItem</CODE>, which is the item number of a sample; and <CODE>*FIFOName</CODE>, which is a pointer to a string containing the name of the DSP input FIFO through which you want to play the sample.<P>
+The FIFO name argument is provided for instruments such as delay instruments with more than one FIFO. If you pass NULL for this argument, you specify the first FIFO of the instrument.<P>
+When <CODE>AttachSample()</CODE> executes, it attaches the specified sample to the specified FIFO of the specified instrument. It creates an attachment item that defines the sample's attachment to the instrument. If successful, the call returns the item number of the attachment. If unsuccessful, it returns a negative value (an error code).<P>
+<H2>The Attachment Item</H2>
+The attachment item created by <CODE>AttachSample()</CODE> is important because it defines the attachment between a sample and an instrument, both of which remain independent entities. The attachment lists the sample and the instrument and ties the two together.<P>
+Because an attachment item maintains the sample and the instrument as independent entities (it does not incorporate the sample into the instrument), one sample can be attached to more than one instrument. And more than one sample can be attached to a single FIFO of an instrument.<P>
+You can alter attachment items with attachment calls; to do so, you need the attachment item number returned by <CODE>AttachSample()</CODE> and the attachment item number to detach the sample from the instrument.<P>
+<H2>Attaching Multisamples to an Instrument</H2>
+It is tempting to try to create a realistic sounding instrument by attaching a single sample to an instrument and then playing the sample back at different rates to create a full range of pitches. There is one major problem with this approach: the sample no longer sounds real once it is played back at a rate much slower or faster than the original rate. For example, a grand piano sample of middle C might sound fine played back at rates that create pitches up to an E above or an A below, but going much higher than that makes the sample sound unreasonably short and tinny, and going lower makes it sound too long and muddy.<P>
+The solution is multisampling: creating many different samples for a single instrument, one sample for each reasonable range of pitches. For example, a middle-C piano sample might be used for an instrument's A to D range, while an F above middle C on the piano may be used for the E-flat to A-flat range above, and so on, with a new sample for every half-octave of the instrument's range.<P>
+To create a multisample sound with a sampled sound instrument, you simply use <CODE>AttachSample()</CODE> to attach as many samples as you need to a single FIFO of the instrument. Each of the samples should be defined to have an exclusive pitch or velocity range in which it plays. Some audio editors allow you to set the pitch range for the sample file. If you cannot set the pitch range there, you can set it using the sample tag arguments AF_TAG_LOWNOTE and AF_TAG_HIGHNOTE. You can set the velocity range using the tag arguments AF_TAG_LOWVELOCITY and AF_TAG_HIGHVELOCITY. The call <CODE>SetAudioItemInfo()</CODE>, described in <A HREF="./03mpg007.html#XREF26867">Setting Audio Item Characteristics</A>, allows you to set these tag argument values for any existing sample item.<P>
+When you play the instrument later, specifying a pitch or a velocity, the Audio folio plays only the sample that is set to play in that pitch and velocity range. If more than one sample fits the pitch and velocity criteria, the Audio folio plays the first of the appropriate samples connected to the instrument. If no sample fits the pitch and velocity criteria, no sample plays.<P>
+Note that all samples in a multisample configuration must have the same format: the same number of bytes per sample, the same number of channels (stereo or mono), and the same compression type.<P>
+You can use multisample with nonvariable rate instruments such as <CODE>fixedmonosample.dsp</CODE>. The pitch will not affect the frequency but it can be used to select a sample. This can be used to put a drum kit on a single instrument.<P>
+<H2>Detaching a Sample from an Instrument</H2>
+When a task finishes playing a sample through a sampled-sound instrument, it should detach the sample from the instrument. To detach an instrument, use this call:<P>
+<DL>
+<DD><CODE>Err DetachSample( Item Attachment )</CODE><BR>
+</DL>
+The call accepts the item number of the attachment that connects the sample and the instrument. When it executes, the call deletes the attachment item, detaching the sample from the instrument. <CODE>DetachSample()</CODE> returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<H2>Deleting a Sample</H2>
+Once a task is finished with a sample, it should delete the sample to free system resources and task memory. To do so, use this call:<P>
+<DL>
+<DD><CODE>Err UnloadSample( Item SampleItem )</CODE><BR>
+</DL>
+The call accepts the item number of the sample to be deleted. When it executes, <CODE>UnloadSample()</CODE> removes the sample data from memory, frees the sample data memory (using the custom memory-freeing function if the sample was created with <CODE>LoadSampleHere()</CODE> or <CODE>DefineSampleHere()</CODE>), and deletes the sample item. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+Note that if you use <CODE>DeleteItem()</CODE> to delete a sample, the sample memory will not be freed because it is in the task's user memory.<P>
+<H2>Debugging a Sample</H2>
+If you are having trouble working with a sample in your code and would like to see <I>all</I> the available information about the sample item, the development version of Portfolio offers this call:<P>
+<DL>
+<DD><CODE>Err DebugSample( Item SampleItem )</CODE><BR>
+</DL>
+The call accepts the item number of the sample for which you want information. When it executes, it prints sample information on the screen of the Macintosh connected to your development system. If successful, it returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+Please note that this call is for debugging only. It will <I>not</I> be available in the production version of Portfolio, so do not use it to get information for your task to act on. Use <CODE>GetAudioItemInfo()</CODE> instead.<P>

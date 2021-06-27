@@ -1,0 +1,77 @@
+<TITLE>Setup for 
+working with MIDI</TITLE>
+<H1><LINK NAME="XREF25707"></LINK><LINK NAME="XREF28535">Setup for working with MIDI</LINK></H1><HR>
+This section explains some system setup for working with MIDI. It is 
+recommended you go through the setup now even if you don't expect to work 
+with MIDI immediately.<P>
+<A NAME="XREF38788"><H2>Files and folder setup</A></H2>
+If you expect to use samples to play MIDI, you need to copy some files 
+into folders that ARIA creates the first time it launches successfully. <P>
+To move the files and folders, go through these steps:<P>
+<OL>
+<LI>In the <I>/remote</I> folder, locate the following folders which ARIA 
+has created: 
+<p>
+<DL>
+<DD>
+<UL>
+<LI><I>/remote/ARIA/Instruments</I>
+<LI><I>/remote/ARIA/Samples</I>
+<LI><I>/remote/ARIA/MIDI</I>
+</UL><BR>
+</DL>
+<p>
+<LI>Drag the contents of the </I><I>ARIA MIDI Examples</I> folder into the 
+new<I> MIDI </I>folder. 
+<p>
+<LI>Drag any samples from the Toolkit CD-ROM that you expect to use to the 
+<I>Samples</I> folder. 
+</OL>
+<H3>How ARIA uses the folders</H3>
+When ARIA compiles patches, it creates files it places in the<I> 
+Instruments</I> folder. ARIA also places a file there each time you save a 
+patch as a Macintosh document. You can open the Macintosh document for 
+further work with ARIA but have to use the file in the <I>Instruments</I> 
+folder to play on the 3DO Station. <P>
+<H2>Required files for real-time MIDI</H2>
+If you intend to use ARIA to create patch documents for making sound 
+effects or to play back standard MIDI files from disk, the folder 
+structure described above is sufficient. <P>
+If you want to create music using ARIA's real-time MIDI capabilities, you 
+also need the following: <P>
+<UL>
+<LI>Apple MIDI manager, including PatchBay, and the Apple MIDI driver, if 
+it is needed by the sequencer. Apple MIDI manager is available from the 
+Apple Developer's Association (1-800-282-2732).
+<p>
+<LI>A MIDI sequencer compatible with MIDI Manager, as described in <A 
+HREF="./sdt4frst.html#XREF34368">Creating MIDI Projects with ARIA</A>.
+<p>
+<LI>A MIDI keyboard.
+</UL>
+<A NAME="XREF11430"><H2>Setting up for MIDI</A></H2>
+For real-time MIDI playback from a sequencer, or to play a patch from a 
+MIDI keyboard, you will need the following:<P>
+<UL>
+<LI>Apple MIDI Driver in your <I>System</I> folder. 
+<LI>Apple MIDI Manager in your <I>Extensions</I> folder.
+<LI>PatchBay application. Consider placing it in your <I>Apple Menu 
+Items</I> folder for easy access. 
+</UL>
+These programs are available separately and are usually bundled with 
+sequencer applications. <P>
+Figure 1 below shows the PatchBay window set up for all possible uses with 
+ARIA.<P>
+The individual connections have the following effect:<P>
+<UL>
+<LI>Serial port to sequencer-used for composing with your sequencer.
+<LI>Sequencer to ARIA-real-time playback from sequencer.
+<LI>Serial port to ARIA-playback of patches from MIDI keyboard.
+</UL>
+
+<IMG SRC="Figures/Ch2figs/patchBay.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>PatchBay setup for working with ARIA.</I><P>
+<B>Warning: </B>If you are using all three of these connections, consider 
+turning off the keyboard "tru" option in the sequencer to avoid "note 
+bounce." <P>

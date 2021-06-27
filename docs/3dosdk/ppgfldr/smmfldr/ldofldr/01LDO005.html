@@ -1,0 +1,19 @@
+<Title>CEL_NEXTPTR </Title>
+<A NAME="XREF19248"><H1>CEL_NEXTPTR </A></H1>
+ Gets the pointer to the next cel in a list.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * CEL_NEXTPTR(ccb)</CODE><P>
+<H3>Description</H3>
+This macro evaluates to a pointer to the next cel. It takes the CCB_NPABS flag into account and always returns an absolute pointer, even when the CCB contains a relative offset in the ccb_NextPtr field. Evaluates to NULL if the CCB_LAST flag is set, or if the ccb_NextPtr field is NULL or zero. <P>
+This macro evaluates its argument more than once; be careful of side effects. It is usable in expression context. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ccb
+<DD>Pointer to a cel. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the next cel, a CCB* type. NULL if there is no next cel. <P>
+<H3>Implementation</H3>
+Macro <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>

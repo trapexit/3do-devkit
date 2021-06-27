@@ -1,0 +1,24 @@
+<TITLE>Connecting Instruments</TITLE>
+<H1><LINK NAME="XREF11340">Connecting Instruments</LINK></H1><HR>
+After you have created and set instruments, you can connect them together for combined effects such as applying an envelope from <CODE>envelope.dsp</CODE> to the amplitude of another instrument. You can connect instruments together to mix sounds, such as combining a sawtooth instrument and a sampled sound instrument in a submixer. And you can connect instruments to a mixer so their audio signals are fed to the DAC, a necessary step if the instrument is to be heard at all.<P>
+<H2>Connecting One Instrument to Another</H2>
+When you connect one instrument to another, you can connect one output of the first instrument to either an input or a knob of the second instrument. When an output of one instrument is connected to an input of a second, the second instrument usually acts <I>upon</I> the incoming signal from the first instrument. For example, if a sampled sound player is connected to an input of a mixer, the mixer mixes the sampled sound output with other audio signals and puts out the mix to the DAC.<P>
+When an output of one instrument is connected to a knob of a second, the second instrument usually acts <I>according to</I> the incoming signal from the first instrument. For example, a slowly oscillating triangle wave generator connected to the frequency knob of a sawtooth generator causes the sawtooth generator to create a sawtooth wave that moves up and down in pitch.<P>
+To connect an output of one instrument to an input or knob of a second instrument, use this call:<P>
+<DL>
+<DD><CODE>Err ConnectInstruments( Item SrcIns, char *SrcName, Item DstIns, char *DstName )</CODE><BR>
+</DL>
+The call accepts four arguments. The first, <CODE>SrcIns</CODE>, is the item number of the source instrument (the first instrument). The second, <CODE>*SrcName</CODE>, is a pointer to a string containing the name of the source instrument's output used for connection. The third, <CODE>DstIns</CODE>, is the item number of the destination instrument (the second instrument). And the fourth, <CODE>*DstName</CODE>, is a pointer to a string containing the name of the destination instrument's input or knob used for connection.<P>
+When setting the parameter values for <CODE>ConnectInstruments()</CODE>,  
+the names for each of an instrument's outputs, inputs, and knobs are 
+listed in  <A HREF="../mprfldr/03mpr.html#XREF41103">Instrument Templates</A><I>,</I> in the <I>3DO Music and Audio Programmer's Reference</I>.<P>
+When <CODE>ConnectInstruments()</CODE> executes, it connects the specified output of the source instrument to the specified input or knob of the destination instrument. If successful, it returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+Note that if you connect a source instrument's output to a knob of the destination instrument, that knob is no longer available for tweaking by a task (using <CODE>TweakKnob()</CODE> or <CODE>StartInstrument()</CODE> tag arguments, both described in <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>) until the source instrument is disconnected.<P>
+<A NAME="XREF34796"><H2>Disconnecting One Instrument From Another</A></H2>
+To disconnect a source instrument's output from a destination instrument's input or knob, use this call:<P>
+<DL>
+<DD><CODE>Err DisconnectInstruments( Item SrcIns, char *SrcName, Item DstIns, char *DstName )</CODE><BR>
+</DL>
+This call accepts the same four arguments as <CODE>ConnectInstruments() </CODE>accepts. They specify an output on the source instrument and an input or knob on the destination instrument.<P>
+When it executes, <CODE>DisconnectInstruments()</CODE> breaks the specified connection. It returns 0 if successful, and a negative value (an error code) if unsuccessful.<P>
+Once the connection to a knob is broken, the knob is unavailable for tweaking.<A NAME="XREF42228"></A><P>

@@ -1,0 +1,25 @@
+<Title>SelectSamplePlayer</Title>
+<A NAME="XREF24061"><H1>SelectSamplePlayer </A></H1>
+<A NAME="XREF33051"></A> Gets the name of the instrument to play the sample.<P>
+<H3>Synopsis</H3>
+<CODE>char *SelectSamplePlayer( Item Sample, int32 IfVariable )</CODE><P>
+<H3>Description</H3>
+This function gets and returns the name of the appropriate instrument that will play the given sample.  If there is no appropriate instrument to play the sample, it returns NULL.  This function looks at the sample rate, the number of channels (mono or stereo), width (8 or 16), and compression type to determine the appropriate instrument for the sample. It also lets you specify whether you need to vary the pitch or play only at the original pitch. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Sample
+<DD>The item number of the sample to be played. 
+</DL>
+<DL>
+<DT>IfVariable
+<DD>A value indicating whether or not the pitch is to vary.  If TRUE, the pitch will vary. If FALSE, the pitch won't vary. 
+</DL>
+<H3>Return Value</H3>
+This function returns the name of the instrument that will play the given sample, or NULL if there is no appropriate instrument to play the sample. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr053.html#XREF30905"><CODE>LoadSoundFile</A>() </CODE><P>
+</CODE>

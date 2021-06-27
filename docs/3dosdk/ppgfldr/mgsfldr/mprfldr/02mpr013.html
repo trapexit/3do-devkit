@@ -1,0 +1,22 @@
+<Title>InitJuggler</Title>
+<A NAME="XREF10647"><H1>InitJuggler </A></H1>
+<A NAME="XREF23773"></A> Initializes the Juggler mechanism for controlling events.<P>
+<H3>Synopsis</H3>
+<CODE>int32 InitJuggler( void )</CODE><P>
+<H3>Description</H3>
+This function initializes the Juggler scheduling system for controlling arbitrary events.  Note that the Juggler must be initialized before calling any object-oriented, Juggler, or MIDI playback functions. <P>
+See the chapter "Playing Juggler Objects" in the Portfolio Programmer's Guide for more information about the Juggler and how it works. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>None.
+<DD> 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+juggler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr019.html#XREF25568"><CODE>TermJuggler</A>(), <A HREF="./02mpr006.html#XREF21967">BumpJuggler</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,13 @@
+To use:
+
+Copy the contents of the "**Put contents in remote" into your remote folder
+
+type "messagesample" into the debugger's terminal window
+wait about a second for the task to register itself.
+
+type "messageclient" into the debugger's terminal window a few times.
+don't forget to wait for the process to register before starting to type again.
+
+press the A button to play
+press the start button to end.
+

@@ -1,0 +1,34 @@
+<TITLE>Accessing Directories</TITLE>
+<H1><LINK NAME="XREF16814">Accessing Directories</LINK></H1><HR>
+Four functions in the File folio provide access to directories and their contents. These functions can enumerate the contents of directories or obtain information about all the currently mounted file systems.<P>
+<UL>
+<LI><CODE>OpenDirectoryPath()</CODE> 
+<LI><CODE>OpenDirectoryItem()</CODE> 
+<LI><CODE>ReadDirectory()</CODE> 
+<LI><CODE>CloseDirectory()</CODE> 
+</UL>
+<H2>Opening the Directory</H2>
+You can open a directory to read by specifying the directory's pathname or the directory's item number. <CODE>OpenDirectoryPathName()</CODE> opens a directory by specifying its pathname.<P>
+<DL>
+<DD><CODE>Directory *OpenDirectoryPathName( char *thePath )</CODE><BR>
+</DL>
+This function opens a directory, allocates a new Directory structure, and prepares for a traversal of the contents of the directory. It returns a pointer to a Directory structure that or NULL if an error occurs.<P>
+<CODE>OpenDirectoryItem()</CODE> opens a directory by referencing its item number. <P>
+<DL>
+<DD><CODE> Directory *OpenDirectoryItem( Item openFileItem )</CODE><BR>
+</DL>
+It allocates a new Directory structure, opens the directory, and prepares for a traversal of the contents of the directory. <CODE>OpenDirectoryItem()</CODE> returns a pointer to the Directory structure, or NULL if an error occurs. Typically, you obtain the item number of a directory by calling <CODE>OpenDiskFile()</CODE> on the directory, or by calling <CODE>GetDirectory()</CODE>.<P>
+<H2>Reading the Directory</H2>
+<CODE>ReadDirectory()</CODE> reads the next entry from the specified directory.<P>
+<DL>
+<DD><CODE> int32 ReadDirectory( Directory *dir, DirectoryEntry *de )</CODE><BR>
+</DL>
+This function gets information about the next directory entry, and deposits this information in the supplied DirectoryEntry structure. The contents of this structure can then be examined to get details about the entry. The function returns an error code if all entries in the directory have been processed.<P>
+<H2>Cleaning Up</H2>
+<CODE>CloseDirectory()</CODE> closes a directory that was previously opened using <CODE>OpenDirectoryItem()</CODE> or<CODE> OpenDirectoryPath()</CODE>. <P>
+<DL>
+<DD><CODE> void CloseDirectory( Directory *dir )</CODE><BR>
+</DL>
+All resources get released.<P>
+<H2>Finding Mounted File Systems</H2>
+You can obtain a list of the mounted file systems by scanning the "/" directory. If you open this directory and call <CODE>ReadDirectory()</CODE> on it, you iterate through all of the currently mounted file system. The DirectoryEntry structure will then hold information about the file system.<A NAME="XREF18249"></A><P>

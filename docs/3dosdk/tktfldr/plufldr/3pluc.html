@@ -1,0 +1,65 @@
+<TITLE>Creating special effects using 
+P-Mode</TITLE>
+<H1><LINK NAME="XREF29653">Creating special effects using P-Mode</LINK></H1><HR>
+The 3DO hardware lets you draw a cel with translucency, smoke, and other 
+special characteristics using a facility called P-Mode (pixel mode). By 
+default, cels exported with the plug-in are drawn with P-Mode 0. You can 
+create a mask in an additional channel and assign all mask pixels a 
+different P-Mode.<P>
+<H2>How to use an extra channel to brighten parts of a cel </H2>
+To create a cel with enhanced luminance in some regions, follow these 
+steps: <P>
+<OL>
+<LI>Open the cel in Photoshop.
+<p>
+<LI>Use the Magic Wand tool to select the area you want to mask. Hold down 
+the Shift key to continue selecting interior areas. 
+<p>
+<LI>Double-click on the Magic Wand tool to display the Tolerance dialog. 
+Make sure Tolerance is set to 4 and Anti-aliased is checked.
+<p>
+<p>Note that while these settings often work well, you may have to change 
+them to meet your needs. 
+<p>
+<LI>From the Select menu, choose Inverse. 
+<p>
+<LI>From the Select menu, choose Save Selection. 
+<p>
+<p>If you previously saved a mask, the channel number of that mask is 
+shown in a submenu and you have the option of overwriting that channel or 
+creating a new one. 
+<p>
+<LI>From the Window menu, choose Channels and select the channel you just 
+created to make sure the mask looks right. 
+<p>
+<LI>From the File menu, choose Export &gt; 3DO CelWriter. 
+<p>
+<p>The CelWriter dialog shows that a channel has been added. Make sure 
+the newly created channel is assigned to P-Mode in the Channel Assignments 
+region. Figure 1 shows the settings from a cel that has both a 
+Transparency channel and a P-Mode channel. 
+<p>
+<p>The P-Mode mask allows you to assign one of two different effects to 
+each pixel in the cel. For example, you can make some pixels of the cel 
+translucent and all others bright opaque. 
+<p>
+<UL>
+<LI>All pixels that are black in the mask are saved as P-Mode 0. <P>
+<LI>All nonblack pixels in the same mask are saved as P-Mode 1.
+</UL><P>
+
+<IMG SRC="Figures/PLU3.figs/P-Mode Set.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>CelWriter dialog for saving a cel with transparent 
+and P-Mode masks.</I><P>
+<p>
+<LI>In the P-Mode Settings box, choose one of the P-Mode presets for 
+P-Mode 0 to result in the kind of effect you want. P-Mode 1 usually 
+remains opaque.
+<p>
+<LI>You may also create a new P-Mode setting following the instructions in 
+<A HREF="3plud.html#XREF22545">Creating and editing a P-Mode preset</A>
+<p>
+<LI>Save the cel and display it on your 3DO Station. 
+</OL>

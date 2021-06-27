@@ -1,0 +1,87 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF25699">Function Calls</LINK></H1><HR>
+The following list contains the function calls that handle linked lists. See 
+<A HREF="../spr/01spr.html#XREF17318">Kernel Folio Calls</A>, in the <I>3DO System Programmer's Reference</I> for more information on these calls.<P>
+<H2>Initializing a List</H2>
+The following calls initialize a list:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr084.html#XREF14579">InitList</A>()  </CODE>Initializes a list.
+<LI><CODE>INITLIST()</CODE> Statically initializes a list.
+</UL>
+<H2>Adding Nodes to a List</H2>
+The following calls handle nodes:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr002.html#XREF16640">AddHead</A>()  </CODE>Adds a node to the head of a list.
+<LI><CODE><A HREF="../spr/01spr003.html#XREF18583">AddTail</A>() </CODE>Adds a node to the tail of a list.
+<LI><CODE><A HREF="../spr/01spr085.html#XREF39863">InsertNodeAfter</A>() 
+</CODE>Inserts a node after another node already in a list.
+<LI><CODE><A HREF="../spr/01spr086.html#XREF21295">InsertNodeBefore</A>() 
+</CODE>Inserts a node before another node already in a list.
+<LI><CODE><A HREF="../spr/01spr087.html#XREF20096">InsertNodeFromHead</A>()</CODE>Inserts a node into a list.
+<LI><CODE><A HREF="../spr/01spr088.html#XREF26607">InsertNodeFromTail</A>() </CODE>Inserts a node into a list.
+<LI><CODE><A HREF="../spr/01spr128.html#XREF27664">UniversalInsertNode</A>() </CODE>Inserts a node into a list.
+</UL>
+<H2>Changing the Priority of a List Node</H2>
+The following call changes the priority of a node: <P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr127.html#XREF13036">SetNodePri</A>()  </CODE>Changes the priority of a list node.
+</UL>
+<H2>Removing Nodes From a List</H2>
+The following calls remove nodes from a list:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr110.html#XREF15588">RemHead</A>()  </CODE>Removes the first node from a list.
+<LI><CODE><A HREF="../spr/01spr111.html#XREF25186">RemNode</A>() </CODE>Removes a specified node from a list.
+<LI><CODE><A HREF="../spr/01spr112.html#XREF23933">RemTail</A>() </CODE>Removes the last node from a list.
+</UL>
+<H2>Checking to See If a List Is Empty</H2>
+The following call checks if a list is empty:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr091.html#XREF32439">IsListEmpty</A>()</CODE> Checks whether a list is empty.
+</UL>
+<H2>Testing Nodes and Lists</H2>
+The following calls are used to test nodes and lists: <P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr094.html#XREF37857">IsNode</A>() </CODE>Checks whether a node is an actual node or the tail (end-of-list) anchor.
+<LI><CODE><A HREF="../spr/01spr095.html#XREF36617">IsNodeB</A>() </CODE>Tests whether the node is an actual node or the head (beginning-of-list) anchor.
+</UL>
+<H2>Traversing a Linked List</H2>
+The following calls are used to traverse a list: <P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr062.html#XREF11960">FirstNode</A>() </CODE>Gets the first node in a list.
+<LI><CODE><A HREF="../spr/01spr096.html#XREF19159">LastNode</A>() </CODE>Gets the last node in a list.
+<LI><CODE><A HREF="../spr/01spr102.html#XREF12754">NextNode</A>() </CODE>Gets the next node in a list.
+<LI><CODE><A HREF="../spr/01spr106.html#XREF31070">PrevNode</A>() </CODE>Gets the previous node in a list.
+<LI><CODE><A HREF="../spr/01spr118.html#XREF16633">ScanList</A>()</CODE>Walks through all the nodes in a list.
+<LI><CODE><A HREF="../spr/01spr119.html#XREF37661">ScanListB</A>() </CODE>Walks through all the nodes in a list backwards.
+</UL>
+<H2>Finding a Node by Name</H2>
+The following call finds a node by name.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr055.html#XREF11199">FindNamedNode</A>() 
+</CODE>Finds a node by specifying its name.
+</UL>
+<H2>Ordinal Node Position Functions</H2>
+The following functions deal with nodes using their ordinal position in a list.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr056.html#XREF23163">FindNodeFromHead</A>() 
+</CODE>Finds a node in a list by counting from the head of the list.
+<LI><CODE><A HREF="../spr/01spr057.html#XREF17756">FindNodeFromTail</A>() </CODE>Finds a node in a list by counting from the tail of the list.
+<LI><CODE><A HREF="../spr/01spr077.html#XREF12312">GetNodePosFromHead</A>() </CODE>Determines the position of a node within a list, counting from the head of the list.
+<LI><CODE><A HREF="../spr/01spr078.html#XREF41323">GetNodePosFromTail</A>() </CODE>Determines the position of a node within a list, counting from the tail of the list.
+</UL>
+<H2>Counting the Nodes in a List</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr076.html#XREF20349">GetNodeCount</A>() 
+</CODE>Counts the number of nodes in a list.
+<LI><CODE><A HREF="../spr/01spr040.html#XREF17185">DumpNode</A>() </CODE>Prints contents of a node to the debugging terminal.
+</UL>

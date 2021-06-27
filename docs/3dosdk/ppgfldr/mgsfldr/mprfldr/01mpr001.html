@@ -1,0 +1,24 @@
+<Title>AbandonInstrument</Title>
+<A NAME="XREF13566"><H1>AbandonInstrument </A></H1>
+<A NAME="XREF14148"> </A>Make an instrument available for adoption.<P>
+<H3>Synopsis</H3>
+<CODE>Err AbandonInstrument (Item Instrument)</CODE><P>
+<H3>Description</H3>
+This function together with <CODE><A HREF="./01mpr003.html#XREF24238">AdoptInstrument</A>()</CODE> form a simple, but efficient, voice allocation system for a single instrument Template. <CODE>AbandonInstrument()</CODE>  adds an instrument to a pool of unused instruments; <CODE><A HREF="./01mpr003.html#XREF24238">AdoptInstrument</A>()</CODE> allocates instruments from that pool. A Template's pool can grow or shrink dynamically. <P>
+Why should you use this system when <CODE>CreateInstrument()</CODE> and <CODE>DeleteInstrument()</CODE>  also do dynamic voice allocation? The answer is that <CODE>CreateInstrument()</CODE> and <CODE>DeleteInstrument()</CODE> create and delete Items and allocate and free DSP resources. <CODE>AdoptInstrument()</CODE> and <CODE>AbandonInstrument()</CODE>   manage a pool of already existing Instrument Items belonging to a template. Therefore they don't have the overhead of Item creation and DSP resource management, and don't thrash the Item table. <P>
+This function stops the instrument, if it was running, and sets its status to AF_ABANDONED (see <CODE>GetAudioItemInfo()</CODE> AF_TAG_STATUS). This instrument is now available to be adopted from its Template by calling AdoptInstrument(). <P>
+Instruments created with the AF_INSF_AUTOABANDON flag set, are automatically put into the AF_ABANDONED state when stopped. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>The item number for the instrument to abandon. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr003.html#XREF24238"><CODE>AdoptInstrument</A>(), <A HREF="./01mpr075.html#XREF37581">StopInstrument</A>(), ScavengeInstrument(), <A HREF="./01mpr043.html#XREF15941">GetAudioItemInfo</A>(), <A HREF="../../pgsfldr/spr/09spr009.html#XREF16655">Instrument</A></CODE><P>
+</CODE>

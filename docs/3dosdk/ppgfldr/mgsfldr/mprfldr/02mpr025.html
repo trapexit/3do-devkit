@@ -1,0 +1,21 @@
+<Title>CreateScoreContext</Title>
+<A NAME="XREF42191"><H1>CreateScoreContext </A></H1>
+<A NAME="XREF14831"></A> Allocates a score context.<P>
+<H3>Synopsis</H3>
+<CODE>ScoreContext *CreateScoreContext( int32 MaxNumPrograms )</CODE><P>
+<H3>Description</H3>
+This function allocates and initializes a score context with room enough for n MIDI programs.  It also creates a default PIMap for the score context.  The score context is necessary to import a MIDI score from a disc file and then play back that file. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>MaxNumPrograms
+<DD>The maximum number of MIDI programs (1128) for which memory will be allocated within the score context. 
+</DL>
+<H3>Return Value</H3>
+Returns a pointer to a new ScoreContext on success; NULL on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr030.html#XREF26764"><CODE>InitScoreDynamics</A>(), <A HREF="./02mpr031.html#XREF21919">InitScoreMixer</A>(), <A HREF="./02mpr021.html#XREF34990">ChangeScoreControl</A>() <A HREF="./02mpr048.html#XREF31982">TermScoreMixer</A>(), <A HREF="./02mpr023.html#XREF39934">ChangeScoreProgram</A>(), <A HREF="./02mpr026.html#XREF24437">DeleteScoreContext</A>() </CODE><P>
+</CODE>

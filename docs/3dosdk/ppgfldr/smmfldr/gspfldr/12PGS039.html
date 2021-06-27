@@ -1,0 +1,41 @@
+<Title>menu</Title>
+<A NAME="XREF20452"><H1>menu </A></H1>
+<A NAME="XREF35422"> </A>Displays a list of programs and lets the user launch 
+one.<P>
+<H3>Synopsis</H3>
+<CODE>menu [program list]</CODE><P>
+<H3>Description</H3>
+This program displays a list of programs on the screen, lets the user pick 
+one, and runs it. After the selected program completes, the list of 
+programs is displayed again and the user can make another selection. <P>
+When the list is on screen, the user can press the up and down arrows on 
+the control pad to change the selected program, press A to select a 
+program to run, and presses Stop to exit. <P>
+During startup, this program reads a file which defines the list of 
+programs to display on screen. Every line in this file defines a program, 
+using the following format: <P>
+["] label ["] cmd-line <P>
+<DL>
+<DT>label 
+<DD>the string that represents this program in the screen display. 
+Surround this string with quotes (") if it contains any spaces. 
+</DL>
+<DL>
+<DT>cmd-line 
+<DD>used as a command-line. Whenever the user selects the entry, this 
+command-line is executed as is. 
+</DL>
+Within the program list, empty lines are ignored. A semicolon indicates 
+the start of a comment. Any text following a semicolon is ignored until 
+the end of the line. Linefeed or a carriage return indicate the end of a 
+line. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>program list
+<DD>Name of a file containing a list of programs to run. If this argument 
+is not supplied, the default name of menu.script is assumed. 
+</DL>
+<H3>Associated Files</H3>
+menu.c, gfxutils.h, gfxutils.c, programlist.h, programlist.c<P>
+<H3>Location</H3>
+examples/Miscellaneous/menu <P>

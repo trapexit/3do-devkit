@@ -1,0 +1,22 @@
+<TITLE>setpri</TITLE>
+<H1><LINK NAME="XREF34619">setpri</LINK></H1><HR><P>
+<A NAME="XREF40750"></A>Sets the shell's priority.<P>
+<H3>Synopsis </H3>
+<CODE>setpri &lt;priority&gt;</CODE><P>
+<H3>Description</H3>
+Sets the priority of the shell's task. Sometimes it is desirable to boost 
+the shell's priority to a high number. This lets commands such as showtask 
+or memmap work with more accuracy. Use the showshellvars command to 
+display the current priority of the shell.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>priority
+<DD>The new shell priority; this value must be in the range 10..199.
+</DL>
+<H3>Implementation</H3>
+Command implemented in shell V20.<P>
+Built-in shell command.<P>
+<H3>Synonyms</H3>
+<CODE>shellpri </CODE><P>
+<H3>See Also</H3>
+<A HREF="Cdbgu.html#XREF22457"><CODE>showshellvars</A></CODE><P>

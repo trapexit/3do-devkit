@@ -1,0 +1,28 @@
+<Title>SetAudioDuration</Title>
+<A NAME="XREF21496"><H1>SetAudioDuration </A></H1>
+<A NAME="XREF14212"></A> Changes duration of audio clock tick.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetAudioDuration (Item Owner, uint32 Frames)</CODE><P>
+<H3>Description</H3>
+This function changes the rate of the audio clock by specifying a duration for the clock's tick. The clock is driven by a countdown timer in the DSP. When the DSP timer reaches zero, it increments the audio clock by one. The DSP timer is decremented at the sample rate of 44,100 Hz. Thus tick duration is given in units of sample frames. <P>
+The current audio clock duration can be read with <CODE>GetAudioDuration()</CODE>. <P>
+You must own the audio clock before changing its rate or duration. See <CODE>OwnAudioClock()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Owner
+<DD>Item number of owner ID from <CODE>OwnAudioClock()</CODE>. 
+</DL>
+<DL>
+<DT>Duration
+<DD>Duration of one audio tick in sample frames at 44,100 Hz. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr058.html#XREF22869"><CODE>OwnAudioClock</A>(), <A HREF="./01mpr044.html#XREF20819">GetAudioRate</A>(), <A HREF="./01mpr068.html#XREF24398">SetAudioRate</A>(), <A HREF="./01mpr040.html#XREF42227">GetAudioDuration</A>(), <A HREF="./01mpr069.html#XREF10773">SignalAtTime</A>(), <A HREF="./01mpr071.html#XREF19984">SleepUntilTime</A>(), <A HREF="./01mpr041.html#XREF22415">GetAudioFolioInfo</A> <BR>
+</CODE><P>
+</CODE>

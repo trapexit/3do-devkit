@@ -1,0 +1,24 @@
+<TITLE>Implementing subscriber functionality</TITLE>
+<H1><LINK NAME="XREF34545">Implementing subscriber functionality</LINK></H1><HR>
+The functionality of a new subscriber depends very much on the data you actually want to process. Here are some things the Protosubscriber example code includes: <P>
+<UL>
+<LI>Routine to process arriving data chunks 
+<p>
+<LI>Routine to set the status bits of a given channel
+<p>
+<LI>Routine to return the status bits of a given channel
+<p>
+<LI>Routine to perform an arbitrary subscriber defined action
+<p>
+<LI>Routine to close down an open subscription
+<p>
+<LI>Routine to start all channels for this subscription 
+<p>
+<LI>Routine to stop all channels for this subscription
+<p>
+<LI>Routine to flush all data waiting and/or queued under the assumption that we have just arrived at a branch point and should be ready to deal with all new data from an entirely different part of the stream
+<p>
+<LI>Routine to take action on end of file condition
+<p>
+<LI>Routine to kill all output, return all queued buffers, and generally stop everything. Should return all channels to pre-initialized state.
+</UL>

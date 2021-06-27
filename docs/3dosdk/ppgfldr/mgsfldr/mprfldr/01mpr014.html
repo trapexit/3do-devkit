@@ -1,0 +1,31 @@
+<Title>Convert12TET_F16</Title>
+<A NAME="XREF17148"><H1>Convert12TET_F16 </A></H1>
+<A NAME="XREF25389"></A> Converts a pitch bend value in semitones and cents into an f16 bend value.<P>
+<H3>Synopsis</H3>
+<CODE>Err Convert12TET_F16( int32 Semitones, int32 Cents,frac16 *FractionPtr )</CODE><P>
+<H3>Description</H3>
+This function, whose name reads (convert 12-tone equal-tempered to f16,)  converts a pitch bend value expressed in semitones and cents to an f16 bend value.  The bend value is used with <CODE>BendInstrumentPitch()</CODE> to bend the instrument's pitch up or down: The value multiplies the frequency of the instrument's output to create a resultant pitch bent up or down by the specified amount. <P>
+Note that the semitones and cents values need not both be positive or both be negative.  One value can be positive while the other value is negative. For example, -5 semitones and +30 cents bends pitch down by 4 semitones and 70 cents. <P>
+<CODE>Convert12TET_F16()</CODE>  stores the resultant bend value in FractionPtr. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Semitones
+<DD>The integer number of semitones to bend up or down (can be negative or positive). 
+</DL>
+<DL>
+<DT>Cents
+<DD>The integer number of cents (from -100 to +100) to bend up or down. 
+</DL>
+<DL>
+<DT>FractionPtr
+<DD>Pointer to a frac16 variable where the bend value will be stored. 
+</DL>
+<H3>Return Value</H3>
+The function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr010.html#XREF37396"><CODE>BendInstrumentPitch</A>() </CODE><P>
+</CODE>

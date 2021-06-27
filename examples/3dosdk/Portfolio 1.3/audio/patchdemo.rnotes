@@ -1,0 +1,93 @@
+$Id: patchdemo.rnotes,v 1.5 1994/05/05 19:50:34 peabody Exp $
+
+patchdemo release notes
+
+
+----------------------- 29 Apr 1994 - last minute patchdemo update for portfolio 1.3 release
+
+These changes occurred after the portfolio 1.3 release notes were finished.
+
+Summary of changed files in patchdemo kit
+    . patchdemo.arm - new executable with delay line support.
+    . patchdemo.c 1.14 - added delay line support and other misc
+      changes.
+    . patchdemo.h 1.13 - added delay line support.
+    . patchdemo.rnotes (this file) - new file containing patchdemo
+      release notes.
+    . pd_faders.c 1.13 - changed C++ comments to C comments.
+    . pd_patch.c 1.16 - added delay line command and related support
+      stuff.
+    . delay.patch 1.1 - new example demonstrating delay line commands.
+    . sample.patch 1.2 - used to refer to a sample file that we don't
+      ship - now refers to sinewave.aiff
+
+Changes to patchdemo.arm
+    . Added delay line support (see changes to commands below)
+    . Added Shift-A button to stop instrument
+
+Changes to patch language
+
+    LoadInstrument (added new argument)
+
+    NEW SYNOPSIS
+        LoadInstrument <instrument symbol> <instrument file name> [<triggerable (1/0)>]
+
+    NEW ARGUMENTS
+        <triggerable> - optional switch to determine whether or not the instrument should
+                        respond to release and be restartable (i.e. instrument is affected
+                        by the A and B buttons).
+
+                        When set to 1 (default), instrument responds to being started and
+                        released with the A and B buttons.
+
+                        When set to 0, instrument is started when patch is
+                        first started (A or B button), but is not released or
+                        restarted by subsequent presses of the A or B buttons.
+                        This is useful for leaving some instruments running
+                        after the rest of the patch has been released (e.g. a
+                        delay line).
+
+
+    AttachSample (Added new argument)
+
+    NEW SYNPOSIS
+        AttachSample <attachment symbol> <instrument> <sample> [<fifo name> [<start frame>]]
+
+    NEW ARGUMENTS
+        <start frame> - optional positive frame offset to apply to the sample attachment.
+                        Defaults to 0.  This can be applied to delay line sample attachments
+                        to give the reader and writer of a delay line different positions in
+                        the delay line.
+
+    DelayLine (new command)
+
+    SYNOPSIS
+        DelayLine <sample symbol> <nbytes> [<nchannels> [<loop (1/0)>]]
+
+    DESCRIPTION
+        Creates a delay line (a special kind of sample) which can be attached
+        to delay instruments.
+
+    ARGUMENTS
+        <sample symbol> - new symbol in sample name space for the delay line
+        <nbytes> - size of delay line in bytes (not frames!).  The formula for
+                   computing nbytes is: nchannels * nframes * 2.  For a 1 second
+                   single channel delay, specify 44100 * 1 * 2, or 88200, bytes.
+                   This arcane method is identical to the audiofolio DelayLine()
+                   function, and is intended to force you to realize how much
+                   memory you are actually using.  The same method is used
+                   here because it seemed inappropriate to give the patch
+                   language a subtly different dialect from the audiofolio.
+        <nchannes> - optional # of channels.  defaults to 1.
+        <loop> - optional argument that indicates whether or not delay line
+                 should be looped (1) or played only once (0) when started.
+                 Defaults to loop.
+
+    SEE ALSO
+        AttachSample, LoadInstrument
+
+
+----------------------- 22 Apr 1994 - initial patchdemo release
+
+See Portfolio 1.3 release notes for details
+

@@ -1,0 +1,36 @@
+<TITLE>About the ARM linker </TITLE>
+<H1><LINK NAME="XREF40512">About the ARM linker </LINK></H1><HR>
+The ARM linker, <I>armlink</I>, accepts as input:<P>
+<UL>
+<LI>one or more separately compiled or assembled object files written in ARM Object Format (see <A HREF="./3arrf.html#XREF41738">ARM object format</A> for a synopsis, and <A HREF="../atsfldr/ats2frst.html#XREF16187">ARM Object Format</A> for details);
+<p>
+<LI>optionally, one or more object libraries in ARM Object Library Format (see <A HREF="../atsfldr/ats3frst.html#XREF40359">ARM Object Library Format</A> for details).
+</UL>
+The ARM linker performs the following functions:<P>
+<UL>
+<LI>it resolves symbolic references between object files;
+<p>
+<LI>it extracts from object libraries the object modules needed to satisfy otherwise unsatisfied symbolic references;
+<p>
+<LI>it sorts object fragments (AOF areas) according to their attributes and names , and consolidates similarly attributed and named fragments into contiguous chunks;
+<p>
+<LI>it relocates (possibly partially) relocatable values;
+<p>
+<LI>it generates an output <I>image</I> possibly comprising several files (or a partially linked object file instead).
+</UL>
+The ARM linker can produce output in any of the following formats:<P>
+<UL>
+<LI>ARM Object Format, (see <A HREF="./3arrf.html#XREF41738">ARM object format</A> for a synopsis, and <A HREF="../atsfldr/ats2frst.html#XREF16187">ARM Object Format</A> for details).
+<p>
+<LI>Plain binary format, relocated to a fixed address, (see <A HREF="./3arrg.html#XREF19244">Plain binary format</A>).
+<p>
+<LI>ARM Image Format, (see <A HREF="./3arrh.html#XREF13245">ARM image format</A>, and also <A HREF="../atsfldr/ats1frst.html#XREF23107">ARM Image Format</A> (Technical Specifications).
+<p>
+<LI>Extended Intellec Hex Format, suitable for driving the Compass integrated circuit design tools, (see <A HREF="./3arri.html#XREF31708">Extended intellec hex Format (IHF)</A>).
+<p>
+<LI>ARM Shared Library Format: a read-only position-independent reentrant sharable code segment (or <I>shared library</I>), written as a plain binary file, together with a <I>stub</I> containing read-write data, entry veneers, etc., written in ARM Object Format. See <A HREF="./3arrj.html#XREF31382">ARM shared library format</A> for details.
+<p>
+<LI>ARM Overlay Format: a <I>root segment</I> written in ARM Image Format, together with a collection of <I>overlay segment</I><I>s</I>, each written as a plain binary file. A system of overlays may be static (each segment bound to a fixed address at link time), or dynamic (each segment may be relocated when it is loaded).
+</UL>
+For details of how to use the options available on the linker command line see <A HREF="../augfldr/aug3frst.html#XREF21025">The ARM Linker (armlink)</A>.<P>
+<P>

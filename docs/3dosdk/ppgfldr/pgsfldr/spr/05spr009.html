@@ -1,0 +1,29 @@
+<Title>WaitUntil</Title>
+<A NAME="XREF29740"><H1>WaitUntil </A></H1>
+<A NAME="XREF30881"></A> Waits for a given amount of time to pass.<P>
+<H3>Synopsis</H3>
+<CODE>Err WaitTime(Item ioreq, uint32 seconds, uint32 micros);</CODE><P>
+<H3>Description</H3>
+Puts the current context to sleep until the system clock reaches a given time. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ioreq
+<DD>An active timer device I/O request, as obtained from CreateTimerIOReq(). 
+</DL>
+<DL>
+<DT>seconds
+<DD>The seconds value that the timer must reach. 
+</DL>
+<DL>
+<DT>micros
+<DD>The microseconds value that the timer must reach. 
+</DL>
+<H3>Return Value</H3>
+Returns &gt;= 0 for success, or a negative error code for failure. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+time.h, clib.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./05spr003.html#XREF34332"><CODE>CreateTimerIOReq</A>(), <A HREF="./05spr004.html#XREF26950">DeleteTimerIOReq</A>(), <A HREF="./05spr008.html#XREF18385">WaitTime</A>() </CODE><P>
+</CODE>

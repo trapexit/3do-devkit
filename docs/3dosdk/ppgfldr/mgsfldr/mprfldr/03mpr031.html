@@ -1,0 +1,19 @@
+<Title>impulse.dsp</Title>
+<A NAME="XREF33000"><H1>impulse.dsp </A></H1>
+<A NAME="XREF31867"></A> Impulse waveform generator.<P>
+<H3>Function</H3>
+This instrument is a simple impulse generator.  The output is either zero or the Amplitude value.  The width of the impulse is one sample.  This is useful for pinging filters. <P>
+<H3>Knobs</H3>
+Frequency  - 0 =&gt; $7FFF, default = $300 = raw frequency.  If you call <CODE>TweakRawKnob()</CODE> the units are phase increments, If you call <CODE>TweakKnob()</CODE> the units are 16.16 fractional Hertz. <P>
+Amplitude  - 0  =&gt;  $7FFF <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 14 <P>
+N memory = 12 words <P>

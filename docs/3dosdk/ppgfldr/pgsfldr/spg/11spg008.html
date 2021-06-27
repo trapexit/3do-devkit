@@ -1,0 +1,41 @@
+<TITLE>File System Folio Function Calls</TITLE>
+<H1>File System Folio Function Calls</H1><HR>
+The following section lists the File folio calls. See <A HREF="../spr/01spr.html#XREF17318">Kernel Folio Calls</A> in the <I>3DO System Programmer's Reference</I> for a complete description of the calls.<P>
+<H2>File Access Calls</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/02spr003.html#XREF14825">CloseDiskFile</A>() </CODE>Closes a file.
+<LI><CODE><A HREF="../spr/02spr005.html#XREF26310">CreateAlias</A>() </CODE>Creates an alias for a file.
+<LI><CODE><A HREF="../spr/02spr006.html#XREF24529">CreateFile</A>() </CODE>Creates a file.
+<LI><CODE><A HREF="../spr/02spr007.html#XREF27849">DeleteFile</A>() </CODE>Deletes a file.
+<LI><CODE><A HREF="../spr/02spr016.html#XREF10715">OpenDiskFile</A>()</CODE>Opens a disk file.
+<LI><CODE><A HREF="../spr/02spr017.html#XREF22921">OpenDiskFileInDir</A>()</CODE>Opens a disk file contained in a specific directory.
+</UL>
+<H2>Program Calls</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/02spr008.html#XREF38016">ExecuteAsSubroutine</A>() </CODE>Executes previously loaded code as a subroutine.
+<LI><CODE><A HREF="../spr/02spr009.html#XREF27642">ExecuteAsThread</A>() </CODE>Executes previously loaded code as a thread.
+<LI><CODE><A HREF="../spr/02spr012.html#XREF40015">LoadProgram</A>()</CODE>Launches a program.
+<LI><CODE><A HREF="../spr/02spr013.html#XREF40203">LoadProgramPrio</A>()</CODE>Launches a program and gives it a priority.
+<LI><CODE><A HREF="../spr/02spr011.html#XREF35386">LoadCode</A>() </CODE>Loads a binary image into memory, and obtains a handle to it.
+<LI><CODE><A HREF="../spr/02spr022.html#XREF19343">UnloadCode</A>() </CODE>Unloads a binary image previously loaded with <CODE>LoadCode()</CODE>.
+</UL>
+<H2>Directory Access Calls</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/02spr001.html#XREF36854">ChangeDirectory</A>()</CODE>Changes the current directory.
+<LI><CODE><A HREF="../spr/02spr002.html#XREF38614">CloseDirectory</A>()</CODE>Closes a directory.
+<LI><CODE><A HREF="../spr/02spr010.html#XREF39534">GetDirectory</A>()</CODE>Gets the item number and pathname for the current directory.
+<LI><CODE><A HREF="../spr/02spr015.html#XREF15336">OpenDirectoryPath</A>()</CODE>Opens a directory specified by a pathname.
+<LI><CODE><A HREF="../spr/02spr014.html#XREF16957">OpenDirectoryItem</A>()</CODE>Opens a directory.
+<LI><CODE><A HREF="../spr/02spr019.html#XREF41423">ReadDirectory</A>()</CODE>Reads the next entry from a directory.
+</UL>
+<A NAME="XREF22315"><H2>Byte-Stream Calls</A></H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/02spr018.html#XREF14517">OpenDiskStream</A>()</CODE>Opens a disk stream for byte stream-oriented I/O.
+<LI><CODE><A HREF="../spr/02spr004.html#XREF24518">CloseDiskStream</A>()</CODE>Closes a disk stream.
+<LI><CODE><A HREF="../spr/02spr020.html#XREF35267">ReadDiskStream</A>() </CODE>Reads from a disk stream.
+<LI><CODE><A HREF="../spr/02spr021.html#XREF35241">SeekDiskStream</A>()</CODE>Performs a seek operation on a disk stream.
+</UL>

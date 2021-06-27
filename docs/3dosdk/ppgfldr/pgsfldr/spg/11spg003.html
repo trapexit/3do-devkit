@@ -1,0 +1,34 @@
+<TITLE>Byte-Stream File Access</TITLE>
+<H1>Byte-Stream File Access</H1><HR>
+A set of function calls in the File folio eases the job of accessing the contents of a file in a byte-by-byte fashion, rather than in the block-by-block mode supported by the file driver interface. These functions include: <P>
+<UL>
+<LI><CODE>OpenDiskStream()</CODE> 
+<LI><CODE>SeekDiskStream()</CODE>
+<LI><CODE>ReadDiskStream()</CODE> 
+<LI><CODE>CloseDiskStream()
+</UL>
+With these functions, a program can read an arbitrary number of bytes from anywhere within a file, without worrying about block boundaries.</CODE><P>
+<H2>Opening a File</H2>
+Before you can read a file's data using the streaming routines, you must open the file:<P>
+<DL>
+<DD><CODE>Stream *OpenDiskStream( char *theName, int32 bSize )</CODE><BR>
+</DL>
+<CODE>OpenDiskStream()</CODE> opens the file identified by an absolute or relative pathname, allocates the specified amount of buffer space, and initiates an asynchronous read to fill the buffer with the first portion of the file's data. It returns NULL if any of these functions cannot be performed for any reason.<P>
+<H2>Reading the Data</H2>
+To read data from a stream file, you must call <CODE>ReadDiskStream()</CODE> <P>
+<DL>
+<DD><CODE>int32 ReadDiskStream( Stream *theStream, char *buffer, int32 nBytes )</CODE><BR>
+</DL>
+<CODE>ReadDiskStream()</CODE> reads data from the given stream file starting at the current position within the file. The data is put into the supplied buffer. The number of bytes actually read from the file is returned. The position within the file is advanced by the number of bytes read, so that the next time <CODE>ReadDiskStream()</CODE> is called, the data that follows is read.<P>
+<H2>Setting Up the Read Position</H2>
+To change the current position within a stream file, you must call:<P>
+<DL>
+<DD><CODE>SeekDiskStream( Stream *thream, int32 offset, enum SeekOrigin whence )</CODE><BR>
+</DL>
+After you call <CODE>SeekDiskStream()</CODE>, data transfers start with the first byte at the new file position. The <CODE>whence</CODE> argument specifies whether the operation is relative to either the beginning or end of the file, or to the current position in the file. The <CODE>offset</CODE> argument specifies the number of bytes offset relative to the <CODE>whence</CODE> position. It returns the actual absolute file position that results from the seek position or a negative error code if unsuccessful.<P>
+The offset can be specified in any of three ways: absolute (positive) byte offset from the beginning of file (<CODE>SEEK_SET</CODE>), relative byte offset from the current position in the file (<CODE>SEEK_CUR</CODE>), or absolute (negative) byte offset from the end of the file (<CODE>SEEK_END</CODE>).<P>
+<H2>Cleaning Up</H2>
+<CODE>CloseDiskStream() </CODE>closes the stream's file, deallocates the buffer memory, and releases the stream structure.<P>
+<DL>
+<DD><CODE>void CloseDiskStream(Stream *theStream);</CODE><BR>
+</DL>

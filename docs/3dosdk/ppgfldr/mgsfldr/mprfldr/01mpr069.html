@@ -1,0 +1,28 @@
+<Title>SignalAtTime</Title>
+<A NAME="XREF10773"><H1>SignalAtTime </A></H1>
+<A NAME="XREF13801"></A> Requests a wake-up call at a given time.<P>
+<H3>Synopsis</H3>
+<CODE>Err SignalAtTime (Item Cue, AudioTime Time)</CODE><P>
+<H3>Description</H3>
+This function requests that a signal be sent to the calling item at the specified audio time. The cue item can be created using <CODE>CreateCue()</CODE>. <P>
+A task can get the cue's signal mask using <CODE>GetCueSignal()</CODE>. The task can then call <CODE>WaitSignal()</CODE> to enter wait state until the cue's signal is sent at the specified time. <P>
+If you need to, you can call <CODE>AbortTimerCue()</CODE> to cancel the timer request before completion. <P>
+See the test program "ta_timer.c" for a complete example. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Cue
+<DD>Item number of a cue. 
+</DL>
+<DL>
+<DT>Time
+<DD>The time at which to send a signal to the calling task. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr002.html#XREF41864"><CODE>AbortTimerCue</A>(), <A HREF="./01mpr015.html#XREF24403">CreateCue</A>(), <A HREF="./01mpr046.html#XREF11073">GetCueSignal</A>(), <A HREF="./01mpr071.html#XREF19984">SleepUntilTime</A>(), <A HREF="./01mpr044.html#XREF20819">GetAudioRate</A>() </CODE><P>
+</CODE>

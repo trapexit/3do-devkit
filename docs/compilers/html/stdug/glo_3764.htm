@@ -1,0 +1,47 @@
+<HTML><HEAD><TITLE>Chapter 21:	 Glossary</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H1>Chapter 22:	 Glossary</H1>
+<CHAPTOC>
+<P><B>bidirectional iterator</B><UL>   An iterator that can be used for reading and writing, and which can move in either a forward or backward direction.</P></UL>
+<P><B>binary function</B><UL>   A function that requires two arguments.</P></UL>
+<P><B>binder</B><UL>   A function adaptor that is used to convert a two-argument binary function object into a one-argument unary function object, by binding one  of the argument values to a specific constant.</P></UL>
+<P><B>constant iterator</B><UL>   An iterator that can be used only for reading values, which cannot be used to modify the values in a sequence.</P></UL>
+<P><B>container class</B><UL>   A class used to hold a collection of similarly typed values.  The container classes provided by the standard library include vector, list, deque, set, map, stack, queue, and priority_queue.</P></UL>
+<P><B>deque</B><UL>   An indexable container class.  Elements can be accessed by their position in the container.  Provides fast random access to elements.  Additions to either the front or the back of a deque are efficient.  Insertions into the middle are not efficient.</P></UL>
+<P><B>forward iterator</B><UL>   An iterator that can be used either for reading or writing, but which moves only forward through a collection.</P></UL>
+<P><B>function object</B><UL>   An instance of a class that defines the parenthesis operator as one of its member functions.  When a function object is used in place of a function, the parenthesis member function will be executed when the function would normally be invoked.</P></UL>
+<P><B>generic algorithm</B><UL>   A templated algorithm that is not specialized to any specific container type.  Because of this, generic algorithms can be used with a wide variety of different forms of container.</P></UL>
+<P><B>heap</B><UL>   A way of organizing a collection so as to permit rapid insertion of new values, and rapid access to and removal of the largest value of the collection.</P></UL>
+<P><B>heterogeneous collection</B><UL>   A collection of values that are not all of the same type.  In the standard library a heterogeneous collection can only be maintained by storing pointers to objects, rather than objects themselves.</P></UL>
+<P><B>insert iterator</B><UL>   An adaptor used to convert iterator write operations into insertions into a container.</P></UL>
+<P><B>iterator</B><UL>   A generalization of the idea of a pointer.  An iterator denotes a specific element in a container, and can be used to cycle through the elements being held by a container.</P></UL>
+<P><B>generator</B><UL>   A function that can potentially return a different value each time it is invoked.  A random number generator is one example.</P></UL>
+<P><B>input iterator</B><UL>   An iterator that can be used to read values in sequence, but cannot be used for writing.</P></UL>
+<P><B>list</B><UL>   A linear container class.  Elements are maintained in sequence.  Provides fast access only to the first and last elements.  Insertions into the middle of a list are efficient.</P></UL>
+<P><B>map</B><UL>   An indexed and ordered container class.  Unlike a vector or deque, the index values for a map can be any ordered data type (such as a string or character).  Values are maintained in sequence, and can be efficiently inserted, accessed or removed in any order.</P></UL>
+<P><B>multimap</B><UL>   A form of map that permits multiple elements to be indexed using the same value.</P></UL>
+<P><B>multiset</B><UL>   A form of set that permits multiple instances of the same value to be maintained in the collection.</P></UL>
+<P><B>negator</B><UL>   An adaptor that converts a predicate function object, producing a new function object that when invoked yields the opposite value.</P></UL>
+<P><B>ordered collection</B><UL>   A collection in which all values are ordered according to some binary comparison operator.  The set data type automatically maintains an ordered collection.  Other collections (vector, deque, list) can be converted into an ordered collection.</P></UL>
+<P><B>output iterator</B><UL>   An iterator that can be used only to write elements into a container, it cannot be used to read values.</P></UL>
+<P><B>past the end iterator</B><UL>   An iterator that marks the end of a range of values, such as the end of the set of values maintained by a container.</P></UL>
+<P><B>predicate</B><UL>   A function or function object that when invoked returns a boolean (true/false) value or an integer value.</P></UL>
+<P><B>predicate function</B><UL>   A predicate.</P></UL>
+<P><B>priority_queue</B><UL>   An adaptor container class, usually built on top of a vector or deque.  The priority queue is designed for rapidly accessing and removing the largest element in the collection.</P></UL>
+<P><B>queue   </B><UL>An adaptor container class, usually built on top of a list or deque.  The queue provides rapid access to the topmost element.  Elements are removed from a queue in the same order they are inserted into the queue.</P></UL>
+<P><B>random access iterator</B><UL>   An iterator that can be subscripted, so as to access the values in a container in any order.</P></UL>
+<P><B>range</B><UL>   A subset of the elements held by a container.  A range is typically specified by two iterators.</P></UL>
+<P><B>reverse iterator</B><UL>   An iterator that moves over a sequence of values in reverse order, such as back to front.</P></UL>
+<P><B>sequence</B><UL>   A portion or all of the elements held by a container.  A sequence is usually described by a range.</P></UL>
+<P><B>set</B><UL>   A ordered container class.  The set container is optimized for insertions, removals, and tests for inclusion.</P></UL>
+<P><B>stack</B><UL>   An adaptor container class, built usually on top of a vector or deque.  The stack provides rapid access to the topmost element.  Elements are removed from a stack in the reverse of the order they are inserted into the stack.</P></UL>
+<P><B>stream iterator</B><UL>   An adaptor that converts iterator operations into stream operations.  Can be use to either read from or write to an iostream.</P></UL>
+<P><B>unary function</B><UL>   A function that requires only one argument.  Applying a binder to a binary function results in a unary function.</P></UL>
+<P><B>vector</B><UL>   An indexable container class.  Elements are accessed using a key that represents their position in the container.  Provides fast random access to elements.  Addition to the end of a vector is efficient.  Insertion into the middle is not efficient.</P></UL>
+<P><B>wide string</B><UL>   A string with 16-bit characters.  Wide strings are necessary for  many non-roman alphabets, i.e., Japanese.</P></UL>
+<HR>
+<A HREF="num_4324.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A>
+</BODY></HTML>

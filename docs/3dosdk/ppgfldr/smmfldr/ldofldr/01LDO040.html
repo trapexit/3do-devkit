@@ -1,0 +1,26 @@
+<Title>CloneTextCel </Title>
+<A NAME="XREF12893"><H1>CloneTextCel </A></H1>
+ Clones an existing text cel.<P>
+<H3>Synopsis</H3>
+<CODE>TextCel * CloneTextCel (TextCel *templateTextCel, Boolean clonePixels)</CODE><P>
+<H3>Description</H3>
+Creates a new TextCel using a TextCel that already exists as a template. If clonePixels is FALSE, the new TextCel contains no text; if TRUE, the pixels from the template TextCel are copied into the new TextCel. <P>
+If the template cel has a format buffer attached to it, and that buffer was dynamically allocated by the call to <CODE>SetTextCelFormatBuffer()</CODE>, a new buffer of the same size is allocated and attached to the new cel. If the template cel has a format buffer that you provided explicitly (a static buffer), the new cel will use the same static buffer. <P>
+This function is useful when you want to create a number of identical TextCels. You can call <CODE>CreateTextCel()</CODE>, followed by whatever <CODE>SetTextCel...()</CODE> functions you need to create a template cel with a given size and attributes, then call <CODE>CloneTextCel()</CODE> as often as necessary to create a number of cels with identical size and attributes. <P>
+Use <CODE>DeleteTextCel()</CODE> to dispose of the TextCel when you are finished with it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>templateTextCel
+<DD>Pointer to the TextCel structure you want to clone. 
+</DL>
+<DL>
+<DT>clonePixels
+<DD>TRUE if the new TextCel is to contain the same pixels as those currently in the template TextCel. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the newly created TextCel structure; NULL if there isn't enough memory to create the new TextCel. <P>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO046.html#XREF36470"><CODE>CreateTextCel</A>, <A HREF="./01LDO057.html#XREF39255">DeleteTextCel</A> </CODE><P>
+</CODE>

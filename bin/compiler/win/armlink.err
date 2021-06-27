@@ -1,0 +1,294 @@
+HELP_VERSION_INFO:%s vsn %s [%s]\n
+HELP_TEXT_FORMAT:\nUsage: %s option-list input-file-list\n\n\
+where\n\n\
+    option-list      is a list of case-insensitive options.\n\
+    input-file-list  is a list of input object and library files.\n\n
+HELP_TEXT_1:\
+List of options (abbreviations shown capitalised):\n\n\
+General options:\n\n\
+    -Help              Print this summary.\n\
+    -Output file       Specify the name of the output file.\n\
+    -vsn               Print version information.\n\n
+HELP_TEXT_2:\
+Options for selecting output file format:\n\n\
+    -elf       Generate the image in ELF format.(Default).\n\
+    -aof       Generate the consolidated object in AOF.\n\
+    -aif       Generate the image in Executable AIF Format.\n\
+    -aif -bin  Generate the image in Non-executable AIF Format.\n\
+    -bin       Generate the image in plain binary format.\n\n
+HELP_TEXT_3:\
+Options for specifying memory map information:\n\n\
+    -scatter file  Create the memory map as described in file.\n\
+    -ro-base n     Set execution address of the region containing the RO section to n.\n\
+    -rw-base n     Set execution address of the second execution region to n.\n\n
+HELP_TEXT_4:\
+Options for controlling image construction:\n\n\
+    -debug         Include debug information in the output.(Default).\n\
+    -nodebug       Do not include debug information in the output.\n\
+    -nozeropad     Do not expand zero-init areas in a binary image.\n\
+    -noremove      Do not remove unused areas from the image.\n\
+    -remove        Remove unused areas from the image.\n\
+    -dupok         Allow duplicate symbols.\n\
+    -entry         See product documentation for details.\n\
+    -first         See product documentation for details.\n\
+    -last          See product documentation for details.\n\n
+HELP_TEXT_5:\
+Options for generating image-related information:\n\n\
+    -info topic-list  Print information about each comma separated topic keyword.\n\n\
+          Totals      Report the total code and data sizes in the image.\n\
+          Sizes       Give a detailed breakdown of the code and data sizes per input object.\n\
+          Interwork   List all calls requiring ARM/Thumb interworking veneers.\n\
+          Unused      List all unused AREAs, when used with the -remove option.\n\n\
+    -map              Create an image map listing the base and size of each constituent area.\n\
+    -symbols file     Lists each symbol and its value to file.\n\
+    -xref             Lists cross references between input areas.\n\n
+HELP_TEXT_6:\
+Options for controlling the linker:\n\n\
+    -errors file        Redirect stderr to file.\n\
+    -list file          Redirect stdout to file.Useful in conjunction with -map, -xrefs and -symbols\n\
+    -verbose            Print messages indicating progress of the link operation.\n\
+    -via file           Read a further list of input filenames from file.\n\
+    -case               Use case-sensitive symbol name matching.(Default).\n\
+    -nocase             Use case-insensitive symbol name matching.\n\
+    -match flags        Sets the symbol-matching options. See product documentation for details.\n\
+    -unresolved symbol  Match references to undefined symbols to the global definition of symbol.\n\
+    -u symbol           As for -unresolved, but displays warnings for each unused symbol encountered.\n\n
+MSG_FORMAT:%s: %s
+msglevel_fatal:(Fatal) 
+msglevel_error:(Error) 
+msglevel_warning:(Warning) 
+msglevel_info:
+fatal_nomember:3Missing library member in member list for %s.
+fatal_extrachars:3Extra characters on end of member list for %s.
+fatal_truncated:3Name %s has been truncated.
+fatal_outmem:3Out of memory.
+fatal_toobig:3Memory request (%lu bytes) too big.
+fatal_tabtoobig:3Internal table (%lu entries) too big.
+fatal_readerr:3Error reading file %s.
+fatal_openerr:3Can't open file '%s'.
+fatal_badobj:3Input file %s corrupt.
+fatal_byteslost:3%lu bytes of part-word lost after word 0x%.lx of IHF output.\n
+fatal_writeerr:3Error writing %s.
+fatal_writeerr_stdout:3Error writing stdout.
+fatal_noentry:3No entry point for image.
+fatal_optype:3Unknown output type[%d].
+fatal_notobj:3%s is not an object or library file.
+fatal_byteorder:3%s has the opposite byte order to the preceding objects.
+fatal_misslevel:3Can't create segment level %c until previous levels declared.
+fatal_missseg:3Can't create segment %s until previous segments declared.
+fatal_badovname:3%s, line %lu: bad overlay segment name %s.
+fatal_badspace:3%s, line %lu: whitespace following '('.
+fatal_badspace2:3%s, line %lu: whitespace following area name.
+fatal_badnl:3%s, line %lu: newline in area list - use '\' to continue line.
+fatal_badcont:3%s, line %lu: misplaced '\'.
+fatal_missegbase:3%s, line %lu: missing base address for segment %s.
+fatal_misbra:3%s, line %lu: misplaced '('.
+fatal_misterm:3%s, line %lu: misplaced ')' or ','.
+fatal_badchar:3%s, line %lu: invalid character, code %d.
+fatal_eftmap:3EFT map botch: len = %lu, should be %lu.
+fatal_noshlimage:3No shared library image file named in %s.
+fatal_baseclash:3Absolute AREA %s based at %x has been placed at %x.
+fatal_notfound:3File %s not found.
+fatal_badqual:3/a or /l qualifier on AOF, a.out or .ar file %s.
+fatal_badbase:3Badly formed or missing -RO-base/-Base value.
+fatal_badsegbase:3Badly formed segment base address in overlay description file.
+fatal_baddatabase:3Badly formed or missing -RW-base/-DATAbase value.
+fatal_badoutput:3Bad output specification: use one of -aif, -elf, -aof, -scf, -ovf, -shl, -bin, -ihf or -rmf.
+fatal_both_remove_and_noremove:3Conflicting options:  only one of -remove and -noremove may be used.
+fatal_reopen_stderr:3Can't reopen stderr to file %s.
+fatal_badentry:3Badly formed constant on -Entry qualifier.
+fatal_badmatchopts:3Badly formed constant on -Match qualifier.
+fatal_badwork:3Badly formed constant on -Workspace qualifier.
+fatal_too_many_objs:3Can't link more than %d object files.
+fatal_nosymtab:3Library %s has no symbol table.
+fatal_ood:3Out of date symbol table in library %s.
+fatal_dirread:3Error reading directory '%s'.
+fatal_multbases:3Multiple base addresses specified.
+fatal_noarg:3No argument to -%s.
+fatal_multunresolved:3Multiple -Unresolved options given.
+fatal_multflag:3Multiple -%s options.
+fatal_toomany:3%s, line %u: Too many argument words.
+fatal_badflag:3Unrecognised option -%s.
+fatal_badinfoarg:3Unrecognised argument %s on -info option
+warn_plink_base_ignored:1-RO-base is incompatible with partially linked output. -RO-base ignored.
+fatal_nofiles:3No files to link, use %s -help for help.
+err_entryinoverseg:2Entry point 0x%lx+%s(%s) is in an overlay segment (%s).
+err_entryinnonroot:2Entry point 0x%lx+%s(%s) is in a non-ROOT execution region (%s in load region %s).
+err_entrynotinimage:2Entry point 0x%lx+%s(%s) is not in the image.
+err_glob_muldef:2Global %s multiply defined (in %s and %s).
+err_addarea_failed:2AREA %s(%s) has unknown attributes 0x%.2x.
+err_strong_non_strong_def_plink:2Global %s defined both strong and non-strong while partial linking (in %s and %s).
+err_mulsharedlibs:2Multiple shared libraries.
+err_extref:2External ref to %s from shared library.
+err_mulentries:2Multiple entry points found in %s(%s) and %s(%s).
+err_badspecial:2Special AOF file %s out of specification.
+err_ovarea:2No object(AREA) matches %s(%s).
+err_truncated:2%s, line %u: line truncated
+err_extnotfound:2External symbol '%s' not found.
+err_locnotfound:2Symbol '%s' not found in object '%s'.
+err_objnotfound:2Object '%s' not found.
+err_eftnoncode:2EFT name %s(%s) is non-code symbol.
+err_eftbadnum:2EFT parameter '%s' is not a number.
+err_relocdata:2Data in AREA %s(%s) need relocating - impossible in shared library.
+err_shlrefstub:2Sharable AREA %s(%s) directly addresses\n\
+              relocatable stub AREA %s(%s).
+err_stubrefshl:2Stub AREA %s(%s) directly addresses\n\
+              sharable library AREA %s(%s).
+err_shlname:2shared library name %s too long.
+err_based_in_AIF:2BASED AREAs are illegal in non-reentrant AIF images\
+    (use -reentrant to force inclusion of %s(%s)).
+err_base_overlap:2Data based at %lx overlaps code based at %lx.
+err_incompat_attrib:2Attributes of -FIRST/LAST AREA incompatible with neighbouring %s(%s)\n\
+    (missing/extra attributes are {%s}).
+err_pcrelabs:2PC relative reference to absolute symbol %s.
+err_reloc:2Reloc at 0x%lx in %s(%s): value %ld exceeds range %u.
+err_instreloc:2can't relocate instr [%.8lx] at offset 0x%lx in %s(%s).
+warn_unaligned_reloc:1Unaligned data at offset 0x%lx in %s(%s).
+warn_unaligned_relocs:1Unaligned data in %s(%s), use '-info unaligned' for more info
+err_lost_reloc:2Relocation w.r.t. undefined %s lost at offset 0x%lx in %s(%s).
+err_type2:1Old style relocation not supported with ARM/Thumb interworking in %s(%s)
+err_inst_to_thumb_reloc:2Unsupported call from ARM code to Thumb symbol %s in %s(%s).
+err_inst_to_arm_reloc:2Unsupported call from Thumb code to ARM symbol %s in %s(%s).
+err_STRONG_undef:2Undefined STRONG symbol %s.
+err_phase_reloc:2Phase error relocating to symbol %s in %s(%s).
+err_phase_symcount:2Phase error: symbol count different (middle = %ld, write = %ld)
+err_phase_strtsize:2Phase error: string table size different (middle = %ld, write = %ld)
+info_both_arm_thumb:0Both ARM & Thumb versions of %s present in image.
+err_noncores:2%s(%s) refers to non-coresident data.
+err_relocB:2B or BL to unaligned destination.
+err_unaligned_reloc:2Unaligned -apcs 3/reentrant relocation.
+err_relocseq:2Relocated value too big for instruction sequence.
+err_entryconflict:2Conflict between -entry option and ENTRY in AREA %s(%s)
+err_bad_areaname:2(%s) bad object(area) name %s(%s) ignored.
+err_mult_area:2(%s) object %s contains more than one AREA.
+err_area_notfound:2(%s) AREA %s not found in object %s.
+err_object_notfound:2(%s) object %s not found.
+err_badsymbolforexportfromsharedlib:2Symbol %s cannot be exported from shared-library.
+err_positiondependentreloc:2Position-dependent reloc at 0x%lx in %s(%s)
+fatal_unsupported_feature:3%s is not supported by this release of the toolkit.
+warn_obsolescent_feature:1%s will not be supported by future releases of the toolkit.
+warn_obsolescent_linker_feature:1%s will not be supported by future releases of armlink.
+warn_obsolescent_alias:1'%s' will not be supported by future releases of armlink. Please use alias '%s' instead.
+warn_noentry:1No entry point for image.
+warn_badverbose:1Badly formed constant on -v qualifier.
+warn_filenotfound:1File %s not found.
+warn_diffattr0:1AREA %s(%s) has conflicting attributes COMMON,SHLDATA;\
+    (COMMON ignored).
+warn_symbol_match:1Reference to symbol %s matched to definition of %s.
+warn_com_toobig:1COMMON %s(%s) is larger than its definition %s(%s).
+warn_com_muldef:1Common AREA %s multiply defined by objects %s and %s.
+warn_glob_muldef:1Global %s multiply defined (in %s and %s).
+warn_deprecated:1Symbol %s referenced, %s used.
+warn_diffattr1:1Attribute conflict between AREA %s(%s) and image code.
+warn_diffattr2:1Attribute conflict within AREA %s\n\
+    (conflict first found with %s(%s)).
+warn_diffattr3:1Attribute conflict between AREAS %s(%s) and %s(%s).
+warn_fp3:1AREA %s(%s) uses revision-3 FP instructions.
+warn_diffarea:1AREA %s differs between object %s and object %s.
+warn_comsym_toobig:1COMMON symbol %s is larger than COMMON AREA %s (in object %s).
+warn_oversegname:1Overlay segment name %s too long - truncated to %d characters.
+err_eftname:2Missing ')' in EFT entry name %s(%s).
+warn_eftdup1:1Duplicate EFT entry %s ignored.
+warn_eftdup2:1Duplicate EFT entry %s(%s) ignored.
+warn_nomatchingdata:1No object(AREA) matches '+ %s(%s)'.
+warn_dupopline:1%s, line %u: duplicate output line ignored.
+warn_missket:1%s, line %u: missing ')'.
+warn_notreent:1AREA %s from object %s(%s) is not REENTRANT.
+warn_noncores:1%s(%s) refers to non-coresident data.
+warn_dupfname:1Duplicate file %s ignored.
+warn_libqual:1Old style /a or /l qualifier on library %s.
+warn_nosymtab:1Library %s has no symbol table.
+warn_ood:1Out of date symbol table in library %s.
+warn_commasep:1Old style ',' separator after %s, use ' '.
+warn_nearoutmem:1Memory shortage, increase memory allocation.
+warn_dbgignored:1Debug data incompatible with plain binary format (-d ignored).
+err_relocignored:2Relocatable is incompatible with plain binary format (-r ignored).
+warn_rwbaseignored:1-RW-base/-DATA incompatible with -IHF without -SPLIT\n\
+    (-RW-base/-DATA ignored).
+warn_multentry:1Implicit entry point in %s(%s) redefined to %s.
+warn_constmigrationtostub:1Constant symbol %s has migrated to the stub.
+warn_badlibraryrequest:1Malformed library request: %s
+warn_conflictinglibraryrequests:1Conflicting requests for library %s: variants %s and %s
+info_uncache:0Memory shortage: uncaching %s.
+info_unused_AREA_1:0Unreferenced AREA (%s) omitted from output.
+info_unused_AREA_3:0Unreferenced AREA %s(%s) (file %s) omitted from output.
+info_diffattrs:0(attribute difference = {%s}).
+info_badref:0        (ref to |%s|+0x%lx at offset 0x%lx)
+misc_areabase:AREA-base
+info_ireloc:0(at 0x%lx in %s(%s): offset/value = 0x%lx bytes)
+info_EFTPBlock:0Size of EFT parameter block = %u bytes
+info_EFTSize:0The EFT has %lu entries
+info_EFTEntry:0    eft[%3lu] = 0x%6lx %s
+info_def:0              def:  %s
+info_ref:0              ref:  %s
+info_weakref:0              ref:  %s (weak)
+info_loadnamed:0  Loading named member %s from %s.
+info_scanlib:0  Scanning library %s for referenced modules.
+info_rescanlib:0  Re-scanning library %s for referenced modules.
+info_loadlib:0  Loading whole library %s.
+info_loadmemb:0    Loading %s to resolve %s.
+info_loadobj:0  Loading object file %s.
+info_openout:0Opening output file %s.
+info_errors:0Errors in link, no output generated.
+info_total_unused:0%d bytes of unused areas omitted.
+info_mem_use:0Memory usage: heap=%d, heap perm=%d, temp=%d, cache=%d.
+misc_removeoutput:%s: garbage output file %s removed\n
+misc_internalerror:%s: Internal error.\n
+misc_interrupted:%s: Interrupted by user.\n
+misc_finished:%s: finished,  %d informational, %d warning and %d error messages.\n
+misc_finished_with_fatal:%s: finished,  %d informational, %d warning, %d error and %d fatal error messages.\n
+misc_refto:%s(%s) refers to %s(%s)\n
+misc_reftosym:%s(%s) refers to %s(%s) for %s\n
+misc_reloc1:    Relocating AREA %s
+misc_reloc2: from %s
+misc_anon:<anon>
+misc_map_areaname:AREA map of %s:\n\n
+misc_map_hdr:Base     Size     Type RO? Name\n
+misc_map_fromfile: from object file %s
+misc_in_area: in area |%s|
+misc_sym_hdr:\nSymbol Table\n\n
+misc_sym_undefref: ?????? Undefined, Reference
+misc_sym_undefweak: ?????? Undefined, WEAK Reference
+misc_sym_strong: [strong]
+misc_nonstrong_sym_hdr:\nNon-Strong Symbols\n\n
+misc_xref_hdr:\nInter-AREA References\n\n
+msgfmt_filelinecol:\"%s\", line %d (near column %d) 
+err_numbertoolong:2Number '%s...' is too long.
+err_noregionname:2Missing region name.
+err_nobaseaddress:2Missing base address.
+err_unalignedbase:2Non-word-aligned base address.
+err_expectedfound:2Expected '%s', found '%s'.
+err_emptyscatterfile:2Scatter description file '%s' is empty.
+warn_emptyloadregion:1Empty LOAD region.
+warn_emptyexecregion:1Empty EXEC region.
+err_nomoduleselector:2Missing module selector.
+err_noareaselector:2Missing AREA selector.
+err_badattrselector:2Unknown AREA selector '+%s'.
+err_badfirstlast:2%s must follow a single selector.
+err_morethanonearea:2More than one AREA matches - cannot all be FIRST/LAST.
+err_noarea:2No AREA matches - no AREA to be FIRST/LAST.
+err_noroot:2No default ROOT definition precedes this ROOT-DATA definition.
+err_nodefaultroot:2Can't default-place %s(%s): no default ROOT region.
+err_nodefaultrootdata:2Can't default-place %s(%s): no default ROOT-DATA region.
+err_scatter_multimatch:2AREA %s(%s) already matches an AREA selector for region '%s'.
+warn_noselectedAREAs:1No AREAs selected by '%s(...)'.
+err_nonempty_implict_ROOT:2Some AREAs could not be assigned to any region:
+info_ROOT_area:0    %s(%s)
+err_ovattrarea:2No object(+ATTRIBUTES) matches %s(+%s).
+err_loadreg_too_big:2Load region %s (size %d) exceeds specified limit.
+err_loadreg_overlap:2Load region %s (size %d) overlaps load region %s
+err_execreg_overlap:2Execution region %s (size %d) overlaps execution region %s
+err_region_clash:2Overlayed regions %s and %s clash unexpectedly
+warn_scatter_robase_ignored:1-RO-base incompatible with -SCATTER. -RO-base will be ignored.
+warn_scatter_rwbase_ignored:1-RW-base incompatible with -SCATTER. -RW-base will be ignored.
+warn_splitflagignored:1-SPLIT incompatible with -SCATTER. -SPLIT will be ignored.
+warn_scatter_aif:1-AIF specified with -SCATTER is equivalent to -AIF -BIN.
+warn_truncated:1'%s' has been truncated.
+err_duplicate_loadreg:2Load region %s has already been defined.
+err_bad_data_root:2ROOT-DATA address conflicts address from earlier ROOT-DATA or -RW-BASE.
+err_undefsym1:2Undefined symbol '%s'.
+warn_undefsym1:1Undefined symbol '%s'.
+err_undefsym2:2Undefined symbol '%s', referred to from %s.
+warn_undefsym2:1Undefined symbol '%s', referred to from %s.
+err_undefsym3:2Undefined symbol '%s', referred to from %s(%s).
+warn_undefsym3:1Undefined symbol '%s', referred to from %s(%s).

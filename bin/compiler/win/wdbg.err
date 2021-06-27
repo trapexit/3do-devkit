@@ -1,0 +1,45 @@
+WErrMess_Shortened:Fewer lines available
+WErrMess_Truncated:Buffer full
+WErrMess_WindowInvalid:Invalid window
+WErrMess_WrongWindowType:Wrong window type
+WErrMess_NoDebugData:Image does not contain this level of debug table
+WErrMess_NotImplemented:Not implemented
+WErrMess_NoSuchPath:No such path
+WErrMess_OutOfHeap:Out of heap
+WErrMess_BadWindowType:Invalid window type
+WErrMess_NoSuchBreak:No such breakpoint
+WErrMess_BPAlreadySet:Breakpoint already set
+WErrMess_BPAlreadyEnabled:Breakpoint already enabled
+WErrMess_BPAlreadyDisabled:Breakpoint already disabled
+WErrMess_NoSuchWatch:No such watchpoint
+WErrMess_NoSuchExprn:Expression not in display list
+WErrMess_BPListFault:Toolbox internal error: view bp list incorrect
+WErrMess_InvalidInteger:Invalid integer
+WErrMess_FileNotFound:File not found
+WErrMess_RDIReset:RDI reset
+WErrMess_NotRestarted:Not restarted
+WErrMess_FileNewerThanImage:The source file has been modified, or the image has been rebuilt
+WErrMess_NoSuchLine:Bad line
+WErrMess_NotAddress:Value unusable as an address
+WErrMess_NotUnion:Type not a union
+WErrMess_NotStruct:Type not a struct or class
+WErrMess_AlreadyExpanded:struct already expanded
+WErrMess_NotExpanded:struct not expanded
+WErrMess_Unexpected:Unexpected error %d
+WErrMess_BadFileName:Invalid file name
+WErrMess_BadCoProNo:Invalid coprocessor number
+WErrMess_UnknownCoPro:Unknown coprocessor
+WErrMess_BadCoProDesc:Syntax error in coprocessor description
+WErrMess_NotLValue:Expression not an LValue
+WErrMess_CPRegNotWritable:CoProcessor register not writable
+WErrMess_AlreadyBaseType:Type does not contain a typedef
+WErrMess_NoSource:Address is outside any source file
+ArgErr_BadKeyword:unrecognised argument \"-%s\"
+ArgErr_BadLinespeed:%d is an invalid linespeed
+ArgErr_BadKeywordPair:unrecognised argument \"-%s %s\"
+ArgErr_Missing:missing parameter for -%s
+Misc_BreakptCount: count %d (of %d) 
+Misc_IfStr: if %s
+Misc_LocalsFor: Locals For 
+Misc_IfTarget: if TargetValue == %s
+Misc_IfTargetandExpr: if TargetValue == %s and %s

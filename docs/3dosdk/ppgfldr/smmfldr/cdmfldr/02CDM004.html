@@ -1,0 +1,59 @@
+<TITLE>Testing Your Title in the Minimum Memory Configuration</TITLE>
+<H1>Testing Your Title in the Minimum Memory Configuration</A>
+</UL></H1><HR>
+This section discusses the minimum available memory and explains how to 
+test your application with the <CODE>minmem</CODE> utility. <P>
+When you send in your title for encryption, 3DO Developer Services tests 
+it in both the minimum memory environment and the nonrestricted, full 
+memory environment. If your title does not run in both environments, 3DO 
+Developer Services cannot accept it. <P>
+The following sections provide information about the minmem utility, 
+including: <P>
+
+<UL>
+<LI><A HREF="#XREF38182">What is minmem?</A>
+<LI><A HREF="#XREF41768">When and Why to Test Your Application with 
+minmem</A>
+<LI><A HREF="#XREF17467">How to Use minmem</A>
+</UL>
+<A NAME="XREF38182"><H2>What is minmem?</A></H2>
+The minmem utility lets you test your title in the minimum memory 
+configuration. By specification, any 3DO hardware, regardless of which 
+manufacturer produced it, has to supply at least as much memory. <P>
+You are encouraged to write your title so it runs in the minimum memory 
+environment but can take advantage of more memory if it becomes available 
+in future versions of the 3DO system. <P>
+The development environment shell provides the minmem program. If you run 
+minmem before you run your title, the system frees 45 * 32 KB DRAM and 63 
+* 16 KB VRAM for the application to use.<P>
+<B>Note: </B>The actual space available in the minimum memory 
+configuration changes slightly with each release of the operating system. 
+The numbers above are the minimum that's guaranteed to be available.<P>
+<A NAME="XREF41768"><H2>When and Why to Test Your Application with 
+minmem</A></H2>
+You must test your title in the minimum memory configuration at three 
+points during the mastering process: <P>
+<UL>
+<LI>Before creating the CD-ROM image file
+<LI>After creating the CD-ROM image file
+<LI>After mastering the disc 
+</UL>
+Testing your title in the minimum memory configuration is important 
+because otherwise it may not run on future versions of 3DO hardware. <P>
+<B>Warning: </B>If your title doesn't run in the minimum memory 
+configuration, 3DO Developer Services cannot issue a Right to 
+Manufacture.<P>
+<A NAME="XREF17467"><H2>How to Use minmem</A></H2>
+You can run <CODE>minmem</CODE> in one of two ways: <P>
+<UL>
+<LI>Type <CODE>minmem</CODE> at the Debugger prompt after running the 3DO 
+boot script, but before launching your title. 
+<p>
+<LI>Check to make sure <CODE>minmem</CODE> is included at the end of the 
+<I>AppStartup</I> script file during testing. 
+</UL>
+<B>Caution: </B>Starting with the Portfolio 1.3.1 release (May 1994) the 
+AppStartup script in the /cdrommaster folder includes minmem. If your 
+title has a mechanism to take advantage of additional memory if it becomes 
+available, you are responsible for removing the minmem command just before 
+your final layout of the cdrom.image file. <P>

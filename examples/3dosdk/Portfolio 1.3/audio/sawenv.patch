@@ -1,0 +1,21 @@
+; $Id: sawenv.patch,v 1.1 1994/03/19 00:26:44 peabody Exp $
+; sawenvsvfenv w/ s/h cutoff modulation
+
+LoadInstrument osc sawenvsvfenv.dsp		; oscillator
+    Tweak osc Amplitude 10000
+    Tweak osc Frequency 122
+    Tweak osc Resonance 300
+
+LoadInstrument lfo randomhold.dsp		; LFO
+    Tweak lfo Frequency 16
+
+LoadInstrument mod timesplus.dsp		; modulator
+    Tweak mod InputB 4000				; modulation amount
+    Tweak mod InputC 4000				; modulation bias
+
+LoadInstrument out directout.dsp		; output
+
+Connect	lfo Output	mod InputA
+Connect	mod Output	osc CutoffFreq			; modulation destination
+Connect	osc Output	out InputLeft
+Connect	osc Output	out InputRight

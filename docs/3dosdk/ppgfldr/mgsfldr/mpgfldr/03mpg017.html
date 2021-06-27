@@ -1,0 +1,101 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF42451">Function Calls</LINK></H1><HR>
+The following Audio folio calls prepare instruments.<P>
+<H2>Audio Folio Control</H2>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr011.html#XREF27572">CloseAudioFolio</A>() </CODE>Closes the Audio folio.
+<LI><CODE><A HREF="../mprfldr/01mpr057.html#XREF36778">OpenAudioFolio</A>() </CODE>Opens the Audio folio.
+</UL>
+The following calls can be used to open and close and Audio folio:<P>
+<H2>Instrument Loading and Creation</H2>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr005.html#XREF27095">AllocInstrument</A>() </CODE>Allocates an instrument using a template.
+<LI><CODE><A HREF="../mprfldr/01mpr018.html#XREF32118">CreateInsTemplate</A>() </CODE>Generic template creation function.
+<LI><CODE><A HREF="../mprfldr/01mpr019.html#XREF12062">CreateInstrument</A>() </CODE>Creates an instrument using a template.
+<LI><CODE><A HREF="../mprfldr/01mpr024.html#XREF26906">DefineInsTemplate</A>() </CODE>Creates an instrument template from a .dsp file.
+<LI><CODE><A HREF="../mprfldr/01mpr029.html#XREF39688">DeleteInstrument</A></CODE>() Frees an instrument and its resources  allocated by <CODE>CreateInstrument()</CODE>.
+<LI><CODE><A HREF="../mprfldr/01mpr038.html#XREF13380">FreeInstrument</A>() </CODE>Frees an instrument and its resources.
+<LI><CODE><A HREF="../mprfldr/01mpr051.html#XREF12263">LoadInsTemplate</A>() </CODE>Loads template for creating instruments.
+<LI><CODE><A HREF="../mprfldr/01mpr052.html#XREF40571">LoadInstrument</A>() </CODE>Loads instrument by name.
+<LI><CODE><A HREF="../mprfldr/01mpr081.html#XREF38811">UnloadInsTemplate</A>() </CODE>Unloads an instrument template.
+<LI><CODE><A HREF="../mprfldr/01mpr082.html#XREF16084">UnloadInstrument</A>() </CODE>Frees an instrument and unloads its template.
+</UL>
+The following calls can be used to load and create instruments:<P>
+<H2>Tuning</H2>
+The following calls can be used to tune items and instruments:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr022.html#XREF16056">CreateTuning</A>() </CODE>Creates a tuning item.
+<LI><CODE><A HREF="../mprfldr/01mpr031.html#XREF33299">DeleteTuning</A>() </CODE>Deletes a tuning.
+<LI><CODE><A HREF="../mprfldr/01mpr077.html#XREF36934">TuneInsTemplate</A>() </CODE>Applies the specified tuning to an instrument template.
+<LI><CODE><A HREF="../mprfldr/01mpr078.html#XREF33775">TuneInstrument</A>() </CODE>Applies the specified tuning to an instrument.
+</UL>
+<H2>Loading, Creating, and Attaching Samples</H2>
+The following calls can be used to handle samples:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr007.html#XREF30972">AttachSample</A>() </CODE>Connects sample to instrument's FIFO.
+<LI><CODE><A HREF="../mprfldr/01mpr021.html#XREF16321">CreateSample</A>() </CODE>Generic sample creation function.
+<LI><CODE><A HREF="../mprfldr/01mpr053.html#XREF16726">LoadSample</A>() </CODE>Loads an AIFF or AIFC sample from file.
+<LI><CODE><A HREF="../mprfldr/01mpr065.html#XREF29290">ScanSample</A>() </CODE>Loads a truncated sample file.
+<LI><CODE><A HREF="../mprfldr/01mpr023.html#XREF37204">DebugSample</A>() </CODE>Prints sample information for debugging.
+<LI><CODE><A HREF="../mprfldr/01mpr033.html#XREF38686">DetachSample</A>() </CODE>Disconnects sample from instrument.
+<LI><CODE><A HREF="../mprfldr/01mpr083.html#XREF21317">UnloadSample</A>() </CODE>Deletes a sample and frees its resources.
+</UL>
+<H2>Reading and Changing Audio-Item Attributes</H2>
+The following calls are used to change attributes of audio items:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr043.html#XREF15941">GetAudioItemInfo</A>() </CODE>Gets information about an audio item.
+<LI><CODE><A HREF="../mprfldr/01mpr067.html#XREF20838">SetAudioItemInfo</A>() </CODE>Sets parameters of an audio item.
+</UL>
+<H2>Envelopes</H2>
+The following calls are used to handle envelopes:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr006.html#XREF15951">AttachEnvelope</A>() </CODE>Attaches an envelope to an instrument and creates an attachment item.
+<LI><CODE><A HREF="../mprfldr/01mpr017.html#XREF13206">CreateEnvelope</A>() </CODE>Creates an envelope for a sample or cue.
+<LI><CODE><A HREF="../mprfldr/01mpr028.html#XREF17495">DeleteEnvelope</A>() </CODE>Deletes an envelope.
+<LI><CODE><A HREF="../mprfldr/01mpr032.html#XREF27420">DetachEnvelope</A>>() </CODE>Detaches an envelope from an instrument.
+</UL>
+<H2>Linking Attachments</H2>
+The following call is used to connect attachments:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr050.html#XREF32325">LinkAttachments</A>()</CODE>Connects attachments for sequential playback.
+</UL>
+<H2>Connecting Instruments</H2>
+The following calls are used to connect and disconnect instruments:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr013.html#XREF38027">ConnectInstruments</A>() </CODE>Patches an output to an input.
+<LI><CODE><A HREF="../mprfldr/01mpr034.html#XREF31453">DisconnectInstruments</A>() </CODE>Disconnects one instrument from another.
+</UL>
+<H2>Adding Reverberation</H2>
+The following calls are used to create and delete delay lines:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr016.html#XREF36090">CreateDelayLine</A>() </CODE>Creates a delay for echoes and reverberations.
+<LI><CODE><A HREF="../mprfldr/01mpr027.html#XREF37533">DeleteDelayLine</A>() </CODE>Deletes a delay line.
+</UL>
+<H2>Handling Knobs</H2>
+The following calls are used to handle knobs:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr047.html#XREF16856">GetKnobName</A>() </CODE>Queries name of indexed knob.
+<LI><CODE><A HREF="../mprfldr/01mpr049.html#XREF29402">GrabKnob</A>() </CODE>Connects a task to an instrument controller.
+<LI><CODE><A HREF="../mprfldr/01mpr048.html#XREF24622">GetNumKnobs</A>() </CODE>Finds how many knobs an instrument has.
+<LI><CODE><A HREF="../mprfldr/01mpr063.html#XREF20424">ReleaseKnob</A>() </CODE>Releases a task from a knob it has grabbed. 
+<LI><CODE><A HREF="../mprfldr/01mpr079.html#XREF16593">TweakKnob</A>() </CODE>Changes the value of a knob. 
+<LI><CODE><A HREF="../mprfldr/01mpr080.html#XREF10802">TweakRawKnob</A>() </CODE>Changes the value of a knob using a raw
+value.
+</UL>
+<H2>Allocating Amplitude</H2>
+The following calls are used to allocate and free amplitude:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr004.html#XREF38370">AllocAmplitude</A>() </CODE>Allocates amplitude from available system amplitude.
+<LI><CODE><A HREF="../mprfldr/01mpr037.html#XREF40996">FreeAmplitude</A>() </CODE>Inverse of <CODE>AllocAmplitude()</CODE>.
+</UL>

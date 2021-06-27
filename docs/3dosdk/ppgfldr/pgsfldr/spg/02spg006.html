@@ -1,0 +1,113 @@
+<TITLE>Example</TITLE>
+<H1><LINK NAME="XREF10140">Example</LINK></H1><HR>
+Example 1 contains sample code for using threads and signals.<P>
+The <CODE>main()</CODE> routine launches two threads. These threads simply sit in a loop and count. After a given number of iterations through their loop, they send a signal to the parent task.<P>
+When the parent task gets a signal, it wakes up and prints the current counters of the threads to show how much they were able to count.<P>
+<B>Example 1: </B><I>Using Threads (signals.c).</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "task.h"
+#include "kernel.h"
+#include "stdio.h"
+#include "operror.h"
+
+
+/*****************************************************************************/
+
+
+/* Global variables shared by all threads. */
+static int32  thread1Sig;
+static int32  thread2Sig;
+static Item   parentItem;
+static uint32 thread1Cnt;
+static uint32 thread2Cnt;
+
+
+/*****************************************************************************/
+
+
+/* This routine shared by both threads */
+static void DoThread(int32 signal, uint32 amount, uint32 *counter)
+{
+uint32 i;
+
+    while (TRUE)
+    {
+        for (i = 0; i &lt; amount; i++)
+        {
+            (*counter)++;
+            SendSignal(parentItem,signal);
+        }
+    }
+}
+
+
+/*****************************************************************************/
+
+
+static void Thread1Func(void)
+{
+    DoThread(thread1Sig, 100000, &amp;thread1Cnt);
+}
+
+
+/*****************************************************************************/
+
+
+static void Thread2Func(void)
+{
+    DoThread(thread2Sig, 200000,&amp;thread2Cnt);
+}
+
+
+/*****************************************************************************/
+
+
+int main(int32 argc, char **argv)
+{
+uint8  parentPri;
+Item   thread1Item;
+Item   thread2Item;
+uint32 count;
+int32  sigs;
+
+    /* get the priority of the parent task */
+    parentPri  = CURRENTTASK-&gt;t.n_Priority;
+
+    /* get the item number of the parent task */
+    parentItem = CURRENTTASK-&gt;t.n_Item;
+
+    /* allocate one signal bits for each thread */
+    thread1Sig = AllocSignal(0);
+    thread2Sig = AllocSignal(0);
+
+    /* spawn two threads that will run in parallel */
+    thread1Item = CreateThread("Thread1", parentPri, Thread1Func, 2048);
+    thread2Item = CreateThread("Thread2", parentPri, Thread2Func, 2048);
+
+    /* enter a loop until we receive 10 signals */
+    count = 0;
+    while (count &lt; 10)
+    {
+        sigs = WaitSignal(thread1Sig | thread2Sig);
+
+        printf("Thread 1 at %d, thread 2 at 
+
+          %d\n",thread1Cnt,thread2Cnt);
+
+        if (sigs &amp; thread1Sig)
+            printf("Signal from thread 1\n");
+
+        if (sigs &amp; thread2Sig)
+            printf("Signal from thread 2\n");
+
+        count++;
+    }
+
+    /* nuke both threads */
+    DeleteThread(thread1Item);
+    DeleteThread(thread2Item);
+}
+</CODE>
+</PRE>

@@ -1,0 +1,38 @@
+<TITLE>FreeMemToMemLists</TITLE>
+<A NAME="XREF28914"><H1>FreeMemToMemLists </A></H1>
+<A NAME="XREF28708"></A>Returns memory to the free pool.<P>
+<H3>Synopsis</H3>
+<CODE>void FreeMemToMemLists( List *l, void *p, int32 size )</CODE><P>
+<H3>Description</H3>
+The procedure returns a block of memory that was allocated with <CODE>AllocMemFromMemLists()</CODE> to the specified free memory pool (a list of memory lists). <P>
+<B>Note: </B> Unless you are trying to move memory from one memory pool to another, you should always free memory to the same pool that you obtained it from. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the memory pool (a list of memory lists) to which to return the memory block. 
+</DL>
+<DL>
+<DT>p
+<DD>A pointer to the memory to free. This value may be NULL, in which case this function just returns. 
+</DL>
+<DL>
+<DT>size
+<DD>Number of bytes to free. This must be the same size that was passed to AllocMemFromMemLists() to allocate the block. See <A HREF="#XREF31542">FreeMem</A> for additional information.
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+You can enable memory debugging in your application by compiling your entire project with the MEMDEBUG value defined on the compiler's command-line. Refer to the <CODE>CreateMemDebug()</CODE> function for more details. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr004.html#XREF40501"><CODE>AllocMem</A>(), <A HREF="./01spr007.html#XREF42660">AllocMemFromMemLists</A>(), <A HREF="./01spr064.html#XREF31542">FreeMem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF28914"></LINK></H1><HR>

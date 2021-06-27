@@ -1,0 +1,53 @@
+<Title>BlitFontChar </Title>
+<A NAME="XREF20398"><H1>BlitFontChar </A></H1>
+ Blits character pixels from font data area into memory buffer.<P>
+<H3>Synopsis</H3>
+<CODE>int32 BlitFontChar(FontDescriptor *fDesc,uint32 theChar, void *blitInfo, void *dstBuf,int32 dstX,int32 dstY,int32 dstBPR,int32 dstColorIndex,int32 dstBPP)</CODE><P>
+<H3>Description</H3>
+Blits character pixels from the font data area into a memory buffer, performing any font format specific data decompression as needed. <P>
+<CODE>BlitFontChar()</CODE> supports the internals of the text library; it should never be necessary to call this function directly from an application program. If you are implementing your own replacement text library, use <CODE>BlitFontChar()</CODE> to render the font character pixels into your own memory buffer. You can use the standard text library source code as a guide in creating your own text library. <P>
+<CODE>BlitFontChar()</CODE> currently supports only 8-bit-per-pixel destination format, and always creates pixels suitable for an 8-bit coded cel with AMV (alternate multiplier value) used to scale pixels already in the cell for anti-aliasing. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fDesc
+<DD>Pointer to a FontDescriptor structure. 
+</DL>
+<DL>
+<DT>theChar
+<DD>The specific character you want to blit to the buffer. 
+</DL>
+<DL>
+<DT>blitInfo
+<DD>Value returned from <CODE>GetFontCharInfo()</CODE> via its **blitInfo parameter, or NULL. If you pass NULL, an internal call to <CODE>GetFontCharInfo()</CODE> is made. If you are already calling <CODE>GetFontCharInfo()</CODE> before blitting each character, you can eliminate this potentially expensive internal call by saving the blitInfo from your call and passing it to this function. 
+</DL>
+<DL>
+<DT>destBuf
+<DD>Pointer to the cel buffer into which you want to blit the character pixels. 
+</DL>
+<DL>
+<DT>dstX
+<DD>X coordinate within the destBuf. 
+</DL>
+<DL>
+<DT>dstY
+<DD>Y coordinate within the destBuf. 
+</DL>
+<DL>
+<DT>dstBPR
+<DD>Bytes-per-row of the destBuf. 
+</DL>
+<DL>
+<DT>dstColorIndex
+<DD>For 8-bit-per-pixel destination buffers, the color index to OR into each pixel as the character pixels are placed into the buffer. The value must be in the range of 0 through 3 inclusive. 
+</DL>
+<DL>
+<DT>dstBPP
+<DD>Bits-per-pixel of the destination buffer. 
+</DL>
+<H3>Return Value</H3>
+Width of the character, in pixels. Zero indicates no pixels were placed in the destination buffer because the character is not within the range of characters stored in the font.<P>
+<H3>Associated Files</H3>
+lib3do.lib, fontlib.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO078.html#XREF37606"><CODE>GetFontCharInfo</A></CODE><P>
+</CODE>

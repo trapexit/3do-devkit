@@ -1,0 +1,38 @@
+<Title>intlLookupLocale </Title>
+<A NAME="XREF21681"></A><H1>intlLookupLocale </A></H1>
+Returns a pointer to a locale structure.<P>
+<H3>Synopsis</H3>
+<CODE>Locale *intlLookupLocale(Item locItem);</CODE><P>
+<H3>Description</H3>
+This macro returns a pointer to a locale structure. The structure can then be examined and its contents used to localize titles. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>locItem
+<DD>A locale item, as obtained from intlOpenLocale(). 
+</DL>
+<H3>Return Value</H3>
+The macro returns a pointer to a locale structure, which contains localization information, or NULL if the supplied Item was not a valid locale item. <P>
+<H3>Implementation</H3>
+Macro implemented in intl.h V24. <P>
+<H3>Associated Files</H3>
+intl.h<P>
+<H3>Example</H3>
+<CODE>
+<PRE>
+{
+Item    |t;
+Locale *loc;
+    it = intlOpenLocale(NULL);
+    0
+    {
+        loc = intlLookupLocale(it);
+        // you can now read fields in the Locale structure.
+        e
+        intlCloseLocale(it);
+    }
+}
+</CODE>
+</PRE>
+<H3>See Also</H3>
+<CODE><A HREF="./06spr008.html#XREF34028"><CODE>intlOpenLocale</A>(), <A HREF="./06spr001.html#XREF39846">intlCloseLocale</A>() </CODE><P>
+</CODE>

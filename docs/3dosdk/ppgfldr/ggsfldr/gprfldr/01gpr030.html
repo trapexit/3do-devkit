@@ -1,0 +1,22 @@
+<Title>FastMapCelInit </Title>
+<A NAME="XREF29704"><H1>FastMapCelInit </A></H1>
+<A NAME="XREF18079"> Initializes a CCB for FastMapCel use.</A><P>
+<H3>Synopsis</H3>
+<CODE>void FastMapCelInit (CCB *ccb)</CODE><P>
+<H3>Description</H3>
+FastMapCelInit() initializes a CCB for use with MapCel. It requires that the ccb_Width and ccb_Height fields of the CCB are correct when the routine is called, and that the routine will replace the current values of the ccb_Width and ccb_Height fields. If the ccb_Width and ccb_Height of the cel are both powers of 2, then they are replaced by the log(base 2) of their respective values. If one or both fields are not a power of 2, the ccb_Width is replaced by (-0x10000/ccb_Width) and ccb_Height is replaced by (0x10000/ccb_Height). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ccb
+<DD>Pointer to the CCB structure to be modified. 
+</DL>
+<H3>Implementation</H3>
+Convenience call implemented in graphics.lib V21. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>Caveats</H3>
+The FastMapCel calls are not compatible with <CODE>MapCel()</CODE>, and cannot be called interchangeably. <P>
+Since this call modifies the ccb_Width and ccb_Height fields of the CCB, it cannot be called multiple times for the same CCB. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr028.html#XREF34286"><CODE>FastMapCel</A>(), <A HREF="./01gpr029.html#XREF30188">FastMapCelf16</A>(), <A HREF="./01gpr045.html#XREF30941">MapCel</A>() </CODE><P>
+</CODE>

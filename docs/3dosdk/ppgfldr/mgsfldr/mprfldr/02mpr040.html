@@ -1,0 +1,29 @@
+<Title>NoteOnIns</Title>
+<A NAME="XREF34628"><H1>NoteOnIns </A></H1>
+<A NAME="XREF18889"></A> Turns on a note for an instrument.<P>
+<H3>Synopsis</H3>
+<CODE>Err NoteOnIns( Item Instrument, int32 Note, int32 Velocity )</CODE><P>
+<H3>Description</H3>
+This function turns on a note for an instrument and specifies the pitch and velocity for the instrument to play the note.  The function does not use voice allocation for the note.  It's called by <CODE>StartScoreNote()</CODE> after <CODE>StartScoreNote()</CODE> has worked out voice allocation. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>The item number of the instrument. 
+</DL>
+<DL>
+<DT>Note
+<DD>The MIDI pitch value of the note. 
+</DL>
+<DL>
+<DT>Velocity
+<DD>The MIDI attack velocity value of the note. If attack velocity is 0, the specified note is released (identical behavior to the MIDI Note On event). 
+</DL>
+<H3>Return Value</H3>
+This function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr039.html#XREF31757"><CODE>NoteOffIns</A>(), <A HREF="./02mpr042.html#XREF14731">ReleaseScoreNote</A>(), <A HREF="./02mpr046.html#XREF33263">StartScoreNote</A>()</CODE><P>
+</CODE>

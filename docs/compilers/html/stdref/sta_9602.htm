@@ -1,0 +1,172 @@
+<HTML><TITLE>stack</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>stack</H2>
+<HR><PRE>     Container Adaptor</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>A container adaptor which behaves like a stack (last in, first out).</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description "><LI>Description </LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Constructor"><LI>Constructor</LI></A>
+<A HREF="#Allocator"><LI>Allocator</LI></A>
+<A HREF="#Member Functions"><LI>Member Functions</LI></A>
+<A HREF="#Non-member Operators"><LI>Non-member Operators</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;stack></PRE>
+<PRE>
+template &#60;class T, class Container = deque&#60;T>,
+      class Allocator = allocator>
+class <B>stack</B> ;
+</PRE>
+<A NAME="Description "><H3>Description </H3></A>
+<P>The <B><I>stack</B></I> container adaptor causes a container to behave like a "last in, first out" (LIFO)  stack.  The last item that was put ("pushed") onto the stack is the first item removed ("popped" off).  The stack can adapt to any container that provides the operations, <SAMP>back()</SAMP>,  <SAMP>push_back()</SAMP>, and <SAMP>pop_back()</SAMP>.  In particular, <A HREF="deq_4164.htm"><B><I>deque</B></I></A> , <A HREF="lis_3222.htm"><B><I>list</B></I></A> , and <A HREF="vec_0251.htm"><B><I>vector</B></I></A> can be used. </P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class T, class Container = deque&#60;T>,
+          class Allocator = allocator>
+ class stack {
+public:
+// typedefs
+   typedef typename Container::value_type value_type;
+   typedef typename Container::size_type size_type;
+   typedef Allocator allocator_type
+// Construct
+   explicit stack (const Allocator&#38; = Allocator());
+   allocator_type get_allocator () const;
+// Accessors
+   bool empty () const;
+   size_type size () const;
+   value_type&#38; top ();
+   const value_type&#38; top () const;
+   void push (const value_type&#38;);
+   void pop ();
+};
+// Non-member Operators
+template &#60;class T, class Container, class Allocator>
+ bool operator== (const stack&#60;T, Container, Allocator>&#38;, 
+                  const stack&#60;T, Container, Allocator>&#38;);
+template &#60;class T, class Container, class Allocator>
+ bool operator&#60; (const stack&#60;T, Container, Allocator>&#38;, 
+                 const stack&#60;T, Container, Allocator>&#38;);</PRE>
+<A NAME="Constructor"><H3>Constructor</H3></A>
+<PRE>explicit
+<B>stack</B> (const Allocator&#38; alloc = Allocator());</PRE>
+<UL><P>Constructs an empty stack. The stack will use the allocator <SAMP>alloc</SAMP> for all storage management.</P>
+</UL>
+<A NAME="Allocator"><H3>Allocator</H3></A>
+<PRE>allocator_type <B>get_allocator</B> () const;</PRE>
+<UL><P>  Returns a copy of the allocator used by self for storage management.</P>
+</UL>
+<A NAME="Member Functions"><H3>Member Functions</H3></A>
+<PRE>bool 
+<B>empty</B> () const;</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if the stack is empty, otherwise <SAMP>false</SAMP>.</P>
+</UL>
+<PRE>void 
+<B>pop</B> ();</PRE>
+<UL><P>Removes the item at the top of the stack.</P>
+</UL>
+<PRE>void 
+<B>push</B> (const value_type&#38; x);</PRE>
+<UL><P>Pushes <SAMP>x</SAMP> onto the stack.</P>
+</UL>
+<PRE>size_type 
+<B>size</B> () const;</PRE>
+<UL><P>Returns the number of elements on the stack.</P>
+</UL>
+<PRE>value_type&#38; 
+<B>top</B> ();</PRE>
+<UL><P>Returns a reference to the item at the top of the stack.  This will be the last item pushed onto the stack unless <SAMP>pop()</SAMP> has been called since then.</P>
+</UL>
+<PRE>const value_type&#38; 
+<B>top</B> () const;</PRE>
+<UL><P>Returns a constant reference to the item at the top of the stack as a <SAMP>const value_type</SAMP>.</P>
+</UL>
+<A NAME="Non-member Operators"><H3>Non-member Operators</H3></A>
+<PRE>template &#60;class T, class Container, class Allocator>
+  bool <B>operator==</B> (const stack&#60;T, Container, Allocator>&#38; x,
+                   const stack&#60;T, Container, Allocator>&#38; y);</PRE>
+<UL><P>Equality operator.  Returns <SAMP>true</SAMP> if <SAMP>x</SAMP> is the same as <SAMP>y</SAMP>.</P>
+</UL>
+<PRE>template &#60;class T, class Container, class Allocator>
+  bool <B>operator&#60;</B> (const stack&#60;T, Container, Allocator>&#38; x,
+                  const stack&#60;T, Container, Allocator>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if the stack defined by the elements contained in <SAMP>x</SAMP> is lexicographically less than the stack defined by the elements of <SAMP>y</SAMP>.</P>
+</UL>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// stack.cpp
+//
+ #include &#60;stack>
+ #include &#60;vector>
+ #include &#60;deque>
+ #include &#60;string>
+ #include &#60;iostream.h>
+ int main(void)
+ {
+   // Make a stack using a vector container
+   <B>stack</B>&#60;int,vector&#60;int>, allocator> s;
+   // Push a couple of values on the stack 
+   s.push(1);
+   s.push(2);
+   cout &#60;&#60; s.top() &#60;&#60; endl;
+   // Now pop them off
+   s.pop();
+   cout &#60;&#60; s.top() &#60;&#60; endl;
+   s.pop();
+   // Make a stack of strings using a deque
+   <B>stack</B>&#60;string,deque&#60;string>, allocator> ss;
+   // Push a bunch of strings on then pop them off
+   int i;
+   for (i = 0; i &#60; 10; i++)
+   {
+     ss.push(string(i+1,'a'));
+     cout &#60;&#60; ss.top() &#60;&#60; endl;
+   }
+   for (i = 0; i &#60; 10; i++)
+   {
+     cout &#60;&#60; ss.top() &#60;&#60; endl;
+     ss.pop();
+   }
+   return 0;
+ }</PRE><PRE>Output :
+2
+1
+a
+aa
+aaa
+aaaa
+aaaaa
+aaaaaa
+aaaaaaa
+aaaaaaaa
+aaaaaaaaa
+aaaaaaaaaa
+aaaaaaaaaa
+aaaaaaaaa
+aaaaaaaa
+aaaaaaa
+aaaaaa
+aaaaa
+aaaa
+aaa
+aa
+a
+</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support template parameter defaults, you are required to supply a template parameter for <SAMP>Container </SAMP>and for<SAMP> Allocator</SAMP>.  For example: </P>
+<P>You would not be able to write,</P>
+<PRE>stack&#60;int> var;</PRE>
+<PRE></PRE><P>Instead, you would have to write,</P>
+<PRE>stack&#60;int, deque&#60;int>, allocator> var;</PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="all_7029.htm"><B><I>allocator</B></I></A>, <A HREF="Con_2487.htm"><B><I>Containers</B></I></A>, <A HREF="deq_4164.htm"><B><I>deque</B></I></A>, <A HREF="lis_3222.htm"><B><I>list</B></I></A>, <A HREF="vec_0251.htm"><B><I>vector</B></I></A></P>
+<HR>
+<A HREF="sta_5767.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Str_9238.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,223 @@
+<HTML><TITLE>Function Objects</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Function Objects</H2>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Objects with an <SAMP>operator()</SAMP> defined.  Function objects are used in place of pointers to functions as arguments to templated algorithms.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE> #include&#60;functional></PRE>
+<PRE>
+ // typedefs
+   template &#60;class Arg, class Result>
+    struct <B>unary_function</B>;
+   template &#60;class Arg1, class Arg2, class Result>
+    struct <B>binary_function</B>;</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Function objects are objects with an <SAMP>operator()</SAMP> defined.  They are important for the effective use of the standard library's generic algorithms, because the interface for each algorithmic template can accept either an object with an <SAMP>operator()</SAMP> defined, or a pointer to a function.  The Standard C++ Library provides both a standard set of function objects, and a pair of classes that you can use as the base for creating your own function objects.</P>
+<P>Function objects that take one argument are called <I>unary function objects.</I>  Unary function objects are required to provide the typedefs <SAMP>argument_type</SAMP> and <SAMP>result_type</SAMP>.  Similarly, function objects that take two arguments are called <I>binary function objects</I> and, as such, are required to provide the typedefs <SAMP>first_argument_type</SAMP>, <SAMP>second_argument_type</SAMP>, and <SAMP>result_type</SAMP>. </P>
+<P>The classes <SAMP>unary_function</SAMP> and <SAMP>binary_function</SAMP> make the task of creating templated function objects easier.  The necessary typedefs for a unary or binary function object are provided by inheriting from the appropriate function object class.</P>
+<P>The function objects provided by the standard library are listed below, together with a brief description of their operation.  This class reference also includes an alphabetic entry for each function.</P>
+<CENTER><TABLE BORDER CELLSPACING=3 CELLPADDING=3>
+<THEAD><COLSPEC colnum="1" colname="col1" colwidth="90pt" colsep="1" rowsep="1"><COLSPEC colnum="2" colname="col2" colwidth="243pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD><B>Name </B></TD>
+<TD><B>Operation</B></TD></TR>
+<TR VALIGN=top>
+<TD><B>arithmetic functions</B></TD></TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="90pt" colsep="1"><COLSPEC colnum="2" colname="col2" colwidth="243pt" colsep="1">
+<TR VALIGN=top>
+<TD><SAMP>plus</SAMP></TD>
+<TD>addition <SAMP>x + y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>minus</SAMP></TD>
+<TD>subtraction <SAMP>x - y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>times</SAMP></TD>
+<TD>multiplication <SAMP>x * y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>divides</SAMP></TD>
+<TD>division <SAMP>x / y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>modulus</SAMP></TD>
+<TD>remainder <SAMP>x % y</SAMP></TD></TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="90pt" colsep="1" rowsep="1"><COLSPEC colnum="2" colname="col2" colwidth="243pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD><SAMP>negate</SAMP></TD>
+<TD>negation <SAMP>- x</SAMP></TD></TR>
+<TGROUP cols="1"><COLSPEC colnum="1" colname="col1" colwidth="333pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD><B>comparison functions</B></TD></TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="90pt" colsep="1"><COLSPEC colnum="2" colname="col2" colwidth="243pt" colsep="1">
+<TR VALIGN=top>
+<TD><SAMP>equal_to</SAMP></TD>
+<TD>equality test <SAMP>x == y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>not_equal_to</SAMP></TD>
+<TD>inequality test <SAMP>x != y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>greater</SAMP></TD>
+<TD>greater comparison <SAMP>x > y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>less</SAMP></TD>
+<TD>less-than comparison<SAMP> x &#60; y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>greater_equal</SAMP></TD>
+<TD>greater than or equal comparison <SAMP>x >= y</SAMP></TD></TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="90pt" colsep="1" rowsep="1"><COLSPEC colnum="2" colname="col2" colwidth="243pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD><SAMP>less_equal</SAMP></TD>
+<TD>less than or equal comparison <SAMP>x &#60;= y</SAMP></TD></TR>
+<TGROUP cols="1"><COLSPEC colnum="1" colname="col1" colwidth="333pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD><B>logical functions</B></TD></TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="90pt" colsep="1"><COLSPEC colnum="2" colname="col2" colwidth="243pt" colsep="1">
+<TR VALIGN=top>
+<TD><SAMP>logical_and</SAMP></TD>
+<TD>logical conjunction <SAMP>x &#38;&#38; y</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>logical_or</SAMP></TD>
+<TD>logical disjunction <SAMP>x || y</SAMP></TD></TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="90pt" colsep="1" rowsep="1"><COLSPEC colnum="2" colname="col2" colwidth="243pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD><SAMP>logical_not</SAMP></TD>
+<TD>logical negation <SAMP>! x</SAMP></TD></TR>
+</TABLE></CENTER>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>    template &#60;class Arg, class Result></PRE>
+<PRE>    struct unary_function{
+         typedef Arg argument_type;
+         typedef Result result_type;
+    };
+    template &#60;class Arg1, class Arg2, class Result>
+    struct binary_function{
+         typedef Arg1 first_argument_type;
+         typedef Arg2 second_argument_type;
+         typedef Result result_type;
+    };
+ // Arithmetic Operations
+   template&#60;class T>
+   struct plus : binary_function&#60;T, T, T> {
+        T operator() (const T&#38;, const T&#38;) const;
+};
+template &#60;class T>
+struct minus : binary_function&#60;T, T, T> {
+        T operator() (const T&#38;, const T&#38;) const;
+};
+template &#60;class T>
+struct times : binary_function&#60;T, T, T> {
+        T operator() (const T&#38;, const T&#38;) const;
+};
+template &#60;class T>
+struct divides : binary_function&#60;T, T, T> {
+        T operator() (const T&#38;, const T&#38;) const;
+};
+template &#60;class T>
+struct modulus : binary_function&#60;T, T, T> {
+        T operator() (const T&#38;, const T&#38;) const;
+};
+template &#60;class T>
+struct negate : unary_function&#60;T, T> {
+        T operator() (const T&#38;) const;
+};
+ // Comparisons
+template &#60;class T>
+struct equal_to : binary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};
+ template &#60;class T>
+ struct not_equal_to : binary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};
+ template &#60;class T>
+ struct greater : binary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};
+ template &#60;class T>
+ struct less : binary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};
+ template &#60;class T>
+ struct greater_equal : binary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};
+ template &#60;class T>
+ struct less_equal : binary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};
+ // Logical Comparisons
+ template &#60;class T>
+ struct logical_and : binary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};
+ template &#60;class T>
+ struct logical_or : binary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};
+ template &#60;class T>
+ struct logical_not : unary_function&#60;T, T, bool> {
+         bool operator() (const T&#38;, const T&#38;) const;
+};</PRE>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// funct_ob.cpp
+//
+ #include&#60;functional>
+ #include&#60;deque>
+ #include&#60;vector>
+ #include&#60;algorithm>
+ #include &#60;iostream.h>
+ //Create a new function object from unary_function
+ template&#60;class Arg>
+ class factorial : public unary_function&#60;Arg, Arg>
+ {
+   public:
+   Arg operator()(const Arg&#38; arg)
+   {
+     Arg a = 1;
+     for(Arg i = 2; i &#60;= arg; i++)
+       a *= i;
+     return a;
+   }
+ };
+ int main()
+ {
+   //Initialize a deque with an array of ints
+   int init[7] = {1,2,3,4,5,6,7};
+   deque&#60;int> d(init, init+7);
+   //Create an empty vector to store the factorials
+   vector&#60;int> v((size_t)7);
+   //Transform the numbers in the deque to their factorials and
+   // store in the vector
+   transform(d.begin(), d.end(), v.begin(), <B>factorial&#60;int>()</B>);
+   //Print the results
+   cout &#60;&#60; "The following numbers: " &#60;&#60; endl &#60;&#60; "     ";
+   copy(d.begin(),d.end(),ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;
+   cout &#60;&#60; "Have the factorials: " &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));
+   return 0;
+ }
+Output : 
+The following numbers:
+     1 2 3 4 5 6 7
+Have the factorials:
+     1 2 6 24 120 720 5040</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you'll have to write :</P>
+<PRE>vector&#60;int, allocator> and deque&#60;int, allocator></PRE>
+<P>instead of : </P>
+<PRE>vector&#60;int> and deque&#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="bin_7851.htm"><B><I>binary_function</B></I></A>, <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A>, <A HREF="una_4659.htm"><B><I>unary_function</B></I></A></P>
+<HR>
+<A HREF="fro_0713.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="gen_0186.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

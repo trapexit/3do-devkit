@@ -1,0 +1,149 @@
+<TITLE>Working with images, cels, and animations</TITLE>
+<H1><LINK NAME="XREF16522">Working with images, cels, and 
+animations</LINK></H1><HR>
+This section gives some additional advice on working with the different 
+3DO graphics types, specifically the following:<P>
+
+<UL>
+<LI><A HREF="#XREF21687">Working with images</A>
+<LI><A HREF="#XREF26236">Working with cels</A>
+<LI><A HREF="#XREF17795">Working with 3DO animations</A>
+</UL>
+<A NAME="XREF21687"><H2>Working with images</A></H2>
+When working with 3DO images, keep in mind the following: <P>
+<UL>
+<LI>Images have to fit the TV screen (320 x 240 for NTSC, 384 x 288 for 
+PAL); they can't be scaled by the program.<P>
+<LI>Images are saved with 16-bit resolution. The ppmto3DO MPW tool lets 
+you create 24-bit images.<P>
+<LI>If you convert 24-bit source art to a 16-bit image, you may get a 
+banding effect if the colors in the image are in the same range. In that 
+case, you can use the 3DO Image Writer plug-in to compute a custom color 
+table that's a gradient to avoid banding.
+</UL>
+<H3>Tools for creating 3DO images</H3>
+Use the following tools in the 3DO Toolkit to create images:<P>
+<UL>
+<LI>3DO Animator (tm) -When you create a 16-bit uncoded cel in 3DO 
+Animator, you can use the resulting graphic as a 3DO image. It is your 
+responsibility to resize the art. This is best done during loading, as 
+discussed in the 
+<A HREF="../anifldr/0anifirst.html">3DO Animator User's Guide.</A><P>
+<LI>3DO Image Writer and PAL Image Writer-Use the 3DO Image Writer and PAL 
+Image Writer plug-ins to create images or images with a custom color 
+table. You have to resize the art before you can create the image. If the 
+art is too large, it is cropped on the NTSC screen. If the art is too 
+small, it is displayed in the upper left corner. <P>
+<LI>3DO PostPro-Use 3DO PostPro to load images and cels and to edit them. 
+You can preview images and multiple cels on the Macintosh monitor and the 
+TV screen. <P>
+<LI>ppmto3DO-Use the ppmto3DO MPW tool for converting source art in ppm 
+(portable pixmap) format to 3DO image format. 
+</UL>
+<A NAME="XREF26236"><H2>Working with cels</A></H2>
+This section provides some additional information to get you started. It 
+discusses:<P>
+
+<UL>
+<LI><A HREF="#XREF11756">Selecting a cel type</A>
+<LI><A HREF="#XREF36070">Creating and displaying anti-aliased cels</A>
+<LI><A HREF="#XREF20337">Packed and unpacked cels</A>
+</UL>
+<A NAME="XREF11756"><H3>Selecting a cel type</A></H3>
+When you save source art as a 3DO cel, there is a trade-off between how 
+many colors are available (and how much control you have over them) and 
+how small the cel is. The table below gives an overview of all cel 
+types.<P>
+<PRE>
+<B>Table 1: </B><I> Characteristics of different cel types.</I>
+--------------------------------------------------------
+Cel type/Colors   |Discussion                           
+--------------------------------------------------------
+16-bit            |The best choice if the source art    
+uncoded32,000     |uses a large number of different     
+colors(RGB 5-5-5) |colors, though you'll end up with a  
+                  |cel that uses the largest amount of  
+                  |space. Supports per-pixel P-Mode; use
+                  |a mask for special effects regions.  
+--------------------------------------------------------
+ 8-bit uncoded256 |Can be used successfully for source  
+colors(RGB 3-3-2) |art with relatively few colors but   
+                  |may be unsatisfactory because you    
+                  |have no control over the palette.    
+--------------------------------------------------------
+16-bit coded 32   |Is rarely used since it offers little
+colors (RGB 3-3-3)|control over the colors but uses a   
+                  |lot of disk space.                   
+--------------------------------------------------------
+8-bit coded32 base|Provides good visual quality and are 
+colors +7 shades  |quite small. A special tool, the     
+per color         |Coded-8 CelWriter, lets you create   
+                  |8-bit coded cels. You can apply      
+                  |custom palettes created with 3DO     
+                  |Animator.                            
+--------------------------------------------------------
+6-bit coded32     |Good choice if your source art has   
+colors            |relatively few colors. Supports      
+                  |per-pixel P-Mode; use a mask for     
+                  |special effects regions.             
+--------------------------------------------------------
+4-bit coded16     |Good choice if source art has 16 or  
+colors            |fewer colors.                        
+--------------------------------------------------------
+2-bit coded4      |Good choice if source art has 4 or   
+colors            |fewer colors.                        
+--------------------------------------------------------
+1-bit coded2      |Good choice if source art has 2 or   
+colors            |fewer colors.                        
+--------------------------------------------------------
+</PRE>
+<P>
+<B>Note: </B>If the source art has more colors than the cel, the colors 
+needs to be reduced. 3DO Animator does this automatically; if you use 
+custom plug-ins, you are responsible for color reduction. For more 
+information, see the individual manuals. <P>
+<A NAME="XREF36070"><H3>Creating and displaying anti-aliased cels</A></H3>
+Anti-aliasing smooths out the rough edges (jaggies) of a computer 
+generated image. The Anti-Alias CelWriter makes it possible to get this 
+effect on the 3DO Station. When you export source art using Anti-Alias 
+CelWriter, it saves a file containing two cels: a source cel and a mask 
+cel. The mask cel is partly translucent, mixing background pixels with 
+source cel pixels to smooth the edges around a cel. <P>
+The program that displays the anti-aliased cel has to render the mask cel 
+first, then display the source cel. <P>
+<A NAME="XREF20337"><H3>Packed and unpacked cels</A></H3>
+Packed cels compress pixels of the same color. In almost all cases, they 
+result in a much smaller cel. They are especially useful if you are using 
+an irregularly shaped (not rectangular) cel. How you create a packed cel 
+depends on the tool you use:<P>
+<UL>
+<LI>3DO Animator-From the 3DO Options menu, use CCB Flags and check the 
+Packed box. <P>
+<LI>3DO CelWriter and 3DO Coded-8 CelWriter-While exporting the cel, click 
+the Set Cel Flags button and make sure Save Cel as Packed box is checked. 
+<P>
+<LI>3DO PostPro-Specify that you intend to create a packed cel when 
+opening it. 
+</UL>
+<A NAME="XREF17795"><H2>Working with 3DO animations</A></H2>
+A 3DO animation consists of a series of 3DO cels. The actual file 
+containing the animation also has information about the frame rate. The 
+file may also contain a preamble, which specifies information the cels 
+share. In most cases, frame rate and preamble information are set by the 
+program. While 3DO animation is in many ways similar to traditional film 
+animation, it differs in several ways:<P>
+<UL>
+<LI>In traditional film animation, the animator times a scene on the basis 
+of a projection rate of 24 frames per second (fps). The standard NTSC 
+display allows a projection rate of 30 fps, though lower rates are 
+possible and used frequently.<P>
+<LI>A trade-off is necessary between cel size, cel resolution, and frame 
+rate. The 3DO hardware can't play back a large animation at a high 
+resolution using a high frame rate. You can, however, usually get a good 
+compromise if you experiment early on. The graphic artist and the 
+programmer have to work together to find out what combination of cel size, 
+cel resolution, and frame rate works best for which animation.<P>
+<LI>The 3DO hardware can shape, move, and stretch each cel or individual 
+cels in an animation.<P> 
+<LI>Special effects are possible for one cel or all cels in an animation. 
+</UL>

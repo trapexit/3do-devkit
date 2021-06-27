@@ -1,0 +1,83 @@
+<HTML><TITLE>set_union</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>set_union</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Basic set operation for sorted sequences.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class InputIterator1, class InputIterator2, class OutputIterator>
+OutputIterator  
+<B>set_union</B> (InputIterator1 first1, InputIterator1 last1,
+           InputIterator2 first2, InputIterator2 last2,
+           OutputIterator result);
+template &#60;class InputIterator1, class InputIterator2, 
+          class OutputIterator, class Compare>
+OutputIterator  
+<B>set_union</B> (InputIterator1 first1, InputIterator1 last1,
+           InputIterator2 first2, InputIterator2 last2,
+           OutputIterator result, Compare comp);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The<B><I> set_union</B></I> algorithm constructs a sorted union of the elements from the two ranges.  It returns the end of the constructed range.  <B><I>set_union</B></I> is stable, that is, if an element is present in both ranges, the one from the first range is copied. The result of of <B><I>set_union</B></I> is undefined if the result range overlaps with either of the original ranges.  Note that <B><I>set_union</B></I> does not merge the two sorted sequences.  If an element is present in both sequences, only the element from the first sequence is copied to <SAMP>result</SAMP>.  (Use the <A HREF="mer_0626.htm"><B><I>merge</B></I></A> algorithm to create an ordered merge of two sorted sequences that contains all the elements from both sequences.)</P>
+<P><B><I>set_union</B></I> assumes that the sequences are sorted using the default comparision operator less than (<SAMP>&#60;</SAMP>), unless an alternative comparison operator (<SAMP>comp</SAMP>) is provided. </P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>At most <SAMP>((last1 - first1) + (last2 - first2)) * 2 -1</SAMP>  comparisons are performed.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// set_unin.cpp
+//
+ #include &#60;algorithm>
+ #include &#60;set>
+ #include &#60;iostream.h>
+ int main()
+ {
+   //Initialize some sets
+   int a2[6]  = {2,4,6,8,10,12};
+   int a3[4]  = {3,5,7,8};
+   set&#60;int, less&#60;int> >  even(a2, a2+6), 
+                        result, small(a3,a3+4);
+   //Create an insert_iterator for result
+   insert_iterator&#60;set&#60;int, less&#60;int> > > 
+                 res_ins(result, result.begin());
+   //Demonstrate set_union
+   cout &#60;&#60; "The result of:" &#60;&#60; endl &#60;&#60; "{";
+   copy(small.begin(),small.end(),
+        ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; "} union {";
+   copy(even.begin(),even.end(),
+        ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; "} =" &#60;&#60; endl &#60;&#60; "{";
+   <B>set_union</B>(small.begin(), small.end(),
+            even.begin(), even.end(), res_ins);
+   copy(result.begin(),result.end(),
+        ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; "}" &#60;&#60; endl &#60;&#60; endl;
+   return 0;
+ }
+Output :
+The result of:
+{3 5 7 8 } union {2 4 6 8 10 12 } =
+{2 3 4 5 6 7 8 10 12 }
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Compare</SAMP> template argument and the <SAMP>Allocator</SAMP> template argument. For instance, you will need to write :</P>
+<P><SAMP>set&#60;int, less&#60;int>, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>set&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="inc_3676.htm"><B><I>includes</B></I></A>, <A HREF="set_1649.htm"><B><I>set</B></I></A>, <A HREF="set_9182.htm"><B><I>set_intersection</B></I></A>, <A HREF="set_0972.htm"><B><I>set_difference</B></I></A>, <A HREF="set_1735.htm"><B><I>set_symmetric_difference</B></I></A></P>
+<HR>
+<A HREF="set_1735.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="sor_1439.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

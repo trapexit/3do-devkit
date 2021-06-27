@@ -1,0 +1,24 @@
+<Title>GetTextCelCoords</Title>
+<A NAME="XREF11887"><H1>GetTextCelCoords </A></H1>
+ Retrieves text cel's CCB coordinates.<P>
+<H3>Synopsis</H3>
+<CODE>void GetTextCelCoords (TextCel *tCel, Coord *ccbX, Coord *ccbY)</CODE><P>
+<H3>Description</H3>
+Retrieves the TextCel CCB coordinates (ccb_XPos and ccb_YPos). <P>
+If you find it convenient to do so, work with the CCB's position, size, and perspective fields directly; you don't have to use this function to safely obtain the on screen position. <P>
+The ccbX and ccbY values are interpreted as frac16 values (the same as the ccb_XPos and ccb_YPos fields themselves). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>ccbX
+<DD>Pointer to a variable to receive the x coordinate for the text cel CCB. 
+</DL>
+<DL>
+<DT>ccbY
+<DD>Pointer to a variable to receive the y coordinate for the text cel CCB. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

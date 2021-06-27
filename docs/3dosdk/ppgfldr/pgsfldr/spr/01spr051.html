@@ -1,0 +1,24 @@
+<TITLE>FindLSB</TITLE>
+<A NAME="XREF19357"><H1>FindLSB </A></H1>
+<A NAME="XREF41588"></A>Finds the least-significant bit.<P>
+<H3>Synopsis</H3>
+<CODE>int FindLSB( uint32 mask )</CODE><P>
+<H3>Description</H3>
+FindLSB() finds the lowest-numbered bit that is set in the argument. The least-significant bit is bit number 1, and the most-significant bit is bit 32. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>flags
+<DD>The 32-bit word to check.
+</DL>
+<H3>Return Value</H3>
+FindLSB() returns the number of the lowest-numbered bit that is set in the argument (for example, 1 if the value of the argument is 1 or 3 or 7, 3 if the value of the argument is 4 or 12). If no bits are set, the procedure returns 0. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr052.html#XREF26766"><CODE>FindMSB</A>(), <A HREF="./01spr043.html#XREF39487">ffs</A>() </CODE></CODE><P>
+<H1></H1><HR>

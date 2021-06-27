@@ -1,0 +1,37 @@
+<Title>timersleep</Title>
+<A NAME="XREF17923"><H1>timersleep </A></H1>
+<A NAME="XREF22916"></A>Demonstrates how to use the timer device to wait for 
+an amount of time specified on the command-line.<P>
+<H3>Synopsis</H3>
+<CODE>timersleep &lt;num seconds&gt; &lt;num microseconds&gt;</CODE><P>
+<H3>Description</H3>
+This program demonstrates how to use the timer device to wait for a 
+certain amount of time. <P>
+The program does the following: <P>
+<UL>
+<LI>Parses the command-line arguments 
+<LI>Opens the timer device 
+<LI>Creates an IOReq 
+<LI>Initializes an IOInfo structure 
+<LI>Calls <CODE>DoIO()</CODE> to perform the wait operation 
+<LI>Cleans up 
+</UL>
+Note that Portfolio provides convenience routines to make using the timer 
+device easier. For example, <CODE>CreateTimerIOReq()</CODE>, 
+<CODE>DeleteTimerIOReq()</CODE>, and <CODE>WaitTime()</CODE>. This example 
+intends to show how in general one can communicate with devices in the 
+Portfolio environment. For more information on the timer convenience 
+routines, see the timer device documentation. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>num seconds
+<DD>Number of seconds to wait.
+</DL>
+<DL>
+<DT>num microseconds
+<DD>Number of microseconds to wait.
+</DL>
+<H3>Associated Files</H3>
+timersleep.c<P>
+<H3>Location</H3>
+examples/Kernel <P>

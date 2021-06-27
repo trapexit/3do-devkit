@@ -1,0 +1,37 @@
+<TITLE>FreeMemToMemList</TITLE>
+<A NAME="XREF14037"><H1>FreeMemToMemList </A></H1>
+<A NAME="XREF33874"></A>Frees a private block of memory.<P>
+<H3>Synopsis</H3>
+<CODE>void FreeMemToMemList( MemList *ml, void *p, int32 size )</CODE><P>
+<H3>Description</H3>
+This procedure frees a private block of memory that was previously allocated by a call to <CODE>AllocMemFromMemList()</CODE>. You can also use it to add memory to a private memory list created by <CODE>AllocMemList()</CODE>. <P>
+<B>Note: </B> The memory you free to a memory list must be either memory that was previously allocated from the list or (when adding new memory to the list) memory of the type specified (by the p argument of <CODE>AllocMemList()</CODE>) when the memory list was created. <P>
+The block of memory is expected to begin and end on nicely aligned bounds; the alignment size can be obtained by calling <CODE>GetMemAllocAlignment()</CODE>. If the block is not properly aligned, the base is rounded up and the size is rounded down until alignment is achieved. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ml
+<DD>A pointer to the memory list to which to free the memory. 
+</DL>
+<DL>
+<DT>p
+<DD>A pointer to the memory to free. This value may be NULL, in which case this function just returns. 
+</DL>
+<DL>
+<DT>size
+<DD>The number of bytes to free. This must be the same size that was passed to AllocMemFromMemList() to allocate the block. See <A HREF="#XREF31542">FreeMem</A> for additional information.
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr006.html#XREF20160"><CODE>AllocMemFromMemList</A>(), <A HREF="./01spr008.html#XREF23775">AllocMemList</A>(), <A HREF="./01spr065.html#XREF12757">FreeMemList</A>(), <A HREF="./01spr072.html#XREF36650">GetMemAllocAlignment</A>()</CODE><P>
+</CODE>
+<H1><LINK NAME="XREF14037"></LINK></H1><HR>

@@ -1,0 +1,9 @@
+# Weaver script for NewSanmStream. Writes a CTRL-ALRM chunk
+# to the end of the stream to loop streamed animation.
+
+streamblocksize 32768
+streamstarttime 0
+file NewSANM 1 0
+#Replaced the following ALRM_Chunk with writegotochunk
+#file ALRM_Chunk 1 7200
+writegotochunk 7248 0

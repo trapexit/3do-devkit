@@ -1,0 +1,91 @@
+<HTML><TITLE>copy, copy_backward</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>copy, copy_backward</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Copies a range of elements</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class InputIterator, class OutputIterator>
+ OutputIterator copy(InputIterator first, InputIterator last,
+                     OutputIterator result);
+template &#60;class BidirectionalIterator1, class BidirectionalIterator2>
+ BidirectionalIterator2 copy_backward(BidirectionalIterator1 first, 
+                                      BidirectionalIterator1 last,
+                                      BidirectionalIterator2 result);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>copy</B></I> algorithm copies values from the range specified by <SAMP>[first</SAMP> , <SAMP>last)</SAMP> to the range that specified by <SAMP>[result, result + (last - first))</SAMP>.  <B><I>copy</B></I> can be used to copy values from one container to another, or to copy values from one location in a container to another location in the <I>same</I> container, as long as <SAMP>result</SAMP> is not within the range <SAMP>[first-last)</SAMP>. <B><I>copy</B></I> returns <SAMP>result + (last - first)</SAMP>.  For each non-negative integer <SAMP>n &#60; (last - first)</SAMP>, <B><I>copy</B></I> assigns <SAMP>*(first + n)</SAMP> to <SAMP>*(result + n)</SAMP>.  The result of <B><I>copy</B></I> is undefined if  <SAMP>result</SAMP> is in the range <SAMP>[first, last)</SAMP>.</P>
+<P>Unless <SAMP>result</SAMP> is an insert iterator, <B><I>copy</B></I> assumes that at least as many elements follow <SAMP>result</SAMP> as are in the range <SAMP>[first, last)</SAMP>.</P>
+<P>The <B><I>copy_backward</B></I> algorithm copies elements in the range specified by <SAMP>[first, last)</SAMP> into the range specified by [<SAMP>result - (last - first), result)</SAMP>, starting from the end of the sequence (<SAMP>last-1</SAMP>) and progressing to the front (<SAMP>first</SAMP>).  Note that <B><I>copy_backward</B></I> does <I>not</I> reverse the order of the elements, it simply reverses the order of transfer.  <B><I>copy_backward</B></I> returns <SAMP>result - (last - first)</SAMP>. You should use <B><I>copy_backward</B></I> instead of <B><I>copy</B></I> when <SAMP>last</SAMP> is in the range <SAMP>[result - (last - first), result)</SAMP>.  For each positive integer  <SAMP>n &#60;= (last - first)</SAMP>,  <B><I>copy_backward</B></I> assigns <SAMP>*(last - n)</SAMP> to <SAMP>*(result - n)</SAMP>.  The result of <B><I>copy_backward</B></I> is undefined if <SAMP>result</SAMP> is in the range <SAMP>[first, last)</SAMP>.</P>
+<P>Unless <SAMP>result</SAMP> is an insert iterator, <B><I>copy_backward</B></I>  assumes that there are at least as many elements ahead of <SAMP>result</SAMP> as are in the range <SAMP>[first, last)</SAMP>.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>Both <B><I>copy </B></I> and <B><I>copy_backward</B></I>  perform exactly <SAMP>last - first</SAMP> assignments.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>   //
+   // stdlib/examples/manual.copyex.cpp
+   //
+ #include &#60;algorithm>
+ #include &#60;vector>
+ #include &#60;iostream.h>
+ int main()
+ {
+   int d1[4] = {1,2,3,4};
+   int d2[4] = {5,6,7,8};
+   // Set up three vectors
+   //
+   vector&#60;int> v1(d1,d1 + 4), v2(d2,d2 + 4), v3(d2,d2 + 4);
+   //
+   // Set up one empty vector
+   //
+   vector&#60;int> v4;
+   //
+   // Copy v1 to v2
+   //
+   copy(v1.begin(),v1.end(),v2.begin());
+   //
+   // Copy backwards v1 to v3
+   //
+   copy_backward(v1.begin(),v1.end(),v3.end());
+   //
+   // Use insert iterator to copy into empty vector
+   //
+   copy(v1.begin(),v1.end(),back_inserter(v4));
+   //
+   // Copy all four to cout
+   //
+   ostream_iterator&#60;int> out(cout," ");
+   copy(v1.begin(),v1.end(),out);
+   cout &#60;&#60; endl;
+   copy(v2.begin(),v2.end(),out);
+   cout &#60;&#60; endl;
+   copy(v3.begin(),v3.end(),out);
+   cout &#60;&#60; endl;
+   copy(v4.begin(),v4.end(),out);
+   cout &#60;&#60; endl;
+   
+   return 0;
+ }
+Output : 
+1 2 3 4
+1 2 3 4
+1 2 3 4
+1 2 3 4</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument. For instance you'll have to write:</P>
+<PRE>vector &#60;int, allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>vector &#60;int></PRE>
+<HR>
+<A HREF="Con_2487.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="cou_2233.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

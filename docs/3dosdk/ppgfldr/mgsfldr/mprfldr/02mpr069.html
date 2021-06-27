@@ -1,0 +1,87 @@
+<Title>SPDecisionFunction</Title>
+<A NAME="XREF41344"><H1>SPDecisionFunction </A></H1>
+<A NAME="XREF25873"></A> Typedef for decision callback functions<P>
+<H3>Synopsis</H3>
+<CODE>typedef Err (*SPDecisionFunction) (SPAction *resultAction, void *decisionData, SPSound *sound, const char *markerName)</CODE><P>
+<H3>Description</H3>
+Client-supplied callback functions of this form may be installed in each marker and/or as a default for an SPPlayer. <P>
+A marker's action is processed when the sound data for that marker's position is read by the player when any of the following is true:<P>
+<UL>
+<LI>there is a default decision function for the marker's SPPlayer.<P>
+<p>
+<LI>the marker has a marker decision function<P>
+<p>
+<LI>the marker specifies a non-trivial action (branch or stop)<P>
+<p>
+<LI>the marker is at the end of a sound <P>
+</UL>
+Normally, disc I/O is performed based on the size of each buffer. When one of the above conditions is true for a marker, the player will split up disc I/O at that marker in order to prepare for a possible branch. This impacts disc I/O efficiency. It is important to avoid having so many markers with non-trivial actions as to cripple the players ability to produce smooth sounding output. Since default decision functions affect every marker, it is necessary to insure that the marker spacing is such that smooth playback can still be produced. This is unfortunately one of those things that requires a bit of trial and error. <P>
+The following steps are used in determining what action the SPPlayer will take when processing a marker's action: <P>
+<UL>
+<LI>If the marker has a decision function, call it. If the marker's decision function sets its resultAction (e.g. by a call to <CODE>spSetBranchAction()</CODE>  or <CODE>spSetStopAction()</CODE>), then take that action. <P>
+<p>
+<LI>Otherwise, if the there is a default decision function, call it. If the default decision function sets its resultAction (e.g. by a call to <CODE>spSetBranchAction()</CODE>  or <CODE>spSetStopAction()</CODE>), then take that action. <P>
+<p>
+<LI>Otherwise, if the marker specifies some static action (branch or stop), take that action. <P>
+<p>
+<LI>Otherwise, if the marker is at the end of a sound, stop reading. <P>
+<p>
+<LI>Otherwise continue reading the sound after the marker. <P>
+</UL>
+A decision function MAY do almost anything to the SPPlayer that owns this marker including adding new sounds or markers, changing the static action for this or any other marker, changing the default or marker decision functions for this or any other marker, deleting this or any other marker or sound (with the below caveats in mind). <P>
+A decision function MUST NOT do any of the following:<P>
+<UL>
+<LI>call any function that changes the player state (e.g. <CODE>spDeletePlayer()</CODE>, <CODE>spStop()</CODE>, <CODE>spStartReading()</CODE>, <CODE>spStartPlaying()</CODE>, <CODE>spService()</CODE>, etc.) for the current SPMarker's SPPlayer. <P>
+<p>
+<LI>delete the current SPMarker's SPSound since this has the side effect of calling <CODE>spStop()</CODE>. <P>
+<p>
+<LI>delete the current marker without setting up resultAction to stop or branch to another marker. <P>
+<p>
+<LI>take a long time to execute. <P>
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>resultAction
+<DD>SPAction to optionally be filled out by decision function. If it isn't filled out, the sound player ignores the call to the decision function and continues as if the decision function hadn't been installed. 
+</DL>
+<DL>
+<DT>decisionData
+<DD>Pointer to client data passed to <CODE>spSetMarkerDecisionFunction()</CODE> or <CODE>spSetDefaultDecisionFunction()</CODE>. 
+</DL>
+<DL>
+<DT>sound
+<DD>Pointer to SPSound containing marker for which  the player is requesting a playback decision. 
+</DL>
+<DL>
+<DT>markerName
+<DD>Name of marker for which the player is requesting a playback decision. 
+</DL>
+<H3>Return Value</H3>
+Client should return a non-negative value for success, or a negative error  code on failure. An error code returned to the sound player causes the sound player to stop  reading and return that error code back to the caller. <P>
+<H3>Outputs</H3>
+Decision function can set the SPAction by calling one of the following: <P>
+<CODE>spSetBranchAction()</CODE>  - specifies a marker to branch to as the result of this decision function. <P>
+<CODE>spSetStopAction()</CODE>  - specifies that reader should stop as the result of this decision function. <P>
+If the decision does note set the SPAction, the sound player ignores the decision function (acts as if decision function hadn't been installed). <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+Err mydecision (SPAction *resultAction, int32 *remaining,
+                SPSound *sound, const char *markerName)
+{
+        // stop when remaining count reaches zero
+    if ((*remaining)-- &lt;= 0) {
+        return spSetStopAction (resultAction);
+    }
+        // do nothing (take default action) otherwise
+    return 0;
+}
+</CODE>
+</PRE>
+<H3>Implementation</H3>
+Typedef for callback function defined in soundplayer.h V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr089.html#XREF13040"><CODE>spSetMarkerDecisionFunction</A>(), <A HREF="./02mpr088.html#XREF33640">spSetDefaultDecisionFunction</A>(), <A HREF="./02mpr087.html#XREF19779">spSetBranchAction</A>(), <A HREF="./02mpr090.html#XREF22533">spSetStopAction</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,39 @@
+<TITLE>Hardware Devices and Connections</TITLE>
+<H1><LINK NAME="XREF24869">Hardware Devices and Connections</LINK></H1><HR>
+The 3DO standard defines a set of buses and ports for connecting hardware devices. These bus and port definitions make the best use of existing hardware technologies. Keep in mind a very important warning as you read about the hardware described in this chapter: <I>the bus and port definitions may change. </I>As hardware prices fall, better performance will be possible using advanced hardware that costs less than the currently specified hardware; the 3DO standard <I>will</I> change to take advantage of better hardware as it becomes available. In other words, the hardware descriptions in this chapter are a snapshot of the current 3DO standards. Don't write software that assumes 3DO hardware is always going to be manufactured as it is now. Fortunately, you don't have to write hardware-specific code, because Portfolio takes care of the specifics for you, as you'll read later in this chapter.<P>
+<H2>Internal Buses</H2>
+The 3DO system currently offers a set of three internal buses that provide connections for devices mounted within the 3DO box. They include the following:<P>
+<UL>
+<LI>The <B>main data bus</B> that connects the CPU to RAM. It can also connect to a full motion video (FMV) cartridge.
+<p>
+<LI>The <B>SlipStream</B> bus that currently has a video-out signal and, in the future, may support video-in as well.
+<p>
+<LI>The <B>Slow bus</B> that is a simple, slow, and low-cost 8-bit bus for devices mounted on the motherboard. Those devices can include ROM, NVRAM, and a digital tuner.
+</UL>
+<H2>The Expansion Port</H2>
+The expansion port, which is a parallel port, provides external connections for plug-in modules that a user may want to add to a 3DO unit. Those modules include devices such as an auxiliary CD-ROM drive, a modem, RAM mass storage, and, in the future, read/write mass storage such as a hard disk drive.<P>
+To support high-power expansion devices, the expansion port uses a custom protocol that provides a fast data rate. The port can support up to 15 devices, all of which are auto-configuring, so users don't have to set DIP switches or set confusing software parameters to use a device; they just plug the device in and let the software do the rest.<P>
+<H2>The Control Port</H2>
+The control port, which is a serial port, is used mainly to connect user-interface devices that control the 3DO unit. These devices include:<P>
+<UL>
+<LI>The <B>controller pad</B> a standard control that includes a joypad and buttons, and may include a headphone jack. This device is used to point, select, and control on-screen action. It can also provide stereo sound accompaniment through the headphone jack.
+<p>
+<LI>The <B>photo-optic gun</B> is used to shoot at targets on the video screen.
+<p>
+<LI><B>Stereoscopic glasses</B> are used to view stereoscopic displays.
+<p>
+<LI>An <B>interlink unit</B> connects one 3DO unit to one or more other units.
+<p>
+<LI>A <B>mouse or trackball</B> is used to point to and select objects on the screen.
+<p>
+<LI>A <B>keyboard</B> is used to type in text.
+<p>
+<LI>A <B>robot control device</B> is used to remotely control a mechanical robot.
+<p>
+<LI>Any number of <B>custom devices</B> created and sold by 3DO-licensed 
+manufacturers.
+</UL>
+The control port supports a daisy chain of devices. Because a new device can always be plugged in to the last device in the chain, the control port doesn't have a fixed maximum number of devices, but instead is limited by the data bandwidth of the port. In other words, you can keep plugging in more control devices until the control port is overwhelmed with data and starts to choke up. If this happens, the control port fails to recognize the newly plugged in control devices that go beyond the port's capacities.<P>
+The control port is designed to be simple, robust, and convenient to users, who may plug and unplug controllers while software is running. All 3DO control devices are autoconfiguring. Portfolio polls the control port to see what's plugged in, and provides the appropriate drivers to work with each device. The control port is not fast when compared to the expansion port and internal buses; it reads and writes data once every video field (which occurs 60 times per second on NTSC systems, and 50 times per second on PAL systems), and currently handles up to 2048 bits of information per field. In addition to data, the control port carries an analog stereo audio output, which can be heard over earphones plugged into a controller stereo jack.<P>
+Tasks interface to the control port using the event broker. To learn about interfacing to external control port hardware, see <A HREF="./12spg.html#XREF23574">The Event Broker</A>.<P>
+<A NAME="XREF30406"></A>

@@ -1,0 +1,27 @@
+<Title>MapCelListToIPoint</Title>
+<A NAME="XREF18504"><H1>MapCelListToIPoint </A></H1>
+ Sets a list of cel's locations to a point.<P>
+<H3>Synopsis</H3>
+<CODE>void MapCelListToIPoint (CCB *list, IPoint *newPosition, Boolean copyPerspective)</CODE><P>
+<H3>Description</H3>
+This function sets a list of cels to the given coordinates. It then adjusts the X/Y coordinates of the rest of the cels in the list such that the cels maintain the same relative X/Y relationships to each other. The net effect is that the list of cels moves as if it were a single unit. <P>
+This function can optionally propagate the size and perspective values already present in the first cel to the rest of the cels in the list. This is useful if you are manipulating size and perspective values manually. To propagate the size and perspective without changing the positions, use one of the <CODE>OffsetCelList()</CODE> functions with delta values of zero. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>list
+<DD>Pointer to a list of one or more cels to be mapped. 
+</DL>
+<DL>
+<DT>newPosition
+<DD>Pointer to the FPoint to which the cel is to be mapped. 
+</DL>
+<DL>
+<DT>copyPerspective
+<DD>TRUE to copy the size and perspective fields from the first cel to the rest of the list. FALSE to leave all size and perspective fields as is. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO126.html#XREF26326"><CODE>MapCelListToFPoint</A>, <A HREF="./01LDO122.html#XREF41880">MapAACelToIPoint</A>, <A HREF="./01LDO132.html#XREF20713">MapCelToIPoint</A> </CODE><P>

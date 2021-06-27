@@ -1,0 +1,25 @@
+<Title>CheckIO</Title>
+<A NAME="XREF25810"><H1>CheckIO </A></H1>
+<A NAME="XREF18642"></A>Checks for I/O request completion.<P>
+<H3>Synopsis</H3>
+<CODE>int32 CheckIO( Item ior )</CODE><P>
+<H3>Description</H3>
+This procedure checks to see if an I/O request has completed. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ior
+<DD>The item number of the I/O request to be checked. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the I/O is not complete. It returns &gt; 0 if it is complete. It returns BADITEM if ior is bad.<P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. Became a folio call in kernel folio V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>io.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr001.html#XREF20829"><CODE>AbortIO</A>(), <A HREF="./01spr021.html#XREF36930">CreateIOReq</A>(), <A HREF="./01spr031.html#XREF13807">DeleteIOReq</A>(), <A HREF="./01spr038.html#XREF37111">DoIO</A>(), <A HREF="./01spr121.html#XREF16419">SendIO</A>(), <A HREF="./01spr131.html#XREF35365">WaitIO</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF25810"></LINK></H1><HR>

@@ -1,0 +1,21 @@
+<TITLE>Making a movie</TITLE>
+<H1>Making a movie</H1><HR>
+The following is a summary of the equipment and source material necessary for working with EZ Squeeze, along with information about formats and processing.<P>
+<H2>Equipment</H2>
+Compression requires a Macintosh Quadra 700 or better, with at least 16 MB of memory and sufficient hard disk space to store content material. To play back video, a standard 3DO Interactive Multiplayer\xaa  is required. The decompressor uses only the ARM processor, so the DSP and Cel Engine are not affected.<P>
+<H2>Video Source</H2>
+The source video should be a QuickTime movie in "raw" (uncompressed) format.  Acceptable bit depths are 16 (1 bit alpha + 5,5,5), 24 (no alpha + 8,8,8), 32 (8 bits alpha + 8,8,8), and 40 (8 bits BW).<P>
+<H2>Audio</H2>
+EZ Squeeze does not compress audio included with the film properly. It's best to create and process audio separately and mix it later with the compressed movie during the data streaming process.<P>
+<H2>Compressing with EZ Squeeze</H2>
+Once you have a QuickTime raw (uncompressed, flat) movie file with the desired frame rate and size:<P>
+<OL>
+<LI>Run the MPW tool MovieToEZQ to create and EZQ Chunk file, adjusting the parameters as indicated below in "Adjusting parameters." 
+<p>
+
+<LI>Weave the EZQ Chunk file and any audio file together into an EZQ Stream (e.g., <CODE>weaver -o copter.stream &lt; copter.script)</CODE>. The weave script file specifies the block size of the resulting stream, and which subscribers need to be loaded to play the stream. Sample weave scripts are found in the <I>SampleScripts</I> folder.  
+</OL>
+<H2>Adjusting parameters</H2>
+Start with default settings (see "Command Line Arguments" below).  If adjustment is necessary, a first step is to change the -p option to 1 or even 2.  Next, increase quality by reducing the values in the  -z option.  If that modification is unnecessary, increase compression by increasing -z option values.<P>
+<H2>Weaver and scripts</H2>
+The Weaver and scripts are identical to other formats.  It is important to verify that the block size in the script matches that used in "MovieToEZQ."<P>

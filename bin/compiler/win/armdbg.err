@@ -1,0 +1,200 @@
+ErrMess_Interrupted:Interrupted
+ErrMess_Overflow:Overflow
+ErrMess_FileNotFound:File not found
+ErrMess_ActivationNotPresent:Function activation does not exist
+ErrMess_OutOfStore:Debugger workspace full
+ErrMess_TypeNotSimple:Compound type
+ErrMess_BufferFull:Buffer full
+ErrMess_AtStackBase:Already at base of stack
+ErrMess_AtStackTop:Already at top of stack (execution level)
+ErrMess_DbgTableFormat:Invalid debug table field
+ErrMess_NotVariable:Not a variable
+ErrMess_NoSuchBreakPoint:Breakpoint not found
+ErrMess_NoSuchWatchPoint:Watchpoint not found
+ErrMess_FileLineNotFound:Line not found
+ErrMess_DbgTableVersion:Wrong ASD table format for operation
+ErrMess_NoSuchPath:No such path
+ErrMess_BadWatchPointSort:Bad ValueSort for watchpoint
+ErrMess_TooManyBreakPoints:Too many breakpoints
+ErrMess_TargetReadFail:Failed to read from target memory
+ErrMess_TargetWriteFail:Failed to write to target memory
+ErrMess_CoProInit:RDI error in processing coprocessor description
+ErrMess_CoProUnknown:Unknown coprocessor
+ErrMess_CoProRegNotWritable:coprocessor register not writable
+ErrMess_BadReg:Invalid register number
+ErrMess_NotInHistory:entry not present in history
+ErrMess_ContextNoLine:Context contains a statement number but no line number
+ErrMess_ContextTwoLines:Context contains multiple line numbers
+ErrMess_ContextSyntax:Invalid syntax for context
+ErrMess_IncompletePos:Incomplete specification of context
+ErrMess_VarReadOnly:Variable is read-only
+ErrMess_VarWriteOnly:Variable is write-only
+ErrMess_FileNewerThanImage:The source file has been modified, or the image has been rebuilt
+ErrMess_NotFound:Name not found
+ErrMess_DeviceNotFound:Device not found
+ErrMess_CoProRead:Failed to read from coprocessor
+ErrMess_CoProWrite:Failed to write to coprocessor
+ErrMess_NoFP:Floating point not available
+ErrMess_BadFPValue:Bad floating-point value
+ErrMess_InfiniteLoop:Possible infinite loop
+ErrMess_BadPCWriteInstruction:Bad PC update instruction
+ErrMess_PCUnset:PC not set
+ErrMess_BadStatusForGo:Can't go
+ErrMess_WrongByteSex:Image probably in wrong byte sex
+ErrMess_RDIError:RDI Error
+ErrMess_BadAIF:Format error in image file
+ErrMess_FileTooBig:Too many lines in source file
+ErrMess_FileTooShort:Image shorter than implied by header (has it been squeezed?)
+ErrMess_FileReadFail:File read failure
+ErrMess_FileWriteFail:File write failure
+ErrMess_BadDbgDataItem:Debug table format error
+ErrMess_BadDbgDataItemPos:Debug table format error at offset 0x%lx in area %s
+ErrMess_BadDbgTableVersion:Program compiled for wrong ASD version
+ErrMess_NotImplemented:Debugger feature not yet implemented
+ErrMess_NoImage:No image loaded
+ErrMess_NoSuchSymTable:Symbol table not found
+ErrMess_Ambiguous:Ambiguous reference
+ErrMess_LineNotFound:No code compiled for source line
+ErrMess_NotProc:No code in non-procedure
+ErrMess_NoFileData:File name not found in debug data
+ErrMess_LLPos:No debug data for function
+ErrMess_BadlyTerminatedExpr:Expression incorrectly terminated
+ErrMess_Lost:Unknown location
+ErrMess_Syntax:Syntax error
+ErrMess_NotForContext:Activation level meaningless here
+ErrMess_DebugLevel:Debug data for section is incomplete
+ErrMess_Type:Type error
+ErrMess_TypeWarn:Type violation
+ErrMess_DivideByZero:Division by zero
+ErrMess_BadField:Unknown structure field name
+ErrMess_Select:Field selector expected
+ErrMess_BoundViolation:Array bounds violation
+ErrMess_RegVar:Can't take address of register
+ErrMess_NotVar:Identifier not a variable
+ErrMess_UBUndef:No known value for upper bound
+ErrMess_LBUndef:No known value for lower bound
+ErrMess_NoSuchElement:Aggregate type has fewer elements
+ErrMess_AssignOp:Assignment operators not permitted
+ErrMess_Brackets:Mismatched parentheses
+ErrMess_LValue:Not an Lvalue
+ErrMess_SqBrackets:Mismatched array brackets
+ErrMess_CommaExpected:Expected ','
+ErrMess_TypeExpected:Type expected
+ErrMess_ProcExpected:Function name expected
+ErrMess_BadReturnType:Toolbox can't handle functions returning aggregates
+ErrMess_BadCount:Invalid count for breakpoint
+ErrMess_ExprIncomplete:Unexpected end of expression
+ErrMess_MissingExpr:Empty expression
+ErrMess_ExprOutOfStore:Workspace full expression too complicated
+ErrMess_EscapedChar:Bad string escape
+ErrMess_CharConstant:Bad character constant
+ErrMess_UnclosedString:Missing string quote
+ErrMess_NotIntegralType:Integral type expected
+ErrMess_BadNumber:Bad integer constant
+ErrMess_ExprUnexpected:Unexpected symbol
+ErrMess_ExprNotFound:Unknown name
+ErrMess_BadValueSort:Bad value sort
+ErrMess_BadStack:No valid stack backtrace beyond this point
+ErrMess_NoReturn:Function has no return
+ErrMess_Internal:Debugger internal error
+ErrMess_BadMode:Invalid mode value
+ErrMess_BadFormat:Invalid register format
+ErrMess_BadFormatString:Invalid format string
+ErrMess_BadConfigData:Corrupt configuration data
+ErrMess_ConfigLoadFail:Failed to load configuration data
+ErrMess_ConfigSelectFail:Configuration select failure
+ErrMess_InadequateTarget:Target processor can't do this
+ErrMess_MemConfig:Unable to configure Memory characteristics
+ErrMess_PP_TooManyArgs:Too many arguments to macro
+ErrMess_PP_TooFewArgs:Too few arguments to macro
+ErrMess_PP_MissingCloseParen:Missing ')' in call of macro
+ErrMess_PP_RecSleep:pp internal error recursive sleep
+ErrMess_PP_EOFinString:EOF in string
+ErrMess_PP_EOFinEscape:EOF in string escape
+ErrMess_Profile_AlreadyStarted:Can't do this after the debuggee has started running
+ErrMess_Profile_NotGoing:Not profiling
+ErrMess_Profile_NotLoaded:Profile map not yet loaded
+ErrMess_Profile_NoMap:Current image has no symbols
+ErrMess_Profile_Cant_CallG:Image unsuitable for call graph profiling
+ErrMess_BadCfg:Error processing configuration file
+ErrMess_NotAvailable:Not available
+ErrMess_MapFile_NotFound:Memory Map File Not Found
+ErrMess_MapFile_Invalid:Invalid Memory Map File
+ErrMess_FileInfo_Corrupt:Debug table contains corrupt line information
+ErrMess_DbgTable_Corrupt:Debug table corrupted (see RDI log for details). Working with image may be impaired.
+Errmess_Unknown:Unknown error code %d
+PSMess_Breakpoint:Breakpoint
+PSMess_BreakpointNumbered:Breakpoint #%d
+PSMess_WatchPoint:Watchpoint #%d at %s changed
+PSMess_UnknownWatchPoint:Unknown watchpoint triggered
+PSMess_StepDone:Step completed
+PSMess_Interrupted:Interrupted
+PSMess_Stopped:Program terminated normally
+PSMess_LostWatch:Watchpoint(s) discarded on exit from procedure
+PSMess_BranchThrough0:Program stopped: branch through zero
+PSMess_Undef:Program stopped: undefined instruction
+PSMess_CaughtSWI:Program stopped: SWI
+PSMess_Prefetch:Program stopped: instruction fetch failed
+PSMess_Abort:Program stopped: data abort
+PSMess_AddrExcept:Program stopped: illegal address
+PSMess_CaughtIRQ:Program stopped: IRQ
+PSMess_CaughtFIQ:Program stopped: FIQ
+PSMess_Error:Program stopped: %s
+PSMess_CallFailed:Call failed
+PSMess_CallReturned:Call returned
+PSMess_UnknownBreak:Unknown breakpoint
+PSMess_Broken:Target broken
+PSMess_Waiting:Other device stopped
+PSMess_Unknown:Unknown status %d
+RDIErrMess_Reset:Reset
+RDIErrMess_UndefinedInstruction:Undefined instruction
+RDIErrMess_SoftwareInterrupt:Software Interrupt
+RDIErrMess_PrefetchAbort:Prefetch Abort
+RDIErrMess_DataAbort:Data abort
+RDIErrMess_AddressException:Address exception
+RDIErrMess_IRQ:IRQ
+RDIErrMess_FIQ:FIQ
+RDIErrMess_Error:Error
+RDIErrMess_BranchThrough0:Branch through 0
+RDIErrMess_NotInitialised:Not initialised
+RDIErrMess_UnableToInitialise:Can't initialise
+RDIErrMess_WrongByteSex:Wrong byte sex
+RDIErrMess_UnableToTerminate:Can't terminate
+RDIErrMess_BadInstruction:Bad instruction
+RDIErrMess_IllegalInstruction:Illegal instruction
+RDIErrMess_BadCPUStateSetting:Bad CPU state setting
+RDIErrMess_UnknownCoPro:Unknown coprocessor
+RDIErrMess_UnknownCoProState:Unknown coprocessor state
+RDIErrMess_BadCoProState:Bad coprocessor state
+RDIErrMess_BadPointType:Unknown point type
+RDIErrMess_UnimplementedType:Unimplemented point type
+RDIErrMess_BadPointSize:Bad point size
+RDIErrMess_UnimplementedSize:Unimplemented size
+RDIErrMess_NoMorePoints:No more points
+RDIErrMess_BreakpointReached:Breakpoint reached
+RDIErrMess_WatchpointAccessed:Watchpoint accessed
+RDIErrMess_NoSuchPoint:No such point
+RDIErrMess_ProgramFinishedInStep:Program finished in step
+RDIErrMess_UserInterrupt:User interrupt
+RDIErrMess_CantSetPoint:Can't set point
+RDIErrMess_IncompatibleRDILevels:Incompatible RDI levels
+RDIErrMess_CantLoadConfig:Can't load configuration data
+RDIErrMess_BadConfigData:Malformed configuration data
+RDIErrMess_NoSuchConfig:No such configuration
+RDIErrMess_BufferFull:Buffer full
+RDIErrMess_OutOfStore:Out of store
+RDIErrMess_NotInDownload:Not in download
+RDIErrMess_PointInUse:Hardware point in use
+RDIErrMess_TargetRunning:Target processor not stopped
+RDIErrMess_DeviceWouldNotOpen:Could not open serial/parallel port
+RDIErrMess_NoSuchHandle:No such memory description handle
+RDIErrMess_ConflictingPoint:Incompatible breakpoint already exists
+RDIErrMess_LinkTimeout:Data link timeout error
+RDIErrMess_OpenTimeout:Cannot open target: the target is not responding.
+RDIErrMess_LinkDataError:Data error (read and/or write) on target link
+RDIErrMess_Interrupted:Interrupted
+RDIErrMess_SoftInitialiseError:Recoverable error in RDI initialisation
+RDIErrMess_InsufficientPrivilege:Insufficient privilege
+RDIErrMess_UnimplementedMessage:Unimplemented RDP message
+RDIErrMess_UndefinedMessage:Undefined RDP message
+RDIErrMess_Unknown:Unknown RDI error code %d

@@ -1,0 +1,459 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_STRING_INCLUDED
+#define TTL_STRING_INCLUDED
+
+#include "algorithm"
+
+#include "string.h"
+#include "stdlib.h"
+
+class string
+{
+public:
+  typedef unsigned int      size_type;
+  typedef char              value_type;
+  typedef value_type       &reference;
+  typedef const value_type &const_reference;
+  typedef value_type       *pointer;
+  typedef const char       *const_pointer;
+
+public:
+  static const size_type npos = (size_type)-1;
+
+public:
+  string()
+    : _str(0),
+      _len(0),
+      _cap(0)
+  {
+  }
+
+  string(const char *str_)
+  {
+    _len = strlen(str_);
+    _str = (char*)malloc(_len + 1);
+    _cap = _len;
+    strcpy(_str,str_);
+  }
+
+  string(const string &str_)
+  {
+    _len = str_._len;
+    _str = (char*)malloc(str_._len + 1);
+    _cap = _len;
+    strcpy(_str,str_._str);
+  }
+
+private:
+  inline
+  string&
+  set_equal(const char      *str_,
+            const size_type  len_)
+  {
+    reserve(len_);
+    strncpy(_str,str_,len_);
+    _len = len_;
+    _str[_len] = '\0';
+
+    return *this;
+  }
+
+public:
+  inline
+  string&
+  append(const char      *str_,
+         const size_type  len_)
+  {
+    reserve(_len + len_);
+    strncpy(&_str[_len],str_,len_);
+    _len += len_;
+    _str[_len] = '\0';
+
+    return *this;
+  }
+
+  inline
+  string&
+  append(const char *str_)
+  {
+    const size_type len = strlen(str_);
+
+    return append(str_,len);
+  }
+
+  inline
+  string&
+  append(const string &str_)
+  {
+    return append(str_._str,str_._len);
+  }
+
+  inline
+  string&
+  append(const size_type count_,
+         const char      ch_)
+  {
+    reserve(_len + count_);
+    for(size_type i = 0; i < count_; i++)
+      _str[_len + i] = ch_;
+    _len += count_;
+    _str[_len] = '\0';
+
+    return *this;
+  }
+
+  inline
+  string&
+  append(const char ch_)
+  {
+    reserve(_len + 1);
+    _str[_len] = ch_;
+    _len += 1;
+    _str[_len] = '\0';
+  }
+
+public:
+  inline
+  bool
+  empty(void) const
+  {
+    return (_len == 0);
+  }
+
+  inline
+  size_type
+  size(void) const
+  {
+    return _len;
+  }
+
+  inline
+  size_type
+  length(void) const
+  {
+    return _len;
+  }
+
+  inline
+  size_type
+  max_size(void) const
+  {
+    return 8192;
+  }
+
+  inline
+  size_type
+  capacity(void) const
+  {
+    return _cap;
+  }
+
+  void
+  reserve(void)
+  {
+    return;
+  }
+
+  void
+  reserve(const size_type cap_)
+  {
+    if(cap_ <= capacity())
+      return;
+
+    _str = (char*)realloc(_str,(cap_ + 1));
+    _cap = cap_;
+  }
+
+  void
+  shrink_to_fit(void)
+  {
+    _str = (char*)realloc(_str,(_len + 1));
+    _str[_len] = '\0';
+    _cap = _len;
+  }
+
+public:
+  inline
+  string&
+  operator=(const char *str_)
+  {
+    const size_type len = strlen(str_);
+
+    return set_equal(str_,len);
+  }
+
+  inline
+  string&
+  operator=(const string &str_)
+  {
+    return set_equal(str_._str,str_._len);
+  }
+
+  inline
+  string&
+  operator+=(const char chr_)
+  {
+    return append((size_type)1,chr_);
+  }
+
+  inline
+  string&
+  operator+=(const char *str_)
+  {
+    return append(str_);
+  }
+
+  inline
+  string&
+  operator+=(const string &str_)
+  {
+    return append(str_);
+  }
+
+  inline
+  void
+  push_back(const char c_)
+  {
+    append(&c_,1);
+  }
+
+  inline
+  char
+  pop_back(void)
+  {
+    char c;
+
+    c = back();
+    _str[--_len] = '\0';
+
+    return c;
+  }
+
+  inline
+  void
+  clear(void)
+  {
+    _len = 0;
+  }
+
+  string&
+  erase(size_type index_ = 0,
+        size_type count_ = npos)
+  {
+    if(index_ > size())
+      return *this;
+
+    if(count_ == npos)
+      {
+        _len       = index_;
+        _str[_len] = '\0';
+      }
+    else
+      {
+        size_type i;
+
+        i = index_;
+        count_ = algorithm::min(count_,size() - index_);
+        while((i + count_) <= _len)
+          {
+            _str[i] = _str[i + count_];
+            i++;
+          }
+
+        _len -= count_;
+      }
+
+    return *this;
+  }
+
+public:
+  inline
+  char&
+  operator[](const size_type i_)
+  {
+    return _str[i_];
+  }
+
+  inline
+  const
+  char&
+  operator[](const size_type i_) const
+  {
+    return _str[i_];
+  }
+
+  inline
+  char&
+  front(void)
+  {
+    return _str[0];
+  }
+
+  inline
+  const
+  char&
+  front(void) const
+  {
+    return _str[0];
+  }
+
+  inline
+  char&
+  back(void)
+  {
+    return _str[_len - 1];
+  }
+
+  inline
+  const
+  char&
+  back(void) const
+  {
+    return _str[_len - 1];
+  }
+
+public:
+  size_type
+  len(void) const
+  {
+    return _len;
+  }
+
+  const
+  char*
+  c_str(void) const
+  {
+    return _str;
+  }
+
+  inline
+  const
+  char*
+  data(void) const
+  {
+    return _str;
+  }
+
+public:
+  bool
+  starts_with(const char      *str_,
+              const size_type  len_) const
+  {
+    return (strncmp(_str,str_,len_) == 0);
+  }
+
+  bool
+  starts_with(const char *str_) const
+  {
+    const size_type len = strlen(str_);
+
+    return starts_with(str_,len);
+  }
+
+  bool
+  starts_with(const string &str_) const
+  {
+    return starts_with(str_._str,str_._len);
+  }
+
+  bool
+  starts_with(const char c_) const
+  {
+    return (front() == c_);
+  }
+
+  bool
+  ends_with(const char      *str_,
+            const size_type  len_) const
+  {
+    (void)str_;
+    (void)len_;
+    return false;
+  }
+
+  bool
+  ends_with(const char *str_) const
+  {
+    const size_type len = strlen(str_);
+
+    return ends_with(str_,len);
+  }
+
+  bool
+  ends_with(const string &str_) const
+  {
+    return ends_with(str_._str,str_._len);
+  }
+
+  bool
+  ends_with(const char c_) const
+  {
+    return (back() == c_);
+  }
+
+  bool
+  contains(const char *str_) const
+  {
+    return (strstr(_str,str_) != (const char*)0);
+  }
+
+  bool
+  contains(const string &str_) const
+  {
+    return contains(str_._str);
+  }
+
+  bool
+  contains(const char c_) const
+  {
+    return (strchr(_str,c_) != (const char*)0);
+  }
+
+  int
+  compare(const char *str_) const
+  {
+    return strcmp(_str,str_);
+  }
+
+  int
+  compare(const string &str_) const
+  {
+    return compare(str_._str);
+  }
+
+  bool
+  operator==(const char *str_) const
+  {
+    return (compare(str_) == 0);
+  }
+
+  bool
+  operator==(const string &str_) const
+  {
+    return (compare(str_) == 0);
+  }
+
+private:
+  char      *_str;
+  size_type  _len;
+  size_type  _cap;
+};
+
+#endif

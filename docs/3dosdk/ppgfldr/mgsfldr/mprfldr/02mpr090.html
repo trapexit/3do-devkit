@@ -1,0 +1,23 @@
+<Title>spSetStopAction</Title>
+<A NAME="XREF22533"><H1>spSetStopAction </A></H1>
+<A NAME="XREF31749"></A> Set up an SPAction to stop reading.<P>
+<H3>Synopsis</H3>
+<CODE>Err spSetStopAction (SPAction *resultAction)</CODE><P>
+<H3>Description</H3>
+Sets up the SPAction to stop reading as the resulting action of a decision function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>action
+<DD>Pointer to an SPAction to fill out. This must be the pointer passed to your decision function. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Outputs</H3>
+On success, fills out SPAction to cause a branch to the specified marker. On failure, nothing is written to the SPAction. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr069.html#XREF41344"><CODE>SPDecisionFunction</A>, <A HREF="./02mpr087.html#XREF19779">spSetBranchAction</A>(), <A HREF="./02mpr094.html#XREF41521">spStopAtMarker</A>() </CODE><P>
+</CODE>

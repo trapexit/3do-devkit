@@ -1,0 +1,28 @@
+<Title>SquashSnd</Title>
+<A NAME="XREF25401"><H1>SquashSnd</A></H1>
+<A NAME="XREF11737"></A>Compresses AIFF or AIFF-C files 2:1.<P>
+<H3>Synopsis</H3>
+<CODE>squashsnd [-v] -i &lt;infile&gt; -o &lt;outfile&gt;</CODE><P>
+<H3>Description</H3>
+Performs a 2 to 1 compression on AIFF/AIFF-C sound files using square root-delta-exact encoding algorithm.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-v
+<DD>Toggle for verbose mode.
+</DL>
+<DL>
+<DT>-i &lt;infile&gt;
+<DD>Specifies input AIFF or AIFC filename.
+</DL>
+<DL>
+<DT>-o &lt;outfile&gt;
+<DD>Specifies output-compressed AIFC filename.
+</DL>
+<H3>Examples</H3>
+Here is a typical command line:<P>
+<CODE>
+<PRE>
+squashsnd -v -i bach_44K_16B_M.aiff -o bach_44K_16B_M.aifc
+</CODE>
+</PRE>
+SquashSnd performs a 2 to 1 compression on the input file called <CODE>bach_44K_16B_M.aiff</CODE> and saves the compressed file in<CODE> bach_44K_16B_M.aiffc. </CODE><P>

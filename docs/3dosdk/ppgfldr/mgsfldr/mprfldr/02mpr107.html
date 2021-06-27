@@ -1,0 +1,23 @@
+<Title>ssplIsSpoolerActive</Title>
+<A NAME="XREF27716"><H1>ssplIsSpoolerActive </A></H1>
+<A NAME="XREF21291"></A> Test if spooler has anything in its active queue.<P>
+<H3>Synopsis</H3>
+<CODE>bool ssplIsSpoolerActive (const SoundSpooler *sspl)</CODE><P>
+<H3>Description</H3>
+Returns TRUE if the SoundSpooler has any SoundBufferNodes in its active queue. Simply calls <CODE>ssplGetSpoolerStatus()</CODE> and tests the SSPL_STATUS_F_ACTIVE flag. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<H3>Return Value</H3>
+TRUE if SoundSpooler has any SoundBufferNodes in its active queue, FALSE otherwise. <P>
+<H3>Caveats</H3>
+This state of SSPL_STATUS_F_ACTIVE is undefined when inside any SoundSpooler callback function. This is the case because the callback functions can be called inside the loop that processes the active queue. No guarantee is made about whether a SoundBufferNode is removed from the active queue before or after the callback functions are called. <P>
+<H3>Implementation</H3>
+Macro implemented in soundspooler.h V24. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr105.html#XREF10988"><CODE>ssplGetSpoolerStatus</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>(), <A HREF="./02mpr110.html#XREF20300">ssplProcessSignals</A>() </CODE><P>
+</CODE>

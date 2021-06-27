@@ -1,0 +1,38 @@
+<TITLE>LoadInstrument</TITLE>
+<H1><LINK NAME="XREF25124">LoadInstrument</LINK></H1><HR>
+<A NAME="XREF23388"></A><A NAME="XREF23967"><H1>LoadInstrument</A></H1>
+ <A NAME="XREF39171">Loads a DSP instrument file.</A><P>
+<H3>Synopsis</H3>
+<CODE>LoadInstrument &lt;symbol&gt; &lt;file name&gt;[&lt;triggerable (1/0)&gt;]</CODE><P>
+<H3>Argument</H3>
+<DL>
+<DT>&lt;symbol&gt;
+<DD>New symbol in the instrument name space to give this instrument.
+</DL>
+<DL>
+<DT>&lt;file name&gt;
+<DD>File name of a DSP instrument to load.
+</DL>
+<DL>
+<DT>&lt;triggerable&gt;
+<DD>Optional switch to determine whether or not the instrument should respond to release and be restartable (i.e. instrument is affected by the A and B buttons).
+</DL>
+<DL>
+<DT>When set to 1 (default), instrument responds to being started and released with the A and B buttons.
+</DL>
+<DL>
+<DT>When set to 0, instrument is started when patch is first started (A or B button), but is not released or restarted by subsequent presses of the A or B buttons. This is useful for leaving some instruments running after the rest of the patch has been released (e.g. a delay line).
+</DL>
+<H3>Examples</H3>
+The following example shows a patch file that uses <CODE>LoadInstrument</CODE>.<P>
+<CODE>
+<PRE>
+LoadInstrument osc1 sawtooth.dsp                                        ; load sawtooth oscillator and 
+                                        ; call it osc1 (for later 
+                                        ; connections and knob        
+
+                                    ; tweaking).
+</CODE>
+</PRE>
+<H3>See Also</H3>
+<CODE>Connect, Tweak</CODE><P>

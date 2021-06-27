@@ -1,0 +1,101 @@
+<TITLE>Command line options</TITLE>
+<H1><LINK NAME="XREF29139">Command line options</LINK></H1><HR>
+The command to invoke <I>armasm</I> takes either of the forms:<P>
+<CODE>
+<PRE>
+armasm {options} sourcefile objectfile
+armasm {options} -o objectfile sourcefile
+</CODE>
+</PRE>
+The options are listed below. Upper-case is used to show the allowable abbreviations. Note that to understand what many of these options do it may be necessary to refer to some of the documentation listed above.<P>
+<CODE>-list listingfile</CODE><P>
+Several options work with -list:<P>
+<PRE>
+--------------------------------------------------------
+-NOTerse   |Turns the terse flag off (the default is    
+           |on).  When the terse flag is on lines       
+           |skipped due to conditional assembly do not  
+           |appear in the listing.  With the terse flag 
+           |off these lines do appear in the listing.   
+--------------------------------------------------------
+-WIdth n   |Sets listing page width (the default is 79).
+--------------------------------------------------------
+-Length n  |Sets listing page length (the default is    
+           |66). Setting the length to zero produces an 
+           |unpaged listing.                            
+--------------------------------------------------------
+-Xref      |Lists cross-referencing information on      
+           |symbols; where they were defined and where  
+           |they were used, both inside and outside     
+           |macros. Default is off.                     
+--------------------------------------------------------
+</PRE>
+<P>
+<CODE>-Depend dependfile</CODE><P>
+Saves source file dependency lists, which are suitable for use with 'make' utilities.<P>
+<CODE>-I dir{,dir}</CODE><P>
+Adds directories to the source file search path so that arguments to GET/INCLUDE directives do not need to be fully qualified.  The search rule used is similar to the ANSI C search rule, the current place being the directory in which the current file was found.<P>
+<H3>-PreDefine directive</H3>
+Pre-executes a SETx directive. This implicitly executes a corresponding GBLx directive. The full SETx argument should be quoted as it contains spaces,<P>
+e.g.<CODE> -PD "Version SETA 44"</CODE>.<P>
+<H3>-NOCache</H3>
+Turns off source caching, (the default is on).  Source caching is performed when reading source files on the first pass, so that they can be read from memory, rather than from disk during the second pass of assembly.<P>
+<CODE>-MaxCache n</CODE><P>
+Sets the maximum source cache size. The default is 8MB.<P>
+<CODE>-NOEsc</CODE><P>
+Ignore C-style special characters (ie '\n', '\t' etc).<P>
+<CODE>-NOWarn</CODE><P>
+Turns off warning messages.<P>
+<CODE>-g</CODE><P>
+Outputs ASD debugging tables, suitable for use with <I>armsd</I>.<P>
+<CODE>-Errors </CODE><I>errorfile</I><P>
+Output error messages to <I>errorfile</I>.<P>
+<CODE>-LIttleend</CODE><P>
+Assemble code suitable for a little-endian ARM, (by setting the built-in variable {ENDIAN} to "little").<P>
+<CODE>-BIgend</CODE><P>
+Assemble code suitable for a big-endian ARM, (by setting the built-in variable {ENDIAN} to "big").<P>
+<CODE>-CPU ARMcore</CODE><P>
+Set target ARM core to <CODE>ARMcore</CODE>.  Currently this can take the values ARM6, ARM7 and ARM7M.  Some processor specific instructions will produce warnings if assembled for the wrong ARM core.<P>
+<CODE>-Help</CODE><P>
+Displays a summary of the command-line options.<P>
+<CODE>-Apcs option{/qualifier}{/qualifier...}</CODE><P>
+Specifies whether the ARM Procedure Call Standard is in use, and also specifies some attributes of CODE AREAs.<P>
+There are two APCS options: NONE and 3; qualifiers should only be used with 3. By default the register names R0-15, r0-15, sp, SP, lr, LR, pc, PC are pre-declared. If the APCS is in use the following register names are also pre-declared: a1-a4, v1-v6, sl, fp, ip, and sp. The qualifiers are as follows:<P>
+<PRE>
+--------------------------------------------------------
+Qualifier       |Description                            
+--------------------------------------------------------
+/REENTrant      |Sets the reentrant attribute for any   
+                |code AREAs, and predeclares sb (static 
+                |base) in place of v6.                  
+--------------------------------------------------------
+/32bit          |Is the default setting and informs the 
+                |Linker that the code being generated is
+                |written for 32-bit ARMs.  The armasm   
+                |built-in varaible {CONFIG} is also set 
+                |to 32.                                 
+--------------------------------------------------------
+/26bit          |Tells the Linker that the code is      
+                |intended for 26-bit ARMs.  The armasm  
+                |built-in varaible {CONFIG} is also set 
+                |to 26.  Note that these options do not 
+                |of themselves generate particular      
+                |ARM-specific code, but allow the Linker
+                |to warn of any mismatch between files  
+                |being linked, and also allow programs  
+                |to use the standard built-in variable  
+                |{CONFIG} to determine what code to     
+                |produce.                               
+--------------------------------------------------------
+/SWSTackcheck   |Marks CODE AREAs as using sl for the   
+                |stack limit register, following the    
+                |APCS (the default setting).            
+--------------------------------------------------------
+/NOSWstackcheck |Marks CODE AREAs as not using software 
+                |stack-limit checking, and predeclares  
+                |an additional v-register, v6 if        
+                |reentrant, v7 if not.                  
+--------------------------------------------------------
+</PRE>
+<P>
+<P>

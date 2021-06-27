@@ -1,0 +1,24 @@
+<Title>IPointIsInCRect</Title>
+<A NAME="XREF15879"><H1>IPointIsInCRect </A></H1>
+ Determines whether a point is within a rectangle.<P>
+<H3>Synopsis</H3>
+<CODE>Boolean IPointIsInCRect (IPoint *point, CRect *rect)</CODE><P>
+<H3>Description</H3>
+Determines whether a point is within a rectangle. Points on the edge are considered within the rectangle. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>point
+<DD>Pointer to an IPoint. 
+</DL>
+<DL>
+<DT>rect
+<DD>Pointer to a CRect. 
+</DL>
+<H3>Return Value</H3>
+TRUE if the point is in the rectangle, FALSE if it is not. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO108.html#XREF36857"><CODE>IPointIsInSRect</A></CODE><P>

@@ -1,0 +1,22 @@
+<Title>ta_pitchnotes</Title>
+<A NAME="XREF25453"><H1>ta_pitchnotes </A></H1>
+<A NAME="XREF34697"></A> Plays a sample at different MIDI pitches.<P>
+<H3>Synopsis</H3>
+<CODE>ta_pitchnotes [&lt;sample file&gt; [&lt;duration&gt;]]</CODE><P>
+<H3>Description</H3>
+This program loads and plays the AIFF sample file at several different pitches. It does this by selecting a MIDI note number, which the audio folio maps to a frequency. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sample file
+<DD>Name of a sample to be played. The sample should be compatible with sampler.dsp (16-bit monophonic).
+</DL>
+<DL>
+<DT>duration
+<DD>Duration of each note, in audio ticks. Defaults to 240.
+</DL>
+<H3>Caveats</H3>
+Because this sample program uses <CODE>SleepaudioTicks()</CODE>, the notes are not necessarily rhythmic. Use the juggler to play rhythmic scores. <P>
+<H3>Associated Files</H3>
+ta_pitchnotes.c<P>
+<H3>Location</H3>
+examples/Audio <P>

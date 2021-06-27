@@ -1,0 +1,55 @@
+<TITLE>Adding a Node to a List</TITLE>
+<H1>Adding a Node to a List</H1><HR>
+You can add a node to a list in any of the following ways:<P>
+<UL>
+<LI>The beginning or end of a list.
+<p>
+<LI>A position in the list that corresponds to the node's priority.
+<p>
+<LI>A position in the list determined by comparing one or more values contained in the node to values of nodes currently in the list, or relative to another node already in the list. 
+</UL>
+The following sections describe each of these cases.<P>
+<H2>Adding a Node to the Head of a List</H2>
+To add a node to the head of a list, use the <CODE>AddHead()</CODE> function:<P>
+<DL>
+<DD><CODE>void AddHead( List *l, Node *n )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list to which to add the node, while the <CODE>n</CODE> argument is a pointer to the node to add.<P>
+<H2>Adding a Node to the Tail of a List</H2>
+To add a node to the tail of a list, use the <CODE>AddTail()</CODE> function:<P>
+<DL>
+<DD><CODE>void AddTail( List *l, Node *n )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list to which to add the node, while the <CODE>n</CODE> argument is a pointer to the node to add.<P>
+<H2>Adding a Node After Another Node in a List</H2>
+To add a node to a list and position it after another node already in the list, use the <CODE>InsertNodeAfter()</CODE> function:<P>
+<DL>
+<DD><CODE>void InsertNodeAfter( Node *oldNode, Node *newNode )</CODE><BR>
+</DL>
+The <CODE>oldNode</CODE> argument is a pointer to a node already in the list, while the <CODE>newNode</CODE> argument is a pointer to the new node to insert.<P>
+<H2>Adding a Node Before Another Node in a List</H2>
+To add a node to a list and position it before another node already in the list, use the <CODE>InsertNodeBefore()</CODE> function:<P>
+<DL>
+<DD><CODE>void InsertNodeBefore( Node *oldNode, Node *newNode )</CODE><BR>
+</DL>
+The <CODE>oldNode</CODE> argument is a pointer to a node already in the list, while the <CODE>newNode</CODE> argument is a pointer to the new node to insert.<P>
+<H2>Adding a Node According to Its Priority</H2>
+The nodes in a list are often arranged by priority. To insert a new 
+node immediately before any other nodes of the same priority, use the <CODE>InsertNodeFromHead()</CODE> function:<P>
+<DL>
+<DD><CODE>void InsertNodeFromHead( List *l, Node *n )</CODE><BR>
+</DL>
+As in the other functions for adding nodes, the <CODE>l</CODE> argument is a pointer to the list to which to add the node, while the <CODE>n</CODE> argument is a pointer to the node to add.<P>
+The name <CODE>InsertNodeFromHead()</CODE> refers to the way the kernel traverses the list to find the correct position for a new node: it compares the priority of the new node to the priorities of nodes already in the list, beginning at the head of the list, and inserts the new node immediately after nodes with higher priorities. If the priorities of all the nodes in the list are higher than the priority of the new node, the node is added to the end of the list.<P>
+To insert a new node immediately after all other nodes of the same priority, you use the <CODE>InsertNodeFromTail()</CODE> function:<P>
+<DL>
+<DD><CODE>void InsertNodeFromTail( List *l, Node *n )</CODE><BR>
+</DL>
+Again, the <CODE>l</CODE> argument is a pointer to the list to which to add the node, while the <CODE>n</CODE> argument is a pointer to the node to add. As with <CODE>InsertNodeFromHead(),</CODE> the name <CODE>InsertNodeFromTail()</CODE> refers to the way the kernel traverses the list to find the correct position for the new node: it compares the priority of the new node to the priorities of nodes already in the list, beginning at the tail of the list, and inserts the new node immediately before nodes with lower priorities. If the priorities of all the nodes in the list are lower, the node is added to the head of the list.<P>
+<H2>Adding a Node According to Other Node Values</H2>
+Arranging list nodes by priority is only one way to order a list. You can 
+arrange the nodes in a list by node values other than priority by using the <CODE>UniversalInsertNode()</CODE> function to insert new nodes:<P>
+<DL>
+<DD><CODE>void UniversalInsertNode( List *l, Node *n, bool (*f)(Node *n,  Node *m) )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list to which to add the node, while the <CODE>n </CODE>argument is a pointer to the node to add. Like <CODE>InsertNodeFromHead()</CODE>, <CODE>UniversalInsertNode()</CODE> compares the node to be inserted with nodes already in the list, beginning with the first node. The difference is that it uses the comparison function <CODE>f</CODE> provided by your task to compare the new node to existing nodes. If the comparison function returns TRUE, the new node is inserted immediately before the node to which it was compared. If the comparison function always returns FALSE, the new node becomes the last node in the list. The comparison function, whose arguments are pointers to two nodes, can use any data in the nodes for the comparison.<A NAME="XREF18200"></A><P>

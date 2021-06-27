@@ -1,0 +1,24 @@
+<Title>UnloadInsTemplate</Title>
+<A NAME="XREF38811"><H1>UnloadInsTemplate </A></H1>
+<A NAME="XREF21813"></A> Unloads an instrument template.<P>
+<H3>Synopsis</H3>
+<CODE>Err UnloadInsTemplate (Item InsTemplate)</CODE><P>
+<H3>Description</H3>
+This function unloads (or deletes) an instrument template created by <CODE>CreateInsTemplate()</CODE>, <CODE>LoadInsTemplate()</CODE>, and <CODE>DefineInsTemplate()</CODE>. It unloads the Template from memory and frees its resources. Any Instruments created using the Template are deleted as well, with the expected side-effects. Any Attachments made to this Template are also deleted. <P>
+Unlike <CODE>DeleteInstrument()</CODE>, any Envelopes or Samples attached to this Template are also deleted, along with the expected side-effects. If you need to protect the Envelopes or Attachments, detach them from the Template first. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>InsTemplate
+<DD>Item number of Template to delete. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Caveats</H3>
+Ideally there should be a <CODE>DeleteInsTemplate()</CODE> function, but there isn't one yet. Sorry for any confusion that might arise from pairing <CODE>CreateInsTemplate()</CODE>  or <CODE>DefineInsTemplate()</CODE> with <CODE>UnloadInsTemplate()</CODE>. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr018.html#XREF32118"><CODE>CreateInsTemplate</A>(), <A HREF="./01mpr051.html#XREF12263">LoadInsTemplate</A>(), <A HREF="./01mpr024.html#XREF26906">DefineInsTemplate</A>() </CODE><P>
+</CODE>

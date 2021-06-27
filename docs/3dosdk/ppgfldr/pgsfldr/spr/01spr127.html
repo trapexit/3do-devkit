@@ -1,0 +1,35 @@
+<TITLE>SetNodePri</TITLE>
+<A NAME="XREF13036"><H1>SetNodePri </A></H1>
+<A NAME="XREF41016"></A>Changes the priority of a list node.<P>
+<H3>Synopsis</H3>
+<CODE>uint8 SetNodePri( Node *n, uint8 newpri )</CODE><P>
+<H3>Description</H3>
+This procedure changes the priority of a node in a list. The kernel arranges lists by priority, with higher-priority nodes coming before lower-priority nodes. When the priority of a node changes, the kernel automatically rearranges the list to reflect the new priority. The node is moved immediately before the first node whose priority is lower. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>n
+<DD>A pointer to the node whose priority to change. 
+</DL>
+<DL>
+<DT>newpri
+<DD>The new priority for the node. This can be a value from 0 to 255. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the previous priority of the node. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveats</H3>
+GIGO (garbage in, garbage out)<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr087.html#XREF20096"><CODE>InsertNodeFromHead</A>(), <A HREF="./01spr088.html#XREF26607">InsertNodeFromTail</A>(), <A HREF="./01spr128.html#XREF27664">UniversalInsertNode</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF13036"></LINK></H1><HR>

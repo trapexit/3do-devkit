@@ -1,0 +1,69 @@
+<Title>CreateIOReq</Title>
+<A NAME="XREF36930"><H1>CreateIOReq </A></H1>
+<A NAME="XREF39857"></A>Creates an I/O request.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateIOReq( const char *name, uint8 pri, Item dev, Item mp )</CODE><P>
+<H3>Description</H3>
+This convenience procedure creates an I/O request item. <P>
+When you create an I/O request, you must decide how the device will notify you when an I/O operation completes. There are two choices: <P>
+<UL>
+<LI>Notification by signal 
+<LI>Notification by message 
+</UL>
+With notification by signal, the device will send your task the SIGF_IODONE signal whenever an I/O operation completes. This is a low-overhead mechanism, which is also low on information. When you get the signal, all you know is that an I/O operation has completed. You do not know which operation has completed. This has to be determined by looking at the state of all outstanding I/O requests. <P>
+Notification by message involves slightly more overhead, but provides much more information. When you create the I/O request, you indicate a message port. Whenever an I/O operation completes, the device will send a message to that message port. The message will contain the following information: <P>
+<UL>
+<LI>msg_Result Contains the io_Error value from the I/O request. This indicates the state of the I/O operation, whether it worked or failed. 
+<LI>msg_DataPtr Contains the item number of the I/O request that completed. 
+<LI>msg_DataSize Contains the value of the ioi_User field taken from the IOInfo structure used when initiating the I/O operation. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the I/O request (see "Notes").
+</DL>
+<DL>
+<DT>pri
+<DD>The priority of the I/O request. For some device drivers, this value determines the order in which I/O requests are processed. When in doubt about what value to use, use 0. 
+</DL>
+<DL>
+<DT>dev
+<DD>The item number of the device to which to send the I/O request. 
+</DL>
+<DL>
+<DT>mp
+<DD>If a task wants to receive a message when an I/O request is finished, this argument must be the item number of the message port to receive the message. If the task wants to receive a signal when an I/O request is finished instead of a message, this argument must be 0. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the new I/O request or one of the following error codes if an error occurs: <P>
+<DL>
+<DT>BADITEM
+<DD>The mp argument was not zero but did not specify a valid message port. 
+</DL>
+<DL>
+<DT>ER_Kr_ItemNotOpen
+<DD>The device specified by the dev argument is not open. 
+</DL>
+<DL>
+<DT>NOMEM
+<DD>There was not enough memory to complete the operation. 
+</DL>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>io.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+When you no longer need an I/O request, use <CODE>DeleteIOReq()</CODE> to delete it. <P>
+You can use <CODE>FindNamedItem()</CODE> to find a I/O request by name. When creating I/O requests, you should assign unique names whenever possible. <P>
+The kernel may change the priority of an I/O request to help optimize throughput. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr031.html#XREF13807"><CODE>DeleteIOReq</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF36930"></LINK></H1><HR>

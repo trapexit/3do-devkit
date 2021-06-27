@@ -1,0 +1,28 @@
+<Title>SetAudioItemInfo</Title>
+<A NAME="XREF20838"><H1>SetAudioItemInfo </A></H1>
+<A NAME="XREF35905"></A> Sets parameters of an audio item.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetAudioItemInfo (Item audioItem, TagArg *tagList)<BR>
+Err SetAudioItemInfoVA (Item audioItem, uint32 tag1, ...)</CODE><P>
+<H3>Description</H3>
+This function sets one or more parameters of an audio item. This is the only way to set parameters for an audio item. The parameters are determined by the tag arguments. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>audioItem
+<DD>Item number of an audio item to modify. 
+</DL>
+<DL>
+<DT>tagList
+<DD>List of parameters to set. See each audio Item pages for list of tags that are supported by each item type. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Caveats</H3>
+If this function fails, the audio item you were modifying may have been partially modified and thus in an undefined state. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr043.html#XREF15941"><CODE>GetAudioItemInfo</A>(), <A HREF="../../pgsfldr/spr/09spr001.html#XREF27996">Attachment</A>, Cue, <A HREF="../../pgsfldr/spr/09spr004.html#XREF24551">Envelope</A>, <A HREF="../../pgsfldr/spr/09spr009.html#XREF16655">Instrument</A>, <A HREF="../../pgsfldr/spr/09spr011.html#XREF23454">Knob</A>, <A HREF="../../pgsfldr/spr/09spr015.html#XREF40705">Probe</A>, <A HREF="../../pgsfldr/spr/09spr016.html#XREF10901">Sample</A>, <A HREF="../../pgsfldr/spr/09spr020.html#XREF24399">Template</A>, <A HREF="../../pgsfldr/spr/09spr021.html#XREF38127">Tuning</A> </CODE><P>
+</CODE>

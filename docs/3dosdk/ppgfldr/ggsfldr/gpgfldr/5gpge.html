@@ -1,0 +1,159 @@
+<TITLE>Creating a Preamble</TITLE>
+<H1><LINK NAME="XREF16173">Creating a Preamble</LINK></H1><HR>
+A cel's preamble contains information that tells the cel engine how to interpret the data it finds in the cel source data. The preamble tells whether the cel is coded or uncoded, how many bits are devoted to each cel pixel, how many columns and rows of pixels there are in the cel, and (if the cel is extracted from existing data) what offsets to use when extracting data. The preamble also contains information about how the cel data should be processed, such as how an 8-bit uncoded cel should be unfolded, whether to disable VH swapping or not, and other processing considerations.<P>
+If the cel is packed, its preamble is one word long. If the cel is unpacked, its preamble is two words long. The second word contains information necessary for handling the unpacked pixels-necessary because unpacked cel data can be extracted from an existing image source such as the frame buffer.<P>
+<H2>The First Preamble Word</H2>
+A cel's first preamble word contains control bits for the source data as shown in Table 7.<P>
+<PRE>
+<B>Table 6: </B><I> The values in the first preamble word.</I>
+---------------------------------------------------------
+Bit #   |Value Name     |Parameter Controlled            
+---------------------------------------------------------
+3128    |xxxxxxx        |Reserved for future use. Set to 
+        |               |0.                              
+---------------------------------------------------------
+2724    |SKIPX          |A value from 0 to 15 that asks  
+        |               |the cel engine to skip that     
+        |               |number of pixels at the         
+        |               |beginning of each row.          
+---------------------------------------------------------
+2316    |xxxxxxx        |Reserved for future use. Set to 
+        |               |0.                              
+---------------------------------------------------------
+156     |VCNT           |The number of rows in this cel  
+        |               |minus one.                      
+---------------------------------------------------------
+5       |xxxxxxx        |Reserved for future use. Set to 
+        |               |0.                              
+---------------------------------------------------------
+4       |UNCODED        |If 1, the cel is uncoded. If 0, 
+        |               |the cel is coded.               
+---------------------------------------------------------
+3       |REP8           |Controls bit replication in an  
+        |               |uncoded 8-bpp cel. If 1, missing
+        |               |low-order bits are replicated   
+        |               |from the high-order bits. If 0, 
+        |               |missing low-order bits are set  
+        |               |to 0.                           
+---------------------------------------------------------
+20      |BPP            |A value that sets the bits used 
+        |               |per pixel in the cel source     
+        |               |data. 1=1, 2=2, 3=4, 4=6, 5=8,  
+        |               |and 6=16. 0 and 7 are reserved  
+        |               |values.                         
+---------------------------------------------------------
+</PRE>
+<P>
+<H3>The SKIPX Value</H3>
+The <CODE>SKIPX</CODE> value set by bits 27, 26, 25, and 24 sets the number of pixels the cel engine will skip at the beginning of each row. For example, a <CODE>SKIPX</CODE> value of five tells the cel engine to skip projecting the first five pixels of each cel row, which effectively deletes the first five columns of the cel.<P>
+This value is used mainly for fine-tuning an offset when an unpacked cel is extracted as a subrectangle of existing source data. The <CODE>WOFFSET</CODE> value in the second preamble word provides the coarse offset (by words in RAM), and the <CODE>SKIPX</CODE> value provides the fine offset (by pixels within a word). Using <CODE>SKIPX</CODE> and <CODE>WOFFSET</CODE> together is described in more detail in <A HREF="#XREF16634">Creating a Preamble for Extracted Data</A>.<P>
+<H3>The VCNT Value</H3>
+The <CODE>VCNT</CODE> value <CODE></CODE>describes the vertical count of the cel: the number of pixel rows it contains <I>minus 1.</I> For example, a cel with 68 rows has a <CODE>VCNT</CODE> value of 67; a cel with 1 row has a <CODE>VCNT</CODE> value of 0. A cel cannot use <CODE>VCNT</CODE> to specify a row count of 0.<P>
+The <CODE>VCNT</CODE> must use the row count minus 1 because the <CODE>VCNT</CODE> bits are loaded into a hardware register that the cel engine decrements until <CODE>VCNT</CODE> goes from 0000000000 to 1111111111, at which point the cel engine stops projecting cel rows. Although you might be tempted to think that a <CODE>VCNT</CODE> value of 1111111111 is the same as specifying 0 rows, it is not. A <CODE>VCNT</CODE> value of 1111111111 specifies a 1024-row cel.<P>
+<B>Note: </B>For LRFORM cels, VCNT specifies pairs of rows of cel data (doubling the height of an LRFORM cel).<P>
+<H3>The UNCODED Bit</H3>
+If bit 4 is set, it indicates that the cel is an uncoded cel. When set to 0, the cel is a coded cel. The cel engine interprets the incoming pixel values accordingly, processing coded cel pixels through the PLUT, and passing uncoded cel pixels around the PLUT and directly to the pixel processor. This bit is only useful for 8- and 16-bit cels.<P>
+<H3>The REP8 Bit</H3>
+Bit 3 applies to the <CODE>REP8</CODE> bit only 8-bit uncoded cels. An uncoded cel needs to pass 5 bits of red, 5 bits of green, and 5 bits of blue value into the pixel processor. The 8-bit uncoded cel has only 3 bits to devote to red, 3 bits to green, and 2 bits to blue. <CODE>REP8</CODE> tells the cel engine how to fill in the missing low-order bits for each value before it sends the pixel to the pixel processor.<P>
+If <CODE>REP8</CODE> is set to 1, bits 4 and 3 of the red value are 
+duplicated and used (consecutively) to fill in the missing bits 1 and 0 
+of the red value. Bits 4 and 3 of the green value are also duplicated and 
+used to fill in the missing bits 1 and 0 of the green value. For the blue 
+value, which is missing bits 2, 1, and 0, blue bit 4 is duplicated and 
+used to fill in blue bits 2 and 0; and blue bit 3 is duplicated and used to 
+fill in blue bit 1. (See Figure 4, the Unfolding 8-bit uncoded pixels into a 
+15-bit color value, in <A HREF="./3gpg.html#XREF38473">Understanding the Cel Engine and SPORT</A>.)<P>
+<H3>The BPP Value</H3>
+The <CODE>BPP</CODE> value specifies how many bits are devoted to each of the 
+cel's pixels (<I>after</I> unpacking, if it is a packed cel). A value of <P>
+<UL>
+<LI>1 specifies 1 bpp
+<LI>2 specifies 2 bpp 
+<LI>3 specifies 4 bpp
+<LI>4 specifies 6 bpp 
+<LI>5 specifies 8 bpp
+<LI>6 specifies 16 bpp 
+</UL>
+The values 0 and 7 are reserved for future use.<P>
+The cel engine uses the bpp value to interpret the bits streaming in from the data unpacker (or directly from the source data if the cel is an unpacked cel). The bits devoted to each pixel determine, how many registers are used in the PLUT for coded cels. For example, a 1-bpp coded cel uses only two PLUT registers for its pixels, while an 8-bpp coded cel uses all 32 PLUT registers.<P>
+<H2>The Second Preamble Word</H2>
+Unpacked cels require a second preamble word, which contains the control bits shown in Table 8. If you provide a second preamble word for a packed cel, the cel engine ignores any of the second word's values and interprets the carefully constructed data you placed there as garbage imagery (unless you set <CODE>CCBPRE</CODE>).<P>
+<PRE>
+<B>Table 7: </B><I> The values in the second preamble word. </I>
+---------------------------------------------------------
+Bit # |Value Name   |Parameter Controlled                
+---------------------------------------------------------
+31-24 |WOFFSET(8)   |The word offset value for 1-, 2-,   
+      |             |4-, or G- bpp cels. This value is   
+      |             |the number minus two of cel data    
+      |             |words from one row of pixels to the 
+      |             |beginning of the next row of pixels.
+      |             |Set 23-16 to zero.                  
+---------------------------------------------------------
+2516  |WOFFSET(10)  |The word offset value for 8- or     
+      |             |16-bpp cels. This value is the      
+      |             |number of cel data words from one   
+      |             |row of pixels to the next row of    
+      |             |pixels minus 2.                     
+---------------------------------------------------------
+15    |xxxxxxx      |Reserved for future use. Set to 0.  
+---------------------------------------------------------
+14    |NOSWAP       |When set to 1, this value disables  
+      |             |the SWAPHV bit of the cel engine    
+      |             |control word, which ensures that the
+      |             |VH bits of a pixel are not be       
+      |             |swapped, destroying an uncoded      
+      |             |pixel's integrity. When set to 0, VH
+      |             |bits can be swapped if SWAPHV is    
+      |             |set.                                
+---------------------------------------------------------
+1312  |UNCLSB       |Set the value of the incoming       
+      |             |uncoded pixel's blue least          
+      |             |significant bit. 00=set it to 0;    
+      |             |01=copy the blue LSB (bit 0) of the 
+      |             |incoming pixel; 10=copy the blue MSB
+      |             |(bit 4) of the incoming pixel;      
+      |             |11=copy the green LSB (bit 5) of the
+      |             |incoming pixel.                     
+---------------------------------------------------------
+11    |LRFORM       |When set to 1, this value specifies 
+      |             |that a 16-bit unpacked cel's pixels 
+      |             |are stored in left/right memory     
+      |             |format (just like the frame buffer  
+      |             |layout). When set to 0, it specifies
+      |             |linear memory format. (This value   
+      |             |applies only to 16-bit unpacked     
+      |             |cels.)                              
+---------------------------------------------------------
+100   |TLHPCNT      |This value sets the number of pixels
+      |             |in each row of the cel source data  
+      |             |minus 1.                            
+---------------------------------------------------------
+</PRE>
+<P>
+<H3>________________________________________________________________________</H3>
+<H3>The WOFFSET Value</H3>
+The <CODE>WOFFSET</CODE> value is defines a subrectangle of source data from within existing source data such as the frame buffer or another unpacked source data file. This value indicates how many words of pixel data exist from the beginning of one cel row to the beginning of the next cel row, in other words, how many words wide the original source data is. The cel engine knows how many pixels to read in each row of the subrectangle (indicated by the <CODE>HPCNT</CODE> and <CODE>SKIPX</CODE> values); it skips all pixels between the spot where it finishes reading subrectangle pixels and the address of the word that begins the next row of pixels.<P>
+For example, if you want to define an unpacked subrectangle that uses 5 words to store each row of pixels. The subrectangle comes from cel source data that uses 12 words to store each row of pixels. You need a word offset of 12 words to ensure that each row of the subrectangle starts on the same column of the mother cel.<P>
+The second preamble word contains two possible <CODE>WOFFSET</CODE> values. The number of bits per pixel determines which value is used:<P>
+<UL>
+<LI>WOFFSET(8), which is used for 1-, 2-, 4-, or 6-bpp cels.
+<LI>WOFFSET(10), which is used for 8- or 16-bpp cels.
+</UL>
+The two values use overlapping bit sets, so you can only use one or the other <CODE>WOFFSET</CODE> value. Whichever one you use, the integer stored there is the word offset <I>minus 2, </I>which is necessary to accommodate the pipelining architecture of the cel engine.<P>
+<CODE>WOFFSET</CODE> works together with the CCB's pointer to cel source data and the <CODE>SKIPX</CODE>, <CODE>VCNT</CODE>, and <CODE>HPCNT</CODE> preamble values to define a subrectangle (see <A HREF="#XREF16634">Creating a Preamble for Extracted Data</A>).<P>
+<H3>The NOSWAP Bit</H3>
+The cel engine can, if the cel engine control word so specifies, swap the V and H bits of a pixel before projecting it. If you are projecting a 16-bpp uncoded cel, it may be important to you that bits 0 and 15 <I>not</I> be swapped to ensure the pixel data's integrity. If so, setting the <CODE>NOSWAP</CODE> bit to 1 guarantees that the cel engine will not swap the bits even if the cel engine control word is set to swap them. Setting <CODE>NOSWAP</CODE> to 0 allows (but does not set) V and H swapping.<P>
+<H3>The UNCLSB Value</H3>
+When an uncoded pixel bypasses the data decoder and is fed into the pixel processor, it may have used bit 0 (normally the least-significant blue bit) to store a V or H value, which is read and passed on to the projector. If so, you may wish to set bit 0 to a predetermined blue value before the pixel goes to the pixel processor. <CODE>UNCLSB</CODE> determines what that blue value will be.<P>
+If <CODE>UNCLSB</CODE> is set to 00, then bit 0 is set to 0, effectively removing the blue resolution that the lower bit provides. If <CODE>UNCLSB</CODE> is set to 01, bit 0 retains its current value, a useful setting if bit 0 has never been used to hold a V or H value. If <CODE>UNCLSB</CODE> is set to 10, bit 0 is set to the value contained in bit 4 of the pixel (the most-significant blue bit). And if <CODE>UNCLSB</CODE> is set to 11, bit 0 is set to the value contained in bit 5 of the pixel (which copies the least-significant green bit).<P>
+The <CODE>UNCLSB</CODE> value overrides any setting in the <CODE>PDCLSB</CODE> value of the cel engine control word (see <A HREF="#XREF33388">The PDCLSB Value</A> for more information), which also sets bit 0 of a pixel coming out of the data decoder. Because <CODE>UNCLSB</CODE> appears anytime a second preamble word is used, unpacked cels are controlled by <CODE>UNCLSB</CODE>, while packed cels (which do not have a second preamble word) are controlled by <CODE>PDCLSB</CODE>.<P>
+<H3>The LRFORM Bit</H3>
+The <CODE>LRFORM</CODE> bit only affects 16-bit unpacked cels, which is the required format if you are creating cel source data from an image stored within a bitmap. Pixels in a bitmap are stored in VRAM using left/right format; that is, pixels from row pairs are interleaved with each other. For example, pixel 0 of row 0 is stored in the first half of a VRAM word, pixel 0 of row 1 is stored in the second half of the same word. In the next word, pixel 1 of row 0 is stored with pixel 1 of row 1. The left/right format allows the display generator to speedily perform interpolation and other pixel operations.<P>
+If you use 16-bit uncoded cel source data stored in left/right format (in other words, you pick up an image from the frame buffer or another bitmap), you must set the <CODE>LRFORM</CODE> bit to 1 so the cel engine can process the pixels correctly. If <CODE>LRFORM</CODE> is set to 0, the cel engine assumes that the source data is stored in normal format (pixels are not interleaved within rows, they are stored consecutively, one after the other, within a single row before the pixels within the next row are stored).<P>
+The <CODE>LRFORM</CODE> bit has no effect on any cels other than 16-bit unpacked cels because all other types of cels are stored in normal format.<P>
+Setting <CODE>LRFORM</CODE> causes two rows of cel data to be processed simultaneously effectively doubling the value specified by <CODE>VCNT</CODE>.<P>
+<H3>The TLHPCNT Value</H3>
+The <CODE>TLHPCNT</CODE> value contains the number of pixels in each row of unpacked cel source data minus 1. Because this is a single value, it means that an unpacked cel must always be rectangular (although some of its pixels can be transparent so that it does not have to appear rectangular).<P>
+The <CODE>TLHPCNT</CODE> value, like the <CODE>VCNT</CODE> value of the first preamble word, is the actual count minus 1 because it is used in a register that decrements until the value goes from 00000000000 to 11111111111. A value of 0 means there's one pixel in each row. A value of -1 (11111111111) means that there are 2,048 pixels in each row.<P>
+<A NAME="XREF20152"></A>

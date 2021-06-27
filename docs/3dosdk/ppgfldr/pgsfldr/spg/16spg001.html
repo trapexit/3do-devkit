@@ -1,0 +1,12 @@
+<TITLE>How Access Works</TITLE>
+<H1><LINK NAME="XREF18996">How Access Works</LINK></H1><HR>
+Many times a task needs to present information to or ask for input from the user. For example, a task may need the file name of a file to load, save, or delete, or ask the user which of two choices to make.<P>
+Access is a Portfolio system task that provides a mechanism for displaying this type of information to the user and accepting user input. Access can create transaction boxes, display specified text, read controller input, and perform all the other user input activities.<P>
+To use Access, a task communicates its user interface needs by sending messages to the Access message port. The calling task receives results by receiving reply messages from Access. For example, a task sends a message to Access requesting it to ask the user to load a file. Access presents the appropriate transaction box, accepts the user's input (via the control pad), and sends the name of the file back to the task.<P>
+Access provides two benefits to calling tasks: <P>
+<UL>
+<LI>First, the task doesn't have to create a user interface from scratch. Access creates the transaction boxes for user input and monitors controllers to get the response to the transaction boxes, all according to simple requests from the calling task. 
+<p>
+<LI>Second, Access provides a consistent user interface for common activities found in many tasks. For example, once a user learns how to load a file in one program that uses Access, he or she doesn't have to learn a different process to load a file in another program that uses Access. <A NAME="XREF31774">
+</UL>
+</A>

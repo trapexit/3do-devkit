@@ -1,0 +1,64 @@
+<TITLE>Creating a 
+patch with a sample</TITLE>
+<H1><LINK NAME="XREF31632"></LINK><LINK NAME="XREF29411">Creating a patch with a sample</LINK></H1><HR>
+The basic process of creating blocks and editing their characteristics is 
+actually the same no matter how complex the patch you create.<P>
+This section shows you how to create a patch that contains an aiff sample 
+file instead of a simple wave form. <P>
+<H2>Creating a sampler patch</H2>
+To create a patch that contains a sample file, follow these steps:<P>
+<OL>
+<LI>If you want, close any old patch documents and open a new one. 
+<p>
+<LI>Create a sampler block, which is the block immediately to the right of 
+the envelope.
+<p>
+<LI>Place two knobs to the left of the sampler and an Output block to the 
+right of it. 
+<p>
+<LI>Connect an aiff sample to the sampler block click on the AIFF button 
+in the sampler block and select an AIFF sample in the file selection 
+dialog that appears. 
+<p>
+<p><B>Note: </B>Samples must always be embedded. In earlier versions the 
+sample file was allowed not to be embedded, which meant that you had the 
+same folder structure when you created the patch as when you played it.<BR>
+<p>
+
+<LI>Connect knobs, sampler, and Output block as explained in <A 
+HREF="./3stdb.html#XREF35120">Creating your first patch</A>. 
+</OL>
+
+<IMG SRC="Figures/Ch3figs/SamplePatch.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Patch with Sample block.</I><P>
+<A NAME="XREF27189"><H2>Compiling and playing the sampler patch</A></H2>
+To hear the whole patch on the 3DO Station:<P>
+<OL>
+<LI>From the File menu, choose Save to save the patch as a Macintosh file. 
+<p>
+<LI>From the Patch menu, select Compile Patch. 
+<p>
+<LI>From the Patch menu, use Start Patch (and Stop Patch) to play the 
+patch- or press the Space bar to start the patch, then press it twice more 
+to release and stop it.
+</OL>
+<H2>Tips and tricks</H2>
+This section gives a few tips and trips for working with sampler patches. 
+<P>
+<H3>Experimenting with other blocks </H3>
+Creating patches becomes more interesting if you use filter blocks to 
+filter out part of the sample or envelopes to modify its frequency or 
+amplitude. Using envelopes is explained in the next section. <P>
+<H3>Making a sample part of a PIMap</H3>
+You can create a patch with no sample in the sample block and make it part 
+of a PIMap you use to play a MIDI file. See 
+<A HREF="#XREF15081">MIDI files and PIMap files</A>.<P>
+<H3>Creating a multisample instrument</H3>
+If you plan to create a multisample instrument from a patch, the patch 
+must not have a sample assigned to it when you compile it. You must attach 
+the samples to the instruments in the PIMap, with their note ranges and 
+other parameters specified there. <P>
+The patch names on such samples must be correct in your PIMap, and must be 
+inside the <I>/remote</I> folder. <P>

@@ -1,0 +1,56 @@
+<Title>DataAcqMsg</Title>
+<A NAME="XREF39143"><H1>DataAcqMsg</A></H1>
+<A NAME="XREF24853"></A>Data acquisition message structure.<P>
+<H3>Synopsis</H3>
+<PRE>
+<CODE>typedef struct DataAcqMsg {
+ DS_MSG_HEADER
+
+ union {
+ struct {
+  DSDataBufPtr bufferPtr;
+  long bufferSize;
+  } data;
+
+ struct {
+  unsigned long value;
+  unsigned long options;
+  } marker;
+
+ struct {
+  struct DSStreamCB* streamCBPtr;
+  } connect;
+
+ } msg;
+
+} DataAcqMsg, *DataAcqMsgPtr</CODE></PRE><P>
+<H3>Description</H3>
+Data structure enclosed in messages sent to data acquisition control operations. <P>
+<H3>Fields</H3>
+<H3>data</H3>
+<DL>
+<DT><CODE>bufferPtr</CODE>
+<DD>Pointer to <CODE>DatBuf</CODE> structure. 
+</DL>
+<DL>
+<DT><CODE>bufferSize</CODE>
+<DD>Size of buffer in bytes.
+</DL>
+<H3>marker</H3>
+<DL>
+<DT><CODE>value</CODE>
+<DD>Marker value (interpreted by data procedure).
+</DL>
+<DL>
+<DT><CODE>options</CODE>
+<DD>Options for branching.
+</DL>
+<H3>connect</H3>
+<DL>
+<DT>streamCBPtr
+<DD>Pointer to the stream control block to which the connection is made.
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR048.html#XREF21532"><CODE>NewDataAcq</A></CODE><P>

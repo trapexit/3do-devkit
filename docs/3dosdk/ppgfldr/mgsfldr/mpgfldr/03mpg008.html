@@ -1,0 +1,133 @@
+<TITLE>Creating and Attaching Envelopes</TITLE>
+<H1><LINK NAME="XREF35501">Creating and Attaching Envelopes</LINK></H1><HR>
+An envelope is data that sets the shape of an audio parameter plotted over time. It typically controls one of an instrument's attributes such as its amplitude, timbre, or frequency. The Audio folio creates envelopes as envelope items. Envelope items can be attached to any instruments that have built-in <I>envelope players. </I>Envelope players read the envelope data and apply it to an instrument attribute during note play.<P>
+<H2>Envelope Players</H2>
+Two Audio folio instruments, <CODE>sawenv.dsp</CODE> and <CODE>sawenvsvfenv.dsp</CODE>, have built-in envelope players. Each envelope player is tied to one attribute of the instrument. In <CODE>sawenv.dsp</CODE>, the envelope player is tied to amplitude, so when it plays an envelope, it shapes a note's loudness over time. In <CODE>sawenvsvfenv.dsp</CODE>, one envelope player is tied to amplitude, and a second envelope player is tied to a filter. The filter envelope player controls the timbre of a note over time.<P>
+A third Audio folio instrument, <CODE>envelope.dsp</CODE>, is nothing <I>but</I> an envelope player. It has no sound synthesis or sampled sound source, so when it plays an envelope, it does not directly control sound attributes. Instead, it puts out a control signal through its output. The signal can be connected to a knob of any other instrument, which applies an envelope to the attribute controlled by the knob. For example, if the output of <CODE>envelope.dsp</CODE> is attached to the amplitude knob of <CODE>sampler.dsp</CODE>, then when <CODE>envelope.dsp</CODE> plays an envelope, the envelope shapes the amplitude of the audio signal coming from <CODE>sampler.dsp</CODE>. This flexibility allows you to apply envelopes to different attributes of many instruments without built-in envelope players.<P>
+<H2>Envelope Properties</H2>
+An envelope item has many different properties set by 
+the tag arguments shown in Table 1.<P>
+<PRE>
+<B>Table 1: </B><I> Tag arguments that define the characteristics of an envelope.</I>
+-------------------------------------------------------
+Tag Name              |Description                     
+-------------------------------------------------------
+AF_TAG_ADDRESS        |A pointer to array of           
+                      |DataTimePair points defining the
+                      |shape of the envelope.          
+-------------------------------------------------------
+AF_TAG_CLEAR_FLAGS    |Set of AF_ENVF_ flags to clear. 
+                      |Clears every flag for which a 1 
+                      |is set in ta_Arg.               
+-------------------------------------------------------
+AF_TAG_FRAMES         |The number of points in the     
+                      |envelope array.                 
+-------------------------------------------------------
+AF_TAG_MICROSPERUNIT  |The number of microseconds per  
+                      |envelope unit. The default is   
+                      |1000, which sets each unit equal
+                      |to one millisecond.             
+-------------------------------------------------------
+AF_TAG_RELEASEJUMP    |The number to jump to when you  
+                      |call ReleaseInstrument().       
+-------------------------------------------------------
+AF_TAG_RELEASEBEGIN   |The index of the start of the   
+                      |release loop. The default is -1,
+                      |which signifies no loop.        
+-------------------------------------------------------
+AF_TAG_RELEASEEND     |The index of the end of the     
+                      |release loop. The default is -1,
+                      |which signifies no loop.        
+-------------------------------------------------------
+AF_TAG_RELEASETIME    |The time in envelope units      
+                      |between the end and the         
+                      |beginning of the release loop.  
+                      |Default is 0.                   
+-------------------------------------------------------
+AF_TAG_SET_FLAGS      |Set of AF_ENVF_ flags to set.   
+                      |Sets every flag for which a 1 is
+                      |set in ta_Arg.                  
+-------------------------------------------------------
+AF_TAG_SUSTAINBEGIN   |The index of the start of the   
+                      |sustain loop. The default is -1,
+                      |which signifies no loop.        
+-------------------------------------------------------
+AF_TAG_SUSTAINEND     |The index of the end of the     
+                      |sustain loop. The default is -1,
+                      |which signifies no loop.        
+-------------------------------------------------------
+AF_TAG_SUSTAINTIME    |The time in envelope units      
+                      |between the end and the         
+                      |beginning of the sustain loop.  
+                      |Default is 0.                   
+-------------------------------------------------------
+</PRE>
+<P>
+<H3>Envelope Points</H3>
+The tag arguments AF_TAG_ADDRESS and AF_TAG_FRAMES point to an array of points that define the envelope and specify the number of points. Each point gives a time from the beginning of the envelope and a value at that time. In series, the points determine the shape of the envelope as shown in the example in Figure 1.<P>
+
+<IMG SRC="Figures/2-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Shape of an envelope</I><P>
+An Audio folio envelope can have as many points as you care to set, which allows you to define very complex envelope shapes. Each point is defined by the <CODE>DataTimePair</CODE> data structure, shown in Example 2.<P>
+<B>Example 1: </B><I>DataTimePair Structure</I><P>
+<CODE>
+<PRE>
+typedef struct DataTimePair
+{
+    uint32    dtpr_Time;
+    int32    dtpr_Data;
+} DataTimePair;
+</CODE>
+</PRE>
+<CODE>DataTimePair</CODE> expects two values:<P>
+<UL>
+<LI>Time, stored in <CODE>dtpr_Time</CODE>
+<LI>Data, stored in <CODE>dtpr_Data
+</UL>
+Time is always an unsigned value that gives the number of envelope units elapsed since the beginning of the envelope. (The first envelope point has a time value of 0, all successive points have progressively higher time values.)  Envelope units are arbitrary time units set by default to 1 unit = 1 millisecond. The duration of a unit can be easily changed, which provides a simple method for expanding or shrinking the duration of all of an envelope's segments without changing the point values of the envelope.</CODE><P>
+Data is a 32-bit signed integer that, because the DSP handles 16-bit values, should be restricted to a signed range from -32,768 to 32,767, or an unsigned range from 0 to 65,535. Values beyond either of these ranges will be truncated.<P>
+<H3>Envelope Unit Duration</H3>
+Although the default envelope unit duration is 1 millisecond, you can easily change the duration for a single envelope by setting the microsecond value for the envelope's AF_TAG_MICROSPERUNIT tag argument. The default value is 1000, which sets the unit equal to one millisecond. Increasing the value stretches out the envelope's duration when played; decreasing the value shrinks the envelope's duration.<P>
+<H3>Envelope Loops</H3>
+Points define the shape of an envelope; loops control the way the envelope is played. Like a sample, an envelope can have one, two, or no loops. Possible loops are the sustain loop and the release loop. These are played just as they are in a sample. That is, the sustain loop enters after the note is started and continues until the note releases. The release loop starts only if playback enters the release stage and continues until the note is stopped. An envelope loop can be used in place of an low frequency oscillator (LFO) to produce complex modulation.<P>
+An envelope's sustain loop is defined by the tag arguments AF_TAG_SUSTAINBEGIN, AF_TAG_SUSTAINEND, and AF_TAG_SUSTAINTIME. The first two tag arguments set the beginning and end of the loop. Each argument is an index from the beginning point of the envelope. (The first point is 0.)  If you want the sustain loop to extend from the third point of the envelope to the seventh point, then AF_TAG_SUSTAINBEGIN should equal 2 and AF_TAG_SUSTAINEND should equal 6. Note that loop beginnings and endings must fall on a point. If you want a loop point between existing points, simply add a new point to the envelope's array, then specify it with one of the sustain tag arguments.<P>
+Note that the beginning and end of a loop can be set to the same envelope point. If so, the envelope holds at that point's value as long as the loop plays.<P>
+The tag argument AF_TAG_SUSTAINTIME controls what happens during playback in the return from the end of a loop to its beginning. The value in this tag argument sets the amount of time, in envelope units, the envelope player takes to go from the end to the beginning of the sustain loop. The default value, 0, sets the envelope to return from the loop's end to its beginning without delay. Values higher than 0 delay the return from end to beginning.<P>
+When a loop return interval is 0, the envelope jumps from the end value to the beginning value. When a loop return interval is greater than 0, the envelope player interpolates values between the ending value and the beginning value. This creates a ramp between the end of the loop and the beginning of the loop (as shown in Figure 2).<P>
+
+<IMG SRC="Figures/2-2.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Envelope loops</I><P>
+The release loop is also defined with three tag arguments: AF_TAG_RELEASEBEGIN, AF_TAG_RELEASEEND, and AF_TAG_RELEASETIME. These tag arguments fill the same purpose for the release loop as the SUSTAIN tag arguments do for the sustain loop.<P>
+<H2>Creating an Envelope</H2>
+To define an envelope and create an envelope item, you must first create an array of <CODE>DataTimePair</CODE> envelope points to define the envelope shape you want. You then use this call:<P>
+<DL>
+<DD><CODE>Item CreateEnvelope( DataTimePair *Points, int32 Numpoints, int32 SustainBegin, int32 SustainEnd );</CODE><BR>
+</DL>
+The call accepts four arguments: <CODE>*Points</CODE>, a pointer to the array of envelope points; <CODE>Numpoints</CODE>, a value specifying the number of points in the array; <CODE>SustainBegin</CODE>, an index to the location of the beginning of the envelope's sustain loop; and <CODE>SustainEnd</CODE>, an index to the location of the end of the envelope's sustain loop.<P>
+When it executes, <CODE>CreateEnvelope()</CODE> creates an envelope item using the parameters you passed and sets the AF_TAG_ADDRESS, AF_TAG_FRAMES, AF_TAG_SUSTAINBEGIN, and AF_TAG_SUSTAINEND values. If successful, it returns the item number of the envelope. If unsuccessful, it returns a negative value (an error code).<P>
+To further define an envelope created with <CODE>CreateEnvelope()</CODE>, use <CODE>SetAudioItemInfo()</CODE> to change its tag argument values. For example, you can use <CODE>SetAudioItemInfo()</CODE> to change the envelope unit duration or set a release loop location. You can also use the <CODE>CreateItem()</CODE> call to create an envelope with custom attributes set with a tag argument list.<P>
+<H2>Attaching an Envelope to an Instrument</H2>
+After you have created an envelope, you can attach it to any instrument that has an envelope player. If an instrument has no envelope player, attach the envelope to the <CODE>envelope.dsp</CODE> instrument, and then use <CODE>ConnectInstrument()</CODE> to connect the output of <CODE>envelope.dsp</CODE> to the appropriate knob of the playerless instrument. To attach an envelope to an instrument, use this call:<P>
+<DL>
+<DD><CODE>Item AttachEnvelope( Item Instrument, Item Envelope, char *EnvName )</CODE><BR>
+</DL>
+The call accepts three arguments: the item number of an instrument; the item number of an envelope; and a pointer to a string containing the name of one of the specified instrument's envelope players.<P>
+The names of an instrument's envelope players are listed in 
+the instrument's description in <A HREF="../mprfldr/03mpr.html#XREF41103">Instrument Templates</A>, of the <I>3DO Music and Audio Programmer's Reference</I>.  In most cases, the names are abbreviations of the envelope names. For example,  AmpEnv for an amplitude envelope player or FilterEnv for a filter envelope player. The instrument <CODE>envelope.dsp</CODE> uses Env for its single envelope player. If you pass NULL instead of a pointer to the envelope player name, then "Env" will be used.<P>
+When <CODE>AttachEnvelope()</CODE> executes, it attaches the specified envelope to the specified envelope player of the specified instrument. It creates an attachment item containing the characteristics of the attachment and returns the item number of that attachment. If unsuccessful, it returns a negative value (an error code).<P>
+Note that you can attach a single envelope to multiple instruments and envelope players. You can also, if desired, change an envelope's data points while it is attached to an instrument. Be careful that the envelope is not played while you are changing its points: the envelope player is a high-priority task that can execute while you are in the middle of changing data.<P>
+<H2>Detaching an Envelope from an Instrument</H2>
+To detach a connected envelope from an instrument, use this call:<P>
+<DL>
+<DD><CODE>Err DetachEnvelope( Item Attachment )</CODE><BR>
+</DL>
+It accepts a single argument: the item number of the attachment between the envelope and the instrument. When executed, it deletes the attachment, which detaches the envelope. The call returns 0 if successful, or a negative number (an error code) if unsuccessful.<P>
+<H2>Deleting an Envelope</H2>
+If an envelope is no longer in use, you should delete it to free system and task resources. To do so, use this call:<P>
+<DL>
+<DD><CODE>Err DeleteEnvelope( Item Envelope )</CODE><BR>
+</DL>
+The call accepts the item number of the envelope to be deleted. When it executes, the call deletes the envelope item and any attachments to it. If successful, it returns 0. If unsuccessful, it returns a negative number (an error code).<P>
+Note that <CODE>DeleteEnvelope()</CODE> only deletes the envelope item and its attachments. It does not delete the array of envelope points defining the envelope's shape. Your task must do that itself.<A NAME="XREF20623"></A><P>

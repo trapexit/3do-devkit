@@ -1,0 +1,69 @@
+<TITLE>Editors</TITLE>
+<H1><LINK NAME="XREF15383">Editors</LINK></H1><HR>
+Both the Attributes editor and Effects editor are accessed through the Document window as discussed in <A HREF="./5prob.html#XREF34521">Windows and dialogs</A>. To bring up an editor, double-click on the category in the Document window list.<P>
+Click on one of the topics below for more information: <P>
+
+<UL>
+<LI><A HREF="#XREF24225">Attributes editor</A>
+<LI><A HREF="#XREF15449">Effects editor</A>
+</UL>
+<A NAME="XREF24225"><H2>Attributes editor</A></H2>
+The Attributes editor appears when you double-click on the Attributes category in the Document window editor list. The Attributes editor lets you set CCB flags for a cel. The flags they allow you to set are discussed in this section. <P>
+
+<IMG SRC="Figures/Chap5.art/editor.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Attributes editor</I><P>
+The Attributes editor options let you set the CCB flags for a cel. Each pulldown menu and its options is covered in this section.<P>
+<H3>Black (RGB 0,0,0) Handling</H3>
+This menu lets you turn off, or toggle between the CCB flags BGND and NOBLK.<P>
+BGND-Decides 000 decoder value treatment. 1=pass 000 as RGB value into the pixel processor; 0=skip the pixel processor and treat the pixel as transparent.<P>
+NOBLK-1=write 000 pixel as 001; 0=write the pixel as 000. This flag is only read if the BGND flag is set to 1.<P>
+
+<IMG SRC="Figures/Chap5.art/Blackhandling.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Black Handling menu.</I><P>
+<H3>Fill Method</H3>
+This menu lets you toggle between options for the MARIA CCB flag.<P>
+MARIA-1=disable regional fill (speed fill only); 0=enable regional fill.<P>
+
+<IMG SRC="Figures/Chap5.art/fillmethod.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 3: </B><I>Fill Method method.</I><P>
+<H3>VH Substitution Source</H3>
+This menu lets you toggle between options for the PLUTOPS CCB flag.<P>
+PLUTOPS-Derives the VH value from the PLUT or CCB. 1=get the VH value from the PLUT; 0=get the VH value from subposition specified by the origin location.<P>
+
+<IMG SRC="Figures/Chap5.art/VHsuposition.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 4: </B><I>VH Substitution Source menu.</I><P>
+<H3>CW/CCW Pixel Rendering</H3>
+This menu lets you toggle between options for the ACW and ACCW CCB flags.<P>
+ACW-Enables clockwise pixel rendering. 1=render CW pixels; 0=don't render CW pixels.<P>
+ACCW-Enables counterclockwise pixel rendering. 1=render CCW pixels; 0=don't render CCW pixels.<P>
+
+<IMG SRC="Figures/Chap5.art/pixelrender.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 5: </B><I>CW/CWW Pixel Rendering menu.</I><P>
+<H3>Corner Engines</H3>
+This menu lets you toggle between options for the LCE and ACE CCB flags.<P>
+LCE-1=lock the two corner engines together; 0=allow only the first corner engine to function.<P>
+ACE-1=allow both corner engines to function; 0=allow only the first corner engine to function.<P>
+
+<IMG SRC="Figures/Chap5.art/cornerengine.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 6: </B><I>Corner Engines menu.</I><P>
+<H3>Uncoded-8 LSB Source</H3>
+This menu lets you toggle between options for the First Preamble word REP8 flag.<P>
+REP8-Controls bit replication in an uncoded 8-bpp cel. If 1, missing low-order bits are replicated from the high-order bits. If 0, missing low-order bits are set to 0.<P>
+
+<IMG SRC="Figures/Chap5.art/uncoded8.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 7: </B><I>Uncoded-8 LSB Source menu</I><P>
+<A NAME="XREF15449"><H2>Effects editor</A></H2>
+The Effects editor allows you to adjust the PIXC settings for a cel. The PIXC settings define how the pixels of a cel display, the characteristics they have. PIXC settings along with the P-Mode setting let you adjust how the pixels in the frame buffer are mixed with the pixels in the cel. This functionality is what lets your create 3DO special effects in cels.<P>
+For example you can define the level of translucency for a cel, as shown in the example in <A HREF="./3prod.html#XREF20020">Editing cel effects</A><P>
+For detailed information on how the PIXC works, see <A HREF="../ginfldr/0ginfrst.html#XREF32959">Introduction to 3DO Graphics</A>.<P>
+
+<IMG SRC="Figures/Chap5.art/effectseditor.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 8: </B><I>Effects editor.</I><P>

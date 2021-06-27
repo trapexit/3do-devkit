@@ -1,0 +1,14 @@
+<HTML><HEAD><TITLE>Memory Management Issues</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Memory Management Issues</H2>
+<P>Containers in the standard library can maintain a variety of different types of elements.  These include the fundamental data types (<SAMP>integer</SAMP>, <SAMP>char</SAMP>, and so on), pointers, or user-defined types.  Containers cannot hold references.  In general, memory management is handled automatically by the standard container classes, with little interaction by the programmer.</P>
+<P>Values are placed into a container using the copy constructor.  For most container classes, the element type held by the container must also define a default constructor.  Generic algorithms that copy into a container (such as <SAMP>copy()</SAMP>) use the assignment operator.</P>
+<P>When an entire container is duplicated (for example, through invoking a copy constructor or as the result of an assignment), every value is copied into the new structure using (depending on the structure) either the assignment operator or a copy constructor.  Whether such a result is a "deep copy" or a "shallow copy," it is controlled by the programmer, who can provide the assignment operator with whatever meaning is desired.  Memory for structures used internally by the various container classes is allocated and released automatically and efficiently.</P>
+<P>If a destructor is defined for the element type, this destructor will be invoked when values are removed from a container.  When an entire collection is destroyed, the destructor will be invoked for each remaining value being held by the container.</P>
+<P>A few words should be said about containers that hold pointer values.  Such collections are not uncommon.  For example, a collection of pointers is the only way to store values that can potentially represent either instances of a class or instances of a subclass.  Such a collection is encountered in an example problem discussed in <a href="app_4189.htm">Chapter 11 (<i>Application - Event Driven Simulation</i>)</a>.  </P>
+<P>In these cases the container is responsible only for maintaining the pointer values themselves.  It is the responsibility of the programmer to manage the memory for the values being referenced by the pointers.  This includes making certain the memory values are properly allocated (usually by invoking the <SAMP>new</SAMP> operator), that they are not released while the container holds references to them, and that they are properly released once they have been removed from the container.</P>
+<HR>
+<A HREF="sel_2116.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="con_9414.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

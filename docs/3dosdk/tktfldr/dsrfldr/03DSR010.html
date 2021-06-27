@@ -1,0 +1,64 @@
+<Title>MovieToStream</Title>
+<H1>MovieToStream<A NAME="XREF34350"></A></H1>
+<A NAME="XREF10617"></A>Converts a Compact Video file to a 3DO Cinepak 
+stream.<P>
+<H3>Synopsis</H3>
+<CODE>movietostream [options] &lt;moviefiles...&gt;</CODE><P>
+<H3>Description</H3>
+Converts a CompactVideo compressed QuickTime movie to 3DO Cinepak format. 
+<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-b &lt;size&gt;
+<DD>Blocking factor for the stream. The blocking size must be a 
+multiple of 2048 bytes. Default is 32,768 bytes.
+</DL>
+<DL>
+<DT>-c &lt;channel&gt;
+<DD>Channel number.
+</DL>
+<DL>
+<DT>-d &lt;outputDirectory&gt;
+<DD>Directs the output files to a directory.
+</DL>
+<DL>
+<DT>-f &lt;rate&gt;
+<DD>Playback rate in frames per second. 30 and 15 fps are often good 
+numbers. Default is 30 fps.
+</DL>
+<DL>
+<DT>-l
+<DD>Loops the streamed movie back to its first frame.
+</DL>
+<DL>
+<DT>-m &lt;rate&gt;
+<DD>Specifies the marker rate to output markers on key frame. Default 
+is markers per 1 second interval.
+</DL>
+<DL>
+<DT>-o &lt;outputfilename&gt;
+<DD>Specifies the output filename. If no name is specified, the output 
+filename will be the input filename with .FILM appended to the end. If 
+output filename is specified and multiple input filenames are streamed, a 
+number is appended to the output filename for each input file.
+</DL>
+<DL>
+<DT>-v
+<DD>Toggles verbose diagnostic output.
+</DL>
+<H3>Caveats</H3>
+MovieToStream currently strips the audio and outputs video chunks only. To 
+make a DSL Cinepak movie with audio, run SFToStream on your audio and 
+weave it with the output from MovieToStream.<P>
+<H3>Examples</H3>
+A typical command line for <CODE>MovieToStream</CODE> is:<P>
+<CODE>
+<PRE>
+MovieToStream -l CpakTest.cv.MooV
+</CODE>
+</PRE>
+The -l option adds a CTRL-GOTO chunk to the end of the output stream. 
+<CODE>MovieToStream</CODE> takes the input file name and generates an 
+output file name by tacking a .FILM onto the end if output filename is not 
+specified. <CODE>MovieToStream</CODE> creates a video-only stream that can 
+be used by the Data Streamer without weaving.<P>

@@ -1,0 +1,65 @@
+<TITLE>Creating a Screen Group</TITLE>
+<H1><LINK NAME="XREF30278">Creating a Screen Group</LINK></H1><HR>
+Displaying a screen within a task is a three-level process: you 
+first create a screen group, you then add the screen group to the 
+Graphics folio's display mechanism, and finally you display a screen 
+from the group. Creating a screen group can be the most involved step 
+of all-or it can be extremely simple if you use default screen group 
+settings. This section describes your options in defining a screen group 
+and its components.<P>
+<H2>The CreateScreenGroup() Call</H2>
+To create a screen group, use the call:<P>
+<CODE><DL>
+<DD><CODE>Item CreateScreenGroup( item *screenItemArray,  TagArg *tagArgs )</CODE><BR>
+</DL>
+</CODE>The first argument, <CODE>screenItemArr</CODE>, is a pointer to a one-dimensional array with one element for each screen in the screen group. You must dimension the array so that it contains at least as many elements as the screen group has screens. When <CODE>CreateScreenGroup()</CODE> is executed, it creates the number of screens specified in its tag arguments, and fills in the array elements with an item number for each screen. You use the item numbers to refer to any screen in the group.<P>
+The second argument, <CODE>tagArgs</CODE>, is a pointer to a list of tag 
+arguments (<CODE>tagArgs</CODE>), groups of values that specify the attributes 
+of the screen group. Each tag argument is a pair of 32-bit values. The first 
+value (<CODE>ta_Tag</CODE>) specifies which attribute of the screen group is 
+being defined; the second value (<CODE>ta_Arg</CODE>) specifies how that 
+attribute is defined. The list can contain a variable number of tag argument 
+in any order; it must be terminated, however, with a <CODE>CSG_TAG_DONE</CODE> 
+tag argument so the call knows when it's finished reading tag arguments. 
+The <CODE>CreateScreenGroup()</CODE> entry in <A HREF="../gprfldr/01gpr.html#XREF37440">Graphics Folio Calls</A> describes each tag argument and its possible values.<P>
+<CODE>CreateScreenGroup()</CODE> assumes that any tag argument not 
+supplied in the tag argument list is set to the default value. For 
+example, if the tag argument for the screen count is not in the list, 
+<CODE>CreateScreenGroup()</CODE> sets the screen count to the default value of 1. If you want <CODE>CreateScreenGroup()</CODE> to create a screen group with nothing but default values, you can substitute NULL for the tag argument list pointer. You then create a screen group with a single 320-by-240 screen, a single 320-by-240 bitmap, and a standard VDL.<P>
+When <CODE>CreateScreenGroup()</CODE> executes, it creates the data structures 
+that define the bitmaps, VDLs, screens, and other components of the screen group. It also allocates any resources necessary to create the screen group (such as VRAM for bitmap buffers). When finished, it returns 0 to indicate success, or a negative number (an error code) if it was unsuccessful.<P>
+The sections that follow describe the tag arguments you can use 
+with the <CODE>CreateScreenGroup()</CODE> call.<P>
+<H2>Setting the Screen Count and Dimensions</H2>
+The tag argument <CODE>CSG_TAG_SCREENCOUNT</CODE> sets the number of screens in the screen group. Its value is the integer number of screens you want in the group; set it to the appropriate number for your purposes: two for double-buffering, three or four for double-buffered stereophonic display, and so on. The default value for this tag argument is 1.<P>
+Be sure that the returned screen item number array you create for the <CODE>CreateScreenGroup()</CODE> call has at least enough elements to contain the number 
+of screens you specify here.<P>
+The tag argument <CODE>CSG_TAG_SCREENHEIGHT</CODE> sets the height in pixels of the buffer for each screen in the screen group. (The buffer is the combined VRAM of the screens' bitmaps.) The default value is 240, which is the maximum number of visible rows in the video display, but you can set the height to be larger (so you can hide parts of the screen off the display) or smaller (so you can reveal other screen groups below this one).<P>
+The tag argument <CODE>CSG_TAG_DISPLAYHEIGHT</CODE> sets the height in pixels of the visible portion of each screen in the screen group. The display height can't be set to reveal more of a screen than exists, so this value must always be less than or equal to the screen height value. When you set a value here that's less than the screen height, the bottom rows of the screen group are hidden in the display, an effect that can reveal other screen groups beneath this one. When you set a value that's greater than the screen height, added rows of black appear at the bottom of the screen. The default display height is 240, enough to fully display a default screen height.<P>
+Both <CODE>CSG_TAG_SCREENHEIGHT</CODE> and <CODE>CSG_TAG_DISPLAYHEIGHT</CODE> must be set to an even number. That's because the frame buffer stores pixels in left/right format, binding pairs of odd and even frame buffers together in VRAM. If you specify height with an odd number, the Graphics folio rounds the value up to the next higher even number.<P>
+<H2>Setting Bitmap Counts, Dimensions, and Buffers</H2>
+The tag argument <CODE>CSG_TAG_BITMAPCOUNT</CODE> sets the number of bitmaps within each screen of a screen group. You must have at least one bitmap; you can, in theory, have one bitmap per screen row if you wish. It's easier, however, to manage a more reasonable number of bitmaps-less than ten, for example. If you don't specify a bitmap count, the default is one bitmap per screen.<P>
+The tag argument <CODE>CSG_TAG_BITMAPWIDTH_ARRAY</CODE> controls the width of each bitmap set in the bitmap count. It contains a pointer to a one-dimensional array of 32-bit integer values, one value for each bitmap. The values in the array apply to the bitmaps within a screen starting with the top bitmap, working down to the bottom bitmap. Each array value sets the width in pixels of its corresponding bitmap. Bitmaps can be wider than their parent screen, in which case the rightmost columns of the bitmap are truncated from the screen, and not displayed. Bitmaps can be narrower than their parent screen, in which case they appear flush on the left side of the screen.<P>
+A bitmap's width can only be set to one of a set of possible widths. Those widths are 32, 64, 96, 128, 160, 256, 320, 384, 512, 576, 640, 1024, 1056, 1088, 1152, 1280, 1536, and 2048. The default bitmap width is 320 pixels, which exactly matches the screen width of the video display.<P>
+The tag arguments <CODE>CSG_TAG_BITMAPHEIGHT_ARRAY</CODE> controls the height of each bitmap set in the bitmap count. Like the bitmap width tag arguments, this tag arguments points to a one-dimensional array of 32-bit integer values, one for each bitmap, going from the top bitmap to the bottom bitmap. You don't need to set this tag arguments if there is only one bitmap set per screen (in which case the bitmap height is set to 240), but you must set bitmap heights if there is more than one bitmap per screen.<P>
+Bitmaps are contiguous within the screen; one bitmap picks up where the last bitmap left off. If the combined bitmap heights are greater than the screen height, then the bottom rows of the bottom bitmap (or bitmaps) are clipped from the screen. If the combined bitmap heights are less than the screen height, then the bottom of the screen is empty-filled with 000 pixels. (In a future release of Portfolio, bitmaps may be positioned within a screen using a Y offset.)<P>
+The tag argument <CODE>CSG_TAG_BITMAPBUF_ARRAY</CODE> lets you specify a bitmap buffer in VRAM for each bitmap-if you're intent on doing it by hand, and don't let the graphics folio do it for you automatically. If you skip this tag arg altogether, you can live a life of leisure: the Graphics folio specifies all the bitmap buffers on its own. If you decide to use this tag argument, its value is a pointer to one-dimensional array of pointers, one per bitmap. The bitmap order is top to bottom in the first screen, top to bottom in the next screen, and so on. Each bitmap pointer points to the starting address in VRAM of the bitmap buffer.<P>
+Note that the bitmap buffer array must contain one entry for each bitmap in the screen group. For example, if a screen group has two screens and each screen has three bitmaps, then the array must contain six pointers, one for each bitmap. Those pointers can, of course, point to the same address if you want to share a buffer among bitmaps.<P>
+The tag argument <CODE>CSG_TAG_SPORTBITS</CODE> is the last bitmap tag argument. It controls the location of the bitmap buffers when they're allocated so that the buffers are capable (or not, if so specified) of using SPORT transfers. SPORT transfers are necessary for refreshing bitmap backgrounds between frames, erasing cel projections and other per-frame renderings to start with a fresh background for new projections and renderings.<P>
+SPORT transfers between bitmap buffers (or within a bitmap buffer) require that the buffers reside within the same bank of memory, so it's important that the buffers be placed together within the same bank when allocated. Banks of VRAM are specified with a 32-bit mask whose bits show selected VRAM banks. The kernel call <CODE>GetBankBits()</CODE> accepts a pointer to any memory location, and then returns a bank mask with the proper bits set to show within which VRAM bank the memory location resides.<P>
+If you provide a 32-bit bank mask specifying a single VRAM bank for <CODE>CSG_TAG_SPORTBITS</CODE>, bitmap buffers are allocated within that specified bank. If you provide a null mask (all bits set to 0 so no banks are specified), all bitmap buffers are allocated within a single unspecified bank of memory so that SPORT transfers are possible among all bitmaps (this feature is not available in this release). And if this tag argument is left out altogether, bitmap buffers are placed in any available VRAM without regard to banks, so that SPORT transfers among bitmaps may not be able to take place.<P>
+<CODE>CSG_TAG_SPORTBITS</CODE> settings apply to bitmap buffers whether you specify each buffer with the <CODE>CSG_TAG_BITMAPBUF_ARRAY</CODE> or if you leave the tag argument out and let the Graphics folio specify bitmap buffers for you.<P>
+<H2>Setting Screen VDL Types and Attaching Custom VDLs</H2>
+<CODE>CSG_TAG_VDLTYPE</CODE> specifies the type of VDL supplied for each screen of the screen group-one type for all the screens in the group. The VDL type specified in this tag argument is used whether you supply your own VDLs (in which case this tag argument tells <CODE>CreateScreenGroup()</CODE> what kind of VDLs you're supplying), or the graphics folio supplies VDLs for you (in which case it tells the Graphics folio what kind of VDLs it must create).<P>
+The two types of VDLs you can specify in <CODE>CSG_TAG_VDLTYPE</CODE> are:<P>
+<UL>
+<LI><CODE>VDLTYPE_SIMPLE</CODE>, which has one entry. This entry points to a bitmap buffer and has color-value and display-control words. The bitmap buffer, CLUT, and display control settings are used for the entire screen.
+<p>
+<LI><CODE>VDLTYPE_FULL</CODE>, which has an entry for each line of the display. Each entry has a bitmap buffer pointer and color-value and display-control words.
+</UL>
+The default VDL type is <CODE>VDLTYPE_SIMPLE</CODE>.<P>
+If you're bold and decide to create your own VDLs, the tag argument <CODE>CSG_TAG_VDLPTR_ARRAY</CODE> lets you point to a custom VDL for each of the screens in the screen group. It contains a pointer to an array of VDLs. It must be accompanied by the tag argument <CODE>CSG_TAG_VDLLENGTHS_ARRAY</CODE>, which is a pointer to a corresponding array containing the length in words of each VDL in the VDL array. <A HREF="#XREF16255">Creating a Custom VDL</A> tells you how to create custom VDLs to include in the VDL array.<P>
+To create a VDL-length array to correspond to the VDL array, determine the length of each custom VDL <I>in words, not bytes,</I> and put that integer value in the VDL-length array element that corresponds to the VDL array element. For example, if a custom VDL stored in the third element of the VDL array is 96 bytes long, set the third element of the VLD-length array to 24 (96 bytes is 24 words).<P>
+If you don't specify an array of VDLs for a screen group, then the Graphics folio creates VDLs for you. You can replace the supplied VDLs with custom VDLs later if you wish. The Graphics folio provides a set of VDL calls that accept custom VDLs, create VDL items, and attach VDL items to screens.<P>
+If you create a custom VDL, the Graphics folio ignores all the previous tag arguments about bitmaps because your VDL defines its own bitmap or bitmaps.<P>
+<P>

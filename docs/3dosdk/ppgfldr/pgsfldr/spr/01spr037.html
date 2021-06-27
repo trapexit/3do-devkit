@@ -1,0 +1,37 @@
+<Title>DeleteThread</Title>
+<A NAME="XREF28597"><H1>DeleteThread </A></H1>
+<A NAME="XREF30549"></A>Deletes a thread.<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteThread( Item x )</CODE><P>
+<H3>Description</H3>
+This procedure deletes a thread. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>x
+<DD>The item number of the thread to be deleted. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a value greater than or equal to 0 if the thread was successfully deleted or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+Although threads may be deleted as soon as the parent task has finished using it by calling <CODE>DeleteThread()</CODE>, threads are automatically deleted when they return, call <CODE>exit(),</CODE> or when their parent task is deleted or dies. <P>
+Threads share memory with their parent tasks. This means that: <P>
+<UL>
+<LI>Memory that was allocated by a thread also belongs to the parent task. 
+<LI>Memory that was allocated by a thread is not automatically deallocated when the thread is deleted but instead remains the property of the parent task. 
+</UL>
+If you create a thread using <CODE>CreateThread()</CODE>, you must delete it using <CODE>DeleteThread()</CODE>, which does special cleanup work. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr028.html#XREF27054"><CODE>CreateThread</A>(), <A HREF="./01spr042.html#XREF40201">exit</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF28597"></LINK></H1><HR>

@@ -1,0 +1,73 @@
+<Title>CreateScreenGroup </Title>
+<A NAME="XREF29335"><H1>CreateScreenGroup </A></H1>
+<A NAME="XREF27820">Creates a screen group and all its screens, bitmaps, </A>buffers, and VDLs.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateScreenGroup (Item *screenItemArray,TagArg *targs)<BR>
+Item CreateScreenGroupVA (Item *screenItemArray,uint32 targs,...)</CODE><P>
+<H3>Description</H3>
+This call is the workhorse of the graphics display architecture. It creates a complete display environment, with all the associated components and data structures, based on the specifications made in the targs argument. The call returns the item number of a newly created ScreenGroup structure, and it fills out the specified screenItemArray with item numbers for the screen structures that have been created. <P>
+The tag arguments supplied as an argument to the call lets the programmer set all of the parameters that control the creation of the screen group. However, you don't need to specify all of the tag arguments. Each possible tag argument has an associated default value that is used if the tag argument is not supplied. In fact, if the programmer specifies a tag argument array with no entries, or specifies NULL as the targs argument, the defaults are sufficient to create a simple single-buffer screen group. <P>
+<B>Note: </B> Only one bitmap per screen is supported. <P>
+<H3>Tag Arguments</H3>
+<DL>
+<DT>Here are the tag arguments that can be passed to <CODE>CreateScreenGroup()</CODE>: 
+</DL>
+<UL>
+<LI>CSG_TAG_SCREENCOUNT - This tag argument defines how many screens are created for the new screen group. Typically, you create two screens in order to create double-buffered displays. Although you may want a screen group with only a single screen to show a static display. You may want to create a stereoscope display with three or four screens in the group. If you don't specify a screen count, the default number is one.
+<LI> CSG_TAG_SCREENHEIGHT - This tag argument specifies the actual height of your screen's framebuffer. This may be different from the display height of the screen, which is the height of the visible portion of your screen. The default width is reported by calling <CODE>QueryGraphics()</CODE> with the tag QUERYGRAF_TAG_DEFAULTHEIGHT. 
+<LI> CSG_TAG_DISPLAYHEIGHT - This tag argument to specifies the display height of your screen. The display height is the visible portion of the screen. You can create a screen that's taller than the display height. The display height must always be equal to or less than the screen height. The default is reported by calling <CODE>QueryGraphics()</CODE> with the tag QUERYGRAF_TAG_DEFAULTHEIGHT. 
+<LI>CSG_TAG_BITMAPCOUNT - This tag argument specifies how many bitmaps each screen will have. Each screen within a screen group has to have the same number and configuration of bitmaps. The count specified by this tag argument is the bitmap count per screen, not the total bitmap count. The default bitmap count per screen is one. 
+<LI> CSG_TAG_BITMAPWIDTH_ARRAY - In a screen with multiple bitmaps, each bitmap can have its own width. To specify a unique width per bitmap, or to have a width that's other than the system's default width, use this tag argument to supply the pointer to a table of widths. The elements of the array are interpreted as int32 values. There must be one entry for each bitmap of a single screen. If you don't specify a bitmap width array, then all bitmaps are of the width reported by calling <CODE>QueryGraphics()</CODE> with the tag QUERYGRAF_TAG_DEFAULTWIDTH. 
+<LI> CSG_TAG_BITMAPHEIGHT_ARRAY - In a screen with multiple bitmaps, each bitmap can have its own height. If you want to specify a unique height per bitmap, use this tag argument to supply the pointer to a table of heights. The elements of the array are interpreted as int32 values. There must be one entry for each bitmap of a single screen. If you have only one bitmap per screen, you don't need to specify a height for that bitmap; the default is to use the height reported by calling <CODE>QueryGraphics()</CODE> with the tag QUERYGRAF_TAG_DEFAULTHEIGHT. If you have more than one bitmap per screen, you must specify a bitmap width array. 
+<LI> CSG_TAG_BITMAPBUF_ARRAY - Normally, the system will allocate your frame buffers for you. However, you can have specific preallocated frame buffers associated with the screens of your display. Designate your own buffers using this tag argument. Paired with this tag argument is the pointer to an array of buffer pointers.The elements in the array are interpreted as pointers to the starting addresses of your frame buffers. There must be an entry for every bitmap in every screen. For example, if you have two screens and each screen has three bitmaps, then the bitmap buffer array must have six entries. If you don't specify a bitmap buffer array, the default is the system allocates the appropriate frame buffers for you. Even if you choose to have the system allocate buffers for you, use the CSG_TAG_SPORTBITS  tag argument to specify SPORT access details. 
+<LI>CSG_TAG_SPORTBITS - This tag argument takes SPORT transfers into consideration when setting up the bitmap frame buffers. SPORT transfers have certain memory requirements and restrictions, all of which are handled by using the correct flag bits when allocating frame buffer memory; for example, a call to <CODE>GetBankBits()</CODE> is usually required to make sure that SPORT memory transfers occur in the same bank of memory. You specify the flag bits that are used when allocating frame buffer buffers with this tag argument. Not only does this tag argument allow you to control memory allocations, but its presence implies that all normal SPORT care (page alignment, page size adjustment) should be done when making the allocation. If this tag argument is used but the associated value is null, this designates that any buffers allocated by the system must be in the same bank of memory, although any bank will do. If this tag argument is absent, the default is to presume that SPORT transfers don't have to be considered when allocating framebuffers.
+<LI>CSG_TAG_VDLTYPE - Every screen needs a VDL. The Graphics folio supports several types of VDLs. You can supply your own VDL, or you can choose to have the system construct one for you. If you supply your own, you have to specify the type of VDL you are supplying. If you choose to have the system construct a VDL for you, you may wish to specify the type of VDL to be built (rather than just accepting the default). The types of VDLs supported by the system include: 
+</UL>
+<DL>
+<DD>
+<UL>
+<LI> VDLTYPE_SIMPLE - The simple VDL has one entry, which points to the frame buffer and has CLUT and display control words. This type of VDL is the default. 
+<LI>VDLTYPE_FULL - This VDL has an entry for every line of the display, which entry includes a buffer address and a full CLUT. 
+<LI>VDLTYPE_COLOR - With this VDL, there is an entry for every line of the display, which entry has the space for a full CLUT. The color VDL does not allow line-by-line modifications of the buffer address. This type of VDL is not yet supported.
+<LI> VDLTYPE_ADDRESS - This VDL provides an entry for every line of the display, which entry has a buffer address. This allows line-by-line control over the data that is displayed on any given line. The address VDL does not allow line-by-line CLUT modifications. This type of VDL is not yet supported. 
+<LI>VDLTYPE_DYNAMIC - The dynamic VDL can be modified with wild abandon. It can grow and shrink dynamically. This type of VDL gives you maximum flexibility, but it requires a great amount of processing overhead and so it's the least attractive type of VDL in that regard. 
+</UL><BR>
+</DL>
+<UL>
+<LI>CSG_TAG_VDLPTR_ARRAY - If you want to specify your own VDLs to go with your own bitmaps, use this tag argument. This tag argument is a pointer to an array of VDLs. This tag argument is used in conjunction with CSG_TAG_VDLLENGTH_ARRAY, and is optional. The elements of the array are interpreted as pointers to VDLs. You must specify a VDL for each screen you want to create. You specify the type of VDLs you're providing using the tag argument CSG_TAG_VDLTYPE. If you don't specify one of those tag arguments, you get the normal default type for the tag argument. If you don't specify an array of VDLs, the system will create the VDLs for you. 
+</UL>
+<UL>
+<LI>CSG_TAG_VDLLENGTH_ARRAY - This tag argument is used in conjunction with CSG_TAG_VDLPTR_ARRAY  to specify your own VDLs to go with your own bitmaps. Each submitted VDL in the VDL array must have a corresponding LENGTH associated with it, because VDL list proofing is in effect. (This is the length in words.)   This is an optional tag argument. If you choose to submit a VDL list of your own, rather than using one of the defaults, it must be fully filled in at the time you call <CODE>CreateScreenGroup()</CODE>. 
+<LI>CSG_TAG_DISPLAYTYPE - Specifies what kind of display you want the system to build for you (that is "Narrow" PAL or normal PAL). The default display type is the one reported by calling <CODE>QueryGraphics()</CODE> with the tag QUERYGRAF_TAG_DEFAULTDISPLAYTYPE. 
+<LI> CSG_TAG_DONE - Put this tag argument at the end your VDL to terminate it. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>screenItemArray
+<DD>Pointer to an array of Item fields. The array is filled in by <CODE>CreateScreenGroup()</CODE> if the call is successful. 
+</DL>
+<DL>
+<DT>targs
+<DD>A pointer to an array of tag arguments. The last element of the array must be the value TAG_END. If there are no tag arguments, this argument must be NULL. 
+</DL>
+<H3>Return Value</H3>
+The call returns the item number of the newly created screen group or an error number (a negative value) if an error occurs. <P>
+<DL>
+<DT>GRAFERR_NOMEM
+<DD>is returned if any memory allocation attempted on the behalf of the task fails. 
+</DL>
+<DL>
+<DT>GRAFERR_VDLWIDTH
+<DD>is returned if an illegal width is specified for the VDL. 
+</DL>
+<H3>Caveats</H3>
+Multiple bitmaps per screen are not yet supported. <P>
+Only VDLs of type VDLTYPE_FULL are currently supported. <P>
+SPORT-conscious bitmap buffer allocation is not yet done "automatically." You must supply a value from <CODE>GetBankBits()</CODE> to take advantage of this feature. <P>
+<H3>Implementation</H3>
+Folio call is implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr001.html#XREF27310"><CODE>AddScreenGroup</A>(), <A HREF="./01gpr012.html#XREF42189">DeleteScreenGroup</A>(), <A HREF="./01gpr052.html#XREF35655">RemoveScreenGroup</A>() </CODE><P>
+</CODE>

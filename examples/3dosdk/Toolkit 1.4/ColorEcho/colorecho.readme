@@ -1,0 +1,33 @@
+/****************************************************************
+**
+** "Color Echo" - graphics feedback using LRForm cels
+**
+** The graphic patterns are created by drawing a zoomed and rotated image of 
+** the screen back into the screen. This is similar to the effect achieved by 
+** pointing a television camera at a monitor showing the image from the 
+** camera. You see an image of the monitor on the monitor. The monitor image 
+** contains the same image and so on. This recursive feedback can generate 
+** fractal patterns in real time.
+**
+** By:  Phil Burk
+**
+** Copyright (c) 1992, 3DO Company.
+** This program is proprietary and confidential.
+**
+****************************************************************/
+
+This program will compile and run under Dragon.  To compile for cardinal, 
+add the following option to your C compiler call:
+
+    -Dcardinal2b
+    
+This will enable some compile time options that will alow it to compile 
+and run under Cardinal.
+
+Red or Green silicon is required because we use LR form cels.
+
+If you make some cool modifications, please share them with others via the
+3DO InfoServer (BBS).
+
+Enjoy it, but not too much cuz we all got work to do....
+

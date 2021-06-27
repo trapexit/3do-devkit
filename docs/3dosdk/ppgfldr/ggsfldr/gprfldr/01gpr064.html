@@ -1,0 +1,29 @@
+<Title>SetReadAddress </Title>
+<A NAME="XREF16176"><H1>SetReadAddress </A></H1>
+<A NAME="XREF15518"> Sets a bitmap's read address.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err SetReadAddress (Item bitmapItem,ubyte *buffer,int32 width)</CODE><P>
+<H3>Description</H3>
+This call sets the read pointer to the bitmap to the specified buffer that contains the specified pixel width. After calling SetReadAddress<CODE>()</CODE>, the specified buffer is used to render cels by reading from a source buffer before writing to the destination buffer. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>Item number of the bitmap structure whose read address is to be set. 
+</DL>
+<DL>
+<DT>buffer
+<DD>Pointer to the data buffer to be used as the read buffer. 
+</DL>
+<DL>
+<DT>width
+<DD>Pixel count of the width of the buffer. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr054.html#XREF28789"><CODE>ResetReadAddress</A>() </CODE><P>
+</CODE>

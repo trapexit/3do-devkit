@@ -1,0 +1,28 @@
+<Title>StreamChunk</Title>
+<A NAME="XREF40467"><H1>StreamChunk</A></H1>
+<A NAME="XREF20295">Stream chunk structure.</A><P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>struct StreamChunk {
+   unsigned long streamChunkType;
+   unsigned long streamChunkSize;
+   unsigned char streamChunkData[4];
+}typedef struct StreamChunk StreamChunk, *StreamChunkPtr</CODE></pre><P>
+<H3>Description</H3>
+A logical data chunk embedded in the stream of blocks. The <CODE>streamData</CODE> type is used to search the stream's subscriber list, and any chunks that match existing subscribers are passed to the subscriber. Chunks that do not match any existing subscriber are ignored.<P>
+<B>Note: </B>All chunks must be quad byte aligned.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>streamChunkType</CODE>
+<DD>4 byte ASCII subscriber data type.
+</DL>
+<DL>
+<DT><CODE>streamChunkSize</CODE>
+<DD>Size of chunk including this header.
+</DL>
+<DL>
+<DT><CODE>streamChunkData</CODE>
+<DD>Start of variable length data. 
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

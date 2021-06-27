@@ -1,0 +1,29 @@
+<Title>ReleaseAttachment</Title>
+<A NAME="XREF21219"><H1>ReleaseAttachment </A></H1>
+<A NAME="XREF38590"></A> Releases an attachment.<P>
+<H3>Synopsis</H3>
+<CODE>Err ReleaseAttachment (Item Attachment, TagArg *tagList)<BR>
+Err ReleaseAttachmentVA (Item Attachment, uint32 tag1, ...)</CODE><P>
+<H3>Description</H3>
+This function releases an attachment and is commonly used to release attachments started with <CODE>StartAttachment()</CODE>. <CODE>ReleaseAttachment()</CODE> causes an attachment in a sustain loop to enter release phase. Has no effect on attachment with no sustain loop, or not in its sustain loop. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Attachment
+<DD>The item number for the attachment. 
+</DL>
+<H3>Tags</H3>
+<DL>
+<DT>None
+<DD> 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Caveats</H3>
+Prior to V24, <CODE>ReleaseAttachment()</CODE> did not support envelope attachments. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<A HREF="./01mpr072.html#XREF15765"><CODE>StartAttachment</A><CODE>(), </CODE><A HREF="./01mpr074.html#XREF33554">StopAttachment</A><CODE>(), </CODE><A HREF="./01mpr050.html#XREF32325">LinkAttachments</A><CODE>() </CODE><P>
+</CODE>

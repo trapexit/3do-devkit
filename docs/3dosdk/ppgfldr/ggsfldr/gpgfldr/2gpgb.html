@@ -1,0 +1,39 @@
+<TITLE>The Frame Buffer</TITLE>
+<H1><LINK NAME="XREF38189">The Frame Buffer</LINK></H1><HR>
+The frame buffer measures 320 pixels wide by 240 pixels high by 16 bits deep. Its location in VRAM is flexible-a pointer in the video display list (VDL) gives its location. In fact, 3DO graphics can support more than one frame buffer; the VDLP can switch back and forth between buffers by reading a new pointer in the VDL at the beginning of each 1/60-second field. This feature fully supports double-buffered animation, which allows one frame buffer to be read into the display generator while the cel engine and Graphics folio calls write pixels in another frame buffer that is not on display.<P>
+A frame buffer can also be fragmented in horizontal bands, with each band stored in a separate section of VRAM. To create a fragmented buffer, the VDL contains a new buffer pointer at the beginning of each line where a new buffer segment begins. A segmented frame buffer allows one segment to be double-buffered while the other segments are single-buffered, saving VRAM for other purposes.<P>
+<H2>Left/Right Pixel Pairs</H2>
+A frame buffer stores pixels in an order whose logic may not be immediately 
+apparent: the pixel in column 0, row 0 is stored in the high 16 bits of the 
+first word in the frame buffer; the pixel in column 0, row 1 is stored in 
+the low 16 bits of the same word. The second word stores column 1, row 0 
+along with column 1, row 1; the third word stores column 2, row 0 along with 
+column 2, row 1; and so on as shown in Figure 1.<P>
+
+<IMG SRC="figures/G.2-2.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 1: </B><I>Storing pixels in a frame buffer using left/right pairs.</I><P>
+Figure 2 shows an array of pixels as they're displayed on the screen. Within each pixel's square is the byte offset in the frame buffer where that pixel is stored. For example, the first pixel in the upper-left corner (column 0, row 0) is stored at byte offset 0-the high-order 16 bits of the first 32-bit word of the frame buffer. The pixel below it (column 0, row 1) is stored at byte offset 2-the low-order 16 bits of the first 32-bit word of the frame buffer. The pixel at column 1, row 0 is stored at byte offset 4-the high-order bits of the second word of the frame buffer; and the pixel at column 1, row 2 is stored at byte offset 6-the low-order bits of the second word of the frame buffer. This goes on to the end of the first two rows, and then jumps to the beginning of the next pair of rows, row 2 and row 3. The pixel at column 0, row 2 is stored in the high bits of word 320, the pixel at column 0, row 3 is stored in the low bits of word 320.<P>
+Pixels stored together in a single word of a frame buffer are called <I>left/right pairs. </I>3DO pixel interpolation hardware reads these pairs using a left channel for the high-order pixel in a word, and a right channel from the low-order pixel in a word. (VRAM is specially designed to read these pairs quickly.) The hardware then averages color between the pixels in the pair.<P>
+<H2>Display Modes</H2>
+The 16 bits contained in each pixel convey information in several different ways, depending on which <I>display mode</I> the VDLP sets. Available display modes include:<P>
+<UL>
+<LI><B>1555</B>, which uses bit 15 (the high bit) as a cornerweight bit, bits 14 to 10 as red value bits, bits 9 to 5 as green value bits, and bits 4 to 0 as blue value bits. (When only one cornerweight bit is used, it can specify either the horizontal or vertical location; the missing location component is filled in with a value set by in the VDL.)
+<p>
+<LI><B>15541</B>, which works the same as 1555, but uses bit 0 (the low bit) as a second cornerweight bit instead of using bit 0 as the low-order bit for the blue value. This mode sacrifices a small amount of blue precision in order to provide a second cornerweight bit.
+<p>
+<LI><B>P555</B>, which uses bit 15 as a palette (color set) selector instead of using bit 15 as a cornerweight bit. This mode uses bits 14 to 0 for a 15-bit color value. (Alternate color sets are discussed a little later in this chapter.)
+<p>
+<LI><B>P5541</B>, which uses bit 15 as a palette selector and uses bit 0 as a single cornerweight bit.
+</UL>
+These display modes are shown in Figure 2. The 16 bits in a pixel are interpreted in different ways according to the display mode set by the VDLP: 
+R = red value, G = green value, B = blue value, W = cornerweight value, and 
+P = palette value.<P>
+<IMG SRC="figures/G.2-3.gif" ALT="Graphic cannot be displayed">
+<p>
+<B>Figure 2: </B><I>Display modes.</I><P>
+When the display generator reads pixel values, it extracts a 15-bit color value regardless of the display mode. In 1555 or P555 modes, the 15-bit value is extracted from bits 14 to 0 of the pixel. In 15541 and P5541 modes, the low bit of the blue value is missing, so the display generator fills it in with a fixed value (0 or 1) set in the VDL.<P>
+The display generator also extracts the pixel's cornerweight location if the display mode supports it. (The location is contained in a value called the<I> VH value</I> because one bit specifies the vertical location and the other bit specifies the horizontal location.) In 1555 and P5541 modes, where only one bit is available for the VH value, the VDL supplies the other bit, a constant value of 0 or 1. The VH value then bypasses the background pixel detector, the CLUT set, and SlipStream. It goes directly to the interpolator, where it's used for subpixel shading.<P>
+In P555 and P5541 modes, the display generator extracts the 1-bit CLUT set value, which it uses to determine which of two CLUT sets to use.<P>
+<A NAME="XREF13159"></A>

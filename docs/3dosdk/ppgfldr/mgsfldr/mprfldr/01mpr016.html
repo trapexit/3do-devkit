@@ -1,0 +1,30 @@
+<Title>CreateDelayLine</Title>
+<A NAME="XREF36090"><H1>CreateDelayLine </A></H1>
+<A NAME="XREF19296"></A> Creates a delay for echoes and reverberations.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateDelayLine( int32 NumBytes, int32 NumChannels,int32 IfLoop )</CODE><P>
+<H3>Description</H3>
+This function creates a delay line item for echo, reverberation, and oscilloscope applications.  The delay line item can be attached to any instrument that provides DMA OUT from DSP.  When finished with the delay line, delete it using <CODE>DeleteDelayLine()</CODE> to free its resources. <P>
+<CODE>CreateDelayLine()</CODE>  calls <CODE>CreateItem()</CODE> using the tag argument AF_TAG_DELAY_LINE. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>NumBytes
+<DD>The number of bytes in the delay line's sample buffer. 
+</DL>
+<DL>
+<DT>NumChannels
+<DD>The number of channels stored in each sample frame. 
+</DL>
+<DL>
+<DT>IfLoop
+<DD>A value indicating whether or not this is a loop.  Set to TRUE (1) or FALSE (0). 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of the delay line or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr027.html#XREF37533"><CODE>DeleteDelayLine</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,63 @@
+<TITLE>Playing the MIDI Score</TITLE>
+<H1>Playing the MIDI Score</H1><HR>
+With the MIDI environment prepared, the MIDI score imported, and the audio clock rate set, you can then use the Juggler to play back the MIDI score. The playback technique is no different than it is for any Juggler object, a process described in the chapter <A HREF="./08mpg.html#XREF34225">Creating and Playing Juggler Objects</A>."  In fact, if you have already created a standard function that plays a Juggler object using the audio clock, you can probably use it to play a MIDI object with little adaptation.<P>
+The process is as follows:<P>
+<UL>
+<LI>Create an audio cue for audio clock notification.
+<LI>Poll the audio clock for the current time.
+<LI>Use the current time to start all objects to be played (in this case, the MIDI sequence or collection).
+<LI>Use the current time to bump the Juggler.
+<LI>Retrieve the next event time returned by the Juggler.
+<LI>Wait until the next event time.
+<LI>Repeat the last three steps until there are no more events to execute.
+<LI>Delete the audio cue.
+</UL>
+The code fragment in Example 5 plays back a MIDI collection:<P>
+<B>Example 1: </B><I>Playing a MIDI collection.</I><P>
+<CODE>
+<PRE>
+MyCue = CreateItem ( MKNODEID(AUDIONODE,AUDIO_CUE_NODE), NULL );
+CueSignal = GetCueSignal ( MyCue );
+/* Drive Juggler using audio clock. */
+/* Delay start by adding ca. 1/2 second to avoid stutter on startup. 
+*/
+NextTime = GetAudioTime() + 120;
+/* Start playback loop. */
+StartObject ( JglPtr , NextTime, NumReps, NULL );
+do
+{
+    /* Request a timer wake up at the next event time. */
+    Result = SleepUntilTime( MyCue, NextTime );
+    CurTime = NextTime;
+    /* Tell Juggler to do its thing. Result &gt; 0 if done. */
+    Result = BumpJuggler( CurTime, &amp;NextTime, SignalsGot, 
+&amp;NextSignals );
+        } while (Result == 0);
+DeleteItem( MyCue );
+</CODE>
+</PRE>
+Notice that the fragment includes a delay of approximately 1/2 second, which is put in place to avoid a stutter of voices at the beginning of the score playback. Without the delay, the object is started at the same time that the Juggler is bumped, which can cause voice stuttering.<P>
+<H2>Dynamic Voice Allocation</H2>
+As the Juggler plays back a MIDI object, the interpreter procedure turns the MIDI events into MIDI messages. The MIDI messages are passed on to <CODE>InterpretMIDIMessage()</CODE>, which is the beginning of a tree of MIDI playback functions designed to act appropriately on each recognizable MIDI message. As these functions play notes, they use a system of dynamic voice allocation, controlled by the calls and the MIDI environment's data structures (such as <CODE>NoteTracker</CODE>). This system provides multiple voices in different channels playing different programs. Although the task playing the MIDI score cannot control this process directly, it is useful to know something about how it works so that MIDI scores can be tweaked to work to their best advantage.<P>
+When the first note of a score is played by a voice, a MIDI playback function creates an instrument to play that note and connects the instrument's output to the MIDI mixer. The voice's channel determines which instrument template should be used to create the instrument. When the note is released, its instrument is abandoned, that is, it remains in existence, connected to the mixer, but it no longer plays.<P>
+When any subsequent note in a score is played, a MIDI playback function looks for an abandoned instrument of the right template for the note. If it finds one, it uses that instrument to play the note. If it does not find one, it looks for an abandoned instrument of another template, frees that instrument, and creates a new instrument using the right template for the note. And if it does not find any abandoned instruments, it creates a new instrument for the note. When the note is finished, its instrument is abandoned so that other notes can use it.<P>
+New instrument allocation continues until the number of existing instruments hits the upper limit set in the score context or until the DSP runs out of resources. When that happens, and there are no abandoned instruments to use, a MIDI playback function starting a new note must steal an existing instrument from another note. To do so, it looks through all the channels to find the least prominent voice to steal. It looks for notes of lower priority, released notes that are dying away, or old notes that the listener cannot hear anymore. It then steals its voice, cutting off the note. The function <I>does not </I>steal a voice from any note of a higher priority than the starting note.<P>
+To sum up, a MIDI playback function playing a note uses this priority list to look for an instrument:<P>
+<OL>
+<LI>Adopt an abandoned instrument.
+<p>
+<LI>Create a new instrument.
+<p>
+<LI>Steal an instrument of lower priority, an instrument used by a released note, or an instrument used by an old note.
+
+</OL>
+<H2>Freeing Instruments Created by Voice Allocation</H2>
+Note that the process of dynamic voice allocation creates instruments as necessary, but never reduces the number of instruments. It recycles existing instruments when possible. This means that if dynamic voice allocation must create a large number of instruments for a part of a score with a large number of multiple voices, the created instruments remain in existence no matter how brief the multiple voice section of the score was. These unused instruments can tie up DSP resources.<P>
+To free instruments allocated by dynamic voice allocation, use this call:<P>
+<DL>
+<DD><CODE>Err FreeChannelInstruments( ScoreContext *scon, int32 Channel )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>*scon</CODE>, a pointer to the score context controlling MIDI playback; and <CODE>Channel</CODE>, the number of a channel whose unused instruments should be freed.<P>
+<CODE>FreeChannelInstruments()</CODE>, when executed, frees all instruments allocated for the specified channel. If this occurs in the middle of score playback and some of those instruments are in use, they are stopped in the middle of a note and then freed. If successful, it returns 0; if unsuccessful, it returns a negative value (an error code).<P>
+This call provides a way for a task to clean up allocated instruments and free DSP resources without deleting a score context and ceasing MIDI playback activities.<P>
+<P>

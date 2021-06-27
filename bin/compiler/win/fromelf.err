@@ -1,0 +1,71 @@
+help_banner:\
+\n%s Version %s [%s]\n%s\n\
+\n%s [options] input_file_name { [ output_format [output_file_name] ] }*\n
+help_options:\n\
+Options:\n\
+\t-h          display this help screen\n\
+\t-nodebug    do not put debug areas in the output image\n\
+\t-nozeropad  do not expand ZI areas (only valid for binary images)\n\n\
+Binary Output Formats:\n\
+\t-bin        Plain Binary\n\
+\t-m32        Motorola 32 bit Hex\n\
+\t-i32        Intel 32 bit Hex\n\
+\t-ihf        Intellec Hex\n\n\
+Other Output Formats:\n\
+\t-aif        Executable AIF\n\
+\t-aifbin     Non Executable AIF\n\
+\t-elf        ELF\n\
+\t-text       Text Information\n\n\
+\t\tFlags for Text Information\n\
+\t\t/v        verbose\n\
+\t\t/c        disassemble code\n\
+\t\t/d        print contents of data section\n\
+\t\t/g        print debug tables\n\
+\t\t/r        print relocation information\n\
+\t\t/s        print symbol table\n\
+\t\t/t        print string table\n\
+\t\tIf an output file is not specified for -text, output is printed on stdout.\n
+help_examples:\n\
+Examples:\n\
+\t%s infile -text/cgsv out.txt\n\
+\t%s -nodebug infile -aif out1.axf -text -m32 out2.axf \n
+msg_i_am:Fromelf
+msg_i_do:ARM Executable ELF file translator
+bad_base_or_size:Base and/or size too big for this format, max = 0x%x.\n
+err_outmem:Error : Out of Memory.\n
+err_writeerr:Error : Failed writing output file.\n
+err_fcreate:Error : Could not create output file '%s'.\n
+warn_fname_clash:Warning: Output filename cannot be same as input filename '%s'.\n
+info_skipping_trans:Skipping translation.\n
+err_unknown_option:Error : Unrecognised option '%s'.\n
+err_no_format:Error : Missing output format before '%s'.\n
+warn_unknown_cat:Warning : Ignoring unrecognised text information category '%c'.\n
+err_no_cat:Error : No text information category specified.\n
+err_unknown_format:Error : Unrecognised file format '%s'.\n
+err_no_filename:Error : Missing output filename for format [%s].\n
+err_readerr:Error : Could not open input file '%s'.\n
+err_readerr1:Error : Could not open input file.\n
+info_success:Translation to %s format successful.\n
+info_fail:Translation to %s format failed/ignored.\n
+err_fileio_fail:Error : File i/o failure.\n
+err_ELF_not32bit:Error : Not a 32 bit ELF file.\n
+err_ELF_not64bit:Error : Not a 64 bit ELF file.\n
+err_ELF_badmagic:Error : Invalid ELF identification number found.\n
+err_bad_sec_idx:Error : Invalid ELF section index found.\n
+err_bad_seg_idx:Error : Invalid ELF segment index found.\n
+err_bad_str_idx:Error : Invalid ELF string table index found.\n
+err_bad_sec_entsz:Error : Invalid ELF section entry size found.\n
+err_bad_ELF_type:Error : ELF Header contains invalid file type.\n
+err_bad_ELF_mc:Error : ELF Header contains machine name.\n
+err_bad_ELF_ver:Error : ELF Header contains version number.\n
+err_less_info:Error : ELF Image has insufficient information to effect this translation.\n
+err_no_entry:Error : ELF image requires an entry point to effect this translation.\n
+err_bad_dbg_offset:Error : Invalid debug offset found.Seek failure.\n
+err_no_root:Error : ELF Image does not have a ROOT Region.\n
+err_hldbg_fail:Error : Failed to write High level debug information.\n
+err_lldbg_fail:Error : Failed to write Low level debug information.\n
+err_strtab_fail:Error : Failed to write image string table.\n
+err_bad_FAT_link:Error : Invalid FAT AIF chain found.Seek failure.\n
+err_mkdir_fail:Error : Failed to create Directory %s. Writing files in current directory.\n
+err_chdir_fail:Error : Failed to change to directory %s.\n
+err_chdir2_fail:Error : Failed to change to directory %s. Writing files in current directory.\n

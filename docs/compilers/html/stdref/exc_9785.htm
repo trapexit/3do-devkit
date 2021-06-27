@@ -1,0 +1,145 @@
+<HTML><TITLE>exception</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>exception</H2>
+<HR><PRE>     Standard Exception</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Classes supporting logic and runtime errors.</P>
+<PRE></PRE>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Constructors"><LI>Constructors</LI></A>
+<A HREF="#Destructor"><LI>Destructor</LI></A>
+<A HREF="#Operators"><LI>Operators</LI></A>
+<A HREF="#Member Function"><LI>Member Function</LI></A>
+<A HREF="#Constructors for Derived Classes"><LI>Constructors for Derived Classes</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE> #include &#60;exception></PRE>
+<PRE>
+ class exception;</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The class <B><I>exception</B></I> defines the base class for the types of objects thrown as exceptions by Standard C++ Library components, and certain expressions, to report errors detected during program execution.  User's can also use these exceptions to report errors in their own programs.  </P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>class exception {</PRE>
+<PRE>
+   public:
+     exception () throw();
+     exception (const exception&#38;) throw();
+     exception&#38; operator= (const exception&#38;) throw();
+     virtual ~exception () throw();
+     virtual const char* what () const throw();
+ };
+ class logic_error : public exception {
+   public:
+     logic_error (const string&#38; what_arg);
+ };
+ class domain_error : public logic_error {
+   public:
+     domain_error (const string&#38; what_arg);
+ };
+ class invalid_argument : public logic_error {
+   public:
+     invalid_argument (const string&#38; what_arg);
+ };
+ class length_error : public logic_error {
+   public:
+     length_error (const string&#38; what_arg);
+ };
+ class out_of_range : public logic_error {
+   public:
+     out_of_range (const string&#38; what_arg);
+ };
+ class runtime_error : public exception {
+   public:
+     runtime_error (const string&#38; what_arg);
+ };
+class range_error : public runtime_error {
+   public:
+     range_error (const string&#38; what_arg);
+ };
+ class overflow_error : public runtime_error {
+   public:
+     overflow_error (const string&#38; what_arg);
+ };
+</PRE>
+<A NAME="Constructors"><H3>Constructors</H3></A>
+<PRE><B>exception </B>() throw();</PRE>
+<UL><P>Constructs an object of class exception.</P>
+</UL>
+<PRE><B>exception</B> (const exception&#38;) throw();</PRE>
+<UL><P>The copy constructor.  Copies an exception object.</P>
+</UL>
+<A NAME="Destructor"><H3>Destructor</H3></A>
+<PRE>virtual 
+<B>~exception</B>() throw();</PRE>
+<UL><P>Destroys an object of class exception.</P>
+</UL>
+<A NAME="Operators"><H3>Operators</H3></A>
+<PRE>exception&#38; 
+<B>operator= </B>(const exception&#38;) throw();</PRE>
+<UL><P>The assignment operator.  Copies an exception object.</P>
+</UL>
+<A NAME="Member Function"><H3>Member Function</H3></A>
+<PRE>virtual const char* 
+<B>what</B>()const throw();</PRE>
+<UL><P>Returns an implementation-defined, null-terminated byte string representing a human-readable message describing the exception.  The message may be a null-terminated  multibyte  string,  suitable  for conversion and display as a <SAMP>wstring</SAMP>.</P>
+</UL>
+<A NAME="Constructors for Derived Classes"><H3>Constructors for Derived Classes</H3></A>
+<PRE>logic_error::<B>logic_error</B> (const string&#38; what_arg);</PRE>
+<UL><P>Constructs an object of class <SAMP>logic_error</SAMP>.</P>
+</UL>
+<PRE>domain_error::<B>domain_error</B> (const string&#38; what_arg);</PRE>
+<UL><P>Constructs an object of class <SAMP>domain_error.</SAMP></P>
+</UL>
+<PRE>invalid_argument::<B>invalid_argument</B> (const string&#38; what_arg);</PRE>
+<UL><P>Constructs an object of class<SAMP> invalid_argument</SAMP>.</P>
+</UL>
+<PRE>length_error::<B>length_error</B> (const string&#38; what_arg);</PRE>
+<UL><P>Constructs an object of class <SAMP>length_error</SAMP>.</P>
+</UL>
+<PRE>out_of_range::<B>out_of_range</B> (const string&#38; what_arg);</PRE>
+<UL><P>Constructs an object of class <SAMP>out_of_range</SAMP>.</P>
+</UL>
+<PRE>runtime_error::<B>runtime_error</B> (const string&#38; what_arg);</PRE>
+<UL><P>Constructs an object of class <SAMP>runtime_error</SAMP>.</P>
+</UL>
+<PRE>range_error::<B>range_error</B> (const string&#38; what_arg);</PRE>
+<UL><P>Constructs an object of class <SAMP>range_error</SAMP>.</P>
+</UL>
+<PRE>overflow_error<B>::overflow_error</B> (const string&#38; what_arg);</PRE>
+<UL><P>Constructs an object of class <SAMP>overflow_error</SAMP>.</P>
+</UL>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>  //
+<PRE>  // exception.cpp
+  //
+  #include &#60;iostream.h>
+  #include &#60;stdexcept>
+  static void f() { throw runtime_error("a runtime error"); }
+  int main ()
+  {
+     //
+     // By wrapping the body of main in a try-catch block we can
+     // be assured that we'll catch all exceptions in the
+     // exception hierarchy.  You can simply catch exception as is
+     // done below, or you can catch each of the exceptions in
+     // which you have an interest.
+     //
+     try
+     {
+         f();
+     }
+     catch (const exception&#38; e)
+     {
+         cout &#60;&#60; "Got an exception: " &#60;&#60; e.what() &#60;&#60; endl;
+     }
+     return 0;
+  }</PRE>
+<HR>
+<A HREF="equ_8796.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="fil_4628.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

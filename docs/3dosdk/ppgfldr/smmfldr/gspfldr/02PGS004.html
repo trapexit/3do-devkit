@@ -1,0 +1,73 @@
+<TITLE>Tips, Tricks, and Troubleshooting</TITLE>
+<H1><LINK NAME="XREF18948">Tips, Tricks, and Troubleshooting</LINK></H1><HR>
+This section provides information about the following topics:<P>
+
+<UL>
+<LI><A HREF="#XREF13477">Languages</A>
+<LI><A HREF="#XREF14074">3DO Data Types</A>
+<LI><A HREF="#XREF35973">Efficient Display Using Cel Lists</A>
+</UL>
+<A NAME="XREF13477"><H2>Languages</A></H2>
+The 3DO Company recommends that every 3DO developer work in C or C++. The ARM C compiler generates high-quality code, and most of the low-level operations are handled by the operating system, so assembly language should not be necessary (although an assembler is provided). Don't forget to use the optimizing flag, -o, for the production version of your title. It is possible to program in C++ using cfront. There is limited support for name unmangling in the Debugger.<P>
+<B>Warning: </B>Using -g disables the optimizer. <P>
+<A NAME="XREF14074"><H2>3DO Data Types</A></H2>
+As you start writing your first programs, you'll find it helpful to have information about available 3DO datatypes. Here's a table of commonly used datatypes:<P>
+<PRE>
+<B>Table 1: </B><I> 3DO data types and what they mean</I>
+---------------------------------------------
+3DO type             |Meaning                
+---------------------------------------------
+char                 |unsigned 8-bit         
+---------------------------------------------
+uchar, ubyte, uint8  |char                   
+---------------------------------------------
+bool, Boolean        |char                   
+---------------------------------------------
+int8                 |signed char            
+---------------------------------------------
+int32                |32-bit integer         
+---------------------------------------------
+uint32               |unsigned int32         
+---------------------------------------------
+int64                |struct {uint32 hi;     
+                     |uint32 lo}             
+---------------------------------------------
+Coord                |int32                  
+---------------------------------------------
+Item                 |int32                  
+---------------------------------------------
+Err                  |int32                  
+---------------------------------------------
+frac16, frac30,      |int32                  
+frac14               |                       
+---------------------------------------------
+ufrac16, ufrac30,    |unit32                 
+ufrac14              |                       
+---------------------------------------------
+int64, uint64,       |                       
+frac32, ufrac32      |                       
+---------------------------------------------
+frac60, ufrac60      |                       
+---------------------------------------------
+</PRE>
+<P>
+Note that working with 3DO types requires some care. For example, many of the fields of the CCB structure have int32 arguments. Upon closer examination you will find, however, that some of them (for example the ccb_HDX and ccb_HDY field), are 12.20 numbers. Others (for example the ccb_VDX and ccb_VDY field) are 16.16 numbers. <P>
+In general, it is best to use the type int32 and int16, and convert all references to int, long, or short values into precisely sized type definitions. The sample code currently included on the CD-ROM uses this technique sporadically.<P>
+<B>Note: </B>All 16-bit datatypes are very inefficient on the ARM processor. It is much faster to use 32-bit datatypes instead. <P>
+<A NAME="XREF35973"><H2>Efficient Display Using Cel Lists</A></H2>
+The jsshowcel example program displays only one image and one cel. This is a very unusual situation. Usually, an application shows many cels on the screen, displaying quite a few at start-up and adding and removing them as needed. A solution to speeding up cel display is working with cel lists. <P>
+Once triggered by a <CODE>DrawCels()</CODE> call, the cel engine renders every cel in a list until it encounters the final cel, which has the CCB_LAST flag in ccb_Flags field turned on. You can establish a cel list by setting the ccb_NextPtr field in the CCB of a cel, to point to the CCB of the next cel to render and clearing the CCB_LAST flag of each cel except the last one. <P>
+Be sure to set the CCB_LAST flag in the ccb_Flags field of the last CCB in the list; if you don't, the cel engine never stops. (The code fragment below sets the ccb_NextPtr field of the last cel to NULL, in addition to setting CCB_LAST. Just setting ccb_NextPtr to NULL is insufficient; the code fragment does it because it's convenient for traversing the cel list in software.)<P>
+When the program starts up and displays the UFO, it effectively displays the other cels as well. Since there is a good deal of overhead involved in starting and stopping the cel engine, you should call <CODE>DrawCels()</CODE> only once per frame for maximum speed (30 frames per second). Take full advantage of the cel list. Set up the complete list, then make a single call to <CODE>DrawCels()</CODE> to process the list. <P>
+The code fragment below, which comes from <CODE>InitGame()</CODE> in jsinteractivesound.c, sets up a cel list. It sets the <CODE>ccb_NextPtr</CODE> field of each CCB to a pointer to the CCB of the next cel. Once a cel is drawn, it's part of the background, so the last cel in the list appears in front of all the other cels in the list. <P>
+<B>Example 1: </B><I>Setting up a cel list</I><P>
+<CODE>
+<PRE>
+/* Link the UFO, laser, crosshairs, and cockpit cels: */
+    
+    LinkCel(gUFOCel, gLaserCel);
+    LinkCel(gLaserCel, gCrosshairsCel);
+    LinkCel(gCrosshairsCel, gCockpitCel);
+    LAST_CEL(gCockpitCel);
+</CODE>
+</PRE>

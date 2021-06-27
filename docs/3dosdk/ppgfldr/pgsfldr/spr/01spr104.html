@@ -1,0 +1,32 @@
+<TITLE>OpenItem</TITLE>
+<A NAME="XREF35423"><H1>OpenItem </A></H1>
+<A NAME="XREF41088"></A>Opens an item.<P>
+<H3>Synopsis</H3>
+<CODE>Item OpenItem( Item FoundItem, void *args )</CODE><P>
+<H3>Description</H3>
+This procedure opens an item for access. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>item
+<DD>The number of the item to open. To find the item number of a system item, use FindItem(), FindDevice(), FindFolio(), or FindNamedItem(). 
+</DL>
+<DL>
+<DT>args
+<DD>A pointer to an array of tag arguments. Currently, there are no system items that require tag arguments; for these and for any future items you're not sending tag arguments to, this argument must be NULL. If you send tag arguments (for any items in the future that use them), the tag arguments can be in any order, and the last element of the array must be the value TAG_END. For a list of tag arguments for each item type, see the "Portfolio Items" chapter. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the number of the item that was opened or an error code if an error occurs. <P>
+<B>Note: </B> The item number for the opened item is not always the same as the item number returned by <CODE>FindItem()</CODE>. When accessing the opened item you should use the return from <CODE>OpenItem()</CODE>, not the return from <CODE>FindItem()</CODE>. You can also call the <CODE>FindAndOpenItem()</CODE> function for to do both a search and an open operation in an atomic manner. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>Notes</H3>
+To close an opened item, use <CODE>CloseItem()</CODE>. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr016.html#XREF39128"><CODE>CloseItem</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF35423"></LINK></H1><HR>

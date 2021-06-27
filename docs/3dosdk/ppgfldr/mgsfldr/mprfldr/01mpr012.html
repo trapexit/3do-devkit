@@ -1,0 +1,36 @@
+<Title>CompareAudioTimes</Title>
+<A NAME="XREF25497"><H1>CompareAudioTimes </A></H1>
+<A NAME="XREF40156"> </A>Compare two AudioTime values with wraparound.<P>
+<H3>Synopsis</H3>
+<CODE>int32 CompareAudioTimes (AudioTime t1, AudioTime t2)</CODE><P>
+<H3>Description</H3>
+<CODE>CompareAudioTimes()</CODE>  compares two AudioTime values taking into account wraparound. The two time values are assumed to be within 0x7fffffff ticks of each other. Time differences larger than this value will produce incorrect comparisons. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>t1
+<DD>First AudioTime value to compare. 
+</DL>
+<DL>
+<DT>t2
+<DD>Second AudioTime value to compare. 
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>&gt;0
+<DD>If t1 is later than t2. 
+</DL>
+<DL>
+<DT>0
+<DD>If t1 equals t2. 
+</DL>
+<DL>
+<DT>&lt;0
+<DD>If t1 is earlier than t2. 
+</DL>
+<H3>Implementation</H3>
+Macro implemented in audio.h V22. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr008.html#XREF11991"><CODE>AudioTimeLaterThan</A>(), <A HREF="./01mpr009.html#XREF13127">AudioTimeLaterThanOrEqual</A>() </CODE><P>
+</CODE>

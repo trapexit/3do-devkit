@@ -1,0 +1,35 @@
+<Title>ssplSetBufferAddressLength</Title>
+<A NAME="XREF33138"><H1>ssplSetBufferAddressLength </A></H1>
+<A NAME="XREF41476"></A> Attach sample data to a SoundBufferNode.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplSetBufferAddressLength ( SoundSpooler *sspl, SoundBufferNode *sbn, char *Data,int32 NumBytes )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplSetBufferAddressLength()</CODE>  attaches sample data to a SoundBufferNode returned by <CODE>ssplRequestBuffer()</CODE>. This function is used internally by <CODE>ssplPlayData()</CODE>  and <CODE>ssplSpoolData()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to SoundSpooler that owns sbn. 
+</DL>
+<DL>
+<DT>sbn
+<DD>Pointer to a SoundBufferNode returned by <CODE>ssplRequestBuffer()</CODE>. 
+</DL>
+<DL>
+<DT>Data
+<DD>Pointer to sample data to attach to this SoundBufferNode. 
+</DL>
+<DL>
+<DT>NumBytes
+<DD>Length of sample data (in bytes). 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Notes</H3>
+The safe minimum size for spooler buffers appears to be around 256 bytes. Values less than this risk having gaps in the playback due insufficient time to process transitions from one sample Attachment to another. This minimum is in reality more a function of the time required to play a sample Attachment than that of sample length in bytes. The value 256 was determined using fixedstereosample.dsp which at the time of this writing had the fastest DMA consumption of all the DSP instruments (176,400 bytes/sec). This means that this value should be a suitable minimum spooler buffer length for any sample playback instrument used with the sound spooler. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr111.html#XREF24497"><CODE>ssplRequestBuffer</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>(), <A HREF="./02mpr118.html#XREF33759">ssplSpoolData</A>() </CODE><P>
+</CODE>

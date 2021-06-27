@@ -1,0 +1,23 @@
+<Title>splsSoundInUse</Title>
+<A NAME="XREF14588"><H1>spIsSoundInUse </A></H1>
+<A NAME="XREF34821"></A> Determines if SPPlayer is currently reading from a particular SPSound.<P>
+<H3>Synopsis</H3>
+<CODE>bool spIsSoundInUse (const SPSound *sound)</CODE><P>
+<H3>Description</H3>
+Determines if SPPlayer is currently reading from a particular SPSound. An SPSound cannot be removed from its owning SPPlayer while it is being read from while the player is running. This function is necessary for a client to know when it is safe to remove an SPSound. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to SPSound to test. 
+</DL>
+<H3>Return Value</H3>
+TRUE if sound is currently being read by player; FALSE otherwise. <P>
+<H3>Caveats</H3>
+Returns FALSE too early for Sample Item class SPSounds. Since the spooler is given a pointer to the Sample Item's memory directly, rather than copying it into the spooler buffers, it must not return FALSE until a Sample Item SPSound has actually finished playing, not finished being read. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr084.html#XREF24744"><CODE>spRemoveSound</A>(), <A HREF="./02mpr093.html#XREF20856">spStop</A>() </CODE><P>
+</CODE>

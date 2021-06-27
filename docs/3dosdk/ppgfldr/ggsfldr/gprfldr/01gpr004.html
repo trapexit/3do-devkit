@@ -1,0 +1,17 @@
+<Title>CloseGraphicsFolio </Title>
+<A NAME="XREF20544"><H1>CloseGraphicsFolio </A></H1>
+<A NAME="XREF25616"> Closes the Graphics folio.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err CloseGraphicsFolio (void)</CODE><P>
+<H3>Description</H3>
+This call terminates access to the Graphics folio, freeing any resources allocated by calling <CODE>OpenGraphicsFolio()</CODE>. <P>
+Once the Graphics folio is closed, the task should no longer call any calls from the folio. <P>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in graphics.lib V21. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr048.html#XREF33578"><CODE>OpenGraphicsFolio</A>() </CODE><P>
+</CODE>

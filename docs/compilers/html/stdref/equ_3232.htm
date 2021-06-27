@@ -1,0 +1,85 @@
+<HTML><TITLE>equal_range</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>equal_range</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Find the largest subrange in a collection into which a given value can be inserted without violating the ordering of the collection.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class ForwardIterator, class T>
+ pair&#60;ForwardIterator, ForwardIterator>
+ <B>equal_range</B>(ForwardIterator first, ForwardIterator last,
+             const T&#38; value);
+ template &#60;class ForwardIterator, class T, class Compare>
+  pair&#60;ForwardIterator, ForwardIterator>
+  <B>equal_range</B>(ForwardIterator first, ForwardIterator last,
+              const T&#38; value, Compare comp);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>equal_range</B></I> algorithm performs a binary search on an ordered container to determine where the element <SAMP>value</SAMP> can be inserted without violating the container's ordering.  The library provides two versions of the algorithm.  The first version uses the less than operator (<SAMP>operator &#60;</SAMP>) to search for the valid insertion range, and assumes that the sequence was sorted using the less than operator.  The second version allows you to specify a function object of type <SAMP>Compare</SAMP>, and assumes that <SAMP>Compare</SAMP> was the function used to sort the sequence.  The function object must be a binary predicate. </P>
+<P><B><I>equal_range</B></I> returns a pair of iterators, <SAMP>i</SAMP> and <SAMP>j</SAMP> that define a range containing elements equivalent to <SAMP>value</SAMP>, i.e., the first and last valid insertion points for <SAMP>value</SAMP>.  If <SAMP>value</SAMP> is not an element in the container, <SAMP>i</SAMP> and <SAMP>j</SAMP> are equal.  Otherwise, <SAMP>i</SAMP> will point to the first element not "less" than value, and <SAMP>j</SAMP> will point to the first element greater than value.  In the second version, "less" is defined by the comparison object.  Formally, <B><I>equal_range</B></I> returns a sub-range <SAMP>[i, j)</SAMP> such that <SAMP>value</SAMP> can be inserted at any iterator <SAMP>k</SAMP> within the range.  Depending upon the version of the algorithm used, <SAMP>k</SAMP> must satisfy one of the following conditions: </P>
+<PRE>!(*k &#60;  value)  &#38;&#38;  !(value  &#60;  *k)</PRE>
+<PRE></PRE><P> or </P>
+<PRE>comp(*k,value) == false &#38;&#38; comp(value, *k) == false</PRE>
+<PRE></PRE><P>The range [<SAMP>first,last</SAMP>) is assumed to be sorted.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P><B><I>equal_range</B></I> performs at most <SAMP>2 * log(last - first) + 1</SAMP> comparisons.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// eqlrange.cpp
+//
+ #include &#60;vector>
+ #include &#60;algorithm>
+ #include &#60;iostream.h>
+
+ int main()
+ {
+   typedef vector&#60;int>::iterator iterator;
+   int d1[11] = {0,1,2,2,3,4,2,2,2,6,7};
+   //
+   // Set up a vector
+   //
+   vector&#60;int> v1(d1+0, d1 + 11);
+   //
+   // Try equal_range variants   
+   //
+   pair&#60;iterator,iterator> p1 = 
+       <B>equal_range</B>(v1.begin(),v1.end(),3);
+   // p1 = (v1.begin() + 4,v1.begin() + 5)</PRE>
+<PRE>   pair&#60;iterator,iterator> p2 = 
+       <B>equal_range</B>(v1.begin(),v1.end(),2,less&#60;int>()); 
+   // p2 = (v1.begin() + 4,v1.begin() + 5)                      </PRE>
+<PRE>   // Output results
+   cout &#60;&#60; endl  &#60;&#60; "The equal range for 3 is: "
+        &#60;&#60; "( " &#60;&#60; *p1.first &#60;&#60; " , " 
+        &#60;&#60; *p1.second &#60;&#60; " ) " &#60;&#60; endl &#60;&#60; endl; </PRE>
+<PRE>   cout &#60;&#60; endl &#60;&#60; "The equal range for 2 is: "
+        &#60;&#60; "( " &#60;&#60; *p2.first &#60;&#60; " , " 
+        &#60;&#60; *p2.second &#60;&#60; " ) " &#60;&#60; endl; 
+   return 0;
+ }</PRE>
+<PRE>Output :
+The equal range for 3 is: ( 3 , 4 )
+The equal range for 2 is: ( 2 , 3 )
+</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance you'll have to write:</P>
+<PRE>vector&#60;int,allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="bin_7851.htm"><B><I>binary_function</B></I></A>, <A HREF="low_4395.htm"><B><I>lower_bound</B></I></A>, <A HREF="upp_0967.htm"><B><I>upper_bound</B></I></A></P>
+<HR>
+<A HREF="equ_0708.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="equ_8796.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

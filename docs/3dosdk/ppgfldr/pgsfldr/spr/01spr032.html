@@ -1,0 +1,30 @@
+<Title>DeleteItem</Title>
+<A NAME="XREF18938"><H1>DeleteItem </A></H1>
+<A NAME="XREF23478"></A>Deletes an item.<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteItem( Item i )</CODE><P>
+<H3>Description</H3>
+This procedure deletes the specified item and frees any resources (including memory) that were allocated for the item. <P>
+<B>Note: </B> There are convenience procedures for deleting most types of items (such as <CODE>DeleteMsg()</CODE> to delete a message and <CODE>DeleteIOReq()</CODE> to delete an I/O request). You should use <CODE>DeleteItem()</CODE> only if you used <CODE>CreateItem()</CODE> to create the item. If you used a convenience routine to create an item, you must use the corresponding convenience routine to delete the item. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>i
+<DD>Number of the item to be deleted. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a value greater than of equal to 0 if successful or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Notes</H3>
+The item number of a deleted item is not reused. If a task specifies the item number of a deleted item, the kernel informs the task that the item no longer exists. <P>
+Tasks can only delete items that they own. If a task transfers ownership of an item to another task, it can no longer delete the item. The lone exception to this is the task itself. You can always commit sepaku.<P>
+When a task dies, the kernel automatically deletes all of the items in its resource table. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr014.html#XREF21994"><CODE>CheckItem</A>(), <A HREF="./01spr022.html#XREF15505">CreateItem</A>(), <A HREF="./01spr031.html#XREF13807">DeleteIOReq</A>(), <A HREF="./01spr034.html#XREF14458">DeleteMsg</A>(), <A HREF="./01spr035.html#XREF42671">DeleteMsgPort</A>(), <A HREF="./01spr037.html#XREF28597">DeleteThread</A>(), <A HREF="./01spr042.html#XREF40201">exit</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF18938"></LINK></H1><HR>

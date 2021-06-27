@@ -1,0 +1,15 @@
+<TITLE>Primary Data Structures</TITLE>
+<H1>Primary Data Structures</H1><HR>
+The <CODE>MIDIEvent</CODE> data structure is used for storing MIDI events within a Juggler sequence used for MIDI score playback.<P>
+<CODE>
+<PRE>
+typedef struct MIDIEvent
+{
+    uint32 mev_Time;
+    unsigned char mev_Command;
+    unsigned char mev_Data1;
+    unsigned char mev_Data2;
+    unsigned char mev_Data3;
+} MIDIEvent;
+</CODE>
+</PRE>

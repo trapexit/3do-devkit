@@ -1,0 +1,43 @@
+PPMTo3DO Quick Reference
+
+ppmto3DO  [flags]  ppmimagefile 3DOimagefile
+
+Flags
+
+-b		pixels of the output image are in 5541 format, with the low
+		bit of the blue component used as a corner weight
+-c		output a 16-bit-per-pixel, non-LR-form image suitable for 
+		processing by makecel
+-d		write to the output file a dynamic VDL containing a CLUT 
+		for each display line; default is no CLUT written
+-f		write to the output file a fixed VDL containing a single 
+		CLUT for the image; default is no CLUT written
+-t N	specify a color in the input image to be translated to 
+		transparent (zero) in the output image; N is a hexadecimal
+		number representing a 16-bit, 555-RGB color value
+-v		print total number of colors in output image
+-e N	place entries in the generated CLUT beginning at index N; 
+		default is 0; the values supplied to -ce and -me must add to
+		be 32 or less.
+-m N	use at most N entries in the generated CLUT; default is 32
+-z		output a 24-bit image, stored as 32 bits/pixel with custom CLUT
+		for 24 bit display.  Suitable for static images only. Standard
+		Cels will not render properly into a framebuffer with this type
+		of VDL installed.
+
+The following options specify how the colors entered in the generated 
+CLUT are selected from the colors found in the input image (or a line of
+the input image, when -d is in effect):
+
+-s0		entries evenly distributed across the color space; default when
+		-d is not in effect
+-s1		entries that are the most popular color values
+-s2		entries that represent approximately equal regions of the color 
+		space by population
+-s3		entries that represent subdivisions of longest intervals between 
+		color values
+-s4		entries that represent subdivisions of intervals containing the 
+		largest numbers of colors (population)
+-s5		entries that represent subdivisions of longest intervals based 
+		on color value weighted by population; default when -d is in
+		effect

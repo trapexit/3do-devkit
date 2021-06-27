@@ -1,0 +1,53 @@
+#
+# This canon dictionary is used to translate the subscriber
+# trace event codes back into text so the trace dumps
+# can be human readable.
+#
+
+tc1000		kTraceInitSubscriber
+tc1001		kTractcloseSubscriber
+tc1002		kTraceNewSubscriber
+tc1003		kTraceDisposeSubscriber
+tc1004		kTraceWaitingOnSignal
+tc1005		kTraceGotSignal
+tc1006		kTraceDataMsg
+tc1007		kTraceGetChanMsg	
+tc1008		kTraceSetChanMsg
+tc1009		kTractcontrolMsg
+tc1010		kTraceSyncMsg
+tc1011		kTraceOpeningMsg
+tc1012		kTraceClosingMsg
+tc1013		kTraceStopMsg
+tc1014		kTraceStartMsg
+tc1015		kTraceEOFMsg
+tc1016		kTraceAbortMsg
+tc1017		kTraceDataSubmited
+tc1018		kTraceDataCompleted
+
+tc1019		kTraceChannelInit
+tc1020		kTraceChannelClose
+tc1021		kTraceChannelStart
+tc1022		kTraceChannelStop
+tc1023		kTraceChannelFlush
+
+tc1024		kFlushedDataMsg 			 
+tc1025		kFlushedBuffer				 
+tc1026		kMovedBuffer				 
+tc1027		kBufferCompleted			 	
+tc1028		kFreedBufferFromFolio		 
+tc1029		kFoundBuffer				 
+tc1030		kFoundWrongBuffer			 
+tc1031		kNewDataMsgArrived			 
+tc1032		kMaskedSignalBits			 
+tc1033		kNewHeaderMsgArrived		 
+tc1034		kBeginSetChannelAmp			 
+tc1035		kBeginSetChannelPan			 
+tc1036		kEndSetChannelAmp			 
+tc1037		kEndSetChannelPan			 
+tc1038		kCurrentBufferOnStop		 
+tc1039		kBufferOrphaned				 
+tc1040		kLoadedTemplates			 
+tc1041		kChannelMuted				 
+tc1042		kChannelUnMuted				 
+
+

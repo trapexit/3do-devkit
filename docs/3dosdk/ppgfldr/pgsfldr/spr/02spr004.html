@@ -1,0 +1,19 @@
+<Title>CloseDiskStream</Title>
+<A NAME="XREF24518"><H1>CloseDiskStream </A></H1>
+<A NAME="XREF32091"></A> Closes a disk stream.<P>
+<H3>Synopsis</H3>
+<CODE>void CloseDiskStream( Stream *theStream )</CODE><P>
+<H3>Description</H3>
+This function closes a disk stream that was opened with a call to <CODE>OpenDiskStream()</CODE>. It closes the stream's file, deallocates the buffer memory, and releases the stream structure. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>theStream
+<DD>A pointer to the stream structure for an open file. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filestreamfunctions.h, filesystem.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr018.html#XREF14517"><CODE>OpenDiskStream</A>(), <A HREF="./02spr020.html#XREF35267">ReadDiskStream</A>(), <A HREF="./02spr021.html#XREF35241">SeekDiskStream</A>() </CODE><P>
+</CODE>

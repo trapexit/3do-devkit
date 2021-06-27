@@ -1,0 +1,57 @@
+<Title>UpdateTextInCel</Title>
+<A NAME="XREF27084"><H1>UpdateTextInCel </A></H1>
+ Renders text into a text cel.<P>
+<H3>Synopsis</H3>
+<CODE>Err UpdateTextInCel (TextCel *tCel, Boolean replaceExisting, char 
+*fmtString,...)</CODE><P>
+<H3>Description</H3>
+Renders text into a cel. If the cel has a format buffer attached to it, 
+the fmtString and related arguments pass first through 
+<CODE>sprintf()</CODE> for formatting. <P>
+If replaceExisting is TRUE, the new text replaces any text already in the 
+cel. The cel data buffer is zeroed, the pen position within the cel data 
+buffer is set back to the top- and left-margin values, and the new text is 
+rendered. <P>
+ If replaceExisting is FALSE, the new text is added to the text already in
+    the cel, using the cel's current pen position.  This effectively adds
+    new characters to the end of the text already in the cel. <P>
+If you created the cel with a width or height of zero (an autosize cel), 
+its size is adjusted to fit the formatted text exactly, if the 
+replaceExisting flag is TRUE. If the replaceExisting flag is FALSE for an 
+autosize cel, the net effect is that no characters are rendered. This 
+happens because the cel was sized exactly right for the characters 
+rendered last time replaceExisting was TRUE. Attempting to add more 
+characters to the cel always results in those characters falling outside 
+the cel's boundaries where they are clipped. <P>
+The related <CODE>vUpdateTextInCel()</CODE> function works exactly the 
+same, but takes a va_list type instead of the ... parameters. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>replaceExisting
+<DD>Flag indicating whether the new text is added to or replaces text 
+already in the cel. 
+</DL>
+<DL>
+<DT>fmtString
+<DD>The string of characters to be rendered, optionally including 
+printf-style % formatting commands. 
+</DL>
+<DL>
+<DT>...                          
+<DD>Arguments for printf-style formatting. (Optional.) 
+</DL>
+<H3>Return Value</H3>
+Zero if all characters were rendered, positive if any characters were 
+clipped, negative if a bigger data buffer could not be allocated for an 
+autosize cel. If the cel is not an autosize type, it can't return a 
+negative value. <P>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<CODE><A 
+HREF="./01LDO208.html#XREF36221"><CODE>vUpdateTextInCel</A></CODE><P>
+</CODE>

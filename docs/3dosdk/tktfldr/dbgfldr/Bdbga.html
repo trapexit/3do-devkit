@@ -1,0 +1,22 @@
+<TITLE>modbin</TITLE>
+<H1><LINK NAME="XREF13925">modbin</LINK></H1><HR>
+<A NAME="XREF36434"><H1>modbin</A></H1>
+Sets workspace for use with Debugger<P>
+<H3>Synopsis</H3>
+<CODE>modbin &lt;program&gt; -stack &lt;stacksize&gt; -debug</CODE><P>
+<H3>Description</H3>
+To use the 3DO Debugger, you have to insert the <CODE>modbin</CODE> command immediately after the <CODE>armlink</CODE> command to set up the workspace. You won't be able to debug a task that hasn't been processed by <CODE>modbin</CODE>.<P>
+A good initial stacksize is 4000. The stack must be set to at least 3000 for running audio folio or audio applications.<P>
+When you launch an application from the shell, the priority set by <CODE>modbin</CODE>  is ignored. The priority of the task is set to 100, the default value of task priority in the shell. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>None
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>None
+</DL>
+<H3>Examples</H3>
+<CODE>modbin {AppName} -stack 4000 -debug </CODE><P>
+<H3>Caveats</H3>
+You can no longer use the <CODE>-workspace</CODE> linker option.<P>

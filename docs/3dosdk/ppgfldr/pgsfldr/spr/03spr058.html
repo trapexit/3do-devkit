@@ -1,0 +1,31 @@
+<Title>MulScalarF16</Title>
+<A NAME="XREF24414"><H1>MulScalarF16 </A></H1>
+<A NAME="XREF14256"></A> Multiplies a 16.16 scalar by an array of 16.16 values.<P>
+<H3>Synopsis</H3>
+<CODE>void MulScalarF16( frac16 *dest, frac16 *src, frac16 scalar,int32 count )</CODE><P>
+<H3>Description</H3>
+This function multiplies a 16.16 scalar by an array of 16.16 fractions. Every element of the array of frac16 values is multiplied by the same value, and the results are deposited in the destination array. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dest
+<DD>A pointer to the destination array to store the results. 
+</DL>
+<DL>
+<DT>src
+<DD>A pointer to the source array of 16.16 fractions to be multiplied. 
+</DL>
+<DL>
+<DT>scalar
+<DD>A 16.16 scalar. 
+</DL>
+<DL>
+<DT>count
+<DD>The number of elements in the vector. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr047.html#XREF27656"><CODE>MulManyF16</A>() </CODE><P>
+</CODE>

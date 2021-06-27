@@ -1,0 +1,52 @@
+Perftest : 3d.lib performance demonstrator
+
+This is used to demonstrate general performance levels of 3d.lib, and by 
+extension, the overall 3DO system in general.
+
+It will create a single world and a field of 25 cubes in a 5 by 5 array.
+Button A will cause any eyepoint or cube motion to freeze, Button B 
+will cycle you through several different options (the current options
+will be printed out to the terminal window), and Button C will move
+your eyepoint along the direction of sight letting you fly around the
+field. Use the control pad to aim you line of sight.
+
+This will show the relative performance of flat shaded CCBs vs. images,
+large images vs. small images, flat lighting vs. real lighting and
+motionless objects vs. rotating ones.
+
+Feel free to modify the source to more closely approximate your own
+situation.
+
+The following are some rough numbers generated without moving the eyepoint
+from the startup position, for the first set of options with image based 
+faces (click button B 3 times to get past the flat colored cubes).
+
+The times are for 100 frames.
+
+
+using sw256.cel, a 256x256 image of the astronaut guy.
+
+unpacked, uncoded 16, 1 corner engine, no superclipping :
+
+	50 seconds : 2.0 fps
+
+unpacked,  uncoded 16, both corner engines, no superclipping :
+
+	36 seconds : 2.7 fps
+
+   "              ", with superclipping :
+
+	34 seconds : 2.9 fps
+
+as above, but using packed data :
+
+	24 seconds : 4.1 fps
+
+as above, but now using coded 8 data :
+
+	18 seconds : 5.6 fps
+
+as above, but with coded 4
+
+	17 seconds : 5.9 fps
+

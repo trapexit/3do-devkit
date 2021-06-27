@@ -1,0 +1,70 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut12_ufo.patch,v 1.4 1994/10/26 21:56:15 peabody Exp $
+;*
+;*  Tutorial 12: Bizarro UFO sound effect
+;*
+;******************************************************************************
+
+    ; sound signal 1 (vibrato)
+LoadInstrument  sig1    samplermod.dsp
+LoadSample      samp1   $samples/PitchedL/Clarinet/ClarinetHard.C4LM44k.aiff
+AttachSample    att1    sig1 samp1
+Tweak sig1 Amplitude 16000
+Tweak sig1 Frequency 36671
+Tweak sig1 ModDepth 15711
+
+LoadInstrument  lfo1    triangle_lfo.dsp
+Tweak lfo1 Frequency 4096
+
+Connect lfo1 Output  sig1 ModInput
+
+    ; filter for signal 1
+LoadInstrument  filter1 svfilter.dsp
+Tweak filter1 resonance 1144
+
+LoadInstrument  lfof1   randomhold.dsp
+LoadInstrument  rampf1  envelope.dsp
+LoadInstrument  modf1   timesplus.dsp
+
+Tweak lfof1 Frequency 1
+Tweak rampf1 env.incr 1
+Tweak modf1 InputB 16383
+Tweak modf1 InputC 16383
+
+Connect lfof1 Output    rampf1 env.request
+Connect rampf1 Output   modf1 InputA
+Connect modf1 Output    filter1 Frequency
+
+    ; sound signal 2 (pulsating drone)
+LoadInstrument  sig2    sampler.dsp
+LoadSample      samp2   $samples/PitchedL/Oboe/Oboe.A4LM44K.aiff
+AttachSample    att2    sig2 samp2
+Tweak sig2 Frequency 3000
+
+LoadInstrument  lfo2    triangle_lfo.dsp
+LoadInstrument  mod2    timesplus.dsp
+
+Tweak lfo2 Frequency 80
+Tweak mod2 InputB 11775
+Tweak mod2 InputC 15750
+
+Connect lfo2 Output  mod2 InputA
+Connect mod2 Output  sig2 Amplitude
+
+    ; output
+LoadInstrument  out mixer2x2.dsp
+
+Tweak out LeftGain0  11000
+Tweak out RightGain0  7000
+Tweak out LeftGain1  10000
+Tweak out RightGain1 20000
+
+    ; connections
+Connect sig1 Output  filter1 Input
+Connect filter1 BandPass  out Input0
+Connect sig2 Output  out Input1

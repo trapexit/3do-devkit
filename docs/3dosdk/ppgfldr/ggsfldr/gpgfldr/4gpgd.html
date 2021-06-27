@@ -1,0 +1,414 @@
+<TITLE>Creating a Custom VDL</TITLE>
+<H1>Creating a Custom VDL</H1><HR>
+To use a custom VDL, a task must first create a VDL in its own memory. It then submits the VDL to the system, which checks the VDL's integrity and-if it passes-creates a VDL item in system memory. The task can then specify a screen to use that VDL item to control screen display. If the task wants to modify the VDL, it can use a function that changes the VDL item. When the task is finished using the VDL, it can delete the VDL item.<P>
+The key to working with custom VDLs is knowing how to write a VDL. To start, you must know how the VDL processor reads a VDL.<P>
+<H2>VDL Processor Operation</H2>
+A VDL is divided into discrete parts called <I>VDL entries. </I>The VDL processor can read one VDL entry per display line, which it does during the horizontal blank between lines. When the VDL processor reads a VDL entry, it extracts display information-pointers to bitmap buffers, new colors for CLUT registers, interpolation on or off, and so on. The player also extracts information about where to find the next VDL entry and how many lines will pass before the next VDL entry is read.<P>
+When the 3DO hardware is finished reading the VDL entry, the display generator puts up a new frame line using the entry's display parameters. If a VDL entry is specified for the next line, the VDL processor reads that entry during the next horizontal blank, and uses the entry's settings to control the display of the following line. If no VDL entry is specified for a line, the VDL processor keeps the same display settings in effect with one exception: pointers to bitmap buffers.<P>
+As you can imagine, if each display line used the same part of the bitmap buffer for its pixels, each line would be identical and you'd end up with a screen full of vertical stripes. To fully display the contents of the bitmap buffer, the pointer to the bitmap buffer must advance through the buffer from line to line. To make this possible, the VDL processor uses two registers: the <I>current bitmap-buffer register</I> and the <I>previous bitmap-buffer register.</I><P>
+As the names imply, one register-the current bitmap-buffer register-stores a pointer to the bitmap buffer used to display the current line. (The current line is the one immediately following a horizontal blank.) The other register-the previous bitmap-buffer register-stores a pointer to the bitmap buffer used to display the previous line. Why does the VDL processor need a pointer to the previous bitmap buffer? Because vertical interpolation between pixels in adjacent lines requires a look at the pixels in the previous line.<P>
+As soon as the display generator finishes displaying a line of the frame, the VDL processor automatically increments the contents of the current bitmap-buffer register by a fixed amount (modulo addition). The modulo value, which is typically 320 for a standard 320-by-240 video display, causes the new current bitmap-buffer pointer to skip over 320 pixels-the contents of a single line. When the next line is displayed, it receives a fresh (and consecutive) row of pixels from the bitmap buffer.<P>
+Just before the current bitmap-buffer register is incremented, the previous bitmap buffer usually receives the value from the current bitmap-buffer register, which is typically 320 pixels greater than its current value. By rotating the current bitmap-buffer pointer to the previous bitmap-buffer pointer-and then incrementing the current bitmap-buffer pointer-the VDL processor marches its way steadily through a bitmap buffer, displaying its contents line by line, and correctly interpolating between vertically adjacent pixels.<P>
+As you'll read in the sections that immediately follow this one, the bitmap-buffer registers' contents and operation can be modified in many ways by a VDL entry. What's important to know about the bitmap-buffer registers is that they're <I>always</I> ticked forward at the end of each line before the VDL processor reads a VDL entry for the next line. The order is<P>
+<UL>
+<LI>Read VDL entry
+<LI>Display line using VDL entry settings
+<LI>Tick bitmap-buffer registers forward
+<LI>Read VDL entry
+<LI>Display line using VDL entry settings
+<LI>Tick bitmap-buffer register forward
+</UL>
+and so on. If a line has no VDL entry, or the entry doesn't change the registers' contents or operation, then the registers' tick forward ensures that the display contains consecutive rows of bitmap-buffer pixels.<P>
+<H2>VDL Structures</H2>
+When you create a custom VDL, you must adhere to its structure as well as to the structures of its component parts.<P>
+<H3>The VDL</H3>
+A VDL is a collection of VDL entries. Each entry contains commands and information that can be read in the horizontal blank between display lines. A VDL must have at least one VDL entry, but need not have more than one. A simple VDL (used for most standard screens) has just a single VDL entry that sets display parameters for all lines of the screen.<P>
+A VDL can have as many VDL entries as there are display lines, but should not have more entries than display lines. If there are <I>fewer</I> VDL entries than there are display lines, some of those entries must persist for more than one display line. The entries themselves can define the length (in lines) of their persistence. If the persistence of the last VDL entry isn't set to last to the end of the display, the VDL processor will increase its persistence to reach to the end of the display.<P>
+<H3>VDL Entries</H3>
+A VDL entry is a string of 32-bit words. The string must be no greater than 38 words in length. The string contains<P>
+<UL>
+<LI>4 header words (required for every VDL entry)
+<LI>1 to 34 command words 
+</UL>
+The header words control the VDL processor's operation and DMA access to the bitmap buffer. The following list shows the words in the order in which they must occur:<P>
+<UL>
+<LI>The <B>CLUT-DMA control word</B> controls the display generator's access to VRAM (where it finds current- and previous-line bitmap buffers, how many words it reads per display line, how many lines it displays per screen, and other parameters). It also determines the size and persistence of this VDL entry and how the VDL processor will find the next VDL entry.
+<p>
+<LI>The <B>current bitmap-buffer address word</B> contains the address of the VRAM containing pixel data for this line. The address may or may not be used, depending on settings in the CLUT-DMA-control word.
+<p>
+<LI>The <B>previous bitmap-buffer address word</B> contains the address of the VRAM containing pixel data for the previous display line. The address may or may not be used, depending on settings in the CLUT-DMA-control word.
+<p>
+<LI>The <B>next VDL-entry address word</B> contains a pointer to the next VDL entry to be read by the VDL processor. This pointer can be an absolute or a relative address depending on settings in the CLUT-DMA-control word.
+</UL>
+The length of a VDL entry is limited by the time available to read its words during a horizontal blank. The upper limit of 34 command words allows a VDL entry to change the contents of all 33 CLUT registers, with one command word left over to set other display parameters for the line.<P>
+The command words, which are optional for a VDL entry, set CLUT colors and control display generator operation. They need not occur in any particular order, but you should note that if two command words contain contradictory commands (two different colors for the same CLUT register, for example) the later word wins out.<P>
+The types of command words are<P>
+<UL>
+<LI>The <B>color-value word</B> sets the contents of a single CLUT color register (0 to 31). It can simultaneously set the red, green, and blue components of a register, or it can set any one of those color components without touching the others-for example, setting red without setting green and blue values.
+<p>
+<LI>The <B>background-value word</B> sets the contents of CLUT register number 32, the background color register.
+<p>
+<LI>The <B>display-control word</B> offers the fixed CLUT set, controls transparency, turns interpolation on or off, sets cornerweight HV values, and controls other display generator parameters.
+<p>
+<LI>The <B>NULLOP word</B> does absolutely nothing. Use it to pad out VDL entries if necessary.
+</UL>
+<H3>The CLUT-DMA Control Word</H3>
+The CLUT DMA control word must be the first word in each VDL entry. It contains the flags shown in Table 1<P>
+<PRE>
+<B>Table 1: </B><I> Bits of the CLUT-DMA.</I>
+------------------------------------------------------
+Bits    |Operation Controlled                         
+------------------------------------------------------
+3126    |Not available to a user task. Set to 0.      
+------------------------------------------------------
+2523    |Sets the modulo value (in words) added to the
+        |VDL processor's bitmap-buffer registers.     
+        |000=320; 001=384; 010=512; 011=640; 100=1024;
+        |101, 110, and 111 are unused.                
+------------------------------------------------------
+22      |Not available to a user task, set to 0.      
+------------------------------------------------------
+21      |Enables video DMA.  1=enable, which shows the
+        |bitmap-buffer image on the display;          
+        |0=disable, which shows only vertical-blank   
+        |color on the display.                        
+------------------------------------------------------
+20      |Not available to a user task. Set to 0.      
+------------------------------------------------------
+19      |Sets vertical mode. 1=480 lines per frame;   
+        |0=240 lines per frame.                       
+------------------------------------------------------
+18      |Indicates the type of the address stored in  
+        |the next VDL-entry-address word. 1=absolute; 
+        |0=relative.                                  
+------------------------------------------------------
+17      |Sets how the previous bitmap-buffer address  
+        |register is ticked at line's end. 1=add      
+        |modulo amount (set in bits 25-23); 0=accept  
+        |current bitmap-buffer address-register value.
+------------------------------------------------------
+16      |Sets current bitmap-buffer address register  
+        |override. 1=load address from current        
+        |bitmap-buffer address word; 0=use address    
+        |generated by register tick (modulo addition  
+        |to last register contents).                  
+------------------------------------------------------
+15      |Sets previous bitmap-buffer address-register 
+        |override. 1=load address from previous       
+        |bitmap-buffer address word; 0=use address    
+        |generated by register tick (rotated current  
+        |bitmap-buffer value or modulo addition to    
+        |last register contentsset by bit 17).        
+------------------------------------------------------
+149     |Gives the number of control words in this VDL
+        |entry (total number of VDL entry words minus 
+        |the four used for the header). Should be from
+        |1 to 34.                                     
+------------------------------------------------------
+8-0     |Gives the number of display lines this VDL   
+        |entry persists. This is the number of lines  
+        |the VDL processor waits until reading the    
+        |next entry in the VDL. The current line      
+        |counts as one. The minimum value is 1 except 
+        |for the last VDL entry, which should be 0. (0
+        |specifies persistence until the bottom of the
+        |screen.)                                     
+------------------------------------------------------
+</PRE>
+<P>
+Note that any bits listed as "not available" to a user task must be set to 0 or the system will reject the VDL.<P>
+What follows is an explanation of the parameters set by the CLUT-DMA control word:<P>
+<UL>
+<LI>The modulo amount (bits 25-23) sets the amount used to increment the current bitmap-buffer address register each time it's ticked (and optionally the previous bitmap-buffer address register each time it's ticked). This value controls the number of pixels displayed per line. It's usually set to 320, which specifies 320 pixels per display line. PAL displays may use 384 pixels per line. A modulo amount that creates more pixels per line than the display can physically contain (640 in a standard 320-pixel-wide video display, for example) will have the effect of skipping over excess pixels. (The rightmost 320 pixels in a row won't appear on a 320-pixel-wide display.)
+<p>
+<LI>Enabling video DMA (bit 21) determines whether the display generator will read the bitmap buffer or not. If video DMA is enabled, the bitmap-buffer contents appear on the screen. If video DMA is disabled, the vertical blank color (which is not the same as black) will appear for all pixels displayed.
+<p>
+<LI>Vertical mode (bit 19) determines whether a frame contains 240 or 480 lines of pixels. If 480 is set, the display generator reads odd bitmap-buffer rows to fill one field of the frame, and even bitmap-buffer rows to fill the other field. The result is a high-resolution shimmery image. If 240 (the normal value) is set, the display generator reads consecutive bitmap-buffer rows for each frame so the same row appears in both fields.
+<p>
+<LI>Type of VDL-entry address (bit 18) tells the VDL processor how to interpret the address stored in the next VDL-entry-address word. Most tasks use absolute addresses, but some use relative addresses, especially if they generate VDLs on the fly.
+<p>
+<LI>Previous bitmap-buffer address-register tick method (bit 17) tells the VDL how to tick the previous bitmap-buffer address-register at the end of each line. The usual method is to accept the just-used address in the current bitmap-buffer address register. This ensures that the last line displayed is used for interpolation with the current line. In some cases, however, a task can set up a separate bitmap buffer strictly for interpolation with a bitmap buffer used for display. The interpolation bitmap buffer is never seen, but shades colors in the display bitmap buffer to greatly expand the color range. In such a case, the pointer of the interpolation bitmap buffer goes to a completely different VRAM location than the pointer of the display bitmap buffer. The separation should be maintained by setting the previous bitmap-buffer address register to be ticked with modulo addition.
+<p>
+<LI>Current bitmap-buffer address register override (bit 16) tells the VDL processor to override the ticked current bitmap-buffer address register by loading in the value stored in the current bitmap-buffer address word. This can set a completely new bitmap buffer for the lines affected by the VDL entry.
+<p>
+<LI>Previous bitmap-buffer address register override (bit 15) tells the VDL processor to override the ticked previous bitmap-buffer address register by loading in the value stored in the previous bitmap-buffer address word, which can set a completely new bitmap buffer for interline interpolation.
+<p>
+<LI>Number of control words (bits 14-9) gives the number of control words following the header in the VDL entry. The VDL processor needs this value to know how far to read.
+<p>
+<LI>Length of persistence (bits 8-0) tells the VDL processor how many lines to wait until it can read a new VDL entry. This sets the number of lines affected by this VDL entry. Note that the line associated with this VDL entry (the current line) counts as one, and that the minimum persistence for a normal VDL entry is 1. If you set persistence to zero (which you should do in the last entry of the VDL), you set persistence to the end of the screen. Note that if total line persistence doesn't match the number of lines in the screen (too few or too many lines of persistence), the VDL will be rejected when submitted to the system. Therefore it's always wise to set 0 for persistence in the last VDL entry.
+</UL>
+<H3>Current Bitmap-Buffer Address Word</H3>
+This word is a 32-bit value that gives the absolute address of a bitmap buffer to use for this VDL entry's current line. This value is only read if bit 16 of the CLUT DMA control word is set to 1, in which case it overrides the ticked value already written into the register.<P>
+<H3>Previous Bitmap-Buffer Address Word</H3>
+This word is a 32-bit value that gives the absolute address of a bitmap buffer to use for the VDL entry's previous. This value is only read if bit 15 of the CLUT DMA control word is set to 1, in which case it overrides the ticked value already written into the register.<P>
+<H3>Next VDL-Entry-Address Word</H3>
+This word is a 32-bit value that gives the address of the next VDL entry. Bit 18 of the CLUT-DMA control word determines whether this is a relative or an absolute address. This value is ignored in the last entry of a VDL.<P>
+<H3>Color-Value Word</H3>
+A color-value word contains the number of the CLUT register it changes; a flag determining whether it affects the red, green, and blue values together in the register, or any one of those values individually; and 8-bit red, green, and blue values to write into the CLUT register. Table 2 shows how its bits are set up.<P>
+<PRE>
+<B>Table 2: </B><I> Bits of a color-value word.</I>
+----------------------------------------------------------
+Bits   |Significance                                      
+----------------------------------------------------------
+31     |Set to 0 to specify that this is a color-value    
+       |word.                                             
+----------------------------------------------------------
+3029   |Determines what parts of a register are written   
+       |to. 00=write to all three registers (red, green,  
+       |and blue); 01=write to blue only; 10=write to     
+       |green only; 11=write to red only.                 
+----------------------------------------------------------
+2824   |Contains the number (031) of the color register to
+       |write to.                                         
+----------------------------------------------------------
+2316   |Contains 8 bits of red color value with bit 23 as 
+       |the most-significant bit.                         
+----------------------------------------------------------
+158    |Contains 8 bits of green color value with bit 15  
+       |as the most-significant bit.                      
+----------------------------------------------------------
+70     |Contains 8 bits of blue color value with bit 7 as 
+       |the most-significant bit.                         
+----------------------------------------------------------
+</PRE>
+<P>
+If the color-value word is set up to write to only the red, green, or blue part of a register, only the red, green, or blue value contained in the word is used.<P>
+<H3>Background-Value Word</H3>
+A VDL entry uses a special command word-the background-value word-to change register 32 (the background register) of the custom CLUT set. The color in this register fills in all pixels detected as background pixels. Table 3 shows how the background-value word's bits are set up.<P>
+<PRE>
+<B>Table 3: </B><I> Bits of a background-value word.</I>
+--------------------------------------------------------
+Bits   |Significance                                    
+--------------------------------------------------------
+3124   |Set to 11100000 to specify that this is a       
+       |background-value word.                          
+--------------------------------------------------------
+2316   |Contains eight bits of red color value with bit 
+       |23 as the most-significant bit.                 
+--------------------------------------------------------
+158    |Contains eight bits of green color value with   
+       |bit 15 as the most-significant bit.             
+--------------------------------------------------------
+70     |Contains eight bits of blue color value with bit
+       |7 as the most-significant bit.                  
+--------------------------------------------------------
+</PRE>
+<P>
+The background color register contains a full 24-bit RGB value, so all of bits 23-0 are written to the register when the background-value word is executed by the VDL processor.<P>
+<H3>Display-Control Word</H3>
+A display-control word contains flags that set the display generator's operating parameters. Table 4 shows the flags and the operations they control.<P>
+<PRE>
+<B>Table 4: </B><I> Bits of a display-control word.</I>
+--------------------------------------------------------
+Bits   |Significance                                    
+--------------------------------------------------------
+3126   |Set to 110000 to specify that this is a         
+       |display-control word.                           
+--------------------------------------------------------
+25     |Makes the fixed CLUT set available.             
+       |1=bitmap-buffer pixels with bit 15 set to 1 pass
+       |through the fixed CLUT set, those with bit 15   
+       |set to 0 pass through the custom CLUT set; 0=all
+       |bitmap-buffer pixels pass through the custom    
+       |CLUT set (the fixed CLUT set is not available). 
+--------------------------------------------------------
+24     |Not available to a user task. Set to 0.         
+--------------------------------------------------------
+23     |Forces pixel transparency. 1=all pixels are     
+       |transparent regardless of color value;          
+       |0=transparency limited to background pixels (if 
+       |enabled by bit 22). This bit is only meaningful 
+       |for SlipStream.                                 
+--------------------------------------------------------
+22     |Sets transparency for background pixels. 1=all  
+       |pixels with 000 RGB value (background pixels)   
+       |are transparent; 0=all background pixels are not
+       |transparent, and are filled with the background 
+       |register color. This bit is only meaningful for 
+       |SlipStream.                                     
+--------------------------------------------------------
+21     |For pixels going through the fixed CLUT setswaps
+       |the meaning of V and H cornerweight bits. 1=H   
+       |value is MSB, V value is LSB; 0=H value is LSB, 
+       |V value is MSB.                                 
+--------------------------------------------------------
+2019   |For pixels going through the fixed CLUT setsets 
+       |each pixel's V cornerweight value. 00=set V to  
+       |0; 01=set V to 1; 10=use V value stored in      
+       |pixel; 11=don't change this setting from the one
+       |used by the last VDL entry.                     
+--------------------------------------------------------
+1817   |For pixels going through the fixed CLUT setsets 
+       |each pixel's H cornerweight value. 00=set H to  
+       |0; 01=set H to 1; 10=use H value stored in      
+       |pixel; 11=don't change this setting from the one
+       |used by the last VDL entry.                     
+--------------------------------------------------------
+1615   |For pixels going through the fixed CLUT setsets 
+       |the value of each pixel's least-significant blue
+       |bit. 00=set to 1; 01=use bit 5 of the           
+       |bitmap-buffer pixel value (the least-significant
+       |green bit); 10=use bit 0 of the bitmap-buffer   
+       |pixel value; 11=don't change this setting from  
+       |the one used by the last VDL entry.             
+--------------------------------------------------------
+14     |For pixels going through the fixed CLUT         
+       |setenables vertical interpolation. 1=vertical   
+       |interpolation on; 0=vertical interpolation off. 
+--------------------------------------------------------
+13     |For pixels going through the fixed CLUT         
+       |setenables horizontal interpolation.            
+       |1=horizontal interpolation on; 0=horizontal     
+       |interpolation off.                              
+--------------------------------------------------------
+12     |For pixels going through the fixed CLUT         
+       |setenables random-number generation to fill in  
+       |the three least-significant bits for the 8-bit  
+       |red, green, and blue values coming out of the   
+       |CLUT set. 1=random number generation on;        
+       |0=random number generation off, LSBs filled by  
+       |technique determined in bit 11.                 
+--------------------------------------------------------
+11     |For pixels going through the fixed CLUT         
+       |setdetermines how three least-significant bits  
+       |for 8-bit red, green, and blue values are filled
+       |in. 1=copied from the three most-significant    
+       |bits of the color value; 0=set to 000.          
+--------------------------------------------------------
+10     |For pixels going through the custom CLUT        
+       |setswaps the meaning of V and H cornerweight    
+       |bits. 1=H value is MSB, V value is LSB; 0=H     
+       |value is LSB, V value is MSB.                   
+--------------------------------------------------------
+98     |For pixels going through the custom CLUT setsets
+       |each pixel's V cornerweight value. 00=set V to  
+       |0; 01=set V to 1; 10=use V value stored in      
+       |pixel; 11=don't change this setting from the one
+       |used by the last VDL entry.                     
+--------------------------------------------------------
+76     |For pixels going through the custom CLUT setsets
+       |each pixel's H cornerweight value. 00=set H to  
+       |0; 01=set H to 1; 10=use H value stored in      
+       |pixel; 11=don't change this setting from the one
+       |used by the last VDL entry.                     
+--------------------------------------------------------
+54     |For pixels going through the custom CLUT setsets
+       |the value of each pixel's least-significant blue
+       |bit. 00=set to 1; 01=use bit 5 of the           
+       |bitmap-buffer pixel value (the least-significant
+       |green bit); 10=use bit 0 of the bitmap-buffer   
+       |pixel value; 11=don't change this setting from  
+       |the one used by the last VDL entry.             
+--------------------------------------------------------
+3      |For pixels going through the custom CLUT        
+       |setenables vertical interpolation. 1=vertical   
+       |interpolation on; 0=vertical interpolation off. 
+--------------------------------------------------------
+2      |For pixels going through the custom CLUT        
+       |setenables horizontal interpolation.            
+       |1=horizontal interpolation on; 0=horizontal     
+       |interpolation off.                              
+--------------------------------------------------------
+1      |Not available to a user task. Set to zero.      
+--------------------------------------------------------
+</PRE>
+<P>
+Note that any bits listed as not available to a user task must be set to 0 or the system will reject the VDL.<P>
+What follows is an explanation of the display generator parameters set by the display-control word:<P>
+<UL>
+<LI>Specifying a display-control word (bits 31-26) is necessary to distinguish this command word from other command words such as color-value words, background-value words, and NULLOP words.
+<p>
+<LI>Turning on the fixed CLUT set (bit 25) allows bitmap-buffer pixels to pass through either the fixed CLUT or the custom CLUT depending on the value of their most-significant bit. If the fixed CLUT set is turned off, all pixels pass through the custom CLUT set. There are also two sets of flags in this word that control the operations of both the fixed and custom CLUT sets. If the fixed CLUT set is turned off, all flags that control its operation are irrelevant.
+<p>
+<LI>Forcing pixel transparency (bit 23) makes all lines affected by this VDL entry transparent, so that covered screens or live video can show through.
+<p>
+<LI>Setting background pixel transparency (bit 22) allows covered screens or live video to show through background pixels. This setting is overridden if the pixel transparency is forced by bit 23.
+<p>
+<LI>Swapping V- and H-value bit locations (bit 21 and bit 10) swaps the way V and H values are extracted from bitmap-buffer pixels. Note that this setting is duplicated-the first setting (bit 21) is for pixels passing through the fixed CLUT set; the second setting (bit 10) is for pixels passing through the custom CLUT set.
+<p>
+<LI>Setting each pixel's V-cornerweight value (bits 20-19 and bits 9-8) can force each pixel's V value to a 0 or 1, or it can read the V value from the pixel's own V and H bits. If this flag is set to 11, it tells the VDL processor to continue setting V values as it did for the previous line. This parameter, like the last one, is duplicated for the fixed and custom CLUT sets.
+<p>
+<LI>Setting each pixel's H-cornerweight value (bits 18-17 and bits 7-6) does the same thing as the previous parameter, but for the H value instead of the V value. This parameter is duplicated for the fixed and custom CLUT sets.
+<p>
+<LI>Setting the least-significant blue bit (bits 16-15 and bits 5-4) fills in a blue bit that's often appropriated by an H or a V value. It can set the least-significant blue bit for all incoming pixels to 0; it can copy the least-significant green bit for the least significant blue bit, or it can simply read bit 0, which would be the least significant blue bit if it isn't appropriated by a cornerweight value. This parameter is duplicated for the fixed and custom CLUT sets.
+<p>
+<LI>Turning vertical interpolation on or off (bit 14 and bit 3) controls interpolation of pixels in one row with pixels in adjacent rows. When vertical interpolation is turned off, you see "crispy rows"-that is, rows of pixels with no smoothly ramping subpixels between them. This parameter is duplicated for the fixed and custom CLUT sets.
+<p>
+<LI>Turning horizontal interpolation on or off (bit 13 and bit 2) controls interpolation of pixels in one column with pixels in adjacent columns. When horizontal interpolation is turned off, you see "crispy columns." This parameter-like the last-is duplicated for the fixed and custom CLUT sets.
+<p>
+<LI>Turning on random-number generation to fill in color values (bit 12) controls the way 24-bit colors that come out of the fixed CLUT set are generated. The CLUT set usually takes the 5-bit red, green, and blue values coming from a bitmap-buffer pixel and adds three fixed least-significant bits to them. The problem with this is that if there's a gradation of closely related colors, you can often see zoning boundaries on the screen. When random-number generation is turned on, the three least-significant bits of each 8-bit red, green, and blue value are filled in with random 1and 0 bits. This dithers closely related colors so you don't see zoning boundaries between them.
+<p>
+<LI>Determining how least-significant color bits are filled in (bit 11) controls how 24-bit colors that come out of the fixed CLUT set are generated when random-number generation is turned off. The normal setting fills in the three least-significant bits with zeros. The second setting copies the red, green, or blue value's three most-significant bits into the same value's three least-significant bits. The second setting has a higher brightness than the first.
+<p>
+<LI>Turning off vertical interpolation for a single line (bit 0) is useful for the first line of an image from a new bitmap buffer. It keeps the line from being smoothly merged into the last line of the image in the previous bitmap buffer so there's a sharp border between the two images.
+</UL>
+<H3>NULLOP Word</H3>
+Occasionally, it may be useful to pad out VDL entries with words that don't cause any VDL processor actions. For example, the <CODE>SubmitVDL()</CODE> function described later recommends that VDL entries have a word length that's a multiple of four. The NULLOP word is the perfect way to fill in, it does absolutely nothing. Table 5 shows the bits that don't do the work.<P>
+<PRE>
+<B>Table 5: </B><I> Bits of the NULLOP word.</I>
+--------------------------------------------------------
+Bits   |Significance                                    
+--------------------------------------------------------
+3124   |Set to 11100001 to specify that this is a NULLOP
+       |word.                                           
+--------------------------------------------------------
+230    |Have no significance whatsoever. Set to zero.   
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Writing a VDL</H2>
+To write a custom VDL, you must think of the screen with which it is associated-does it have uniform properties throughout, or will it be divided into bands of differing properties? You must then decide the properties for each band of the screen, and write a VDL entry to match.<P>
+<H3>Writing a VDL Entry</H3>
+One of the most important properties to set in a VDL entry is the relationship of the bitmap buffer to the display. Are there 320, 384, or more pixels per display line? Does the display for this band use 240-line resolution or 480-line resolution, which requires twice as many rows of bitmap-buffer pixels for the same area? Will vertical interpolation occur between subsequent rows of the same bitmap buffer, or is there a separate interpolation buffer to fine-tune the colors of the first bitmap buffer? Does this band get its image from a completely new bitmap buffer, or does it continue displaying pixels from the bitmap buffer used for the previous line? Or does the band not present an image at all and completely ignore the bitmap buffer to put up vertical blank color?<P>
+You set all of these bitmap-buffer properties in the CLU- DMA control word, the first word of the VDL entry header. You provide supporting values, if necessary, in the current bitmap-buffer address and previous bitmap-buffer address words.<P>
+The combination of properties you set determines how the display generator reads VRAM for an image. You must also set up the data in the specified bitmap buffer (or bitmap buffers) to match the bitmap-buffer properties or you'll get garbage on the screen. For example, if you store an image in VRAM that is 320 pixels wide and then set row width in the CLUT-DMA control word to 384 pixels, you'll see a curiously skewed image on the screen.<P>
+Once you've tied the band on the screen to a bitmap buffer in VRAM, you must consider how the display generator handles the pixels in the bitmap buffer. Should it make them all transparent to show underlying images, make just background images transparent, or offer no transparency at all? Should it allow pixels to use the fixed CLUT set so they have a guaranteed color for each pixel, or should it turn the fixed CLUT set off? Should the pixels be interpolated for smooth integration one to the next, or should interpolation be turned off for crispy pixels? Should only the first line escape interpolation to establish a crisp border with the preceding band? How does each pixel determine its cornerweight values? How are missing low-order color bits filled in?<P>
+You set these display generator operation properties in a single display-control word. If you use more than one, only the last display-control word in the VDL entry is used for the band. If you don't want to change the display generator operation used in the last band, you can omit a display-control word completely.<P>
+You may also want to consider the custom color palette that interprets the bitmap-buffer pixel values. If you want to change the colors in the custom CLUT registers, create an appropriate color-value word for each register change. If you want to change the background color, create an appropriate background-value word. If you create more than one color-value word for a single register, or more than one background-value word, only the last duplicate word in the VDL entry is used-so don't waste command words! You can't have more than 34 command words in a VDL entry. That's just enough to change all 33 CLUT registers and set display generator properties for the band.<P>
+<H3>Weaving the VDL Entries Into a Complete VDL</H3>
+When you're finished setting up VDL entries, you must finally set the properties of the VDL entries themselves so they work together as a complete VDL:<P>
+<UL>
+<LI>Set line persistence for each VDL so the total line persistence equals the number of lines in the screen. (Remember that setting the persistence of the last VDL entry to 0 specifies persistence to the bottom of the screen.) If total persistence doesn't equal available screen lines, the VDL is rejected.
+<p>
+<LI>Specify the number of command words included in each VDL entry.
+<p>
+<LI>Link the VDL entries in the order in which they're read in the VDL: put the address of a following entry in the next VDL-entry address word and set a control bit to tell whether the address is relative or absolute.
+</UL>
+These properties are set in the CLUT-DMA control word and the next VDL-entry address word.<P>
+<H3>Storing VDL Entries</H3>
+When your task sets up a custom VDL, it stores the VDL words as a one-dimensional array in its own memory. All words within a VDL entry must be in consecutive order. The VDL entries themselves need <I>not</I> be in consecutive order as long as each entry properly points to the next. Note that it doesn't matter where the last entry in the VDL points.<P>
+When your task's custom VDL is submitted to the 3DO system, the VDL is checked for integrity and then written to system RAM. Because of alignment constraints in the hardware, VDL entries may not fit correctly in system RAM if their length in words is not a multiple of four.<P>
+Your task should pad each VDL entry with NULLOP words at the end of the VDL entry to create a length that's a multiple of four. The CLUT-DMA control-word setting that sets the number of command words in the VDL entry need not include NULLOP pad words. For example, consider a VDL entry with a full complement of 34 command words-it's 38 words long. The task writing it to memory adds two NULLOP words at the end of the entry to bring the entry to 40 words in length. The entry still claims it has 34 command words, so it's a legal entry and not overlong. The NULLOP words are simply not read by the VDL processor when the VDL is used.<P>
+<H2>Submitting a Screen VDL</H2>
+Once a task has created a custom VDL, it submits it to the system with this function call:<P>
+<CODE><DL>
+<DD><CODE>Item SubmitVDL;( VDLEntry *VDLDataPtr, int32 length, int32 type</CODE> )</CODE><BR>
+</DL>
+The first argument, <CODE>VDLDataPtr</CODE>, is a pointer to a custom VDL data structure. The second argument, <CODE>length</CODE>, is the length of the VDL <I>in words</I>. And the third argument, <CODE>type</CODE>, gives the type of VDL submitted. <P>
+When executed, <CODE>SubmitVDL()</CODE> reads the submitted VDL, proofs it for inconsistent or system-crashing settings, and, if it finds none, copies the VDL, into system RAM, as a screen VDL. The call can alter some VDL settings before the VDL becomes an item. For example, if the total persistence for the VDL entries doesn't cover the entire screen, the persistence of the last VDL entry is set to continue to the bottom of the screen. Control-word bits that aren't available to user tasks are also set when the VDL becomes an item.<P>
+<CODE>SubmitVDL()</CODE> returns an item number for the screen VDL it creates. You can use that item number with a <CODE>CreateScreenGroup()</CODE> tag argument to associate the VDL with a newly created screen in a screen group. You can also use the VDL item number to specify the VDL when you modify it or its connections. If unsuccessful, this call returns a negative value (an error code). A task should check for <CODE>GRAFERR_PROOF_ERR</CODE> in particular, which indicates that the submitted VDL had illegal control codes or bad data.<P>
+<H2>Modifying a VDL</H2>
+To modify the contents of an existing VDL item, use this call:<P>
+<CODE><DL>
+<DD><CODE>Err ModifyVDL( Item vdlItem, TagArg* vdlTags )</CODE><BR>
+</DL>
+</CODE>The first argument, <CODE>vdlItem</CODE>, specifies the screen VDL to modify. The second argument, <CODE>vdlTags</CODE>, points to a tag argument array that describes the changes to be made to the VDL.<P>
+The tag arguments include:<P>
+<UL>
+<LI><CODE>CREATEVDL_TAG_SLIPSTREAM</CODE> sets transparency for background pixels (bit 22 of the display-control word). 1 turns background transparency on; 0 turns it off. When transparency is on, SlipStream images can be displayed in transparent pixels.
+<p>
+<LI><CODE>CREATEVDL_TAG_HAVG</CODE> turns horizontal interpolation on or off (bit 13 and bit 2 of the display-control word). 1 turns horizontal interpolation on; 0 turns it off.
+<p>
+<LI><CODE>CREATEVDL_TAG_VAVG</CODE> turns vertical interpolation on or off (bit 14 and bit 3 of the display-control word). 1 turns vertical interpolation on; 0 turns it off.
+</UL>
+When <CODE>ModifyVDL()</CODE> executes, it accepts the tag arguments and writes their arguments to the proper display-control bits of <I>each VDL entry</I> in the VDL. Its effects are VDL-wide; tag argument can't specify a single VDL entry within a VDL (unless, of course, the VDL has only one entry). If successful, the call returns a 0. If unsuccessful, it returns a negative value (an error code).<P>
+A task can't modify a screen VDL by modifying the VDL data structure it used to create that VDL. Once created the VDL exists in system RAM and must be modified using <CODE>ModifyVDL()</CODE>.<P>
+<H2>Setting a New VDL for an Existing Screen</H2>
+If you've already created a screen in a screen group and want to assign a different screen VDL to that screen, use this call:<P>
+<DL>
+<DD><CODE>itemSetVDL( Item screenItem, Item vdlItem )</CODE><BR>
+</DL>
+The first argument, <CODE>screenItem</CODE>, specifies the item number of the screen to which you want to assign a new screen VDL. The second argument, <CODE>vdlItem</CODE>, specifies the screen VDL that you want to assign. When executed, the call assigns the VDL to the screen. When the screen is displayed, its display operation is controlled by its associated VDL. If successful, the call returns a 0. If unsuccessful, it returns the item number of the VDL that was replaced.<P>
+<H2>Deleting a VDL</H2>
+To delete a screen VDL and free its resources, use the call <CODE>DeleteItem()</CODE> and supply it with the item number of the screen VDL you want to delete. If you delete a VDL that is in use, the screen depending on that VDL goes black.<P>
+<P>

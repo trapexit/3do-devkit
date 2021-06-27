@@ -1,0 +1,40 @@
+<Title>CreateBackdropCel</Title>
+<A NAME="XREF37012"><H1>CreateBackdropCel </A></H1>
+ Creates a single-color cel.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * CreateBackdropCel (int32 width, int32 height, int32 color, int32 opacityPercent)</CODE><P>
+<H3>Description</H3>
+Creates a single-colored cel which is useful in serving as a backdrop and/or control point for other objects. <P>
+The color is an RGB555-format value. Use the <CODE>MakeRGB15()</CODE> macro to create this value from separate red, green, and blue values. <P>
+The cel can be opaque or translucent as specified by opacityPercent. 100 
+percent is opaque, smaller values give translucent cels where the cel's 
+color intensity is the specified percentage of the projected result. For example, 75% means the projected pixels are 75% of the cel's color, 25% of the existing pixel's color. There are actually only eight levels of translucency available; the percentage you request is mapped to the closest available level. The opacity and color of the cel cannot be changed by this function after the cel is created.<P>
+An opacityPercent of zero results in a virtual cel, which does not project any pixels when drawn. The CCB_SKIP flag is set when opacityPercent is zero. A cel of this sort is useful in anchoring a list of related cels. It can serve as a single point of control for moving, centering, mapping, and other projection-related manipulations when used with the Library call implemented in lib3do.lib.s that manipulate lists of cels as if they were a single entity. <P>
+Regardless of the sizes you specify, the cel requires only sizeof(CCB) bytes of memory. The cel is created with a source size of 1x1 pixel, and the HDX and VDY fields are set to project the pixel to the specified width and height. Note that the ccb_Width and ccb_Height fields reflect the cel's source data size of 1x1pixel. Library call implemented in lib3do.lib.s that are sensitive to cel size, such as centering functions, use <CODE>SRectFromCel()</CODE> to get the projected cel size and thus work correctly. You should do the same if you need to obtain the projected cel size programmatically. <P>
+You may remap the cel to project to any position, size, and shape you desire after it is created. <P>
+Use <CODE>DeleteCel()</CODE> to release all resources allocated for the cel. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>width
+<DD>Width of the cel as it is to appear when projected. 
+</DL>
+<DL>
+<DT>height
+<DD>Height of the cel as it is to appear when projected. 
+</DL>
+<DL>
+<DT>color
+<DD>Color of the cel, in RGB555 format. 
+</DL>
+<DL>
+<DT>opacityPercent
+<DD>Opacity percentage, from 0 (invisible) to 100 (opaque). 
+</DL>
+<H3>Return Value</H3>
+Pointer to the new CCB, or NULL if there is not enough memory to make the cel. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO043.html#XREF35656"><CODE>CreateCel</A>, <A HREF="./01LDO055.html#XREF42213">DeleteCel</A> </CODE><P>

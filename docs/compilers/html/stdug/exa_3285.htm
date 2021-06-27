@@ -1,0 +1,76 @@
+<HTML><HEAD><TITLE>Example Program - An Inventory System</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Example Program - An Inventory System</H2>
+<A HREF="sidebar.htm#sidebar21"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>We will use a simple inventory management system to illustrate the use of several list operations.  Assume a business, named <I>WorldWideWidgetWorks</I>, requires a software system to manage their supply of widgets.  Widgets are simple devices, distinguished by different identification numbers:</P>
+<PRE>class  Widget {
+public:
+   Widget(int a = 0) : id(a) { }
+   void operator = (const Widget&#38; rhs) { id = rhs.id; }
+   int id;
+   friend ostream &#38; operator &#60;&#60; (ostream &#38; out,const Widget &#38; w)
+      { return out &#60;&#60; "Widget " &#60;&#60; w.id; }
+   friend bool operator == (const Widget&#38; lhs, const Widget&#38; rhs)
+      { return lhs.id == rhs.id; }
+   friend bool operator&#60; (const Widget&#38; lhs, const Widget&#38; rhs)
+      { return lhs.id &#60; rhs.id; }
+};</PRE>
+<!--ASQ-1 The style "teletype gap" is not associated; its content follows: --><P>The state of the inventory is represented by two lists.  One list represents the stock of widgets on hand, while the second represents the type of widgets that customers have backordered.  The first is a list of widgets, while the second is a list of widget identification types.  To handle our inventory we have two commands; the first, <SAMP>order()</SAMP>, processes orders, while the second, <SAMP>receive(),</SAMP> processes the shipment of a new widget.</P>
+<PRE>class inventory {
+public:
+   void order (int wid);     // process order for widget type wid
+   void receive (int wid);   // receive widget of type wid in shipment
+private:
+   list&#60;Widget> on_hand;
+   list&#60;int> on_order;
+};
+</PRE>
+<P>When a new widget arrives in shipment, we compare the widget identification number with the list of widget types on backorder.  We use <SAMP>find()</SAMP> to search the backorder list, immediately shipping the widget if necessary.  Otherwise it is added to the stock on hand.</P>
+<PRE>void inventory::receive (int wid)
+{
+   cout &#60;&#60; "Received shipment of widget type " &#60;&#60; wid &#60;&#60; endl;
+   list&#60;int>::iterator weneed = 
+      find (on_order.begin(), on_order.end(), wid); 
+   if (weneed != on_order.end()) 
+   {
+      cout &#60;&#60; "Ship " &#60;&#60; Widget(wid) 
+           &#60;&#60; " to fill back order" &#60;&#60; endl;
+      on_order.erase(weneed);
+   }
+   else
+      on_hand.push_front(Widget(wid));
+}
+</PRE>
+<P>When a customer orders a new widget, we scan the list of widgets in stock to determine if the order can be processed immediately.  We can use the function <SAMP>find_if()</SAMP> to search the list.  To do so we need a binary function that takes as its argument a widget and determines whether the widget matches the type requested.  We can do this by taking a general binary widget-testing function, and binding the second argument to the specific widget type.  To use the function <SAMP>bind2nd(),</SAMP> however, requires that the binary function be an instance of the class <A HREF="../stdref/bin_7851.htm"><B><I>binary_function</I></B></A>.  The general widget-testing function is written as follows:</P>
+<PRE>class WidgetTester : public binary_function&#60;Widget, int, bool> {
+public:
+   bool operator () (const Widget &#38; wid, int testid) const
+      { return wid.id == testid; }
+};
+</PRE>
+<P>The widget order function is then written as follows:</P>
+<PRE>void inventory::order (int wid)
+{
+   cout &#60;&#60; "Received order for widget type " &#60;&#60; wid &#60;&#60; endl;
+   list&#60;Widget>::iterator wehave = 
+         find_if (on_hand.begin(), on_hand.end(), 
+            bind2nd(WidgetTester(), wid));
+   if (wehave != on_hand.end()) 
+   {
+      cout &#60;&#60; "Ship " &#60;&#60; *wehave &#60;&#60; endl;
+      on_hand.erase(wehave);
+   }
+   else 
+   {
+      cout &#60;&#60; "Back order widget of type "  &#60;&#60; wid  &#60;&#60; endl;
+      on_order.push_front(wid);
+   }
+}
+</PRE>
+
+<HR>
+<A HREF="lis_8858.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="deq_4164.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,12 @@
+<TITLE>Determining the Ordinal Position of a Node</TITLE>
+<H1>Determining the Ordinal Position of a Node</H1><HR>
+Given a list and a node, you can determine the position of the node within the list, counting from the beginning or the end of the list. To determine the position of a node relative to the beginning of a list, use the <CODE>GetNodePosFromHead() </CODE>function:<P>
+<DL>
+<DD><CODE>int32 GetNodePosFromHead( const List *l, const Node *n );</CODE><BR>
+</DL>
+The<CODE> l</CODE> argument is a pointer to the list in which the node is located; the <CODE>n</CODE> argument is the node to find in the list. The function scans the list looking for the node, and returns the position of the node within the list. The first node in the list has position 0. If the node cannot be located in the list, the function returns -1.<P>
+To determine the position of a node relative to the end of a list, use the <CODE>GetNodePosFromTail()</CODE> function:<P>
+<DL>
+<DD><CODE>int32 GetNodePosFromTail( const List *l, const Node *n );</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list in which the node is located; the <CODE>n </CODE>argument is the node to find in the list. The function scans the list looking for the node, and returns the position of the node relative to the end of the list. The last node in the list has position 0. If the node cannot be located in the list, the function returns -1.<P>

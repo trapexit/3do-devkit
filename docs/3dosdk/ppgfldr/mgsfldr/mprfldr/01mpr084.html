@@ -1,0 +1,24 @@
+<Title>WhereAttachment</Title>
+<A NAME="XREF16016"><H1>WhereAttachment </A></H1>
+<A NAME="XREF27603"></A> Returns the current playing location attachment.<P>
+<H3>Synopsis</H3>
+<CODE>int32 WhereAttachment (Item Attachment)</CODE><P>
+<H3>Description</H3>
+This function is useful for monitoring the progress of a sample or envelope that's being played. It returns a value indicating where playback is located in the attachment's sample or envelope. For sample attachments, returns the currently playing byte offset of within the sample. For envelope attachments, returns the currently playing segment index. <P>
+A sample's offset starts at zero. Note that the offset is not measured in sample frames. You must divide the byte offset by the number of bytes per frame, then discard the remainder to find out which frame is being played. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Attachment
+<DD>Item number of the attachment. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value indicating position (byte offset of sample or segment index of envelope) on success, negative error code on failure. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Caveats</H3>
+If a sample attachment has finished, the return value may be negative, or greater than the length of the sample. This is because the DMA hardware is pointing to a different sample.  To determine whether an attachment has finished, use <CODE>MonitorAttachment()</CODE>.<P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<A HREF="./01mpr056.html#XREF24049"><CODE>MonitorAttachment</A><CODE>() </CODE><P>
+</CODE>

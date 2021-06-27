@@ -1,0 +1,31 @@
+<TITLE>IsNodeB</TITLE>
+<A NAME="XREF36617"><H1>IsNodeB </A></H1>
+<A NAME="XREF18161"></A>Checks that a node pointer is not the tail list anchor.<P>
+<H3>Synopsis</H3>
+<CODE>bool IsNodeB( const List *l, const Node *n )</CODE><P>
+<H3>Description</H3>
+This macro is used to test whether the specified node is an actual node or is the head (beginning-of-list) anchor. Use this macro when traversing a list from tail to head. When traversing a list from head to tail, use the <CODE>IsNode()</CODE> macro. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the list containing the node to check. 
+</DL>
+<DL>
+<DT>n
+<DD>A pointer to the node to check. 
+</DL>
+<H3>Return Value</H3>
+The macro returns TRUE if the node is an actual node or FALSE if it is the head (beginning-of-list) anchor. <P>
+<B>Note: </B> This macro currently returns TRUE for any node that is not the head anchor, whether or not the node is in the specified list. <P>
+<H3>Implementation</H3>
+Macro implemented in list.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Macro Definition 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr062.html#XREF11960"><CODE>FirstNode</A>(), <A HREF="./01spr091.html#XREF32439">IsListEmpty</A>(), <A HREF="./01spr094.html#XREF37857">IsNode</A>(), <A HREF="./01spr096.html#XREF19159">LastNode</A>(), <A HREF="./01spr102.html#XREF12754">NextNode</A>(), <A HREF="./01spr106.html#XREF31070">PrevNode</A>(), <A HREF="./01spr118.html#XREF16633">ScanList</A>() <BR>
+</CODE><CODE></CODE><P>
+</CODE>
+<H1><LINK NAME="XREF36617"></LINK></H1><HR>

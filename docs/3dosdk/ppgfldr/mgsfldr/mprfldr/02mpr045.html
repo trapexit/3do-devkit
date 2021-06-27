@@ -1,0 +1,26 @@
+<Title>SetScoreBendRange</Title>
+<A NAME="XREF21010"><H1>SetScoreBendRange </A></H1>
+<A NAME="XREF40428"></A> Sets the current pitch bend range value for a score context.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetScoreBendRange( ScoreContext *scon, int32 BendRange )</CODE><P>
+<H3>Description</H3>
+The function sets a score's current pitch bend range value.  This value is an integer, measured in semitones (half steps), that sets the range above or below normal that instruments can be bent.  A pitch range of two, for example, means that instruments can bend up two semitones (a whole step up) and down two semitones (a whole step down). <P>
+Note that DSP sampled sound instruments won't bend any more than 12 semitones, so don't set BendRange to a value greater than 12. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>Pointer to a ScoreContext data structure. 
+</DL>
+<DL>
+<DT>BendRange
+<DD>A pitch bend range value from 1 to 12. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if all went well; otherwise, an error code (less then 0) indicating that an error occurred. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr022.html#XREF24439"><CODE>ChangeScorePitchBend</A>(), <A HREF="./02mpr024.html#XREF30500">ConvertPitchBend</A>(), <A HREF="./02mpr029.html#XREF32740">GetScoreBendRange</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,9 @@
+<TITLE>Locking a Semaphore</TITLE>
+<H1><LINK NAME="XREF38022">Locking a Semaphore</LINK></H1><HR>
+To lock a semaphore, thereby preventing other tasks from accessing the associated resource until your task is finished with it, call the <CODE>LockSemaphore()</CODE> function:<P>
+<DL>
+<DD><CODE>int32 LockSemaphore( Item s, uint32 flags )</CODE><BR>
+</DL>
+The <CODE>s</CODE> argument is the item number of the semaphore for the resource you want to lock. Use the <CODE>flags</CODE> argument to specify what to do if the resource is already locked: if you include the <CODE>SEM_WAIT</CODE> flag, your task is put into wait state until the resource is available.<P>
+<CODE>LockSemaphore()</CODE> returns 1 if the resource was locked successfully. If the 
+resource is already locked and you did not include the <CODE>SEM_WAIT</CODE> flag in the flags argument, the function returns 0. If an error occurs, the function returns a negative error code.<P>

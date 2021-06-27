@@ -1,0 +1,27 @@
+<A NAME="XREF25632"><H1>DrawCels </A></H1>
+<A NAME="XREF11667"> Draws a list of cels (one or more) to the buffer of a bitmap.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err DrawCels (Item bitmapItem,CCB *ccb)</CODE><P>
+<H3>Description</H3>
+This call sets up the cel engine according to parameters in the bitmapItem, and then submits to the cel hardware the list of cels specified by the ccb argument. When the call returns, the cels have been rendered. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>Item number of a bitmap. 
+</DL>
+<DL>
+<DT>ccb
+<DD>Pointer to the first of one or more CCB structures. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+GRAFERR_CELTIMEOUT is returned if the cel engine times out during the rendering process. The most likely cause of a cel engine time-out is a bad cel or CCB data being passed to the cel engine. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. This call became an SWI in Graphics folio V24. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>Notes</H3>
+ <CODE>DrawCels()</CODE> operates faster when the task or thread calling it owns the bitmap, as opposed to simply calling <CODE>OpenItem()</CODE> on the bitmap. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr022.html#XREF27677"><CODE>DrawScreenCels</A>() </CODE><P>
+</CODE>

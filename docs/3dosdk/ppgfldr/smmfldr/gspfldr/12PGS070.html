@@ -1,0 +1,92 @@
+<Title>tsp_algorithmic</Title>
+<A NAME="XREF12219"><H1>tsp_algorithmic </A></H1>
+<A NAME="XREF29330"></A>Advanced sound player example showing algorithmic 
+sequencing of sound playback.<P>
+<H3>Synopsis</H3>
+<CODE>tsp_algorithmic</CODE><P>
+<H3>Description</H3>
+Assume you have two short sounds in memory and one long sound file with 
+the following markers: <P>
+<DL>
+<DT>BEGIN
+<DD>beginning segment (attack) 
+</DL>
+<DL>
+<DT>Loop
+<DD>loop segment (sustain) 
+</DL>
+<DL>
+<DT>First Ending
+<DD>1st ending segment (gap) 
+</DL>
+<DL>
+<DT>Second Ending
+<DD>2nd ending segment (release, end) 
+</DL>
+<DL>
+<DT>END 
+</DL>
+Given this, algorithmically play the following sequence of sounds: <P>
+<DL>
+<DT>Segment 
+<DD>What you should hear
+</DL>
+<DL>
+<DT>long sound beginning segment
+<DD>attack 
+</DL>
+<DL>
+<DT>long sound loop segment
+<DD>sustain 
+</DL>
+<DL>
+<DT>long sound 1st ending segment
+<DD>gap 
+</DL>
+<DL>
+<DT>long sound loop segment
+<DD>sustain
+</DL>
+<DL>
+<DT>long sound 2nd ending segment
+<DD>release, end 
+</DL>
+<DL>
+<DT>short sound 1
+<DD>&lt;blast&gt;
+</DL>
+<DL>
+<DT>long sound loop segment 
+<DD>sustain 
+</DL>
+<DL>
+<DT>long sound 1st ending segment
+<DD>gap 
+</DL>
+<DL>
+<DT>long sound loop segment
+<DD>sustain 
+</DL>
+<DL>
+<DT>long sound 2nd ending segment
+<DD>release, end 
+</DL>
+<DL>
+<DT>short sound 2
+<DD>&lt;honk&gt;
+</DL>
+The technique used to implement this sequence involves the use of static 
+branches, where one segment always leads into another, (e.g. after playing 
+the 1st ending always go back to the loop segment), and decision functions 
+where a conditional branching is required (e.g. from the end of the loop 
+segment either go to the 1st or 2nd ending). <P>
+This also demonstrates using sounds spooled from disc and played directly 
+from memory. <P>
+<H3>Associated Files</H3>
+tsp_algorithmic.c <P>
+$samples, words.aiff<P>
+<H3>Location</H3>
+examples/Audio/Advanced_Sound_Player<P>
+<H3>See Also</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/02mpr068.html#XREF24761">spCreatePlayer</A>, 
+./12PGS073.html#XREF12413">tsp_switcher</A>, ./12PGS071.html#XREF30384">tsp_rooms</A> </CODE><P>

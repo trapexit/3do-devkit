@@ -1,0 +1,20 @@
+<TITLE>GetCurrentSignals</TITLE>
+<A NAME="XREF22129"><H1>GetCurrentSignals </A></H1>
+<A NAME="XREF28898"></A> Gets the currently received signal bits.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetCurrentSignals( void )</CODE><P>
+<H3>Description</H3>
+This macro returns the signal bits that have been received for the current task. For information about signals, see the description of the <CODE>AllocSignal()</CODE> procedure and the "Communicating Among Tasks" chapter in the 3DO Portfolio Programmer's Guide.<P>
+<H3>Return Value</H3>
+A 32-bit word in which all currently received signal bits are set. <P>
+<H3>Implementation</H3>
+Macro implemented in kernel.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>kernel.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr009.html#XREF39797"><CODE>AllocSignal</A>(), <A HREF="./01spr068.html#XREF37706">FreeSignal</A>(), <A HREF="./01spr123.html#XREF40028">SendSignal</A>(), <A HREF="./01spr133.html#XREF12306">WaitSignal</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF22129"></LINK></H1><HR>

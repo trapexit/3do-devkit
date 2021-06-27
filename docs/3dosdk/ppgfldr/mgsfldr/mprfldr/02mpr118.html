@@ -1,0 +1,38 @@
+<Title>ssplSpoolData</Title>
+<A NAME="XREF33759"><H1>ssplSpoolData </A></H1>
+<A NAME="XREF10681"></A> Send a block full of data. (convenience routine)<P>
+<H3>Synopsis</H3>
+<CODE>int32 ssplSpoolData ( SoundSpooler *sspl, char *Data, int32 NumBytes, void *UserData )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplSpoolData()</CODE>  is a convenience function that does the following operations: <P>
+<UL>
+<LI>Requests an available SoundBufferNode, returns 0 if none are available. <P>
+<LI>Attaches sample data and optional user data pointer to the SoundBufferNode. <P>
+<LI>Submits the SoundBufferNode to the active queue. <P>
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<DL>
+<DT>Data
+<DD>Pointer to the buffer of data. 
+</DL>
+<DL>
+<DT>NumBytes
+<DD>Number of bytes of data to send. 
+</DL>
+<DL>
+<DT>UserData
+<DD>Pointer to user data, or NULL. 
+</DL>
+<H3>Return Value</H3>
+Positive value on success indicating the signal to be sent when the buffer finishes playing, zero if no SoundBufferNodes are available, or negative 3DO error code for others kinds of failure. <P>
+<H3>Implementation</H3>
+Convenience call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr109.html#XREF11288"><CODE>ssplPlayData</A>(), <A HREF="./02mpr111.html#XREF24497">ssplRequestBuffer</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>(), <A HREF="./02mpr115.html#XREF33138">ssplSetBufferAddressLength</A>(), <A HREF="./02mpr117.html#XREF18890">ssplSetUserData</A>() </CODE><P>
+</CODE>

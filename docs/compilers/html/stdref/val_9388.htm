@@ -1,0 +1,48 @@
+<HTML><TITLE>value_type</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>value_type</H2>
+<HR><PRE><B><I>     </I></B>Type primitive</B></I>
+</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Determine the type of value an iterator points to.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;iterator></PRE>
+<PRE>
+template &#60;class T, class Distance> 
+inline T* value_type (const input_iterator&#60;T, Distance>&#38;)
+template &#60;class T, class Distance> 
+inline T* value_type (const forward_iterator&#60;T, Distance>&#38;)
+template &#60;class T, class Distance> 
+inline T* value_type (const bidirectional_iterator&#60;T, Distance>&#38;)
+template &#60;class T, class Distance> 
+inline T* value_type (const random_access_iterator&#60;T, Distance>&#38;)
+template &#60;class T>
+inline T* value_type (const T*)
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>value_type</B></I>  function template returns a pointer to a default value of the type pointed to by an iterator.  Five overloaded versions of this function template handle the four basic iterator types and simple arrays.  Each of the first four take an iterator of a specific type, and return the value used to instantiate the iterator.  The fifth version takes and returns a <SAMP>T*</SAMP> in order to handle the case when an iterator is a simple pointer.</P>
+<P>This family of  function templates can be used to extract a value type from an iterator and subsequently use that type to create a local variable.  Typically the <B><I>value_type</B></I> functions are used like this:</P>
+<PRE>template &#60;class Iterator>
+void foo(Iterator first, Iterator last)
+{
+  __foo(begin,end,value_type(first));
+}
+template &#60;class Iterator, class T>
+void __foo(Iterator first, Iterator last, T*>
+{
+  T temp = *first;
+    _
+}
+</PRE><P>The auxiliary function <SAMP>__foo</SAMP> extracts a usable value type from the iterator and then puts the type to work.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P>Other iterator primitives:  <A HREF="dis_6675.htm"><B><I>distance_type</B></I></A>, <A HREF="ite_7451.htm"><B><I>iterator_category</B></I></A>, <A HREF="dis_0186.htm"><B><I>distance</B></I></A>, <A HREF="adv_9283.htm"><B><I>advance</B></I></A></P>
+<HR>
+<A HREF="upp_0967.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="vec_0251.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

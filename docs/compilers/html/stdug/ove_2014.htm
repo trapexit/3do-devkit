@@ -1,0 +1,418 @@
+<HTML><HEAD><TITLE>Overview</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Overview</H2>
+<P>In this chapter and in <a href="ord_1635.htm">Chapter 14</a> we will examine and illustrate each of the generic algorithms provided by the standard library.  The names and a short description of each of the algorithms in this chapter are given in the following table.  We have divided the algorithms into several categories, based on how they are typically used.  This division differs from the categories used in the C++ standard definition, which is based upon which algorithms modify their arguments and which do not.</P>
+<CENTER><TABLE BORDER CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<B><I>Name</I></B><BR>
+</TD>
+
+<TD>
+<B><I>Purpose </I></B><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<B>algorithms used to initialize a sequence<BR><a href="ini_5794.htm">Chapter 13 (<i>Initialization Algorithms</i>)</a></B><BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<SAMP>fill</SAMP><BR>
+</TD>
+
+<TD>
+fill a sequence with an initial value<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>fill_n</SAMP><BR>
+</TD>
+
+<TD>
+fill n positions with an initial value<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>copy</SAMP><BR>
+</TD>
+
+<TD>
+copy sequence into another sequence<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>copy_backward</SAMP><BR>
+</TD>
+
+<TD>
+copy sequence into another sequence<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>generate</SAMP><BR>
+</TD>
+
+<TD>
+initialize a sequence using a generator<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>generate_n</SAMP><BR>
+</TD>
+
+<TD>
+initialize n positions using a generator <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>swap_ranges</SAMP><BR>
+</TD>
+
+<TD>
+swap values from two parallel sequences <BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<B>searching algorithms<BR><a href="sea_9743.htm">Chapter 13 (<i>Searching Algorithms</i>)</a></B><BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<SAMP>find</SAMP><BR>
+</TD>
+
+<TD>
+find an element matching the argument <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>find_if</SAMP><BR>
+</TD>
+
+<TD>
+find an element satisfying a condition <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>adjacent_find</SAMP><BR>
+</TD>
+
+<TD>
+find consecutive duplicate elements <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>search</SAMP><BR>
+</TD>
+
+<TD>
+match a subsequence within a sequence <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>max_element</SAMP><BR>
+</TD>
+
+<TD>
+find the maximum value in a sequence <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>min_element</SAMP><BR>
+</TD>
+
+<TD>
+find the minimum value in a sequence <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>mismatch</SAMP><BR>
+</TD>
+
+<TD>
+find first mismatch in parallel sequences<BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<B>in-place transformations<BR><a href="inp_4704.htm">Chapter 13 (<i>In-Place Transformations</i>)</a></B><BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<SAMP>reverse</SAMP><BR>
+</TD>
+
+<TD>
+reverse the elements in a sequence <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>replace</SAMP><BR>
+</TD>
+
+<TD>
+replace specific values with new value <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>replace_if</SAMP><BR>
+</TD>
+
+<TD>
+replace elements matching predicate<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>rotate</SAMP><BR>
+</TD>
+
+<TD>
+rotate elements in a sequence around a point <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>partition</SAMP><BR>
+</TD>
+
+<TD>
+partition elements into two groups <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>stable_partition</SAMP><BR>
+</TD>
+
+<TD>
+partition preserving original ordering <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>next_permutation</SAMP><BR>
+</TD>
+
+<TD>
+generate permutations in sequence <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>prev_permutation</SAMP><BR>
+</TD>
+
+<TD>
+generate permutations in reverse sequence <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>inplace_merge</SAMP><BR>
+</TD>
+
+<TD>
+merge two adjacent sequences into one <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>random_shuffle</SAMP><BR>
+</TD>
+
+<TD>
+randomly rearrange elements in a sequence<BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<B>removal algorithms<BR><a href="rem_8388.htm">Chapter 13 (<i>Removal Algorithms</i>)</a></B><BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<SAMP>remove</SAMP><BR>
+</TD>
+
+<TD>
+remove elements that match condition<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>unique</SAMP><BR>
+</TD>
+
+<TD>
+remove all but first of duplicate values in sequences<BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<B>scalar generating algorithms<BR><a href="sca_1926.htm">Chapter 13 (<i>Scalar Generating Algorithms</i>)</a></B><BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<SAMP>count</SAMP><BR>
+</TD>
+
+<TD>
+count number of elements matching value <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>count_if</SAMP><BR>
+</TD>
+
+<TD>
+count elements matching predicate<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>accumulate</SAMP><BR>
+</TD>
+
+<TD>
+reduce sequence to a scalar value <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>inner_product</SAMP><BR>
+</TD>
+
+<TD>
+inner product of two parallel sequences<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>equal</SAMP><BR>
+</TD>
+
+<TD>
+check two sequences for equality <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>lexicographical_compare</SAMP><BR>
+</TD>
+
+<TD>
+compare two sequences<BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<B>sequence generating algorithms<BR><a href="seq_4302.htm">Chapter 13 (<i>Sequence Generating Algorithms</i>)</a></B><BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<SAMP>transform</SAMP><BR>
+</TD>
+
+<TD>
+transform each element<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>partial_sum</SAMP><BR>
+</TD>
+
+<TD>
+generate sequence of partial sums <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>adjacent_difference</SAMP><BR>
+</TD>
+
+<TD>
+generate sequence of adjacent differences <BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<B>miscellaneous operations<BR><a href="mis_2456.htm">Chapter 13 (<i>Miscellaneous Operations</i></a></B><BR>
+</TD>
+</TR>
+<TR VALIGN=top>
+<TD>
+<SAMP>for_each</SAMP><BR>
+</TD>
+
+<TD>
+apply a function to each element of collection <BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+
+<P>In this chapter we will illustrate the use of each algorithm with a series of short examples.  Many of the algorithms are also used in the sample programs provided in the  on the various container classes.  These cross references have been noted where appropriate.</P>
+<P>All of the short example programs described in this section have been collected in a number of files, named <SAMP>alg1.cpp</SAMP> through <SAMP>alg6.cpp</SAMP>.  In the files, the example programs have been augmented with output statements describing the test programs and illustrating the results of executing the algorithms.  In order to not confuse the reader with unnecessary detail, we have generally omitted these output statements from the descriptions here.  If you wish to see the text programs complete with output statements, you can compile and execute these test files.  The expected output from these programs is  also included in the distribution.</P>
+
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>To use any of the generic algorithms you must first include the appropriate header file.  The majority of the functions are defined in the header file <SAMP>algorithm</SAMP>.  The functions <SAMP>accumulate(),</SAMP> <SAMP>inner_product(),</SAMP> <SAMP>partial_sum(),</SAMP> and <SAMP>adjacent_difference()</SAMP>are defined in the header file <SAMP>numeric</SAMP>.</P>
+<PRE>   # include &#60;algorithm>
+   # include &#60;numeric></PRE>
+
+<HR>
+<A HREF="gen_9895.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="ini_5794.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

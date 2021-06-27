@@ -1,0 +1,25 @@
+<TITLE>FindTask</TITLE>
+<A NAME="XREF22836"><H1>FindTask </A></H1>
+<A NAME="XREF21836"></A>Finds a task by name.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindTask( const char *name )</CODE><P>
+<H3>Description</H3>
+This macro finds a task with the specified name. The search is not case-sensitive (that is, the kernel does not distinguish uppercase and lowercase letters in task names). You can use this macro in place of <CODE>FindNamedItem()</CODE> to find a task. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the task to find. 
+</DL>
+<H3>Return Value</H3>
+The macro returns the item number of the task that was found or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in task.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr028.html#XREF27054"><CODE>CreateThread</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF22836"></LINK></H1><HR>

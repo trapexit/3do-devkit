@@ -1,0 +1,24 @@
+<Title>BlockFile</Title>
+<A NAME="XREF14841"><H1>BlockFile</A></H1>
+<A NAME="XREF37197"></A>Block file structure.<P>
+<H3>Synopsis</H3>
+<PRE>
+<CODE>typedef struct BlockFile {
+ Item fDevice;
+ FileStatus fStatus;
+} BlockFile, *BlockFilePtr</CODE></PRE><P>
+<H3>Description</H3>
+A descriptor containing device and status information for a file opened by <CODE>OpenBlockFile()</CODE>.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>fDevice</CODE>
+<DD>File device item.
+</DL>
+<DL>
+<DT><CODE>fStatus</CODE>
+<DD>Status record.
+</DL>
+<H3>Associated Files</H3>
+BlockFile.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR048.html#XREF21532"><CODE>NewDataAcq</A></CODE><P>

@@ -1,0 +1,41 @@
+<Title>QueryGraphics </Title>
+<A NAME="XREF27199"><H1>QueryGraphics </A></H1>
+<A NAME="XREF24565"> Gets graphics environment information.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err QueryGraphics (int32 tag,void *ret)</CODE><P>
+<H3>Description</H3>
+<CODE>QueryGraphics()</CODE> looks up a value in the environment based on the passed-in tag and deposits that value in the address pointed to by ret. <P>
+<H3>Tag Arguments</H3>
+<DL>
+<DT>The currently available tag arguments and their return values follow: 
+</DL>
+<UL>
+<LI>QUERYGRAF_TAG_END - No return value. 
+<LI>QUERYGRAF_TAG_FIELDFREQ - int32 - Returns the display field frequency (in Hz) of the current environment. The return value is 60 for NTSC  and 50 for PAL. 
+<LI>QUERYGRAF_TAG_FIELDTIME - int32 - Returns the length of time for a single video display in usec. 
+<LI>QUERYGRAF_TAG_FIELDCOUNT - uint32 - Returns a number that is incremented every vblank period. 
+<LI>QUERYGRAF_TAG_DEFAULTWIDTH - int32 - Returns the default display width for the current hardware. The return value is 320 on every machine that is capable of generating a 320-pixel-wide display. This may not be the preferred width for the environment (PAL for example). 
+<LI>QUERYGRAF_TAG_DEFAULTHEIGHT - int32 - Returns the default display height for the current hardware. The return value is 240 on every machine that is capable of generating a 240-line-tall display. This may not be the preferred height for the environment (PAL for example). 
+<LI>QUERYGRAF_TAG_DEFAULTDISPLAYTYPE - int32 - Returns the default display type in the environment. DI_TYPE_NTSC is returned on current NTSC machines. DI_TYPE_PAL1 is returned on current PAL machines. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>tag
+<DD>Tag number indicating information requested. 
+</DL>
+<DL>
+<DT>ret
+<DD>Pointer to the location in memory where the requested value is deposited. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurred. <P>
+<DL>
+<DT>GRAFERR_BADTAG is returned if an unknown tag is passed in. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V21. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr050.html#XREF22949"><CODE>QueryGraphicsList</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,30 @@
+<TITLE>Primary Data Structures</TITLE>
+<H1><LINK NAME="XREF23560">Primary Data Structures</LINK></H1><HR>
+The following data structures are used when programming bitmaps, screens, frames, and the display generator.<P>
+<H2>The Graphics Context (GrafCon) Data Structure</H2>
+<CODE>
+<PRE>
+/* Graphics Context structure */
+typedef struct GrafCon
+    {
+    Node  gc;
+    Color gc_FGPen;
+    Color gc_BGPen;
+    Coord gc_PenX;
+    Coord gc_PenY;
+    ulong gc_Flags;
+    } GrafCon;
+</CODE>
+</PRE>
+<H2>The Rect Data Structure</H2>
+<CODE>
+<PRE>
+typedef struct Rect
+       {
+       Coord rect_XLeft;
+       Coord rect_YTop;
+       Coord rect_XRight;
+       Coord rect_YBottom;
+       } Rect;
+</CODE>
+</PRE>

@@ -1,0 +1,16 @@
+<Title>signals</Title>
+<A NAME="XREF34603"></A><A NAME="XREF10322"><H1>signals </A></H1>
+<A NAME="XREF36318"></A> Demonstrates how to use signals.<P>
+<H3>Synopsis</H3>
+<CODE>signals</CODE><P>
+<H3>Description</H3>
+Demonstrates the use of threads and signals. <P>
+The <CODE>main()</CODE> routine launches two threads. These threads sit in 
+a loop and count. After a given number of iterations through their loop, 
+they send a signal to the parent task. When the parent task gets a signal, 
+it wakes up and prints the current counters of the threads to show how 
+much they were able to count. <P>
+<H3>Associated Files</H3>
+signals.c<P>
+<H3>Location</H3>
+examples/Kernel <P>

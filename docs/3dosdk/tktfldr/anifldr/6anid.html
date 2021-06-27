@@ -1,0 +1,91 @@
+<TITLE>Function buttons</TITLE>
+<H1><LINK NAME="XREF21752">Function buttons</LINK></H1><HR>
+The function buttons appear in the column to the right of the palette. 
+Which buttons are displayed depends on whether a No Mode is selected or a 
+coded cel is displayed. Uncoded cels don't have available function 
+buttons. <P>
+<H2>Function buttons with No Mode selected</H2>
+This section discusses the following function buttons:<P>
+<UL>
+<LI>Load Palette
+<LI>Save Palette
+<LI>Best Palette
+<LI>Copy Sample Color
+<LI>Paste in Focus
+</UL>
+
+<IMG SRC="Figures/ANICh6/FunctionButtons.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Function buttons with No Mode selected. </I><P>
+<H3>Load Palette</H3>
+Lets you load a palette file saved in Macintosh or 3DO format. The new 
+palette appears in place of the previous palette. The system does not 
+automatically update or remap the document.<P>
+<H3>Save Palette</H3>
+Displays a dialog box that lets you save a palette in Macintosh format if 
+the cel is uncoded and in 3DO format if the cel is coded.<P>
+<H3>Best Palette</H3>
+If you click this button, 3DO Animator calculates the best palette for a 
+specific cel and type. It gives you several choices in the process. <P>
+When you click the Best Palette button, you are first prompted for the 
+method to process the document. You have a choice between Fast &amp; not 
+Optimized and Optimized processing.<P>
+The next dialog prompts for information about the palette: <P>
+<UL>
+<LI>The Number of Colors region is by default set to 32, but you may need 
+to change it depending on the cel type you have selected. The table below 
+lists the number of colors you should choose for the different cel types. 
+<PRE>
+<B>Table 1: </B><I> Number of colors for different cel types.</I>
+--------------------------------------------------------
+Cel Type             |Number of Colors                  
+--------------------------------------------------------
+Coded 16-bit         |32                                
+--------------------------------------------------------
+Coded 8-bit          |256 (32 + ramp)                   
+--------------------------------------------------------
+Coded 6-bit          |32                                
+--------------------------------------------------------
+Coded 4-bit          |16                                
+--------------------------------------------------------
+Coded 2-bit          |4                                 
+--------------------------------------------------------
+</PRE>
+
+<LI>Method buttons let you choose how the palette is calculated. 
+</UL>
+Once you've made your selections and click the OK button, the system 
+calculates the palette and displays it in the Set 3DO Object Type dialog, 
+while simultaneously changing the document on your system.<P>
+<H3>Copy Sample Color</H3>
+When you select a color from the 3DO palette and then click the Copy 
+Sample Color button, the color becomes current. When used in conjunction 
+with the Paste in Focus button, the sample color appears in the hue bar at 
+the top of its column.<P>
+<H3>Paste in Focus</H3>
+Moves the copy of a selected sample color to the hue bar position of the 
+column it is in on the palette grid.<P>
+<H2>Function buttons for coded cels</H2>
+Coded cels have the following additional buttons:<P>
+<UL>
+<LI>Sort By Hue
+<LI>Update Document
+<LI>Remap Document
+</UL>
+
+<IMG SRC="Figures/ANICh6/FuncButCoded.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Function buttons for a coded cel.</I><P>
+<H3>Sort By Hue</H3>
+Rearranges the colors of a customized palette according to hue.<P>
+<H3>Update Document</H3>
+Updates the document on the screen but does no remapping unless the 
+palette has fewer colors than before.<P>
+<H3>Remap Document</H3>
+Maps each color in the document to the closest one in the new palette. If 
+the document is an animation, each frame is remapped. Remap Document 
+always creates a new document, with the cel type as a suffix in the 
+document name.<P>
+<P>

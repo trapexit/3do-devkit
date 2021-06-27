@@ -1,0 +1,309 @@
+<TITLE>3DO Debugger menus</TITLE>
+<H1><LINK NAME="XREF17636">3DO Debugger menus</LINK></H1><HR>
+This section discusses all 3DO Debugger menu commands. <P>
+<H3>Keyboard shortcuts</H3>
+Keyboard shortcuts are listed with each command and also summarized on the 
+Quick Reference card that is part of your documentation package. <P>
+<H2>The File menu</H2>
+The File menu controls how the 3DO Debugger tool operates as an 
+application on the Macintosh. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/Filemenu.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>File menu. </I><P>
+<H3>New </H3>
+Does nothing and is always disabled.<P>
+<H3>Close</H3>
+Closes the active window. <P>
+Keyboard shortcut: Command-W<P>
+<H3>Save...</H3>
+Produces an ASCII text file of the active Data window. <P>
+Keyboard shortcut: Command-S<P>
+<H3>Directories...</H3>
+Displays the Directories submenu, which offers the commands listed in the 
+following table: <P>
+<PRE>
+<B>Table 1: </B><I> Subcommands of the Directories command.</I>
+--------------------------------------------------------
+Command       |Description                              
+--------------------------------------------------------
+Current       |Displays the current Source Directory    
+Source...     |pathway. To modify the current source    
+              |directory, use Directories &gt; Setup.      
+--------------------------------------------------------
+Current       |Displays the current Data Directory      
+Data...       |pathway. To modify the current data      
+              |directory, use Directories &gt; Setup.      
+--------------------------------------------------------
+Setup...      |Presents a standard Macintosh directory  
+              |selection dialog, which allows you to    
+              |select the directory where source and    
+              |data files are found. Set the source     
+              |directory to the folder location of the  
+              |source file, the data directory to the   
+              |location of the .sym file.               
+--------------------------------------------------------
+</PRE>
+<P>
+<B>Note: </B>You can also set source directories using a .spt script file. 
+See  <A HREF="./1dbgb.html#XREF26436">Using an spt script file to set 
+source directories</A> for more information.<P>
+<H3>Save Config</H3>
+Saves the current window positions and settings as part of the preferences 
+file.<P>
+<H3>Save Config As...</H3>
+Saves the current window positions and settings as a separate file. <P>
+<H3>Load Config...</H3>
+Opens a file previously created with the Save Config As command. The file 
+specifies window positions and settings. <P>
+<H3>Start CD Access Log...</H3>
+Causes the Debugger to start collecting information about CD-ROM access in 
+a log file. You are prompted for the location of the file. CD access is 
+performed by a number of functions in the filesystem folio. If you are 
+working with a version of the system that does not have a CD-ROM attached, 
+CD-ROM access is simulated. You can use this command to determine how much 
+of a program's time is spent retrieving data from the CD-ROM.<P>
+<H3>Page Setup...</H3>
+Displays the standard Macintosh Page Setup dialog for changing page size, 
+orientation, and other defaults for printing 3DO Debugger windows.<P>
+<H3>Print...</H3>
+Prints the active window.<P>
+Keyboard shortcut: Command-P<P>
+<H3>Special Mode</H3>
+When you select this mode, the Debugger no longer goes through the main 
+event loop and gives high priority to file I/O. As a result, your program 
+runs much faster than in normal mode. When you select Special Mode, a 
+dialog informs you that you can click the mouse button or press any key to 
+return to normal mode. <P>
+<H3>Loop On...</H3>
+Allows looping on a script, useful when preparing a standalone 
+demonstration program. If you select Loop On, you are prompted for a file, 
+which has to be a shell script or a 3DO application. The file is executed 
+in the foreground repeatedly until you click the mouse button or press a 
+key. At that time, the current cycle is executed to completion but no new 
+cycle is started. <P>
+<H3>No Target Check</H3>
+Select this item to temporarily disconnect the Macintosh from the 3DO 
+Station. The Macintosh will ignore any incoming message or I/O request 
+from the 3DO Station. To resume normal communication, uncheck the item. 
+You shouldn't have to use this feature during a normal debugging session. 
+<P>
+<H3>Acquire</H3>
+This command is always disabled. <P>
+<H3>Release &amp; Quit</H3>
+Releases the 3DO Station by executing a Go command, then quits the 
+application. For more information on the Go command, see <A 
+HREF="#XREF34460">The Execution menu</A>.<P>
+<H3>Quit</H3>
+Quits the application and returns to the Finder.<P>
+Keyboard shortcut: Command-Q<P>
+<A NAME="XREF28625"><H2>The Edit menu</A></H2>
+The Edit menu lets you edit text, clear the active Variables window, and 
+display the Preferences dialog boxes.<P>
+
+<IMG SRC="Figures/002.Ch2Pics/Editmenu.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Edit menu.</I><P>
+<H3>Undo</H3>
+Reverts your last editing operation to the original value.<P>
+Keyboard shortcut: Command-Z<P>
+<H3>Cut</H3>
+Deletes selected text and puts it on the Clipboard, replacing the previous 
+contents of the Clipboard. <P>
+Keyboard shortcut: Command-X<P>
+<H3>Copy</H3>
+Copies selected text to the Clipboard, replacing the previous contents of 
+the Clipboard.<P>
+Keyboard shortcut: Command-C<P>
+<H3>Paste</H3>
+Inserts a copy of the Clipboard contents at the insertion point or 
+replaces selected text.<P>
+Keyboard shortcut: Command-V<P>
+<H3>Clear</H3>
+Deletes aselected variable <I>if</I> the Variables window is the active 
+window. Otherwise, clears the entire Terminal window.<P>
+<H3>Select All</H3>
+Selects all text in the Terminal window if it is the active window. <P>
+Keyboard shortcut: Command-A<P>
+<H3>Fonts... </H3>
+Changes fonts in the active Data and Terminal windows. This command is 
+dimmed if it does not affect the active window. <P>
+<H3>Preferences... </H3>
+Displays a dialog box for selecting preferences and downloading flash ROM. 
+This dialog box is discussed in <A 
+HREF="./2dbgi.html#XREF25825">Preferences and Configuration dialog 
+box</A>.<P>
+<A NAME="XREF36145"><H2>The View menu</A></H2>
+The View menu opens 3DO Debugger windows or brings them to the front if 
+they are open already. The Debugger displays a list of all Variables 
+windows it creates during one session at the bottom of the menu. You can 
+make a Variables window active by selecting it in that list. You can also 
+send a selected variable from the active Source window to the Variables 
+window that receives data for display.<P>
+
+<IMG SRC="Figures/002.Ch2Pics/Viewmenu.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>View menu. </I><P>
+<H3>New Window</H3>
+Opens a new Disassembly, Data, or Source window. <P>
+If you hold down the Shift key while opening a new display window, the 
+selection in the active window is used as the base address for the new 
+window.<P>
+Keyboard shortcuts: <P>
+Command-J (DisAsm)
+Command-B (Data)
+Command-K (Source)<P>
+<H3>Variables </H3>
+Opens a new Variables window. To bring an already open one to the front, 
+select it from the list of open display windows at the bottom of the View 
+menu. <P>
+Keyboard shortcut: Command-M<P>
+<H3>Registers </H3>
+Opens (or brings to the front) the ARM CPU Registers window. <P>
+Keyboard shortcut: Command-R<P>
+<H3>Stacks</H3>
+Opens (or brings to the front) the ARM CPU Stack window.  <P>
+Keyboard shortcut: Command-E<P>
+<H3>Symbols</H3>
+Opens (or brings to the front) the Symbol window for the current 
+program.<P>
+Keyboard shortcut: Command-Y<P>
+<H3>BreakPoints</H3>
+Opens (or brings to the front) the BreakPoints window.  <P>
+Keyboard shortcut: Command-U<P>
+<H3>Terminal </H3>
+Opens (or brings to the front) the Terminal window.  <P>
+Keyboard shortcut: Command-T<P>
+<H3>Clock</H3>
+Opens the Target Clock window, which displays the current ticks of the 
+program running on the 3DO Station in hexadecimal and microseconds. <P>
+<H3>Send Variable Data</H3>
+Allows you to send a variable selected in the Source window to the 
+Variable window that receives data. <P>
+Keyboard shortcut: Command-D<P>
+<H3>(Open Display Windows)</H3>
+Lists all openVariables windows at their examined addresses. Select one to 
+bring it to the front.<P>
+<A NAME="XREF34460"><H2>The Execution menu</A></H2>
+The Execution menu controls the execution of the program running on the 
+3DO Station.<P>
+
+<IMG SRC="Figures/002.Ch2Pics/Executionmenu.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 4: </B><I>Execution menu. </I><P>
+<H3>Go</H3>
+Starts execution at the current value of the program counter (PC). If 
+you've just launched the Debugger, use this command to release the 
+operating system.<P>
+Keyboard shortcut: Command-G<P>
+<H3>Stop</H3>
+Stops the current task on the 3DO Station but not the operating system. If 
+the current task was not your program but a system task, you may need to 
+try again.<P>
+If you know the program well, a better way to stop it is to display a 
+Source or Disassembly window and set a breakpoint on an instruction likely 
+to be executed. The program will then stop at the break. <P>
+Keyboard shortcut: Command-. (Command-Period)<P>
+<H3>HW Reset...</H3>
+Prompts whether you want to reset the target hardware. If you confirm, 
+resets and relaunches the target when you press Command-G.<P>
+Keyboard shortcut: Command-H<P>
+<H3>Trace</H3>
+Provides a menu which has a submenu of available trace options:<P>
+<UL>
+<LI>In-Traces into subroutines and functions. Keyboard shortcut: Command-I
+<LI>Over-Traces across subroutines and functions. Keyboard shortcut: 
+Command-O
+</UL>
+<H3>Step Over</H3>
+Executes one instruction at the current value of the program counter (PC), 
+stepping over subroutines and function calls. If a Source window is active 
+(with the Examine field set to PC), one source line will be executed; 
+otherwise, one opcode will be executed. (See Note below.)<P>
+Keyboard shortcut: Command-, (Command-Comma)<P>
+<H3>Step In</H3>
+Executes one instruction at the current value of the program counter (PC), 
+stepping into subroutines and function calls but stepping over system 
+calls. By default, one opcode is executed. If a Source window is active, 
+one source line is executed. (See Note below.)<P>
+Keyboard shortcut: Command-; (Command-Semicolon)<P>
+<B>Note: </B>Sometimes, the 3DO Debugger does not step and requests that a 
+Source window be set to PC. If that happens, create a new Source window 
+(Command-K) and try again. If you always keep one Source window set to PC, 
+this condition will never occur. <P>
+<H3>Kill Aborted Task</H3>
+If a task causes an abort, the Debugger takes control. You then have two 
+choices: Make an appropriate change, for example, change a variable, and 
+then continue execution, or kill the task that caused the abort using the 
+Kill Aborted Task command. This allows you to execute a new task without 
+performing a Hardware Reset.<P>
+<H3>Execute</H3>
+Prompts you for a program to execute. Using this command is similar to 
+typing the program's name into the Terminal window, but sets up 
+directories appropriately in addition to executing the program. <P>
+<A NAME="XREF15988"><H2>The Target menu</A></H2>
+The Target menu controls launching, downloading, and dumping the program 
+running on the 3DO Station and to access the performance analyzer. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/Targetmenu.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 5: </B><I>Target menu. </I><P>
+<H3>Launch... </H3>
+Displays a dialog box for selecting a script to execute. <P>
+<UL>
+<LI>Execute Current (or pressing Return) selects the named script. 
+<LI>Execute lets you specify a new script.
+<LI>Cancel (or pressing the Escape or Command key) lets you use the 
+Debugger without a script. This allows you to examine memory, but not much 
+else. 
+</UL>
+Keyboard shortcut: Command-L<P>
+
+<IMG SRC="Figures/002.Ch2Pics/Launchprompt.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 6: </B><I>Launch dialog box.</I><P>
+<H3>Download... </H3>
+Presents a standard Macintosh file selection dialog box for downloading 
+binary files to the 3DO Station.<P>
+<H3>Memory Dump... </H3>
+Displays a dialog box that lets you dump target RAM as a binary image 
+file. Enter the start and end addresses, then select Dump to create the 
+output binary file.<P>
+
+<IMG SRC="Figures/002.Ch2Pics/MemoryDump.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 7: </B><I>Memory Dump dialog box. </I><P>
+<H3>Performance Analyzer... </H3>
+Displays the Performance Analyzer dialog box, which lets you monitor the 
+percentage of execution time spent in different routines.<P>
+
+<IMG SRC="Figures/002.Ch2Pics/PerfAnalyzer.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 8: </B><I>Performance analyzer dialog box. </I><P>
+Click Start Sampling to begin collecting samples; click Stop Sampling to 
+pause the sampling process. Click Stop &amp; Quit to stop the sampling 
+process. Output goes to a text file called <I>3DODebug.Perf</I>. The 
+performance analyzer reports:<P>
+<UL>
+<LI>how much time is spent in execution of the user task and how much time 
+is spent on system tasks and other overhead
+<p>
+<LI>how much time is spent in the different functions in the user task 
+</UL>
+You can get both hierarchical and nonhierarchical samples in the report. A 
+hierarchical sample provides all calling functions for each function that 
+is called. <P>
+<B>Note: </B>Since the performance analyzer itself affects the performance 
+of the system, you only get a rough estimate of the actual performance 
+when you use it. <P>
+<H3>Redirect Terminal</H3>
+Writes a copy of all terminal output to a file you specify. <P>
+<P>

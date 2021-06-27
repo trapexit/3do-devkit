@@ -1,0 +1,35 @@
+<Title>CreateItemPool</Title>
+<A NAME="XREF36441"><H1>CreateItemPool</A></H1>
+<A NAME="XREF22561"></A>Creates item pool.<P>
+<H3>Synopsis</H3>
+<CODE>ItemPoolPtr CreateItemPool (long numToPreallocate, CreateProcPtr createProc, void *createArg)</CODE><P>
+<H3>Description</H3>
+Creates an item pool with the specified number of items. The type of items in the pool is determined by the item creation function used to create the items. The function specified by <CODE>createProc</CODE> is used to create the items in the pool.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>numToPreallocate</CODE>
+<DD>Number of items to allocate for the pool.
+</DL>
+<DL>
+<DT><CODE>createProc</CODE>
+<DD>Pointer to the item creation function. The function can be any call that returns an item.
+</DL>
+<DL>
+<DT><CODE>createArg</CODE>
+<DD>Arguments to the item creation function.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+</DL>
+<DL>
+<DT>(Pointer to the item pool)
+<DD>None
+</DL>
+<DL>
+<DT><CODE>NULL</CODE>
+<DD>Could not allocate memory for pool
+</DL>
+<H3>Associated Files</H3>
+ItemPool.h<P>

@@ -1,0 +1,33 @@
+<TITLE>FindNamedNode</TITLE>
+<A NAME="XREF11199"><H1>FindNamedNode </A></H1>
+<A NAME="XREF36917"></A>Finds a node by name.<P>
+<H3>Synopsis</H3>
+<CODE>Node *FindNamedNode( const List *l, const char *name )</CODE><P>
+<H3>Description</H3>
+This procedure searches a list for a node with the specified name. The search is not case-sensitive (that is, the kernel does not distinguish uppercase and lowercase letters in node names). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the list to search. 
+</DL>
+<DL>
+<DT>name
+<DD>The name of the node to find. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a pointer to the node structure or NULL if the named node couldn't be found.<P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr062.html#XREF11960"><CODE>FirstNode</A>(), <A HREF="./01spr096.html#XREF19159">LastNode</A>(), <A HREF="./01spr102.html#XREF12754">NextNode</A>(), <A HREF="./01spr106.html#XREF31070">PrevNode</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF11199"></LINK></H1><HR>

@@ -1,0 +1,17 @@
+<Title>markertime</Title>
+<A NAME="XREF41285"><H1>markertime</A></H1>
+<A NAME="XREF28270"></A> Writes timestamp for use by DSHGoMarker.<P>
+<H3>Synopsis</H3>
+<CODE>markertime &lt;time&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>Markertime tells </CODE>the Weaver to write the physical byte offset of the first chunk with a timestamp of <I>time</I> in the output file. This byte offset can be used in <CODE>DSHGoMarker()</CODE> calls and in CTRL-GOTO chunks to seek the DSL to another point in a stream. You do not need to define a <CODE>markertime</CODE> 0 in order to call <CODE>DSHGoMarker()</CODE> to jump to this location.<P>
+Use <CODE>markertime</CODE> in conjunction with <CODE>writemarkertable. </CODE><P>
+<H3>Arguments</H3>
+<DL>
+<DT>time
+<DD> 0 to 7FFFFFFF (hex)-audio ticks
+</DL>
+<H3>Caveats</H3>
+Define a markertime command in your Weaver script for every location to which you will go. The Weaver ensures that these locations are at the start of a physical block boundary. IF YOU JUMP TO UNDEFINED LOCATIONS YOU WILL GET STRANGE RESULTS!<P>
+<H3>See Also</H3>
+<A HREF="./04DSR014.html#XREF40216">writegotochunk</A>, <A HREF="./04DSR016.html#XREF31137">writemarkertable</A>, <A HREF="./04DSR017.html#XREF20006">writestopchunk</A><P>

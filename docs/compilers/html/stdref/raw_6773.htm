@@ -1,0 +1,50 @@
+<HTML><TITLE>raw_storage_iterator</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>raw_storage_iterator</H2>
+<HR><PRE>     Memory Management</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Enables iterator-based algorithms to store results into uninitialized memory.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Constructor"><LI>Constructor</LI></A>
+<A HREF="#Member Operators"><LI>Member Operators</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;memory></PRE>
+<PRE>
+template &#60;class OutputIterator, class T>
+ class <B>raw_storage_iterator</B> : public output_iterator {
+public:
+   explicit raw_storage_iterator (OutputIterator);
+   raw_storage_iterator&#60;OutputIterator, t>&#38; operator*();
+   raw_storage_iterator&#60;OutputIterator, T>&#38;
+     operator= (const T&#38;);
+   raw_storage_iterator&#60;OutputIterator>&#38; operator++();
+   raw_storage_iterator&#60;OutputIterator> operator++ (int);
+};
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Class <B><I>raw_storage_iterator</B></I> enables iterator-based algorithms to store their results in uninitialized memory.  The template parameter, <SAMP>OutputIterator</SAMP> is required to have its <SAMP>operator*</SAMP> return an object for which <SAMP>operator&#38; </SAMP>is both defined and returns a pointer to <SAMP>T</SAMP>. </P>
+<A NAME="Constructor"><H3>Constructor</H3></A>
+<PRE><B>raw_storage_iterator</B> (OutputIterator x);</PRE>
+<UL><P>Initializes the iterator to point to the same value that <SAMP>x</SAMP> points to.</P>
+</UL>
+<A NAME="Member Operators"><H3>Member Operators</H3></A>
+<PRE>raw_storage_iterator &#60;OutputIterator, T>&#38;
+  <B>operator =</B>(const T&#38; element);</PRE>
+<UL><P>Constructs an instance of <SAMP>T</SAMP>, initialized to the value <SAMP>element</SAMP> , at the location pointed to by the iterator.</P>
+</UL>
+<PRE>raw_storage_iterator &#60;OutputIterator, T>&#38; 
+<B>operator++</B>();</PRE>
+<UL><P> Pre-increment:  advances the iterator and returns a reference to the updated iterator.</P>
+</UL>
+<PRE>raw_storage_iterator&#60;OutputIterator>
+ <B>operator++</B> (int);</PRE>
+<UL><P>Post-increment:  advances the iterator and returns the old value of the iterator.</P>
+</UL>
+<HR>
+<A HREF="ran_2368.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="rem_4572.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

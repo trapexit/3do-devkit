@@ -1,0 +1,64 @@
+<Title>SoundBufferFunc</Title>
+<A NAME="XREF25499"><H1>SoundBufferFunc </A></H1>
+<A NAME="XREF40985"></A> SoundSpooler callback function typedef.<P>
+<H3>Synopsis</H3>
+<CODE>typedef int32 (*SoundBufferFunc) ( SoundSpooler *sspl, SoundBufferNode *sbn,int32 msg )</CODE><P>
+<H3>Description</H3>
+This callback system is a superset of the <CODE>(*UserBufferProcessor)()</CODE> system. It offers 2 basic improvements over the former: <P>
+1.  It provides a method of getting buffer start as well as completion notification. <P>
+2.  UserBufferProcessor can't be called by functions such as <CODE>ssplDetachInstrument()</CODE>  or <CODE>ssplPlayData()</CODE> because these functions do not have a UserBufferProcessor argument.  The SoundBufferFunc is stored in the SoundSpooler structure, so all support functions can call it. <P>
+The client can install a callback function pointer of this type in the SoundSpooler by calling <CODE>ssplSetSoundBufferFunc()</CODE>.  Several sound spooler functions send notification messages to this function when the state of a SoundBufferNode changes.  When a buffer is started, one of the start class messages is sent to the SoundBufferFunc.  When a buffer ends, one of the end class messages is sent. <P>
+This callback function is called with a message id, a pointer to the SoundSpooler and SoundBufferNode whose state has changed.  The callback function can call non-destructive sound spooler functions like <CODE>ssplGetUserData()</CODE>, <CODE>ssplGetSequencenNum()</CODE>, etc., but is not permitted to do anything to change the state of the sound spooler.  In particular, calling ssplRequestBuffer()  or <CODE>ssplSendBuffer()</CODE> typically will confuse the sound spooler's list processing functions. Also, the state of SSPL_STATUS_F_ACTIV E is undefined when inside a SoundBufferFunc function. <P>
+Generally, the callback function must be able to handle all message types. To simplify message handling, you can get the class of a message by calling <CODE>ssplGetSBMsgClass()</CODE>.  This is extremely useful if you only care to know that a buffer started or finished, but not the specifics of how it did this. <P>
+The callback function is required to return a result.  The sound spooler considers a return value &gt;= 0 from the callback function to indicate success.  This value does NOT propagate back to the client. <P>
+If the callback returns a value &lt;0, that value is returned to the client through the sound spooler function that called the callback function.  In this case, the sound spooler function terminates immediately.  Any function that can process multiple SoundBufferNodes (e.g. <CODE>ssplAbort()</CODE>, or <CODE>ssplProcessSignals()</CODE>)  doesn't complete its active queue processing when the callback function returns an error code.  If the cause of the callback failure can be resolved by the client, the client can usually call the offending function again to continue where it left off. <P>
+Use of the SoundBufferFunc and UserBufferProcessor systems are mutually exclusive.  When a UserBufferProcessor is supplied to a function that supports it and a SoundBufferFunc is installed, that function fails and returns an error code prior to doing anything. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>SoundSpooler. 
+</DL>
+<DL>
+<DT>sbn
+<DD>SoundBufferNode changing state. 
+</DL>
+<DL>
+<DT>msg
+<DD>A message id (SSPL_SBMSG_...).  See below. 
+</DL>
+<H3>Messages</H3>
+<DL>
+<DT><CODE>Start Class </CODE>
+</DL>
+<DL>
+<DT>SSPL_SBMSG_INITIAL_START
+<DD>Initial Start. <CODE> ssplStartSpooler()</CODE> sends this message for the first buffer in active queue. 
+</DL>
+<DL>
+<DT>SSPL_SBMSG_LINK_START
+<DD>Link Start.  <CODE>ssplProcessSignals()</CODE> sends this message for the next buffer in the active queue after it removes a completed buffer. 
+</DL>
+<DL>
+<DT>SSPL_SBMSG_STARVATION_START
+<DD>
+</DL>
+<DL>
+<DT><CODE>End Class </CODE>
+</DL>
+<DL>
+<DT>SSPL_SBMSG_COMPLETE
+<DD>Complete.  <CODE>ssplProcessSignals()</CODE> sends this mess age for every completed buffer that it removes from the active queue. 
+</DL>
+<DL>
+<DT>SSPL_SBMSG_ABORT
+<DD>Abort. <CODE> ssplAbort()</CODE> sends this message for ever y buffer (completed or otherwise) that it removes from the active queue. 
+</DL>
+<H3>Return Value</H3>
+Client should return non-negative value on success, or a negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Client-supplied callback function used by music.lib V22. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr116.html#XREF16970"><CODE>ssplSetSoundBufferFunc</A>(), <A HREF="./02mpr103.html#XREF27899">ssplGetSBMsgClass</A>(), <A HREF="./02mpr119.html#XREF23431">ssplStartSpooler</A>(), <A HREF="./02mpr096.html#XREF40388">ssplAbort</A>(), <A HREF="./02mpr110.html#XREF20300">ssplProcessSignals</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,352 @@
+<TITLE>Passing Messages</TITLE>
+<H1><LINK NAME="XREF17543">Passing Messages</LINK></H1><HR>
+The message system allows tasks to send data to one another, providing information flow from task to task. Tasks must create the following elements for the message system to work:<P>
+ <UL>
+<LI>The sending task must create a message port.
+<LI>The receiving task must create a message port.
+<LI>The sending task must create a message.
+</UL>
+Once the elements are in place, the sending task follows these procedures:<P>
+<UL>
+<LI>It specifies a message to send and a destination message port to which to send the message.
+<LI>It specifies the data to go with the message.
+</UL>
+The receiving task does one of the following procedures:<P>
+<UL>
+<LI>It enters the wait state to wait for a message on a specified message port.
+<LI>It checks one of its message ports to see if a message has arrived there.
+</UL>
+Once a message arrives at a task's message port, the task follows these procedures:<P>
+<UL>
+<LI>It removes the message from its message port.
+<p>
+<LI>It gets a pointer to the message, and reads data directly from the message, or finds the data block pointer and size and reads from the data block.
+<p>
+<LI>If the message needs a reply, the task writes new data directly into the message or sets a pointer and size in the message for a new data block.
+<p>
+<LI>It sends the reply back to the message.
+</UL>
+The message system is very flexible, and allows a single task to create multiple message ports and multiple messages. A single message port can receive many messages; they're queued up and retrieved one at a time by the receiving task. A message port allows a single task to receive, in serial order, messages from many other tasks.<P>
+Messages, like all other items, are assigned priority numbers. These priority numbers determine the order of messages within a message queue: higher-
+priority messages go to the front of the queue. Messages with the same priority are arranged in arrival order: earlier messages come first.<P>
+<H2>Creating a Message Port</H2>
+Before a task can send or receive a message, it must have at least created one message port. To create a message port, use this call:<P>
+<DL>
+<DD><CODE>Item CreateMsgPort( const char *name, uint8 pri, uint32 signal )</CODE><BR>
+</DL>
+The call accepts three arguments: a name string, <CODE>name</CODE>, which it uses to name the message port; a 1-byte priority value, <CODE>pri</CODE>, which assigns a priority to the message port; and a 32-bit signal mask, <CODE>signal</CODE>, which assigns an allocated signal bit to the message port.<P>
+The message port's name and priority don't change the way the message port operates, but are useful when another task tries to find the message port.<P>
+The signal mask specifies a signal to associate with the message port. The signal mask must contain only allocated signal bits. If you specify a signal mask of 0, then <CODE>CreateMsgPort()</CODE> allocates a signal bit automatically. When the port is later deleted using <CODE>DeleteMsgPort()</CODE>, the signal bit is automatically freed.<P>
+<CODE>CreateMsgPort()</CODE> returns the item number of the newly created message port if successful, or returns a negative number (an error code) if unsuccessful. The message port now exists as an item in system memory, owned by the creating task.<P>
+The message port uses its assigned signal bit to signal its owner task whenever a message arrives at the port. The signal bit should <I>not</I> be freed until the message port is freed.<P>
+The item number returned by <CODE>CreateMsgPort()</CODE> is a handle to the new port. The owner task should give it out to any task that may want to send a message to it. Sending a message requires specifying the item number of the message port to which the message is sent.<P>
+<H2>Creating a Message</H2>
+To create a message to send to a specific message port, a task must first create its own message port to use as a reply port. Then, it must specify which of three message types to create:<P>
+<UL>
+<LI>A <B>standard message</B>, which has a pointer to a block of data and the size of that data.
+<LI>A <B>small message</B>, which has two 32-bit words of data.
+<LI>A <B>buffered message</B>, which has a built-in data block.
+</UL>
+If the task sends 8 or fewer bytes of data within the message itself, it should create a small message.<P>
+If the task sends more than 8 bytes of data and only points to the data in a data block that isn't carried with the message, it should create a standard message.<P>
+And if the task sends more than 8 bytes of data within the message, it should create a buffered message.<P>
+<H3>Standard Messages</H3>
+To create a standard message, use this call:<P>
+<DL>
+<DD><CODE>Item CreateMsg( const char *name, uint8 pri, Item mp )</CODE><BR>
+</DL>
+The first argument, <CODE>name</CODE>, is the name for the message, which is useful for finding the message later. The second argument, <CODE>pri</CODE>, sets the message's priority, which determines how it is sorted in a receiving task's message queue. It can be a value from 0 to 255. The third argument, <CODE>mp</CODE>, is the item number of a message port that belongs to the creating task. This is the message's reply port, where it returns if the receiving task sends it back with a reply call.<P>
+A standard message carries with it a pointer to a data block, and the size of the data block. The task that receives the message can obtain the pointer to the data block and access the data. If the receiving task has write permission to the pages of memory where the data block is located, it can even write to the data block directly. Because of the fact you pass a pointer to a data block, standard messages are often referred to as "pass-by-reference" messages.<P>
+The reply to a standard message can contain 4 bytes of data.<P>
+When executed, <CODE>CreateMsg()</CODE> creates a standard message and returns the message's item number. If unsuccessful, it returns a negative number (an error code). Example 1 uses <CODE>CreateMsg()</CODE>:<P>
+<B>Example 1: </B><I>Sample using CreateMsg( ).</I><P>
+<CODE>
+<PRE>
+static Item myMsg;
+static Item mpItem;
+
+/* Create a message */
+    myMsg = CreateMsg("Message1", 0, mpItem);
+     if (myMsg &lt; 0)
+    {
+        printf("error creating Message\n");
+        return (-2);
+    }
+</CODE>
+</PRE>
+<H3>Small Messages</H3>
+Both standard and buffered messages have message structure fields with pointers to a data block and the size of the data block. A small message uses those same fields to store up to 8 bytes of data instead of storing a pointer and a block size value.<P>
+To create a small message, use <CODE>CreateSmallMsg()</CODE>:<P>
+<DL>
+<DD><CODE>Item CreateSmallMsg( const char *name, uint8 pri, Item mp )</CODE><BR>
+</DL>
+The arguments are identical to those for <CODE>CreateMsg(). </CODE>You'll see the difference when you call <CODE>SendSmallMsg()</CODE> (described later).<P>
+<H3>Buffered Messages</H3>
+Some applications require a message that can carry data within the message itself. This lets the sender copy data into the message, send the message, and not have to keep around its original data buffer. The buffer is no longer needed because the data is now in the message itself. In addition, when the destination task returns a buffered message, it can also write data to the message's buffer, allowing a great deal of information to be returned.<P>
+Because buffered messages require data to be copied into them before being sent, they are often referred to as "pass-by-value" messages.<P>
+With buffered messages, a sending task can send large amounts of read/write data to another task. The receiving task can modify this data and return it to the caller. This avoids granting the receiving task write permission to memory buffers in the sending task's address space.<P>
+To create a buffered message, use this call:<P>
+<DL>
+<DD><CODE>Item CreateBufferedMsg( const  char *name, uint8 pri, Item mp, uint32 datasize )</CODE><BR>
+</DL>
+Like <CODE>CreateMsg()</CODE>, this call accepts arguments that point to a name, supply a 
+priority, and give the item number of a reply port for the message. The additional argument, <CODE>datasize</CODE>, specifies the size, in bytes, of the data buffer to create.<P>
+When the call executes, it creates a buffered message with its accompanying buffer. If successful, the call returns the item number of the message. If unsuccessful, it returns a negative number (an error code).<P>
+<H2>Sending a Message</H2>
+A task can send all three types of messages, but each requires different handling.<P>
+<H3>Small Messages</H3>
+To send a small message, use this call:<P>
+<DL>
+<DD><CODE>Err SendSmallMsg( Item mp, Item msg, uint32 val1,  uint32 val2 )</CODE><BR>
+</DL>
+The first argument, <CODE>mp</CODE>, is the item number of the message port to which the message is sent. The second argument, <CODE>msg</CODE>, is the item number of the small message to send. The third argument, <CODE>val1</CODE>, is the first 4 bytes of data to send in the message; the fourth argument, <CODE>val2</CODE>, is the second 4 bytes of data to send in the message. (If you don't know the item number of the message port, but you know its name, you can use <CODE>FindMsgPort()</CODE> to get the item number.)<P>
+When <CODE>SendSmallMsg()</CODE> executes, it writes the first value into the <CODE>msg_DataPtr</CODE> 
+field of the message's data structure and the second value into the <CODE>msg_DataSize</CODE> field of the structure. It then sends the message to the specified message port. It returns a 0 if the message is successfully sent, or a negative number (an error code) if unsuccessful.<P>
+You should <I>not</I> send a standard or buffered message with this call, because the values you supply can be read as an erroneous pointer and data size.<P>
+<H3>Standard and Buffered Messages</H3>
+To send a standard or buffered message, use this call:<P>
+<DL>
+<DD><CODE>Err SendMsg( Item mp, Item msg, const void *dataptr, int32  datasize )</CODE><BR>
+</DL>
+Like <CODE>SendSmallMsg()</CODE>, this call accepts the item number of a message port to which to send the message, <CODE>mp</CODE>, and the item number of the message to send, <CODE>msg</CODE>. Instead of accepting values to store with the message, <CODE>SendMsg()</CODE> accepts a pointer to a data block in the <CODE>dataptr</CODE> argument and the size, in bytes, of the data block in the <CODE>datasize</CODE> argument. <P>
+When <CODE>SendMsg()</CODE> executes, it sends the message, returning a 0 if successful, or a negative number (an error code) if unsuccessful. Its effect on the message depends on whether the message is standard or buffered.<P>
+A standard message stores the data block pointer and the data size value in the message. The data block remains where it is, and the receiving task reads it there, using the pointer and size value to find it and know how far it extends.<P>
+With a buffered message, <CODE>SendMsg()</CODE> checks the size of the data block to see if it will fit in the message's buffer. If it won't, the call returns an error. If it does fit, <CODE>SendMsg()</CODE> copies the contents of the data block into the message's buffer. The receiving task can then read the data directly out of the message's buffer.<P>
+The advantage of a buffered message is that it carries the full data block within its buffer, so the sending task can immediately use the original data block's memory for something else. The task doesn't need to maintain the data block until it's sure that the receiving task has read the block. The data block is handled by the system, and is carried within the message in protected system memory.<P>
+<H2>Receiving a Message</H2>
+Once a message is sent to a message port, it is held in the message port's message queue until the receiving task retrieves the message, or the sending task decides to pull it back. The messages within the queue are put in order first by priority, and then by order received.<P>
+To receive a message, a task can wait until it receives notification of a message at a message port, or it can check a message port directly to see if a message is there.<P>
+<H3>Waiting for a Message</H3>
+To enter the wait state until a message arrives on a specific message port, a task uses this call:<P>
+<DL>
+<DD><CODE>Item WaitPort( Item mp, Item msg )</CODE><BR>
+</DL>
+<CODE>WaitPort()</CODE> accepts the required argument, <CODE>mp</CODE>, which contains the item number of the message port where the task receives messages. The call also accepts an optional argument, <CODE>msg</CODE>, which contains the item number of a specific message the task expects to receive at the message port. (To wait for any incoming message, use 0 as the value of <CODE>msg</CODE>.)<P>
+<B>Note: </B>If the message arrived before <CODE>WaitPort()</CODE> is called, the task never enters the wait state.<P>
+When <CODE>WaitPort()</CODE> executes, the task enters the wait state until it detects a message on the message port's message queue. At that point, if the call doesn't specify a specific message, the task exits the wait state, and the call returns the item number of the first message in the port's queue. The message is removed from the message queue, and the task can use its item number to find and read the message.<P>
+If a specific message was given to <CODE>WaitPort()</CODE> in addition to a message port, the task waits until that message arrives at the message port. When it arrives, the task exits the wait state and the message is removed from the message queue.<P>
+<H3>Checking for a Message</H3>
+To check for a message at a message port without entering the wait state, a task uses this call:<P>
+<DL>
+<DD><CODE>Item GetMsg( Item mp )</CODE><BR>
+</DL>
+<CODE>GetMsg()</CODE> accepts a single argument: the item number of the message port where it wants to check for messages. When it executes, it checks the message port to see if there are any messages in the port's queue. If there are, it returns the item number of the first message in the queue and removes it from the queue. If there is no message at the message port, the call returns 0. If there is an error, the call returns an error code (a negative number).<P>
+<H2>Working With a Message</H2>
+Once a task receives a message, it interprets the contents of the message to determine what the message means. To do this, the task must obtain a pointer to the Message structure associated with the message's item number:<P>
+<CODE>
+<PRE>
+Message *msg;
+Item     msgItem;
+
+   msg = (Message *)LookupItem(msgItem);
+</CODE>
+</PRE>
+Once the task has the pointer, it can determine the type of message it has received by inspecting the contents of the <CODE>msg.n_Flags</CODE> field of the message structure. If the <CODE>MESSAGE_SMALL</CODE> bit is set in this field, it means it is a small message. If the <CODE>MESSAGE_PASS_BY_VALUE</CODE> bit is set, it means it is a buffered message. If neither of these bits is set, it means that it is a standard message.<P>
+When you set up communication channels among your tasks or threads using message ports, you should know what type of messages will be sent around to these ports, so that you don't always need to check the types.<P>
+<H3>Small Messages</H3>
+When you receive a small message, the only information you can get from the message is contained in the <CODE>msg_DataPtr</CODE> and <CODE>msg_DataSize</CODE> fields. The information corresponds directly to the <CODE>val1</CODE> and <CODE>val2</CODE> arguments the sending task specified when it called <CODE>SendSmallMsg()</CODE>. When you return such a message, you supply a 4-byte result code, and two new 32-bit values to put into <CODE>msg_DataPtr</CODE> and <CODE>msg_DataSize</CODE>.<P>
+<H3>Standard Messages</H3>
+When you receive a standard message, the <CODE>msg_DataPtr</CODE> field of the message contains the address of a data area which you can access. The size of the data area is contained in <CODE>msg_DataSize</CODE>. Typically, the data area points to a data structure belonging to the task that sent the message.<P>
+If the standard message comes from another task, as opposed to a sibling thread, the data area likely will only be readable by the receiving task, unless the sending task takes the extra steps to grant write permission to that data area. To determine whether your task can write to a data area pointed to in a standard message, use the <CODE>IsMemWritable()</CODE> function.<P>
+If you send messages between threads and tasks of the same application, it is often not necessary to go through the extra trouble of checking whether the data area is writable before writing to it, since this can be part of the protocol setup within your application.<P>
+When a task replies to a standard message, it provides a 4-byte result code, and new values for <CODE>msg_DataPtr</CODE> and <CODE>msg_DataSize</CODE>. When a task calls <CODE>ReplyMsg()</CODE>, it can leave the values to what they were by simply using <CODE>msg_DataPtr</CODE> and <CODE>msg_DataSize</CODE> as parameters to <CODE>ReplyMsg()</CODE>.<P>
+<H3> Buffered Messages</H3>
+When a task receives a buffered message, the <CODE>msg_DataPtr</CODE> field of the message contains the address of a read-only data area, and <CODE>msg_DataSize</CODE> specifies the number of useful bytes within this buffer. The task can read this data at will.<P>
+When a task replies a buffered message, it supplies a 4-byte result code, and can optionally supply new data to be copied into the message's buffer. The task can determine the size available in the message's buffer by looking at the msg_DataPtrSize field of the message structure.<P>
+<H2>Pulling Back a Message</H2>
+When a sending task sends a message, the task can pull the message out of a message queue before the message has been received. To do so, it uses the <CODE>GetThisMsg()</CODE> call:<P>
+<DL>
+<DD><CODE>Item GetThisMsg( Item msg )</CODE><BR>
+</DL>
+The single argument, <CODE>msg</CODE>, specifies the message to rescind. If the message is still on the message port it was sent to, it is removed and its item number returned. If the message was already removed from the port by the receiving task, then the function returns 0.<P>
+<H2>Replying to a Message</H2>
+Once a message is received, the receiving task can reply, which returns a message to its reply port. The message contains 4 bytes that are set aside for a reply code; the replying task assigns an arbitrary value for storage there, often a value that reports the success or failure of message handling.<P>
+Once again, the three different message types require different handling when replying to a message.<P>
+<H3>Small Messages</H3>
+To send back a small message in reply to the sending task, use this call:<P>
+<DL>
+<DD><CODE>Err ReplySmallMsg( Item msg, int32 result, uint32 val1,  uint32 val2 )</CODE><BR>
+</DL>
+<CODE>ReplySmallMsg()</CODE> accepts four arguments. The first argument, <CODE>msg</CODE>, is the item number of the message being returned in reply. The second argument, <CODE>result</CODE>, is a 32-bit value written into the reply field of the message data structure. The third and fourth arguments, <CODE>val1</CODE> and <CODE>val2</CODE>, are data values written into the pointer and size fields of the message data structure (just as they are in <CODE>SendSmallMsg()</CODE>). Note that no destination message port is specified because the message returns to its reply port, which is specified within the message data structure.<P>
+When <CODE>ReplySmallMsg()</CODE> executes, it sends a message back in reply and returns a 0 if successful, or an error code (a negative number) if unsuccessful.<P>
+<H3>Standard and Buffered Messages</H3>
+To send back a standard or buffered message in reply, use this call:<P>
+<DL>
+<DD><CODE>Err ReplyMsg( Item msg, int32 result, const void *dataptr, int32 datasize)</CODE><BR>
+</DL>
+<CODE>ReplyMsg()</CODE> accepts four arguments. The first two, <CODE>msg</CODE> and <CODE>result</CODE>, are the same as those accepted by <CODE>ReplySmallMsg()</CODE>. The third, <CODE>dataptr</CODE>, is a pointer to a data block in memory. The fourth, <CODE>datasize</CODE>, is the size in bytes of that data block.<P>
+When <CODE>ReplyMsg()</CODE> executes, it sends the message in reply and returns a 0 if successful, or an error code (a negative number) if unsuccessful. The effect the reply has on the message depends on whether the message is standard or buffered, just as it does in <CODE>SendMsg()</CODE>.<P>
+If the message is standard, the data block pointer and the data size value are stored in the message, and are read as such by the task getting the reply. If the message is buffered, <CODE>ReplyMsg()</CODE> checks the size of the data block to see if it will fit in the message's buffer. If it doesn't fit, the call returns an error. If it does fit, <CODE>ReplyMsg()</CODE> copies the contents of the data block into the message's buffer and sends the message.<P>
+<H2>Finding a Message Port</H2>
+When a task sends a message to message a port, it needs to know the item number of the port. To get the item number of the port, it is often necessary to use the <CODE>FindMsgPort()</CODE> call:<P>
+<DL>
+<DD><CODE>Item FindMsgPort( const char *name )</CODE><BR>
+</DL>
+When you provide <CODE>FindMsgPort()</CODE> the name of the message port to find, it returns the item number of that port. If the port doesn't exist, it returns a negative error code. If multiple ports of the same name exist, it returns the item number of the port with the highest priority.<P>
+<H2>Example Code for Messages</H2>
+The code in Example 2 demonstrates how to send messages among threads or tasks.<P>
+The <CODE>main()</CODE> routine of the program creates a message port where it can receive messages. It then spawns a thread. This thread creates its own message port and message. The thread then sends the message to the parent's message port. Once the parent receives the message, it sends it back to the thread.<P>
+<B>Example 2: </B><I>Samples using the message passing routines (msgpassing.c).</I><P>
+
+<CODE>
+<PRE>
+#include "types.h"
+#include "item.h"
+#include "kernel.h"
+#include "task.h"
+#include "msgport.h"
+#include "operror.h"
+#include "stdio.h"
+
+
+/*****************************************************************************/
+
+/* A signal mask used to sync the thread with the parent */
+int32 parentSig;
+
+/*****************************************************************************/
+
+
+static void ThreadFunction(void)
+{
+Item  childPortItem;
+Item  childMsgItem;
+Item  parentPortItem;
+Err   err;
+Msg  *msg;
+
+    printf("Child thread is running\n");
+
+    childPortItem = CreateMsgPort("ChildPort",0,0);
+    if (childPortItem &gt;= 0)
+    {
+        childMsgItem = CreateSmallMsg("ChildMsg",0,childPortItem);
+        if (childMsgItem &gt;= 0)
+        {
+            parentPortItem = FindMsgPort("ParentPort");
+            if (parentPortItem &gt;= 0)
+            {
+                /* tell the paren't we're done initializing */
+                SendSignal(CURRENTTASK-&gt;t_ThreadTask-&gt;t.n_Item,parentSig);
+
+                err = SendSmallMsg(parentPortItem,childMsgItem,12,34);
+                if (err &gt;= 0)
+                {
+                    err = WaitPort(childPortItem,childMsgItem);
+                    if (err &gt;= 0)
+                    {
+                        msg = (Msg *)LookupItem(childMsgItem);
+                        printf("Child received reply from parent: ");
+                        printf("msg_Result %d, msg_DataPtr %d, msg_DataSize %d\n",
+                               msg-&gt;msg_Result, msg-&gt;msg_DataPtr, msg-
+                                  &gt;msg_DataSize);
+                    }
+                    else
+                    {
+                        printf("WaitPort() failed: ");
+                        PrintfSysErr(err);
+                    }
+                }
+                else
+                {
+                    printf("SendSmallMsg() failed: ");
+                    PrintfSysErr(err);
+                }
+
+                SendSignal(CURRENTTASK-&gt;t_ThreadTask-&gt;t.n_Item,parentSig);
+            }
+            else
+            {
+                printf("Could not find parent message port: ");
+                PrintfSysErr(parentPortItem);
+            }
+            DeleteMsg(childMsgItem);
+        }
+        else
+        {
+            printf("CreateSmallMsg() failed: ");
+            PrintfSysErr(childMsgItem);
+        }
+        DeleteMsgPort(childPortItem);
+    }
+    else
+    {
+        printf("CreateMsgPort() failed: ");
+        PrintfSysErr(childPortItem);
+    }
+}
+
+
+/*****************************************************************************/
+
+
+int main(int32 argc, char **argv)
+{
+Item  portItem;
+Item  threadItem;
+Item  msgItem;
+Msg  *msg;
+
+    parentSig = AllocSignal(0);
+    if (parentSig &gt; 0)
+    {
+        portItem = CreateMsgPort("ParentPort",0,0);
+        if (portItem &gt;= 0)
+        {
+            threadItem = CreateThread("Child",10,ThreadFunction,2048);
+            if (threadItem &gt;= 0)
+            {
+                /* wait for the child to be ready */
+                WaitSignal(parentSig);
+
+                /* confirm that the child initialized correctly */
+                if (FindMsgPort("ChildPort") &gt;= 0)
+                {
+                    printf("Parent waiting for message from child\n");
+
+                    msgItem = WaitPort(portItem,0);
+                    if (msgItem &gt;= 0)
+                    {
+                        msg = (Msg *)LookupItem(msgItem);
+                        printf("Parent got child's message: ");
+                        printf("msg_DataPtr %d, msg_DataSize %d\n",
+
+                          msg-&gt;msg_DataPtr, msg-&gt;msg_DataSize);
+                        ReplySmallMsg(msgItem,56,78,90);
+                    }
+                    else
+                    {
+                        printf("WaitPort() failed: ");
+                        PrintfSysErr(msgItem);
+                    }
+                }
+
+                /* wait for the thread to tell us it's done before we zap it */
+                WaitSignal(parentSig);
+
+                DeleteThread(threadItem);
+            }
+            else
+            {
+                printf("CreateThread() failed: ");
+                PrintfSysErr(threadItem);
+            }
+            DeleteMsgPort(portItem);
+        }
+        else
+        {
+            printf("CreateMsgPort() failed: ");
+            PrintfSysErr(portItem);
+        }
+        FreeSignal(parentSig);
+    }
+    else
+    {
+        printf("AllocSignal() failed");
+    }
+
+    return 0;
+}
+</CODE>
+</PRE>
+<A NAME="XREF41034"></A><A NAME="XREF20902"></A>

@@ -1,0 +1,29 @@
+<Title>UserBufferProcessor</Title>
+<A NAME="XREF33469"><H1>UserBufferProcessor </A></H1>
+<A NAME="XREF28862"></A> Callback function called by <CODE>ssplProcessSignals()</CODE>, <CODE>ssplAbort()</CODE>, and <CODE>ssplReset()</CODE>.<P>
+<H3>Synopsis</H3>
+<CODE>void (*UserBufferProcessor) ( SoundSpooler *sspl, SoundBufferNode *sbn )</CODE><P>
+<H3>Description</H3>
+This user callback function is called by <CODE>ssplProcessSignals()</CODE> for each buffer that has finished playing and <CODE>ssplAbort()</CODE> for each buffer that is removed from the active buffer queue.  This function can be used as notification that the sound spooler is done with a given buffer.  For example, if sound is being spooled from a network connection, this function could be used to reply the network packet that contained the sample data for a given buffer. <P>
+Using the SoundBufferNode's UserData field can help identify the buffer being passed to this function (for example, UserData could be a pointer to the aforementioned network packet).  See <CODE>ssplGetUserData()</CODE>. <P>
+It is not legal to do anything to disturb the sound spooler's active buffer queue during this function.  In particular, do not call <CODE>ssplSendBuffer()</CODE>  or anything that might call <CODE>ssplSendBuffer()</CODE> as this will confuse the list processor in <CODE>ssplProcessSignals()</CODE>. <P>
+The state of SSPL_STATUS_F_ACTIVE is undefined when inside a UserBufferProcessor function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to the SoundSpooler passed to <CODE>ssplProcessSignals()</CODE> or <CODE>ssplAbort()</CODE>. 
+</DL>
+<DL>
+<DT>sbn
+<DD>Pointer to the completed (or aborted) SoundBufferNode that was just removed from the active queue. 
+</DL>
+<H3>Return Value</H3>
+None <P>
+<H3>Implementation</H3>
+Client-supplied callback function used by music.lib V21. <P>
+<H3>Note</H3>
+This facility has been superceded by the SoundBufferFunc system. <P>
+There are plenty of sound spooler functions in which buffers can be removed from the active queue without any means for the client to provide a UserBufferProcessor function.  This list includes, but is not limited to <CODE>ssplDeleteSoundSpooler()</CODE>, <CODE>ssplAttachInstrument()</CODE>, <CODE>ssplDetachInstrument()</CODE>, and <CODE>ssplPlayData()</CODE>.  Consider using a SoundBufferFunc instead of a UserBufferProcessor. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr095.html#XREF25499"><CODE>SoundBufferFunc</A>(), <A HREF="./02mpr110.html#XREF20300">ssplProcessSignals</A>(), <A HREF="./02mpr096.html#XREF40388">ssplAbort</A>(), <A HREF="./02mpr112.html#XREF41034">ssplReset</A>() </CODE><P>
+</CODE>

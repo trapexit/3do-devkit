@@ -1,0 +1,21 @@
+<Title>delay1tap.dsp</Title>
+<A NAME="XREF11172"><H1>delay1tap.dsp </A></H1>
+<A NAME="XREF26956"></A> Simple 1 tap delay.<P>
+<H3>Function</H3>
+This instrument writes samples to an output, then reads them back on another FIFO and mixes them.  It has a separate "effects send" mix and an output mix.  It can only write to special samples created using <CODE>CreateDelayLine()</CODE>. <P>
+<H3>Knobs</H3>
+Tap0Send  - -$-8000  =&gt;  $7FFF, default = $-4000, = amount of delayed signal to send back.  This controls the amount of recirculation or feedback.  Negative is best because it reduces DC drift. <P>
+OriginalSend  - -$-8000  =&gt;  $7FFF, default = $-3FFF = amount of original signal to send to delay line. <P>
+Tap0Mix  - -$-8000  =&gt;  $7FFF, default = $-4000, = amount of delayed signal to send to output. <P>
+OriginalMix  - -$-8000  =&gt;  $7FFF, default = $-3FFF = amount of original signal to send output. <P>
+<H3>Inputs</H3>
+Input<P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+Tap0 <P>
+<H3>Output FIFOs</H3>
+OutFIFO <P>
+<H3>Resources</H3>
+Ticks = 16 <P>
+N memory = 16 words <P>

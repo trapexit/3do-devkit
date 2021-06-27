@@ -1,0 +1,26 @@
+<TITLE>FreeSignal</TITLE>
+<A NAME="XREF37706"><H1>FreeSignal </A></H1>
+<A NAME="XREF41156"></A>Frees signals.<P>
+<H3>Synopsis</H3>
+<CODE>Err FreeSignal( uint32 sigMask )</CODE><P>
+<H3>Description</H3>
+This procedure frees one or more signal bits allocated by <CODE>AllocSignal()</CODE>. The freed bits can then be reallocated. <P>
+For information about signals, see the description of the <CODE>AllocSignal()</CODE> procedure and the "Communicating Among Tasks" chapter in the 3DO Portfolio Programmer's Guide.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>sigMask
+<DD>A 32-bit value in which any signal bits to deallocate are set. The bits are numbered from 0 (the least-significant bit) to 31 (the most-significant bit). Bits 0 through 7 and bit 31 cannot be freed. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the signal(s) were freed successfully or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ANSI C Prototype
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr009.html#XREF39797"><CODE>AllocSignal</A>(), <A HREF="./01spr133.html#XREF12306">WaitSignal</A>(), <A HREF="./01spr123.html#XREF40028">SendSignal</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF37706"></LINK></H1><HR>

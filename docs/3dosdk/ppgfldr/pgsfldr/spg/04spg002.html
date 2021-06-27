@@ -1,0 +1,11 @@
+<TITLE>Creating and Initializing a List</TITLE>
+<H1>Creating and Initializing a List</H1><HR>
+To create an empty linked list, you first create a variable of type <CODE>List</CODE>. You then initialize the list, which gives the list a name and initializes its head and tail anchors, by calling the <CODE>InitList()</CODE> function:<P>
+<DL>
+<DD><CODE>void InitList( List *l, const char *name )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list to be initialized. The <CODE>name</CODE> argument is the name of the list.<P>
+Another way to initialize a list is by using the <CODE>INITLIST()</CODE> macro. This macro lets you define a fully initialized <CODE>List</CODE> as a variable. By using the macro, you avoid the need to call the<CODE> InitList()</CODE> function. Here is an example of using the <CODE>INITLIST</CODE> macro to create a variable called <CODE>listOfStuff</CODE>:<P>
+<DL>
+<DD><CODE>static List listOfStuff = INITLIST(listOfStuff,"List Name");<A NAME="XREF28891"></A></CODE><BR>
+</DL>

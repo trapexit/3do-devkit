@@ -1,0 +1,312 @@
+<TITLE>Example Programs</TITLE>
+<H1><LINK NAME="XREF38158">Example Programs</LINK></H1><HR>
+Example 2 and Example 2 demonstrate Audio folio programming techniques.<P>
+<B>Example 1: </B><I>Audio folio programming example.</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "operror.h"
+#include "stdio.h"
+
+/* Include this when using the Audio Folio */
+#include "audio.h"
+
+#define    PRT(x)        { printf x; }
+
+#define INS_NAME "triangle.dsp"
+
+/* Macro to simplify error checking. */
+#define CHECKRESULT(val,name) \
+    if (val &lt; 0) \
+    { \
+        Result = val; \
+        PrintError(NULL, name, NULL, Result); \
+        goto cleanup; \
+    }
+
+int main( int32 argc, char *argv[])
+{
+    Item OscIns = 0;
+    Item OutputIns = 0;
+    Item SleepCue = 0;
+    int32 TicksPerSecond;
+    int32 Result = -1;
+
+    PRT(("%s\n", argv[0]));
+
+/* Initialize audio, return if error. */
+    if (OpenAudioFolio() &lt; 0)
+    {
+        PRT(("Audio Folio could not be opened!\n"));
+        return(-1);
+    }
+/*
+** The audio clock rate is usually around 240 ticks per second.
+** It is possible to change the rate using SetAudioRate().
+** We can query the audio rate by calling GetAudiorate().
+*/
+    TicksPerSecond = ConvertF16_32( GetAudioRate() );
+
+/*
+** Create a Cue item that we can use with the Audio Timer functions.
+** It contains a Signal that is used to wake us up.
+*/
+    SleepCue = CreateCue( NULL );
+    CHECKRESULT(SleepCue,"CreateCue");
+
+/*
+** Load "directout" for connecting to DAC.
+** You must connect to a "directout.dsp" or a mixer for
+** the sound to be heard.
+*/
+    OutputIns = LoadInstrument("directout.dsp",  0,  100);
+    CHECKRESULT(OutputIns,"LoadInstrument");
+
+/* Load description of synthetic waveform instrument */
+    OscIns = LoadInstrument( INS_NAME, 0, 100);
+    CHECKRESULT(OscIns,"LoadInstrument");
+
+/* Connect output of sawtooth to left and right inputs. */
+    Result = ConnectInstruments (OscIns, "Output", OutputIns, 
+"InputLeft");
+    CHECKRESULT(Result,"ConnectInstruments");
+    Result = ConnectInstruments (OscIns, "Output",
+
+        OutputIns, "InputRight");
+    CHECKRESULT(Result,"ConnectInstruments");
+
+/*
+** Start the directout instrument so that you hear all of the
+** sawtooth output.
+*/
+    Result = StartInstrument( OutputIns, NULL );
+    CHECKRESULT(Result,"StartInstrument OutputIns");
+
+/*
+** Play a note using StartInstrument.
+** You can pass optional TagArgs to control pitch or amplitude.
+*/
+    Result = StartInstrument( OscIns, NULL );
+    CHECKRESULT(Result,"StartInstrument OscIns");
+
+/*
+** Go to sleep for about 2 seconds.
+*/
+    SleepUntilTime( SleepCue, GetAudioTime() +
+
+        ( 2 * TicksPerSecond ) );
+
+/* Now stop the sound. */
+    StopInstrument(OscIns, NULL);
+    StopInstrument(OutputIns, NULL);
+
+    PRT(("%s all done.\n", argv[0]));
+
+cleanup:
+/* The Audio Folio is immune to passing NULL values as Items. */
+    UnloadInstrument( OscIns );
+    UnloadInstrument( OutputIns );
+    DeleteCue( SleepCue );
+    CloseAudioFolio();
+    return((int) Result);
+}
+</CODE>
+</PRE>
+<B>Example 2: </B><I>Playing an AIFF file.</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "filefunctions.h"
+#include "debug.h"
+#include "operror.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include "event.h"
+
+/* Include this when using the Audio Folio */
+#include "audio.h"
+/* Include this when using the music.lib */
+#include "music.h"
+
+/* Handy printing and debugging macros. */
+#define            PRT(x)        { printf x; }
+#define            ERR(x)        PRT(x)
+#define            DBUG(x)        /* PRT(x) */
+
+/* Macro to simplify error checking. */
+#define CHECKRESULT(val,name) \
+    if (val &lt; 0) \
+    { \
+        Result = val; \
+        PrintError(0,"\failure in",name,val); \
+        goto cleanup; \
+    }
+
+/************************************************************/
+int main(int argc, char *argv[])
+{
+    Item OutputIns = 0;
+    Item SamplerIns = 0;
+    Item SampleItem = 0;
+    Item Attachment = 0;
+    char *SampleName = "sinewave.aiff";
+    int32 Rate = 0x8000;
+    int32 Result = -1;
+    int32 DoIt = TRUE;
+    int32 IfVariable = FALSE;
+    char *InstrumentName;
+    uint32 Buttons;
+    ControlPadEventData cped;
+    TagArg SamplerTags[3];
+    
+    PRT(("Usage: %s &lt;samplefile&gt; &lt;rate&gt;\n", argv[0]));
+
+/* Get optional argumants from command line. */
+    if (argc &gt; 1) SampleName = argv[1]; 
+    if (argc &gt; 2)
+    {
+        Rate=atoi(argv[2]);
+        IfVariable = TRUE;
+    }
+    
+/* Print menu of button commands. */
+    PRT(("Button Menu:\n"));
+    PRT(("   A = Start\n"));
+    PRT(("   B = Release\n"));
+    PRT(("   C = Stop\n"));
+    PRT(("   X = Exit\n"));
+    
+/* Initialize audio, return if error. */ 
+    Result = OpenAudioFolio();
+    if (Result &lt; 0)
+    {
+        PrintError(0,"Audio Folio could not be opened.",0,Result);
+        return(-1);
+    }
+
+/* Initialize the EventBroker. */
+    Result = InitEventUtility(1, 0, LC_ISFOCUSED);
+    if (Result &lt; 0)
+    {
+        PrintError(0,"InitEventUtility",0,Result);
+        goto cleanup;
+    }
+
+/* Load a directout instrument to send the sound to the DAC. */
+    OutputIns = LoadInstrument("directout.dsp",  0, 0);
+    CHECKRESULT(OutputIns,"LoadInstrument");
+    StartInstrument( OutputIns, NULL );
+
+/* Load digital audio AIFF Sample file from disk. */
+    SampleItem = LoadSample(SampleName);
+    CHECKRESULT(SampleItem,"LoadSample");
+    
+/* Look at sample information for fun. */
+    DebugSample(SampleItem);
+    
+/* Select an apropriate sample playing instrument based on sample 
+format. =
+*/
+    InstrumentName = SelectSamplePlayer( SampleItem , IfVariable );
+    if (InstrumentName == NULL)
+    {
+        ERR(("No instrument to play that sample.\n"));
+        goto cleanup;
+    }
+
+/* Load Sampler instrument */
+    PRT(("Use instrument: %s\n", InstrumentName));
+    SamplerIns = LoadInstrument(InstrumentName,  0, 100);
+    CHECKRESULT(SamplerIns,"LoadInstrument");
+
+/* Connect Sampler Instrument to DirectOut. Works for mono or stereo. 
+*/
+    Result = ConnectInstruments (SamplerIns, "Output", OutputIns,
+        "InputLeft");
+    if( Result &gt;= 0 )
+    {
+        Result = ConnectInstruments (SamplerIns, "Output",
+
+            OutputIns,"InputRight");
+        CHECKRESULT(Result,"ConnectInstruments");
+    }
+    else
+    {
+        Result = ConnectInstruments (SamplerIns, "LeftOutput",
+
+            OutputIns, "InputLeft");
+        CHECKRESULT(Result,"ConnectInstruments");
+        Result = ConnectInstruments (SamplerIns, "RightOutput",
+
+            OutputIns, "InputRight");
+        CHECKRESULT(Result,"ConnectInstruments");
+    }
+    
+/* Attach the sample to the instrument for playback. */
+    Attachment = AttachSample(SamplerIns, SampleItem, 0);
+    CHECKRESULT(Attachment,"AttachSample");
+
+/*
+** Start the instrument at the given "frequency". You could also
+** use AF_TAG_PITCH, AF_TAG_AMPLITUDE.
+*/
+    SamplerTags[0].ta_Tag = AF_TAG_RATE;
+    SamplerTags[0].ta_Arg = (void *) Rate;
+    SamplerTags[1].ta_Tag = TAG_END;
+    Result = StartInstrument( SamplerIns, SamplerTags );
+    
+/* Interactive event loop. */
+    while(DoIt)
+    {
+/* Get User input. */
+        Result = GetControlPad (1, TRUE, &amp;cped);
+        if (Result &lt; 0) {
+            PrintError(0,"read control pad in","PlaySoundFile",Result);
+        }
+        Buttons = cped.cped_ButtonBits;
+    
+/* Process buttons pressed. */
+        if(Buttons &amp; ControlX) /* EXIT */
+        {
+            DoIt = FALSE;
+        }
+        if(Buttons &amp; ControlA) /* START */
+        {
+            Result = StartInstrument( SamplerIns, SamplerTags );
+            CHECKRESULT(Result,"StartInstrument");
+        }
+        if(Buttons &amp; ControlB) /* RELEASE */
+        {
+            Result = ReleaseInstrument( SamplerIns, NULL );
+            CHECKRESULT(Result,"ReleaseInstrument");
+        }
+        if(Buttons &amp; ControlC) /* STOP */
+        {
+            Result = StopInstrument( SamplerIns, NULL );
+            CHECKRESULT(Result,"StopInstrument");
+        }
+    }
+
+    Result = StopInstrument( SamplerIns, NULL );
+    CHECKRESULT(Result,"StopInstrument");
+    
+cleanup:
+
+    DetachSample( Attachment );
+    UnloadSample( SampleItem );
+    UnloadInstrument( SamplerIns );
+    UnloadInstrument( OutputIns );
+    
+/* Cleanup the EventBroker. */
+    Result = KillEventUtility();
+    if (Result &lt; 0)
+    {
+        PrintError(0,"KillEventUtility",0,Result);
+    }
+    CloseAudioFolio();
+    PRT(( "%s finished.\n", argv[0] ));
+    return((int) Result);
+}
+</CODE>
+</PRE>
+<A NAME="XREF38006"></A>

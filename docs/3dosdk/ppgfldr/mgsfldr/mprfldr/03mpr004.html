@@ -1,0 +1,28 @@
+<Title>adpcmvarmono.dsp</Title>
+<A NAME="XREF37417"><H1>adpcmvarmono.dsp </A></H1>
+<A NAME="XREF37823"></A> Play a variable-rate compressed 4-bit Intel/DVI format sample.<P>
+<H3>Function</H3>
+This instrument plays a variable rate sample that has been previously compressed to a 4-bit Intel/DVI format.  Run the SoundHack program to compress a sound sample from 16 bits to 4 bits (Intel/DVI format).  This instrument plays this compressed sample, and it uses the decodeadpcm.dsp library routine to do the necessary decompression. <P>
+<H3>Knobs</H3>
+<DL>
+<DT>Frequency
+<DD>Frequency in fixed point phase increment in the range of 0..$8000.  $8000 equals the normal sample rate, with 1 sample per frame.<CODE>  </CODE>Defaults to $2000 which is 1/4 normal rate. 
+</DL>
+<DL>
+<DT>Amplitude
+<DD>0..$7FFF. Defaults to $7FFF. 
+</DL>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+InFIFO <P>
+<H3>Resources</H3>
+Ticks: 108 <P>
+Code: 70 words <P>
+<H3>Implementation</H3>
+V24 <P>
+<H3>Notes</H3>
+Unlike other sample player instruments this one doesn't   support playing the sample above the system sample rate. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./03mpr003.html#XREF39452"><CODE>adpcmmono.dsp</A>, <A HREF="./03mpr011.html#XREF18722">decodeadpcm.dsp</A>, <A HREF="./03mpr010.html#XREF42370">dcsqxdvarmono.dsp</A>, <A HREF="./03mpr047.html#XREF15193">sampler.dsp</A> </CODE><P>
+</CODE>

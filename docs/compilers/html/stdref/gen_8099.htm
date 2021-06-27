@@ -1,0 +1,91 @@
+<HTML><TITLE>generate, generate_n</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>generate, generate_n</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Initialize a container with values produced by a value-generator class.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class ForwardIterator, class Generator>
+  void <B>generate</B>(ForwardIterator first, ForwardIterator last,
+                Generator gen);
+template &#60;class OutputIterator, class Size, class Generator>
+  void <B>generate_n</B>(OutputIterator first, Size n, Generator gen);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>A value-generator function returns a value each time it is invoked. The algorithms <B><I>generate</B></I> and <B><I>generate_n</B></I> initialize (or reinitialize) a sequence by assigning the return value of the generator function <SAMP>gen</SAMP> to all the elements designated by iterators in the range <SAMP>[first, last)</SAMP> or <SAMP>[first, first + n)</SAMP>. The function <SAMP>gen</SAMP> takes no arguments.  (<SAMP>gen</SAMP> can be a function or a class with an <SAMP>operator () </SAMP>defined that takes no arguments.)</P>
+<P><B><I>generate_n</B></I> assumes that there are at least <SAMP>n</SAMP> elements following <SAMP>first</SAMP>, unless <SAMP>first</SAMP> is an insert iterator.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>The <B><I>generate</B></I> and <B><I>generate_n</B></I> algorithms invoke <SAMP>gen </SAMP>and assign its return value exactly<SAMP> last - first </SAMP>(or <SAMP>n</SAMP>) times.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// generate.cpp 
+//
+ #include &#60;algorithm>
+ #include &#60;vector>
+ #include &#60;iostream.h>
+ // Value generator simply doubles the current value 
+ // and returns it 
+ template &#60;class T>
+ class generate_val
+ {
+   private:
+      T val_;
+   public:
+      generate_val(const T&#38; val) : val_(val) {}
+      T&#38; operator()() { val_ += val_; return val_; }
+ };
+ int main()
+ {
+   int d1[4] = {1,2,3,4};
+   generate_val&#60;int> gen(1);
+   // Set up two vectors
+   vector&#60;int> v1(d1,d1 + 4), v2(d1,d1 + 4);
+   // Set up one empty vector
+   vector&#60;int> v3;
+   // Generate values for all of v1
+   <B>generate</B>(v1.begin(),v1.end(),gen);
+   // Generate values for first 3 of v2
+   <B>generate_n</B>(v2.begin(),3,gen);
+   // Use insert iterator to generate 5 values for v3 
+   <B>generate_n</B>(back_inserter(v3),5,gen);
+   // Copy all three to cout
+   ostream_iterator&#60;int> out(cout," ");
+   copy(v1.begin(),v1.end(),out);
+   cout &#60;&#60; endl;
+   copy(v2.begin(),v2.end(),out);
+   cout &#60;&#60; endl;
+   copy(v3.begin(),v3.end(),out);
+   cout &#60;&#60; endl;
+   // Generate 3 values for cout
+   <B>generate_n</B>(ostream_iterator&#60;int>(cout," "),3,gen);
+   cout &#60;&#60; endl;
+   return 0;
+ }
+Output :
+2 4 8 16
+2 4 8 4
+2 4 8 16 32
+2 4 8
+</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you'll have to write:</P>
+<PRE>vector&#60;int, allocator></PRE>
+<PRE></PRE><P>instead of :</P>
+<PRE>vector&#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A></P>
+<HR>
+<A HREF="Fun_7437.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="get_8241.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

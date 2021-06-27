@@ -1,0 +1,24 @@
+<Title>SetFGPen </Title>
+<A NAME="XREF41179"><H1>SetFGPen </A></H1>
+<A NAME="XREF11239"> Sets the foreground pen of a GrafCon.</A><P>
+<H3>Synopsis</H3>
+<CODE>void SetFGPen (GrafCon *gc,Color c)</CODE><P>
+<H3>Description</H3>
+This call sets the foreground pen of the specified GrafCon to the specified color. The color value is a coded 15-bit RGB format value, with each 5-bit value acting as an index into the CLUT color registers. After this call, the imagery part of the text (and other graphics elements that use the foreground pen, including line drawing, rectangle and ellipse rendering) is rendered in the new foreground color. <P>
+The color values produced are different from the color values produced by <A HREF="./01gpr040.html#XREF18008">MakeCLUTColorEntry</A><CODE>()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>gc
+<DD>Pointer to a GrafCon structure. 
+</DL>
+<DL>
+<DT>c
+<DD>Value to be stored as the new foreground pen color. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr043.html#XREF27404"><CODE>MakeRGB15</A>(), <A HREF="./01gpr056.html#XREF24897">SetBGPen</A>() </CODE><P>
+</CODE>

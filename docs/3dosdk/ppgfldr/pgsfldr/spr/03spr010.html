@@ -1,0 +1,18 @@
+<Title>Atan2F16</Title>
+<A NAME="XREF25116"><H1>Atan2F16 </A></H1>
+<A NAME="XREF32537"></A> Computes the arctangent of a ratio.<P>
+<H3>Synopsis</H3>
+<CODE>frac16 Atan2F16( frac16 x, frac16 y )</CODE><P>
+<H3>Description</H3>
+This function computes the arctangent of the ratio y/x. <P>
+The result assumes 256.0 units in the circle (or 16,777,216 units if used as an integer). A correct 16.16 result is returned if the arguments are int32, frac30 or frac14, as long as both arguments are the same type. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>x, y                         16.16-format fractions. 
+</DL>
+<H3>Return Value</H3>
+The function returns the arctangent of the ratio of the arguments. <P>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>

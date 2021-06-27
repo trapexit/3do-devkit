@@ -1,0 +1,31 @@
+<Title>MulManyVec4Mat44_F16</Title>
+<A NAME="XREF24932"><H1>MulManyVec4Mat44_F16 </A></H1>
+<A NAME="XREF26537"></A> Multiplies one or more vectors by a 4x4 matrix of 16.16 values.<P>
+<H3>Synopsis</H3>
+<CODE>void MulManyVec4Mat44_F16( vec4f16 *dest, vec4f16 *src,mat44f16 mat, int32 count )</CODE><P>
+<H3>Description</H3>
+This function multiplies an array of one or more vectors by a 3x3 matrix of 16.16 fractions. The results of the products are deposited in the array of vectors pointed to by the dest argument. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dest
+<DD>A pointer to the array of destination vectors to store the results. 
+</DL>
+<DL>
+<DT>src
+<DD>A pointer to the array of source vectors to be multiplied with the matrix. 
+</DL>
+<DL>
+<DT>mat
+<DD>A 4x4 matrix of 16.16 fractions. 
+</DL>
+<DL>
+<DT>count
+<DD>The number of vectors for the multiplication. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr048.html#XREF25424"><CODE>MulManyVec3Mat33_F16</A>() </CODE><P>
+</CODE>

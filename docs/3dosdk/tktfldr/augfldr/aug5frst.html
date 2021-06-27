@@ -1,0 +1,42 @@
+<TITLE>The ARM Object Format Decoder (decaof)</TITLE>
+<H1><LINK NAME="XREF39634">The ARM Object Format Decoder (decaof)</LINK></H1><HR>
+The ARM Object Format (AOF) file decoder, <I>decaof</I>, is a tool which decodes AOF files, such as those produced by <I>armasm</I> and <I>armcc</I>. <P>
+<H1>Command line options</H1>
+The format of the <I>decaof</I> command is:<P>
+<CODE>
+<PRE>
+decaof [-options] &lt;file&gt; [file ...]
+</CODE>
+</PRE>
+<I>options</I> consists of a string of letters, which have the following meaning:<P>
+<PRE>
+--------------------------------------------------------
+Option   |Description                                   
+--------------------------------------------------------
+h or help|gives on-line details of the decaof command;  
+--------------------------------------------------------
+b        |(brief) prints only the area declarations;    
+--------------------------------------------------------
+a        |prints area contents in hex (and implicitly   
+         |includes -d);                                 
+--------------------------------------------------------
+d        |prints area declarations;                     
+--------------------------------------------------------
+r        |prints relocation directives (and implicitly  
+         |includes -d);                                 
+--------------------------------------------------------
+c        |disassembles code areas (and implicitly       
+         |includes -d);                                 
+--------------------------------------------------------
+g        |prints debug areas formatted readably;        
+--------------------------------------------------------
+s        |prints symbol tables;                         
+--------------------------------------------------------
+t        |prints string tables.                         
+--------------------------------------------------------
+</PRE>
+<P>
+If no <I>options</I> are specified, the effect is of -dst.<P>
+Each <I>file</I> should be an AOF file, otherwise decaof will complain.<P>
+<H2>For more information</H2>
+For a synopsis of AOF, see <A HREF="../arrfldr/3arrf.html#XREF41738">ARM object format</A>. The full specification of AOF can be found in <A HREF="../atsfldr/ats2frst.html#XREF16187">ARM Object Format</A>.<P>

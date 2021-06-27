@@ -1,0 +1,49 @@
+<Title>LoadAnim</Title>
+<A NAME="XREF27243"><H1>LoadAnim </A></H1>
+ Loads an animation<P>
+<H3>Synopsis</H3>
+<CODE>ANIM * LoadAnim (char *fileName, uint32 memTypeBits)</CODE><P>
+<H3>Description</H3>
+Loads an animation file from disk. Parses the cels within the animation 
+into an ANIM structure and returns a pointer to the ANIM. <P>
+The animation file can be single-CCB or multi-CCB format. An optional ANIM 
+chunk may appear at the start of the file. The file can contain pixel and 
+color chunks in either PDAT, PLUT or PLUT, PDAT order, but the chunks must 
+appear in the same order throughout the file. (3DO Animator creates PLUT, 
+PDAT files; PDAT, PLUT files result from concatenating cel files using 
+MPW.) <P>
+When you are finished with the animation, use <CODE>UnloadAnim()</CODE> to 
+free all resources acquired by <CODE>LoadAnim()</CODE> for a given 
+animation file. <P>
+The frames within an animation are allocated incrementally. Initially a 
+block large enough to hold N_FRAMES_PER_CHUNK frames is allocated. If this 
+is exceeded while reading the ANIM then a block with space for 
+N_FRAMES_PER_CHUNK additional frames is allocated, the previously computed 
+frames are copied into this new space, and the old full buffer space is 
+deallocated <P>
+The tag_AnimFrame  and tag_ANIM structures, defined in 
+animutils.h, are used by <CODE>LoadAnim()</CODE>. <P>
+
+The frames within an ANIM are allocated incrementally. Initially a block 
+large enough to hold N_FRAMES_PER_CHUNK frames is allocated. If this is 
+exceeded while reading the ANIM then a block with space for 
+N_FRAMES_PER_CHUNK additional AnimFrames is allocated, the previously 
+computed frames are copied into this new space, and the old full AnimFrame 
+buffer space is deallocated <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fileName
+<DD>Pointer to the file name string. 
+</DL>
+<DL>
+<DT>memTypeBits
+<DD>Type of memory to use when loading the file; usually MEMTYPE_ANY. 
+</DL>
+<H3>Return Value</H3>
+Pointer to an ANIM structure, or NULL if an error occurred. <P>
+<H3>Associated Files</H3>
+lib3do.lib, animutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO201.html#XREF14615"><CODE>UnloadAnim</A>, <A 
+HREF="./01LDO074.html#XREF10102">GetAnimCel</A></CODE>, <A 
+HREF="./01LDO061.html#XREF16402">DrawAnimCel</A> </CODE><P>

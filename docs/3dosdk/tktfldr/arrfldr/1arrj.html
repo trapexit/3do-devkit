@@ -1,0 +1,9 @@
+<TITLE>Floating point support </TITLE>
+<H1><LINK NAME="XREF28963"></LINK><LINK NAME="XREF33057"></LINK><LINK NAME="XREF13511"></LINK><LINK NAME="XREF24892"></LINK><LINK NAME="XREF23557">Floating point support </LINK></H1><HR>
+The ARM C Compiler generates ARM Floating Point instructions to perform floating point operations.<P>
+The ARM's floating point instruction set is supported either by an attached floating-point coprocessor (hardware coprocessors 1 and 2) or by an instruction emulator entered from the undefined instruction trap.<P>
+Normally the floating point instruction emulator is installed by the environment in which the program is executing.  However, for a completely standalone application the program can install the floating point emulator itself.  This is described in the following paragraphs.<P>
+The ARM Floating Point instruction set Emulator (FPE) is supplied with the ARM C system as a linkable object file. Its environmental dependencies are all via a <I>stub</I>, supplied as an assembly language source. This stub file, <I>fpestub</I>, documents how to attach an FPE to the invalid instruction trap location (address 0x4).<P>
+It is intended that the FPE and the <I>fpestub</I> be linked together with whatever else is required to make a standalone module on the target hardware. The <I>fpestub</I> contains two entries for initialisation (attachment to the invalid instruction trap vector) and finalisation (removal from the invalid instruction trap vector). These should be called on activation and deactivation, respectively, of the standalone module.<P>
+For testing purposes, the FPE, <I>fpestub</I> and a test application can be linked together to make a single, standalone application. The application must call __fp_initialise before using any floating point instructions, and __fp_finalise before exiting.<P>
+<P>

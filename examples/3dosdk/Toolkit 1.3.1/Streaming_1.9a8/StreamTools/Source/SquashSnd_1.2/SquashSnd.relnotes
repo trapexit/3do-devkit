@@ -1,0 +1,52 @@
+SquashSnd Release Notes
+----------------------------------------------
+Version 1.2   9/12/93	
+  -new	add spin cursor so you can see activity without
+						verbose mode
+	-new	change -if -of and -vb to -i -o and -v for compatibility
+						with all of the other stream tools.  Apologies for broken
+						MPW scripts; the confusion was driving us crazy.	
+Version 1.1   6/17/93		
+	-new  add gestalt manager call to check for presence of FPU
+            and quit if there isn't one.
+Version 1.0   6/17/93		
+	-new	command line flag changes:
+				-vb for verbose
+				-if for input file
+				-of for output file
+	-new	uses mac file io instead of ansi library calls, does
+					block reads and writes and uses inline 68881 code; now more
+				  than4 times faster.
+	-fix	the encoding routine to deal with 16bit overflow problems	
+	-fix	the compression name string in the comm chunk.  I was 
+			writing a Str255 instead of a C string.
+----------------------------------------------
+Version .11   3/10/93   
+	-new  support for stereo samples; see ta_dcsqstereo
+ 	-fix  sets the creator and type of the new AIFC file	
+
+----------------------------------------------
+First release 0.1 	2/16/93
+
+SquashSnd is an MPW tool that compresses samples/soundfiles 2:1.
+
+Usage: SquashSnd [-v] <infile> <outfile>
+
+SquashSnd can read AIFF/C format soundfiles.  It writes Version1 AIFF-C files 
+which can be played back by the AudioFolio as of Magneto6. 
+
+Currently SquashSnd supports only monophonic, 16bit samples.
+
+SquashSnd preserves the FORMat, FormatVERsion, COMMon, SampledSouND, 
+MARKer (loops should still work!) and INSTrument chunks.  Any other chunks 
+found in the source file are thrown out (this is Apple's recommendation 
+and the AudioFolio doesn't use any of them anyway). 
+
+The -v (verbose) flag causes SquashSnd to print informational and 
+diagnostic messages. Most of this information is not terribly interesting 
+or useful except possibly the statistics on encoding errors.
+
+See ta_dcsq.c in the AudioTestProgs folder for an example of compressed 
+sample playback.
+
+

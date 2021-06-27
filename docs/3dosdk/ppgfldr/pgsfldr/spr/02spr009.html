@@ -1,0 +1,42 @@
+<Title>ExecuteAsThread</Title>
+<A NAME="XREF27642"><H1>ExecuteAsThread </A></H1>
+<A NAME="XREF22155"></A> Executes previously loaded code as a thread.<P>
+<H3>Synopsis</H3>
+<CODE>Item ExecuteAsThread(CodeHandle code,int32 argc, char **argv,char *threadName, int32 priority);</CODE><P>
+<H3>Description</H3>
+This function lets you execute a chunk of code that was previously loaded from disk using <CODE>LoadCode()</CODE>. The code will execute as a thread of the current task. <P>
+In order to function correctly, code being run as a thread should be linked with threadstartup.o instead of the usual cstartup.o.<P>
+The argc and argv parameters are passed directly to the <CODE>main()</CODE> entry point of the loaded code. <P>
+The values you supply for argc and argv are irrelevant to this function. They are simply passed through to the loaded code. Therefore, their meaning must be agreed upon by the caller of this function and by the loaded code. <P>
+threadName specifies the name of the thread. <P>
+priority specifies the priority the new thread should have. Providing a negative priority makes the thread inherit the priority of the current task or thread. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>code
+<DD>A code handle filled in by a previous call to LoadCode(). 
+</DL>
+<DL>
+<DT>argc
+<DD>A value that is passed directly as the argc parameter to the loaded code's main() entry point. This function doesn't use the value of this argument, it is simply passed through to the loaded code. 
+</DL>
+<DL>
+<DT>argv
+<DD>A value that is passed directly as the argv parameter to the loaded code's main() entry point. This function doesn't use the value of this argument; it is simply passed through to the loaded code. 
+</DL>
+<DL>
+<DT>threadName
+<DD>The name of the thread. Should be a descriptive string that identifies this thread. 
+</DL>
+<DL>
+<DT>priority
+<DD>The priority for the new thread. Supply a negative value to have the thread inherit the priority of the current task or thread. Priorities for user threads can be in the range of 10 to 199. 
+</DL>
+<H3>Return Value</H3>
+Returns the item number of the new thread, or a negative error code if the thread could not be created. <P>
+<H3>Implementation</H3>
+Folio call implemented in file folio V21. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr011.html#XREF35386"><CODE>LoadCode</A>(), <A HREF="./02spr022.html#XREF19343">UnloadCode</A>(), <A HREF="./02spr008.html#XREF38016">ExecuteAsSubroutine</A>() </CODE><P>
+</CODE>

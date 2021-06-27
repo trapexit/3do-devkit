@@ -1,0 +1,24 @@
+<Title>FreeInstrument</Title>
+<A NAME="XREF13380"><H1>FreeInstrument </A></H1>
+<A NAME="XREF15914"></A> Frees an instrument and its resources allocated by <CODE>AllocInstrument()</CODE>.<P>
+<H3>Synopsis</H3>
+<CODE>Err FreeInstrument (Item InstrumentItem)</CODE><P>
+<H3>Description</H3>
+This function frees an instrument allocated by <CODE>AllocInstrument()</CODE>, which frees the resources allocated for the instrument. If the instrument is running, it is stopped. All of the Attachments, Knobs, and Probes belonging to this Instrument are also deleted by this function. The Envelopes and Samples at the other end of Attachments are not deleted by this function. <P>
+If you delete an instrument Template, all Instruments created using that Template are freed, so you don't need to use <CODE>DeleteInstrument()</CODE> on them. <P>
+Do not confuse this function with <CODE>UnloadInstrument()</CODE>. If you create an Instrument using <CODE>LoadInstrument()</CODE>, you shouldn't use <CODE>DeleteInstrument()</CODE> to free the instrument because it will leave the instrument's Template loaded and without access to unload the Template. Use <CODE>UnloadInstrument()</CODE> instead. <P>
+<CODE>AllocInstrument() </CODE> and <CODE>FreeInstrument()</CODE> are special cases of the more general <CODE>CreateInstrument()</CODE>  and <CODE>DeleteInstrument()</CODE>, which offer greater flexibility. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>InstrumentItem
+<DD>The item number of the instrument to free. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in audio.lib V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr005.html#XREF27095"><CODE>AllocInstrument</A>(), <A HREF="./01mpr029.html#XREF39688">DeleteInstrument</A>(), <A HREF="./01mpr082.html#XREF16084">UnloadInstrument</A>(), <A HREF="./01mpr081.html#XREF38811">UnloadInsTemplate</A>() </CODE><P>
+</CODE>

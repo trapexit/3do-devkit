@@ -1,0 +1,17 @@
+<HTML><HEAD><TITLE>Container Types Not Found in the Standard Library</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Container Types Not Found in the Standard Library</H2>
+<P>There are a number of "classic" container types that are not found in the standard library.  In most cases, the reason is that the containers that have been provided can easily be adapted to a wide variety of uses, including those traditionally solved by these alternative collections.</P>
+<P>There is no <I>tree</I> collection that is described as such.  However, the <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> data type is internally implemented using a form of binary search tree.  For most problems that would be solved using trees, the set data type is an adequate substitute.</P>
+<P>The set data type is specifically ordered, and there is no provision for performing set operations (union, intersection, and so on) on a collection of values that cannot be ordered (for example, a set of complex numbers).  In such cases a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> can be used as a substitute, although it is still necessary to write special set operation functions, as the generic algorithms cannot be used in this case.</P>
+<P>There are no <I>multidimensional arrays</I>.  However, vectors can hold other vectors as elements, so such structures can be easily constructed.</P>
+<P>There are no <I>graphs</I>.  However, one representation for graphs can be easily constructed as a map that holds other maps.  This type of structure is described in the sample problem discussed in <a href="exa_7078.htm#graphs">Chapter 9</a>.</P>
+<P>There are no <I>sparse arrays</I>.  A novel solution to this problem is to use the graph representation discussed in <a href="exa_7078.htm#graphs">Chapter 9</a>.</P>
+<P>There are no <I>hash tables</I>.  A hash table provides amortized constant time access, insertion and removal of elements, by converting access and removal operations into indexing operations.  However, hash tables can be easily constructed as a vector (or deque) that holds lists (or even sets) as elements.  A similar structure is described in the radix sort sample problem discussed in <a href="exa_6226.htm">Chapter 7</a>, although this example does not include invoking the hash function to convert a value into an index.</P>
+<P>In short, while not providing every conceivable container type, the containers in the standard library represent those used in the solution of most problems, and a solid foundation from which further structures can be constructed.</P>
+
+<HR>
+<A HREF="mem_0434.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="vec_1893.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

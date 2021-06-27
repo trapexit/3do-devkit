@@ -1,0 +1,30 @@
+<Title>ssplUnrequestBuffer</Title>
+<A NAME="XREF21344"><H1>ssplUnrequestBuffer </A></H1>
+<A NAME="XREF39164"></A> Return an unused buffer to the sound spooler.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplUnrequestBuffer (SoundSpooler *sspl, SoundBufferNode *sbn)</CODE><P>
+<H3>Description</H3>
+<CODE>ssplUnrequestBuffer()</CODE>  puts an unused SoundBufferNode from the requested queue back into the free queue. Use it as a way to politely give up write access to a SoundBufferNode that was given to you by <CODE>ssplRequestBuffer()</CODE>  that you aren't going to submit to <CODE>ssplSendBuffer()</CODE>. For example, This can be used as part of a clean up path that traps failures between <CODE>ssplRequestBuffer()</CODE>  and <CODE>ssplSendBuffer()</CODE>. <P>
+This is automatically done for all SoundBufferNodes in the requested list by <CODE>ssplReset()</CODE>, <CODE>ssplAbort()</CODE>, and <CODE>ssplDeleteSoundSpooler()</CODE>. <P>
+<H3>Argument</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<DL>
+<DT>sbn
+<DD>Pointer to a SoundBufferNode to return. The SBN must actually be in the requested or else this function will return an error. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, negative error code on failure: <P>
+<DL>
+<DT>ML_ERR_BAD_ARG
+<DD>- the supplied sbn was not actually on the requested list. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr111.html#XREF24497"><CODE>ssplRequestBuffer</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>() </CODE><P>
+</CODE>

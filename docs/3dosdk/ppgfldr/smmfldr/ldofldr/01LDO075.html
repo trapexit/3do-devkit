@@ -1,0 +1,19 @@
+<Title>GetCelBitsPerPixel</Title>
+<A NAME="XREF26605"><H1>GetCelBitsPerPixel </A></H1>
+ Returns a cel's bits per pixel value.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetCelBitsPerPixel (CCB *cel)</CODE><P>
+<H3>Description</H3>
+Returns the bits-per-pixel value for the cel, determined by examining the cel's preamble data.<P>
+This function exists primarily to support library internals, but may be useful for applications as well. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to a cel. 
+</DL>
+<H3>Return Value</H3>
+Bits per pixel, one of 1, 2, 4, 6, 8, or 16. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>

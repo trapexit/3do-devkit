@@ -1,0 +1,336 @@
+<TITLE>The ARM instruction set</TITLE>
+<H1><LINK NAME="XREF40499">The ARM instruction set</LINK></H1><HR>
+The ARM instruction set, describedin this section, may be subject to processor-specific restrictions and changes. Particular combinations of instructions must be avoided where noted, as unpredictable results may otherwise occur. Refer to the appropriate ARM processor datasheet for a precise definition of the instruction set, and also refer to companion application notes for information on relevant restrictions and changes.<P>
+The most significant variations are those between ARM processors with 26- and 32-bit program counters. <P>
+<H2>Conditional execution and the `S' bit</H2>
+All ARM instructions are conditional and are only executed if their condition field matches the N, Z, C and V condition flags of the program status register (PSR).  For full details of the processor status flags refer to the ARM Datasheet for the appropriate ARM device. The default condition field setting is <I>execute</I> <I>always</I>; other conditions are specified by appending a two-character condition mnemonic to the instruction mnemonic. A conditionally executed sequence of instructions will usually be shorter and sometimes even faster than a branched-around sequence, because it will not cause breaks in the CPU pipeline.<P>
+<PRE>
+----------------------------------------------------------
+Mnemonic  |Condition                  |CPU condition flags
+----------------------------------------------------------
+EQ        |EQual                      |Z set              
+----------------------------------------------------------
+NE        |Not Equal                  |Z clear            
+----------------------------------------------------------
+CS        |Carry Set/unsigned Higher  |C set              
+          |or Same                    |                   
+----------------------------------------------------------
+CC        |Carry Clear/unsigned LOwer |C clear            
+          |than                       |                   
+----------------------------------------------------------
+MI        |Negative (MInus)           |N set              
+----------------------------------------------------------
+PL        |Positive (PLus)            |N clear            
+----------------------------------------------------------
+VS        |oVerflow Set               |V set              
+----------------------------------------------------------
+VC        |oVerflow Clear             |V clear            
+----------------------------------------------------------
+HI        |HIgher unsigned            |C set and Z clear  
+----------------------------------------------------------
+LS        |Lower or Same unsigned     |C clear or Z set   
+----------------------------------------------------------
+GE        |Greater than or Equal to   |(N and V) set or   
+          |                           |(Nand V) clear     
+----------------------------------------------------------
+LT        |Less Than                  |(N set and V clear)
+          |                           |or (N clear and V  
+          |                           |set)               
+----------------------------------------------------------
+GT        |Greater Than               |((N and V) set or  
+          |                           |clear) and Z clear 
+----------------------------------------------------------
+LE        |Less Than or equal to      |(N set and V clear)
+          |                           |or (N clear and V  
+          |                           |set) or Z set      
+----------------------------------------------------------
+</PRE>
+<P>
+HS (Higher or Same) and LO (LOwer than) are synonyms for CS and CC respectively.<P>
+Condition flags are set by executed ALU instructions which have the `S' bit set, and by executed comparison instructions. The S bit is set by appending `S' to the instruction mnemonic.<P>
+<H2>Register Names and `.'</H2>
+Fifteen registers (R0 to R14), the program counter (PC), and the processor status register (PSR), are all directly accessible to the programmer. Register R15 contains the PC, and in 26-bit address ARMs it contains the PSR too. In 32-bit address ARMs the PSR is separate, and is manipulated by separate instructions.<P>
+R14 is used as the subroutine link register, saving a copy of R15 when a <I>Branch with Link</I> instruction is executed (see <A HREF="#XREF16629">Branch instructions - B and BL</A>). R13 is conventionally used as a stack pointer.<P>
+The non-user processor modes each have their own R13 and R14, and in 32-bit ARMs, PSR registers. FIQ mode additionally has its own R8-R12. When a mode change occurs, because of interrupts, SWIs or traps, R14 of the new mode is set to a copy of R15, and in 32-bit ARMs the PSR of the new mode is copied from the PSR of the old mode. For further details of banked registers and mode changes, consult the appropriate ARM datasheet for the target processor.<P>
+Within an assembly language source, the current value of the program counter (PC) can be referred to as `.'. Usually, `.' is 8 bytes ahead of the instruction using it because of pipelining. For example:<P>
+<CODE>
+<PRE>
+LDR R0,[.-8+offset]
+</CODE>
+</PRE>
+loads a word at <I>offset</I> bytes from the current instruction. Please refer to the appropriate ARM datasheet for precise details.<P>
+<A NAME="XREF16629"><H2>Branch instructions </A></H2>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+B{L}{condition} expression
+</CODE>
+</PRE>
+where the <I>expression</I> evaluates to the branch destination address. If the address is within \xb1 32MB of the current program counter, it can be expressed directly as an offset. On 32-bit address ARMs, branches of more than 32MB have to be effected by loading the destination address directly into the PC, or by adding a long offset to the PC using a value loaded into a register. <I>Branch with Link</I> saves the PC into R14 of the current bank. To return, use:<P>
+<CODE>
+<PRE>
+MOV    PC, R14
+</CODE>
+</PRE>
+or<P>
+<CODE>
+<PRE>
+LDMFD  SP!, {...,PC}
+</CODE>
+</PRE>
+if the link register has been saved on a stack. Note that these instructions will not restore the original PSR.<P>
+The assembler automatically compensates for the effects of pipelining and prefetching when calculating offsets.<P>
+<A NAME="XREF32602"><H2>Data processing instructions </A></H2>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+opcode{condition}{S} destination,operand2
+</CODE>
+</PRE>
+The <I>destination</I> must be a register. <I>Operand2</I> may be any of:<P>
+<UL>
+<LI>An 8-bit immediate constant, rotated right by a constant 0, 2, 4...30 bits. Assembler syntax:
+</UL>
+    <CODE>
+<PRE>
+#constant-expression{,constant-rotation}
+</CODE>
+</PRE>
+<UL>
+<LI>A register shifted left, shifted logically right, shifted arithmetically right, or rotated right by a constant 0...31 bits. Assembler syntax:
+</UL>
+    <CODE>
+<PRE>
+register {,shift #constant-expression}
+</CODE>
+</PRE>
+<UL>
+<LI>where shift is one of:
+</UL>
+    <CODE>
+<PRE>
+LSL        Shift left
+    LSR        Logical shift right
+    ASR        Arithmetic shift right
+    ROR        rotate right
+</CODE>
+</PRE>
+<UL>
+<LI>A register, shifted as above by the amount given in another register. Assembler syntax:
+</UL>
+    <CODE>
+<PRE>
+register {,shift register}
+</CODE>
+</PRE>
+<UL>
+<LI>A register rotated 1 bit right through the carry flag, (a 1 bit rotate right of a 33-bit value, after which the most significant bit of the register is the old value of the carry flag). The assembler syntax in this case is:
+</UL>
+    <CODE>
+<PRE>
+register, RRX
+</CODE>
+</PRE>
+For simple constants (e.g. #&amp;FC000003), the assembler will generate the appropriate rotation for you.<P>
+<H2>Data processing instructions </H2>
+The syntax of this group of instructions is:<P>
+<CODE>
+<PRE>
+opcode{condition}{S} destination,operand1,operand2
+</CODE>
+</PRE>
+The <I>destination</I> and <I>operand1</I> must both be registers, and <I>operand2</I> should be as described for the MOV and MVN instructions (see <A HREF="#XREF32602">Data processing instructions - MOV and MVN</A>).<P>
+With ADD and ADC a carry is generated by 32-bit overflows; for subtractions it is generated if, and only if underflow did not occur.<P>
+With ADD, ADC, SUB, SBC, RSB and RSC the V flag is set if signed overflow occurred, i.e. when the carry into bit 31 was not equal to the carry out of that bit.<P>
+<H2>Data processing instructions </H2>
+The N and C flags may also be affected if a shift or rotation was involved in the construction of <I>operand2</I><P>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+opcode{condition}{P} operand1,operand2
+</CODE>
+</PRE>
+Each of these instructions preserves its operands and produces no result other than updated PSR flags. <I>Operand1 </I>must be a register, and <I>operand2</I><I> </I>must be as described for MOV and MVN (see <A HREF="#XREF32602">Data processing instructions - MOV and MVN</A>).<P>
+If <I>P</I> is not specified, the PSR condition flags are set to the ALU condition flags after the operation (as described above), and the instructions behave as conventional status-setting comparisons.<P>
+With 26-bit ARMs, use of <I>P</I> allows direct manipulation of the PSR, as described below. <I>P</I> must not be used with 32-bit ARMs: instead use MSR and MRS (see section <A HREF="#XREF16833">PSR transfer - MSR and MRS</A>).<P>
+In 26-bit user mode, <CODE>{</CODE><I>opcode</I><CODE>}P</CODE> moves the result of the operation to the PSR, and sets the N, Z, C and V flags from the top four bits of the result. In other 26-bit modes it sets the N, Z, C, V, I and F flags from the top six bits, and the mode bits from the bottom two bits of the result. A typical use of <CODE>{</CODE><I>opcode</I><CODE>}P</CODE> would be to change modes.<P>
+<A NAME="XREF16833"><H2>PSR transfer </A></H2>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+MSR
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+MRS
+</CODE>
+</PRE>
+These instructions are available on 32-bit ARMs only. R15 cannot be used as the destination register. Please refer to your ARM datasheet for precise details.<P>
+<I>psrl</I> can be one of CPSR, CPSR_all, CPSR_flg, CPSR_ctl, SPSR, SPSR_all, SPSR_flg, or SPSR_ctl. (CPSR and CPSR_all are synonyms as are SPSR and SPSR_all).<P>
+<I>psrs</I> can be one of SPSR, SPSR_all, CPSR or CPSR_all.<P>
+<I>Operand2</I> is as described in section <A HREF="#XREF32602">Data processing instructions - MOV and MVN</A>.<P>
+In user mode the instructions behave as follows:<P>
+<CODE>
+<PRE>
+MSR CPSR_all, op2                    ; CPSR{N,Z,C,V} &lt;- op2
+MSR CPSR_flg, op2                    ; CPSR{N,Z,C,V} &lt;- op2
+MSR CPSR_ctl, op2                    ; No effect
+MRS Rd, CPSR                    ; Rd &lt;- CPSR{N,Z,C,V,I,F,M[4:0]}
+MSR SPSR, op2                    ; Not valid in user mode
+MRS Rd, SPSR                    ; Not valid in user mode
+</CODE>
+</PRE>
+In privileged modes the instructions behave as follows:<P>
+<CODE>
+<PRE>
+MSR CPSR_all, op2                    ; CPSR{N,Z,C,V,I,F,M[4:0]} &lt;- op2
+MSR CPSR_flg, op2                    ; CPSR{N,Z,C,V} &lt;- op2
+MSR CPSR_ctl, op2                    ; CPSR{I,F,M[4.0]} &lt;- op2
+MRS Rd, CPSR                    ; Rd &lt;- CPSR{N,Z,C,V,I,F,M[4:0]}
+MSR SPSR_all, Rm                    ; SPSR_mode{N,Z,C,V,I,F,M[4:0]} &lt;- op2
+MSR SPSR_flg, Rm                    ; SPSR_mode{N,Z,C,V} &lt;- op2
+MSR SPSR_ctl, Rm                    ; SPSR_mode{I,F,M[4.0]} &lt;- op2
+MRS Rd, SPSR                    ; Rd &lt;- SPSR_mode{N,Z,C,V,I,F,M[4:0]}
+</CODE>
+</PRE>
+<H2>Single data transfer </H2>
+These instructions come in two forms called pre-indexed and post-indexed. The syntax of pre-indexed instructions is:<P>
+<CODE>
+<PRE>
+opcode{condition}{B} register,[base{,index}]{!}
+</CODE>
+</PRE>
+Post-indexed instructions take the form:<P>
+<CODE>
+<PRE>
+opcode{condition}{B} register,[base]{,index}
+</CODE>
+</PRE>
+<I>B</I> specifies a byte instead of a word transfer (i.e. 8 bits instead of 32). <I>Register</I> is the destination of the load or source of the store. <I>Base</I> must be a register; for pre-indexed addressing, <I>index</I> is added to it to yield the load or store address; with post-indexed addressing, <I>base</I><I> </I>gives the address for the load or store, and <I>base</I>+<I>index</I> is the value written back to <I>base</I>. In the pre-indexed case <I>!</I> enables writeback of <I>base</I>+<I>index</I> to base.<P>
+Index may be one of the following:<P>
+<CODE>
+<PRE>
+#{-}12-bit-constant-expression
+{-}register {, shift #5-bit-constant-expression}
+</CODE>
+</PRE>
+(<I>Shift</I> is explained in section <A HREF="#XREF32602">Data processing instructions - MOV and MVN</A>. In this second form the value of <I>index</I> is the value in <I>register</I><I> </I>shifted as specified.<P>
+LDR can also used to generate literal constants,  program counter relative constant addresses and external addresses.  The syntax is:<P>
+<CODE>
+<PRE>
+LDR register,=expression
+</CODE>
+</PRE>
+If expression is a numeric constant, then a MOV or MVN will be used rather than an LDR if the constant can be constructed by either of these instructions.  Otherwise, the assembler will generate a program-relative LDR, and if the desired literal does nor already exist within the addressable range of this LDR, it will place the literal in the next literal pool, (see also LTORG <A HREF="./7auge.html#XREF23090">Organisational directives - END, ORG, LTORG and KEEP</A>.<P>
+Additionally, LDR or STR can be used to transfer data to or from an address specified by a label (optionally with an offset) as follows:<P>
+<CODE>
+<PRE>
+opcode{cond}{B} register,label-expression
+</CODE>
+</PRE>
+When used in this form, <I>label expression</I> must either be addressable PC-relative from this instruction, or must be a register-relative label created using the `^' directive with a register operand, (see section <A HREF="./7auge.html#XREF29996">Describing the layout of store - ^ and #</A>).<P>
+<A NAME="XREF35349"><H2>Block data transfer </A></H2>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+opcode{condition}type base{!},register-list{^}
+</CODE>
+</PRE>
+The opcode is combined with one of eight instruction types with the mnemonics DB, DA, IB, IA, FD, ED, FA, and EA; the meaning of FD, ED FA and EA varies according to whether a load or store is performed. In detail:<P>
+<PRE>
+--------------------------------------------------------
+STMDB      |Decrement base Before the store             
+--------------------------------------------------------
+STMDA      |Decrement base After the store              
+--------------------------------------------------------
+STMIB      |Increment base Before the store             
+--------------------------------------------------------
+STMIA      |Increment base After the store              
+--------------------------------------------------------
+LDMDB      |Decrement base Before the load              
+--------------------------------------------------------
+LDMDA      |Decrement base After the load               
+--------------------------------------------------------
+LDMIB      |Increment base Before the load              
+--------------------------------------------------------
+LDMIA      |Increment base After the load               
+--------------------------------------------------------
+STMFD      |Push registers to a Full stack, Descending  
+           |(STMDB)                                     
+--------------------------------------------------------
+STMED      |Push registers to an Empty stack, Descending
+           |(STMDA)                                     
+--------------------------------------------------------
+STMFA      |Push registers to a Full stack, Ascending   
+           |(STMIB)                                     
+--------------------------------------------------------
+STMEA      |Push registers to an Empty stack, Ascending 
+           |(STMIA)                                     
+--------------------------------------------------------
+LDMFD      |Pop registers from a Full stack, Descending 
+           |(LDMIA)                                     
+--------------------------------------------------------
+LDMED      |Pop registers from an Empty stack,          
+           |Descending (LDMIB)                          
+--------------------------------------------------------
+LDMFA      |Pop registers from a Full stack, Ascending  
+           |(LDMDA)                                     
+--------------------------------------------------------
+LDMEA      |Pop registers from an Empty stack, Ascending
+           |(LDMDB)                                     
+--------------------------------------------------------
+</PRE>
+<P>
+A full stack is one in which the stack pointer points to the last data item written to it, and an empty stack is one where the stack pointer points to the first free slot in it. A descending stack grows from high memory addresses to low, and an ascending stack vice versa.<P>
+<I>Base</I> contains the starting address for the transfer and can be any register except R15. If present <I>!</I> requests writeback of the updated base address to <I>base</I> after the instruction is executed.<P>
+<I>Register-list</I> is a comma-separated list of registers, or register ranges enclosed in {}. A register range is two register names joined by a hyphen, and represents the registers named and all those between them. The directive RLIST (see section <A HREF="./7auge.html#XREF11810">Miscellaneous directives - ALIGN, NOFP, RLIST and ENTRY</A>) can also be used to create a list of registers to be used. In user mode ^ sets the S bit to load the PSR along with the PC; in privileged modes it forces transfer of the user mode registers.<P>
+<H2>Multiplies </H2>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+MUL{condition}{S} destination,operand1,operand2
+MLA{condition}{S} destination,operand1,operand2,operand3
+</CODE>
+</PRE>
+The <I>destination</I> and all operands must be registers. MUL multiplies <I>operand1</I> by <I>operand2</I><I>, </I>and places the result in the destination register. MLA multiplies <I>operand1</I> by <I>operand2</I>, adds <I>operand3</I> to the product and places the result in the destination register. Both instructions work with signed and unsigned integers. For details of how to make multiply instructions execute quickly, see the appropriate ARM datasheet, or the Cookbook.<P>
+Certain combinations of operands should be avoided and are warned against by the assembler. The destination register should not be the same as <I>operand1</I> as this will give a meaningless result. R15 should not be used as a destination register, nor as an operand.  See the appropriate ARM datasheet for further details.<P>
+<H2>Single data swap </H2>
+SWP swaps a byte or word quantity between a register and memory, locking the memory bus in the process to preserve atomic operation (where supported by external hardware). The syntax is:<P>
+<CODE>
+<PRE>
+SWP{condition}{B} destination,source,[base]
+</CODE>
+</PRE>
+<I>Destination</I>, <I>source</I> and <I>base</I> must all be registers. <I>B</I> sets the width of the transfer to byte rather than word. The memory address is that in <I>base</I>; its contents are read, the source register is written to it, and the old memory contents are then stored in <I>destination</I>. The same register can serve as <I>source</I> and <I>destination</I>. R15 may not be used as the swap address, the <I>source</I> or the <I>destination</I>.<P>
+<H2>Software interrupt/supervisor call </H2>
+This instruction is used by programs to communicate with the host operating system. The syntax is:<P>
+<CODE>
+<PRE>
+SWI constant-expression
+</CODE>
+</PRE>
+The expression value is truncated to 24 bits (i.e. between &amp;0 and &amp;FFFFFF); it is ignored by the processor but is interpreted by operating system software.<P>
+<H2>Pseudo-instructions </H2>
+The Assembler supports several pseudo-instructions which are translated into the appropriate combination of ARM instructions at assembly time.<P>
+<PRE>
+--------------------------------------------------------
+ADR        |Assemble address to register                
+--------------------------------------------------------
+</PRE>
+<P>
+Because the ARM has no `load effective address' instruction the assembler provides ADR, which will always assemble to produce ADD, SUB, MOV or MVN instructions to generate the address. The syntax is:<P>
+<CODE>
+<PRE>
+ADR{condition}{L} register,expression
+</CODE>
+</PRE>
+The <I>expression</I> can be register-relative, program-relative or numeric. ADR must assemble to one instruction, whereas ADRL allows a wider range of effective addresses to be assembled in two instructions..<P>
+<PRE>
+--------------------------------------------------------
+NOP        |No operation                                
+--------------------------------------------------------
+</PRE>
+<P>
+This generates the preferred <I>no-operation</I> code for a given ARM processor, which is often <I>MOV R0,R0</I>. NOP is really a directive and so cannot be used conditionally; not executing a <I>no-operation</I> is the same as executing it, so conditional execution is pointless.<P>
+<P>

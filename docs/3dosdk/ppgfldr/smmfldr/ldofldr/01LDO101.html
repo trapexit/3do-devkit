@@ -1,0 +1,25 @@
+<Title>ICornerFromSRect</Title>
+<A NAME="XREF11198"><H1>ICornerFromSRect </A></H1>
+ Calculates the opposite corner in an SRect.<P>
+<H3>Synopsis</H3>
+<CODE>IPoint * ICornerFromSRect (IPoint *dst, SRect *src)</CODE><P>
+<H3>Description</H3>
+Calculates the opposite corner of the area described by the source rectangle (src), and stores the results at *dst. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to the IPoint where the results are to be stored. 
+</DL>
+<DL>
+<DT>src
+<DD>Pointer to an SRect. 
+</DL>
+<H3>Return Value</H3>
+The input parameter dst. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO211.html#XREF38961"><CODE>XCORNERFROMSRECT</A>, <A HREF="./01LDO213.html#XREF38828">YCORNERFROMSRECT</A>, <A HREF="./01LDO110.html#XREF38962">ISizeFromCRect</A></CODE><P>
+</CODE>

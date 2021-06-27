@@ -1,0 +1,26 @@
+<Title>GetKnobName</Title>
+<A NAME="XREF16856"><H1>GetKnobName </A></H1>
+<A NAME="XREF33893"></a> Queries name of one of an Instrument's knob.<P>
+<H3>Synopsis</H3>
+<CODE>char *GetKnobName (Item Instrument, int32 KnobNumber)</CODE><P>
+<H3>Description</H3>
+This function returns the name of one of the Knobs belonging to an Instrument. The Knob is selected by specifying an index between 0 and NKnobs-1, where NKnobs is the # of Knobs the instrument has (see <CODE>GetNumKnobs()</CODE>). The name of the Knob can be used to grab that Knob. This function is useful if you don't already know the names of the Knobs belonging to an instrument (see the example ta_faders.c or patchdemo.c for example usage). <P>
+If you already have a Knob Item, you can find out its name with <CODE>GetAudioItemInfo()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>Item number of the instrument. 
+</DL>
+<DL>
+<DT>KnobNumber
+<DD>Index number of a knob. Must be between zero and one less than the result of <CODE>GetNumKnobs()</CODE> for this instrument. 
+</DL>
+<H3>Return Value</H3>
+The function returns a pointer to the name of the specified knob if successful or NULL if an error occurs. Note that this is not a memory allocation, but a pointer to system memory. You can read it, but you can't write it, free it, or change it in any way. This pointer becomes invalid after the Instrument's Template has been deleted. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr048.html#XREF24622"><CODE>GetNumKnobs</A>(), <A HREF="./01mpr049.html#XREF29402">GrabKnob</A>(), <A HREF="../../pgsfldr/spr/09spr011.html#XREF23454">Knob</A> </CODE><P>
+</CODE>

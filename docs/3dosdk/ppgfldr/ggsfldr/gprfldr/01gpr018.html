@@ -1,0 +1,51 @@
+<Title>DisplayOverlay </Title>
+<A NAME="XREF23720"><H1>DisplayOverlay </A></H1>
+<A NAME="XREF40363"> Displays a bitmap overlaying all screens.</A><P>
+<H3>Synopsis</H3>
+<CODE>Item DisplayOverlay (Item bitmap, int32 topedge();</CODE><P>
+<H3>Description</H3>
+DisplayOverlay creates and installs an overlay onto the prevailing display. This presents critical information to the user. The underlying screen and application driving it continue to operate normally. <P>
+The specified bitmap is spliced into the prevailing display; its top edge is at the location specified by topedge. <CODE>DisplayOverlay()</CODE> returns an item representing the overlay or an error if unsuccessful. The specified bitmap will remain in front of all other screens until the overlay is removed using <CODE><A HREF="../../pgsfldr/spr/01spr032.html#XREF18938">DeleteItem</A>()</CODE>. <P>
+Only one overlay can be active at a time; the most recent bitmap supplied to <CODE>DisplayOverlay()</CODE> is displayed. <P>
+The top edge of the bitmap may be greater than or equal to 0, and the bottom edge must be no lower than the total height of the prevailing display mode (NTSC or PAL). The overlay is not be created if these bounds are violated. <P>
+<H3>Note</H3>
+It is strongly recommended that this function is used only to display information of a time-critical and transient nature to the user. Using this facility for the purpose of permanently installing a static graphic (like a flight control panel) is expressly discouraged. <P>
+It is anticipated that, one day, overlays will be translucent. In anticipation of this eventuality, you are encouraged to observe the following rendering rules: <P>
+<UL>
+<LI>Translucent imagery should be rendered with the high bit (bit 15) set. 
+<LI>Opaque imagery (like text) should be rendered with the high bit clear. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>Number of the bitmap to be displayed. 
+</DL>
+<DL>
+<DT>topedge
+<DD>Y-position Where the top edge of the bitmap is to appear. 
+</DL>
+<H3>Result </H3>
+<DL>
+<DT>Item
+<DD>An item representing the overlay, or a negative error code. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V22. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>graphics.h
+<DD>ANSI Prototype 
+</DL>
+<DL>
+<DT>graphics.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveats</H3>
+Currently, if the top edge is 0, it is silently bumped to 1. This behavior will change in the future. <P>
+The internal nature of the overlay shall forever remain private, because its implementation is going to change. If you attempt to rely on any characteristics of an overlay item that aren't documented here your application will break. <P>
+The CLUT used for the overlay is the standard ascending color set; it cannot be changed. <P>
+All subpositioning and anti-aliasing features are turned off in the overlay region; they cannot be changed. <P>
+Due to a hardware, the top and bottom lines of the overlay can appear irregular if vertical averaging is enabled in the underlying screen. This is especially true of pseudo-24-bit displays. <P>
+<H3>See Also</H3>
+<CODE><A HREF="../../pgsfldr/spr/01spr022.html#XREF15505"><CODE>CreateItem</A>(), <A HREF="./01gpr008.html#XREF29335">CreateScreenGroup</A>(), <A HREF="../../pgsfldr/spr/01spr032.html#XREF18938">DeleteItem</A>() </CODE><P>
+</CODE>

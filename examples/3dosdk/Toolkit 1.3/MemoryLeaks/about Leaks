@@ -1,0 +1,86 @@
+
+Files:	Leaks.c & Leaks.h
+
+Contains:	
+	Routines to track Lib3DO's memory alloc/free functions.  
+	These functions maintain a list of all memory blocks  
+	allocated, along with the line number and the name of the
+	source file where the allocation occurred.  A function
+	dumps the list to the debugger's terminal window.   
+
+Implementation notes:
+	We have two goals in this code, track all memory allocated so 
+	that orphaned blocks can be identified, and do so WITHOUT having
+	to change all memory allocation/freeing code in your already
+	written code.  
+
+	Tracking memory is easy enough, every time you allocate a block of
+	memory insert it into a linked list, every time you free a block 
+	remove it from the list.  Examine the list at a point in your program
+	where there SHOULD be no allocated blocks, if there are any you have 
+	a leak.
+	
+	This is what the code in Leaks.c does: Whenever a block is allocated
+	it adds enough to the allocation size for fields to record the link 
+	to the next block, the memory type, and the name (20 characters) and 
+	line in the source file where the allocation request originated.  
+	Whenever a block is freed, it is removed from the linked list.  
+	Functions are also provided for dumping the list of blocks to the 
+	debugger window, finding a block in the linked list, and turning 
+	allocation tracking on and off. Allocation tracking is off by default.
+	
+	All of the functions in Leaks.c (details below) can be called directly,
+	or you can rebuild Lib3DO with the modified version of UMemory.c and 
+	simply set a compiler flag when you want to use the Leaks code.  In 
+	the modified version of UMemory.c, all functions have been renamed by
+	adding "Internal" to the function name, ie. "NewPtr" has been renamed 
+	"InternalNewPtr" and "FreePtr" has been renamed "InternalFreePtr".  
+	UMemory.h has macros which change the standard UMemory function names to
+	call functions in Leaks.c when the compiler flag CHECK_FOR_MEMORY_LEAKS
+	is set.  For example, your code calls "NewPtr".  If your make file
+	defines CHECK_FOR_MEMORY_LEAKS to be 0, "NewPtr" is changed to 
+	"InternalNewPtr" and your block is allocated as it always has been.  
+	If your make file defines CHECK_FOR_MEMORY_LEAKS to be 1, "NewPtr" is
+	changed to "Leaks_Malloc" and the block is added to the list.
+	
+
+	To use the leaks code: 
+	1	add/replace the following files to the Lib3DO source folder, and do a 
+		full rebuild by executing "buildprogram -e lib3do.lib" or selecting Full 
+		build from the build menu:
+			Lib3DO.lib.make
+			Leaks.c
+			Leaks.h
+			UMemory.c
+			UMemory.h
+	
+	2	define the flag CHECK_FOR_MEMORY_LEAKS in your make file and
+		do a FULL BUILD of your code.
+	
+	3	call the function "Leaks_On()" when you want to start tracking
+		memory allocation
+	
+	4	call "Leaks_Dump()" at a point in your program when you want to check 
+		all allocated blocks
+	
+
+Leaks details:
+
+void	Leaks_On(void);
+	Start tracking all allocation/free calls
+	
+void	Leaks_Off(void);
+	Stop tracking all allocation/free calls
+	
+void	Leaks_Dump(void);
+	Dump the type, address, size, source file line, and source file name
+	for all blocks.
+	
+uint32	Leaks_MemBlockSize(void *ptr, int32 lineNum, char *fileName);
+	Get the size of the a memory block (the size originally requested).
+	
+void	*Leaks_Malloc(uint32 bytesNeeded, uint32 memType, int32 lineNum, char *fileName);
+	Allocate a block of memory.
+	
+void 	*Leaks_Free(void *address, int32 lineNum, char *fileName);
+	Free a block of memory.

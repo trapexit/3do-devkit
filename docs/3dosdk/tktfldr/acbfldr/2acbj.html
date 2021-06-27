@@ -1,0 +1,40 @@
+<TITLE>Byte order reversal</TITLE>
+<H1>Byte order reversal</H1><HR>
+<H2>About this recipe</H2>
+This recipe gives a compact ARM Instruction Sequence to perform byte order 
+reversal ie. reversing the endianess of a word.<P>
+<H2>The details</H2>
+Changing the endianess of a word can be a common operation in certain 
+applications.  For example when communicating word sized data as a stream 
+of bytes to a receiver of the opposite endianess.<P>
+This operation can be performed efficiently on the ARM, using just four 
+instructions.  The word to be reversed is held in a1 both on entry and 
+exit of this instruction sequence.  ip is used as a temporary register 
+(For more information about these register names see <A 
+HREF="./acb3frst.html#XREF41444">Interfacing Assembly Language and C</A>): 
+<P>
+<CODE>
+<PRE>
+    EOR    ip, a1, a1, ror #16
+    BIC    ip, ip, #&amp;ff0000
+    MOV    a1, a1, ror #8
+    EOR    a1, a1, ip, lsr #8
+</CODE>
+</PRE>
+A demonstration program which should help explain how this works has been 
+provided in source form in the <I>examples</I> directory.  To compile this 
+program and run it under <I>armsd</I> first set your current directory to 
+be <I>examples</I> and then use the following commands:<P>
+<CODE>
+<PRE>
+&gt;<B>armcc bytedemo.c -o bytedemo -li -apcs 3/32bit</B>
+&gt;<B>armsd -li bytedemo</B>
+A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little endian.
+Object program file bytedemo
+armsd: <B>go</B>
+    ... demonstration program executes ...
+</CODE>
+</PRE>
+Note that this program uses ANSI control codes, so should work on most 
+terminal types under Unix and also on the PC.<P>

@@ -1,0 +1,83 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_FUNCTIONAL_INCLUDED
+#define TTL_FUNCTIONAL_INCLUDED
+
+#define TRIVIAL_HASH(TYPE)                      \
+  template<>                                    \
+  struct hash<TYPE>                             \
+  {                                             \
+    unsigned int                                \
+    operator()(TYPE val_) const                 \
+    {                                           \
+      return (unsigned int)val_;                \
+    }                                           \
+  };
+
+struct functional
+{
+  template<typename T>
+  struct hash;
+
+  template<typename T>
+  struct hash<T*>
+  {
+    unsigned int
+    operator()(T* val_) const
+    {
+      return (unsigned int)val_;
+    }
+  };
+
+  template<>
+  struct hash<float>
+  {
+    unsigned int
+    operator()(float val_) const
+    {
+      return *(unsigned int*)&val_;
+    }
+  };
+
+  template<>
+  struct hash<double>
+  {
+    unsigned int
+    operator()(double val_) const
+    {
+      return (((unsigned int*)&val_)[0] ^
+              ((unsigned int*)&val_)[1]);
+    }
+  };
+
+  TRIVIAL_HASH(char)
+  TRIVIAL_HASH(signed char)
+  TRIVIAL_HASH(unsigned char)
+  TRIVIAL_HASH(signed short)
+  TRIVIAL_HASH(unsigned short)
+  TRIVIAL_HASH(signed int)
+  TRIVIAL_HASH(unsigned int)
+  TRIVIAL_HASH(signed long)
+  TRIVIAL_HASH(unsigned long)
+  TRIVIAL_HASH(signed long long)
+  TRIVIAL_HASH(unsigned long long)
+  TRIVIAL_HASH(bool)
+};
+
+#endif

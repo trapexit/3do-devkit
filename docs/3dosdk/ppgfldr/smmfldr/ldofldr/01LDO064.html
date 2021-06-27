@@ -1,0 +1,55 @@
+<Title>DrawTextString</Title>
+<A NAME="XREF22957"><H1>DrawTextString </A></H1>
+ Draws a text string into a bitmap.<P>
+<H3>Synopsis</H3>
+<CODE>void DrawTextString (FontDescriptor *fDesc, GrafCon *gcon,Item 
+bitmapItem, char *text,...)</CODE><P>
+<H3>Description</H3>
+Draws a text string directly into a bitmap, using the colors and x/y 
+coordinates specified in the GrafCon. The text string can be a simple 
+string of characters or a printf-style format string followed by 
+additional arguments. If you use printf-style formatting, the resulting 
+formatted string cannot exceed 1024 characters. A maximum of ten 
+printf-style % formatting directives can appear in the string. <P>
+The GrafCon's pen coordinates are interpreted as integer (not Frac16)
+    values. After the call, the GrafCon's gc_PenX and gc_PenY fields have been
+    updated to reflect the space the character pixels occupy within the
+    bitmap. A newline character moves the gc_PenY value down by the
+    font's height + leading value, and sets gc_PenX to its entry-time value.
+    The net effect is that when there are multiple lines of text, each line
+    begins in the column specified by the initial value of gc_PenX.
+ <P>
+The foreground and background colors follow the usual rules for cels: a 
+color of 000 results in transparent output, for opaque black use 001. <P>
+If you use typical double-buffering screen logic, it is more efficient to 
+use a TextCel to hold your text string and redraw it on each frame with 
+<CODE>DrawScreenCels()</CODE> than to rerender the string directly into 
+the screen bitmap on each frame update. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fDesc
+<DD>Pointer to a FontDescriptor structure. 
+</DL>
+<DL>
+<DT>gcon
+<DD>Pointer to a GrafCon structure containing the foreground and 
+background colors and pen x/y coordinates to use in rendering the 
+character. 
+</DL>
+<DL>
+<DT>bitmapItem
+<DD>Bitmap into which the character is rendered. 
+</DL>
+<DL>
+<DT>text
+<DD>String of characters to be rendered, optionally including printf-style 
+% formatting commands. 
+</DL>
+<DL>
+<DT>...                          
+<DD>Optional arguments for printf-style formatting. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO063.html#XREF33522"><CODE>DrawTextChar</A> </CODE><P>

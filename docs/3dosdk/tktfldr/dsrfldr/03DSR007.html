@@ -1,0 +1,59 @@
+<Title>Dumpstream</Title>
+<A NAME="XREF39279"><H1>Dumpstream</A></H1>
+<A NAME="XREF12409"></A>Writes diagnostic listing of streams.<P>
+<H3>Synopsis</H3>
+<CODE>dumpstream [options] -i &lt;inputfile&gt;</CODE><P>
+<H3>Description</H3>
+DumpStream writes a diagnostic listing of a streams and chunked format 
+files. This can help greatly with debugging.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-i &lt;inputfile&gt;
+<DD>Input stream file.
+</DL>
+<DL>
+<DT>-s &lt;time&gt;
+<DD>Start time for dump.
+</DL>
+<DL>
+<DT>-bw &lt;bps&gt;
+<DD>Maximum data bandwidth.
+</DL>
+<DL>
+<DT>-v
+<DD>Verbose output toggle.
+</DL>
+<DL>
+<DT>-xf
+<DD>Hex file position output.
+</DL>
+<DL>
+<DT>-bs
+<DD>Stream block size.
+</DL>
+<DL>
+<DT>-w
+<DD>Suppress warnings.
+</DL>
+<DL>
+<DT>-stats
+<DD>Statistics output only.
+</DL>
+<DL>
+<DT>-fbs
+<DD>Filler block sizes output only.
+</DL>
+<H3>Examples</H3>
+Here is a typical command line:<P>
+<CODE>
+<PRE>
+dumpstream -xf -v -i CPakTestStream
+</CODE>
+</PRE>
+Dumpstream dumps the chunked data in CPakTestStream. The <CODE>-v</CODE> 
+option dumps a header followed by the data consisting of file position, 
+data type, size, stream time, channel and chunk subtype. If the 
+<CODE>-v</CODE> option is not specified, only the file position, data 
+type, size, and stream time will be dumped without a header. The
+<CODE>-xf</CODE> option specifies that the file position be displayed in 
+hexadecimal value.<P>

@@ -1,0 +1,25 @@
+<Title>ReadProbe</Title>
+<A NAME="XREF23993"><H1>ReadProbe </A></H1>
+<A NAME="XREF16254"></A> Read the value of a Probe.<P>
+<H3>Synopsis</H3>
+<CODE>Err ReadProbe( Item ProbeItem, int32 *ValuePtr )</CODE><P>
+<H3>Description</H3>
+Read the instantaneous value of an instrument output. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ProbeItem
+<DD>Item number of the knob to be tweaked. 
+</DL>
+<DL>
+<DT>ValuePtr
+<DD>Pointer to where to put result. Task must have write permission for that address. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code ( a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V24. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr020.html#XREF38964"><CODE>CreateProbe</A>(), <A HREF="./01mpr030.html#XREF19553">DeleteProbe</A>() </CODE><P>
+</CODE>

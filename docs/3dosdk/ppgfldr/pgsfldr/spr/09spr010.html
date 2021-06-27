@@ -1,0 +1,31 @@
+<Title>IOReq</Title>
+<A NAME="XREF31465"><H1>IOReq</A></H1>
+<A NAME="XREF26177"></A> An item used to communicate between a task and an I/O device. <P>
+<H3>Description</H3>
+An IOReq item is used to carry information from a client task to a device in order to have the device perform some operation. Once the device is stores return information in the IOReq, and returns it to the client task.<P>
+<H3>Folio</H3>
+kernel<P>
+<H3>Item Type</H3>
+IOREQNODE<P>
+<H3>Create</H3>
+<CODE><A HREF="./01spr021.html#XREF36930">CreateIOReq</A>(), <A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE><P>
+<H3>Delete</H3>
+<A HREF="./01spr031.html#XREF13807"><CODE>DeleteIOReq</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE><P>
+<H3>Query</H3>
+<A HREF="./01spr050.html#XREF25448"><CODE>FindItem</A>()</CODE><P>
+<H3>Modify</H3>
+<A HREF="./01spr125.html#XREF39158"><CODE>SetItemOwner</A>(), <A HREF="./01spr126.html#XREF17657">SetItemPri</A>()</CODE><P>
+<H3>Use</H3>
+<A HREF="./01spr121.html#XREF16419"><CODE>SendIO</A>(), <A HREF="./01spr038.html#XREF37111">DoIO</A>(), <A HREF="./01spr001.html#XREF20829">AbortIO</A>(), <A HREF="./01spr131.html#XREF35365">WaitIO</A>(), <A HREF="./01spr013.html#XREF25810">CheckIO</A>()</CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>CREATEIOREQ_TAG_REPLYPORT
+<DD>
+</DL>
+<DL>
+<DT>(Item) Create. The item number of a message port.This is where the device will send a message whenever an I/O operation completes. This argument is optional. If you do not specify it, the device will send your task the <CODE>SIGF_IODONE</CODE> signal instead of a message.
+</DL>
+<DL>
+<DT>CREATEIO_TAG_DEVICE
+<DD>(Item) Create. This specifies the item number of the device that this IOReq will be used to communicate with. This item number is obtained by calling OpenNamedDevice() or FindAndOpenNamedDevice(). 
+</DL>

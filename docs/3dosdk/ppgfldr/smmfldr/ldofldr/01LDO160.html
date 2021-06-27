@@ -1,0 +1,18 @@
+<Title>SetTextCelLeadingAdjust</Title>
+<A NAME="XREF32569"><H1>SetTextCelLeadingAdjust </A></H1>
+ Sets leading adjustment for text cel.<P>
+<H3>Synopsis</H3>
+<CODE>void SetTextCelLeadingAdjust (TextCel *tCel, int32 adjustLeading)</CODE><P>
+<H3>Description</H3>
+Sets a leading adjustment for text rendered in the cel. Leading is the extra vertical space between lines of text. The base leading value comes from the FontDescriptor attached to the cel. The value you specify in this call is a signed adjustment to the leading. Negative values render lines of text closer together; positive values render lines farther apart. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>adjustLeading
+<DD>Value (in pixels) to add to the base leading value for the font. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

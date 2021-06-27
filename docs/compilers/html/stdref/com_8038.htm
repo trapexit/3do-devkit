@@ -1,0 +1,374 @@
+<HTML><TITLE>complex</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>complex</H2>
+<HR><PRE>     Complex Number Library<B><I> </B></I>
+</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>C++ complex number library</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Specializations"><LI>Specializations</LI></A>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Constructors"><LI>Constructors</LI></A>
+<A HREF="#Assignment Operators"><LI>Assignment Operators</LI></A>
+<A HREF="#Member Functions"><LI>Member Functions</LI></A>
+<A HREF="#Non-member Operators"><LI>Non-member Operators</LI></A>
+<A HREF="#Non-member Functions"><LI>Non-member Functions</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+</UL>
+<A NAME="Specializations"><H3>Specializations</H3></A>
+<PRE>complex &#60;float></PRE>
+<PRE>complex &#60;double>
+complex &#60;long double></PRE>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;complex></PRE>
+<PRE>
+template &#60;class T>
+class complex ;</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P><B><I>complex&#60;T></B></I> is a class that supports complex numbers. A complex number has a real part and an imaginary part. The <B><I>complex</B></I> class supports equality, comparison and basic arithmetic operations. In addition, mathematical functions such as exponentiation, logarithmic, power, and square root are also available.</P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class T></PRE>
+<PRE>class complex {
+public:
+   complex (T = 0 , T = 0);
+   template &#60;class X> complex
+    (const complex&#60;X>&#38;);
+   T real () const;
+   T imag () const;
+   template &#60;class X>
+    complex&#60;T>&#38; operator= (const complex&#60;X>&#38;);
+   template &#60;class X>
+    complex&#60;T>&#38; operator+= (const complex&#60;X>&#38;);
+   template &#60;class X>
+    complex&#60;T>&#38; operator-= (const complex&#60;X>&#38;);
+   template &#60;class X>
+    complex&#60;T>&#38; operator*= (const complex&#60;X>&#38;);
+   template &#60;class X>
+    complex&#60;T>&#38; operator/= (const complex&#60;X>&#38;);
+};
+// Non-member Operators
+template&#60;class T>
+ complex&#60;T> operator+ (const complex&#60;T>&#38;, const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator+ (const complex&#60;T>&#38;, T);
+template&#60;class T>
+ complex&#60;T> operator+ (T, const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator- (const complex&#60;T>&#38;, const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator- (const complex&#60;T>&#38;, T);
+template&#60;classT>
+ complex&#60;T> operator- (T, const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator* (const complex&#60;T>&#38;, const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator* (const complex&#60;T>&#38;, T);
+template&#60;class T>
+ complex&#60;T> operator* (T, const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator/ (const complex&#60;T>&#38;, const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator/ (const complex&#60;T>&#38;, T);
+template&#60;class T>
+ complex&#60;T> operator/ (T, const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator+ (const complex&#60;T>&#38;);
+template&#60;class T>
+ complex&#60;T> operator- (const complex&#60;T>&#38;);
+template&#60;class T>
+ bool operator== (const complex&#60;T>&#38;, const complex&#60;T>&#38;);
+template&#60;class T>
+ bool operator== (const complex&#60;T>&#38;, T);
+template&#60;class T>
+ bool operator== (T, const complex&#60;T>&#38;);
+template&#60;class T>
+ bool operator!= (const complex&#60;T>&#38;, const complex&#60;T>&#38;);
+template&#60;class T>
+ bool operator!= (const complex&#60;T>&#38;, T);
+template&#60;class T>
+ bool operator!= (T, const complex&#60;T>&#38;);
+template &#60;class X>
+ istream&#38; operator>> (istream&#38;, complex&#60;X>&#38;);
+template &#60;class X>
+ ostream&#38; operator&#60;&#60; (ostream&#38;, const complex&#60;X>&#38;);
+// Values
+template&#60;class T> T real (const complex&#60;T>&#38;);
+template&#60;class T> T imag (const complex&#60;T>&#38;);
+template&#60;class T> T abs (const complex&#60;T>&#38;);
+template&#60;class T> T arg (const complex&#60;T>&#38;);
+template&#60;class T> T norm (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> conj (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> polar (T, T);
+// Transcendentals
+template&#60;class T> complex&#60;T> acos (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> asin (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> atan (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> atan2 (const complex&#60;T>&#38;, 
+                                    const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> atan2 (const complex&#60;T>&#38;, T);
+template&#60;class T> complex&#60;T> atan2 (T, const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> cos (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> cosh (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> exp (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> log (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> log10 (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> pow (const complex&#60;T>&#38;, int);
+template&#60;class T> complex&#60;T> pow (const complex&#60;T>&#38;, T);
+template&#60;class T> complex&#60;T> pow (const complex&#60;T>&#38;, 
+                                  const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> pow (T, const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> sin (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> sinh (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> sqrt (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> tan (const complex&#60;T>&#38;);
+template&#60;class T> complex&#60;T> tanh (const complex&#60;T>&#38;);
+</PRE>
+<A NAME="Constructors"><H3>Constructors</H3></A>
+<PRE><B>complex</B>
+(const T&#38; re_arg = 0, const T&#38; im_arg = 0);</PRE>
+<UL><P>Constructs an object of class <B><I>complex</B></I>,  initializing <SAMP>re_arg</SAMP> to the real part and <SAMP>im_arg</SAMP> to the imaginary part.</P>
+</UL>
+<PRE><B>template &#60;class X> complex</B>
+(const complex&#60;X>&#38;);</PRE>
+<UL><P>Copy constructor.  Constructs a complex number from another complex number.</P>
+</UL>
+<A NAME="Assignment Operators"><H3>Assignment Operators</H3></A>
+<PRE>template &#60;class X>
+complex&#60;T> 
+<B>operator= </B>(const complex&#60;X>&#38; c);</PRE>
+<UL><P>Assigns <SAMP>c</SAMP> to itself.</P>
+</UL>
+<PRE>template &#60;class X>
+complex&#60;T> 
+<B>operator+=</B> (const complex&#60;X>&#38; c);</PRE>
+<UL><P>Adds <SAMP>c</SAMP> to itself, then returns the result.</P>
+</UL>
+<PRE>template &#60;class X>
+complex&#60;T> 
+<B>operator</B>-<B>=</B> (const complex&#60;X>&#38; c);</PRE>
+<UL><P>Subtracts <SAMP>c</SAMP> from itself, then returns the result.</P>
+</UL>
+<PRE>template &#60;class X>
+complex&#60;T> 
+<B>operator*= </B>(const complex&#60;X>&#38; c);</PRE>
+<UL><P>Multiplies itelf by <SAMP>c</SAMP> then returns the result.</P>
+</UL>
+<PRE>template &#60;class X>
+complex&#60;T> 
+<B>operator/= </B>(const complex&#60;X>&#38; c);</PRE>
+<UL><P>Divides itself by <SAMP>c</SAMP>, then returns the result.</P>
+</UL>
+<A NAME="Member Functions"><H3>Member Functions</H3></A>
+<PRE>T 
+<B>imag</B>() const;</PRE>
+<UL><P>Returns the imaginary part of the complex number.</P>
+</UL>
+<PRE>T 
+<B>real</B>() const;</PRE>
+<UL><P>Returns the real part of the complex number.</P>
+</UL>
+<A NAME="Non-member Operators"><H3>Non-member Operators</H3></A>
+<PRE>template&#60;class T> complex&#60;T>
+<B>operator+</B> (const complex&#60;T>&#38; lhs,const complex&#60;T>&#38; rhs);
+template&#60;class T> complex&#60;T>
+<B>operator+</B> (const complex&#60;T>&#38; lhs, T rhs);
+template&#60;class T> complex&#60;T>
+<B>operator+</B> (T lhs, const complex&#60;T>&#38; rhs);</PRE>
+<UL><P>Returns the sum of <SAMP>lhs</SAMP> and <SAMP>rhs</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>operator-</B> (const complex&#60;T>&#38; lhs,const complex&#60;T>&#38; rhs);
+template&#60;class T> complex&#60;T>
+<B>operator-</B> (const complex&#60;T>&#38; lhs, T rhs);
+template&#60;class T> complex&#60;T>
+<B>operator-</B> (T lhs, const complex&#60;T>&#38; rhs);</PRE>
+<UL><P>Returns the difference of <SAMP>lhs</SAMP> and <SAMP>rhs</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>operator*</B>  (const complex&#60;T>&#38; lhs,const complex&#60;T>&#38; rhs);
+template&#60;class T> complex&#60;T>
+<B>operator*</B> (const complex&#60;T>&#38; lhs, T rhs);
+template&#60;class T> complex&#60;T>
+<B>operator*</B> (T lhs, const complex&#60;T>&#38; rhs);</PRE>
+<UL><P>Returns the product of <SAMP>lhs</SAMP> and <SAMP>rhs</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>operator/</B> (const complex&#60;T>&#38; lhs,const complex&#60;T>&#38; rhs);
+template&#60;class T> complex&#60;T>
+<B>operator/</B> (const complex&#60;T>&#38; lhs, T rhs);
+template&#60;class T> complex&#60;T>
+<B>operator/</B> (T lhs, const complex&#60;T>&#38; rhs);</PRE>
+<UL><P>Returns the quotient of <SAMP>lhs</SAMP> divided by <SAMP>rhs</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>operator+</B> (const complex&#60;T>&#38; rhs);</PRE>
+<UL><P>Returns <SAMP>rhs</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>operator-</B> (const complex&#60;T>&#38; lhs);</PRE>
+<UL><P>Returns <SAMP>complex&#60;T>(-lhs.real(), -lhs.imag())</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> bool
+<B>operator==</B> (const complex&#60;T>&#38; x, const complex&#60;T>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if the real and imaginary parts of <SAMP>x</SAMP> and <SAMP>y</SAMP> are equal.</P>
+</UL>
+<PRE>template&#60;class T> bool
+<B>operator==</B> (const complex&#60;T>&#38; x, T y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if <SAMP>y</SAMP> is equal to the real part of <SAMP>x</SAMP> and the imaginary part of <SAMP>x</SAMP> is equal to 0.</P>
+</UL>
+<PRE>template&#60;class T> bool
+<B>operator==</B> (T x, const complex&#60;T>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if <SAMP>x</SAMP> is equal to the real part of <SAMP>y</SAMP> and the imaginary part of <SAMP>y</SAMP> is equal to 0.</P>
+</UL>
+<PRE>template&#60;class T> bool
+<B>operator!=</B> (const complex&#60;T>&#38; x, const complex&#60;T>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if either the real or the imaginary part of <SAMP>x</SAMP> and <SAMP>y</SAMP> are not equal.</P>
+</UL>
+<PRE>template&#60;class T> bool
+<B>operator!=</B> (const complex&#60;T>&#38; x, T y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if <SAMP>y</SAMP> is not equal to the real part of <SAMP>x</SAMP> or the imaginary part of <SAMP>x</SAMP> is not equal to 0.</P>
+</UL>
+<PRE>template&#60;class T> bool
+<B>operator!=</B> (T x, const complex&#60;T>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if <SAMP>x</SAMP> is not equal to the real part of <SAMP>y</SAMP> or the imaginary part of <SAMP>y</SAMP> is not equal to 0.</P>
+</UL>
+<PRE>template &#60;class X> istream&#38; 
+<B>operator>></B> (istream&#38; is, complex&#60;X>&#38; x);</PRE>
+<UL><P>Reads a complex number <SAMP>x</SAMP> into the input stream <SAMP>is</SAMP>.   <SAMP>x</SAMP> may be of the form <SAMP>u</SAMP>, <SAMP>(u)</SAMP>, or <SAMP>(u,v)</SAMP> where <SAMP>u</SAMP> is the real part and <SAMP>v</SAMP> is the  imaginary part.  If bad input is encountered, the <SAMP>ios::badbit flag</SAMP> is set.</P>
+</UL>
+<PRE>template &#60;class X> ostream&#38; 
+<B>operator&#60;&#60;</B> (ostream&#38; os, const complex&#60;X>&#38; x);</PRE>
+<UL><P>Returns <SAMP>os &#60;&#60; "(" &#60;&#60; x.real() &#60;&#60; ","  &#60;&#60; x.imag() &#60;&#60; ")"</SAMP>.</P>
+</UL>
+<A NAME="Non-member Functions"><H3>Non-member Functions</H3></A>
+<PRE>template&#60;class T> T 
+<B>abs</B>(const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the absolute value or magnitude of <SAMP>c</SAMP> (the square root of the norm).</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>acos</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the arccosine of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> T 
+<B>arg</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the phase angle of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>asin</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the arcsine of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>atan</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the arctangent of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>atan2</B> (T a, const complex&#60;T>&#38; b);</PRE>
+<UL><P>Returns the arctangent of <SAMP>a/b</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>atan2</B> (const complex&#60;T>&#38; a, T b);</PRE>
+<UL><P>Returns the arctangent of <SAMP>a/b</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>atan2</B> (const complex&#60;T>&#38; a, const complex&#60;T>&#38; b);</PRE>
+<UL><P>Returns the arctangent of <SAMP>a/b</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>conj</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the conjugate of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>cos</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the cosine of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>cosh</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the hyperbolic cosine of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>exp</B> (const complex&#60;T>&#38; x);</PRE>
+<UL><P>Returns <SAMP>e</SAMP> raised to the <SAMP>x</SAMP> power.</P>
+</UL>
+<PRE>template&#60;class T> T 
+<B>imag</B> (const complex&#60;T>&#38; c) const;</PRE>
+<UL><P>Returns the imaginary part of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>log</B> (const complex&#60;T>&#38; x);</PRE>
+<UL><P>Returns the natural logarithm of <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>log10</B> (const complex&#60;T>&#38; x);</PRE>
+<UL><P>Returns the logarithm base 10 of <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> T 
+<B>norm</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the squared magnitude of <SAMP>c</SAMP>.  (The sum of the squares of the real and imaginary parts.)</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>polar</B> (const T&#38; m, const T&#38; a);</PRE>
+<UL><P>Returns the complex value of a complex number whose magnitude is <SAMP>m</SAMP> and phase angle is <SAMP>a</SAMP>, measured in radians.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T>
+<B>pow</B> (const complex&#60;T>&#38; x, int y);
+template&#60;class T> complex&#60;T>
+<B>pow</B> (const complex&#60;T>&#38; x, T y);
+template&#60;class T> complex&#60;T>
+<B>pow</B> (const complex&#60;T>&#38; x, const complex&#60;T>&#38; y);
+template&#60;class T> complex&#60;T>
+<B>pow</B> (T x, const complex&#60;T>&#38; y);</PRE>
+<UL><P>Returns <SAMP>x</SAMP> raised to the <SAMP>y</SAMP> power.</P>
+</UL>
+<PRE>template&#60;class T> T 
+<B>real</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the real part of <B>c</B>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>sin</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the sine of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>sinh</B> (const complex&#60;T>&#38; c);</PRE>
+<UL><P>Returns the hyperbolic sine of <SAMP>c</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>sqrt</B> (const complex&#60;T>&#38; x);</PRE>
+<UL><P>Returns the square root of <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>tan</B> (const complex&#60;T>&#38; x);</PRE>
+<UL><P>Returns the tangent of <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> complex&#60;T> 
+<B>tanh</B> (const complex&#60;T>&#38; x);</PRE>
+<UL><P>Returns the hyperbolic tangent of <SAMP>x</SAMP>.</P>
+</UL>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// complex.cpp
+//
+ #include &#60;complex>
+ #include &#60;iostream.h>
+ int main() 
+ {
+   complex&#60;double> a(1.2, 3.4);
+   complex&#60;double> b(-9.8, -7.6);
+   a += b;
+   a /= sin(b) * cos(a);
+   b *= log(a) + pow(b, a);
+   cout &#60;&#60; "a = " &#60;&#60; a &#60;&#60; ", b = " &#60;&#60; b &#60;&#60; endl;
+   return 0;
+ }
+Output : 
+a = (1.42804e-06,-0.0002873), b = (58.2199,69.7354)</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>On compilers that don't support member function templates, the arithmetic operators will not work on any arbitrary type.  (They will work only on float, double and long doubles.)  You also will only be able to perform binary arithmetic on types that are the same. </P>
+<P>Compilers that don't support non-converting constructors will permit unsafe downcasts (i.e., long double to double, double to float, long double to float).</P>
+<HR>
+<A HREF="com_1776.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Con_2487.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,14 @@
+<Title>OpenMathFolio</Title>
+<A NAME="XREF39528"><H1>OpenMathFolio </A></H1>
+<A NAME="XREF26722"></A> Opens the math folio and sets _MathBase global variable.<P>
+<H3>Synopsis</H3>
+<CODE>int32 OpenMathFolio( void )</CODE><P>
+<H3>Description</H3>
+This function attempts to open the math folio structure. If it successfully locates the math folio, it sets the global variable _MathBase to point to the math folio structure. If it fails to open the folio, it returns a negative number that can be printed with the PrintfSysError function. <P>
+Programs must call OpenMathFolio before attempting to use any of the math folio functions. <P>
+<H3>Return Value</H3>
+If successful, the function sets the global variable _MathBase to point to the math folio structure. If unsuccessful, it returns a negative number. <P>
+<H3>Implementation</H3>
+Convenience call implemented in operamath.lib V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>

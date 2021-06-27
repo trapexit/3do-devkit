@@ -1,0 +1,41 @@
+<Title>CreateMsg</Title>
+<A NAME="XREF10430"><H1>CreateMsg </A></H1>
+<A NAME="XREF18619"></A>Creates a standard message.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateMsg( const char *name, uint8 pri, Item mp )</CODE><P>
+<H3>Description</H3>
+One of the ways tasks communicate is by sending messages to each other. This procedure creates an item for a standard message (a message where any data to be communicated to the receiving task is contained in a data block allocated by the sending task). You can use this procedure in place of <CODE>CreateItem()</CODE> to create the item. <P>
+To create a buffered message (a message that includes an internal buffer for sending data to the receiving task), use <CODE>CreateBufferedMsg()</CODE>. To create a small message (a message that can contain up to eight bytes of data), use <CODE>CreateSmallMsg()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the message (see "Notes").
+</DL>
+<DL>
+<DT>pri
+<DD>The priority of the message. This determines the position of the message in the receiving task's message queue and thus, how soon it is likely to be handled. A larger number specifies a higher priority. 
+</DL>
+<DL>
+<DT>mp
+<DD>The item number of the message port at which to receive the reply. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the message or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+The same message item can be reused for any number of messages. When you are finished with a message item, use <CODE>DeleteMsg()</CODE> to delete it. <P>
+You can use <CODE>FindNamedItem()</CODE> to find a message item by name. When creating messages, you should assign unique names whenever possible. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr025.html#XREF19499"><CODE>CreateMsgPort</A>(), <A HREF="./01spr020.html#XREF20657">CreateBufferedMsg</A>(), <A HREF="./01spr027.html#XREF18113">CreateSmallMsg</A>(), <A HREF="./01spr034.html#XREF14458">DeleteMsg</A>(), <A HREF="./01spr035.html#XREF42671">DeleteMsgPort</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF10430"></LINK></H1><HR>

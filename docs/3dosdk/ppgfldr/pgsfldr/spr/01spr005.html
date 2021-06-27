@@ -1,0 +1,38 @@
+<Title>AllocMemBlocks</Title>
+<A NAME="XREF36147"><H1>AllocMemBlocks </A></H1>
+<A NAME="XREF14117"></A>Transfers pages of memory from the system-wide free memory pool.<P>
+<H3>Synopsis</H3>
+<CODE>void *AllocMemBlocks( int32 size, uint32 typebits )</CODE><P>
+<H3>Description</H3>
+When there is insufficient memory in a task's free memory pool to allocate a block of memory, the kernel automatically provides additional memory pages from the system-wide free memory pool. Tasks can also get pages from the system-wide free memory pool by calling <CODE>AllocMemBlocks()</CODE>. <P>
+<B>Note: </B> Normal applications do not need to call this procedure. It should only be used by applications that need additional control over the memory-allocation process. <P>
+You must set MEMTYPE_TASKMEM in the typebits argument otherwise the memory will not be allocated to the current task. <P>
+ <CODE>AllocMemBlocks()</CODE> is different from other memory-allocation procedures: <P>
+<UL>
+<LI>The pages of memory that are transferred are not automatically added to the task's free memory pool. To move the memory into its free memory pool, thereby making it available to tasks, the task must call one of the procedures for freeing memory <CODE>(FreeMem()</CODE>, <CODE>FreeMemToMemList()</CODE>, or <CODE>FreeMemToMemLists())</CODE> with the pointer returned by <CODE>AllocMemBlocks()</CODE> as the argument. (Note that in the memory returned by <CODE>AllocMemBlocks()</CODE>, the first four bytes specify the amount of memory, in bytes, that was transferred. You should use this value as the size to be freed.) 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>size
+<DD>The amount of memory to transfer, in bytes. If the size is not an integer multiple of the page size for the type of memory requested, the system transfers the number of full pages needed to satisfy the request. 
+</DL>
+<DL>
+<DT>typebits
+<DD>Flags that specify the type of memory to transfer. These flags can include MEMTYPE_ANY, MEMTYPE_VRAM, MEMTYPE_DRAM, MEMTYPE_BANKSELECT, MEMTYPE_BANK1, MEMTYPE_BANK2, MEMTYPE_DMA, MEMTYPE_CEL, MEMTYPE_AUDIO, MEMTYPE_DSP, MEMTYPE_TASKMEM. For information about these flags, see the description of AllocMem().
+<DD>MEMTYPE_TASKMEM must always be set.
+</DL>
+<H3>Return Value</H3>
+The procedure returns a pointer to the pages of memory that were transferred or NULL if the memory couldn't be transferred. The first four bytes of the memory specify the amount of memory that was transferred, in bytes. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ARM C "swi" declaration 
+</DL>
+<H3>Notes</H3>
+To return memory to the system-wide free memory pool, use <CODE>ScavengeMem()</CODE> or <CODE>ControlMem()</CODE>. <CODE>ScavengeMem()</CODE> finds pages of memory in the task's free memory pool from which no memory has been allocated and returns those pages to the system-wide memory pool. You can use <CODE>ControlMem()</CODE> to transfer ownership of memory to the system-wide memory pool. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr018.html#XREF21673"><CODE>ControlMem</A>(), <A HREF="./01spr064.html#XREF31542">FreeMem</A>(), <A HREF="./01spr066.html#XREF14037">FreeMemToMemList</A>(), <A HREF="./01spr067.html#XREF28914">FreeMemToMemLists</A>(), <A HREF="./01spr120.html#XREF32080">ScavengeMem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF36147"></LINK></H1><HR>

@@ -1,0 +1,146 @@
+<Title>DSStreamCB</Title>
+<A NAME="XREF13602"><H1>DSStreamCB</A></H1>
+<A NAME="XREF12137"></A>Stream context block structure.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct DSStreamCB {
+   Item creatorTask;
+   uint32 creatorSignal;
+   int32 creatorStatus;
+   Item threadItem;
+   void* threadStackBlock;
+   Item acquirePort;
+   long bufDataSize;
+   DSDataBufPtr freeBufHead;
+   unsigned long streamFlags;
+   uint32 clockOffset;
+   uint32 lastValidClock;
+   uint32 branchDest;
+   Item requestPort;
+   uint32 requestPortSignal;
+   Item acqReplyPort;
+   uint32 acqReplyPortSignal;
+   MemPoolPtr dataMsgPool;
+   Item subsReplyPort;
+   uint32 subsReplyPortSignal;
+   MemPoolPtr subsMsgPool;
+   DSDataBufPtr filledBufHead;
+   DSDataBufPtr filledBufTail;
+   long totalBufferCount;
+   long currentFreeBufferCount;
+   DSRequestMsgPtr endOfStreamMsg;
+   int32 repliesPending;
+   DSRequestMsgPtr requestMsgHead;
+   DSRequestMsgPtr requestMsgTail;
+   long numSubscribers;
+   DSSubscriber subscriber[DS_MAX_SUBSCRIBERS];
+} DSStreamCB,  *DSStreamCBPtr</CODE></pre><P>
+<H3>Description</H3>
+This data structure contains all the contexts necessary to drive a stream, including a description of all subscribers and the information necessary to manage all memory buffers. One of these data structures exists for each open stream. <P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>creatorTask</CODE>
+<DD>Task to signal when initialization complete.
+</DL>
+<DL>
+<DT><CODE>creatorSignal</CODE>
+<DD>Signal to send for synchronous completion.
+</DL>
+<DL>
+<DT><CODE>creatorStatus</CODE>
+<DD>Result code for creator.
+</DL>
+<DL>
+<DT><CODE>threadItem</CODE>
+<DD>Thread Item for the server process.
+</DL>
+<DL>
+<DT><CODE>threadStackBlock</CODE>
+<DD>Pointer to thread's stack memory block.
+</DL>
+<DL>
+<DT><CODE>acquirePort</CODE>
+<DD>Acquisition module message port.
+</DL>
+<DL>
+<DT><CODE>bufDataSize</CODE>
+<DD>Size of data buffers in BYTES.
+</DL>
+<DL>
+<DT><CODE>freeBufHead</CODE>
+<DD>Pointer to list of free data buffers.
+</DL>
+<DL>
+<DT><CODE>streamFlags</CODE>
+<DD>Stream state flags.
+</DL>
+<DL>
+<DT><CODE>clockOffset</CODE>
+<DD>Offset to get relative stream clock.
+</DL>
+<DL>
+<DT><CODE>lastValidClock</CODE>
+<DD>Set when stream stopped.
+</DL>
+<DL>
+<DT><CODE>branchDest</CODE>
+<DD>Marker to branching to <CODE>STRM_GO_INPROGRESS</CODE> true.
+</DL>
+<DL>
+<DT><CODE>requestPort</CODE>
+<DD>Work request message port.
+</DL>
+<DL>
+<DT><CODE>requestPortSignal</CODE>
+<DD>Signal for request port.
+</DL>
+<DL>
+<DT><CODE>acqReplyPort</CODE>
+<DD>Reply port for data acquisition communications.
+</DL>
+<DL>
+<DT><CODE>acqReplyPortSignal</CODE>
+<DD>Signal for data acquisition reply port.
+</DL>
+<DL>
+<DT><CODE>dataMsgPool</CODE>
+<DD>Pool of data message blocks.
+</DL>
+<DL>
+<DT><CODE>subsReplyPort</CODE>
+<DD>Reply port for subscriber communication.
+</DL>
+<DL>
+<DT><CODE>subsReplyPortSignal</CODE>
+<DD>Signal for subscriber reply port.
+</DL>
+<DL>
+<DT><CODE>subsMsgPool</CODE>
+<DD>Pool of subscriber message blocks.
+</DL>
+<DL>
+<DT><CODE>filledBufHead</CODE>
+<DD>Pointer to list of filled data buffers.
+</DL>
+<DL>
+<DT><CODE>filledBufTail</CODE>
+<DD>Pointer to end of list of filled data buffers.
+</DL>
+<DL>
+<DT><CODE>repliesPending</CODE>
+<DD>Number of replies needed before replying to request.
+</DL>
+<DL>
+<DT><CODE>requestMsgHead</CODE>
+<DD>Pointer to first request message in queue. 
+</DL>
+<DL>
+<DT><CODE>requestMsgTail</CODE>
+<DD>Pointer to last request message in queue.
+</DL>
+<DL>
+<DT><CODE>numSubscribers</CODE>
+<DD>Number of subscribers. 
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

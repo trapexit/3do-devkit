@@ -1,0 +1,19 @@
+<Title>triangle_lfo.dsp</Title>
+<A NAME="XREF40365"><H1>triangle_lfo.dsp </A></H1>
+<A NAME="XREF14709"></A> Triangle waveform generator for Low Frequency Oscillator.<P>
+<H3>Function</H3>
+This instrument is a triangle wave generator that uses extended precision arithmetic to give lower frequencies than triangle.dsp. It also has better resolution at the same frequency. The frequency of this instrument is 256 times lower than its corresponding high frequency version. It is useful as a modulation source for controlling other instruments, or for bass instruments. <P>
+<H3>Knobs</H3>
+Frequency  - 0 =&gt; $7FFF, default = $300 = raw frequency.  If you call <CODE>TweakRawKnob()</CODE> the units are phase increments, If you call <CODE>TweakKnob()</CODE> the units are 16.16 fractional Hertz. <P>
+Amplitude  - 0  =&gt;  $7FFF <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 24 <P>
+N memory = 23 words <P>

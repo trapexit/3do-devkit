@@ -1,0 +1,86 @@
+<TITLE>The File menu</TITLE>
+<H1><LINK NAME="XREF37456"></LINK><LINK NAME="XREF29922">The File menu</LINK></H1><HR>
+
+<IMG SRC="Figures/Ch6figs/Filemenu.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>File menu.</I><P>
+<H2>Open command</H2>
+Opens the following types of sound files: <P>
+<UL>
+<LI>Sound Designer II (Sd2f)
+<LI>DSP Designer (DSPs)
+<LI>MacMix (MSND)
+<LI>IRCAM/BICSF (IRCM)
+<LI>NeXT/Sun (NxTs) 
+<LI>Audiomedia (Sd2f)
+<LI>Audio Interchange File Format (AIFF)
+<LI>Audio Interchange File Format - C (AIFC)
+<LI>Microsoft WAVE (RIFF)
+</UL>
+If the file doesn't have a Macintosh four-character file type, it appears 
+in the Open File dialog box if it has one of these extensions:<P>
+<UL>
+<LI>.aifc
+<LI>.aiff
+<LI>.au
+<LI>.irc
+<LI>.sf
+<LI>.snd
+<LI>.wav
+<LI>.WAV
+</UL>
+Once the file is open the Soundfile Information dialog box appear. This 
+dialog gives the name, sample rate, length in seconds, number of channels, 
+type, and numeric format of the sound file. <P>
+
+<IMG SRC="Figures/Ch6figs/SoundfileInfo.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Soundfile Information box.</I><P>
+If you select a process from the Hack menu, SoundHack processes the file 
+displayed in the Soundfile Information box. Only one input sound file may 
+be open at a time.<P>
+<H2>Open Any command</H2>
+Opens any file as a sound file. Useful for opening headerless and text 
+sound files. Text sound files should be formatted so that each line is a 
+fixed point sample. Here is an example of how the text should look:<P>
+<B>Example 1: </B><I>Text sound file example.</I><P>
+<CODE>
+<PRE>
+-0.054688
+-0.015625
+-0.007812
+0.015625
+0.078125
+0.093750
+0.117188
+0.093750
+0.015625
+0.000000
+-0.117188
+</CODE>
+</PRE>
+Headerless files (both text and raw) must be saved to another format 
+before being processed.<P>
+<H2>Close command</H2>
+Closes the currently open sound file.<P>
+<H2>Save A Copy command</H2>
+Saves a copy of the open sound file in any sound file format. This command 
+makes it possible to convert sound files from a variety of formats to AIFF 
+files. Save a Copy offers two compressed 3DO file formats. To access them, 
+select first the File Type Audio IFC in the Format pop-up, then8 Bit 2:1 
+3DO SQXD or 4 Bit 4:1 ADPCM in the dialog below.<P>
+<B>Note: </B>This is the primary command to use if your main goal is file 
+conversion.<P>
+<H2>lisTen to AIFF file command</H2>
+Plays the open AIFF or AIFC file through the Macintosh speaker. You need 
+SoundManager 3.0 or an AV machine for this to work properly.<P>
+<H2>Import SND resource command</H2>
+Lets you convert an Apple sound resource to a sound file.<P>
+<H2>Export SND resource command</H2>
+Lets you write part of a sound file into an Apple sound resource. The 
+length of the sound resource is limited by the amount of memory allocated 
+to SoundHack.<P>
+<H2>Quit command</H2>
+Quits the application.<P>
+<P>

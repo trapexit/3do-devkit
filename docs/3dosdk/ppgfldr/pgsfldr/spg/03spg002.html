@@ -1,0 +1,14 @@
+<TITLE>Tags and TagArgs</TITLE>
+<H1>Tags and TagArgs</H1><HR>
+A TagArg is a simple data structure that contains a command or attribute, and an argument for that command or attribute. The TagArg structure looks like:<P>
+<CODE>
+<PRE>
+typedef struct TagArg
+{
+    uint32  ta_Tag;
+    TagData ta_Arg;
+} TagArg;
+</CODE>
+</PRE>
+TagArg structures are generally used in array form. Many Portfolio function calls take an array of TagArg structures as a parameter. Each function call that uses TagArg arrays defines which commands or attributes can be used with the call.<P>
+Arrays of TagArg structures are scanned from start to finish by the function calls that use them. Each element in the array specifies an individual command or attribute pertinent to that function. If a given command appears more than once in a TagArg array, the last occurrence within the array takes precedence. If an unknown command appears in a TagArg, the whole function call fails and returns an appropriate error.<A NAME="XREF30139"></A><P>

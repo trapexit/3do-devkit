@@ -1,0 +1,70 @@
+<Title>Weaver</Title>
+<A NAME="XREF39378"><H1>Weaver</A></H1>
+<A NAME="XREF23665"></A> MPW tool that creates a stream.<P>
+<H3>Synopsis</H3>
+<CODE>weaver [options] -o <I>output_file</I> &lt; <I>script_file</CODE><P>
+</I><H3>Description</H3>
+The Weaver tool takes as input a script file that references one or more 
+chunked files and writes one stream that consists of interleaved chunks 
+from all input files. The weaver script determines how weaving is done 
+(See <A HREF="./dsr4frst.html#XREF14426">Weaver Script Commands</A>. 
+ Weaver script files consists of commands and comments: <P>
+<UL>
+<LI>Commands start with a Weaver command followed by command arguments. 
+<LI>Comments are lines starting with a #. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>-iobs &lt;size&gt;
+<DD>Buffer size (default is 32,768 bytes).
+</DL>
+<DL>
+<DT>-b &lt;time&gt;
+<DD>Output stream start time
+</DL>
+<DL>
+<DT>-s &lt;size&gt;
+<DD>Output stream block size
+</DL>
+<DL>
+<DT>-m &lt;size&gt;
+<DD>Output stream media block size
+</DL>
+<DL>
+<DT>-o<I> &lt;file&gt;
+<DD>Output stream file name
+</DL>
+<DL>
+<DT>-mm &lt;num&gt;
+<DD>Max markers to allow
+</DL>
+<DL>
+<DT>-v
+<DD>Toggle verbose diagnostic output
+</DL>
+<H3>Examples</H3>
+The following example weaves a sound file created with sftostream:<P>
+<CODE>
+<PRE>
+Weaver -v -o MySoundTestWeave &lt; MySoundScript
+</CODE>
+</PRE>
+The script file contains the following lines:<P>
+<CODE>
+<PRE>
+streamblocksize 32768
+streamstarttime 0
+file Tree:Sounds:MySoundTest 1 0
+</CODE>
+</PRE>
+The Weaver does the following: <P>
+<UL>
+<LI>Finds the MySoundScript file, defined in the MySoundScript file. 
+<LI>Uses the option <CODE>-v</CODE> for verbose<CODE>.</CODE>
+<LI>Uses the option <CODE>-o</CODE> to create the output file 
+MySoundTestWeave.
+</UL>
+<B>Note: </B> Make sure to quote file or folder names that contain spaces. 
+<P>
+<H3>See Also</H3>
+<A HREF="./dsr4frst.html#XREF14426">Weaver Script Commands</A> <P>

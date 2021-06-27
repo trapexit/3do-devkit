@@ -1,0 +1,37 @@
+<Title>spBranchAtMarker</Title>
+<A NAME="XREF40639"><H1>spBranchAtMarker </A></H1>
+<A NAME="XREF23463"></A> Set up a static branch at a marker.<P>
+<H3>Synopsis</H3>
+<CODE>Err spBranchAtMarker (SPSound *fromSound, const char *fromMarkerName, SPSound *toSound, const char *toMarkerName)</CODE><P>
+<H3>Description</H3>
+Sets up a static branch from one marker to another. Barring the result of a marker or default decision function, when the playback encounters the 'from' marker, the playback will skip to the 'to' marker seamlessly. <P>
+Markers can have one of 3 static actions: continue, branch, or stop. This action can be changed at any time, including while the player is playing. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fromSound
+<DD>Pointer to SPSound containing marker to branch from. 
+</DL>
+<DL>
+<DT>fromMarkerName
+<DD>Name of marker in fromSound to branch from. All markers except markers at the beginning of sounds are considered valid "from" markers. 
+</DL>
+<DL>
+<DT>toSound
+<DD>Pointer to SPSound containing marker to branch to. 
+</DL>
+<DL>
+<DT>toMarkerName
+<DD>Name of marker to branch to in toSound. All markers except markers at the end of sounds are considered valid "to" markers. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Notes</H3>
+Both SPSounds must belong to the same SPPlayer. <P>
+Good sounding results require good placement of markers in the sounds. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr094.html#XREF41521"><CODE>spStopAtMarker</A>(), <A HREF="./02mpr067.html#XREF24196">spContinueAtMarker</A>(), <A HREF="./02mpr089.html#XREF13040">spSetMarkerDecisionFunction</A>(), <A HREF="./02mpr088.html#XREF33640">spSetDefaultDecisionFunction</A>() </CODE><P>
+</CODE>

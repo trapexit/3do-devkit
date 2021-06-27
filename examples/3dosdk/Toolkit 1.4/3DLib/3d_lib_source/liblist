@@ -1,0 +1,9 @@
+:objects:math_3d.s.o
+:objects:manage_3d.c.o
+:objects:miscasm_3d.s.o
+:objects:process_3d.c.o
+:objects:misc_3d.c.o
+:objects:render_3d.c.o
+:objects:sound_3d.c.o
+:objects:utils_3d.c.o
+

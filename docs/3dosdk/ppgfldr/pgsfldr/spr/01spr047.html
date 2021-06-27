@@ -1,0 +1,33 @@
+<TITLE>FindAndOpenNamedItem</TITLE>
+<A NAME="XREF36773"><H1>FindAndOpenNamedItem </A></H1>
+<A NAME="XREF20963"></A>Finds an item by name and opens it.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindAndOpenNamedItem( int32 ctype, const char *name )</CODE><P>
+<H3>Description</H3>
+This procedure finds an item of the specified type whose name matches the name argument. The search is not case-sensitive (that is, the kernel does not distinguish uppercase and lowercase letters in item names). When an item is found, it is automatically opened and prepared for use. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ctype
+<DD>The type of the item to find. Use MkNodeID() to create this value. 
+</DL>
+<DL>
+<DT>name
+<DD>The name of the item to find. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the number of the item that was opened. It returns an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr046.html#XREF40895"><CODE>FindAndOpenItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF36773"></LINK></H1><HR>

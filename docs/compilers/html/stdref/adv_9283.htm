@@ -1,0 +1,76 @@
+<HTML><TITLE>advance</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>advance</H2>
+<HR><PRE>     Iterator Operation</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Move an iterator forward or backward (if available) by a certain distance.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;iterator></PRE>
+<PRE>
+template &#60;class InputIterator, class Distance>
+void advance (InputIterator&#38; i, Distance n);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>advance</B></I> template function allows an iterator to be advanced through a container by some arbitrary distance.  For bidirectional and random access iterators, this distance may be negative.  This function uses <SAMP>operator+</SAMP> and <SAMP>operator-</SAMP> for random access iterators, which provides a constant time implementation.  For input, forward, and bidirectional iterators, <B><I>advance</B></I> uses <SAMP>operator</SAMP> <SAMP>++</SAMP> to provide linear time implementations.  <B><I>advance</B></I> also uses <SAMP>operator</SAMP> <SAMP>--</SAMP> with bidirectional iterators to provide linear time implementations of negative distances. </P>
+<P>If <SAMP>n</SAMP> is positive, <B><I>advance</B></I> increments iterator reference <SAMP>i</SAMP> by <SAMP>n</SAMP>.  For negative <SAMP>n</SAMP>, <B><I>advance</B></I> decrements reference <SAMP>i</SAMP>.  Remember that <B><I>advance</B></I> accepts a negative argument <SAMP>n</SAMP> for random access and bidirectional iterators only.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// advance.cpp
+//
+ #include&#60;iterator>
+ #include&#60;list>
+ #include&#60;iostream.h>
+ int main()
+ {
+   //
+   //Initialize a list using an array
+   //
+   int arr[6] = {3,4,5,6,7,8};
+   list&#60;int> l(arr,arr+6);
+   //
+   //Declare a list iterator, s.b. a ForwardIterator
+   //
+   list&#60;int>::iterator itr = l.begin();
+   //
+   //Output the original list
+   //
+   cout &#60;&#60; "For the list: ";
+   copy(l.begin(),l.end(),ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;
+   cout &#60;&#60; "When the iterator is initialized to l.begin()," 
+        &#60;&#60; endl &#60;&#60; "it points to " &#60;&#60; *itr &#60;&#60; endl &#60;&#60; endl;
+   //
+   // operator+ is not available for a ForwardIterator, 
+   // so use advance.
+   //
+   advance(itr, 4);
+   cout &#60;&#60; "After advance(itr,4), the iterator points to " 
+        &#60;&#60; *itr &#60;&#60; endl;
+   return 0;
+ }
+Output :
+For the list: 3 4 5 6 7 8
+When the iterator is initialized to l.begin(),
+it points to 3
+After advance(itr,4), the iterator points to 7
+</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance you'll have to write:</P>
+<PRE>vector&#60;int,allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<PRE></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Seq_6405.htm"><B><I>Sequences</B></I></A>, <A HREF="dis_0186.htm"><B><I>distance</B></I></A></P>
+<HR>
+<A HREF="adj_8817.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Alg_5157.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

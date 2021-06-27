@@ -1,0 +1,30 @@
+<Title>MakeRGB15 </Title>
+<A NAME="XREF27404"><H1>MakeRGB15 </A></H1>
+<A NAME="XREF10896">Creates a 3DO RGB value out of separate red, green, and </A>blue values.<P>
+<H3>Synopsis</H3>
+<CODE>uint32 MakeRGB15 (r, g, b)</CODE><P>
+<H3>Description</H3>
+This macro creates a 3DO RGB value out of separate red, green, and blue values. The composite RGB value it creates can be written to a bitmap, a CCB's PLUT, or anywhere the default RGB data type is required. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>r
+<DD>The red value to be included in the RGB composite. This can be any integer value; the value is coerced by the macro to a uint32 value. 
+</DL>
+<DL>
+<DT>g
+<DD>The green value to be included in the RGB composite. This can be any integer value; the value is coerced by the macro to a uint32 value. 
+</DL>
+<DL>
+<DT>b
+<DD>The blue value to be included in the RGB composite. This can be any integer value; the value is coerced by the macro to a uint32 value. 
+</DL>
+The r, g, and b values must all be in the range 0-31. <P>
+<H3>Return Value</H3>
+The macro returns a composite RGB value. <P>
+<H3>Implementation</H3>
+Macro implemented in graphics.h V20. <P>
+<H3>Associated File</H3>
+graphics.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr044.html#XREF39620"><CODE>MakeRGB15Pair</A>() </CODE><P>
+</CODE>

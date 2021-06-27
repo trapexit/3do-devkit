@@ -1,0 +1,29 @@
+<TITLE>The Process of Event Monitoring</TITLE>
+<H1><LINK NAME="XREF16369">The Process of Event Monitoring</LINK></H1><HR>
+Although event broker messages come in enough flavors to allow a task to carry out a variety of I/O operations through the event broker, the event broker's main function is to monitor events in user-interface devices and report the events to listening tasks. From a listener task's point of view, the process of event monitoring has the following steps:<P>
+<OL>
+<LI>Connecting to the event broker
+<p>
+<UL>
+<LI>Create a message port
+<LI>Create a configuration message
+<LI>Create a configuration block
+<LI>Send the configuration message to the event broker
+<LI>Receive the event broker's connection reply message
+</UL><BR>
+<LI>Monitoring events through the event broker
+<p>
+<UL>
+<LI>Wait for event messages on the allocated message port
+<LI>Read an event message data block
+<LI>Process event data block information (if desired)
+<LI>Reply to the event broker for event message receipt
+</UL><BR>
+
+<LI>Changing configuration (if desired) or disconnecting from the event broker
+<p>
+<UL>
+<LI>Send a new configuration data structure to the event broker
+</UL><BR>
+</OL>
+Each of these steps use event broker data structures and message flavors.<A NAME="XREF29824"></A><P>

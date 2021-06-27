@@ -1,0 +1,164 @@
+<Title>Sample </Title>
+<A NAME="XREF10901"></A><A NAME="XREF40602"><H1>Sample </A></H1>
+<A NAME="XREF40549"> A digital recording of a sound.</A><P>
+<H3>Description</H3>
+A Sample Item is a handle to a digital recording of a sound in memory. Samples come in two kinds:<P>
+<UL>
+<LI>Ordinary Samples - sample loaded from a sample file, or created from scratch. User memory is used for samples. <CODE>CreateSample()</CODE> and a myriad of special purpose functions create ordinary samples.
+<p>
+<LI>Delay Lines - special samples suitable for receiving the DMA output from delay instruments (e.g. delaymono.dsp). The memory for delay lines is allocated in system memory. Use <CODE>CreateDelayLine()</CODE> to create a delay line. 
+</UL>
+Most sample operations can be performed on both kinds of samples. <P>
+<H3>Folio</H3>
+audio <P>
+<H3>Item Type</H3>
+AUDIO_SAMPLE_NODE <P>
+<H3>Create</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr016.html#XREF36090">CreateDelayLine</A>()</CODE> <P>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE> <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr021.html#XREF16321">CreateSample</A>()</CODE> <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr025.html#XREF29821">DefineSampleHere</A>()</CODE> <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr053.html#XREF16726">LoadSample</A>()</CODE> <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr054.html#XREF41997">LoadSampleHere</A>()</CODE> <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr065.html#XREF29290">ScanSample</A>()</CODE> <P>
+<H3>Delete</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr027.html#XREF37533">DeleteDelayLine</A>()</CODE> <P>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE> <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr083.html#XREF21317">UnloadSample</A>()</CODE> <P>
+<H3>Query</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr043.html#XREF15941">GetAudioItemInfo</A>()</CODE> <P>
+<H3>Modify</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr067.html#XREF20838">SetAudioItemInfo</A>()</CODE> <P>
+<H3>Use</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr007.html#XREF30972">AttachSample</A>()</CODE> <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr023.html#XREF37204">DebugSample</A>()</CODE> <P>
+<H3>Tags</H3>
+Loading: <P>
+<DL>
+<DT>AF_TAG_NAME
+<DD>(const char *) Create. Name of sample file to load. 
+</DL>
+<DL>
+<DT>AF_TAG_IMAGE_ADDRESS
+<DD>(const char *) Create. Specifies a memory location containing a sample file image from which to read sample. Must use in conjunction with AF_TAG_IMAGE_LENGTH. 
+</DL>
+<DL>
+<DT>AF_TAG_IMAGE_LENGTH
+<DD>(uint32) Create. Specifies number of bytes in sample file image pointed to by AF_TAG_IMAGE_ADDRESS. 
+</DL>
+<DL>
+<DT>AF_TAG_SCAN
+<DD>(int32) Create. Specifies the maximum number of bytes of sound data to read from the file. This can be used to cause the Audio folio to simply load sample parameters without loading sample data. 
+</DL>
+<DL>
+<DT>AF_TAG_ALLOC_FUNCTION
+<DD>(void *(*)(uint32 memsize, uint32 memflags)) Create. Sets custom memory allocation function to be called to allocate sample memory while loading sample file. Defaults to <CODE>AllocMem()</CODE>. If you supply a custom allocation function you must also provide a custom free function with AF_TAG_FREE_FUNCTION. 
+</DL>
+<DL>
+<DT>AF_TAG_FREE_FUNCTION
+<DD>(void (*)(void *memptr, uint32 memsize)) Create. Sets custom memory free function to free sample memory to be called during sample deletion. Defaults to <CODE>FreeMem()</CODE>. If you supply a custom free function you must also provide a custom allocation function with AF_TAG_ALLOC_FUNCTION. 
+</DL>
+<DL>
+<DT>AF_TAG_LEAVE_IN_PLACE
+<DD>(bool) When TRUE, causes sample being read from AF_TAG_IMAGE_ADDRESS to be used in-place instead of allocating more memory to hold the sample data. Mutually exclusive with AF_TAG_ALLOC_FUNCTION. See <CODE>CreateSample()</CODE> for more details and caveats.
+</DL>
+<DL>
+<DD>Note that sample data may have to be moved down two bytes to align it properly for Opera DMA.  This will destroy the sample image so that it cannot be reused.
+</DL>
+<DL>
+<DT>AF_TAG_DATA_OFFSET
+<DD>(uint32) Query. Byte offset in sample file of the beginning of the sample data. 
+</DL>
+<DL>
+<DT>AF_TAG_DATA_SIZE
+<DD>(uint32) Query. Size of sample data in sample file in bytes. Note that this may differ from the length of the sample as loaded into memory (as returned by AF_TAG_NUMBYTES). 
+</DL>
+Data: <P>
+<DL>
+<DT>AF_TAG_ADDRESS
+<DD>(void *) Create, Query, Modify. Address of sample data. 
+</DL>
+<DL>
+<DD>This tag, and the all the other Data tags, can be used to query or modify the data address/length of ordinary samples. They can only be used to query the address/length of a delay line. 
+</DL>
+<DL>
+<DT>AF_TAG_FRAMES
+<DD>(uint32) Create, Query, Modify. Length of sample data expressed in frames. In a stereo sample, this would be the number of stereo pairs. 
+</DL>
+<DL>
+<DT>AF_TAG_NUMBYTES
+<DD>(uint32) Create, Query, Modify. Length of sample data expressed in bytes. 
+</DL>
+Format: <P>
+<DL>
+<DT>AF_TAG_CHANNELS
+<DD>(uint32) Create, Query, Modify. Number of channels (or samples per sample frame). For example: 1 for mono, 2 for stereo. Valid range is 1..255. 
+</DL>
+<DL>
+<DT>AF_TAG_WIDTH
+<DD>(uint32) Create, Query, Modify. Number of bytes per sample (uncompressed). Valid range is 1..2. 
+</DL>
+<DL>
+<DT>AF_TAG_NUMBITS
+<DD>(uint32) Create, Query, Modify. Number of bits per sample (uncompressed). Valid range is 1..32. Width is rounded up to the next byte when computed from this tag. 
+</DL>
+<DL>
+<DT>AF_TAG_COMPRESSIONTYPE
+<DD>(uint32) Create, Query, Modify. 32-bit ID representing AIFC compression type of sample data (e.g. ID_SDX2). 0 for no compression. 
+</DL>
+<DL>
+<DT>AF_TAG_COMPRESSIONRATIO
+<DD>(uint32) Create, Query, Modify. Compression ratio of sample data. Uncompressed data has a value of 1. 0 is illegal. 
+</DL>
+Loops: <P>
+<DL>
+<DT>AF_TAG_SUSTAINBEGIN
+<DD>(int32) Create, Query, Modify. Frame index of the first frame of the sustain loop. Valid range is 0..NumFrames-1. -1 for no sustain loop. Use in conjunction with AF_TAG_SUSTAINEND. 
+</DL>
+<DL>
+<DT>AF_TAG_SUSTAINEND
+<DD>(int32) Create, Query, Modify. Frame index of the first frame after the last frame in the sustain loop. Valid range is 1..NumFrames. -1 for no sustain loop. Use in conjunction with AF_TAG_SUSTAINBEGIN. 
+</DL>
+<DL>
+<DT>AF_TAG_RELEASEBEGIN
+<DD>(int32) Create, Query, Modify. Frame index of the first frame of the release loop. Valid range is 0..NumFrames-1. -1 for no release loop. Use in conjunction with AF_TAG_RELEASEEND. 
+</DL>
+<DL>
+<DT>AF_TAG_RELEASEEND
+<DD>(int32) Create, Query, Modify. Frame index of the first frame after the last frame in the release loop. Valid range is 1..NumFrames. -1 for no release loop. Use in conjunction with AF_TAG_RELEASEBEGIN. 
+</DL>
+Tuning: <P>
+<DL>
+<DT>AF_TAG_BASENOTE
+<DD>(uint32) Create, Query, Modify. MIDI note number for this sample when played at the original sample rate (as set by AF_TAG_SAMPLE_RATE). Defaults to middle C (60). This defines the frequency conversion reference note for the <CODE>StartInstrument()</CODE> AF_TAG_PITCH tag. 
+</DL>
+<DL>
+<DT>AF_TAG_DETUNE
+<DD>(int32) Create, Query, Modify. Amount to detune the MIDI base note in cents to reach the original pitch. Must be in the range of -100 to 100. 
+</DL>
+<DL>
+<DT>AF_TAG_SAMPLE_RATE
+<DD>(ufrac16) Create, Query, Modify. Original sample rate for sample expressed in 16.16 fractional Hz. Defaults to 44,100 Hz. 
+</DL>
+<DL>
+<DT>AF_TAG_BASEFREQ
+<DD>(ufrac16) Query. The frequency of the sample, expressed in 16.16 Hz, when played at the original sample rate. This value is computed from the other tuning tag values. 
+</DL>
+Multisample: <P>
+<DL>
+<DT>AF_TAG_LOWNOTE
+<DD>(uint32) Create, Query, Modify. Lowest MIDI note number at which to play this sample when part of a multisample. <CODE>StartInstrument()</CODE> AF_TAG_PITCH tag is used to perform selection. Valid range is 0 to 127. Defaults to 0. 
+</DL>
+<DL>
+<DT>AF_TAG_HIGHNOTE
+<DD>(uint32) Create, Query, Modify. Highest MIDI note number at which to play this sample when part of a multisample. Valid range is 0 to 127. Defaults to 127. 
+</DL>
+<H3>Notes</H3>
+Sample creation tags have a lot mutual interaction. See <CODE>CreateSample()</CODE> for a complete explanation of this. <P>
+<H3>Caveats</H3>
+There's currently no way to enforce that memory pointed to by AF_TAG_ADDRESS or file image memory used with AF_TAG_LEAVE_IN_PLACE is actually of MEMTYPE_AUDIO. Be careful. <P>
+All sample data, loop points, and lengths must be quad-byte aligned. For example, a 1-channel, 8-bit sample (which has 1 byte per frame) is only legal when the lengths and loop points are at multiples of 4 frames. For mono ADPCM samples (which have only 4 bits per frame), lengths and loop points must be at multiples of 8 frames. The Audio folio, however, does not report any kind of an error for using non-quad-byte aligned sample data. Sample addresses, lengths, and loop points, are internally truncated to quad-byte alignment when performing the DMA without warning. Misalignments may result in noise at loop points, or slight popping at the beginning and ending of sound playback. It is recommended that you pay very close attention to sample lengths and loop points when creating, converting, and compressing samples. <P>
+Setting AF_TAG_WIDTH does not set the AF_TAG_NUMBITS attribute (e.g. if you create a sample with AF_TAG_WIDTH set to 1, <CODE>GetAudioItemInfo()</CODE> AF_TAG_NUMBITS will return 16). Setting AF_TAG_NUMBITS does however correctly update the AF_TAG_WIDTH field. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./09spr001.html#XREF27996"><CODE>Attachment</A>, <A HREF="./09spr009.html#XREF16655">Instrument</A>, <A HREF="./09spr020.html#XREF24399">Template</A>, <A HREF="../../mgsfldr/mprfldr/01mpr073.html#XREF13758">StartInstrument</A>(), <A HREF="../../mgsfldr/mprfldr/03mpr047.html#XREF15193">sampler.dsp</A>, <A HREF="../../mgsfldr/mprfldr/03mpr014.html#XREF39356">delaymono.dsp</A> </CODE><P>
+</CODE>

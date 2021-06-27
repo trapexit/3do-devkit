@@ -1,0 +1,28 @@
+<Title>spRemoveSound</Title>
+<A NAME="XREF24744"><H1>spRemoveSound </A></H1>
+<A NAME="XREF28613"></A> Manually remove an SPSound from an SPPlayer.<P>
+<H3>Synopsis</H3>
+<CODE>Err spRemoveSound (SPSound *sound)</CODE><P>
+<H3>Description</H3>
+Removes and frees the specified sound from the SPPlayer that it belongs to. All markers belonging to this sound including any the client may have added, are automatically freed by this function. <P>
+All sounds belonging to an SPPlayer are automatically disposed of when that SPPlayer is disposed of with <CODE>spDeletePlayer()</CODE>. Use this function if you want to remove a sound manually. <P>
+For sound file class SPSounds, the file opened by <CODE>spAddSoundFile()</CODE> is closed. The sample item passed into <CODE>spAddSample()</CODE> is left behind after this <CODE>spRemoveSound()</CODE> for the client to clean up. <P>
+An SPSound cannot be removed from its owning SPPlayer while it is being read from while the player is running. <CODE>spIsSoundInUse()</CODE> can be used to determine if the sound is being read. If this function is called for an SPSound for which <CODE>spIsSoundInUse()</CODE> returns TRUE, the SPPlayer is stopped by calling <CODE>spStop()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to an SPSound to remove. Can be NULL. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Caveats</H3>
+This function only stops the SPPlayer when while the SPPlayer is still reading from the SPSound being removed, which is fine for AIFF Sound File class SPSounds. For Sample Item class SPSounds, the player passes pointers to the Sample Item's sound data in memory the SoundSpooler rather than copying the sound data to the SPPlayer's buffers. That means that the sound data must remain valid until the SoundSpooler has completely played the sound data, which happens some amount of time after the SPPlayer is done 'reading' that data. <P>
+If you remove a Sample Item class SPSound during that window of vulnerability and then delete the data for the Sample Item (e.g. <CODE>UnloadSample()</CODE>), the SoundSpooler is then pointing to freed memory, whose contents may be clobbered by another task at any time. Unfortunately you may not hear bad results if you do this inadvertently because there's no guarantee that freed memory  will get trashed (unless you are running a daemon to munge newly freed memory). <P>
+So, avoid removing Sample Item class SPSounds while the SPPlayer is playing. Or at least go to measures to insure that the Sample Item class SPSound you are removing is not in the spooler (e.g. it has never been played, or at least not since the last <CODE>spStop()</CODE>). <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr061.html#XREF17185"><CODE>spAddMarker</A>(), <A HREF="./02mpr063.html#XREF36046">spAddSoundFile</A>(), <A HREF="./02mpr083.html#XREF25941">spRemoveMarker</A>(), <A HREF="./02mpr070.html#XREF29915">spDeletePlayer</A>(), <A HREF="./02mpr079.html#XREF14588">spIsSoundInUse</A>() </CODE><P>
+</CODE>

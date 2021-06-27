@@ -1,0 +1,17 @@
+<Title>subscriber</Title>
+<A NAME="XREF42550"><H1>subscriber</A></H1>
+<A NAME="XREF37654"></A> Specifies which subscriber will be instantiated.<P>
+<H3>Synopsis</H3>
+<CODE>subscriber &lt;subscriber_ID&gt; &lt;delta_priority&gt;</CODE><P>
+<H3>Description</H3>
+Lets you add the subscriber entry in the stream header and specify which subscriber will be instantiated. Each subscriber entry consists of the subscriber ID (subscriber data type) for the subscriber and a delta priority to be used when the <CODE>subscriber</CODE> is instantiated. If you use this command, you need to also include the writestreamheader command. <P>
+delta_priority<I> </I>should be low because the task priority of the subscriber thread is calculated in relation to the priority of its parent task.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>subscriber_ID 
+<DD>4-byte ASCII characters describing the subscriber type (FILM, SNDS, CTRL, SANM).
+</DL>
+<DL>
+<DT>delta_priority 
+<DD>0 to 200. The higher the number, the higher the priority. 
+</DL>

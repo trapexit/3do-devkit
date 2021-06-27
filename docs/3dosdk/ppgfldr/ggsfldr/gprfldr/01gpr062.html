@@ -1,0 +1,28 @@
+<Title>SetCurrentFontCCB </Title>
+<A NAME="XREF30280"><H1>SetCurrentFontCCB </A></H1>
+<A NAME="XREF17325"> Sets the font's CCB.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err SetCurrentFontCCB (CCB *ccb)</CODE><P>
+<H3>Description</H3>
+This call sets the CCB of the current font. To modify the CCB of the current font, do the following: <P>
+<UL>
+<LI>Call <CODE>GetCurrentFont()</CODE> 
+<LI>Copy the CCB pointed to by the font structure 
+<LI>Edit your copy of the CCB 
+<LI>Call <CODE>SetCurrentFontCCB()</CODE> 
+</UL>
+When you submit a CCB, the ccb_PLUTPtr field should either be significant or set to NULL. The font flag, FONT_VERTICAL, determines whether characters are printed vertically (top to bottom) or horizontally (left to right). If the flag is set, the characters are printed vertically. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ccb
+<DD>Pointer to the CCB. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr032.html#XREF21455"><CODE>GetCurrentFont</A>() </CODE><P>
+</CODE>

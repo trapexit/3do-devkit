@@ -1,0 +1,22 @@
+<Title>mouseufo</Title>
+<A NAME="XREF29960"></A><A NAME="XREF40249"><H1>mouseufo </A></H1>
+<A NAME="XREF36153"></A> A basic player/target game with mouse support.<P>
+<H3>Synopsis</H3>
+<CODE>mouseufo</CODE><P>
+<H3>Description</H3>
+This program demonstrates the programming of a basic player/target game 
+which is controlled via the control pad or mouse. It illustrates the 
+convenience routines <CODE>GetMouse()</CODE> and 
+<CODE>GetControlPad(</CODE>. <P>
+<H3>Caveats</H3>
+While the control pad and mouse convenience routines is fine for certain 
+titles, titles that require a high level of performance should use the 
+Event Broker directly. This is particularly true if you want to put 
+peripheral input handling in its own thread. <P>
+See the BrokerShell example program for programming directly to the Event 
+Broker. <P>
+<H3>Associated Files</H3>
+mouseufo.c, mouseufo.make, padandmouse.c, padandmouse.h,    
+audiohandler.c,audiohandler.h, playbgndmusic.c, playbgndmusic.make<P>
+<H3>Location</H3>
+examples/EventBroker/Mouse<P>

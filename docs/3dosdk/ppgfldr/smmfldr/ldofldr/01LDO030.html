@@ -1,0 +1,23 @@
+<Title>CenterRectCelOverIPoint </Title>
+<A NAME="XREF18762"><H1>CenterRectCelOverIPoint </A></H1>
+ Centers a cel over a point.<P>
+<H3>Synopsis </H3>
+<CODE>void CenterRectCelOverIPoint (CCB *cel, IPoint *point)</CODE><P>
+<H3>Description</H3>
+Centers a single cel over a specified point. <P>
+The ccb_XPos and ccb_YPos fields are modified in the CCB; other CCB fields are not modified. The centering is based on the cel's projected size, not its source data size. If the cel is projected to a non-rectangular shape, the result is invalid. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to a cel to be centered. 
+</DL>
+<DL>
+<DT>point
+<DD>Pointer to an IPoint over which the cel is to be centered. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO029.html#XREF16009"><CODE>CenterRectCelOverFPoint</A>, <A HREF="./01LDO020.html#XREF42484">CenterRectAACelOverIPoint</A>, <A HREF="./01LDO028.html#XREF31246">CenterRectCelListOverIPoint</A></CODE><P>

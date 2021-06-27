@@ -1,0 +1,9 @@
+<TITLE>Special Tag Commands</TITLE>
+<H1><LINK NAME="XREF30139">Special Tag Commands</LINK></H1><HR>
+Portfolio provides three special tag commands that have universal meanings in all system calls: <CODE>TAG_END</CODE>, <CODE>TAG_NOP</CODE>, and <CODE>TAG_JUMP</CODE>. By setting the <CODE>ta_Tag</CODE> field to these commands, you can control how TagArg arrays are processed by the system.<P>
+<H3>TAG_END</H3>
+The <CODE>TAG_END</CODE> command tells the system that this structure marks the end of an array of TagArg structures. The system stops scanning the array and goes no further.<P>
+<H3>TAG_NOP</H3>
+The <B></B><CODE>TAG_NOP</CODE> command tells the system to ignore the particular TagArg structure. The system just skips ahead and continues processing with the next TagArg structure.<P>
+<H3>TAG_JUMP</H3>
+The <CODE>TAG_JUMP</CODE> command links arrays of TagArg structures together. The <CODE>ta_Arg</CODE> field for this command must point to another array of TagArg structures. When the system encounters such a TagArg structure, it stops scanning the current array, and resumes scanning at the address specified by <CODE>ta_Arg</CODE>.<A NAME="XREF18811"></A><P>

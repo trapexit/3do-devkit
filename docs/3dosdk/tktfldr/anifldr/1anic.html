@@ -1,0 +1,76 @@
+<TITLE>Creating a simple coded cel</TITLE>
+<H1><LINK NAME="XREF38335">Creating a simple coded cel</LINK></H1><HR>
+This section first provides some background information, then steps you 
+through creating a simple coded cel. <P>
+<H2>Introduction</H2>
+Coded 3DO cels are indexed into a palette. When you create a coded cel, 
+3DO Animator always has to first compute the palette; after that you can 
+remap the document. <P>
+<H3>Available palette colors for different cel types</H3>
+The number of available colors for the palette of a coded cel depends on 
+the cel type you select. Here's an overview of the available colors for 
+different cels: <P>
+<UL>
+<LI>8-bit coded and 6-bit coded: 32 colors
+<LI>4-bit coded: 16 colors
+<LI>2-bit coded: 4 colors
+<LI>1-bit coded: 2 colors
+</UL>
+<H3>Saving coded cels and saving palettes</H3>
+When you save a coded cel, 3DO Animator always automatically saves the 
+palette associated with it. The 3DO system knows how to use the palette 
+information in the file to display the cel on the 3DO screen using colors 
+that are close to the original. <P>
+If a palette works out well for a cel, you can save and load it using the 
+Save Palette and Load Palette buttons in the Functions area of the Set 3DO 
+Cel Type dialog, as discussed in the section <A HREF="#XREF38179">Saving 
+and loading palettes</A>. This is particularly useful when you're working 
+with an animation. <P>
+<H2>How to create a coded cel</H2>
+To convert 32-bit source art to an 8-bit coded cel, follow these steps: <P>
+<OL>
+<LI>Launch 3DO Animator and select Open in the New Document dialog that 
+appears, then find the file in the file selection dialog and choose OK. 
+<P>If 3DO Animator is already open, choose Open from the File menu. 
+<P>
+
+<LI>Type 3 to display the Set 3DO Object Type dialog if it's not currently 
+visible. 
+<LI>From the Cel Type pop-up in the dialog, choose Coded 8.
+<LI>Click the Best Palette button in the dialog.
+<P>A process method dialog appears. 
+<P>
+
+<LI>Choose Optimized Version (3DO). 
+<P>3DO Animator computes a palette based on the colors in the source art. 
+For an 8-bit coded cel, 3DO Animator creates a palette with 32 base colors 
+and 7 shades of each color, as shown in Figure 4. Once the calculation is 
+complete, the "best" palette is displayed in the palette grid of the Set 
+3DO Object Type dialog. The artwork is not remapped, however, until you 
+click the Remap Document button. 
+<P>
+
+<IMG SRC="Figures/ANICh1/Set3DOfor8bit.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Set 3DO Object Type dialog for an 8-bit coded cel. 
+</I><P>
+
+<LI>Click the Remap Document button, then select Optimized Version (3DO) 
+from the Process Method dialog. 
+<P>A second dialog appears, prompting for special mapping parameters.
+<P>
+
+<LI>Since you're not currently planning on using Transparency or 
+Translucency options, leave the defaults in the dialog. 
+<P>3DO Animator creates a new document and names it with an extension 
+Coded8.
+<P>
+
+<LI>If you're satisfied with the newly mapped document, save it choosing 
+Save from the File menu. 
+
+<P>If you're not satisfied, you can edit the palette, then update the 
+document, as discussed in <A HREF="./1anid.html#XREF12415">Customizing a 
+palette</A>. 
+<P>

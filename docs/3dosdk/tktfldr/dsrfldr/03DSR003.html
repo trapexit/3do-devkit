@@ -1,0 +1,37 @@
+<Title>ChunkMatcher</Title>
+<A NAME="XREF13527"><H1>ChunkMatcher</A></H1>
+<A NAME="XREF36132"></A>Performs operations on chunk files.<P>
+<H3>Synopsis</H3>
+<CODE>chunkmatcher [-v] [-of &lt;filename&gt;] -op &lt;operation&gt; -if &lt;filename&gt; -od &lt;directoryname&gt;</CODE><P>
+<H3>Description</H3>
+This command applies the specified operation to the specified input chunk file.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-op &lt;operation&gt;
+<DD>Specifies the operation to be performed against the input chunk file. Available operations are the following:
+</DL>
+<DL>
+<DT>extract Extract cels from an ANIM or SANM input chunk file and write a cel into an individual chunk file in the specified output directory. Anti-aliased frames, consisting of a edge cel and a foreground cel, are written as two separate output files. Extract may also be performed against SCEL files, in which case each output file will contain a single SCEL cel-list chunk.
+</DL>
+<DL>
+<DT>extract_groups    Same as the extract operation, except anti-aliased cels are written as a single output file in the same format as a file written by the anti-aliased cel-writer Photoshop plug-in.
+</DL>
+<DL>
+<DT>stream_info Analyze a stream chunk file to determine the percent of filler versus data. This operation does not require the specification of an output directory.
+</DL>
+<DL>
+<DT>-if &lt;filename&gt;
+<DD>Specifies the input chunk file.
+</DL>
+<DL>
+<DT>-od &lt;directoryname&gt;
+<DD>Specifies the directory into which all of the output files will be written.
+</DL>
+<DL>
+<DT>-v
+<DD>Specifies verbose printing of progress information.
+</DL>
+<DL>
+<DT>-of &lt;filename&gt;
+<DD>Specifies an output file. This option is unused since none of the current operation modules require a separate output file.
+</DL>

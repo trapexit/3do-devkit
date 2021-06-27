@@ -1,0 +1,159 @@
+<HTML><HEAD><TITLE>The Queue Data Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The Queue Data Abstraction</H2>
+<P>As a data abstraction, a <A HREF="../stdref/que_0953.htm"><B><I>queue</I></B></A> is traditionally defined as any object that implements the following operations:</P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<SAMP>empty()</SAMP><BR>
+</TD>
+
+<TD>
+ return true if the collection is empty<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>size()</SAMP><BR>
+</TD>
+
+<TD>
+ return number of elements in collection<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>front()</SAMP><BR>
+</TD>
+
+<TD>
+ return (but do not remove) the element at the front of the queue <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>back()</SAMP><BR>
+</TD>
+
+<TD>
+ return the element at the end of the queue <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>push(newElement)</SAMP><BR>
+</TD>
+
+<TD>
+ push a new element on to the end of the queue <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>pop()</SAMP><BR>
+</TD>
+
+<TD>
+ remove (but do not return) the element at the front of the queue<BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>Note that the operations of accessing and of removing the front elements are performed separately.  Programs that use the queue data abstraction should include the file <SAMP>queue</SAMP>, as well as the include file for the container type (e.g., <SAMP>list</SAMP>).</P>
+<PRE>   # include &#60;queue>
+   # include &#60;list>
+</PRE>
+
+<A NAME="declarationandinitializationofqueue"><H3>Declaration and Initialization of queue</H3></A>
+<P>A declaration for a queue must specify both the element type as well as the container that will hold the values.  For a queue the most common containers are a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> or a <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A>.  The list version is generally smaller, while the deque version may be slightly faster.  The following are sample declarations for a queue.</P>
+<PRE>   queue&#60; int, list&#60;int> > queueOne;
+   queue&#60; double, deque&#60;double> > queueTwo;
+   queue&#60; Part *, list&#60;Part * > > queueThree;
+   queue&#60; Customer, list&#60;Customer> > queueFour;
+</PRE>
+<P>The last example creates a queue of a programmer-defined type named Customer.  As with the stack container, all objects stored in a queue must understand the operators <SAMP>&#60;</SAMP> and <SAMP>==</SAMP>.</P>
+<P>Because the queue does not implement an iterator, none of the generic algorithms described in Sections <a href="gen_9895.htm">13</a> or <a href="ord_1635.htm">14</a> apply to queues.</P>
+
+<A NAME="exampleprogrambanktellersimulation"><H3>Example Program - Bank Teller Simulation</H3></A>
+<A HREF="sidebar.htm#sidebar39"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>Queues are often found in businesses, such as supermarkets or banks.  Suppose you are the manager of a bank, and you need to determine how many tellers to have working during certain hours.  You decide to create a computer simulation, basing your simulation on certain observed behavior.  For example, you note that during peak hours there is a ninety percent chance that a customer will arrive every minute.</P>
+<P>We create a simulation by first defining objects to represent both customers and tellers.  For customers, the information we wish to know is the average amount of time they spend waiting in line.  Thus, customer objects simply maintain two integer data fields: the time they arrive in line, and the time they will spend at the counter.  The latter is a value randomly selected between 2 and 8.  (See <a href="var_0565.htm">Chapter 2 (<I><SMALL>Varieties of Iterators</i>)</a> for a discussion of the <SAMP>randomInteger()</SAMP> function.)</P>
+<PRE>class Customer {
+public:
+   Customer (int at = 0) : arrival_Time(at), 
+         processTime(2 + randomInteger(6)) {}
+   int arrival_Time;
+   int processTime;
+   
+   bool done()      // are we done with our transaction? 
+      { return --processTime &#60; 0; }
+      
+   operator &#60; (const Customer &#38; c)   // order by arrival time
+      { return arrival_Time &#60; c.arrival_Time; }
+      
+   operator == (const Customer &#38; c)   // no two customers are alike
+      { return false; }
+};
+</PRE>
+<P>Because objects can only be stored in standard library containers if they can be compared for equality and ordering, it is necessary to define the <SAMP>&#60;</SAMP> and <SAMP>==</SAMP> operators for customers.  Customers can also tell us when they are done with their transactions.</P>
+<P>Tellers are either busy servicing customers, or they are free.  Thus, each teller value holds two data fields; a customer, and a boolean flag.  Tellers define a member function to answer whether they are free or not, as well as a member function that is invoked when they start servicing a customer.</P>
+<PRE>class Teller {
+public:
+   Teller() { free = true; }
+   
+   bool isFree()   // are we free to service new customer?
+      { if (free) return true;
+        if (customer.done())
+           free = true;
+        return free;
+       }
+
+   void addCustomer(Customer c)   // start serving new customer
+      {   customer = c;
+         free = false;
+      }
+
+private:
+   bool free;
+   Customer customer;
+};
+</PRE>
+<P>The main program is then a large loop, cycling once each simulated minute.  Each minute a new customer is, with probability 0.9, entered into the queue of waiting customers.  Each teller is polled, and if any are free they take the next customer from the queue.  Counts are maintained of the number of customers serviced and the total time they spent in queue.  From these two values we can determine, following the simulation, the average time a customer spent waiting in the line.</P>
+<PRE>void main() {
+   int numberOfTellers = 5;
+   int numberOfMinutes = 60;
+   double totalWait = 0;
+   int numberOfCustomers = 0;
+   vector&#60;Teller> teller(numberOfTellers);
+   queue&#60; Customer, deque&#60;Customer> > line;
+   
+   for (int time = 0; time &#60; numberOfMinutes; time++) {
+      if (randomInteger(10) &#60; 9)
+         line.push(Customer(time));
+      for (int i = 0; i &#60; numberOfTellers; i++) {
+         if (teller[i].isFree() &#38; ! line.empty()) {
+            Customer &#38; frontCustomer = line.front();
+            numberOfCustomers++;
+            totalWait += (time - frontCustomer.arrival_Time);
+            teller[i].addCustomer(frontCustomer);
+            line.pop();
+            }
+         }
+      }
+   cout &#60;&#60; "average wait:" &#60;&#60;
+          (totalWait / numberOfCustomers) &#60;&#60; endl;
+}
+</PRE>
+<P>By executing the program several times, using various values for the number of tellers, the manager can determine the smallest number of tellers that can service the customers while maintaining the average waiting time at an acceptable amount.</P>
+
+<HR>
+<A HREF="sta_5501.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="pri_2327.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,35 @@
+<Title>preloadinstrument</Title>
+<A NAME="XREF32859"><H1>preloadinstrument</A></H1>
+<A NAME="XREF23333"></A> Specifies an audio subscriber tag for preloading. <P>
+<H3>Synopsis</H3>
+<CODE>preloadinstrument &lt;audio_data_type&gt;</CODE><P>
+<H3>Description</H3>
+Specifies an <CODE>SAudioSubscriber</CODE> tag name for preloading instruments. This is saves time when the instrument is later needed by a sound in the stream file. <P>
+If you use this command, you also have to include writestreamheader. The information is then included in the stream header. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>audio_data_type 
+<DD>One of the following uncompressed or compressed instrument tags:
+</DL>
+Uncompressed instrument tags:<P>
+<UL>
+<LI><CODE>SA_44K_16B_S</CODE> - 44 kHz, 16-bit stereo
+<LI><CODE>SA_44K_16B_M - </CODE>44 kHz, 16-bit mono
+<LI><CODE>SA_44K_8B_S </CODE>- 44 kHz, 8-bit stereo
+<LI><CODE>SA_44K_8B_M</CODE> - 44 kHz, 8-bit mono
+<LI><CODE>SA_22K_8B_S</CODE> - 22 kHz, 8-bit stereo
+<LI><CODE>SA_22K_8B_M</CODE> - 22 kHz, 8-bit mono
+</UL>
+Compressed instrument tags: <P>
+<UL>
+<LI><CODE>SA_44K_16B_S_SDX2</CODE> - 44 kHz, 16-bit stereo, 2 to 1 compression
+<LI><CODE>SA_44K_16B_M_SDX2</CODE> - 44 kHz, 16-bit mono, 2 to 1 compression
+<LI><CODE>SA_22K_16B_S_SDX2</CODE> - 22 kHz, 16-bit stereo, 2 to 1 compression
+<LI><CODE>SA_22K_16B_M_SDX2</CODE> - 22 kHz, 16-bit mono, 2 to 1 compression
+<LI><CODE>SA_44K_16B_M_ADPCM4_22kHz</CODE>- 16-bit mono, 4:1 compression
+<LI><CODE>SA_22K_16B_M_ADPCM4_22kHz</CODE>- 16-bit mono, 4:1 compression
+</UL>
+<H3>Caveats</H3>
+None.<P>
+<H3>See Also</H3>
+<A HREF="./04DSR018.html#XREF15454">writestreamheader</A><P>

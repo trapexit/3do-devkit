@@ -1,0 +1,81 @@
+<HTML><HEAD><TITLE>The Priority Queue Operations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The Priority Queue Operations</H2>
+<P>A priority queue is a data structure that can hold elements of type <SAMP>T</SAMP> and that implements the following five operations:</P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<SAMP>push(T)</SAMP><BR>
+</TD>
+
+<TD>
+ add a new value to the collection being maintained<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>top()</SAMP><BR>
+</TD>
+
+<TD>
+ return a reference to the smallest element in collection<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>pop()</SAMP><BR>
+</TD>
+
+<TD>
+ delete the smallest element from the collection<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>size()</SAMP><BR>
+</TD>
+
+<TD>
+ return the number of elements in the collection<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>empty()</SAMP><BR>
+</TD>
+
+<TD>
+ return true if the collection is empty <BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<P>Elements of type <SAMP>T</SAMP> must be comparable to each other, either through the use of the default less than operator (the <SAMP>&#60;</SAMP> operator), or through a comparison function passed either as a template argument or as an optional argument on the constructor.  The latter form will be illustrated in the example program provided later in this section.  As with all the containers in the Standard Library, there are two constructors.  The default constructor requires either no arguments or the optional comparison function.  An alternative constructor takes an iterator pair, and initializes the values in the container from the argument sequence.  Once more, an optional third argument can be used to define the comparison function.</P>
+<A HREF="sidebar.htm#sidebar41"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Initializing Queues from other containers</STRONG></A>
+
+<P>The priority queue data type is built on top of a container class, which is the structure actually used to maintain the values in the collection.  There are two containers in the standard library that can be used to construct priority queues: <B><I>vector</I></B><B><I>s</I></B> or <B><I>deque</I></B><B><I>s</I></B>.  </P>
+<A NAME="declarationandinitializationofpriorityqueue"><H3>Declaration and Initialization of priority queue</H3></A>
+<P>The following illustrates the declaration of several priority queues:</P>
+<PRE>priority_queue&#60; int, vector&#60;int> > queue_one;
+priority_queue&#60; int, vector&#60;int>, greater&#60;int> > queue_two;
+priority_queue&#60; double, deque&#60;double> > 
+      queue_three(aList.begin(), aList.end());
+priority_queue&#60; eventStruct, vector&#60;eventStruct> > 
+      queue_four(eventComparison);
+priority_queue&#60; eventStruct, deque&#60;eventStruct> > 
+      queue_five(aVector.begin(), aVector.end(), eventComparison);
+</PRE>
+<P>Queues constructed out of vectors tend to be somewhat smaller, while queues constructed out of deques can be somewhat faster, particularly if the number of elements in the queue varies widely over the course of execution.  However, these differences are slight, and either form will generally work in most circumstances.</P>
+<P>Because the priority queue data structure does not itself know how to construct iterators, very few of the algorithms noted in <a href="gen_9895.htm">Chapter 13</a> can be used with priority queues.  Instead of iterating over values, a typical algorithm that uses a priority queue constructs a loop, which repeatedly pulls values from the structure (using the <SAMP>top()</SAMP> and <SAMP>pop()</SAMP> operations) until the collection becomes empty (tested using the <SAMP>empty()</SAMP> operation).  The example program described in the next section will illustrate this use.</P>
+
+<A HREF="sidebar.htm#sidebar42"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Information on ...</STRONG></A>
+
+<P>Priority queues are implemented by internally building a data structure called a <I>heap</I>.  Abstractly, a heap is a binary tree in which every node possesses the property that the value associated with the node is smaller than or equal to the value associated with either child node.</P>
+<HR>
+<A HREF="pri_5364.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="app_4189.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

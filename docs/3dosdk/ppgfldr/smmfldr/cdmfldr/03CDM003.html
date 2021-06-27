@@ -1,0 +1,174 @@
+<TITLE>Preparing Simple cdrom.image Files</TITLE>
+<H1><A NAME="XREF29116">Preparing Simple cdrom.image Files</A></H1>
+The first step in creating your CD-ROM is to generate a simple, 
+nonoptimized <I>cdrom.image</I> file. You create the CD-ROM image file 
+using the <CODE>laytool</CODE> program. This program uses a 
+<I>cdrom.tcl</I> script file to create the image file. This section 
+describes: <P>
+
+<UL>
+<LI><A HREF="#XREF29196">Editing the cdrom.tcl File for the Simple 
+Image</A>
+<LI><A HREF="#XREF13372">Creating the Simple Image</A>
+</UL>
+All files and folders needed to create the image file are in the 
+/<I>cdrommaster </I>folder named after the current version of the 
+operating system.<P>
+To step through this section, you should have already set up your files, 
+as explained in <A HREF="./03CDM002.html#XREF34059">Preparing Your Title's 
+Files for the Layout Process</A>.<P>
+<H3>About the cdrom.tcl File</H3>
+The <I>cdrom.tcl</I> script file contains variables that affect the final 
+form of the CD-ROM image file. Variables are defined with <CODE>set</CODE> 
+commands in the script. If a command is preceded by an initial hash sign 
+(#), it is considered a comment and won't execute. <P>
+<A NAME="XREF29196"><H2>Editing the cdrom.tcl File for the Simple 
+Image</A></H2>
+To edit the <I>cdrom.tcl</I> file for first-time layout, follow these 
+steps:<P>
+<OL>
+<LI>Launch MPW.
+<p>
+<LI>From the Directory menu, choose Set Directory and select the folder 
+inside the <I>cdrommaster</I> folder that is named like the most recent 
+operating system.
+<p>
+<LI>From the File menu, choose Open and select the <I>cdrom.tcl</I> file. 
+<p>
+<p><B>Note: </B>The cdrom.tcl file is commented extensively; if you pay 
+attention to the comments, you should find editing the file quite easy.<BR>
+<p>
+
+<LI>Edit the file so the variables have the values shown in the table 
+below: 
+<PRE>
+<B>Table 1: </B><I> Variable settings for simple image creation.</I>
+--------------------------------------------------------
+Variable      |Setting                                  
+--------------------------------------------------------
+imagefile     |Pathname of a cdrom.image file to be     
+              |created on a hard disk that has at least 
+              |640 MB space.                            
+--------------------------------------------------------
+label         |Set to "cd-rom" during initial testing of
+              |the CD-ROM image.                        
+--------------------------------------------------------
+takedirectory |Pathname of the /takeme folder that      
+              |contains the title.                      
+--------------------------------------------------------
+megabytes     |Rule of Thumb: Use 110% of the size of   
+              |the /takeme folder (with your executable 
+              |and data files), and use that number as  
+              |the number of megabytes. If you allocate 
+              |too little, the layout process           
+              |terminates. If you allocate too much, the
+              |process takes longer but there won't be  
+              |other problems. The number of blocks must
+              |be a multiple of 16.The number of        
+              |kilobytes must be a multiple of 32.      
+--------------------------------------------------------
+directoryavata|The number of directory avatars defaults 
+rs            |to 3 and may be safely reduced to 2.     
+--------------------------------------------------------
+rootavatars   |The number of root avatars defaults to 7 
+              |and may be safely reduced to 2.          
+--------------------------------------------------------
+labelavatars  |The number of label avatars defaults to  
+              |2, and must not be changed.              
+--------------------------------------------------------
+</PRE>
+
+</OL>
+The different avatars are discussed in some detail in the <I>cdrom.tcl</I> 
+file itself. <P>
+<A NAME="XREF13372"><H2>Creating the Simple Image</A></H2>
+To create a CD-ROM image using the layout tool, follow these steps:<P>
+<OL>
+<LI>In the MPW Worksheet window, make sure<I> /cdrommaster/_version_</I> 
+is the working directory.
+<p>
+<p>The<I> /cdrommaster/_version_</I> folder contains the <I>/takeme</I> 
+folder with your executables and data. 
+<p>
+
+<LI>Type <CODE>laytool &lt; cdrom.tcl</CODE> and press the Enter key (not 
+the Return key). 
+<p>
+<p>After you've started the image creation process, the layout tool does the 
+following:<P>
+<UL>
+<LI>Assembles the Macintosh file hierarchy of your title into a Portfolio 
+file system. 
+<p>
+<LI>Creates the <I>cdrom.image</I> file. 
+<p>
+<LI>Creates the <I>filemap.out</I> file that is needed for creating an 
+optimized CD-ROM image. 
+</UL>
+<p>
+<p>At the end of the process, the MPW shell should display the line "layout 
+successful."<P>
+<p>If you don't see the line "layout successful," or if something else goes 
+wrong: <P>
+<UL>
+<LI>Look at <A HREF="./03CDM006.html#XREF35577">Layout Tool 
+Troubleshooting</A> below. 
+<p>
+<LI>If you can't solve your problems with that information, select the 
+status messages the layout tool printed and save them to a file for use by 
+3DO Developer Technical Support. 
+</UL>
+</OL>
+<H2>Testing the Simple Image</H2>
+To test the CD-ROM image file, follow these steps:<P>
+<OL>
+<LI>Rename any additional copies of your title's executable and data 
+folders you have on your Macintosh so they aren't accessed instead of the 
+files in the CD-ROM image you want to test. 
+<p>
+
+<LI>Make sure there are no other <I>cdrom.image </I>files anywhere on your 
+Macintosh.
+<p>
+<LI>Make sure your environment is set up for debugging. 
+<p>
+<LI>Open the Debugger and select Cancel when prompted for a script to 
+execute. 
+<p>
+<LI>From the Edit menu, choose Preferences and make sure the CD Emulation 
+checkbox is checked. 
+<p>
+<LI>From the File menu, choose Directories, and then choose Setup. In the 
+dialog that appears, click Data, then find the <I>cdrom.image</I> file you 
+just created and click Select Current Directory.
+<p>
+<LI>From the Target menu, select Launch.
+<p>
+<LI>When prompted, select the boot script and click Execute.
+<p>
+<LI>Press Command-G to start the operating system (if you didn't uncheck 
+Set Initial Breakpoints).
+<p>
+<LI>When you see a Mac-&gt; prompt in the Debugger Terminal window, type 
+the following:
+<p>
+<DL>
+<DD><CODE>alias boot /cd-rom</CODE><BR>
+</DL>
+<p>
+<p>This sets the alias <CODE>boot</CODE> to <CODE>/cd-rom</CODE>. In 
+turn, any pathname in the application that contains <CODE>$boot</CODE> 
+will properly reference the files on the CD-ROM.
+<p>
+
+<LI>Execute the program contained in the image file by typing the 
+following command into the Terminal window:
+<p>
+<DL>
+<DD><CODE>$boot/launchme</CODE><BR>
+</DL>
+<p>
+<p>The Debugger runs your title from the image file and you can perform 
+the first round of testing. 
+<p>
+</OL>

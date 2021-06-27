@@ -1,0 +1,31 @@
+<TITLE>Displaying a Screen Group</TITLE>
+<H1><LINK NAME="XREF36569">Displaying a Screen Group</LINK></H1><HR>
+Once a screen group and its components are defined, you can use further graphics calls to display the screen group's screens in a frame.<P>
+<H2>Adding a Screen Group to the Display</H2>
+The first step in displaying a screen group is to add the item to the Graphics folio's display mechanism, which you do with this call:<P>
+<CODE><DL>
+<DD><CODE>int32 AddScreenGroup( Item screenGroup, TagArg *targs )</CODE><BR>
+</DL>
+</CODE>The first argument is the item number of the screen group you wish to add. The second argument is a list of tag arguments that defines how the screen group is to be placed in the display. These tag arguments don't exist at this release, so set the tags to null.<P>
+<CODE>AddScreenGroup</CODE> returns 0 if the screen group was added to the display mechanism; it returns a negative number (an error code) if anything went wrong and the screen group was <I>not</I> added.<P>
+<H2>Displaying Screens</H2>
+Once a screen group has been added to the display mechanism, you can display any of its screens (which includes all of the screens' visible bitmaps) by using this call:<P>
+<CODE><DL>
+<DD><CODE>int32 DisplayScreen( Item ScreenItem0, Item ScreenItem1 )</CODE><BR>
+</DL>
+</CODE>This call accepts two arguments, each the item number of a screen within the same screen group. The first screen is displayed in the odd field of a frame; the second screen is displayed in the even field of the same frame.<P>
+If you want to display a stereoscopic image from a screen group, specify two different screens in this call: the right screen first, the left screen second. If you don't want a stereoscopic image and instead want the same image displayed in both fields of the frame, you can either specify the same screen for both arguments, or pass a null value for the second argument.<P>
+<CODE>DisplayScreen()</CODE> returns 0 if it was successful. It returns a negative number (an error code) if it wasn't successful.<P>
+<H3>Double-Buffering</H3>
+To use a two-screen group for double-buffered animation, issue a <CODE>DisplayScreen()</CODE> during each vertical blank. In one frame, specify one screen alone for display, and render to the other screen. In the next frame, specify the second screen alone for display, and render to the first screen. Continue alternating as long as the animation continues.<P>
+Double-buffering a stereoscopic display works much the same way, but instead of alternating between single screens in each frame, alternate between pairs of screens.<P>
+<H2>Removing a Screen Group from Display</H2>
+Once a screen is displayed with the <CODE>DisplayScreen()</CODE> call, it remains in the frame until the screen's screen group is removed. To remove a screen group, use this call:<P>
+<CODE><DL>
+<DD><CODE>int32 RemoveScreenGroup( Item screenGroup )</CODE><BR>
+</DL>
+</CODE>This call accepts the item number of the screen group that you wish to remove. It removes the group from the Graphics folio's display mechanism, but the group's data structures and resource allocation remain intact. You can redisplay the group at any time with another <CODE>AddScreenGroup()</CODE> call followed by a <CODE>DisplayScreen()</CODE> call.<P>
+<CODE>RemoveScreenGroup()</CODE> returns 0 if successful, and returns a negative number (an error code) if unsuccessful.<P>
+<H2>Deleting a Screen Group</H2>
+To completely delete a screen group, including the data structures used for its definition and all of its allocated resources, use <CODE>DeleteScreenGroup()</CODE>, and supply it with the item number of the screen group.<P>
+Any time a task quits, any of its screen groups are automatically deleted.<P>

@@ -1,0 +1,38 @@
+<TITLE>About Linked Lists</TITLE>
+<H1><LINK NAME="XREF30247">About Linked Lists</LINK></H1><HR>
+Linked lists are used throughout Portfolio and in applications you create with it. To make using lists easier (and to meet the needs of system software and its lists), the kernel defines a special type of linked list, known as a Portfolio list. The kernel also provides a variety of functions for creating and managing Portfolio lists.<P>
+Like all linked lists, Portfolio lists are dynamic; they can expand and contract as needed. Their contents, known as nodes, are ordered (there is a first node, a second node, and so on), and you can add a new node at any position in a list. The following sections explain how Portfolio lists are different from other linked lists.<P>
+<H2>Characteristics of Portfolio Lists</H2>
+Unlike ordinary linked lists, which contain only nodes, Portfolio 
+lists also contain a special component known as an anchor, which marks 
+both ends of the list. The anchor (which is implemented as a C union) 
+serves as both the beginning-of-list marker (known as the head anchor) 
+and the end-of-list marker (known as the tail anchor). Figure 1 illustrates an anchored list.<P>
+<p>
+<IMG SRC="Artwork/4-1.gif" ALT="Graphic cannot be displayed">
+<B>Figure 1: </B><I>Anchored list.</I><P>
+When a task traverses a Portfolio list, it determines whether it's at the beginning or end of the list by testing to see if the subsequent node is an anchor.<P>
+As the previous illustration shows, Portfolio lists are doubly linked: Each node contains two pointers, one to point to the following node or anchor and one to the previous node or anchor. As a result, back-to-front list traversals are as efficient as front-to-back traversals.<P>
+<H2>Characteristics of Nodes</H2>
+In Portfolio lists, there are special data structures that contain only information needed for list management. This information includes the necessary forward and backward pointers, a priority value (described later in this section), and other fields that are used primarily by the operating system. A node can also have a name. Use the <CODE>FindNamedNode()</CODE> call to find a node by name. <P>
+To create a list component, you define a data structure whose first field is a node. An example is the NoteTracker structure defined in the music library:<P>
+<B>Example 1: </B><I>The Note Tracker structure in the music library.</I><P>
+<CODE>
+<PRE>
+typedef struct NoteTracker
+{
+        Node    nttr_Node;
+        int8    nttr_Note;
+        int8    nttr_MixerChannel;
+        uint8   nttr_Flags;
+        int8    nttr_Channel;  /* MIDI */
+        Item    nttr_Instrument;
+} NoteTracker;
+</CODE>
+</PRE>
+To pass such a component to one of the many list-manipulation functions that takes a Node structure as an argument, you simply cast the argument to type Node. Here's an example:<P>
+<DL>
+<DD><CODE>AddTail( &amp;DSPPData.dspp_ExternalList, (Node *) dext );</CODE><BR>
+</DL>
+Every node in a list has a priority (a value from 0-255 that is stored in the <CODE>n_Priority</CODE> field of the Node structure). When you use a list, you have the option of keeping its nodes sorted by priority (done automatically by the kernel if you use <CODE>InsertNodeFromHead()</CODE> or <CODE>InsertNodeFromTail()</CODE>), or you can specify other ways to arrange the contents (by using the <CODE>UniversalInsertNode()</CODE> function). You can also change the priority of a node in a list with the <CODE>SetNodePri()</CODE> function, whereupon the kernel automatically repositions the node in the list to reflect its new priority value.<P>
+A node can be in only one list at a time.<P>

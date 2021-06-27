@@ -1,0 +1,136 @@
+<TITLE>Creating an irregularly shaped 
+cel</TITLE>
+<H1><LINK NAME="XREF23369">Creating an irregularly shaped cel</LINK></H1><HR>
+Cels are, by default, rectangular. In most situations, however, you don't 
+want to move a rectangle around the screen but want to move an object like 
+a UFO, a person, or a fish. <P>
+The 3DO hardware makes it easy to create irregularly shaped cels by 
+offering two special features: <P>
+<UL>
+<LI>The hardware interprets all black pixels in a cel as transparent 
+pixels by default. 
+<p>  
+<LI>The hardware allows you to mark certain pixels in the cel explicitly 
+as transparent using a special color.
+</UL>
+<DL>
+<DD><B>Note: </B>Using a special color is only possible for packed cels 
+and currently implemented only for the Coded-8 CelWriter. It is, however, 
+the most efficient way of creating an irregularly shaped cel. <BR>
+</DL>
+As a result, you can create irregularly shaped cels two ways; and you will 
+learn:<P>
+
+<UL>
+<LI><A HREF="#XREF19540">How to create an irregularly shaped cel (no true 
+black in cel)</A>.
+<LI><A HREF="#XREF36014">How to use a special color for an irregularly 
+shaped cel (Coded-8 CelWriter)</A>.
+</UL>
+<A NAME="XREF19540"><H2>How to create an irregularly shaped cel (no true 
+black in cel)</A></H2>
+To create an irregularly shaped cel with no true black-3DO hardware 
+interprets black as transparent-follow these steps:<P>
+<OL>
+<LI>From the Image menu, choose Adjust, then Levels, from the submenu, and 
+drag the Output Levels slider slightly to the right until the value is 9. 
+(Alternately, change the Output Level from 0 to 9.)
+<p>
+<p>This changes all black pixels (RGB 0-0-0) to mostly black (RGB 9-9-9) 
+in the source art. The result on the TV screen will in most cases look 
+black to the viewer.
+<p>
+
+<LI>Select the object you want to mask with the Magic Wand tool.
+<p>
+<LI>Double-click on the Magic Wand tool and make sure Tolerance is set to 
+4 and anti-aliased is checked.
+<p>
+<p>Note that while these settings work well in many situations, you may 
+decide to adjust them. 
+<p>
+
+<LI>From the Select menu, choose Inverse. 
+<p>
+<LI>From the Select menu, choose Save Selection. 
+<p>
+<LI>From the Window menu, choose Show Channels and select the mask channel 
+in the Channels window to check the mask.<P>
+
+<IMG SRC="Figures/PLU3.figs/MaskedPenguin.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Example for creating a mask for transparency.</I><P>
+<p>
+<p>In the example in the figure above, the area surrounding the penguin 
+is marked to become transparent. 
+<p>
+
+<LI>From the File menu, choose Export &gt; 3DO CelWriter and use the 
+following settings in the dialog:
+<p>
+<UL>
+<LI>Set the Transparency pop-up menu to the channel you just created. 
+<p>
+<LI>Make sure the Transparency channel is not used by one of the other 
+options, such as P-Mode. Consider setting the P-Mode channel to Off.
+</UL><BR>
+<IMG SRC="Figures/PLU3.figs/TransparentSet.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>CelWriter dialog for saving a transparent 
+channel.</I><P>
+
+<LI>Click Set Cel Flags and make sure that Make All Black Pixels 
+Transparent is checked. 
+<p>
+<LI>Choose Save and you're done.
+</OL>
+<A NAME="XREF42522"></A><A NAME="XREF35215"></A><A 
+NAME="XREF36014"><H2>How to use a special color for an irregularly shaped 
+cel (Coded-8 CelWriter)</A></H2>
+If you save a packed 8-bit coded cel, you can use a special color that 
+does not appear often in source art-such as hot pink (255 0 255)-to 
+specify in the source art which pixels should be transparent. <P>
+<B>Note: </B>Using a packed cel and a special color is by far the most 
+efficient way of creating an irregularly shaped cel. <P>
+<A NAME="XREF42597"><H3>How to use a special color to specify transparent 
+pixels</A></H3>
+To create an irregularly shaped cel using a special color in the Coded-8 
+CelWriter, follow these steps: <P>
+<OL>
+<LI>Open your source art in Adobe Photoshop.
+<p>
+<LI>Decide on a color you want to use for transparency and apply it to all 
+regions of the cel you want transparent. Check that you don't create holes 
+in your cel-unless that's your intent. 
+<p>
+<LI>Choose Export &gt; Coded-8 CelWriter.
+<p>
+<LI>In the dialog that appears, check the Alternate Transparency Color 
+box. <P>
+
+<IMG SRC="Figures/PLU3.figs/TransparentColor.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>Coded-8 CelWriter dialog using an alternate 
+Transparency color.</I><P>
+<p>
+<LI>Click on the color box and select the color you want to use for 
+Transparency using the standard Macintosh Color Picker.
+<p>
+<p>Note that the color picker displays 16-bit values from 0 to 65535. To 
+use Photoshop color values, multiply by 16 before entering the value. For 
+example, 255 0 255 becomes 65535 0 65535. 
+<p>
+<LI>Click on Set Cel Options and make sure that Pack Cel Data is checked 
+and Make Black Pixels Transparent is <I>not</I> checked, then choose OK to 
+save the cel.
+<P>
+
+<IMG SRC="Figures/PLU3.figs/CelSettings.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 4: </B><I>Cel Control Settings dialog for saving a packed 8-bit 
+coded cel. </I><P>
+</OL>

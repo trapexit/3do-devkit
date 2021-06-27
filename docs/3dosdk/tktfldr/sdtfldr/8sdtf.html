@@ -1,0 +1,37 @@
+<TITLE>Tweak</TITLE>
+<H1><LINK NAME="XREF19693">Tweak</LINK></H1><HR>
+<A NAME="XREF37311"><H1>Tweak</A></H1>
+ <A NAME="XREF30775">Adjust a knob in an instrument</A><P>
+<H3>Synopsis</H3>
+<CODE>Tweak &lt;instrument&gt; &lt;knob&gt; &lt;value&gt;</CODE><P>
+<H3>Arguments</H3>
+<DL>
+<DT>&lt;instrument&gt;
+<DD>Symbol name of an instrument containing the knob to adjust.
+</DL>
+<DL>
+<DT>&lt;knob&gt;
+<DD>Name of the knob to adjust.
+</DL>
+<DL>
+<DT>&lt;value&gt;
+<DD>New raw value for &lt;knob&gt;. Every knob has its own range of values. See Chapter 12 in the <I>Portfolio Reference</I> <I>Manual</I> for a complete list. A value with a leading 0 is treated as octal. A value with a leading 0x is treated as hexadecimal. Otherwise values are treated as decimal.
+</DL>
+<H3>Examples</H3>
+The following example shows a patch file that uses <CODE>Tweak</CODE>.<P>
+<CODE>
+<PRE>
+Tweak osc Frequency 4000                                ; Set Frequency knob to 4000 
+                                ; Raw value not Hz *.
+Tweak osc Amplitude 0x7fff                                ; Set Amplitude knob to                                     32767 
+
+                                ; (7FFF hex).
+Tweak osc PulseWidth -100                                ; Set PulseWidth knob to -100.* 
+See PRG 332-333 in the Portfolio Programmer's Guide for more 
+information on raw values.
+</CODE>
+</PRE>
+<H3>Note</H3>
+If a value is out of range it will be brought into range.<P>
+<H3>See Also</H3>
+<CODE>LoadInstrument, Connect</CODE><P>

@@ -1,0 +1,68 @@
+; Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+; This material contains confidential information that is the property of The 3DO Company.
+; Any unauthorized duplication, disclosure or use is prohibited.
+; $Id: CoalRiver.pimap,v 1.2 1994/11/04 01:42:16 peabody Exp $
+;
+; pimap for CoalRiver demo.
+;
+; Piano sound
+1 $samples/PitchedL/PianoConcertFat/Piano.C2M22k.aiff -l 0 -b 36 -h 41 -m 4
+1 $samples/PitchedL/PianoConcertFat/Piano.As2M22k.aiff -l 42 -b 46 -h 48 -m 4
+1 $samples/PitchedL/PianoConcertFat/Piano.Ds3LM22k.aiff -l 49 -b 51 -h 53 -m 4
+1 $samples/PitchedL/PianoConcertFat/Piano.Gs3LM22k.aiff -l 54 -b 56 -h 58 -m 4
+1 $samples/PitchedL/PianoConcertFat/Piano.Cs4LM22k.aiff -l 59 -b 61 -h 63 -m 4
+1 $samples/PitchedL/PianoConcertFat/Piano.Fs4LM22k.aiff -l 64 -b 66 -h 68 -m 4
+1 $samples/PitchedL/PianoConcertFat/Piano.B4LM22k.aiff -l 69 -b 71 -h 73 -m 4
+1 $samples/PitchedL/PianoConcertFat/Piano.E5LM22k.aiff -l 74 -b 76 -h 78 -m 4
+1 $samples/PitchedL/PianoConcertFat/Piano.A5LM22k.aiff -l 79 -b 81 -h 107 -m 4
+;
+; Acoustic Guitar pick
+;
+2 $samples/PitchedL/GuitarPick/AcousticGuitar.E2LM44k.aiff -l 0 -b 52 -h 53 -m 2
+2 $samples/PitchedL/GuitarPick/AcousticGuitar.G2LM44k.aiff -l 54 -b 55 -h 56 -m 2
+2 $samples/PitchedL/GuitarPick/AcousticGuitar.B2LM44k.aiff -l 57 -b 59 -h 61 -m 2
+2 $samples/PitchedL/GuitarPick/AcousticGuitar.E3LM44k.aiff -l 62 -b 64 -h 67 -m 2
+2 $samples/PitchedL/GuitarPick/AcousticGuitar.As3LM44k.aiff -l 68 -b 70 -h 72 -m 2
+2 $samples/PitchedL/GuitarPick/AcousticGuitar.E4M44k.aiff -l 73 -b 76 -h 79 -m 2
+2 $samples/PitchedL/GuitarPick/AcousticGuitar.As4LM44k.aiff -l 80 -b 82 -h 85 -m 2
+2 $samples/PitchedL/GuitarPick/AcousticGuitar.E5M44k.aiff -l 86 -b 88 -h 95 -m 2
+;
+; Acoustic Guitar strum
+;
+2 $samples/PitchedL/GuitarStrum/AcousticGuitarGStrum.aiff -l 103 -b 103 -h 103 -m 2
+2 $samples/PitchedL/GuitarStrum/AcousticGuitarCStrum.aiff -l 96 -b 96 -h 96 -m 2
+2 $samples/PitchedL/GuitarStrum/AcousticGuitarDStrum.aiff -l 98 -b 98 -h 98 -m 2
+;
+; Acoustic plucked bass
+;
+3 $samples/PitchedL/BassAcousticPlucked/AcBassPlucked.A1LM22k.aiff -l 0 -b 33 -h 37 -m 1
+3 $samples/PitchedL/BassAcousticPlucked/AcBassPlucked.G2LM22k.aiff -l 38 -b 43 -h 60 -m 1
+;
+; Violin
+;
+; 4 $samples/PitchedL/Violin/Violin.A3LM44k.aiff -l 0 -b 57 -h 59 -m 2
+; 4 $samples/PitchedL/Violin/Violin.D4LM44k.aiff -l 60 -b 62 -h 65 -m 2
+; 4 $samples/PitchedL/Violin/Violin.B4LM44k.aiff -l 66 -b 71 -h 76 -m 2
+; 4 $samples/PitchedL/Violin/Violin.A5LM44k.aiff -l 77 -b 81 -h 107 -m 2
+;
+; Banjo
+;
+5 $samples/PitchedL/Banjo/Banjo.D3LM44k.aiff -l 0 -b 50 -h 52 -m 2
+5 $samples/PitchedL/Banjo/Banjo.G3LM44k.aiff -l 53 -b 55 -h 57 -m 2
+5 $samples/PitchedL/Banjo/Banjo.C4M44k.aiff -l 58 -b 60 -h 63 -m 2
+5 $samples/PitchedL/Banjo/Banjo.Fs4M44k.aiff -l 64 -b 66 -h 68 -m 2
+5 $samples/PitchedL/Banjo/Banjo.B4LM44k.aiff -l 69 -b 71 -h 73 -m 2
+5 $samples/PitchedL/Banjo/Banjo.E5M44k.aiff -l 74 -b 76 -h 107 -m 2
+;
+; 22k sound effects
+8 $samples/Unpitched/HumanVoice/YeeHaw.LM44k.aiff -f -l 50 -b 50 -h 50 -m 1
+;
+; 44k sound effects
+;
+9 $samples/Unpitched/CrowdCheer/Crowd.LM44k.aiff -f -l 50 -b 50 -h 50 -m 1
+9 $samples/Unpitched/CrowdClap/ClapOne.M44k.aiff -f -l 51 -b 51 -h 51 -m 1
+9 $samples/Unpitched/CrowdClap/ClapTwo.M44k.aiff -f -l 52 -b 52 -h 52 -m 1
+;
+; Percussion
+;
+10 $samples/GMPercussion22k/Tambourine.M22k.aiff -f -l 54 -b 54 -h 54 -m 1

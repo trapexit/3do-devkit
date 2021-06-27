@@ -1,0 +1,19 @@
+<Title>decodeadpcm.dsp</Title>
+<A NAME="XREF18722"><H1>decodeadpcm.dsp </A></H1>
+<A NAME="XREF21481"></A> Decompress a 4-bit Intel/DVI format  sample.<P>
+<H3>Function</H3>
+This instrument is the adaptive delta pulse code modulation library routine.  It is used internally when it is called by other adpcm routines to implement the decompression of 4-bit samples.  Load this instrument using <CODE>LoadInstrument()</CODE> before loading other adpcm instruments. <P>
+Sound samples are compressed from 16-bit samples to 4-bit samples using the SoundHack program.   These 4- bit samples are in the standard Intel/DVI format.  This library routine decompresses the 4-bit samples so that they can be played by other adpcm instruments. <P>
+<H3>Knobs</H3>
+None <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+In accumulator <P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resource</H3>
+Ticks = 0 <P>
+N memory = 51 words <P>

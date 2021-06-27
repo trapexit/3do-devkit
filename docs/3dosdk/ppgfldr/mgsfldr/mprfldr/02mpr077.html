@@ -1,0 +1,36 @@
+<Title>spGetPlayerStatus</Title>
+<A NAME="XREF27522"><H1>spGetPlayerStatus </A></H1>
+<A NAME="XREF17125"></A> Get current status of an SPPlayer.<P>
+<H3>Synopsis</H3>
+<CODE>int32 spGetPlayerStatus (const SPPlayer *player)</CODE><P>
+<H3>Description</H3>
+Returns a set of flags indicating the current state of an SPPlayer. The most useful thing about this function is that it can be used to find out when an SPPlayer has finished playing. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to SPPlayer to interrogate. 
+</DL>
+<H3>Return Value</H3>
+Any combination of the following SP_STATUS_F_ flags (always a non-negative value): <P>
+<DL>
+<DT>SP_STATUS_F_BUFFER_ACTIVE
+</DL>
+<DL>
+<DT>SP_STATUS_F_READING
+<DD>This flag indicates that there's more data to read. It is set by <CODE>spStartReading()</CODE> and cleared when there is no more to read (by <CODE>spStartReading()</CODE> or <CODE>spService()</CODE>), or when <CODE>spStop()</CODE> is called. 
+</DL>
+<DL>
+<DT>SP_STATUS_F_PLAYING
+<DD>This flag indicates that playback is underway. It is set by <CODE>spStartPlaying()</CODE> and cleared by <CODE>spStop()</CODE>. 
+</DL>
+<DL>
+<DT>SP_STATUS_F_PAUSED
+<DD>This flag indicates that player has been paused. It is set by <CODE>spPause()</CODE> and cleared by <CODE>spResume()</CODE>,<CODE> spStop()</CODE>, <CODE>spStartPlaying()</CODE>. This flag is really only meaningful when SP_STATUS_F_PLAYING is set. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr092.html#XREF25186"><CODE>spStartReading</A>(), <A HREF="./02mpr091.html#XREF15941">spStartPlaying</A>(), <A HREF="./02mpr093.html#XREF20856">spStop</A>() </CODE><P>
+</CODE>

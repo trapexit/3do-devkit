@@ -1,0 +1,28 @@
+<Title>DivSF16</Title>
+<A NAME="XREF27188"><H1>DivSF16 </A></H1>
+<A NAME="XREF38816"></A> Computes the quotient of a 16.16 division.<P>
+<H3>Synopsis</H3>
+<CODE>frac16 DivSF16( frac16 d1, frac16 d2 )</CODE><P>
+<H3>Description</H3>
+This function divides one 16.16 fraction by another and returns the quotient. <P>
+This function also returns a correct result if the arguments are int32 or frac30, as long as both d1 and d2 are the same type. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>d1
+<DD>The dividend. 
+</DL>
+<DL>
+<DT>d2
+<DD>The divisor. 
+</DL>
+<H3>Return Value</H3>
+The function returns the quotient of the division. <P>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>Caveats</H3>
+The function does not detect overflows. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr036.html#XREF23483"><CODE>DivRemU32</A>(), <A HREF="./03spr034.html#XREF29500">DivRemS32</A>(), <A HREF="./03spr040.html#XREF32762">DivU64</A>(), <A HREF="./03spr035.html#XREF40125">DivRemSF16</A>(), <A HREF="./03spr041.html#XREF19153">DivUF16</A>(), <A HREF="./03spr037.html#XREF21065">DivRemUF16</A>(), <A HREF="./03spr038.html#XREF40748">DivS64</A>() </CODE><P>
+</CODE>

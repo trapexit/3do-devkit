@@ -1,0 +1,45 @@
+<HTML><HEAD><TITLE>Merge Ordered Sequences</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Merge Ordered Sequences</H2>
+<P>The algorithm <SAMP>merge()</SAMP> combines two ordered sequences to form a new ordered sequence.  The size of the result is the sum of the sizes of the two argument sequences.  This should be contrasted with the <SAMP>set_union()</SAMP> operation, which eliminates elements that are duplicated in both sets.  The <SAMP>set_union()</SAMP> function will be described later in this section.</P>
+<P>The merge operation is stable.  This means, for equal elements in the two ranges, not only is the relative ordering of values from each range preserved, but the values from the first range always precede the elements from the second.  The two ranges are described by a pair of iterators, whereas the result is defined by a single output iterator.  The arguments are shown in the following declaration:</P>
+<PRE>OutputIterator merge (InputIterator first1, InputIterator last1,
+   InputIterator first2, InputIterator last2,
+   OutputIterator result [, Compare ]);
+</PRE>
+<P>The example program illustrates a simple merge, the use of a merge with an inserter, and the use of a merge with an output stream iterator.</P>
+<PRE>void merge_example ()
+   // illustrate the use of the merge algorithm
+{
+      // make a list and vector of 10 random integers
+   vector&#60;int> aVec(10);
+   list&#60;int> aList(10, 0);
+   generate (aVec.begin(), aVec.end(), randomValue);
+   sort (aVec.begin(), aVec.end());
+   generate_n (aList.begin(), 10, randomValue);
+   aList.sort();
+
+      // merge into a vector
+   vector&#60;int> vResult (aVec.size() + aList.size());
+   merge (aVec.begin(), aVec.end(), aList.begin(), aList.end(),
+      vResult.begin());
+
+      // merge into a list
+   list&#60;int> lResult;
+   merge (aVec.begin(), aVec.end(), aList.begin(), aList.end(),
+      inserter(lResult, lResult.begin()));
+
+      // merge into the output
+   merge (aVec.begin(), aVec.end(), aList.begin(), aList.end(),
+      ostream_iterator&#60;int> (cout, " "));
+   cout &#60;&#60; endl;
+
+}
+</PRE>
+<P>The algorithm <SAMP>inplace_merge()</SAMP> (<i><a href="inp_4704.htm#mergetwoadjacentsequencesintoone">Section 13 Merge Two Adjacent Sequences into One</a></i>) can be used to merge two sections of a single sequence into one sequence.</P>
+
+<HR>
+<A HREF="bin_2092.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="set_1753.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

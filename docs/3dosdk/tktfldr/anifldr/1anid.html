@@ -1,0 +1,155 @@
+<TITLE>Customizing a palette</TITLE>
+<H1><LINK NAME="XREF12415">Customizing a palette</LINK></H1><HR>
+A custom palette lets you work in a different color system, modify or name 
+a color in the palette, reorganize the colors, or create a spread of 
+colors in the palette.<P>
+This section looks at custom palettes and steps you through:<P>
+
+<UL>
+<LI><A HREF="#XREF19275">Working with the 3DO palette</A> 
+<LI><A HREF="#XREF22504">Working with a custom palette</A> 
+<LI><A HREF="#XREF38179">Saving and loading palettes</A> 
+</UL>
+<A NAME="XREF19275"><H2>Working with the 3DO palette</A></H2>
+If you're not satisfied with the palette 3DO Animator generated for a 
+document, you can modify the 3DO palette by changing one or more colors. 
+You then have to update or remap the document before you save it.<P>
+<H3>Selection in the 3DO palette</H3>
+Before you can change colors in the 3DO palette, you have to understand 
+its selection mechanism. The table below provides an overview of the 
+things you can do:<P>
+<PRE>
+<B>Table: </B><I>Overview of multiple selection mechanisms.</I>
+--------------------------------------------------------
+To do this...        |Use these keys                    
+--------------------------------------------------------
+Select more than one |Shift-click.                      
+color.               |                                  
+--------------------------------------------------------
+Deselect only one    |Shift-click on a selected color.  
+color in a multiple  |                                  
+selection.           |                                  
+--------------------------------------------------------
+Blacken a selection  |Control-click the selection.      
+(replace with 0, 0,  |                                  
+0).                  |                                  
+--------------------------------------------------------
+Replace the color in |First Option-click a color to     
+a blackened          |replace black. Then Option-click  
+selection.           |on blackened colors to replace    
+                     |them with the selected color. If  
+                     |you click on a nonblackened color,
+                     |it does not change and becomes the
+                     |color that replaces the next      
+                     |blackened color you select.       
+--------------------------------------------------------
+Set the P-Mode on a  |Select more than one color and    
+multiple selection.  |click the P-Mode checkbox. The    
+                     |P-Mode is inverted for all        
+                     |selected colors.                  
+--------------------------------------------------------
+</PRE>
+<P>
+<H3>Changing the palette</H3>
+You can modify the palette one or more colors at a time, move colors, and 
+reorganize the palette as follows:<P>
+<PRE>
+<B>Table: </B><I>Changing the palette.</I>
+--------------------------------------------------------
+To do this...  |Follow this procedure                   
+--------------------------------------------------------
+Modify one     |* Click on the color to select it.      
+color.         |* Change the RGB (or HSV) values by     
+               |moving the small cursors next to the    
+               |color bars or clicking on the box and   
+               |then typing in the RGB or HSV color     
+               |value.                                  
+               |You can view the color in the sample    
+               |area above the color bars, as well as in
+               |the selected cel of the palette grid.   
+--------------------------------------------------------
+Move a color.  |Click on the color in the palette grid  
+               |and drag it to its new position.        
+--------------------------------------------------------
+Create a spread|Hold down the Command key and click on  
+of colors      |the two colors. All colors between the  
+between two    |selected two colors are replaced to     
+colors in the  |create the gradient.                    
+palette        |                                        
+--------------------------------------------------------
+Reorganize     |* Hold down the Shift key while clicking
+colors.        |on the colors you want to reorganize.   
+               |* While still holding down the Shift    
+               |key, drag your selection to the palette 
+               |location for the first color of the     
+               |group. When you release the mouse       
+               |button, the colors are displayed in the 
+               |order selected starting at this new     
+               |position.                               
+               |* To deselect a color you selected in a 
+               |multiple selection, hold down Shift     
+               |while clicking on the color.            
+               |* Click Remap Document.                 
+--------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF22504"><H2>Working with a custom palette</A></H2>
+After modifying a palette, apply it to the document using the Remap 
+Document button or the Update Document button. <P>
+<UL>
+<LI><B>Remap Document-</B>Updates the document, mapping each color to the 
+closest one in the new palette. If the document is an animation, 3DO 
+Animator remaps each frame. Remap Document always creates a new document, 
+with the cel type as a suffix in the document name.<P>
+<LI><B>Update Document-</B>Updates the document on the screen but does no 
+remapping; that is, does not recompute each color unless the palette has 
+fewer colors than before. 
+</UL>
+<H3>Example: Using Update Document or Remap Document</H3>
+Update Document differs from Remap Document in the following ways: <P>
+Assume you select a shade of yellow in the document and change it to a 
+shade of purple. <P>
+<UL>
+<LI>If you choose Remap Document, all yellow pixels in the document will 
+have a new index. The new index stays as close to yellow as possible 
+within the range of the palette.<P>
+<LI>If you choose Update Document, all the yellow pixels will become 
+purple.
+</UL>
+<DL>
+<DD><B>Note: </B>Use Update Document for an image or cel that uses 256 
+colors. <BR>
+</DL>
+<A NAME="XREF38179"><H2>Saving and loading palettes</A></H2>
+3DO Animator lets you save and load palettes, making it possible to use 
+the same palette with more than one cel or image. Certain palette choices 
+can be used to de-noise video frames or to enforce color schemes.<P>
+<B>Note: </B>You should save and load palettes for coded cels in 3DO PLUT 
+format.<P>
+This section steps you through saving and loading a palette. <P>
+<H3>Saving a palette</H3>
+To save a palette, follow these steps: <P>
+<OL>
+<LI>In the Set 3DO Object Type dialog, click the Save Palette button. 
+<P>A dialog appears.
+<P>
+
+<LI>Choose between saving in Macintosh format or in 3DO format, change the 
+filename if you like, then choose Save.
+</OL>
+
+<IMG SRC="Figures/ANICh1/SavePalette.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Save Palette dialog.</I><P>
+<H3>Loading a palette</H3>
+To load a palette, follow these steps: <P>
+<OL>
+<LI>In the Set 3DO Object Type dialog, click the Load Palette button.<P>
+
+<LI>In the file selection dialog that appears, choose a palette saved 
+either in Macintosh or in 3DO format. 
+
+<P>The new palette is displayed in place of the previous palette, but the 
+system does not remap or update the document.
+<P>

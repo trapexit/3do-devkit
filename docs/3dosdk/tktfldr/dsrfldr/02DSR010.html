@@ -1,0 +1,75 @@
+<Title>DSRequestOpcode</Title>
+<A NAME="XREF18294"><H1>DSRequestOpcode</A></H1>
+<A NAME="XREF26357"> Request operation code enumeration.</A><P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef enum DSRequestOpcode {
+   kDSOpPreRollStream  0,
+   kDSOpCloseStream,
+   kDSOpWaitEndOfStream,
+   kDSOpStartStream,
+   kDSOpStopStream,
+   kDSOpSubscribe,
+   kDSOpGoMarker,
+   kDSOpGetChannel,
+   kDSOpSetChannel,
+   kDSOpControl,
+   kDSOpConnect,
+   kDSOpSetSkipMode,
+   kDSOpLastOp
+ }</CODE></pre><P>
+<H3>Description</H3>
+Used as the type selector for DSRequestMsg. <P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>kDSOpPreRollStream</CODE>
+<DD>0
+<DD>Preload all possible buffers.
+</DL>
+<DL>
+<DT><CODE>kDSOpCloseStream</CODE>
+<DD>Close the stream.
+</DL>
+The following messages have arguments that are passed in the `msg' extension of the request message.<P>
+<DL>
+<DT><CODE>kDSOpStartStream</CODE>
+<DD>Start data flowing.
+</DL>
+<DL>
+<DT><CODE>kDSOpStopStream</CODE>
+<DD>Stop data flowing.
+</DL>
+<DL>
+<DT><CODE>kDSOpSubscribe</CODE>
+<DD>Add a subscribe.
+</DL>
+<DL>
+<DT><CODE>kDSOpGoMarker</CODE>
+<DD>Position stream to a marker.
+</DL>
+<DL>
+<DT><CODE>kDSOpGetChannel</CODE>
+<DD>Get channel status.
+</DL>
+<DL>
+<DT><CODE>kDSOpSetChannel</CODE>
+<DD>Set channel status.
+</DL>
+<DL>
+<DT><CODE>kDSOpControl</CODE>
+<DD>Perform subscriber dependent control.
+</DL>
+<DL>
+<DT><CODE>kDSOpConnect</CODE>
+<DD>Connect data client to stream.
+</DL>
+<DL>
+<DT><CODE>kDSOpSetSkipMode</CODE>
+<DD>Go into skip mode (ShuttlePlayer only).
+</DL>
+<DL>
+<DT><CODE>kDSOpLastOp</CODE>
+<DD>Last operation.
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

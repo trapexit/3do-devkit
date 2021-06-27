@@ -1,0 +1,34 @@
+<Title>InitScoreMixer</Title>
+<A NAME="XREF21919"><H1>InitScoreMixer </A></H1>
+<A NAME="XREF22530"></A> Creates and initializes a mixer instrument for MIDI score playback.<P>
+<H3>Synopsis</H3>
+<CODE>Err InitScoreMixer( ScoreContext *scon, char *MixerName,int32 MaxNumVoices, int32 Amplitude )</CODE><P>
+<H3>Description</H3>
+This function creates a mixer instrument from the specified instrument template and writes the item number of that mixer into the score context so that notes played with that score context are fed through the mixer. The function uses the maximum number of voices specified to create an appropriate number of note trackers to handle MIDI note playback.  The function also uses the amplitude value as the maximum possible amplitude allowed for each voice in the score. <P>
+Note that a task should first allocate system amplitude to itself.  It can then divide that amplitude up by the number of voices to arrive at a completely safe amplitude value (one that won't drive the DSP to distortion) for this call.  Because it's unlikely that all voices will play simultaneously at full amplitude, a task can typically raise amplitude levels above the level considered to be completely safe. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>Pointer to a ScoreContext data structure. 
+</DL>
+<DL>
+<DT>MixerName
+<DD>Pointer to a character string containing the name of a mixer instrument template. 
+</DL>
+<DL>
+<DT>MaxNumVoices
+<DD>Value indicating the maximum number of voices used for the score. 
+</DL>
+<DL>
+<DT>Amplitude
+<DD>Value indicating the maximum volume for each voice in the score. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr023.html#XREF39934"><CODE>ChangeScoreProgram</A>(), <A HREF="./02mpr030.html#XREF26764">InitScoreDynamics</A>(), <A HREF="./02mpr048.html#XREF31982">TermScoreMixer</A>(), <A HREF="./02mpr025.html#XREF42191">CreateScoreContext</A>() </CODE><P>
+</CODE>

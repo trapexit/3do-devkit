@@ -1,0 +1,23 @@
+<Title>GetFontCharWidth</Title>
+<A NAME="XREF36747"><H1>GetFontCharWidth </A></H1>
+ Retrieves character width.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetFontCharWidth (FontDescriptor *fDesc, int32 character)</CODE><P>
+<H3>Description</H3>
+Retrieves the width of the specified character in the font. The return value is the width of the character (not including intercharacter spacing). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fDesc
+<DD>Pointer to a FontDescriptor structure. 
+</DL>
+<DL>
+<DT>character
+<DD>The specific character you're looking for.
+</DL>
+<H3>Return Value</H3>
+Width of the character; zero if the character is not present in the font. <P>
+<H3>Associated Files</H3>
+lib3do.lib, fontlib.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO081.html#XREF30627"><CODE>GetFontStringWidth</A></CODE><P>
+</CODE>

@@ -1,0 +1,30 @@
+3dlib example4 documentation :
+
+The example4 of the 3dlib was created to demonstrate the
+use of new 3dlib calls in the beta release. A single world is created. At the
+origin is placed a tumbling cube. Orbiting around the  cube is a pyramid.
+
+This is just like 3d_example1, except it attaches a light-source to the
+orbiting pyramid as well as a 3D sound (use headphones).
+
+Make sure you install "Rumble.aiff" in your remote/aiff directory.
+
+Once you start the animation, the joypad controls will change various
+elements:
+
+Button A does nothing.
+
+Button B will cause the camera to pan CW.
+
+Button C will freeze the animation.
+
+The up/down positions on the pad will move the camera up and
+down along the y-axis. Left/right will move it side to side along the x-axis.
+
+Exit the example by using the "enter" button.
+
+Most of the stuff in 3d_example1_core.c is not needed specifically
+for 3d use, but is merely set up and driver code. 
+
+
+

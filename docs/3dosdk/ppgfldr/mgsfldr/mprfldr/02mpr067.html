@@ -1,0 +1,26 @@
+<Title>spContinueAtMarker</Title>
+<A NAME="XREF24196"><H1>spContinueAtMarker </A></H1>
+<A NAME="XREF31005"></A> Clear static branch at a marker.<P>
+<H3>Synopsis</H3>
+<CODE>Err spContinueAtMarker (SPSound *sound, const char *markerName)</CODE><P>
+<H3>Description</H3>
+Restores the marker to its default action of playing through (for a marker in the middle of a sound), or stopping (for a marker at the end of a sound), barring the results from a marker or default decision function. This resets the effect of <CODE>spBranchAtMarker()</CODE> or <CODE>spStopAtMarker()</CODE>. <P>
+Markers can have one of 3 static actions: continue, branch, or stop. This action can be changed at any time, including while the player is playing. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to SPSound containing marker to clear branch from. 
+</DL>
+<DL>
+<DT>markerName
+<DD>Name of marker in sound to clear branch from. All markers except markers at the beginning of sounds are considered valid for this function. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr064.html#XREF40639"><CODE>spBranchAtMarker</A>(), <A HREF="./02mpr094.html#XREF41521">spStopAtMarker</A>(), <A HREF="./02mpr089.html#XREF13040">spSetMarkerDecisionFunction</A>(), <A HREF="./02mpr088.html#XREF33640">spSetDefaultDecisionFunction</A>() </CODE><P>
+</CODE>

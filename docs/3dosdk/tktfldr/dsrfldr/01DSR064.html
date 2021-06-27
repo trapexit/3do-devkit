@@ -1,0 +1,27 @@
+<Title>SetTextMemoryFcns</Title>
+<A NAME="XREF39060"><H1>SetTextMemoryFcns</A></H1>
+<A NAME="XREF10200"></A> Sets subscriber memory allocation functions.<P>
+<H3>Synopsis</H3>
+<CODE>int32 SetSCelMemoryFcns (TextContextPtr ctx, TextNewPtrFcn newPtrFcn, TextFreePtrFcn freePtrFcn)</CODE><P>
+<H3>Description</H3>
+Sets the memory allocation and deallocation functions used by the Text subscriber. The Text subscriber allocates memory when: a string chunk (CHAR) arrives with its "copy" flag (COPY_TEXT_FROM_STREAM) set, a 3DO font chunk (FONT) arrives.<P>
+The memory function arguments include the sub-type, channel, and presentation timestamp of the data chunk that has triggered the memory operation. This information is provided so the handler knows something about the state of the data stream at the time of the memory operation.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>ctx
+<DD>Pointer to context structure for the Text subscriber.
+</DL>
+<DL>
+<DT>newPtrFcn
+<DD>Pointer to memory allocation function.
+</DL>
+<DL>
+<DT>freePtrFcn
+<DD>Pointer to memory deallocation function.
+</DL>
+<H3>Return Value</H3>
+Returns an error code, or zero if there was no error.<P>
+<H3>Caveat</H3>
+This function is part of the <I>Subscriber.lib</I> library file that can currently (Toolkit1.5) be found in <I>Attic:Streaming:2p1:DataStream:Subscribers:Subscriber.lib</I>. It will later be integrated into the main Streaming tree. <P>
+<H3>Associated Files</H3>
+TextSubscriber.h<P>

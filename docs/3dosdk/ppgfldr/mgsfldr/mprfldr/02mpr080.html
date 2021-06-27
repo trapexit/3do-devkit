@@ -1,0 +1,28 @@
+<Title>spLinkSounds</Title>
+<A NAME="XREF21427"><H1>spLinkSounds </A></H1>
+<A NAME="XREF26624"></A> Branch at end of one sound to beginning of another.<P>
+<H3>Synopsis</H3>
+<CODE>Err spLinkSounds (SPSound *fromSound, SPSound *toSound)</CODE><P>
+<H3>Description</H3>
+This is a convenient macro for linking multiple sounds together. It simply does this: <P>
+<CODE>spBranchAtMarker (fromSound, SP_MARKER_NAME_END, toSound, SP_MARKER_NAME_BEGIN) </CODE><P>
+<H3>Arguments</H3>
+<DL>
+<DT>fromSound
+<DD>Pointer to SPSound to link from. 
+</DL>
+<DL>
+<DT>toSound
+<DD>Pointer to SPSound to link to the end of fromsound. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Macro implemented in soundplayer.h V24. <P>
+<H3>Notes</H3>
+Both SPSounds must belong to the same SPPlayer. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr064.html#XREF40639"><CODE>spBranchAtMarker</A>(), <A HREF="./02mpr081.html#XREF27508">spLoopSound</A>() </CODE><P>
+</CODE>

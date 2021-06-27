@@ -1,0 +1,30 @@
+<Title>IPointFromIVal</Title>
+<A NAME="XREF25378"><H1>IPointFromIVal </A></H1>
+ Creates an IPoint from inline values.<P>
+<H3>Synopsis</H3>
+<CODE>IPoint * IPointFromIVal (IPoint *dst, int32 x, int32 y)</CODE><P>
+<H3>Description</H3>
+Stores the specified values at *dst. It is useful for writing inline calls such as: <P>
+<CODE>
+<PRE>
+IPoint    wrk; 
+OffsetCelListByIDelta (cel, IPointFromFVal(&amp;wrk, my_x, my_y)); 
+</CODE>
+</PRE>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to the IPoint where the results are to be stored. 
+</DL>
+<DL>
+<DT>x y 
+<DD>Values to be used for the IPoint.
+</DL>
+<H3>Return Value</H3>
+The input parameter dst. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO105.html#XREF31170"><CODE>IPointFromFVal</A>,</CODE> <A HREF="./01LDO073.html#XREF32229">FPointFromIVal</A> </CODE><P>

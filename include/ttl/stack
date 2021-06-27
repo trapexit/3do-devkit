@@ -1,0 +1,101 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_STACK_INCLUDED
+#define TTL_STACK_INCLUDED
+
+#include "cstdint"
+#include "vector"
+
+template<typename T,
+         class CONTAINER = vector<T> >
+class stack
+{
+public:
+  typedef T                                   value_type;
+  typedef uint32_t                            size_type;
+  typedef typename CONTAINER::reference       reference;
+  typedef typename CONTAINER::const_reference const_reference;
+
+public:
+  stack()
+  {
+  }
+
+  ~stack()
+  {
+  }
+
+public:
+  bool
+  empty() const
+  {
+    return _stack.empty();
+  }
+
+  size_type
+  size() const
+  {
+    return _stack.size();
+  }
+
+  reference
+  top()
+  {
+    return back();
+  }
+
+  const_reference
+  top() const
+  {
+    return back();
+  }
+
+  void
+  push(const value_type &val_)
+  {
+    _stack.push_back(val_);
+  }
+
+  template<typename T>
+  void
+  emplace(const T &val_)
+  {
+    _stack.emplace(val_);
+  }
+
+  template<typename T1,
+           typename T2>
+  void
+  emplace(const typename T1 &val1_,
+          const typename T2 &val2_)
+  {
+    _stack.emplace(val1_,val2_);
+  }
+
+  void
+  pop()
+  {
+    _stack.pop_back();
+  }
+
+private:
+  CONTAINER _stack;
+};
+
+#endif

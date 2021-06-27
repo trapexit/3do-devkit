@@ -1,0 +1,172 @@
+<TITLE>The Projector</TITLE>
+<H1>The Projector</H1><HR>
+The projector accepts 15-bit color values coming out of the pixel processor, incorporates a VH value into each 15-bit value, and writes the resulting pixels into the frame buffer. The projector projects cel pixels a row at a time, starting with the top-left pixel of the cel, accepting cels from left to right across the row, and then moves down a row to accept left-to-right pixels from the next row of the cel. It continues projecting rows of cel pixels until the cel is completely projected.<P>
+Although the projector <I>reads</I> cel pixels from left to right and from top to bottom, it does not necessarily <I>write</I> those pixels from left to right and from top to bottom in the frame buffer. You can set the projection quadrilateral so that the projector flips the cel image, rotates it, twists it into a bow tie, or manipulates it in other ways. When that happens, the pixels in a row can be projected from right to left, and rows can be projected from bottom to top. The following sections describe the process of projecting rows of pixels and the values used to control that process.<P>
+<H2>Transparent Pixels</H2>
+The first step the projector takes is to accept incoming color values for each cel pixel from the pixel processor. There is one exception: it can skip any transparent pixels. The cel engine can detect transparent pixels in a cel at two different stages:<P>
+<UL>
+<LI>When the data unpacker unpacks a packed cel and finds a packet of transparent pixels
+<LI>When the decoder returns a color value of 000 for a pixel
+</UL>
+When the cel engine detects a transparent pixel, it sends a message to the projector, telling it to pass over the pixel's position in the frame buffer, not overwriting any frame buffer values beneath the pixel. The transparent pixel skips all the processing steps between the point where it was detected and the projector.<P>
+For example, a transparent pixel discovered at the data unpacker does not pass through the decoder or the pixel processor. A transparent pixel discovered at the pixel decoder does not pass through the pixel processor. Because transparent pixels (if detected early) require much less processing time than other pixels, you can create large cels with intricate patterns of transparency and still be able to process the cel as quickly as a smaller solid cel.<P>
+When a processed pixel comes out of the pixel processor with a 000 color value, the projector can treat it in one of two possible ways according to a control bit set in the CCB:<P>
+<UL>
+<LI>000 is a background pixel, so the projector writes it as 000 into the frame buffer.
+<p>
+<LI>000 is a black pixel, so it's changed to 100, which gives it a very small red value, small enough to appear as black to the eye (but still distinguishable from black by the hardware). It is then projected into the frame buffer.
+</UL>
+There is an important distinction between a transparent pixel and a background pixel. A transparent pixel is a <I>cel</I> pixel that does not project its value into the frame buffer. A background pixel is a <I>frame buffer</I> pixel that is treated as background by the display generator, that is, it is given a background color value, or is replaced by SlipStream pixels.<P>
+<H2>Adding VH Values</H2>
+When the projector receives a nontransparent 15-bit color value from the pixel processor, it incorporates an additional VH value that comes from one of the following sources:<P>
+<UL>
+<LI>The current position of the cel's origin corner within a frame buffer pixel-upper-left, upper-right, lower-left, or lower-right. (A cel can be positioned in 640-by-480 space.) In this case, the first bit of fraction in the cel's x position is used for the H bit and the first bit of fraction of the cel's y position is used for the V bit.
+<P>
+<LI>The VH value from the current cel pixel extracted by the pixel decoder.
+<P>
+<LI>The current frame buffer pixel's VH value.
+<P>
+<LI>From a constant VH value set in the CCB.
+</UL>
+The projector assembles the 15-bit color value and the VH value into a single 16-bit frame buffer value. It then projects that value into the frame buffer.<P>
+<H2>Specifying Frame Buffer Coordinates</H2>
+To project a cel into the frame buffer, the projector must receive frame buffer coordinates for the cel's origin corner. It must also receive offsets to set the size and shape of the projection quadrilateral. <P>
+The coordinate system's origin (0, 0) is in the upper-leftmost corner of the screen; its positive x axis extends to the right of the origin, and its positive y axis extends down from the origin. Coordinates can be fractions. For example, a point can be at (154.24, 43.5), which is x = 154.25, y = 43.5. Coordinates can also be negative, which specify points beyond the left and top borders of the screen.<P>
+The CCB uses a 32-bit word to store an x or a y coordinate. For a low-res 
+coordinate, the 16 most-significant bits of the word store the integer part 
+of the value. (The most significant bit determines the sign of the integer, 0 
+indicates a positive integer, 1 a negative integer.) The 16 least-significant 
+bits of the coordinate store the fractional part of the value. This is called 
+the <I>16.16 format</I> (see Figure 1). <P>
+<p>
+<IMG SRC="figures/G.3-8.gif" ALT="Graphic cannot be displayed">
+<p>
+<B>Figure 1: </B><I>16.16 format.</I><P>
+When the projector uses coordinates to find a frame buffer pixel, it ignores the fractional coordinate values and uses the remaining integer coordinates to locate the pixel. For example, the coordinates (154.24, 43.5) specify the frame buffer pixel (154, 43).<P>
+<H2>Setting the Cel's Origin Corner</H2>
+When the projector starts projecting a cel, it starts with the upper-left pixel of the cel (if that pixel is transparent, the projector skips over its projection location). It then starts projection at the origin point, which is a frame buffer address specified in the CCB.<P>
+<H2>Projecting Cel Pixels</H2>
+When the projector writes a cel's pixels into the frame buffer, it treats each cel pixel as a square defined by four corner points. It cannot treat each cel pixel as a point that contains a color value because the cel pixel can be stretched out to cover two or more frame buffer pixels. The cel pixel must have a 2-D shape to be stretched this way.<P>
+When each of its pixels is defined as a square, a cel becomes a grid as 
+shown in Figure 2, where each intersection in the grid defines the corner of a pixel. The projector treats this 8-by-4 cel as a grid of square pixels. The grid intersections are the corners of the pixels. Each row of pixels has an upper and lower edge (edges are shared with adjacent rows). The rows are numbered in this figure to show that there is always one more row edge in a cel then there are rows. To project the grid into the frame buffer, the projector must determine the frame buffer coordinates for each intersection point of the grid.<P>
+<p>
+<IMG SRC="figures/G.3-9.gif" ALT="Graphic cannot be displayed">
+<p>
+<B>Figure 2: </B><I>A cel as a grid.</I><P>
+One cel grid point is already determined: the upper-left corner of the cel falls on the coordinates defined by the starting-point value. The other grid points are set by the <I>projection offset values,</I> which are three pairs of values stored in the CCB. They are<P>
+<UL>
+<LI>HDX and HDY (the horizontal x and horizontal y offsets)
+<LI>VDX and VDY (the vertical x and vertical y offsets)
+<LI>HDDX and HDDY (the HDX and HDY change offsets)
+</UL>
+The HDX, HDY, HDDX and HDDY values are 12.20 fractions, the VDX and VDY values are 16.16 fractions.<P>
+<H3>HDX and HDY Values</H3>
+The projector uses the HDX and HDY values to determine successive intersection points along the top or bottom edge of a row of pixels. It adds HDX to the starting point x coordinate and HDY to the starting point y coordinate to get the coordinates of the next intersection point along the edge. It then adds HDX and HDY to the new coordinates to get the following intersection, and keeps adding HDX and HDY to get the full series of points along the edge.<P>
+HDX and HDY determine the slope of the row edge as well as the spacing of the pixels in the row. HDX and HDY values larger than 1 stretch cel pixels in the frame buffer; HDX and HDY values less than 1 shrink cel pixels in the frame buffer. The ratio of HDX to HDY determines the angle of the row's edge. For example, an HDX value of 2 and an HDY value of -2 will stretch out the pixels horizontally to the right and set the row-edge angle to a heading of 45 degrees up from the horizontal.<P>
+<H3>VDX and VDY Values</H3>
+Once the projector has calculated all the intersection points for one cel row edge, the projector moves down to the next row edge and once again uses the HDX and HDY values to calculate all the intersection points for the new edge. The VDX and VDY values tell the projector where to start the new edge; the values are added to the coordinates of the last edge starting point. VDX and VDY are continuously added to edge starting point coordinates until the coordinates of all edge starting points are calculated.<P>
+VDX and VDY determine the slope and spacing of the left edge of the cel. For example, a VDX value of .25 and a VDY value of .5 shrinks the cel pixels vertically and sets the left edge angle to a heading of 60 degrees down from horizontal.<P>
+<H3>HDDX and HDDY Values</H3>
+When fixed HDX and HDY values set the horizontal offset of a cel and VDX and VDY values set the vertical offset of a cel, the result is always a strict parallelogram-all the row edges are parallel as are all the column edges. Although you change the size and angles of the parallelogram, you cannot get any perspective effects with row edges converging or diverging. To add perspective, the projector uses the HDDX and HDDY offset pair.<P>
+HDDX and HDDY change HDX and HDY values by a set amount at the beginning of each row edge. When one row edge is calculated, the projector adds HDDX to HDX and adds HDDY to HDY. It then uses the new HDX and HDY values to calculate the next row edge. Because HDDX and HDDY can change the row slope and pixel spacing from row edge to row edge, they can create converging or diverging row edges.<P>
+<H3>Writing to the Frame Buffer</H3>
+After the offset values set the coordinates of the cel grid intersection 
+points, the projector writes the appropriate color values into the areas 
+defined by the grid in the frame buffer. Figure 3 shows a simple example.<P>
+<p>
+<IMG SRC="figures/G.3-10.gif" ALT="Graphic cannot be displayed">
+<p>
+<B>Figure 3: </B><I>Simple offset values.</I><P>
+Notice in Figure 10 the original cel (a very small cel) has three rows of four pixels. Those three rows have four row edges, here labeled 0, 1, 2, and 3. The 12 cel pixels are labeled A through L.<P>
+The cel's starting point is (0, 4) and its offset values are HDX=2, HDY=0; VDX=0, VDY=2; HDDX=0, HDDY=0. The projector adds HDX and HDY repeatedly to the starting-point coordinates to create the points (2, 4), (4, 4), (6, 4), and (8, 4). These points define the first line edge, labeled with zeros in the cel grid in Figure 10.<P>
+The projector then adds VDX and VDY to the cel starting point to create the starting point for the next row, which is (0, 6). The change offsets HDDX and HDDY are both 0, so HDX and HDY remain the same. The projector uses HDX and HDY to calculate the points in the second row edge: (2, 6), (4, 6), (6, 6), and (8, 6).<P>
+The projector continues to use the offset values to lay out the rest of the cel grid, calculating the coordinates of each intersection point. Once the coordinates are available, the projector writes to the frame buffer to slant and stretch out each cel pixel as specified in the cel grid.<P>
+Figure 4 shows a more involved example using the same cel. This 
+example uses HDDX and HDDY to change the horizontal offsets from 
+row edge to row edge. Offset values project a rectangular cel into 
+the frame buffer using diverging row edges to fan out the cel pixels.<P>
+<p>
+<IMG SRC="figures/G.3-11.gif" ALT="Graphic cannot be displayed">
+<p>
+
+<B>Figure 4: </B><I>Complex offset values.</I><P>
+The cel's starting point is (0, 12) and its offset values are HDX=1, HDY=-3; VDX=1, VDY=1; HDDX=0, HDDY=1. The projector adds HDX and HDY repeatedly to the starting-point coordinates to create the points (9,1), (6,2), (3,3), and (0,4). These points define the first line edge, labeled with zeros in the cel grid in Figure 11.<P>
+The projector then adds VDX and VDY to the cel starting point to create the starting point for the next row, which is (1,13). It adds the change offsets HDDX and HDDY to the current values of HDX and HDY so they now become HDX=1, HDY=-2. The projector uses these new horizontal offset values to calculate the points in this second row edge: (2,11), (3,9), (4,7), and (5,5).<P>
+The projector continues to use the offset values to lay out the rest of the cel grid, calculating the coordinates of each intersection point. It uses HDDX and HDDY to change HDX and HDY for each row edge. Once the coordinates are calculated, the projector writes values to the frame buffer to slant and stretch out each cel pixel as specified in the cel grid.<P>
+The starting-point coordinates and the offset values can be fractions (although they are not in this example). As offsets are added, the resulting coordinates can also be fractional. When the projector uses these coordinates for writing, it ignores the fraction and uses only the integer value because pixel addresses cannot be fractions. The fraction is retained, however, for the next offset addition so that the effect of the fractions is cumulative. For example, if HDX is .25 and the starting x coordinate is 7, the first four x coordinates are 7.0, 7.25, 7.5, and 7.75, which are all truncated to 7.0. The fifth x coordinate is 8.0, the cumulative result of the fractional HDX value.<P>
+<H2>Changing Cel Pixel Size</H2>
+When the offset values are set to decrease the size of cel pixels, some pixels do not generate any output.<P>
+When the offset values are set to increase the overall size of cel pixels, the projector can use two methods that write to multiple frame buffer pixels for each cel pixel:<P>
+<UL>
+<LI><B>Speed fill</B> is used for most pixels that map to regions consisting of no more than one output pixel.
+<P>
+<LI><B>Region fill</B> is used for the remaining pixels.
+</UL>
+Speed fill is faster than region fill; it uses a lookup table and finds a pattern appropriate to output a single pixel given its relative corner coordinates. The projector then writes that pixel to the frame buffer. <P>
+Region fill automatically takes over for any pixel region not found in the lookup table and fills in a region of the frame buffer within the cel pixel's corner coordinates using the cel pixel's 16-bit value. A value in the CCB can optionally turn off region fill so that the projector uses speed fill for all pixels. This causes a single pixel to be output, even for enlarged pixels, causing the image to have holes giving it a sparse or "strainer" effect.<P>
+<H2>The Corner Engines</H2>
+The projector uses a pair of <I>corner engines</I> to write to the frame buffer using the cel corner coordinates created with the offset values. A corner engine writes a row of cel pixels into the frame buffer, stretching or shrinking the pixels as necessary to fit the projection quadrilateral, and then starts on a new cel row when finished.<P>
+When the cel engine renders a cel to frame buffer memory, it performs a clip test before it renders pixels into the frame buffer.  The <I>clip region</I> is the area in frame buffer memory that is visible on the screen, usually the entire frame buffer memory. A <I>cel source line</I> is a single line of pixels in a cel that is scanned by the cel engine. The cel source line is analogous to a scanline on the screen.<P>
+<H2>Cel Clipping</H2>
+There are three types of clipping: <I>normal clipping</I>, <I>line super clipping</I>, and <I>cel super clipping</I>.<P>
+The cel engine inspects each pixel to determine if its location falls inside the clip region of the frame buffer. If a pixel is not in the clip region, it is not rendered to the frame buffer, and therefore does not change any frame buffer memory. This is normal clipping and it is part of the basic operation of the 3DO cel engine. Normal clipping is not based on the settings of any of the super clipping features. If super clipping does not apply, normal clipping is performed.<P>
+There are two types of super clipping: line super clipping and cel super clipping. The cel engine stops rendering a region if it determines that the remaining pixels will never enter the clip region.<P>
+<UL>
+<LI>Line super clipping<I> </I>occurs when the cel engine determines that no more pixels in the cel source line that it is currently processing can fall inside the clip region. Processing moves to the next line. This saves rendering time. 
+<P>
+<LI>Cel super clipping occurs when the cel engine determines that no remaining pixels in the current cel image can possibly fall inside the clip region. Processing of the remainder of the cel is discontinued. This saves rendering time.  
+</UL>
+Super clipping only speeds up the rendering process. It does not change the results of the rendering operation in any way; that is, any pixels that fall outside the clip region will not be rendered into the frame buffer through normal or super clipping. <P>
+<B>Note: </B>Cel super clipping is currently not available. <P>
+<H3>Line Super Clipping</H3>
+If line super clipping is enabled, the cel engine looks at all the pixels in the source line of a cel and determines if <I>any of the remaining pixels in the line could fall inside the clip region</I>. It takes into account both the direction of the source line and the starting position of the source-line in relation to the horizontal and vertical extents of the frame buffer clip region. If no pixel that is part of the line could possibly fall inside the clip region, line super clipping applies and the cel engine starts processing the next source line in the cel.<P>
+<H3>Cel Super Clipping</H3>
+If cel super clipping is enabled and line super clipping has been applied to a source line of a cel, the cel engine inspects the rest of the cel to determine if <I>any</I> of the pixels in the rest of the cel could fall inside the clip region. If no remaining part of the cel falls inside the clip region, cel super clipping applies and the cel engine starts processing the next cel. Otherwise, the cel engine attempts line super clipping on the next cel source line, as explained above. <P>
+<H3>Normal Clipping</H3>
+If it is possible that <I>at least some of the pixels in the cel source line could fall inside the clip region</I>, the cel engine inspects each pixel individually to see if it is inside the clip region. If the pixel is outside the clip region, it is clipped and not written to memory. The next pixel is inspected and the checking process starts again as explained above under "Line Super Clipping."<P>
+Figure 5 shows a flow chart of the cel clipping process.<p>
+<IMG SRC="figures/Cook.3-12.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 5: </B><I>Cel clipping flow chart.</I><P>
+Figure 6 shows examples of the different types of clipping. <P>
+
+<IMG SRC="figures/Cook.3-13.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 6: </B><I>Clipping example.</I><P>
+The cel engine looks at the cel source line and determines that part of the line might intersect the clip region. At this point, the cel engine does not know exactly where the source line will end. It knows only the current point and direction (the vector) of the line, so it knows it <I>might</I> intersect a clip boundary. The cel engine goes through the following steps to determine whether or not clipping can be performed:<P>
+<OL>
+<LI>In the section leading up to the clip region, normal clipping is used. 
+<P>
+<LI>Inside the clip region, pixels are rendered to the frame buffer. 
+<P>
+<LI>On the far side of the clip region, the cel engine continues to inspect each pixel. It notices that, from that first pixel on, it could perform line super clipping, and it does that. It stops processing the rest of the line.
+<P>
+<LI>The cel engine then checks whether it can apply cel super clipping to the rest of the cel. Because some of the remainder of the cel might intersect the clip region, cel super clipping does not apply and the cel engine proceeds to process the next line.
+
+<p>
+<IMG SRC="figures/Cook.3-14.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 7: </B><I>Cel super clipping.</I><P>
+</OL>
+<H3>How to Enable Super Clipping</H3>
+Cel super clipping and line super clipping are disabled by default. You can turn them on by turning certain bits in the CCB on or off: <P>
+To enable line super clipping and disable cel clipping (cel clipping should currently not be used) you should:<P>
+ <OL>
+<LI>Set the following flags in the CCB:
+<P>
+<UL>
+<LI>ACSC flag (bit #20) to 0 (to turn off cel super clipping)
+<LI>ALSC flag (bit #19) to 1 (to turn on line super clipping)
+</UL><BR>
+
+<LI>Set the ASCALL flag (bit #26) in the cel engine control word to 1. The ACSC and ALSC flags are each ANDed with ASCALL, so if this value is not 1, super clipping cannot be enabled.
+</OL>
+Note that you can use the Flags dialog box in 3DO Animator or the Cel Settings dialog in the 3DO Cel Writer custom plug-in to set these flags. <P>
+<H2>Backface Removal</H2>
+In 3-D modeling, cels are often linked together in a group to create a 3-D object. For example, six square cels may be linked together and stretched appropriately to form the sides of a cube as seen in perspective. When the cube is rotated, the component cels are moved around and dynamically stretched to give the appearance of a moving 3-D object. At least one face of the cube is always completely hidden behind the other faces (even when the faces are moving), and that hidden face does not need to be rendered. A hidden face is called a<I> backface. </I>A backface should not be rendered, even if another cel is written over it to hide it, because it wastes rendering time.<P>
+A classic test to see if a face in a rotating object has been flipped around to become a backface is to check to see if its cel pixels are rendered clockwise (CW) or counterclockwise (CCW). The pixels in a frontface cel are rendered clockwise; those in a backface cel are rendered counterclockwise. The projector can test the first pixel of a cel to see if it's rendered clockwise or counterclockwise. If it's rendered counterclockwise, the projector does not render the cel at all. If it's rendered clockwise, the projector renders the complete cel.<P>
+The projector can also individually test all of the pixels within a cel and render only those pixels that are clockwise. This removes only those parts of a cel that have been turned into backface-for example, half of a bow-tie-twisted cel. This behavior can be reversed.<P>
+The CCB controls backface removal, and can specify that backface pixel removal or backface cel removal be turned on or off.<P>
+<A NAME="XREF24000"></A>

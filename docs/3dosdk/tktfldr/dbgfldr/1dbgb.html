@@ -1,0 +1,84 @@
+<TITLE>Starting a debugging session</TITLE>
+<H1><LINK NAME="XREF24679">Starting a debugging session</LINK></H1><HR>
+This section first discusses preparing a program for debugging and then steps you through starting a debugging session.<P>
+<H3>Examples used in this section</H3>
+This chapter uses as an example the UFO program that is included on the Portfolio CD-ROM in the<I> /remote</I> folder. You can follow the instructions on a Macintosh that's connected to a 3DO Station. All files used in the example here are provided on the installation CD-ROM or are easy to create. <P>
+<A NAME="XREF33691"><H2>Preparing for launch</A></H2>
+Preparing for launch involves the following steps, discussed in this section:<P>
+
+<UL>
+<LI><A HREF="#XREF32089">Preparing the makefile</A>
+<LI><A HREF="#XREF18366">Setting up the folder structure</A>
+<LI><A HREF="#XREF26436">Using an spt script file to set source directories</A>
+</UL>
+<A NAME="XREF32089"><H3>Preparing the makefile</A></H3>
+The easiest way to create a makefile with the right settings is to use the Create3DOMake tool available via the 3DO menu in MPW. <P>
+If you decide to use your own makefile, pay attention to the following requirements:<P>
+<UL>
+<LI>Compile with the <CODE>-g</CODE> flag and link with the <CODE>-debug</CODE> flag.
+<p>
+<LI>Use the <CODE>modbin</CODE> command with the <CODE>-debug</CODE> option to properly configure the final executable.
+<p>
+<LI>Use the <CODE>stripaif</CODE> command to create a separate symbols file.
+<p>
+<LI>Include in your makefile-after the <CODE>stripaif</CODE> command-a <CODE>duplicate</CODE> command that duplicates the following files to the <I>/remote</I> folder:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>the executable (for example, <I>UFO</I>)
+<LI>the symbol file (for example, <I>UFO.sym</I>)
+</UL><BR>
+</DL>
+<A NAME="XREF18366"><H3>Setting up the folder structure</A></H3>
+To facilitate debugging, use the following folder structure: <P>
+<UL>
+<LI>The 3DO boot script file (<I>3DOBootNTSC.scr</I> or <I>3DOBootPAL.scr)</I> should be in the same folder as the <I>/remote</I> folder. This is the default setup.
+<p>
+<LI>All data and source code should be in one folder (which may contain subfolders). This folder can reside anywhere on your hard disk. 
+</UL>
+<A NAME="XREF26436"><H3>Using an spt script file to set source directories</A></H3>
+When the Debugger starts, it looks for a preferences file and for script files. TWo script files are currently recognized:<P>
+<UL>
+<LI>The <I>.spt</I> script file is created by the user. 
+<p>
+<LI>The <I>.scr</I> boot script file<I> </I>is included in the system.
+<p>
+<p>You can set the source directory either for one program only or for several programs the following way: <P>
+<p>
+<LI>To set the source directory for a specific program, create a file name <I>executable</I>.spt (for example, <I>UFO.spt</I>) in which you specify the source directories. 
+    <CODE>
+<PRE>
+setsourcedir
+    setsourcedir PubsStation:3DO:Examples:UFO:
+    setsourcedir PubsStation:3DO:Examples:Lib3DO.lib:
+</CODE>
+</PRE>
+<p>
+<LI>To set the source directory globally, include the following command in the 3DO boot script (<I>.scr</I>) file. It's a good idea to clear all source directories first by using <CODE>setsourcedir</CODE> with the <CODE>NULL</CODE> string:
+<CODE>
+<PRE>
+setsourcedir
+    setsourcedir dirname
+</CODE>
+</PRE>
+</UL>
+<B>Note: </B>Don't make any other changes to the 3DO boot script (<I>.scr</I>) file. They can cause problems with the encryption process. <P>
+<H2>Starting the Debugger</H2>
+After you have installed all software, turn on the Macintosh, the 3DO Station, and the TV monitor, and go through the following steps:<P>
+<OL>
+<LI>Make sure your station is set up for debugging: 
+<p>
+<p>If you have an older "Green" Station, make sure the Debug switch on the 3DO Station is in the UP position. 
+<p>If you have a newer, International Station, you should be set up for debugging by default. If not, use the ROM pop-up in the Preferences dialog, as described in <A HREF="./2dbgi.html#XREF27711">Preferences dialog pop-ups</A>.
+<p>
+
+<LI>Double-click on the 3DODebug icon in the 3DO_OS:<I>version</I><I> </I>folder. 
+<p>
+<p>You are prompted for a script to execute. 
+<p>
+<LI>Select the 3DO boot script file, which should reside in the same folder as the Debugger. 
+<p>
+<p>The Debugger starts up the 3DO Station and downloads and launches the operating system. A number of messages appear, followed by a Debugger prompt.
+<p>You can now start using the Debugger to download your programs.
+</OL>

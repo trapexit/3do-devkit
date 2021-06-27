@@ -1,0 +1,196 @@
+<Title>CreateSample</Title>
+<A NAME="XREF16321"><H1>CreateSample </A></H1>
+<A NAME="XREF22888"> </A>Generic sample creation function.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateSample (TagArg *TagList)<BR>
+Item CreateSampleVA (uint32 tag1, ...)</CODE><P>
+<H3>Description</H3>
+This function is used by all the other sample creation functions (e.g. <CODE>LoadSample()</CODE>, <CODE>ScanSample()</CODE>, <CODE>DefineSampleHere()</CODE>, etc.) to actually  perform the sample creation. Use it if you need to do something that these other more specific functions don't provide (e.g. creating an empty sample item to which to attach your own sample memory). <P>
+This function is extremely flexible and has many different sets of tags to perform different types of Sample Item creation. Sample Item creation falls into these categories:<P>
+<UL>
+<LI> Loading a Sample File from disc<P>
+<LI>Parsing a Sample File image in memory<P>
+<LI>Creating a Sample Item from scratch <P>
+</UL>
+The currently supported sample file formats are:<P>
+<UL>
+<LI>AIFF<P>
+<LI>AIFC <P>
+</UL>
+The tag sets are described below for each category of sample item creation. <P>
+<H3>Tags</H3>
+Used to Load Sample File <P>
+Required: <P>
+<DL>
+<DT>AF_TAG_NAME
+<DD>(const char *) Name of sample file to load. 
+</DL>
+Optional: <P>
+<DL>
+<DT>AF_TAG_SCAN
+<DD>(int32) Specifies the maximum number of bytes of sound data to read from the file. This can be used to cause the Audio folio to simply load sample parameters without loading sample data. (see <CODE>ScanSample()</CODE>). 
+</DL>
+<DL>
+<DT>AF_TAG_ALLOC_FUNCTION
+<DD>(void *(*)(uint32 memsize, uint32 memflags)) Sets custom memory allocation function to be called to allocate sample memory while loading sample file. Defaults to <CODE>AllocMem()</CODE>. If you supply a custom allocation function you must also provide a custom free function with AF_TAG_FREE_FUNCTION. 
+</DL>
+<DL>
+<DT>AF_TAG_FREE_FUNCTION
+<DD>(void (*)(void *memptr, uint32 memsize)) Sets custom memory free function to free sample memory to be called during sample deletion. Defaults to <CODE>FreeMem()</CODE>. If you supply a custom free function you must also provide a custom allocation function with AF_TAG_ALLOC_FUNCTION. 
+</DL>
+Used to Parse Sample File Image in Memory <P>
+Required: <P>
+<DL>
+<DT>AF_TAG_IMAGE_ADDRESS
+<DD>(const char *) Specifies a memory location containing a sample file image from which to read sample. Unless AF_TAG_LEAVE_IN_PLACE is set, this memory does not need to remain valid after calling <CODE>CreateSample()</CODE>. Must use in conjunction with AF_TAG_IMAGE_LENGTH. 
+</DL>
+<DL>
+<DT>AF_TAG_IMAGE_LENGTH
+<DD>(uint32) Specifies number of bytes in sample file image pointed to by AF_TAG_IMAGE_ADDRESS. 
+</DL>
+Optional: <P>
+<DL>
+<DT>AF_TAG_SCAN
+<DD>(int32) See above. 
+</DL>
+<DL>
+<DT>AF_TAG_ALLOC_FUNCTION
+<DD>(void *(*)(uint32 memsize, uint32 memflags)) See above. Mutually exclusive with AF_TAG_LEAVE_IN_PLACE. 
+</DL>
+<DL>
+<DT>AF_TAG_FREE_FUNCTION
+<DD>(void (*)(void *memptr, uint32 memsize)) See above. 
+</DL>
+<DL>
+<DT>AF_TAG_LEAVE_IN_PLACE
+<DD>(bool) Memory is normally allocated for the sample data to be extracted from the sample file, even when parsing a sample file image in memory. When this parameter is set to TRUE, the Sample Item uses the sample data contained within the sample file image in-place rather than allocating more memory to hold the sample data.
+</DL>
+<DL>
+<DT>This tag assumes that the file has been buffered in memory of MEMTYPE_AUDIO and that the memory will remain valid for the life of the Sample Item.
+</DL>
+<DL>
+<DT>Also, because the Audio folio requires that sample data be quad-byte aligned, the sample data image in memory may be moved within the file image. This corrupts the file image for further parsing, but leaves the sample data intact. The Audio folio prints a warning message if it needed to move the sample data, but does not return any special code. Therefore it's best to assume that the file image is always corrupted when this option is enabled.
+</DL>
+<DL>
+<DT>Defaults to FALSE. Mutually exclusive with AF_TAG_ALLOC_FUNCTION. 
+</DL>
+Used to Create Sample from Scratch <P>
+Data: <P>
+<DL>
+<DT>AF_TAG_ADDRESS
+<DD>(void *) Specifies pointer to sample data to construct Sample Item for. This parameter can be changed at a later time with <CODE>SetAudioItemInfo()</CODE>, so it is not required for creation. For best results, must be quad-byte aligned (see caveats). In general, this parameter should be used in conjunction with AF_TAG_FRAMES or AF_TAG_NUMBYTES. Defaults to NULL. 
+</DL>
+<DL>
+<DT>AF_TAG_FRAMES
+<DD>(uint32) Length of sample data expressed in frames. In a stereo sample, this would be the number of stereo pairs. For best results, must be quad-byte aligned (see caveats). Mutually exclusive with AF_TAG_NUMBYTES. If neither AF_TAG_FRAMES or AF_TAG_NUMBYTES is specified, length defaults to 0. 
+</DL>
+<DL>
+<DT>AF_TAG_NUMBYTES
+<DD>(uint32) Length of sample data expressed in bytes. For best results, must be quad-byte aligned (see caveats). Mutually exclusive with AF_TAG_FRAMES. If neither AF_TAG_FRAMES  or AF_TAG_NUMBYTES is specified, length defaults to 0. 
+</DL>
+Format: <P>
+<DL>
+<DT>AF_TAG_CHANNELS
+<DD>(uint32) Number of channels (or samples per sample frame). For example: 1 for mono, 2 for stereo. Valid range is 1..255. Defaults to 1. 
+</DL>
+<DL>
+<DT>AF_TAG_WIDTH
+<DD>(uint32) Number of bytes per sample (uncompressed). Valid range is 1..2. Mutually exclusive with AF_TAG_NUMBITS. If neither AF_TAG_WIDTH or AF_TAG_NUMBIS is specified, width defaults to 2 bytes (16 bits). 
+</DL>
+<DL>
+<DT>AF_TAG_NUMBITS
+<DD>(uint32) Number of bits per sample (uncompressed). Valid range is 1..32. Width is rounded up to the next byte when computed from this tag. Mutually exclusive with AF_TAG_WIDTH. If neither AF_TAG_WIDTH or AF_TAG_NUMBITS is specified, width defaults to 2 bytes (16 bits). 
+</DL>
+<DL>
+<DT>AF_TAG_COMPRESSIONTYPE
+<DD>(uint32) 32-bit ID representing AIFC compression type of sample data (e.g. ID_SDX2). 0 for no compression, which is the default. 
+</DL>
+<DL>
+<DT>AF_TAG_COMPRESSIONRATIO
+</DL>
+Loops: <P>
+<DL>
+<DT>AF_TAG_SUSTAINBEGIN
+<DD>(int32) Frame index of the first frame of the sustain loop. Valid range is 0..NumFrames-1. For best results, must be quad-byte aligned (see caveats). -1 for no sustain loop, which is the default. Must be used in conjunction with AF_TAG_SUSTAINEND. 
+</DL>
+<DL>
+<DT>AF_TAG_SUSTAINEND
+<DD>(int32) Frame index of the first frame after the last frame in the sustain loop. Valid range is 1..NumFrames. For best results, must be quad-byte aligned (see caveats). -1 for no sustain loop, which is the default. Must be used in conjunction with AF_TAG_SUSTAINBEGIN. 
+</DL>
+<DL>
+<DT>AF_TAG_RELEASEBEGIN
+<DD>(int32) Frame index of the first frame of the release loop. Valid range is 0..NumFrames-1. For best results, must be quad-byte aligned (see caveats). -1 for no release loop, which is the default. Must be used in conjunction with AF_TAG_RELEASEEND. 
+</DL>
+<DL>
+<DT>AF_TAG_RELEASEEND
+<DD>(int32) Frame index of the first frame after the last frame in the release loop. Valid range is 1..NumFrames. For best results, must be quad-byte aligned (see caveats). -1 for no release loop, which is the default. Must be used in conjunction with AF_TAG_RELEASEBEGIN. 
+</DL>
+Tuning: <P>
+<DL>
+<DT>AF_TAG_BASENOTE
+<DD>(uint32) MIDI note number for this sample when played at the original sample rate (as set by AF_TAG_SAMPLE_RATE). Defaults to middle C (60). This defines the frequency conversion reference note for the <CODE>StartInstrument()</CODE> AF_TAG_PITCH tag. 
+</DL>
+<DL>
+<DT>AF_TAG_DETUNE
+<DD>(int32) Amount to detune the MIDI base note in cents to reach the original pitch. Must be in the range of -100 to 100. Defaults to 0. 
+</DL>
+<DL>
+<DT>AF_TAG_SAMPLE_RATE
+<DD>(ufrac16) Original sample rate for sample expressed in 16.16 fractional Hz. Defaults to 44,100 Hz. 
+</DL>
+Multisample: <P>
+<DL>
+<DT>AF_TAG_LOWNOTE
+<DD>(uint32) Lowest MIDI note number at which to play this sample when part of a multisample. StartInstrument() AF_TAG_PITCH tag is used to perform selection. Valid range is 0 to 127. Defaults to 0. 
+</DL>
+<DL>
+<DT>AF_TAG_HIGHNOTE
+<DD>(uint32) Highest MIDI note number at which to play this sample when part of a multisample. Valid range is 0 to 127. Defaults to 127. 
+</DL>
+<H3>Return Value</H3>
+The function returns a Sample Item number (a positive value) if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Caveats</H3>
+There's currently no way to enforce that memory pointed to by AF_TAG_ADDRESS or file image memory used with AF_TAG_LEAVE_IN_PLACE is actually of MEMTYPE_AUDIO. Be careful. <P>
+All sample data, loop points, and lengths must be quad-byte aligned. For example, a 1-channel, 8-bit sample (which has 1 byte per frame) is only legal when the lengths and loop points are at multiples of 4 frames. For mono ADPCM samples (which have only 4 bits per frame), lengths and loop points must be at multiples of 8 frames. The Audio folio, however, does not report any kind of an error for using non-quad-byte aligned sample data. Sample addresses, lengths, and loop points, are internally truncated to quad-byte alignment when performing the DMA without warning. Misalignments may result in noise at loop points, or slight popping at the beginning and ending of sound playback. It is recommended that you pay very close attention to sample lengths and loop points when creating, converting, and compressing samples. <P>
+Setting AF_TAG_WIDTH does not set the AF_TAG_NUMBITS attribute (e.g. if you create a sample with AF_TAG_WIDTH set to 1, <CODE>GetAudioItemInfo()</CODE> AF_TAG_NUMBITS will return 16). Setting AF_TAG_NUMBITS does however correctly update the AF_TAG_WIDTH field. <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+    // Create a Sample Item to be filled out later with 
+SetAudioItemInfo()
+sample = CreateSample (NULL);
+    // Make a Sample Item for raw sample data in memory
+    // (8-bit monophonic 22KHz sample in this case)
+sample = CreateSampleVA (
+    AF_TAG_ADDRESS,     data,
+    AF_TAG_FRAMES,      NUMFRAMES,
+    AF_TAG_CHANNELS,    1,
+    AF_TAG_WIDTH,       1,
+    AF_TAG_SAMPLE_RATE, Convert32_F16 (22050),
+    TAG_END);
+    // Parse a sample file image and use the sample data in place
+sample = CreateSampleVA (
+    AF_TAG_IMAGE_ADDRESS,  sampleFileImage,
+    AF_TAG_IMAGE_LENGTH,   sampleFileLength,
+    AF_TAG_LEAVE_IN_PLACE, TRUE,
+    TAG_END);
+    // Identical to LoadSample()
+sample = CreateSampleVA (
+    AF_TAG_NAME, "sinewave.aiff",
+    TAG_END);
+    // Identical to DefineSampleHere()
+sample = CreateSampleVA (
+    AF_TAG_IMAGE_ADDRESS,  sampleFileImage,
+    AF_TAG_IMAGE_LENGTH,   sampleFileLength,
+    AF_TAG_ALLOC_FUNCTION, MyAlloc,
+    AF_TAG_FREE_FUNCTION,  MyFree,
+    TAG_END);
+</CODE>
+</PRE>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr083.html#XREF21317"><CODE>UnloadSample</A>(), <A HREF="./01mpr053.html#XREF16726">LoadSample</A>(), <A HREF="./01mpr065.html#XREF29290">ScanSample</A>(), <A HREF="../../pgsfldr/spr/09spr016.html#XREF10901">Sample</A>, <A HREF="./01mpr007.html#XREF30972">AttachSample</A>() </CODE><P>
+</CODE>

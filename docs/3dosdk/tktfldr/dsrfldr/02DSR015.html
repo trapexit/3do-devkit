@@ -1,0 +1,32 @@
+<Title>ItemPool</Title>
+<A NAME="XREF40097"><H1>ItemPool</A></H1>
+<A NAME="XREF25139"></A>Item pool structure.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct ItemPool {
+   long numItemsInPool;
+   void* itemDescBlockPtr;
+   ItemDescPtr availList;
+   ItemDescPtr inUseList;
+} ItemPool, *ItemPoolPtr</CODE></pre><P>
+<H3>Description</H3>
+A structure for keeping track of the state of a group of related items.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>numItemsInPool</CODE>
+<DD>Number allocated (not currently used). 
+</DL>
+<DL>
+<DT><CODE>itemDescBlockPtr</CODE>
+<DD>Pointer to block of allocated descriptors. 
+</DL>
+<DL>
+<DT><CODE>availList</CODE>
+<DD>Pointer to first available item descriptor.
+</DL>
+<DL>
+<DT><CODE>inUseList</CODE>
+<DD>Pointer to first in-use item descriptor.
+</DL>
+<H3>Associated Files</H3>
+ItemPool.h<P>

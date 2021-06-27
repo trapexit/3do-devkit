@@ -1,0 +1,20 @@
+<Title>UnloadCel</Title>
+<A NAME="XREF31145"><H1>UnloadCel </A></H1>
+ Unloads a cel file loaded by LoadCel().<P>
+<H3>Synopsis</H3>
+<CODE>void UnloadCel (CCB *cel)</CODE><P>
+<H3>Description</H3>
+Releases all resources acquired when a cel was loaded via <CODE>LoadCel()</CODE>. A NULL pointer is valid as input but has not effect. <P>
+<CODE>UnloadCel()</CODE> just calls <CODE>DeleteCel()</CODE>; it differs only in that it doesn't return a NULL pointer. <P>
+<CODE>DeleteCel()</CODE> and <CODE>DeleteCelList()</CODE> may also be used on files loaded via <CODE>LoadCel()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to a cel loaded via LoadCel(). 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO114.html#XREF15438"><CODE>LoadCel</A>, <A HREF="./01LDO055.html#XREF42213">DeleteCel</A> </CODE><P>

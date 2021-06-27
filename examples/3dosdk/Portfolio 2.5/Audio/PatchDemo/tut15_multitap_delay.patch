@@ -1,0 +1,71 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut15_multitap_delay.patch,v 1.4 1994/10/26 21:56:15 peabody Exp $
+;*
+;*  Tutorial 15: Multitap delay
+;*
+;******************************************************************************
+
+; --------------------- delay
+;
+; inputs
+;   delaymixer Input0 - signal input to delay
+;
+; outputs
+;   delaymixer LeftOutput - signal output from delay
+;
+; knobs
+;   delaymixer LeftGain0  - output gain of dry input signal
+;   delaymixer LeftGain1  - output gain of tap 1 signal
+;   delaymixer LeftGain2  - output gain of tap 2 signal
+;   delaymixer LeftGain3  - output gain of tap 3 signal
+;   delaymixer RightGain0 - send gain of dry input signal
+;   delaymixer RightGain1 - feedback gain of tap1 signal
+;   delaymixer RightGain2 - feedback gain of tap2 signal
+;   delaymixer RightGain3 - feedback gain of tap3 signal
+
+LoadInstrument  delaymixer     submixer4x2.dsp 0        ; delay mixer
+LoadInstrument  delaysendins   delaymono.dsp 0          ; delay send instrument
+LoadInstrument  delaytap1ins   fixedmonosample.dsp 0    ; delay return instruments
+LoadInstrument  delaytap2ins   fixedmonosample.dsp 0
+LoadInstrument  delaytap3ins   fixedmonosample.dsp 0
+                                                        ; (not retriggable so delay continues after rest of patch is released)
+DelayLine       delayline      80000                    ; single channel delay line 40000 sample frames long (80000 bytes)
+AttachSample    delaysend      delaysendins delayline OutFIFO
+AttachSample    delaytap1      delaytap1ins delayline InFIFO 33000  ;  7000 frame delay
+AttachSample    delaytap2      delaytap2ins delayline InFIFO 23000  ; 17000 frame delay
+AttachSample    delaytap3      delaytap3ins delayline InFIFO  3000  ; 37000 frame delay
+
+Connect delaytap1ins Output    delaymixer Input1
+Connect delaytap2ins Output    delaymixer Input2
+Connect delaytap3ins Output    delaymixer Input3
+Connect delaymixer RightOutput delaysendins Input
+
+Tweak   delaymixer LeftGain0  24000
+Tweak   delaymixer LeftGain1  24000
+Tweak   delaymixer LeftGain2  24000
+Tweak   delaymixer LeftGain3  24000
+Tweak   delaymixer RightGain0 8191
+Tweak   delaymixer RightGain1 0
+Tweak   delaymixer RightGain2 0
+Tweak   delaymixer RightGain3 0
+
+
+; --------------------- demo stuff
+
+LoadInstrument  out     directout.dsp 0
+
+    ; source instrument (a percussive sample)
+; LoadInstrument  src     sawenvsvfenv.dsp
+LoadInstrument  src     sampler.dsp
+LoadSample      sample  $samples/Unpitched/DrumSnare/SnareOpen.M44k.aiff
+AttachSample    sampatt src sample
+
+    ; connections
+Connect     src Output delaymixer Input0
+Connect     delaymixer LeftOutput out InputLeft
+Connect     delaymixer LeftOutput out InputRight

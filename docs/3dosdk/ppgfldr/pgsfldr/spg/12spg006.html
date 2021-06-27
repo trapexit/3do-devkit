@@ -1,0 +1,71 @@
+<TITLE>High-Performance Event Broker Use</TITLE>
+<H1><LINK NAME="XREFevent broker">High-Performance Event Broker Use</LINK></H1><HR>
+The pod table interface gives applications a fast and efficient way to monitor the current state of certain control port devices on a field-by-field basis. The pod table does not require applications to process a large number of event messages.<P>
+<H2>The Pod Table</H2>
+Devices such as analog joysticks and light guns provide applications with position information, as well as with button-state information. Button-state information does not change frequently (a few times per second in most cases), but positional information changes often during almost every video field (up to 60 times a second). These rapid position changes are inherent in the high resolutions of these input devices, and their tendency to "jitter" slightly as a result of small mechanical movements or electrical noise in the circuitry. Applications must track the position of an input device. For example, by moving a set of crosshairs on the display, an application may need to parse and process messages from the event broker many times each second This process can lead to an undesirable slowdown of the application.<P>
+The <I>pod table</I> is an alternative method for accessing the current position of devices such as the analog joystick and light gun, with substantially lower overhead for both the application and the event broker. This table (actually a set of arrays and data structures) contains the current position information, and current button-state, for up to eight generic control port devices in each family. By examining the contents of the pod table, applications can track device position whenever it is convenient for them to do so.<P>
+<H2>Gaining Access to the <A NAME="XREFpod table"></A><A NAME="XREFpod table">Pod Table</A></H2>
+The event broker constructs the pod table by the event broker when an application sends it a message asking for access to the table. This message has the standard event broker format and uses a message code of <CODE>EB_MakeTable</CODE>.<P>
+The event broker builds the table and replies to the application's message by sending an <CODE>EB_MakeTableReply</CODE> message whose data structure includes a pointer to the table. The table is updated whenever new data arrives from the control port. An application that gains access to the table in this fashion can "poll" the contents of the table at its convenience. The table contains a semaphore that the application must lock to ensure the event broker does not update the table while the application examines it.<P>
+<H2>Relinquishing Access to the Pod Table</H2>
+The pod table is retained in memory and kept up to date, as long as the application that requested it is executing. The system maintains the table as long as the event broker receives a table-request message from at least one message port. As soon as the event broker detects that the last such message port was deleted, it ceases updating the pod table and releases the memory occupied by the table.<P>
+<H2>Structure of the Pod Table</H2>
+<A NAME="XREFpod table">The pod table consists of 
+two portions:</A> a fixed-size and fixed-format section and a 
+set of variable-size arrays, which are created when needed. The variable 
+size arrays may not always be present. Figure 1 shows the fixed-size section 
+and fixed-format.<P>
+
+<IMG SRC="Artwork/11-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 1: </B><I>Pod table structure fixed-size and fixed-format section.</I><P>
+The table begins with a semaphore item. It is followed by a total of 16 almost-identical substructures: one substructure per generic class, with the names of the substructures indicating the generic class to which they refer. Within each substructure are two pointers: one to an array of <CODE>uint32</CODE> timestamps, and another to an array of generic-class-specific event data structures. Each substructure also contains a <CODE>uint32</CODE> "how many" field that gives the number of elements in the event and timestamp arrays. The "how many" field can contain 0, in which case the two pointers will contain NULL.<P>
+The event data structures used in these arrays are the same ones used to send 
+information in a normal event broker event frame. For example, the substructure 
+for generic class 0 (control pads) contains a pointer to an array of 
+<CODE>ControlPadEventData</CODE> structures, and the substructure for generic 
+class 8 (analog joysticks) contains a pointer to an array of StickEventData 
+structures.<P>
+<H2>Empty Generic Class Substructures</H2>
+If there are no devices of a particular generic class connected to the 3DO 
+unit, the substructure for this generic class can be left empty. In this case, 
+the "how many" field contains 0, and the two array pointers will contain NULL. 
+For example, if the 3DO unit were started up without a control pad attached, 
+the first portion of the pod table might be as shown in Figure 2.<P>
+
+<IMG SRC="Artwork/11-2.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<P>
+<B>Figure 2: </B><I>Pod substructure.</I><P>
+<H2>Non-Empty Generic Class Substructures</H2>
+If one or more devices of a particular generic class are connected to the 3DO system, the pod table reflects this. The "how many" field is nonzero, and the array pointers are non-NULL and point to valid arrays. Figure 3 shows an example of the generic class substructure.<P>
+
+<IMG SRC="Artwork/11-3.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 3: </B><I>Generic class substructure.</I><P>
+The "how many" field does not necessarily contain the number of devices of a generic class that are currently attached to the system; rather, this field identifies the sizes of the data arrays. Normally, the event broker will reserve sufficient space in the arrays for up to eight devices in each class, and the "how many" field will reflect this fact. If your application needs to get a complete and accurate listing of the devices currently attached to the system, it should use the <CODE>EB_DescribePods</CODE> message to ask the event broker for a current list.<P>
+The entries in the timestamp and device-data arrays should be accessed with a starting index of 1. That is, the data for the first generic joystick will be found in <CODE>StickEventData[1]</CODE>. This ensures that the numbering scheme for these arrays matches the generic-device numbers in the event broker's event-frame and pod-description messages. Entry 0 in each array is reserved for future use, and should not be accessed by applications.<P>
+The values in the timestamp arrays are standard Portfolio VBL counter timestamps. They have a resolution of 1/60th of a second on NTSC systems and 1/50th of a second on PAL systems. They are derived from the same source as the event timestamp values in an event broker event message, and also correspond to the VBL-count times applications read using the timer device.<P>
+If a controller is unplugged from the control port, the event broker ceases updating its entries in the pod table. An application can detect stale information by checking to see if the validity timestamp is changing.<P>
+A substructure goes from empty to nonempty if a device of an as yet unseen generic class is connected to the multiplayer, and a driver for this device is available. The array pointers in a substructure can be changed if the event broker needs to enlarge the arrays to support a larger number of devices than expected. In any case, a change in the table's structure will occur only when the event broker has locked the semaphore on the pod table. Applications are urged to lock the semaphore before accessing the contents of the table, and unlock it immediately afterwards, to avoid having data in the table change while the application is reading it.<P>
+<H2>Use and Abuse of the <A NAME="XREFpod table">Pod Table</A></H2>
+It is easy to misuse the pod table, which can hurt the performance and reliability of your application, rather than helping it.<P>
+The pod table mechanism is intended to give applications a way to view the most recent information for each control port device on the system. As such, it lets you track a light gun's target position or the offset of an analog joystick with very little effort and overhead. You may be tempted to use it for other, less appropriate purposes: for example, to detect button-down and button-up interactions at the control pads or light gun or analog joysticks. <I>Do not do this. </I>It can cause compatibility problems, now or in the future.<P>
+You can also get into trouble because an application has no guaranteed way of knowing just when the data in the pod table is likely to be changed. If somebody taps and releases a button on the control pad very quickly, it is possible for the pod table to be updated twice (reflecting both the button-down and button-up changes) before your application gets around to polling it. As a result, your application will never notice this particular button-press, and it will not react to the user's action.<P>
+<A NAME="XREFpod table"><H3>Pod Table Polling</A></H3>
+You may think that you can avoid this problem by polling the pod table frequently, perhaps once per field (60 times a second on an NTSC machine). That might work today, but it might not work tomorrow. Future versions of the 3DO hardware and software may scan the control port more frequently than today's version to reduce the delay between the time a button is pressed and the time a program reacts to it. In fact, this is very likely. If your application depends on polling the pod table more rapidly than the event broker can update it, it will probably not run reliably on some future 3DO hardware.<P>
+Polling the pod table frequently adds quite a bit of overhead and complexity to an application. You will either have to interrupt your main-line code several times per field to poll the table (making the code bigger and bulkier) or it will be necessary to have a code thread wake up every few milliseconds to check the table (thus adding more overhead than the pod table mechanism eliminated, and slowing down your application's frame rate). You might be tempted to start writing "busy/wait" polling loops to wait for events; these would make your program multitasking-hostile and network-unfriendly. <P>
+The event broker's event message system was designed specifically to eliminate such problems. The event broker is a couple of steps closer to the hardware than your application is, and takes advantage of this fact. It does all of the button-down/button-up detection for you. Every time new data arrives from the control port it can queue up several event messages in a row for your application without losing any data, and it will wake up your program or thread (sending a message) when an event arrives.<P>
+The best way to use the pod table is to use it <I>only</I> to keep track of position information (analog joystick-position, mouse offset, light gun target pulse count, and so on.). For all real user-interaction events (button-down, trigger pulled, and so on), use the event broker event message mechanism.<P>
+<H3>Using the Pod Table Semaphore<A NAME="XREFsemaphore"></A></H3>
+When you lock the semaphore on the pod table before accessing the table, be sure to unlock it as quickly as possible. If left locked, you will lock out the event broker and can cause your application to miss events. Ideally, you should lock the semaphore, copy the information you need from the pod table to a variable in your program's own storage, and then unlock the semaphore immediately.<P>
+It is tempting to not lock the semaphore and read the tables directly. This is dangerous, as you might get inconsistent data within the table. It might also lead to crashes if new controllers are plugged into the system and the event broker must alter table pointers.<P>
+Finally, since the array pointers within the pod table can change from event to event, it is important not to cache these values anywhere. Whenever you lock the pod table semaphore, you must sample the array pointers from the table.<P>
+<H2>Synchronization Between the Pod Table and<A NAME="XREFpod table"> Event Messages</A></H2>
+The event frames in an event broker message have timestamps associated with each event, as do the arrays in the pod table. Both timestamps are derived from the same source (the timer device VBL counter) and so are consistent with one another.<P>
+However, if you are checking timestamps in the event messages, and are also looking at timestamps in the pod table, you should be cautious. It is possible for you to receive an event message (containing a timestamped event), look in the pod table, and find that the timestamp for the corresponding device does not match the one in the event message. This can (and often will) happen because the pod table was updated between the time that the event message was sent to your application, and the time that your application processed it. The pod table timestamp will usually be more recent than the event frame timestamp. <P>
+This might cause some confusion if, for example, an application tracking the light gun cursor based on pod table information but the application was "firing bullets" based on the event messages. The application might mistakenly shoot a bullet at the position the gun was aimed before or after the moment the trigger was pulled, rather than where it was aimed at the precise moment of firing.<P>
+All of the information in any particular event frame has the same timestamp. For example, if your application receives a "light gun button down" event frame, then the button-bits and the light gun counter in that event frame were sampled at exactly the same moment. Your application should fire at the spot indicated in the event frame, rather than at the (possibly different) location currently indicated in the pod table.<P>

@@ -1,0 +1,26 @@
+################################################################################
+#	BuildSlideStreamAudio
+#
+#	MPW script to build the audio stream file to be used with the
+#	SlideStream example program. 
+#
+#	History:
+#	--------
+#	04/15/94	dtc		Defined symbol for the SlideStream Data folder
+#	12/1/93		jb		New today
+################################################################################
+
+# Set symbol for Slide Stream Data folder
+set SlideStreamData 	"::Apps & Data:"
+
+# Compress the AIFF files into 2:1 SDX2 AIFC format with SquashSnd
+
+	SquashSnd -i "{SlideStreamData}"bach_44K_16B_M.aiff -o "{SlideStreamData}"bach_44K_16B_M.aifc
+
+
+# Make streamed audio files from AIFF and AIFC sources 
+
+	sftostream -i "{SlideStreamData}"bach_44K_16B_M.aifc -o "{SlideStreamData}"bach_44K_16B_M.saudio
+
+# Unset symbol
+unset SlideStreamData 

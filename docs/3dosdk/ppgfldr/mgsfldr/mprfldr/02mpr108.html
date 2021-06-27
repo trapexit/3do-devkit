@@ -1,0 +1,23 @@
+<Title>ssplPause</Title>
+<A NAME="XREF36471"><H1>ssplPause </A></H1>
+<A NAME="XREF19344"></A> Pauses the SoundSpooler<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplPause ( SoundSpooler *sspl )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplPause()</CODE> pauses SoundSpooler's sample player instrument. Stops playback and retains the sample data position so that playback can be resumed at the same position with <CODE>ssplResume()</CODE>. This differs from the <CODE>ssplStartSpooler()</CODE>  <CODE>ssplStopSpooler()</CODE>  pair which do not retain the current sample playback position. <P>
+The playback cannot be resumed from the paused location if <CODE>ssplStartSpooler()</CODE>  or <CODE>ssplStopSpooler()</CODE> are called between <CODE>ssplPause()</CODE> and <CODE>ssplResume()</CODE>. Multiple calls to <CODE>ssplPause()</CODE> have no effect; pause does not nest. <P>
+Sets SSPL_STATUS_F_PAUSED. <P>
+<H3>Argument</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr113.html#XREF35532"><CODE>ssplResume</A>(), <A HREF="./02mpr121.html#XREF17770">ssplStopSpooler</A>(), <A HREF="./01mpr059.html#XREF14745">PauseInstrument</A>(), <A HREF="./02mpr105.html#XREF10988">ssplGetSpoolerStatus</A>() </CODE><P>
+</CODE>

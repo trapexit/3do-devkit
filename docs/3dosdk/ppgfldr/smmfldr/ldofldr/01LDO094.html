@@ -1,0 +1,37 @@
+<Title>GetTextCelExtent</Title>
+<A NAME="XREF13737"><H1>GetTextExtent </A></H1>
+ Retrieves width and height for formatted text.<P>
+<H3>Synopsis</H3>
+<CODE>char * GetTextExtent (TextCel *tCel, int32 *pWidth,int32 *pHeight, char *fmtString,...)</CODE><P>
+<H3>Description</H3>
+Calculates the on-screen extent that would be used by the formatted text. GetTextExtent formats text (if necessary), calculates the pixel width and height required to display the text, and returns width/height values via the pointers you provide. The function return value is a pointer to the formatted text (with printf-style formatting already resolved), a feature that is mainly a convenience for the text library internals. <P>
+This function does not take clipping into account; the returned width and height may be larger than the current size of the text cel specified. As a result, you can use this function to determine whether a cel needs to be expanded by comparing the width and height it returns with the ccb_Width and ccb_Height fields in the current cel. <P>
+The related <CODE>vGetTextExtent()</CODE> function works exactly the same, but takes a va_list type instead of the ... parameters. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>pWidth
+<DD>Pointer to the variable into which the width is returned. 
+</DL>
+<DL>
+<DT>pHeight
+<DD>Pointer to the variable into which the height is returned. 
+</DL>
+<DL>
+<DT>fmtString
+<DD>The string of characters to be rendered, optionally including printf-style % formatting commands. 
+</DL>
+<DL>
+<DT>...                          
+<DD>Arguments for printf-style formatting (optional). 
+</DL>
+<H3>Return Value</H3>
+Pointer to the formatted text. <P>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO207.html#XREF23539"><CODE>vGetTextExtent</A></CODE><P>
+</CODE>

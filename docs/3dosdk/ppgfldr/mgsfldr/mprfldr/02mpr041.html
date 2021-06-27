@@ -1,0 +1,46 @@
+<Title>PurgeScoreInstrument</Title>
+<A NAME="XREF21283"><H1>PurgeScoreInstrument </A></H1>
+<A NAME="XREF29035"></A> Purges an unused instrument from a ScoreContext.<P>
+<H3>Synopsis</H3>
+<CODE>Err PurgeScoreInstrument( ScoreContext *scon, uint8 Priority, int32 MaxLevel )</CODE><P>
+<H3>Description</H3>
+This function purges an unused instrument from a ScoreContext. This call, coupled with the scon_PurgeHook allows an application to share DSP resources with the ScoreContext. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>A pointer to a ScoreContext data structure controlling playback. 
+</DL>
+<DL>
+<DT>Priority
+<DD>The maximum instrument priority to purge for instruments that are still playing (in the range of 0 to 200). Instruments of higher priority that this may be purged if they have stopped playing. 
+</DL>
+<DL>
+<DT>MaxLevel
+<DD>The maximum activity to purge (i.e. AF_ABANDONED, AF_STOPPED, AF_RELEASED, AF_STARTED). 
+</DL>
+<H3>Return Value</H3>
+This function returns a positive value if an instrument was actually purged, zero if no instrument matching the specifications could be purged, or a negative error code on failure. <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+This code fragment can be used to free the DSP resources used by all
+instruments that have finished playing:
+{
+    int32 result;
+        * loop until function returns no voice purged or error *
+    while ( (result = PurgeScoreInstrument (scon, SCORE_MAX_PRIORITY,
+                                            AF_STOPPED)) &gt; 0 ) ;
+        * catch error *
+    if (result &lt; 0) ...
+}
+</CODE>
+</PRE>
+<H3>Caveats</H3>
+This function deletes items that are created by <CODE>StartScoreNote()</CODE>. Frequent use of this function and <CODE>StartScoreNote()</CODE> can consume the item table. If you simply want to stop a score note in it's tracks for later use with the same channel, use <CODE>StopScoreNote()</CODE> instead. It merely stops instruments and doesn't delete them. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr047.html#XREF12834"><CODE>StopScoreNote</A>() </CODE><P>
+</CODE>

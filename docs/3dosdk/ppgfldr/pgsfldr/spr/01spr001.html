@@ -1,0 +1,34 @@
+<Title>AbortIO</Title>
+<A NAME="XREF20829"><H1>AbortIO </A></H1>
+<A NAME="XREF28583"></A>Aborts an I/O operation.<P>
+<H3>Synopsis</H3>
+<CODE>Err AbortIO( Item ior )</CODE><P>
+<H3>Description</H3>
+This procedure aborts an I/O operation. If the I/O operation has already completed, calling <CODE>AbortIO()</CODE> has no effect. If it is not complete, it will be aborted. <P>
+A task should call <CODE>WaitIO()</CODE> immediately after calling <CODE>AbortIO()</CODE>. When <CODE>WaitIO()</CODE> returns, the task knows that the I/O operation is no longer active. It can then confirm that the I/O operation was aborted before it was finished by checking the io_Error field of the IOReq structure. If the operation aborted, the value of this field is ER_Aborted. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ior
+<DD>The item number of the I/O request to abort. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the I/O operation was successfully aborted or an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>BADITEM
+<DD>The ior argument is not an IOReq. 
+</DL>
+<DL>
+<DT>NOTOWNER
+<DD>The ior argument is an IOReq but the calling task is not its owner. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>io.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr013.html#XREF25810"><CODE>CheckIO</A>(), <A HREF="./01spr021.html#XREF36930">CreateIOReq</A>(), <A HREF="./01spr031.html#XREF13807">DeleteIOReq</A>(), <A HREF="./01spr038.html#XREF37111">DoIO</A>(), <A HREF="./01spr121.html#XREF16419">SendIO</A>(), <A HREF="./01spr131.html#XREF35365">WaitIO</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF20829"></LINK></H1><HR>

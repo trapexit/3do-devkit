@@ -1,0 +1,955 @@
+;; ARMulator configuration file
+;; Copyright (c) 1996-1998 ARM Limited. All Rights Reserved.
+
+;; RCS $Revision: 1.77.4.4 $
+;; Checkin $Date: 1999/12/21 18:42:02 $
+;; Revising $Author: mwilliam $
+ 
+;;
+;; This is the configuration file for ARMulator 2.0
+;;
+
+;; Comment this out for benchmarking
+; For the moment we assume that if no clock speed has been set on the
+; command-line, the user wishes to use a wall-clock for timing
+#if !CPUSPEED
+Clock=Real
+#endif
+
+
+;; This line controls whether (some) models give more useful descriptions
+;; of what they are on startup, and during running.
+Verbose=False
+
+;; To get the full validation environment, we set Validate to one of
+;; "OS" or "CP".  The former installs itself as an OS model, whiile
+;; the latter simply registers the validation coprocessors.
+;Validate=OS
+;Validate=CP
+
+;; To enable faster watchpoints, set "WatchPoints"
+;Watchpoints
+
+;; ARMulator comes up with the cache and MMU enabled, when using a
+;; cached Processor. To disable this, set 'UsePageTables' to 'False'.
+UsePageTables=True
+
+
+#if Validate && Validate==OS
+
+OS=ValidateOS
+
+#else
+
+;; The default operating-system is Angel - this can be changed to Demon
+;; if desired
+#if OSMODEL_Angel
+OS=Angel
+#else
+OS=Demon
+#endif
+
+#endif
+
+;; Operating system (Demon or Angel) configuration
+
+#if OS==Angel || OS==Demon
+
+{ OS
+
+;; Angel configuration
+
+;; SWIs to use for Angel
+AngelSWIARM=0x123456
+AngelSWIThumb=0xab
+
+#if PIE
+HeapBase=0x00050000
+HeapLimit=0x00060000
+StackBase=0x00080000
+StackLimit=0x0078000
+#elif PID7T
+HeapBase=0x02069000
+HeapLimit=0x02079000
+StackBase=0x02080000
+StackLimit=0x02079000
+#else
+HeapBase=0x40000000
+HeapLimit=0x70000000
+StackBase=0x80000000
+StackLimit=0x70000000
+#endif
+
+
+#if !FPE || FPE==FALSE
+;; If you want to be able to run demon programs (for backwards
+;; compatability) set this to "Yes"
+Demon=No
+FPE=No
+#else
+Demon=Yes
+#endif
+
+;; Demon configuration
+
+;; Configure the locations of stacks, etc.
+AddrSuperStack=0xa00
+AddrAbortStack=0x800
+AddrUndefStack=0x700
+AddrIRQStack=0x500
+AddrFIQStack=0x400
+
+;; The default location of the user mode stack
+AddrUserStack=0x80000
+
+;; Start of the "soft vector" code
+AddrSoftVectors=0xa40
+
+;; Where to place a copy of the command line
+AddrCmdLine=0xf00
+
+;; Address and workspace for installed handlers
+AddrsOfHandlers=0xad0
+
+;; Default handlers
+SoftVectorCode=0xb80
+}
+#endif
+
+; Whether to have a "-proc StrongARM" option
+NoStrongARM=False
+
+;;
+;; This is the list of all processors supported by ARMulator.
+;;
+
+{ Processors
+
+Default=ARM7TDMI
+
+;; Entries are of the form:
+;
+; { <processor-name>
+; ... features ...
+; ... variants ...
+; }
+;
+;; or
+;
+; <processor-variant>=<processor-name>
+;
+;; In the latter case, the "variant" must appear in the variants list
+;; for the named processor.
+
+
+;; The "BASIC" RDI model provides models of the ARM2/ARM6/ARM7 and ARM8
+;; families.
+#if RDI_BASIC
+
+;; ARM2 family
+
+{ ARM2
+;; Features:
+Processor=ARM2
+Core=ARM2
+ARMulator=BASIC
+Architecture=2
+
+;; Variants:
+ARM2aS:Processor=ARM2aS
+
+ARM61:Processor=ARM61
+
+ARM3:Processor=ARM3
+ARM3:Architecture=2a
+
+ARM3:Memory=Default
+}
+
+ARM2aS=ARM2
+ARM61=ARM2
+#if MEMORY_MMUlator
+ARM3=ARM2
+#endif
+
+;; ARM6 family
+
+{ ARM6
+;; Features:
+Processor=ARM6
+Core=ARM6
+ARMulator=BASIC
+Architecture=3
+
+;; Variants:
+ARM60:Processor=ARM60
+
+;; Cached variants
+ARM600:Processor=ARM600
+ARM610:Processor=ARM610
+
+ARM600:Memory=ARM600
+ARM610:Memory=ARM610
+}
+
+ARM60=ARM6
+#if MEMORY_MMUlator
+ARM600=ARM6
+ARM610=ARM6
+#endif
+
+;; ARM7 family
+
+{ ARM7
+;; Features:
+Processor=ARM7
+Core=ARM7
+ARMulator=BASIC
+Architecture=3
+Nexec
+LateAborts
+SubPage
+
+;; Variants:
+ARM70:Processor=ARM70
+
+;; Cached variants
+ARM700:Processor=ARM700
+ARM704:Processor=ARM704
+ARM710a:Processor=ARM710a
+ARM710:Processor=ARM710
+
+ARM700:Memory=ARM700
+ARM704:Memory=ARM704
+ARM710a:Memory=ARM710a
+ARM710:Memory=ARM710
+}
+
+ARM70=ARM7
+#if MEMORY_MMUlator
+ARM700=ARM7
+ARM704=ARM7
+ARM710=ARM7
+ARM710a=ARM7
+#endif
+
+;; ARM7D family - ARM7D and ARM70D
+
+{ ARM7D
+;; Features
+Processor=ARM7D
+Core=ARM7
+ARMulator=BASIC
+Architecture=3
+Nexec
+LateAborts
+Debug
+
+ARM70D:Processor=ARM70D
+ARM70D:Debug
+
+;; ARM7DM families
+ARM7DM:Processor=ARM7DM
+ARM7DM:Architecture=3M
+
+ARM70DM:Processor=ARM70DM
+ARM70DM:Architecture=3M
+
+}
+
+ARM70D=ARM7D
+ARM7DM=ARM7D
+ARM70DM=ARM7D
+
+;; Thumb family
+
+{ ARM7TDM
+;; Features
+Processor=ARM7TDM
+Core=ARM7
+ARMulator=BASIC
+Architecture=4T
+Nexec
+LateAborts
+Debug
+
+ARM7TDMI:Processor=ARM7TDMI
+ARM7TM:Processor=ARM7TM
+
+;; Cached variants
+ARM710T:Processor=ARM710T
+ARM710T:Memory=ARM710T
+
+ARM720T:Processor=ARM720T
+ARM720T:Memory=ARM720T
+ARM720T:HighExceptionVectors
+
+ARM740T:Processor=ARM740T
+ARM740T:Memory=ARM740T
+}
+
+ARM7TM=ARM7TDM
+ARM7TDMI=ARM7TDM
+#if MEMORY_MMUlator
+ARM710T=ARM7TDM
+ARM720T=ARM7TDM
+ARM740T=ARM7TDM
+#endif
+
+;; Synthesisable ARM family
+
+{ ARM7TM-S
+;; Features
+Processor=ARM7TM-S
+Core=ARM7
+ARMulator=BASIC
+Architecture=4T
+Nexec
+LateAborts
+Debug
+
+ARM7TDMI-S:Processor=ARM7TDMI-S
+
+; Options - no long multipliers
+
+ARM7T-S:Architecture=4TxM
+ARM7T-S:Processor=ARM7T-S
+ARM7T-S:EarlySignedMultiply=True
+
+ARM7TDI-S:Architecture=4TxM
+ARM7TDI-S:Processor=ARM7TDI-S
+ARM7TDI-S:EarlySignedMultiply=True
+
+}
+
+ARM7T-S=ARM7TM-S
+ARM7TDI-S=ARM7TM-S
+ARM7TDMI-S=ARM7TM-S
+
+;; ARM8 family
+
+{ ARM8
+;; Features:
+Processor=ARM8
+Core=ARM8
+ARMulator=BASIC
+Architecture=4
+Nexec
+MultipleEarlyAborts
+AbortsStopMultiple
+Prefetch
+HasBranchPrediction
+NoLDCSTC
+
+;; Variants:
+ARM810:Processor=ARM810
+
+ARM810:Memory=ARM810
+}
+
+#if MEMORY_MMUlator
+ARM810=ARM8
+#endif
+#endif
+
+
+;; The "STRONG" RDI interface provides models of the StrongARM1 family.
+#if RDI_STRONG
+
+;; StrongARM family
+
+#if NoStrongARM==FALSE
+{ StrongARM
+;; Features:
+Processor=StrongARM
+Core=StrongARM
+ARMulator=STRONG
+Architecture=4
+Nexec
+MultipleEarlyAborts
+AbortsStopMultiple
+StrongARMAware
+NoLDCSTC
+NoCDP
+
+;; Variants:
+SA-110:Processor=SA-110
+
+SA-110:Memory=SA-110
+}
+
+#if MEMORY_StrongMMU
+SA-110=StrongARM
+#endif
+
+#else
+
+{ SA-110
+;; Features:
+Processor=SA-110
+Core=StrongARM
+ARMulator=STRONG
+Architecture=4
+Nexec
+MultipleEarlyAborts
+AbortsStopMultiple
+StrongARMAware
+NoLDCSTC
+NoCDP
+Processor=SA-110
+Memory=SA-110
+}
+#endif
+#endif
+
+
+;; ARM9 family
+
+{ ARM9TDMI
+;; Features:
+Processor=ARM9TDMI
+Core=ARM9
+ARMulator=ARM9ulator
+Architecture=4T
+Nexec
+MultipleEarlyAborts
+AbortsStopMultiple
+CoreCycles
+HighExceptionVectors
+;;StrongARMAware
+;;NoLDCSTC
+;;NoCDP
+
+;; Variants:
+{ ARM940T
+Processor=ARM940T
+Memory=ARM940T
+}
+{ ARM920T
+Processor=ARM920T
+Memory=ARM920T
+}
+}
+#if MEMORY_ARM940CacheMPU
+ARM940T=ARM9TDMI
+#endif
+#if MEMORY_ARM920CacheMMU
+ARM920T=ARM9TDMI
+#endif
+
+;; New processors/variants can be added here.
+}
+
+;;
+;; List of memory models
+;;
+
+{ Memories
+
+;; Default memory model is the "Flat" model, or the "MapFile" model if there
+;; is an armsd.map file to load.
+
+;; Validation suite uses the trickbox
+#if Validate
+Default=TrickBox
+#endif
+
+;; If there's a memory mapfile, use that.
+#if MemConfigToLoad && MEMORY_MapFile
+Default=MapFile
+#endif
+
+;; Default default is the flat memory map
+Default=Flat
+
+;; The "MMUlator" provides emulation of the caches and MMU's on the
+;; ARM6/ARM7 and ARM8 processor families.
+
+#if MEMORY_MMUlator
+;; Plumbing for cached models - leave alone
+ARM600=MMUlator
+ARM610=MMUlator
+ARM620=MMUlator
+
+ARM700=MMUlator
+ARM704=MMUlator
+ARM710=MMUlator
+ARM710a=MMUlator
+ARM710T=MMUlator
+ARM720T=MMUlator
+ARM740T=MMUlator
+
+;; Validationmem is used by the 740T to map the top 2GB of memory onto the 
+;; lower 2GB of memory. This is used during the validation process and must be
+;; provided here as there is no MMU. 
+
+
+;;#if ARM740T && Validate
+;;Validationmem=1
+;;#endif
+
+ARM810=MMUlator
+
+{ MMUlator
+
+IdleCycles
+;; Uncomment this to have a byte-lane memory interface
+;;Bytelanes
+#if Bytelanes
+Memory=BytelaneVeneer
+#else
+Memory=Default
+#endif
+
+;; If Track=True, the MMUlator tells you when registers are
+;; written to, etc. Helps debugging.
+Track=False
+
+;; Whether to have the "verbose" $statistics
+Counters=False
+
+{ ARM600
+CacheWords=4
+CacheAssociativity=64
+CacheBlocks=4
+TLBSize=32
+RNG=6
+WriteBufferAddrs=2
+WriteBufferWords=8
+CacheReplaceTicks=1
+CacheWrite=WriteThrough
+HasUpdateable=TRUE
+BufferedSwap=TRUE
+Architecture=3
+CacheWriteBackInterlock
+sNa=Yes
+ChipNumber=0x60
+Has26BitConfig
+Replacement=Random
+HasWriteBuffer
+
+ARM610:NoCoprocessorInterface
+ARM610:ChipNumber=0x61
+
+; Set core/memory clock ratio
+MCCFG=2
+}
+
+ARM610=ARM600
+
+{ ARM700
+
+CacheWords=8
+CacheAssociativity=4
+CacheBlocks=64
+TLBSize=64
+RNG=7
+WriteBufferAddrs=4
+WriteBufferWords=8
+CacheReplaceTicks=1
+CacheWrite=WriteThrough
+HasRFlag
+HasUpdateable=FALSE
+BufferedSwap=FALSE
+Architecture=3
+CacheWriteBackInterlock
+sNa=Yes
+Replacement=Random
+Has26BitConfig
+HasWriteBuffer
+CheckCacheWhenDisabled
+
+ChipNumber=0x700
+
+ARM710:NoCoprocessorInterface
+ARM710:ChipNumber=0x0710
+ARM710:Revision=0
+
+ARM704:NoCoprocessorInterface
+ARM704:CacheWords=4
+ARM704:CacheBlocks=64
+ARM704:ChipNumber=0x2710
+ARM704:Revision=0
+
+ARM710a:NoCoprocessorInterface
+ARM710a:CacheWords=4
+ARM710a:CacheBlocks=128
+ARM710a:ChipNumber=0x4710
+ARM710a:Revision=0
+
+ARM710T:CacheWords=4
+ARM710T:CacheAssociativity=4
+ARM710T:CacheBlocks=128
+ARM710T:Architecture=4T
+ARM710T:ChipNumber=0x710
+ARM710T:Revision=0
+ARM710T:ThumbAware=1
+ARM710T:ProcessId=0
+ 
+ARM720T:CacheWords=4
+ARM720T:CacheAssociativity=4
+ARM720T:CacheBlocks=128
+ARM720T:Architecture=4T
+ARM720T:ChipNumber=0x720
+ARM720T:Revision=0
+ARM720T:ThumbAware=1
+ARM720T:ProcessId=1
+ARM720T:ProcessId
+
+ARM740T:CacheWords=4
+ARM740T:CacheAssociativity=4
+ARM740T:CacheBlocks=128
+ARM740T:Architecture=4T
+ARM740T:ChipNumber=0x740
+ARM740T:Revision=0
+ARM740T:ThumbAware=1
+ARM740T:ProcessId=0
+ARM740T:ProtectionUnit=1
+ARM740T:LockDownTLB=0
+
+; Set core/memory clock ratio
+MCCFG=2
+}
+
+ARM710=ARM700
+ARM710a=ARM700
+ARM704=ARM700
+ARM710T=ARM700
+ARM720T=ARM700
+ARM740T=ARM700
+
+{ ARM810
+
+CacheWords=4
+CacheAssociativity=64
+CacheBlocks=8
+TLBSize=64
+RNG=6
+WriteBufferAddrs=4
+WriteBufferWords=8
+CacheReplaceTicks=3
+CacheWrite=WriteBack
+HasRFlag
+NoUpdateable
+NoBufferedSwap
+Architecture=4
+CacheBlockInterlock
+;; If using the PLLs
+;PLLClock
+;RefClkCfg=0
+;PLLCfg=15
+;PLLRange=0
+HasBranchPrediction
+Replacement=Random
+HasWriteBuffer
+LockDownCache
+LockDownTLB
+CheckCacheWhenDisabled
+
+ChipNumber=0x810
+
+;Set core/memory clock speed ratio
+MCCFG=2
+}
+
+Replacement=rng
+WriteBufferWords=8
+Revision=0xff
+
+;; Track, if on, displays to the console all CP15 (etc.) operations
+Track=Off
+
+LRURead
+LRUWrite
+
+}
+#endif
+
+
+;; The "StrongMMU" model provides the cache model for the SA-110
+
+#if MEMORY_StrongMMU
+SA-110=StrongMMU
+
+{ StrongMMU
+
+#if Validate || MemConfigToLoad
+Config=Standard
+#endif
+Config=Enhanced
+ChipNumber=0x110
+
+;; Clock speed controlled by three values:
+;; See the SA-110 Technical Reference Manual for details.
+CCLK=3.68MHz
+CCCFG=0
+MCCFG=0
+
+;; "ClockSwitching" controls whether "clock switching" is disabled (as on
+;; real silicon) or enabled (to simplify benchmarking) on reset.
+ClockSwitching=True
+
+;; To enable useful timings for profiling (etc), the StrongARMulator allows
+;; us to divide what would be the real core clock frequency by a factor. This
+;; "slows down" StrongARM, so we get more emulated time per real time.
+Time_Scale_Factor=1
+
+Memory=Default
+}
+#endif
+
+
+#if MEMORY_ARM940CacheMPU
+;; The "ARM940CacheMPU" model provides the cache/PU model for the ARM940
+ARM940T=ARM940CacheMPU
+
+{ ARM940CacheMPU
+
+ChipNumber=0x940
+
+;;Set the number of cache lines
+ICACHE_LINES=256
+DCACHE_LINES=256
+;; 256 = 4 Kbytes
+;; 512 = 8 Kbytes
+
+;; Clock speed controlled by:
+MCCFG=1
+ 
+Memory=Default
+}
+#endif
+
+#if MEMORY_ARM920CacheMMU
+;; The "ARM920CacheMMU" model provides the cache/MMU model for the ARM920
+ARM920T=ARM920CacheMMU
+
+{ ARM920CacheMMU
+
+#if Validate
+Config=Standard
+#endif
+Config=Enhanced
+ChipNumber=0x920
+
+;; Clock speed controlled by a pair of values:
+CCCFG=0
+MCCFG=8
+
+Memory=Default
+}
+#endif
+
+#if MEMORY_BytelaneVeneer
+BytelaneVeneer:Memory=Default
+#endif
+
+#if MEMORY_MapFile
+{ MapFile
+;; Options for the mapfile memory model
+CountWaitStates=True
+AMBABusCounts=False
+SpotISCycles=True
+ISTiming=Early
+}
+#endif
+
+}
+
+;; Co-processor bus
+CoprocessorBus=ARMCoprocessorBus
+
+;;
+;; Coprocessor configurations
+;;
+
+{ Coprocessors
+
+; Here is the list of co-processors, in the form:
+; Coprocessor[<n>]=Name
+
+#if COPROCESSOR_DummyMMU
+;; By default, we install a dummy MMU on co-processor 15.
+CoProcessor[15]=DummyMMU
+
+; Here is the configuration for the co-processors.
+
+;; The Dummy MMU can be configured to return a given Chip ID
+;DummyMMU:ChipID=
+#endif
+}
+
+;;
+;; Basic models (ARMulator extensions)
+;;
+
+{ EarlyModels
+;;
+;; "EarlyModels" get run before memory initialisation, "Models" after.
+;;
+
+#if MODEL_WatchPoints && MEMORY_WatchPoints && WatchPoints
+;; Inserts a watchpoint model into the memory hierarchy.
+WatchPoints
+#endif
+
+#if MODEL_Tracer
+{ Tracer
+;; Output options - can be plaintext to file, binary to file or to RDI log
+;; window. (Checked in the order RDILog, File, BinFile.)
+RDILog=False
+File=armul.trc
+BinFile=armul.trc
+;; Tracer options - what to trace
+TraceInstructions=True
+TraceMemory=False
+TraceIdle=True
+TraceNonAccounted=False
+TraceEvents=False
+;; Where to trace memory - if not set, it will trace at the core.
+TraceBus=True
+;; Flags - disassemble instructions; start up with tracing enabled;
+Disassemble=True
+StartOn=False
+}
+#endif
+}
+
+{ Models
+
+#if MODEL_Profiler
+{ Profiler
+;; For example - to profile the PC value when cache misses happen, set:
+;Type=Event
+;Event=0x00010001
+;EventWord=pc
+}
+#endif
+
+#if MODEL_WindowsHourglass
+{ WindowsHourglass
+;; We can control how regularly we callback the frontend
+;; More often (lower value) means a slower emulator, but
+;; faster response. The default is 8192.
+Rate=8192
+}
+#endif
+
+
+;;
+;; Validation co-processor
+;;
+#if MODEL_ValidateCP && Validate && Validate==CP
+ValidateCP
+#endif
+
+;;
+;; Operating system definitions - used only for a NEW_OS_INTERFACE build
+;;
+
+;; The default operating-system is Angel - this can be changed to Demon
+;; if desired
+#if MODEL_Angel && !Validate
+{ Angel
+
+;; Angel configuration
+
+;; SWIs to use for Angel
+AngelSWIARM=0x123456
+AngelSWIThumb=0xab
+
+#if PIE
+HeapBase=0x00050000
+HeapLimit=0x00060000
+StackBase=0x00080000
+StackLimit=0x0078000
+#elif PID7T
+HeapBase=0x02069000
+HeapLimit=0x02079000
+StackBase=0x02080000
+StackLimit=0x02079000
+#else
+HeapBase=0x40000000
+HeapLimit=0x70000000
+StackBase=0x80000000
+StackLimit=0x70000000
+#endif
+
+;; If you don't want to be able to run demon programs (for backwards
+;; compatability) set this to "No"
+Demon=Yes
+
+#if !FPE || Demon==No
+FPE=No
+#endif
+
+;; Demon configuration
+
+;; Configure the locations of stacks, etc.
+AddrSuperStack=0xa00
+AddrAbortStack=0x800
+AddrUndefStack=0x700
+AddrIRQStack=0x500
+AddrFIQStack=0x400
+
+;; The default location of the user mode stack
+AddrUserStack=0x80000
+
+;; Start of the "soft vector" code
+AddrSoftVectors=0xa40
+
+;; Where to place a copy of the command line
+AddrCmdLine=0xf00
+
+;; Address and workspace for installed handlers
+AddrsOfHandlers=0xad0
+
+;; Default handlers
+SoftVectorCode=0xb80
+}
+#endif
+
+#if MODEL_ValidateOS && Validate && Validate==OS
+ValidateOS
+#endif
+
+#if UsePageTables==True && MODEL_Pagetables && !Validate
+;; Page tables
+{ Pagetables
+MMU=Yes
+AlignFaults=No
+Cache=Yes
+WriteBuffer=Yes
+Prog32=Yes
+Data32=Yes
+LateAbort=Yes
+BranchPredict=Yes
+ICache=Yes
+HighExceptionVectors=No
+;; The following is set to the default setting of the processor core
+;; (which is controlled from the command-line or configuration window).
+;; Only uncomment if you wish to override that setting.
+;BigEnd=
+
+PageTableBase=0xa0000000
+DAC=0x00000003
+
+{ Region[0]
+VirtualBase=0
+PhysicalBase=0
+Size=4GB
+Cacheable=Yes
+Bufferable=Yes
+Updateable=Yes
+Domain=0
+AccessPermissions=3
+Translate=Yes
+}
+
+;; You can add more "regions" here: Region[1], etc.
+
+}
+#endif
+}
+
+;; EOF armul.cnf

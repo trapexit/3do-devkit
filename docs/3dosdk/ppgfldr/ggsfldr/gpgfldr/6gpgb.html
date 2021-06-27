@@ -1,0 +1,58 @@
+<TITLE>Cels</TITLE>
+<H1><LINK NAME="XREF17928">Cels</LINK></H1><HR>
+<A NAME="XREF33363"><H2> Cel Rendering Speed</A></H2>
+<B>Q:</B> What affects cel rendering speed?<P>
+<B>A:</B> Several factors influence rendering speed: <P>
+ <UL>
+<LI>If the image is scaled 1:1 and not rotated, rendering time should be a function of the size of the image source data and on the amount of screen area the image covers. 
+<p>
+<LI>If the image is scaled down, rendering time can speed up a little, but not significantly. 
+<p>
+<LI> If the image is scaled up, rendering slows down. 
+<p>
+<LI> If the image is rotated, rendering slows down. 
+<p>
+<LI> If only one of the two corner engines is enabled, rendering slows down. 
+<p>
+<LI> If the image uses frame buffer data in its pixel processing calculations, rendering time almost doubles. 
+<p>
+<LI> If areas of the image extend over the edges of the screen, the cel engine still processes those areas, but does not take the same amount of time processing them as it would rendering them to the screen.
+</UL>
+Almost all of these factors relate directly to bus bandwidth. How much data is traveling across the bus (at 50 MB/s) is by far the most critical factor affecting cel rendering speed. <P>
+A new feature called super clipping helps speed things up when portions of a cel extend beyond the boundaries of the screen. <P>
+<B>Q:</B> I am drawing a cel in a variety of shapes and sizes. Are there any guidelines to determine the optimum size (number of pixels) for the original image?<P>
+<B>A:</B> Here are two hints for drawing cels quickly: <P>
+<UL>
+<LI>Packed cels with transparency render faster than unpacked cels. 
+<LI>Small cels render faster than big ones, even when scaled. 
+</UL>
+<I>See also:</I> <A HREF="#XREF22819">Huge Cels Draw Slowly</A>.<P>
+<A NAME="XREF14083"><H2>CPU and DMA</A></H2>
+<B>Q:</B> The 3DO system uses the DMA when displaying cels. Can the CPU do other work during that time? <P>
+<B>A:</B> When the cel engine is running, the CPU can't operate. When the cel engine finishes, the CPU can operate again.<P>
+Remember, however, that the cel engine renders graphics much faster than 
+the CPU.<P>
+The cel engine pauses for CPU interrupts so that time critical events to maintain the system still function.<P>
+<A NAME="XREF12708"><H2>When Cel-Display Calls Return</A></H2>
+<B>Q:</B> I need to determine when a display process starts and be notified when it's finished. <P>
+<B>A:</B> A <CODE>DisplayScreen()</CODE> call returns immediately. The specified screen is displayed   after the next vertical blank. <P>
+A <CODE>DrawCels()</CODE> call does not return until the cels have been rendered. <P>
+<A NAME="XREF13117"><H2> Displaying Text as a Cel</A></H2>
+<B>Q:</B> How do I render text into a cel so that I can take advantage of the cel engine's features. None of the text calls takes or returns a CCB.<P>
+<B>A:</B> Currently text routines can only render into a bitmap, so you need to have the cel engine extract the text from an off-screen bitmap.<P>
+Make sure the CCB for the extracting cel correctly represents the data in the off-screen bitmap. Pay special attention to the CCB preamble words.<P>
+<A NAME="XREF26516"><H2>Using Relative Addressing with Cels</A></H2>
+Below is a code snippet. The trick is to use the call <CODE>MakeCCBRelative</CODE>. <P>
+<CODE>
+<PRE>
+CCB* testCelP;
+CCB* nextCelP;
+    // assign the relative offset to the next cel
+testCelP-&gt;ccb_NextPtr = (CCB*)MakeCCBRelative(&amp;testCelP-&gt;ccb_NextPtr, 
+nextCelP);
+    // be sure to clear this bit!
+ClearFlag(testCelP-&gt;ccb_Flags, CCB_NPABS);
+The macros MakeCCBRelative and ClearFlag are defined in 
+graphics.h.
+</CODE>
+</PRE>

@@ -1,0 +1,12 @@
+<TITLE>Finding a Node by Its Ordinal Position</TITLE>
+<H1>Finding a Node by Its Ordinal Position</H1><HR>
+You can find a node that appears in a given position from the beginning or end of a list. To find a node from the beginning of a list, use the <CODE>FindNodeFromHead()</CODE> function:<P>
+<DL>
+<DD><CODE>Node *FindNodeFromHead( const List *l, uint32 position )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list to search; the <CODE>position</CODE> argument is the position of the node sought within the list, counting from the head of the list. The first node in the list has position 0. The function returns a pointer to the node, or NULL if there are not enough nodes in the list for the requested position.<P>
+To find a node from the end of a list, use the <CODE>FindNodeFromTail()</CODE> function:<P>
+<DL>
+<DD><CODE>Node *FindNodeFromTail( const List *l, uint32 position )</CODE><BR>
+</DL>
+The<CODE> l</CODE> argument is a pointer to the list to search; the <CODE>position</CODE> argument is the position of the node sought within the list, counting from the tail of the list. The last node in the list has position 0. The function returns a pointer to the node, or NULL if there are not enough nodes in the list for the requested position.<P>

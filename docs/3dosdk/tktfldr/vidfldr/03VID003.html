@@ -1,0 +1,50 @@
+<TITLE>Capturing video</TITLE>
+<H1>Capturing video</H1><HR>
+Before capturing video, make sure you have a clean disk with enough space; capturing to a fragmented disk causes problems. Capture also requires a lot of time, since almost all capture processes are multipass. Note that audio is captured separately, as discussed below. <P>
+For capture, you need the following three cards:<P>
+<B>Video controller card: </B>One such recommended card is a Diaquest card with Editmac and Quickpass. Diaquest<P>
+<UL>
+<LI>controls two 422 devices
+<LI>uses house sync for accurate capture
+<LI>uses VDIG or video card driver
+<LI>tags QuickTime movies with time codes
+</UL>
+With the Diaquest  set up you <P>
+<UL>
+<LI>select the start frame
+<LI>select the number of frames to capture
+<LI>select size, compression, etc. 
+</UL>
+<B>Video acquisition card: </B>Choices include Video Explorer card, RasterOps card, Digital Film card, NuVista and card, and more. A video acquisition card lets you<P>
+<UL>
+<LI>capture one frame of video in VRAM
+<LI>use custom Plug-ins, VDIG
+<LI>use selectable Gamma correction
+<LI>choose among RGB, YPrPb, D1, and S-Video formats
+<LI>take advantage of excellent quality RGB, analog-to-digital converter
+</UL>
+<B>Audio acquisition card: </B>The following cards let you perform 16-bit audio acquisition:<P>
+<UL>
+<LI>AudioMedia II: frame-accurate, uses MIDI.
+<LI>Digital Film card: no time code, not frame-accurate but acceptable for processing up to 20 minutes of video.
+</UL>
+<B>Note: </B>To synchronize video and audio, you need to translate the video SMPTE time code to MIDI. Use Video Time Piece.<P>
+<H2>Capture process</H2>
+Generally you should get the highest-quality video tape possible and capture at 640 x 480 in 24-bit color. It's best to start with the highest resolution because you lose detail later in compression, and you need 640 x 480 to deinterlace properly later.  640 x 480 requires multipass capture, which must be frame-accurate in order to synchronize audio. <P>
+<H3>Compress during capture?</H3>
+It's best not to capture with JPEG compression because subsequent compression with Cinepak tends to double or compound artifacts that result from compression. If you decide to compress at capture because of space considerations, however, keep in mind the following:<P>
+<UL>
+<LI>Compression during capture may degrade quality, but uncompressed capture uses considerable storage: 640 x 480 x 3 (that is, R, G, B) == 1 megabyte per frame, about 1 frame per second.
+<LI><B>Tape deck</B>: (Betacam, Hi 8) multipass capture is necessary but happens automatically; audio is added last. 
+<LI><B>LaserDisc: </B>Single-pass capture is possible. 
+</UL>
+<H3>Audio capture</H3>
+Audio capture is a separate process. You should capture at 44.1 kHz or 22.05 kHz (not at the Apple standard- 22.25 kHz). If audio takes up more space than you can spare, subsampling from 44.1 kHz to 22.05 kHz is preferable to dropping from 16-bit audio to 8-bit audio. <P>
+Free-running audio capture results in loss of lip sync after 5 minutes. Frame-accurate capture (Audiomedia II card) requires SMPTE-to-MIDI time code converter, but this still results in loss of lip sync after 5 to 8 minutes. To achieve frame-accurate capture for longer periods of time requires an audio capture clock that is slaved to the video sync pulse. <P>
+<H3>Example: uncompressed multipass capture</H3>
+Considerations while doing uncompressed multipass capture:<P>
+<UL>
+<LI>Captures as fast as disk can write, rewinds and gets the next batch.
+<LI>640 x 480, no compression, 30 passes.
+<LI>30 seconds of video take about 30 minutes and use about 1 gigabyte.
+</UL>

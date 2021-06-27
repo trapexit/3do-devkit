@@ -1,0 +1,42 @@
+<Title>CreateBasicDisplay</Title>
+<A NAME="XREF27530"><H1>CreateBasicDisplay </A></H1>
+ Does everything needed to create a simple display.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateBasicDisplay (ScreenContext *sc, uint32 displayType, uint32 numScreens)</CODE><P>
+<H3>Description</H3>
+Prepares a screen display on the 3DO system: Opens the graphics folio, creates a screen group, and adds the screen group. When you are ready, call <CODE>DisplayScreen() </CODE>to view the screen display on the monitor. <P>
+Using this function, you can create a display suitable for NTSC or PAL. This is controlled using the displayType argument. The different display types are defined in graphics.h and currently include: <P>
+DI_TYPE_DEFAULT-Specifying this value results in a display which matches the current defaults for the system. If the system is PAL, it opens a PAL display, and if the machine is NTSC, it opens an NTSC display. Note that additional display types that can be the default are likely to be added in the future. If your code can only deal with either NTSC or PAL, specify the modes explicitly. <P>
+DI_TYPE_NTSC-Opens a 320-x-240 display running at 60Hz. <P>
+DI_TYPE_PAL1-Opens a 320-x-240 display running at 50Hz. <P>
+DI_TYPE_PAL2-Opens a 384-x-288 display running at 50Hz. <P>
+If your application includes both NTSC and PAL artwork, you can use the following approach to determine which set of artwork to use: <P>
+<CODE>
+<PRE>
+QueryGraphics(QUERYGRAF_TAG_DEFAULTDISPLAYTYPE,&amp;displayType); 
+if ((displayType == DI_TYPE_PAL1) || (displayType == DI_TYPE_PAL2)) {
+     displayType = DI_TYPE_PAL2; } 
+else { displayType = DI_TYPE_NTSC; } 
+</CODE>
+</PRE>
+You can then supply the displayType parameter to <CODE>CreateBasicDisplay()</CODE>. The above code protects you against any new display types that can be added to the system. Essentially, if the system says the default is PAL, you will use the PAL artwork. Any other condition results in an NTSC display. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sc
+<DD>This structure is used for output only. It contains various fields that describe the display. This includes the sc_DisplayType field which indicates the actual display type of the display. If this pointer is NULL, the function returns an error code. 
+</DL>
+<DL>
+<DT>displayType
+<DD>Type of display to open. See the explanation under Description. 
+</DL>
+<DL>
+<DT>numScreens
+<DD>Number of screen buffers to allocate; typically 1 or 2. Allocate two screen buffers to do double-buffering. 
+</DL>
+<H3>Return Value</H3>
+Item number of the screen group that was created, or a negative error code upon failure. <P>
+<H3>Associated Files</H3>
+lib3do.lib, displayutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO054.html#XREF12240"><CODE>DeleteBasicDisplay</A> </CODE><P>
+</CODE>

@@ -1,0 +1,24 @@
+<Title>LoadFont</Title>
+<A NAME="XREF37217"><H1>LoadFont </A></H1>
+ Loads 3DO font file.<P>
+<H3>Synopsis</H3>
+<CODE>FontDescriptor * LoadFont (char *fileName, uint32 memTypeBits)</CODE><P>
+<H3>Description</H3>
+Loads a font from the specified file and prepares it for use. <P>
+Use <CODE>UnloadFont()</CODE> to release all resources acquired by <CODE>LoadFont()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fileName
+<DD>Font file to load. 
+</DL>
+<DL>
+<DT>memTypeBits
+<DD>Type of memory to load the font into (usually MEMTYPE_ANY). 
+</DL>
+<H3>Return Value</H3>
+Pointer to a FontDescriptor structure that describes the font; returns NULL if the file is not found, is not a valid font file, or there is not enough memory to process the file. <P>
+<H3>Associated Files</H3>
+lib3do.lib, fontlib.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO204.html#XREF40483"><CODE>UnloadFont</A>, <A HREF="./01LDO145.html#XREF30852">ParseFont</A> </CODE><P>
+</CODE>

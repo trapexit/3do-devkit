@@ -1,0 +1,108 @@
+<TITLE>Background and Overview</TITLE>
+<H1><LINK NAME="XREF30817">Background and Overview</LINK></H1><HR>
+This section is an overview of how to create a <I>cdrom.image</I> file of 
+your title using the layout tool optimized for clustering and the Catapult 
+file for rapid startup.<P>
+You learn about:<P>
+<UL>
+<LI>Layout tool background information
+<LI>Process for using the layout tool
+</UL>
+<B>Note: </B>Feel free to skip the background information first if you're 
+mostly interested in the process. <P>
+<H2>Layout Tool Background Information</H2>
+The layout tool, which is provided on the 3DO Portfolio CD-ROM, takes all 
+files in a folder and creates one CD-ROM image file. In the process, it 
+places one or more avatars (instances) of the root, label, and directory 
+in the image. <P>
+The current version of the layout tool allows optimized layout. First you 
+collect information about your title using a simple image, then the layout 
+tool uses that information for layout. The current layout tool also 
+contains the Catapult feature which enables your CD-ROM to be started up 
+much more quickly than was possible in earlier releases.<P>
+<H3>Nonoptimized Layout</H3>
+The original layout uses a "first seen, first placed" algorithm. Files are 
+"seen" in alphabetical order within each directory; subdirectories are 
+seen and placed recursively as they're encountered.<P>
+This algorithm leads to delays during certain stages of a title's startup. 
+For example, a program's sound (<I>.aiff</I>) files frequently require the 
+loading of a DSP instrument (<I>.dsp</I>) template file. Because the 
+<I>.aiff</I> and <I>.dsp</I> files are stored in different directories, 
+they're a fair distance apart on the CD-ROM, and the drive spends a lot of 
+time moving the read head back and forth between different areas of the 
+disc.<P>
+<H3>Layout Using the Cluster Optimizer</H3>
+The current layout tool with its cluster optimizer locates files in 
+clusters according to when they are used, not according to their position 
+in the file system. If files from different directories are accessed one 
+right after the other, they usually end up in adjacent sections of the 
+CD-ROM. This greatly reduces head-seek time. Since files that are accessed 
+in sequential time order are often laid out in sequential physical 
+position, several files can be read in sequence with only one head seek.<P>
+The optimizer also places additional avatars (copies) of 
+frequently-accessed files in several different locations on the disc. 
+Small, frequently used files may be replicated up to 7 times). Large or 
+infrequently used files may not be replicated at all. <P>
+The amount of avatar duplication depends on the amount of otherwise unused 
+space in your file system. If your title has so much data that it almost 
+fills a 640 MB CD-ROM, very little space is available for cluster 
+optimization and avatar duplication. If your application uses only a few 
+hundred megabytes, there is plenty of room for avatar duplication. This 
+can improve performance. It also enables your application to run even if 
+one or more avatar of critical files is not available because of 
+scratching or other damage to the CD-ROM.<P>
+The clustering optimizer has some significant limitations. It is fairly 
+common for an application to read pieces out of several different files in 
+alternation. For example, when opening an audio <I>.aiff</I> file, the 
+audio folio usually reads the first block of the <I>.aiff</I> file, then 
+opens and reads the contents of a <I>.dsp</I> instrument file the 
+<I>.aiff</I> file points to, and then reads the remainder of the 
+<I>.aiff</I> file. The cluster optimizer can reduce the cost of the head 
+seeks that take place when the drive seeks back and forth between the 
+<I>.aiff</I> and <I>.dsp</I> files, but it cannot eliminate them. A 
+similar problem arises whenever a program reads data from two or more 
+files in parallel. <P>
+A further limitation of the clustering optimizer involves directories. 
+Directories cannot actually be placed within clusters, because the size of 
+a directory cannot be determined accurately until the placement (and 
+number of avatars) of every file within that directory have been 
+finalized. During a cluster optimization, directories are placed in small 
+gaps between clusters. Accessing a directory at runtime (if the 
+directory's contents are not currently in the directory cache) usually 
+requires two head-seeks: one to the directory and one to the file that has 
+just been opened. Clustering can reduce the cost of these 
+directory-related seeks, but cannot eliminate them.<P>
+<A NAME="XREF41440"><H3>Catapult</A></H3>
+Catapult is a feature recently added to the optimized layout tool. With 
+the Catapult feature, the layout tool collects the CD-ROM data that your 
+application needs at startup time (programs, data files, folios, 
+directories, etc.) into a single area of the disc, in exactly the order 
+needed. As a result, the startup process requires very few head-seeks. 
+Proper Catapult optimization of your title can reduce its startup time 
+significantly.<P>
+Catapult's operation takes place at the file system/driver interface. 
+Since you can use Catapult without making any changes to your programs or 
+data, you should prepare one optimized image using Catapult, one 
+optimized image without Catapult, and complare. The actual speedup varies 
+greatly depending on the title itself. 
+level.<P>
+<H2>Optimized Layout Process Overview</H2>
+To use the clustering optimizer, you must perform the layout process twice 
+and collect access information in between. This results in the following 
+steps, which are described in the remainder of this chapter:<P>
+<UL>
+<LI>Perform your first layout process which results in a simple, 
+nonoptimized <I>cdrom.image</I> file. 
+<p>
+<LI>Test your title. 
+<p>
+<LI>Create the base image for optimized layout. Use this image to exercise 
+your title and collect access information using the 3DO Debugger's ability 
+to create a <I>CD_Access.log</I> file which records all of the reads 
+issued to the <I>cdrom.image</I> file during testing.
+<p>
+<LI>Perform a second layout process during which the layout tool uses 
+information from the <I>CD_Access.log</I> file to group files into 
+clusters based on the actual patterns of use. This optimized 
+<I>cdrom.image</I> file can then be burned onto a CD-ROM disc and tested.
+</UL>

@@ -1,0 +1,30 @@
+<Title>spAddMarker</Title>
+<A NAME="XREF17185"><H1>spAddMarker </A></H1>
+<A NAME="XREF12658"></A> Add a new SPMarker to an SPSound.<P>
+<H3>Synopsis</H3>
+<CODE>Err spAddMarker (SPSound *sound, uint32 position, const char *markerName)</CODE><P>
+<H3>Description</H3>
+Adds a new SPMarker to the specified SPSound. <P>
+All markers added to an SPSound are automatically freed when the SPSounds is freed by <CODE>spRemoveSound()</CODE>. A marker may be manually freed by calling <CODE>spRemoveMarker()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to an SPSound to which to add an SPMarker. 
+</DL>
+<DL>
+<DT>position
+<DD>Position (in frames) within the sound data for the new marker. The range is 0..nframes, where nframes is the length of the sound in frames. 0 places the new marker before the first frame in the sound; nframes places the marker after the last frame in the sound. This position must be DMA-aligned, or else this function returns ML_ERR_BAD_SAMPLE_ALIGNMENT. 
+</DL>
+<DL>
+<DT>markerName
+<DD>Name for the new marker. This name must be unique for the sound. Names are compared case-insensitively. The name passed in to this function is copied, so the caller need not keep the string buffer pointed to by markerName intact after calling this function. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr083.html#XREF25941"><CODE>spRemoveMarker</A>(), <A HREF="./02mpr064.html#XREF40639">spBranchAtMarker</A>(), <A HREF="./02mpr094.html#XREF41521">spStopAtMarker</A>(), <A HREF="./02mpr067.html#XREF24196">spContinueAtMarker</A>(), <A HREF="./02mpr089.html#XREF13040">spSetMarkerDecisionFunction</A>(), <A HREF="./02mpr066.html#XREF39335">spClearMarkerDecisionFunction</A>() </CODE><P>
+</CODE>

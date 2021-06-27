@@ -1,0 +1,330 @@
+WORKING WITH NVRAM
+***************************************************************************************************
+
+The 3DO Interactive Multiplayer™ has at least 32 KB of non-volatile RAM (NVRAM) available. Title developers can use this facility for persistent storage of small pieces of data. Practical uses might be to provide a “save game” feature, to save user preference settings, or to store title configuration information.
+
+This document collects information about NVRAM to provide convenient access to it. Specifically, it discusses: 
+
+•	Appropriate and inappropriate ways of managing NVRAM.
+•	Steps a title should go though when the user wants to save a title’s state
+•	Basic principles of working with NVRAM.
+•	Useful functions for working with NVRAM.
+•	CreateDiskFile()
+•	WriteDiskFile()
+•	ReadDiskFile()
+•	GetBlockFileSize()
+•	SetEndOfFile()
+
+
+MANAGING NVRAM
+
+It’s important to manage NVRAM properly. If NVRAM is full, some titles deal inappropriately with the situation:
+
+•	Some titles fail silently, discarding information the user wants to save. 
+•	Some titles overwrite information saved by other titles. This can be even more upsetting, for example, if a user had reached a relatively high level in another title. 
+
+***************************************************************************************************
+Caution: Developers are urged to refrain from the above ways of managing NVRAM.
+***************************************************************************************************
+
+To deal with NVRAM appropriately, do the following: 
+
+•	A title should remove files it has created that it knows are now obsolete. For example, files for a previous version of the same title can probably be removed.
+•	If possible, a title should save files compressed. 
+•	No title should ever delete information about a different title without prompting the user. 
+•	If a title attempts to write to NVRAM but fails because NVRAM is full, the title should prompt the user to delete information currently in NVRAM. This can be done using Access, discussed in the 3DO Portfolio Programmer’s Guide. Some guidelines are discussed in the next section, “Interacting with the End-User.”
+
+
+INTERACTING WITH THE END-USER
+
+Every title should go through the same set of steps when a user wants to save a title’s status. This section lists the steps in sequence. Commented sample code for parts of the sequence is provided as part of 3DO Toolkit 1.3.1.
+
+•	Bring up Save Title display. This display differs from title to title. Users can usually choose to overwrite files or add to a list of existing files.
+•	If user cancels, exit with no error.
+•	Else attempt to write file. 
+•	If writing  file works, exit with no error.
+•	Else delete the file that was just saved. (This is important in order to remove any pieces of it that might have made it to NVRAM). Then inform the user that there is not enough room to save the game, and bring up the Delete File display.
+•	If the user chooses a file to delete, remove the file and jump back to step 3 above.
+•	Else—if the user cancels—return to Save Title display and jump back to 
+step 1. 
+
+***************************************************************************************************
+NOTE: A sample program that brings up a Delete File display is included in this release.
+***************************************************************************************************
+
+
+WORKING NVRAM
+
+Portfolio supports NVRAM access through file system calls. Your title can use I/O requests to work with an open NVRAM file as a device, as it would any other file.  Chapter 24, “Using the File System” of the 0194.1 edition of the 3DO Portfolio Programmer’s Guide includes NVRAM-specific information. The documentation describes a relatively low-level access method. For high-level access, the file system provides calls to open, close and delete a file. You can use the routines below to create (and allocate) blocks, and to read from, write to, get the block size of a file, and set the end of a file.
+
+Choosing Appropriate Filenames
+
+The NVRAM volume is a flat file system; it cannot contain sub-directories. You have to choose filenames wisely to avoid conflicts with other developers. To avoid the possibility of name conflicts while still providing readable file names to end users, 3DO recommends the following file naming standard. Note that file names in NVRAM have a limit of 31 characters. 
+<title name> [<user/level name>] 
+File names that follow this standard consist of two parts:
+•	The first part is the name of the title itself. If space allows you should use the full name of your title, with no abbreviations. 
+•	The second part of the file name is used to uniquely identify the file to the user. This is flexible depending on the purpose of the file. For example, if the file is a game and users are prompted for their name as part of the game, the user’s name or the name of the game level could be part of the file name. 
+
+NOTE When a title displays a Load Game or a Save Game display, it should only show its own files within the list. That is, when loading a saved game from Total Eclipse, for example, the user should not be able to see games from, for example, Monster Manor in the file list. In addition, the entries displayed in that list should not include the title’s name. 
+
+Following this standard will greatly reduce the chance of file name conflicts in NVRAM. However, it still does not completely eliminate the possibility of confusion between titles that create files with similar or identical names. Therefore, it is recommended that you store a unique identifier in the first two bytes of every file that your title creates in NVRAM. To guarantee uniqueness, this identifier should be the licensee number assigned to you by 3DO.
+
+Working with NVRAM via the Debugger
+
+Like any other volume, you must format NVRAM properly before the file system can access it. If you’re working from the Debuggerr, type the following command—followed by the Enter key—in the Debugger Terminal window:
+
+format RAM 3 0 NVRAM
+
+After issuing this command, reset the target. You should see the “/NVRAM” volume mount during file system startup. Thereafter, you can refer to this volume as “/NVRAM”. You will not need to perform this format ritual again, since the contents of NVRAM are preserved across restarts and shutdowns. On a production multiplayer NVRAM is pre-formatted.
+If you’re working from a CD-ROM image, the volume is formatted automatically. 
+
+Working With NVRAM Files From the Debugger
+You can work with files in NVRAM the same way you’d work with other files. Copy them using the copy command. To view them, type into the Terminal window: 
+$c/ls nvram
+You’ll see a list of all files in NVRAM. To see a more detailed list, type: 
+$c/lmdump RAM 3 0
+
+
+USEFUL FUNCTIONS FOR WORKING WITH NVRAM
+
+Using CreateDiskFile
+
+The CreateDiskFile() routine creates a file at the specified location and allocates the specified number of bytes. You must allocate all the bytes the file will ever need at once, since NVRAM files must be contiguous. When you create files in NVRAM, take care to store only a minimum of information since all titles have to share this space. As a final step you must also set the “end of file” using the SetEndOfFile() function to the number of useful bytes in the file.
+Err CreateDiskFile(char* fileName, uint32 numberOfBytes)
+{
+	Err err;
+	Item fileItem;
+	Item ioReqItem;
+	IOReq* ioReqP;
+	uint32 numberOfBlocks, blockSize;
+
+	fileItem = CreateFile(fileName);
+	err = (fileItem < 0) ? fileItem : 0;
+
+	if (err == 0)
+	{
+		fileItem = OpenDiskFile(fileName);
+		err = (fileItem < 0) ? fileItem : 0;
+
+		if (err == 0)
+		{
+			err = GetFileBlockSize(fileItem, &blockSize);
+
+			if (err == 0)
+			{
+				numberOfBlocks = (numberOfBytes / blockSize);
+
+				if ((numberOfBytes % blockSize) > 0)
+					numberOfBlocks++;
+
+				ioReqItem = CreateIOReq(NULL, 0, fileItem, 0);
+
+				if (ioReqItem >= 0)
+				{
+					IOInfo fileInfo;
+	
+					memset(&fileInfo, 0, sizeof(IOInfo));
+	
+					fileInfo.ioi_Command = FILECMD_ALLOCBLOCKS;
+					fileInfo.ioi_Offset = numberOfBlocks;
+
+					ioReqP = (IOReq*)LookupItem(ioReqItem);
+
+					err = DoIO(ioReqItem, &fileInfo);
+					if (err >= 0)
+					{
+						// see if device returned an error
+						err = ioReqP->io_Error;
+					}
+			
+					DeleteIOReq(ioReqItem);
+				}
+				else
+				{
+					err = ioReqItem;
+				}
+			}
+
+			err = CloseDiskFile(fileItem);
+		}
+		else
+		{
+			err = fileItem;
+		}
+	}
+
+	return err;
+}
+
+Using WriteDiskFile
+
+The WriteDiskFile() routine writes the specified number of bytes into the file. 
+Err WriteDiskFile(Item fileItem, ubyte *data, int32 numberOfBytes)
+{
+	int32 err;
+	IOInfo fileInfo;
+	Item ioReqItem;
+	IOReq* ioReqP;
+
+	ioReqItem = CreateIOReq(NULL, 0, fileItem, 0);
+
+	if (ioReqItem >= 0)
+	{
+		memset(&fileInfo, 0, sizeof(IOInfo));
+
+		fileInfo.ioi_Command = CMD_WRITE;
+
+		fileInfo.ioi_Send.iob_Buffer = data;
+		fileInfo.ioi_Send.iob_Len = (int)numberOfBytes;
+		fileInfo.ioi_Offset = 0;
+
+		ioReqP = (IOReq*)LookupItem(ioReqItem);
+
+		err = DoIO(ioReqItem, &fileInfo);
+		if (err >= 0)
+		{
+				// see if the device returned an error
+			err = ioReqP->io_Error;
+		}
+
+		DeleteIOReq(ioReqItem);
+	}
+	else
+	{
+		err = ioReqItem;
+	}
+
+	return err;
+}
+Using ReadDiskFile
+The ReadDiskFile() routine reads the specified number of bytes from the file. 
+Err ReadDiskFile(Item fileItem, ubyte *data, int32 numberOfBytes)
+{
+	int32 err;
+	IOInfo fileInfo;
+	Item ioReqItem;
+	IOReq* ioReqP;
+
+	ioReqItem = CreateIOReq(NULL, 0, fileItem, 0);
+
+	if (ioReqItem >= 0)
+	{
+		memset(&fileInfo, 0, sizeof(IOInfo));
+
+		fileInfo.ioi_Command = CMD_READ;
+
+		fileInfo.ioi_Recv.iob_Buffer = data;
+		fileInfo.ioi_Recv.iob_Len = numberOfBytes;
+		fileInfo.ioi_Offset = 0;
+
+		ioReqP = (IOReq*)LookupItem(ioReqItem);
+
+		err = DoIO(ioReqItem, &fileInfo);
+		if (err >= 0)
+		{
+				// see if the device returned an error
+			err = ioReqP->io_Error;
+		}
+
+		DeleteIOReq(ioReqItem);
+	}
+	else
+	{
+		err = ioReqItem;
+	}
+
+	return err;
+}
+Using GetFileBlockSize
+The GetFileBlockSize() routine returns the block size in bytes of the specified file item. 
+Err GetFileBlockSize(Item fileItem, uint32* blockSize)
+{
+	int32 err;
+	IOInfo fileInfo;
+	FileStatus status;
+	Item ioReqItem;
+	IOReq* ioReqP;
+
+	*blockSize = 0;
+
+	ioReqItem = CreateIOReq(NULL, 0, fileItem, 0);
+
+	if (ioReqItem >= 0)
+	{
+		memset(&fileInfo, 0, sizeof(IOInfo));
+
+		fileInfo.ioi_Command = CMD_STATUS;
+		fileInfo.ioi_Recv.iob_Buffer = &status;
+		fileInfo.ioi_Recv.iob_Len = sizeof(FileStatus);
+
+		ioReqP = (IOReq*)LookupItem(ioReqItem);
+
+		err = DoIO(ioReqItem, &fileInfo);
+		if (err >= 0)
+		{
+				// see if the device returned an error
+			err = ioReqP->io_Error;
+		}
+
+		DeleteIOReq(ioReqItem);
+
+		if (err == 0)
+			*blockSize = status.fs.ds_DeviceBlockSize;
+	}
+	else
+	{
+		err = ioReqItem;
+	}
+
+	return err;
+}
+
+Using SetEndOfFile
+
+The file system maintains an end-of-file nd of the useful data in the file, as opposed to the physical end of the blocks allocated to the file. This information is used by certain title-level libraries and tools to determine how much useful data is in a file.
+
+Why use SetEndOfFile?
+
+Many current titles use block-mode I/O to read and write NVRAM files, make the assumption that all of the bytes in the physically-allocated file are truly meaningful. It is not a good idea to make this assumption. Although NVRAM currently has a block size of 1 byte, future systems may, and probably will, have a larger block size. There may be bytes at the end of the last allocation block which are not truly meaningful to the title. It would be bad if the title tried to use them the next time the data was read in.
+Also certain tools, libraries, and utilities that exist for the purpose of manipulating files rely on the end-of-file marker. Specifically, the "FileStream" convenience calls such as OpenDiskStream(), ReadDiskStream, etc. and development tools such as "copy2mac" rely on the end-of-file marker to work properly. In future machines their may be NVRAM management utilities built into ROM that will rely on this information as well.
+   "Hey! My title doesn't set the end-of-file marker, and its already been released! What can I do?"
+	We are working on a mechanism by which this can be corrected for titles that are already in the field. We will be contacting you soon to find out the names of the files your title creates, and how much useful data is in those files.  ??what do we say here??
+How to Use SetEndOfFile
+The SetEndOfFile() routine sets the logical end of the file specified by fileItem.  You must set the end of file for every file you create to the number of useful data bytes in the file. This may be different from the actual number of physical blocks allocated to the file. The “FileStream” convenience library relies on this end of file value, as do other file system related tools and routines.
+
+Err SetEndOfFile(Item fileItem, int32 endOfFile)
+{
+	int32 err;
+	IOInfo fileInfo;
+	Item ioReqItem;
+	IOReq* ioReqP;
+
+	ioReqItem = CreateIOReq(NULL, 0, fileItem, 0);
+
+	if (ioReqItem >= 0)
+	{
+		memset(&fileInfo, 0, sizeof(IOInfo));
+
+		fileInfo.ioi_Command = FILECMD_SETEOF;
+		fileInfo.ioi_Offset = endOfFile;
+
+		ioReqP = (IOReq*)LookupItem(ioReqItem);
+
+		err = DoIO(ioReqItem, &fileInfo);
+		if (err >= 0)
+		{
+				// see if the device returned an error
+			err = ioReqP->io_Error;
+		}
+
+		DeleteIOReq(ioReqItem);
+	}
+	else
+	{
+		err = ioReqItem;
+	}
+
+	return err;
+}
+
+

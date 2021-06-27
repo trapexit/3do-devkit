@@ -1,0 +1,44 @@
+<TITLE>Default Juggler Classes</TITLE>
+<H1><LINK NAME="XREF39699">Default Juggler Classes</LINK></H1><HR>
+The Juggler currently provides three default object classes:<P>
+<UL>
+<LI>The <I>jugglee class</I>, the root class for the entire class hierarchy.
+<p>
+<LI>The <I>sequence class</I>, a jugglee subclass that creates an object that can maintain and play back a sequence of events.
+<p>
+<LI>The<I> collection class</I>, a jugglee subclass that creates an object that can maintain and play back in parallel an assembly of sequences and other collections.
+</UL>
+These three classes are defined in the header file <I>juggler.h</I>.<P>
+<A NAME="XREF10328"><H2>The Jugglee Class</A></H2>
+The jugglee class is the root class for all other Juggler classes. Its elements include pointers to a set of methods common to all Juggler objects. Those methods are discussed in <A HREF="./08mpg005.html#XREF40198">Message Macros</A>.<P>
+The jugglee class also includes variables that store information about the object, including the object size, a validation key, hierarchical ties, the start time for the object, the time of the next event to play, a count stating how many times the object should be repeated, a flag showing whether the object is active or not, and delay values used to set delays before an object starts playing, repeats, or stops.<P>
+<B>Note: </B>The Juggler does not currently support the creation of custom classes. The class variables are handled by the class instance.<P>
+The jugglee class is designed as a prototype for other Juggler classes; it should only be used to create new classes. <I>Do not</I> use the jugglee class to create jugglee objects. A jugglee object does not have the necessary elements to play back events.<P>
+<A NAME="XREF19085"><H2>The Sequence Class</A></H2>
+The sequence class is used to assemble and play sequential events. The events can be audio or nonaudio. The sequence class contains all of the jugglee's methods and variables and also has a pointer to an <I>event list,</I> a list of timed events  and a pointer to an <I>interpreter procedure,</I> which interprets each event in the event list.<P>
+<H3>Event Lists</H3>
+Each event in the list is a time value followed by one or more data values. An example of an event list is shown in Table 2.<P>
+<PRE>
+<B>Table 1: </B><I> Example event list.</I>
+--------------------------
+Time       |Data          
+--------------------------
+0          |56            
+--------------------------
+120        |58            
+--------------------------
+480        |54            
+--------------------------
+</PRE>
+<P>
+The time for each event is measured in ticks, an arbitrary unit of time. The time is a relative value, the amount of time in ticks that elapses from the beginning of playback until the event starts. For example, the first event in Table 2 starts as soon as the sequence begins playback. The second event starts 120 ticks after the start of the sequence, and the third event starts 480 ticks after the start of the sequence.<P>
+The task playing the sequence supplies timing by giving tick values directly to the Juggler, which passes it on to the sequence for playback. See <A HREF="./08mpg006.html#XREF14054">Bumping the Juggler</A> for information on supplying tick values to the Juggler. The audio timer is commonly used for tick values, which ticks approximately 240 times per second at default speed. If the event list in Table 2 is played using audio timer values, the second event starts one-half second after the first event (120 ticks), and the third event starts one-and-one-half seconds after the second event (480 - 120 = 360 ticks).<P>
+<H3>The Interpreter Procedure</H3>
+The event data associated with each event can be a single value, as shown in Table 2, or it can be multiple values. This data has meaning only to the interpreter procedure associated with the sequence. When the sequence is played, the data is passed to the interpreter procedure, which executes according to that data.<P>
+The task that creates a sequence object creates the interpreter procedure and the data to go with it; a task can create a sequence containing almost any kind of event.<P>
+For example, an interpreter procedure can play half-second-long notes on an audio instrument. It accepts event data and interprets the data as a MIDI pitch value, which sets the pitch of each instrument note played. The interpreter procedure can read pitch, amplitude, and duration for each event and play audio instrument notes accordingly. It can accept other types of data, such as two sets of coordinates that it uses to project a cel onscreen.<P>
+<A NAME="XREF22133"><H2>The Collection Class</A></H2>
+The collection class is used to create higher level event structures: assemblies of sequences, assemblies of other collections, or assemblies of sequences and collections combined.<P>
+The collection class contains all of the jugglee's methods and variables, and also contains  a list of <I>placeholders</I>. Each placeholder contains a pointer to a Juggler object and a variable telling how many times to repeat the object in playback. The list of placeholders, called the <I>object list</I>, defines the collection's assembly of objects.<P>
+The collection class also contains new variables in addition to the jugglee class variables. The new variables store the current time (used to determine what events need to be played) and the time of the next event to be played (used to report to the Juggler).<P>
+When a collection is played, its objects are played in parallel and each object is repeated the number of times specified by the object's placeholder. Parallel playback means that each object starts playback simultaneously when the collection starts playback.<P>

@@ -1,0 +1,81 @@
+<TITLE>Using Busy Waiting </TITLE>
+<H1>Using Busy Waiting </H1><HR>
+<H3>What is it:</H3>
+Sitting in a tight loop polling a resource such as the control pad, or using tight loops for timing or synchronization.<P>
+<H3>Why it's bad:</H3>
+Degrades the performance of the multitasking system by starving lower-priority tasks and unnecessarily stealing time from tasks of equal priority.<P>
+<H3>What to do</H3>
+Use wait calls like <CODE>GetControlPad()</CODE>, <CODE>WaitVBL()</CODE>, or <CODE>WaitIO()</CODE> instead of polling.<P>
+<H2>Discussion and Example</H2>
+This section discusses two examples that rely on busy waiting, pointing out problems and offering an alternative. <P>
+<CODE>
+<PRE>
+/*
+**    BAD, NASTY, EVIL BUSY WAITNG CODE!!
+**    Wait for the user to make a selection, then press start
+*/
+do {
+    userInput = ReadControlPad (JOYMOVE + JOYBUTTON)
+    switch (userInput) {
+        case JOYUP
+            MoveSelectionUp();
+            break;
+        case JOYDOWN
+            MoveSelectionDown();
+    }
+} while (userInput != JOYSTART);
+or
+/*
+**    BAD, NASTY, EVIL BUSY WAITNG CODE!!
+**    Pause for about half a second.
+*/
+for (waitLoop = 0; waitLoop &lt; ABOUT_HALF_A_SECOND; waitloop++)
+</CODE>
+</PRE>
+Busy waiting is a bad programming practice because it consumes one of the system's most valuable resources: CPU time. It may cause a video you are streaming in to grind to a halt. In a cable television environment it may cause the picture-in-picture display the user was keeping an eye on to become jerky and out of sync. This will make your program very unpopular. <P>
+Consider the two examples of busy waiting above. <P>
+<UL>
+<LI>In the video streaming example, critical code sits in a busy-waiting loop looking for a control pad event.
+<LI>In the cable television example, the program waits for half a second based on the amount of time it takes the CPU to count to an arbitrary number. This will fail as soon as 3DO changes the clock speed of the CPU and it also ties up the CPU even though there are better ways to measure a half second's passing.
+</UL>
+Here's a better way to do each of these:<P>
+<CODE>
+<PRE>
+/*
+**    Wait for the user to make a selection, then press start.
+**
+**    Setting the wait flag to true in GetControlPad puts us into
+**    the sleep queue until there's a change of control pad 
+**    status, allowing lower or equal priority tasks to get time
+**    slices.
+*/
+do {
+    err = GetControlPad (kMyControlPad, true, controlPadData);
+    CHECKRESULT (err, "GetControlPad");
+
+    switch (controlPadData-&gt;cped_ButtonBits) {
+        case ControlUp:
+            MoveSelectionUp();
+            break;
+        case ControlDown:
+            MoveSelectionDown();
+        case ControlStart:
+            polling = false;
+    }
+} while (polling);
+</CODE>
+</PRE>
+or <P>
+<CODE>
+<PRE>
+/*
+**    Wait for a half a second to go by before we proceed
+*/
+struct timeval delay;
+
+delay.tv_sec     = 0;
+delay.tv_usec    = 50000;
+WaitTime (myTimer, &amp;delay);            // See functions below
+</CODE>
+</PRE>
+Wait functions used wisely eliminate busy-waiting. The 3DO Portfolio documentation, its html online version, or 411 help describe these calls. The kernel, the event broker and the audio folio all have functions for putting a process to sleep while it's awaiting a resource. Using them will measurably improve overall performance.<P>

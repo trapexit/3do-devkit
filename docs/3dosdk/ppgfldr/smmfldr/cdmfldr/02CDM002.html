@@ -1,0 +1,49 @@
+<TITLE>Programming Notes</TITLE>
+<H1>Programming Notes<LINK NAME="XREF33590"></LINK></H1><HR>
+This section discusses some frequently encountered problems. It covers:<P>
+
+<UL>
+<LI><A HREF="#XREF27348">Using Relative Pathnames</A>
+<LI><A HREF="#XREF30313">Hints on Error Checking and Other Advice</A>
+</UL>
+<A NAME="XREF27348"><H2>Using Relative Pathnames</A></H2>
+Applications should always use pathnames relative to the location from 
+which the application boots. <P>
+For example, during development an application boots from <I>/remote</I>. 
+If artwork is located in <I>$boot/art....</I> , the program should refer 
+to those files as <I>art/...</I>. During development, the pathname is then 
+resolved to <I>/remote/art</I> since the program booted from 
+<I>/remote</I>. <P>
+A title should use <I>$boot</I> and other aliases explicitly only in cases 
+where an absolute path is needed because the program would not know how to 
+resolve a relative pathname. Generally, all programs should be able to 
+resolve a relative pathname, with the current location being the point 
+from which the program was entered.<P>
+<B>Warning: </B>Never use /remote in a pathname; it won't be available on 
+an end-user machine. <P>
+<A NAME="XREF30313"><H2>Hints on Error Checking and Other Advice</A></H2>
+Here are some common problems and advice on how to avoid them: <P>
+<UL>
+<LI>Check all function return values. Make sure a function never exits the 
+program if an error results and that returned pointer values are not 
+<CODE>NULL</CODE>.
+<p>
+<LI>Use printf() to facilitate debugging<B>. </B>The <CODE>printf()</CODE> 
+statements in your program statements are displayed in the Debugger 
+Terminal window when you run the application in Debugger mode. The<CODE> 
+printf()</CODE> statements are dropped when you run in stand-alone mode. 
+<p>
+<p><B>Note: </B>Once you have generated a clean <I>cdrom.image</I> file, 
+eliminate the <CODE>printf()</CODE> statements for a slightly more 
+efficient title.<BR>
+<p>
+<LI>Don't use OpenMacLink(). The function is obsolete.
+<p>
+<LI>Read an integral number of blocks. When reading files from the CD-ROM, 
+you must read an integral number of disc blocks. For example, if 
+CMD_Status reports that the blocksize is 2048, and the file size is 3277 
+bytes, you <I>must</I> read 4096 bytes. 
+<p>
+<LI>Don't forget to recompile and retest. If you changed your application 
+don't forget to recompile it and test it once more. 
+</UL>

@@ -1,0 +1,134 @@
+<TITLE>Example</TITLE>
+<H1><LINK NAME="XREF13591">Example</LINK></H1><HR>
+Example 1 contains the sample program <I>compressexample.c</I> (located in the Examples folder), which shows how to use the Compression folio. This program loads itself into a memory buffer, compresses the data, decompresses it, and finally compares the original data with the decompressed data to make sure the compression process was successful.<P>
+<B>Example 1: </B><I>Example of compressing and decompressing data (compressexample.c).</I><P>
+
+<CODE>
+<PRE>
+#include "types.h"
+#include "filestream.h"
+#include "filestreamfunctions.h"
+#include "stdio.h"
+#include "mem.h"
+#include "compression.h"
+
+
+/*****************************************************************************/
+int main(int argc, char **argv)
+{
+Stream       *stream;
+Err           err;
+bool          same;
+uint32        i;
+int32         fileSize;
+uint32       *originalData;
+uint32       *compressedData;
+uint32       *finalData;
+int32         numFinalWords;
+int32         numCompWords;
+
+    err = OpenCompressionFolio();
+    if (err &gt;= 0)
+    {
+        stream = OpenDiskStream(argv[0],0);
+        if (stream)
+        {
+            fileSize       = stream-&gt;st_FileLength &amp; 0xfffffffc;
+            originalData   = (uint32 *)malloc(fileSize);
+            compressedData = (uint32 *)malloc(fileSize);
+            finalData      = (uint32 *)malloc(fileSize);
+
+            if (originalData &amp;&amp; compressedData &amp;&amp; finalData)
+            {
+                if (ReadDiskStream(stream,(char *)originalData,fileSize) == 
+
+                   fileSize)
+                {
+                    err = Compress(originalData, fileSize / sizeof(uint32),
+                                   compressedData, fileSize / sizeof(uint32));
+                    if (err &gt;= 0)
+                    {
+                        numCompWords = err;
+                        err = Decompress(compressedData, numCompWords,
+                                         finalData, fileSize / sizeof(uint32));
+                        if (err &gt;= 0)
+                        {
+                            numFinalWords = err;
+                            printf("Original data size    : %d\n",fileSize / 
+
+                                sizeof(uint32));
+                            printf("Compressed data size  : %d\n",numCompWords);
+                            printf("Uncompressed data size: %d\n",numFinalWords);
+
+                            same = TRUE;
+                            for (i = 0; i &lt; fileSize / sizeof(uint32); i++)
+                            {
+                                if (originalData[i] != finalData[i])
+                                {
+                                    same = FALSE;
+                                    break;
+                                }
+                            }
+
+                            if (same)
+                            {
+                                printf("Uncompressed data matched original\n");
+                            }
+                            else
+                            {
+                                printf("Uncompressed data differed with 
+
+                                        original!\n");
+                                for (i = 0; i &lt; 10; i++)
+                                {
+                                    printf("orig $%08x, final $%08x, comp 
+
+                                          $%08x\n",
+                                           originalData[i],
+                                           finalData[i],
+                                           compressedData[i]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            PrintError(NULL,"decompress data",NULL,err);
+                        }
+                    }
+                    else
+                    {
+                        PrintError(NULL,"compress data",NULL,err);
+                    }
+                }
+                else
+                {
+                    printf("Could not read whole file\n");
+                }
+            }
+            else
+            {
+                printf("Could not allocate memory buffers\n");
+            }
+
+            free(originalData);
+            free(compressedData);
+            free(finalData);
+
+            CloseDiskStream(stream);
+        }
+        else
+        {
+            printf("Could not open '%s' as an input file\n",argv[0]);
+        }
+        CloseCompressionFolio();
+    }
+    else
+    {
+        PrintError(NULL,"open the compression folio",NULL,err);
+    }
+
+    return (0);
+}
+</CODE>
+</PRE>
+<A NAME="XREF40176"></A>

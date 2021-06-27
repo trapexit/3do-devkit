@@ -1,0 +1,9 @@
+Release Notes for Asset Manager 1.0d2
+December 14, 1993
+
+This release changes the ResToAsset Macintosh application such that it forces resource data to be written to the output asset file on QUADBYTE aligned boundaries. This change enables programmers to call the GetAsset() routine and use the returned pointer to asset data to access QUADBYTE aligned data structures. This makes it convenient to create asset data structures using ResEdit on the Mac that match the way the ARM C compiler wants to access structure fields. The compiler requires that all 'struct' data structures begin on QUADBYTE aligned addresses.
+
+If your code did not use the method of accessing asset data as described above, this change will not affect you in any way. You should upgrade to this version of the application whether or not you depend on aligned data.
+
+There were no other changes to the Asset Manager code in this release. 
+

@@ -1,0 +1,35 @@
+<TITLE>FindNodeFromTail</TITLE>
+<A NAME="XREF17756"><H1>FindNodeFromTail </A></H1>
+<A NAME="XREF28129"></A>Returns a pointer to a node appearing at a given ordinal position from the tail of the list.<P>
+<H3>Synopsis</H3>
+<CODE>Node *FindNodeFromTail(const List *l, uint32 position);</CODE><P>
+<H3>Description</H3>
+This function scans the supplied list and returns a pointer to the node appearing in the list at the given ordinal position counting from the end of the list. NULL is returned if the list doesn't contain that many items.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the list to scan for the node. 
+</DL>
+<DL>
+<DT>position
+<DD>The node position to look for, relative to the end of the list. 
+</DL>
+<H3>Return Value</H3>
+A pointer to the node found, or NULL if the list doesn't contain enough nodes. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveats</H3>
+GIGO (garbage in, garbage out)<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr002.html#XREF16640"><CODE>AddHead</A>(), <A HREF="./01spr003.html#XREF18583">AddTail</A>(), <A HREF="./01spr087.html#XREF20096">InsertNodeFromHead</A>(), <A HREF="./01spr088.html#XREF26607">InsertNodeFromTail</A>(), <A HREF="./01spr110.html#XREF15588">RemHead</A>(), <A HREF="./01spr111.html#XREF25186">RemNode</A>(), <A HREF="./01spr112.html#XREF23933">RemTail</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF17756"></LINK></H1><HR>

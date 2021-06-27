@@ -1,0 +1,18 @@
+<Title>writegotochunk</Title>
+<A NAME="XREF40216"><H1>writegotochunk</A></H1>
+<A NAME="XREF24671"></A> Places a goto chunk at the specified time.<P>
+<H3>Synopsis</H3>
+<CODE>writegotochunk &lt;stream_time&gt; &lt;destination_time&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>Writegotochunk</CODE> writes a GOTO control chunk to the stream file. You can specify the time where the GOTO control chunk is to be placed.The destination time specifies the file location in bytes where you want to go to. You should make sure to only jump to the start of a block. This can be done by adding the command markertime, which specifies the stream time you want to jump to.<P>
+In effect, this allows branching from the GOTO chunk to the destination time. <P>
+Note that weaving with goto chunks is a two step process: For the first pass, put all files and markes in the stream. Then examine the file using dumpstream and determine the position in the file you want to jump to. Use that number as an argument to writegotochunk in the Weaver script and weave the file a second time. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>stream_time
+<DD>0 to 7FFFFFFF (hex)
+</DL>
+<DL>
+<DT>destination_time
+<DD>0 to 7FFFFFFF (hex)
+</DL>

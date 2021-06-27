@@ -1,0 +1,33 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF40176">Function Calls</LINK></H1><HR>
+The Compression folio currently includes the following calls, which are listed here by the type of function they perform.<P>
+<H2>Convenience calls</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/08spr001.html#XREF24780">Compress</A>() </CODE>Compresses a chunk of memory to a different chunk of memory.
+<LI><CODE><A HREF="../spr/08spr004.html#XREF34120">Decompress</A>()</CODE> Decompresses a chunk of memory to a different chunk of memory
+</UL>
+The following calls are convenience calls:<P>
+<H2>Compression Calls</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/08spr002.html#XREF38875">CreateCompressor</A>() </CODE>Creates a compression engine.
+<LI><CODE><A HREF="../spr/08spr007.html#XREF24354">FeedCompressor</A>() </CODE>Gives data to a compressor engine to compress and pass to the output function.
+<LI><CODE><A HREF="../spr/08spr005.html#XREF27597">DeleteCompressor</A>() </CODE>Deletes the compressor engine. 
+</UL>
+The following calls compress data:<P>
+<H2>Decompression Calls</H2>
+The following calls compress data:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/08spr003.html#XREF30556">CreateDecompressor</A>() </CODE>Creates a decompression engine.
+<LI><CODE><A HREF="../spr/08spr008.html#XREF39747">FeedDecompressor</A>() </CODE>Gives data to a decompressor engine to have it decompressed and pass it to the output function.
+<LI><CODE><A HREF="../spr/08spr006.html#XREF23324">DeleteDecompressor</A>() </CODE>Deletes the decompressor engine.
+</UL>
+<H2>Buffer Calls</H2>
+The following calls get the size of working buffers:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/08spr009.html#XREF34265">GetCompressorWorkBufferSize</A>() </CODE>Gets the size of the work buffer needed by a compression engine.
+<LI><CODE><A HREF="../spr/08spr010.html#XREF22878">GetDecompressorWorkBufferSize</A>() </CODE>Gets the size of the work buffer needed by a decompression engine.
+</UL>

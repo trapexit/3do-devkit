@@ -1,0 +1,71 @@
+msg_warning:(Warning) 
+msg_error:(Error)   
+msg_fatal:(Fatal)   
+msg_mem_req_too_big:Memory request %u too big.
+msg_mem_req_silly:Zero or negative memory request %d.
+msg_mem_out:Out of memory.
+msg_unable_open_lib:Unable to open library %s.
+msg_not_lib:%s is not a library file.
+msg_read_error:Unable to read %s.
+msg_no_match:No match for %s.
+msg_no_file:Can't find file %s.
+msg_unable_open_file:Unable to open file %s.
+msg_write_error:Unable to write file %s.
+msg_error_writing:Error writing file %s.
+msg_zero_length:Zero-length file: %s
+msg_member_diff_sex:Library member %s has different bytesex.
+msg_not_chunk_file:Library member %s is not a chunk file.
+msg_bad_member:Bad library member %s.
+msg_no_symbol_table:No symbol table in %s.
+msg_no_string_table:No string table in %s.
+msg_no_exported_syms:No exported symbols in %s.
+msg_sym_tab_too_big:Symbol table (size %lu) too big in %s.
+msg_no_external_sym_tab:No external symbol table.
+msg_multiple_libs:Multiple libraries: %s amd %s.
+msg_unknown_option:Unrecognised option(s) -%s.
+msg_no_via_filename:No filename supplied for -via option.
+msg_only_one_option:Only one of -c, -i, -d and -e may be used.
+msg_no_lib_specified:No library file specified.
+msg_must_use_one_option:Please use at least one of -c, -i, -d, -e, -o, -l or -s.
+msg_no_file_or_member_list:No file or member list specified.
+msg_invalid_file_or_member_list:Invalid file or member list.
+msg_no_target_dirname:No directory path supplied for -d option.
+msg_duplicate_member:Duplicate library member %s.
+msg_lib_no_vsn:\nFormat version: (no version number)\n
+msg_lib_vsn_n:\nFormat version: %d\n
+msg_last_modify:Last Modification: %s\n
+msg_contents:\nContents:\n\n
+msg_member_info:  %-40s %10d   %s\n
+msg_end_of_lib:\nEnd of Library\n
+msg_ext_sym_tab_generated:External Symbol Table, generated: %s\n\n
+msg_sym_tab_info:  %-40s from   %s\n
+msg_end_table:\nEnd of Table\n
+msg_help_1:\
+%s version %s [%s]\n       - AOF library creation and maintenance tool\n\n\
+Command format:\n\n\
+%s options library [ file_list | member_list ]\n\n
+msg_help_wild:Wildcards '%c' and '*' may be used in <member_list>\n\n
+msg_help_2:\
+Options:-\n\
+\n\
+-c      Create a new library containing files in <file_list>.\n\
+-i      Insert files in <file_list>, replace existing members of the same name.\n\
+-d      Delete the members in <member_list>.\n\
+-e      Extract members in <member_list> placing in files of the same name.\n
+msg_help_3:\
+-o      Add an external symbol table to an object library (DEFAULT).\n\
+-n      Do not add an external symbol table to an object library.\n\
+-p      Respect paths of files and objects.\n\
+-l      List library, may be specified with any other option.\n\
+-s      List symbol table, may be specified with any other option.\n\
+-t dir  Extract files to <dir> directory.\n\
+-v file Take additional arguments from via file.\n\
+\n
+msg_help_4:\
+Examples:-\n\
+\n\
+        %s -c mylib obj1 obj2 obj3...\n\
+        %s -e mylib %csort*\n\
+        %s -d mylib hash.o\n\
+        %s -i mylib quick_sort.o quick_hash1.o\n\
+        %s -l -s ansilib\n\n

@@ -1,0 +1,36 @@
+<TITLE>Using Private Memory Lists</TITLE>
+<H1>Using Private Memory Lists</H1><HR>
+If you have dynamic components running and allocating memory, it may be necessary to limit the amount of memory certain threads can use. You can create a private memory for those threads, memory list. Those threads would only allocate memory from this list and since you can control the total amount of memory in the private memory list, you can control the maximum amount of memory that certain threads can allocate.<P>
+<H2>Creating a Private Memory List</H2>
+You can create a private memory list by calling the <CODE>AllocMemList()</CODE> function:<P>
+<DL>
+<DD><CODE>MemList *AllocMemList( const void *p, const char *name )</CODE><BR>
+</DL>
+The <CODE>p</CODE> argument is a pointer to a memory address of the type of memory (either DRAM or VRAM) you want to store in the list. A single memory list can store either DRAM or VRAM, but not both. You use the <CODE>name</CODE> argument to name the memory list. The return value is a pointer to the resulting MemList structure, or NULL if an error occurred.<P>
+<H2>Adding Memory to a Private Memory List</H2>
+Initially, the memory list you create with <CODE>AllocMemList()</CODE> is empty. To add memory to the list, use the <CODE>FreeMemToMemList()</CODE> function:<P>
+<DL>
+<DD><CODE>void FreeMemToMemList( MemList *ml, void *p, int32 size )</CODE><BR>
+</DL>
+The <CODE>ml</CODE> argument is a pointer to the memory list from which to free the memory. The <CODE>p</CODE> argument is a pointer to the memory to free. The memory block must be properly aligned in position and size for the type of memory being manipulated. The alignment granularity can be determined with <CODE>GetMemAllocAlignment()</CODE>. The number returned by this function indicates the alignment needed for the pointer; the size of the memory block being freed must also be a multiple of this value. Your task must already own this memory. The type of the memory to free must be the same as the type specified in the p argument of <CODE>AllocMemList(). </CODE>The <CODE>size</CODE> argument specifies the amount of memory to move the free list, in bytes. You can move a block of any size to the free list.<P>
+<H2>Allocating Memory From a Private Memory List</H2>
+Once you've created a private memory list and put memory into it, you can allocate memory from the list with the <CODE>AllocMemFromMemList()</CODE> function:<P>
+<DL>
+<DD><CODE>void *AllocMemFromMemList( MemList *ml, int32 size, uint32 memFlags )</CODE><BR>
+</DL>
+The <CODE>ml</CODE> argument is a pointer to the memory list from which to allocate the memory. The <CODE>size</CODE> argument specifies the size of the block to allocate, in bytes. The <CODE>memtype</CODE> argument contains flags that specify the type of memory to allocate, the alignment of the block with respect to the page, and so on; these flags can include <CODE>MEMTYPE_ANY, MEMTYPE_VRAM</CODE>, <CODE>MEMTYPE_DRAM, MEMTYPE_BANKSELECT</CODE>, <CODE>MEMTYPE_BANK1</CODE>, <CODE>MEMTYPE_BANK2</CODE>, <CODE>MEMTYPE_DMA</CODE>, <CODE>MEMTYPE_CEL</CODE>,<CODE> MEMTYPE_AUDIO</CODE>, <CODE>MEMTYPE_DSP</CODE>, <CODE>MEMTYPE_FILL</CODE>, <CODE>MEMTYPE_INPAGE</CODE>, <CODE>MEMTYPE_STARTPAGE</CODE>, <CODE>MEMTYPE_SYSTEMPAGESIZE</CODE>, and <CODE>MEMTYPE_MYPOOL</CODE>. Note that the flags that specify the actual memory type (such as <CODE>MEMTYPE_DRAM</CODE>) must match the type of the memory contained in the list. For complete descriptions of these flags, see <A HREF="./05spg002.html#XREF25963">Allocating a Memory Block</A>. The function returns a pointer to the block that was allocated or NULL if there was not enough memory in the list to satisfy the request.<P>
+To free memory that you've allocated with <CODE>AllocMemFromMemList(),</CODE> you must use only <CODE>FreeMemToMemList()</CODE> (described in the next section). Each memory allocation function has a corresponding deallocation function; if you use another memory allocation function, you must use its corresponding deallocation function.<P>
+<H2>Freeing Memory to a Private Memory List</H2>
+To free a block of memory that you've allocated from a private memory list and return it to the list, you use the <CODE>FreeMemToMemList()</CODE> function:<P>
+<DL>
+<DD><CODE>void FreeMemToMemList( MemList *ml, void *p, int32 size )</CODE><BR>
+</DL>
+The <CODE>ml</CODE> argument is a pointer to the memory list from which the block was allocated. The <CODE>p</CODE> argument is a pointer to the block to free. The <CODE>size</CODE> argument specifies the size of the block to free, in bytes.<P>
+<H2>Deallocating a Private Memory List</H2>
+To deallocate a private memory list, you first empty it (using <CODE>ControlMem()</CODE> to return the memory pages to the kernel, as described in <A HREF="./05spg006.html#XREF39785">Transferring Memory to Other Tasks</A>) and then use the <CODE>FreeMemList()</CODE> function:<P>
+<DL>
+<DD><CODE>void FreeMemList( MemList *ml )</CODE><BR>
+</DL>
+The <CODE>ml</CODE> argument is a pointer to the memory list to deallocate. If the list is not empty, any memory it contains is lost.<P>
+<A NAME="XREF40472"><H2>Sharing Private Memory Lists Among Threads</A></H2>
+To use a single memory list from multiple independent threads, there must be extra protection so the threads don't corrupt the shared data structure. To share a memory list, you must attach a semaphore item to the MemList structure. This is done by creating a semaphore item and putting its Item number in the <CODE>meml_Sema4</CODE> field of the MemList structure.<P>

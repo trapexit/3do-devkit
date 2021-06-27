@@ -1,0 +1,58 @@
+<Title>AllocSignal</Title>
+<A NAME="XREF39797"><H1>AllocSignal </A></H1>
+<A NAME="XREF32497"></A>Allocates signals.<P>
+<H3>Synopsis</H3>
+<CODE>int32 AllocSignal( uint32 sigMask )</CODE><P>
+<H3>Description</H3>
+One of the ways tasks communicate is by sending signals to each other. Signals are 1-bit flags that indicate that a particular event has occurred. <P>
+Tasks that send and receive signals must agree on which signal bits to use and the meanings of the signals. Except for system signals, there are no conventions for the meanings of individual signal bits; it is up to software developers to define their meanings. <P>
+You allocate bits for new signals by calling <CODE>AllocSignal()</CODE>. To define one signal at a time - by far the most common case - call <CODE>AllocSignal()</CODE> with 0 as the argument: <P>
+theSignal = AllocSignal( 0 ) <P>
+This allocates the next unused bit in the signal word. In the return value, the bit that was allocated is set. If the allocation fails (which happens if all the non-reserved bits in the signal word are already allocated), the procedure returns 0. <P>
+In rare cases, you may need to define more than one signal with a single call. You do this by creating a uint32 value and setting any bits you want to allocate for new signals, then calling <CODE>AllocSignal()</CODE> with this value as the argument. If all the signals are successfully allocated, the bits set in the return value are the same as the bits that were set in the argument. <P>
+Signals are implemented as follows: <P>
+<UL>
+<LI>Each task has a 32-bit signal mask that specifies the signals it understands. Tasks allocate bits for new signals by calling <CODE>AllocSignal()</CODE>. The bits are numbered from 0 (the least-significant bit) to 31 (the most-significant bit). Bits 0 through 7 are reserved for system signals (signals sent by the kernel to all tasks); remaining bits can be allocated for other signals. Note: Bit 31 is also reserved for the system. It is set when the kernel returns an error code to a task instead of signals. For example, trying to allocate a system signal or signal number 31. 
+<LI>A task calls <CODE>SendSignal()</CODE> to send one or more signals to another task. Each bit set in the signalWord argument specifies a signal to send. Normally, only one signal is sent at a time. 
+<LI>When <CODE>SendSignal()</CODE> is called, the kernel gets the incoming signal word and ORs it into the received signal mask of the target task. If the task was in the wait queue, it compares the received signals with the WaitSignalMask. If there are any bits set in the target, the task is moved from the wait queue to the ready queue. 
+<LI>If the SIGF_ABORT system signal is sent to the task, the corresponding bit in the task's signal word is automatically set. This signal cannot be masked. 
+<LI>A task gets incoming signals by calling <CODE>WaitSignal()</CODE>. If any bits are set in the task's signal word , <CODE>WaitSignal()</CODE> returns immediately. If no bits are set in the task's signal word, the task remains in wait state until a signal arrives that matches one of the signals the task is waiting for. 
+</UL>
+The following system signals are currently defined: <P>
+<DL>
+<DT>SIGF_ABORT 
+<DD>Informs the task that the current operation has been aborted. 
+</DL>
+<DL>
+<DT>SIGF_IODONE 
+<DD>Informs the task that an asynchronous I/O request is complete. 
+</DL>
+<DL>
+<DT>SIGF_DEADTASK 
+<DD>Informs the task that one of its child tasks or threads has been deleted. Note: This signal does not specify which task was deleted. To find this out, the parent task must check to see which of its child tasks still exist. 
+</DL>
+<DL>
+<DT>SIGF_SEMAPHORE 
+<DD>Informs a task waiting to lock a semaphore that it can do so. Note: This signal is for system internal use only. 
+</DL>
+<H3>Arguments</H3>
+<DL>
+<DT>signalMask
+<DD>An uint32 value in which the bits to be allocated are set, or 0 to allocate the next available bit. You should use 0 whenever possible (see Notes).
+</DL>
+<H3>Return Value</H3>
+The procedure returns a int32 value with bits set for any bits that were allocated or 0 if not all of the requested bits could be allocated. It returns ILLEGALSIGNAL if the signalMask specified a reserved signal. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ARM C Prototype
+</DL>
+<H3>Notes</H3>
+Use <CODE>FreeSignal()</CODE> to deallocate signals. <P>
+Future versions of Portfolio may define additional system signals. To help ensure that the signal bits you allocate in current applications do not conflict with future system signals, you should always use 0 as the value of the signalMask argument when allocating signals. If you must allocate specific signal bits (which is discouraged), use bits 17-31. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr068.html#XREF37706"><CODE>FreeSignal</A>(), <A HREF="./01spr070.html#XREF22129">GetCurrentSignals</A>(), <A HREF="./01spr123.html#XREF40028">SendSignal</A>(), <A HREF="./01spr133.html#XREF12306">WaitSignal</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF39797"></LINK></H1><HR>

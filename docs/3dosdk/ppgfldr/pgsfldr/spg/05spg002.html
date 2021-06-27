@@ -1,0 +1,77 @@
+<TITLE>Allocating Memory</TITLE>
+<H1>Allocating Memory</H1><HR>
+The following sections explain the easy way to allocate memory: by asking the kernel to do it. To learn how tasks can allocate their own memory from private memory lists, see <A HREF="./05spg007.html#XREF26964">Using Private Memory Lists</A>.<P>
+<A NAME="XREF25963"><H2>Allocating a Memory Block</A></H2>
+The normal way to allocate memory is with the <CODE>AllocMem()</CODE> macro:<P>
+<DL>
+<DD><CODE>void *AllocMem( int32 s, uint32 t )</CODE><BR>
+</DL>
+The <CODE>s</CODE> argument specifies the size of the memory block to allocate, in bytes. The <CODE>t</CODE> argument contains memory allocation flags that specify the type of memory to allocate. You can include optional flags in the <CODE>t</CODE> argument that specify other characteristics of the block. The macro returns a pointer to the allocated block or NULL if the block couldn't be allocated.<P>
+<H3>Memory Block Flags</H3>
+In the <CODE>t</CODE> argument, you must include one of the following flags to specify the type of memory to allocate:<P>
+<UL>
+<LI><B>MEMTYPE_ANY</B>. Allocates any memory that is available.
+<LI><B>MEMTYPE_VRAM</B>. Allocates only video random-access memory (VRAM).
+<LI><B>MEMTYPE_DRAM</B>. Allocates only dynamic random-access memory (DRAM).
+</UL>
+
+If a block of VRAM must come from a specific VRAM bank, you must include the following flag to specify that bank:
+
+ <UL>
+<LI><B>MEMTYPE_BANKSELECT</B>, Allocates VRAM from a specific VRAM bank.
+</UL>
+
+You must also include one of the following two VRAM bank selection flags:
+
+ <UL>
+<LI><B>MEMTYPE_BANK1. </B>Allocates only memory from VRAM bank 1.
+<LI><B>MEMTYPE_BANK2</B>. Allocates only memory from VRAM bank 2.
+</UL>
+The following flags are for compatibility with future hardware. You can set them in addition to the preceding flags.<P>
+ <UL>
+<LI><B>MEMTYPE_DMA</B>. Allocates only the memory that is accessible via direct memory access (DMA). Currently, all memory is accessible via DMA, but this may not be true in future hardware. Include this flag if you know the memory must be accessible via DMA.
+<p>
+<LI><B>MEMTYPE_CEL</B>. Allocates memory that is accessible only to the cel engine. Currently, all memory is accessible to the cel engine, but this may not be true in future hardware. Include this flag if you know the memory will be used for graphics.
+<p>
+<LI><B>MEMTYPE_AUDIO</B>. Allocates only memory that is used only for audio data (such as digitized sound). Currently, all memory can be used for audio, but this may not be true in future hardware. Include this flag if you know the memory will be used for audio data.
+<p>
+<LI><B>MEMTYPE_DSP</B>. Allocates only memory that is accessible to the digital signal processor (DSP). Currently, all memory is accessible to the DSP, but this may not be true in future hardware. Include this flag if you know the memory must be accessible to the DSP.
+</UL>
+You can use the following optional flags to specify alignment (where the block is in relation to page boundaries), fill (the initial value of all memory locations in the block), and other allocation characteristics:<P>
+ <UL>
+<LI><B>MEMTYPE_FILL</B>. Sets every byte in the memory block to the value of the lower-8 bits of the flags. If this flag is not set, the previous contents of the memory block are not changed. Using this flag is slower than not using it, so don't set this flag if you plan to initialize memory with your own data.
+<p>
+<LI><B>MEMTYPE_INPAGE</B>. Allocates a memory block that does not cross page boundaries.
+<p>
+<LI><B>MEMTYPE_SYSTEMPAGESIZE</B>. Allocates a memory block that starts on a memory protection page boundary as opposed to a SPORT page boundary.
+<p>
+<LI><B>MEMTYPE_STARTPAGE</B>. Allocates a memory block that starts on a page boundary. When allocating VRAM, this flag tells the system to allocate memory at the start of a SPORT page (2 KB boundaries) as opposed to a memory protection page. To always use the memory protection page size, you must also set the <CODE>MEMTYPE_SYSTEMPAGESIZE</CODE> flag.
+<p>
+<LI><B>MEMTYPE_MYPOOL</B>. Allocates a memory block from memory that is already in your task's free memory pool. This means that if there is not sufficient memory in the task's pool, the kernel will not allocate additional memory from the system-wide free memory pool.
+<p>
+<LI><B>MEMTYPE_FROMTOP</B>. Causes the allocation to come from the top of the task's free pool instead of from the bottom.
+</UL>
+If there is insufficient memory in a task's free memory pool to allocate the requested memory, the kernel automatically transfers the necessary pages of additional memory from the system-wide free memory pool to the task's free memory pool. The only exceptions are when there is not enough memory in both pools together to satisfy the request, or when the <CODE>MEMTYPE_MYPOOL</CODE> memory flag-which specifies that the memory block must be allocated only from the task's current free memory pool-is set.<P>
+<H2>Freeing a Memory Block</H2>
+To free a memory block allocated with <CODE>AllocMem()</CODE>, use <CODE>FreeMem()</CODE>:<P>
+<DL>
+<DD><CODE>void FreeMem( void *p, int32 size )</CODE><BR>
+</DL>
+The <CODE>p</CODE> argument points to the memory block to free. The <CODE>size</CODE> argument specifies the size of the block to free, in bytes. The size you specify must always be the same as the size specified when you allocated the block.<P>
+<H2>Allocating Memory in Programs Ported From Other Platforms</H2>
+If you're porting a program from another platform that uses the <CODE>malloc()</CODE> function from the standard C library to allocate memory, you can continue to use <CODE>malloc():</CODE><P>
+<DL>
+<DD><CODE>void *malloc( int32 size )</CODE><BR>
+</DL>
+The <CODE>size</CODE> argument specifies the size of block to allocate, in bytes. It returns a pointer to the block that was allocated, or NULL if the memory couldn't be 
+allocated.<P>
+Because <CODE>malloc()</CODE> does not accept memory allocation flags, you cannot use it to specify a particular kind of memory or any other memory characteristics. If you are writing programs specifically for 3DO systems, you should use <CODE>AllocMem()</CODE> 
+in place of <CODE>malloc()</CODE>.<P>
+You must only use <CODE>free()</CODE> to free memory that you've allocated with <CODE>malloc()</CODE>. Each memory allocation function has a corresponding deallocation function; if you use a different memory allocation function, you must use its corresponding deallocation function. (See .)<P>
+<H2>Freeing Memory in Programs Ported From Other Platforms</H2>
+To free a memory block you have allocated with<CODE> malloc(),</CODE> use <CODE>free()</CODE>:<P>
+<DL>
+<DD><CODE>void free( void *p )</CODE><BR>
+</DL>
+The <CODE>p</CODE> argument points to the memory block to free. The entire block is freed automatically; unlike <CODE>FreeMem(),</CODE> you do not need to specify the amount of 
+memory to free.<P>

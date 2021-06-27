@@ -1,0 +1,82 @@
+<Title>intlConvertString </Title>
+<A NAME="XREF22219"><H1>intlConvertString </A></H1>
+Changes certain attributes of a string.<P>
+<H3>Synopsis</H3>
+<CODE>int32 intlConvertString(Item locItem,const unichar *string,unichar *result, uint32 resultSize,uint32 flags);</CODE><P>
+<H3>Description</H3>
+Converts character attributes within a string. The flags argument specifies the type of conversion to perform. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>locItem
+<DD>A locale item, as obtained from intlOpenLocale(). 
+</DL>
+<DL>
+<DT>string
+<DD>The string to convert. 
+</DL>
+<DL>
+<DT>result
+<DD>Where the result of the conversion is put. This area must be at least as large as the number of bytes in the string. 
+</DL>
+<DL>
+<DT>resultSize
+<DD>The number of bytes available in the result buffer. This limits the number of bytes that are put into the buffer. 
+</DL>
+<DL>
+<DT>flags
+<DD>Description of the conversion process to apply:<p> 
+<DL>
+<DT>INTL_CONVF_UPPERCASE will convert all characters to uppercase if possible. 
+</DL>
+<DL>
+<DT>INTL_CONVF_LOWERCASE will convert all characters to lowercase if possible. 
+</DL>
+<DT>
+<DL>INTL_CONVF_HALFWIDTH will convert all FullKana characters to HalfKana.
+</DL>
+<DL>
+<DT>INTL_CONVF_FULLWIDTH will convert all HalfKana characters to FullKana.
+</DL>
+<DL>
+<DT>INTL_CONVF_STRIPDIACRITICALS will remove diacritical marks from all characters. 
+</DL>
+</DL>
+<DL>
+<DT>You can also specify:<P>
+<DT>(<CODE>INTL_CONVF_UPPERCASE|INTL_CONVF_STRIPDIACRITICALS</CODE>) or (<CODE>INTL_CONVF_LOWERCASE|INTL_CONVF_STRIPDIACRITICALS</CODE>) in order to perform two conversions in one call. If flags is 0, then a straight copy occurs. <P>
+</DL>
+<H3>Return Value</H3>
+If positive, returns the number of characters in the result buffer. If negative, returns an error code. The string copied into the result buffer is guaranteed to be NULL-terminated. <P>
+<DL>
+<DT>&gt; = 0
+<DD>Number of characters copied.
+</DL>
+<DL>
+<DT>INTL_ERR_BADSOURCEBUFFER
+<DD>The string pointer supplied was bad. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADRESULTBUFFER
+<DD>The result buffer pointer was NULL or wasn't invalid writable memory.
+</DL>
+<DL>
+<DT>INTL_ERR_BUFFERTOOSMALL
+<DD>There was not enough room in the result buffer. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADITEM
+<DD>locItem was not an existing locale item. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in international folio V24. <P>
+<H3>Associated Files</H3>
+intl.h<P>
+<H3>Caveats</H3>
+This function varies in intelligence depending on the language 
+bound to the Locale argument. Specifically, most of the
+time, all characters above 0x0ff are not affected by the routine. 
+The exception is with the Japanese language, where the Japanese 
+characters are also affected by this routine.
+<H3>See Also</H3>
+<CODE><A HREF="./06spr008.html#XREF34028"><CODE>intlOpenLocale</A>(), <A HREF="./06spr002.html#XREF40395">intlCompareStrings</A>() </CODE><P>
+</CODE>

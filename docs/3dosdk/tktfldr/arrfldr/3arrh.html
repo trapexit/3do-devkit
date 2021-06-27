@@ -1,0 +1,32 @@
+<TITLE>ARM image format</TITLE>
+<H1><LINK NAME="XREF13245"></LINK><LINK NAME="XREF29426">ARM image format</LINK></H1><HR>
+At its simplest, a file in ARM Image Format (AIF) is a plain binary image preceded by a small (128 byte) header which describes what follows.<P>
+At its most sophisticated, AIF can be considered to be a collection of envelopes which enwrap a plain binary image, as follows:<P>
+<UL>
+<LI>The outer wrapper allows the inner layers to be compressed using any compression algorithm to which you have access which supports efficient decompression at image load time, either by the loader or by the loaded image itself. In particular, AIF defines a simple structure for images which decompress themselves, consisting of: AIF header; compressed contents; decompression tables; decompression code.
+<p>
+<LI>The next layer of wrapping deals with relocating the image to its load address. Three options are supported: link-time relocation; load-time relocation to whatever address the image has been loaded at; load time relocation to a fixed offset from the top of memory. In particular, an AIF image is capable of self-relocation or self-location (to the high address end of memory), followed by self-relocation.
+<p>
+<LI>Once an AIF image has been decompressed and relocated, it can create its own zero-initialised area.
+<p>
+<LI>Finally, the enwrapped image is entered at the (unique) entry point found by the linker in the set of input object modules.
+</UL>
+Two flavours of AIF are supported:<P>
+<UL>
+<LI>Executable AIF, can be loaded at its load address and entered at the same point (at the first word of the AIF header). It prepares itself for execution by relocating itself, zeroing its own 0-initialised data, etc.
+<p>
+<LI>Non-executable AIF must be processed by an image loader, which loads the image at its load address and prepares it for execution as detailed in the AIF header. The header is then discarded.
+</UL>
+An executable AIF image is loaded at its load address (which may be arbitrary if the image is relocatable), and entered at the same address. Eventually, control passes to a branch to the image's entry point.<P>
+In order to produce an AIF output there must be:<P>
+<UL>
+<LI>no unresolved symbolic references between the input objects, (each reference must resolve directly or via an input library);
+<p>
+<LI>exactly one input object containing a program entry point (or no input area containing an entry point, and the entry point given using an -Entry option);
+<p>
+<LI>either an absolute load address or the relocatable option given to the linker, (the self-location option is system-dependent).
+</UL>
+The AIF header is specified fully in <A HREF="../atsfldr/1atsb.html#XREF12900">The layout of AIF</A>.<P>
+The contents of some fields of the AIF header (such as the program exit instruction) can be customised by providing a template for the header in an area with the name AIF_HDR and a length of 128 bytes, in the<I> first</I> object module in the list of object modules given to <I>armlink</I>.<P>
+Similarly, the self-move and self-relocation code appended by the linker to a relocatable AIF image can customised by providing an area with the name AIF_RELOC, also in the <I>first</I> object module in the input list.<P>
+<P>

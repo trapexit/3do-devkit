@@ -1,0 +1,51 @@
+<TITLE>GetTagArg</TITLE>
+<A NAME="XREF41123"><H1>GetTagArg </A></H1>
+<A NAME="XREF28884"></A>Finds a TagArg in list and returns its ta_Arg field.<P>
+<H3>Synopsis</H3>
+<CODE>TagData GetTagArg (const TagArg *tagList, uint32 tag,TagData defaultValue)</CODE><P>
+<H3>Description</H3>
+This function calls <CODE>FindTagArg()</CODE> to locate the specified tag. If it is found, it returns the ta_Arg value from the found TagArg. Otherwise, it returns the default value supplied. This is handy when resolving a tag list that has optional tags that have suitable default values. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tagList
+<DD>The list of tags to scan. Can be NULL. 
+</DL>
+<DL>
+<DT>tag
+<DD>The tag ID to look for. 
+</DL>
+<DL>
+<DT>defaultValue
+<DD>Default value to use when specified tag isn't found in tagList.
+</DL>
+<H3>Return Value</H3>
+ta_Arg value from found TagArg or defaultValue. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+void dosomething (const TagArg *tags)
+{
+    uint32 amplitude = (uint32)GetTagData (tags, MY_TAG_AMPLITUDE, (TagData)0x7fff);
+    .
+    .
+    .
+}
+</CODE>
+</PRE>
+<H3>Caveats</H3>
+It's a good idea to always use casts for the default value and result. Don't assume anything about the type definition of TagData other than that it is a 32-bit value. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>tags.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr059.html#XREF34043"><CODE>FindTagArg</A>(), <A HREF="./01spr103.html#XREF28387">NextTagArg</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF41123"></LINK></H1>

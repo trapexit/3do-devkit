@@ -1,0 +1,69 @@
+<TITLE>Audio Hardware</TITLE>
+<H1><LINK NAME="XREF36740">Audio Hardware</LINK></H1><HR>
+Like most audio systems, the 3DO system accepts audio input and sends audio output. Between input and output, it processes the incoming audio or generates new audio. Figure 1 shows standard 3DO audio input, output, and processing.<P>
+
+<IMG SRC="Figures/1-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Audio input and output processing.</I><P>
+The 3DO system can accept audio input from the following sources:<P>
+<UL>
+<LI>The built-in compact disc (CD) player, which reads the standard Red Book audio CD format as well as most standard CD data formats.
+<p>
+<LI>Direct digital input  brings audio signals into DSP for the purpose of processing and mixing. (Not available on Opera systems. May not be available on all consumer multiplayers.)
+<p>
+<LI>Any digitized audio placed in DRAM, which can come from sources such as SlipStream.
+</UL>
+The 3DO system can send audio output through these features:<P>
+<UL>
+<LI>Two line-level output jacks connected to DACs (Digital-to-Analog Converters), which convert 16-bit digital sampled sound into analog signals.
+<p>
+<LI>A player-bus stereo headphone jack, which accepts the analog output of the DACs and provides a headphone-level signal on a 3DO controller so a user can hear 3DO audio through connected headphones.
+<p>
+<LI>Any external device that can read DRAM and take digitized audio stored there.
+</UL>
+To process audio, the 3DO system uses:<P>
+<UL>
+<LI>The digital signal processor (DSP), a programmable processor built into the CLIO chip that accepts 13 DMA channels of digital input, performs standard math operations on input data, and provides two channels of digital-to-
+analog audio output and four DMA channels of digital output.
+</UL>
+To provide additional audio control, the 3DO system can read and send MIDI messages if the system contains optional expansion equipment:<P>
+<UL>
+<LI>MIDI In, Out, and Thru ports connected to the 3DO system expansion port.
+</UL>
+<H2>The CD Player</H2>
+The 3DO system built-in CD player is designed to play back standard Red Book audio CDs with full 16-bit precision and bandwidth at a sample rate of 44,100 samples per second. When a Red Book CD plays, its samples pass directly through the DSP. The DSP does not process those samples, but simply fetches left and right samples and passes them to the appropriate left or right DAC so that they put out stereo audio to a connected amplified speaker system or to connected headphones.<P>
+The fundamental code necessary to play back a Red Book CD is stored in the 3DO system ROM so that a user can simply turn on a 3DO system, place a CD in the drive, press a play button, and listen to the CD. Simple Red Book playback does <I>not</I> require a CD containing the Portfolio boot files.<P>
+The CD player also reads Yellow Book CDs, spinning the CD at double the standard rate to provide faster data access. Portfolio can read sampled sound files from these CDs; the files are typically stored using the AIFF standard maintained by Electronic Arts and Apple Computer. These sampled-sound files can be fed directly to the DSP.<P>
+<H2>The Digital Signal Processor (DSP)</H2>
+The digital signal processor (DSP) is a data processor uniquely designed to handle audio data. It works with the 16-bit sample values commonly used for high-quality digital audio, and it provides a running cycle that exactly matches the 44,100 sample pairs per second needed for generating full-frequency digital audio. Figure 2 shows a diagram of its major features.<P>
+
+<IMG SRC="Figures/1-2.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>DSP features.</I><P>
+To accept sample input from DRAM, the DSP has 13 input DMA channels that feed to the DSP input memory. To process those samples, the DSP provides an ALU (arithmetic logic unit), multiplier, barrel shifter, and accumulator. It also provides internal instruction memory for DSP instructions and internal  memory for processed data. To put processed data back out to the rest of the system, the DSP provides output memory with two registers that feed directly to the output DACs, and four output DMA channels that write samples back to DRAM. <P>
+<H3>DSP Input</H3>
+The DSP provides 13 channels of DMA input, each 16 bits wide, to read standard audio samples. Each DMA channel has full access to DRAM addresses and is buffered by an eight-sample-deep FIFO. Data passes through the DMA into the FIFO and from the FIFO into external input (EI) memory, a DSP internal memory bank.<P>
+EI memory is designed to accept input data from external sources. It contains 128 16-bit registers. Thirteen of those registers are devoted to the input DMA channels, one register per channel. The ARM(TM) CPU can write directly to EI memory, but cannot read from it. The DSP can read EI memory, but cannot write to it.<P>
+<H3>DSP Processing</H3>
+The DSP uses standard processing units to handle input data:<P>
+<UL>
+<LI>A 20-bit ALU with a fast multiplier.
+<LI>A barrel shifter.
+<LI>A 20-bit accumulator.
+</UL>
+In addition to these units, the DSP provides two internal memory banks for processing:<P>
+<UL>
+<LI><B>N memory (iNstruction memory),</B> which stores DSP programming instructions.
+<LI><B>I memory (internal memory),</B> which stores data for internal operations.
+</UL>
+The DSP executes the instructions stored in N memory, stepping through them in the order in which they're stored. The ARM CPU can write instructions directly to N memory. It can also use a single internal DMA channel to place blocks of DSP code directly into N memory. While executing instructions, the DSP can read to or write from I memory. I memory is off limits to any other reads or writes, including those from the ARM CPU.<P>
+<H3>DSP Output</H3>
+DSP output starts with external output (EO) memory, an internal memory bank to which the DSP alone can write data. The ARM CPU can read some EO memory directly to fetch data that the DSP places there.<P>
+EO memory contains sixteen 16-bit registers that are readable by the CPU. It also contains two 16-bit registers that are connected directly to the DACs: one (called the <I>left register</I>) to the left DAC; the other (called the <I>right register</I>) to the right DAC. When the DACs put out digital audio, they read the contents of the left and right registers, convert whatever contents they find there into an analog signal, and send that signal to the line outputs and the headphone jack.<P>
+EO memory also contains four registers that are connected to the FIFOs of four output-DMA channels. Those FIFOs are each 16 bits wide and 8 samples deep; they buffer output to a DMA channel that can write directly to DRAM. These four output-DMA channels allow processed audio data to be written to DRAM, where it can be read again by the DSP input DMAs, a technique that creates delay effects such as reverb and those used for 3-D sound effects created by the 3-D library.<P>
+<H3>DSP Running Modes</H3>
+When the DSP runs, it can use either of two modes: <I>cyclic,</I> which it uses for audio processing, or <I>free-running</I>, which it uses for general-purpose processing.<P>
+When the DSP runs in cyclic mode, it starts each cycle by running through the program instructions in its N memory. At the end of each cycle, the DSP goes to sleep and waits for an outside source to reset the DSP state and start a new cycle. In the new cycle, program execution begins again from the beginning of the program instructions in N memory. The contents of the DSP memory banks (EI, EO, I and N) are <I>not </I>automatically reset between cycles, although they will probably be affected by whatever instructions the DSP executes during the cycle, and so are changed per cycle by the running DSP.<P>
+Cyclic mode is usually used to execute a set of instructions for each sample pair sent out to external audio by the DACs. To do so, it must cycle 44,100 times per second (approximately once every 22 microseconds, or every 568 system ticks) in perfect synch with the DAC cycles. To guarantee synchronization no matter what brand of DAC a 3DO hardware manufacturer chooses to specify for its 3DO systems, the DSP offers <I>audlock cycling, </I>cycling control that reads the DAC crystal for timing information, and locks the DSP cycles to match the DAC cycles.<P>
+On some occasions, a task may want to use the DSP at a cycle rate that does not synchronize with the DAC cycles. For example, it may need to provide processing only once every two or three DAC cycles, or it may need to provide processing in cycles that do not correspond at all to the DAC cycles. If so, the DSP offers <I>system cycling </I>where it sets the cycle according to the 3DO internal timers. The length of each cycle is set by the contents of an internal DSP register.<P>
+When the DSP is used for nonaudio processing, it can operate in free-running mode, where it simply executes the instructions in N memory and then stops without resetting its state. Free-running mode can also be used for audio programming if desired, with the DSP polling the DAC FIFO to see if it should start over again. This polling allows the free-running DSP to run in cycles that match the DAC cycles.<P>

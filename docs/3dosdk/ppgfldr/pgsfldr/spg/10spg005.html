@@ -1,0 +1,140 @@
+<TITLE>The File Pseudo-Device </TITLE>
+<H1>The File Pseudo-Device </H1><HR>
+The File folio, in cooperation with the various file systems, provides the services needed to access filesystem-oriented external storage; for example, reading files from a CD-ROM, or writing files to the 3DO NVRAM (non-volatile RAM).<P>
+When you open a file using the File folio <CODE>OpenDiskFile()</CODE> function, the item that is returned serves as a handle to the file. The <CODE>Item</CODE> is of type Device. This enables communication to the filesystem that controls this file using the standard Portfolio I/O model.<P>
+When you send a command to a file device, the file system responsible for the file wakes up and executes the command. Therefore, the file device is only a pseudo-device, serving as a gateway to the underlying filesystem.<P>
+The File folio provides many high-level functions to control file systems. For example, you can create files using the <CODE>CreateFile()</CODE> function, or you can delete files using the <CODE>DeleteFile()</CODE> function. These File folio functions are merely wrappers for file system commands. The functions internally create file devices and send commands to the device to perform work.<P>
+This section explains the various commands you can send to a file device. It is often much easier to use the higher-level File folio functions to interact with the file system. However, there are some operations that can only be performed by interfacing to the file device directly.<P>
+<H2>Getting Filesystem Status</H2>
+Once you open a file, you can obtain information about the filesystem the file resides on. This is done by using the <CODE>FILECMD_FSSTAT</CODE> command.<P>
+<CODE>
+<PRE>
+IOInfo        ioInfo;
+FileSystemStat fsStat;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                        = FILECMD_FSSTAT;
+ioInfo.ioi_Recv.iob_Buffer                        = &amp;fsStat;
+ioInfo.ioi_Recv.iob_Len                        = sizeof(FileSystemStat);
+</CODE>
+</PRE>
+Once the command returns successfully, you can look at the fields in the fsStat structure for the status information. The <CODE>fst_BitMap</CODE> field of the FileSystemStat structure indicates which fields in the rest of the structure are valid and can be examined. Different file systems cannot always provide all the information in a FileSystemStat structure. For example, if the <CODE>FSSTAT_SIZE</CODE> bit is set in <CODE>fst_BitMap</CODE>, it means the <CODE>fst_Size</CODE> field of the FileSystemStat structure is valid.<P>
+The fields in the FileSystemStat structure are:<P>
+<UL>
+<LI><B>fst_BitMap. </B>Indicates which fields of the structure contain valid data.
+<p>
+<LI><B>fst_CreateTime. </B>Indicates when the filesystem was created. This field is currently never valid and always contains 0.
+<p>
+<LI><B>fst_BlockSize. </B>Indicates the nominal size of data blocks in the filesystem. To determine the block size to use when reading and writing files, query the file's status and extract the block size from that information.
+<p>
+<LI><B>fst_Size. </B>Indicates the total size of the filesystem in blocks.
+<p>
+<LI><B>fst_MaxFileSize. </B>Indicates the maximum size of a file in the filesystem
+<p>
+<LI><B>fst_Free. </B>Indicates the total number of blocks currently not in use on the filesystem
+<p>
+<LI><B>fst_Used. </B>Indicates the total number of blocks currently in use on the filesystem.
+</UL>
+<H2>Getting File Status</H2>
+Once you open a file, you can obtain information about the file by using the <CODE>CMD_STATUS</CODE> command.<P>
+<CODE>
+<PRE>
+IOInfo    ioInfo;
+FileStatus fStat;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                        = CMD_STATUS;
+ioInfo.ioi_Recv.iob_Buffer                = &amp;fStat;
+ioInfo.ioi_Recv.iob_Len                   = sizeof(FileStatus);
+</CODE>
+</PRE>
+Once the command completes successfully, you can look at the fields in the fStat structure for the status information. Fields of interest are:<P>
+<UL>
+<LI><B>fs.ds_DeviceBlockSize. </B>The block size to use when reading or writing this file.
+<LI><B>fs.ds_DeviceBlockCount. </B>The number of blocks of data in the file.
+<LI><B>fs_ByteCount. </B>The number of bytes currently in the file.
+</UL>
+<H2>Creating and Deleting Files</H2>
+To create a file, use the File folio's <CODE>CreateFile()</CODE> function. You supply the path name of the file to create, and the function does the necessary work to create a new file entry on the filesystem.<P>
+To delete an existing file, use the File folio's <CODE>DeleteFile()</CODE> function. You supply it the path name of the file to delete, and the function does the necessary work to remove the file's entry from the filesystem.<P>
+<H2>Allocating Blocks for a File</H2>
+Before you can write data to a file, you must allocate enough free blocks in the file to hold the data to be written. This is done by using the <CODE>FILECMD_ALLOCBLOCKS</CODE> command.<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                = FILECMD_ALLOCBLOCKS;
+ioInfo.ioi_Offset                = numBlocks;
+</CODE>
+</PRE>
+The <CODE>numBlocks</CODE> variable contains the number of blocks by which to extend the file. If this value is negative, the size of the file is reduced by the specified number of blocks.<P>
+<H2>Writing Data to a File</H2>
+You must use the <CODE>CMD_WRITE</CODE> command to write data to a file. All write operations must be performed in full blocks. The size of the blocks can be obtained by sending a <CODE>CMD_STATUS</CODE> command to the file device. The write operation must also be aligned on a block boundary within the file.<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                               = CMD_WRITE;
+ioInfo.ioi_Offset                                = blockOffset;
+ioInfo.ioi_Send.iob_Buffer                       = dataAddress;
+ioInfo.ioi_Send.iob_Len                          = numBytes;
+</CODE>
+</PRE>
+The <CODE>blockOffset</CODE> field indicates the offset in blocks from the beginning of the file where the data is to be written. The <CODE>dataAddress</CODE> value points to the data that is to be written. Finally, the <CODE>numBytes</CODE> value indicates the number of bytes to write out. This value must be an even multiple of the block size for the file.<P>
+<H2>Marking the End of a File</H2>
+Once you are done writing data to a file, you must mark the end of the file using the <CODE>FILECMD_SETEOF</CODE> command. This command tells the filesystem how many useful bytes of data are in the file. Because you can only transfer data in terms of blocks, sending this command tells the filesystem how many bytes of the last written block are useful bytes.<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                            = FILECMD_SETEOF;
+ioInfo.ioi_Offset                             = numBytesInFile;
+</CODE>
+</PRE>
+<H2>Reading Data From a File</H2>
+Reading information from a file is done much the same way you write information to a file. You must supply the offset in blocks where to start reading data, and the number of bytes of data to read.<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                                    = CMD_READ;
+ioInfo.ioi_Offset                                     = blockOffset;
+ioInfo.ioi_Recv.iob_Buffer                            = dataAddress;
+ioInfo.ioi_Recv.iob_Len                               = numBytes;
+</CODE>
+</PRE>
+The<CODE> blockOffset</CODE> value indicates the offset in blocks from the beginning of the file from which data is read. <CODE>dataAddress</CODE> indicates an address in memory where the data will be copied once read from the filesystem. Finally, <CODE>numBytes</CODE> contains the number of bytes to read. This number must be an even multiple of the block size of the file.<P>
+<H2>Getting Directory Information</H2>
+The <CODE>OpenDiskFile()</CODE> function<CODE> </CODE>opens a directories. You can then use the <CODE>FILECMD_READDIR</CODE> command to scan the directory and obtain information about files in the directory. <P>
+<CODE>
+<PRE>
+IOInfo        ioInfo;
+DirectoryEntry dirEntry;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                                = FILECMD_READDIR;
+ioInfo.ioi_Offset                                 = fileNum;
+ioInfo.ioi_Recv.iob_Buffer                        = &amp;dirEntry;
+ioInfo.ioi_Recv.iob_Len                           = sizeof(DirectoryEntry);
+</CODE>
+</PRE>
+The <CODE>fileNum</CODE> value indicates the number of the file within the directory to read. You start with file 0, and keep going until the I/O cannot be completed because there are no more files. The dirEntry structure will be filled out with information about the specified file.<P>
+<H2>Getting the Path of a File</H2>
+Once you have an open file, you may need to determine the exact path to reach this file. The <CODE>FILECMD_GETPATH</CODE> command determines the exact path to an open file.<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+
+char   path[FILESYSTEM_MAX_PATH_LEN];
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                        = FILECMD_GETPATH;
+ioInfo.ioi_Recv.iob_Buffer                = path;
+ioInfo.ioi_Recv.iob_Len                   = sizeof(path);
+</CODE>
+</PRE>
+Once the command completes successfully, the path variable contains a complete unambiguous path to reach the file. You can then use this path to issue another <CODE>OpenDiskFile()</CODE> command or a <CODE>DeleteFile()</CODE> command.<P>

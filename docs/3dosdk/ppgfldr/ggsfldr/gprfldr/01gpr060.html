@@ -1,0 +1,31 @@
+<Title>SetClipOrigin </Title>
+<h1>SetClipOrigin </h1>
+<A NAME="XREF27600"> Sets the clip origin of a bitmap.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err SetClipOrigin (Item bitmapItem,int32 x,int32 y)</CODE><P>
+<H3>Description</H3>
+This call sets the clip origin of a bitmap. Specify the item number of a bitmap and the x and y coordinates of the top-left corner of the clip rectangle within the bitmap. <P>
+The (0,0) coordinate always refers to the top-left corner of the clip window, whether the clip window is set to the full size of the bitmap or to some subregion of the bitmap. The clip rectangle that you specify must fit within the parameters of the bitmap; that is, the clip x offset plus the clip window width must not exceed the actual width of the bitmap. The same is true for the height, or y, offset. The order of operations setting width/height first or setting origin first is significant. <P>
+If the read address is the same as the write address (this is normal), then the read buffer address is modified the same as the write buffer address (this is what you would expect). If you use <CODE>SetReadAddress()</CODE> to set the read address to something other than the write buffer, the read address is not disturbed by the call to <CODE>SetClipOrigin()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>Item number of a Bitmap structure. 
+</DL>
+<DL>
+<DT>x
+<DD>Value for the top-left corner x coordinate. 
+</DL>
+<DL>
+<DT>y
+<DD>Value for the top-left corner y coordinate (At this time, if the y argument is an odd number, it is forced to the next numerically lower even number, and a warning is returned.) 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr061.html#XREF41634"><CODE>SetClipWidth</A>(),<A HREF="./01gpr059.html#XREF10063">SetClipHeight</A>()</CODE><P>
+</CODE>

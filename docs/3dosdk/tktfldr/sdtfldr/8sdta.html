@@ -1,0 +1,42 @@
+<TITLE>AttachSamplex</TITLE>
+<H1><LINK NAME="XREF30661">AttachSample</LINK></H1><HR>
+<H1>AttachSample</H1>
+<H1></H1>
+Attaches a sample to an instrument<P>
+<H3>Synopsis</H3>
+<CODE>AttachSample &lt;attachment symbol&gt; &lt;instrument&gt; &lt;sample&gt;  [&lt;FIFO  name&gt; [&lt;start frame&gt;]]</CODE><P>
+<H3>Description</H3>
+<CODE>AttachSample</CODE> attaches a sample to an instrument. A single sample can be connected to multiple instruments.<P>
+<H3>Argument</H3>
+<DL>
+<DT>&lt;attachment symbol&gt;
+<DD>New symbol in the attachment symbol name space to give this attachment. 
+</DL>
+<DL>
+<DT>&lt;instrument&gt;
+<DD>Symbol name of a previously loaded instrument to attach a sample to.
+</DL>
+<DL>
+<DT>&lt;sample&gt;
+<DD>Symbol name of a previously loaded sample to attach.
+</DL>
+<DL>
+<DT>&lt;FIFO name&gt;
+<DD>Optional name of a FIFO in the instrument to attach the sample to. Uses the instrument's first or only FIFO when not specified.
+</DL>
+<DL>
+<DT>&lt;start frame&gt;
+<DD>Optional positive frame offset to apply to the sample attachment. Defaults to 0. This can be applied to delay line sample attachments to give the reader and writer of a delay line different positions in the delay line.
+</DL>
+<H3>Examples</H3>
+The following example shows a patch file that uses <CODE>AttachSample</CODE>.<P>
+<CODE>
+<PRE>
+LoadInstrument player sampler.dsp
+LoadSample sax sax.aiff
+AttachSample att1 player sax                                    ; attach the horn sample to the
+                                    ; sample player.
+</CODE>
+</PRE>
+<H3>See Also</H3>
+<CODE>LoadInstrument, LoadSample, DelayLine</CODE><P>

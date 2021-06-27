@@ -1,0 +1,24 @@
+<Title>GetSCelList</Title>
+<A NAME="XREF23058"><H1>GetSCelList</A></H1>
+<A NAME="XREF18189"></A> Returns a list of CCBs for the current stream time.<P>
+<H3>Synopsis</H3>
+<CODE>CCB* GetSCelList (struct SCelContext* context, long channelNumber)</CODE><P>
+<H3>Description</H3>
+Returns a self-describing list of CCBs corresponding to the current stream time. All elements of the cel list (CCBs, PLUTs, and source pixel data) are relatively linked. Assume the CCB_LAST flag of the last CCB in the list is set, if the data stream was prepared using 3DO tools.<P>
+Each cel list (or frame) in the data stream has an associated start time and duration. The interval from start-time to start-time + duration is the time during which the frame is intended to be displayed on screen. If there is no frame in the data stream whose display interval corresponds to the current stream time, then a NULL pointer is returned. This condition can arise when stream time has progressed beyond the last frame in the stream, or when explicit gaps have been woven into the stream. An application wishing to always display the last frame received should detect the NULL pointer and inhibit screen flipping.<P>
+Only the most recent cel list pointer returned by <CODE>GetSCelList()</CODE> is valid. Less recent cel list pointers may not be valid, and should not be dereferenced by the client application. Should a client application need to save an earlier cel list, it must explicitly copy the entire cel list (and linked PLUTs and source data) and retain a pointer to the copy.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>context</CODE> 
+<DD>Pointer to context structure for the SCel subscriber 
+</DL>
+<DL>
+<DT>channelNumber 
+<DD>Logical channel number.
+</DL>
+<H3>Return Value</H3>
+Returns a pointer to a list of CCBs for the current stream time, or <CODE>NULL</CODE> if there is none.<P>
+<H3>Caveat</H3>
+This function is part of the <I>Subscriber.lib</I> library file that can currently (Toolkit1.5) be found in <I>Attic:Streaming:2p1:DataStream:Subscribers:Subscriber.lib</I>. It will later be integrated into the main Streaming tree. <P>
+<H3>See Also</H3>
+<A HREF="./01DSR039.html#XREF37350"><CODE>GetSCelListAndType</A></CODE><P>

@@ -1,0 +1,37 @@
+<Title>FillPoolWithMsgItems</Title>
+<A NAME="XREF13937"><H1>FillPoolWithMsgItems</A></H1>
+<A NAME="XREF32153"></A> Fills memory pool with message items.<P>
+<H3>Synopsis</H3>
+<CODE>Boolean FillPoolWithMsgItems (MemPoolPtr memPool, Item replyPort)</CODE><P>
+<H3>Description</H3>
+Allocates a message item for each entry in a memory pool. The items created by <CODE>FillPoolWithMsgItems()</CODE> will have their reply port field set to the value of <CODE>replyPort</CODE>.<P>
+The DataStreamer calls <CODE>ForEachFreePoolMember()</CODE> to allocate the items; <CODE>ForEachFreePoolMember()</CODE> then calls <CODE>CreateMsgItem()</CODE> to create the items that are allocated to the entries.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>memPool</CODE>
+<DD>Memory pool.
+</DL>
+<DL>
+<DT><CODE>replyPort</CODE>
+<DD>Reply port selected for the items.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT><CODE>TRUE</CODE>
+<DD>None
+<DD>
+</DL>
+<DL>
+<DT><CODE>FALSE</CODE>
+<DD><CODE>CreateMsgItem()</CODE> failed
+<DD>
+</DL>
+<H3>Associated Files</H3>
+DataStreamLib.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR010.html#XREF40701"><CODE>CreateMsgItem</A>, <A HREF="./01DSR034.html#XREF32393">ForEachFreePoolMember</A></CODE><P>

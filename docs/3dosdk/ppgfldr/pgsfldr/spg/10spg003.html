@@ -1,0 +1,192 @@
+<TITLE>The Timer Device</TITLE>
+<H1><LINK NAME="XREF35491">The Timer Device</LINK></H1><HR>
+The timer device is a software component that provides a standardized interface to the timing hardware.The 3DO hardware architecture includes a number of clocks and timers. <P>
+The timer device has two separate timer units that offer different timing characteristics: the microsecond unit (<CODE>TIMER_UNIT_USEC</CODE>) and the vertical blank unit (<CODE>TIMER_UNIT_VBLANK</CODE>). The microsecond timer deals with time quantities using seconds and microseconds, while the vertical blank timer counts time in vertical blank intervals. Vertical blank intervals are discussed in more detail in <A HREF="#XREF22584">The Vertical Blank Unit</A>. Both units respond to the same commands. <P>
+Using either of the timer units, you can do four basic operations:<P>
+<UL>
+<LI>Sample the current time
+<LI>Ask the timer to notify you when a given time arrives
+<LI>Ask the timer to notify you after a given amount of time passes
+<LI>Ask the timer to notify you at regular intervals until you ask it to stop
+</UL>
+The following sections describe how to perform these operations with either timer device units. <P>
+<B>Note: </B>The timer device currently doesn't provide real-time clocks. That is, the timer starts counting time only when the machine is turned on, it stops counting time when the machine is shut down. Therefore, it is not currently possible to automatically determine the current time of day. This capability may be added to the 3DO architecture in the future.<P>
+<H2>Working With the Timer Device</H2>
+Communicating with the two units of the timer device is done using the standard Portfolio I/O commands. To send commands to the timer device, you must complete the following steps:<P>
+<OL>
+<LI>Open the timer device using the <CODE>OpenNamedDevice()</CODE> function.
+
+<LI>Create an IOReq structure by calling the <CODE>CreateIOReq()</CODE> function.
+<LI>Initialize an IOInfo structure that specifies the command and parameters to the command.
+<LI>Send the command to the timer device using either <CODE>DoIO()</CODE> or <CODE>SendIO().
+</OL>
+<H2>The Microsecond Unit</H2>
+The microsecond timer unit provides very high-resolution timing. Although it has very high short-term accuracy, its time base can drift slightly over extended periods of time.</CODE><P>
+This microsecond unit of the timer device deals in time quantities using the TimeVal structure, which is defined as:<P>
+<CODE>
+<PRE>
+typedef struct timeval
+{
+    int32 tv_Seconds;         /* seconds */
+    int32 tv_Microseconds;     /* and microseconds */
+} TimeVal;
+</CODE>
+</PRE>
+<H3>Reading the Current System Time</H3>
+To read the current system time, you must initialize an IOInfo structure such as:<P>
+<CODE>
+<PRE>
+IOInfo  ioInfo;
+TimeVal tv;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                         = CMD_READ
+ioInfo.ioi_Unit                         = TIMER_UNIT_USEC;
+ioInfo.ioi_Recv.iob_Buffer = &amp;tv;
+ioInfo.ioi_Recv.iob_Len                         = sizeof(tv);
+</CODE>
+</PRE>
+The <CODE>ioi_Command</CODE> field is set to <CODE>CMD_READ,</CODE> indicating the current system time should be read. <CODE>ioi_Unit</CODE> indicates which unit of the timer device to query. <CODE>ioi_Recv.iob_Buffer</CODE> points to a TimeVal structure. This pointer is where the timer device stores the current time value. Finally, <CODE>ioi_Recv.iob_Len</CODE> holds the size of the TimeVal structure.<P>
+Once an I/O operation is performed on the timer device using the above <CODE>IOInfo</CODE>, the timer device puts the current system time in the supplied TimeVal structure, and completes the I/O operation by sending your task a message or a signal, depending on how the I/O request was created.<P>
+For a high performance way to read the system's microseconds clock, see <A HREF="#XREF26630">High-Performance Timing</A>.<P>
+<H3>Waiting for a Specific Time to Arrive</H3>
+A common use for the timer device is to provide automatic notification of the passage of time. For example, if you want a given picture to remain on the display for exactly 1 second, you can send a command to the timer device telling it to send you a signal when 1 second has passed. While you are waiting for that second to pass, your task can do other work, such as play music, confident in the fact that the timer device will notify it when the appropriate amount of time has passed.<P>
+You can ask the timer device to notify you when a specific time arrives. To do this, you must first ask the system what the current time is by sending the device a <CODE>CMD_READ</CODE>. Once you know the current time, you can use the <CODE>AddTimes()</CODE> and <CODE>SubTimes()</CODE> calls, explained below, to calculate the time to receive a notification. Once you have calculated the time to be notified, you can send the <CODE>TIMERCMD_DELAYUNTIL</CODE> command to the timer device. You must initialize the IOInfo structure in the following way:<P>
+<CODE>
+<PRE>
+IOInfo  ioInfo;
+TimeVal tv;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                          = TIMERCMD_DELAYUNTIL;
+ioInfo.ioi_Unit                         = TIMER_UNIT_USEC;
+ioInfo.ioi_Send.iob_Buffer = &amp;tv;
+ioInfo.ioi_Send.iob_Len   = sizeof(tv);
+</CODE>
+</PRE>
+The <CODE>ioi_Comman</CODE>d field is set to <CODE>TIMERCMD_DELAYUNTIL, </CODE>indicating that the timer will wait until a specific time arrives. <CODE>ioi_Unit</CODE> indicates which unit of the timer device to use. <CODE>ioi_Send.iob_Buffer</CODE> points to a TimeVal structure. This contains the amount of time to wait. Finally, <CODE>ioi_Send.iob_Le</CODE>n holds the size of the TimeVal structure.<P>
+You can send the I/O request to the timer device using either <CODE>DoIO()</CODE> or <CODE>SendIO()</CODE>. When using <CODE>DoIO(),</CODE> your task is put to sleep until the requested time. If you use <CODE>SendIO()</CODE>, then your task is free to continue working while the timer is counting time. When the requested time arrives, the timer device will either send your task the <CODE>SIGF_IODONE</CODE> signal, or will send you a message as specified in your I/O request.<P>
+<H3>Waiting a Specific Amount of Time</H3>
+Instead of asking the timer to wait until a given time, you can tell it to wait for a fixed amount of time to pass. To achieve this, you follow the procedure in the previous section except that you initialize the IOInfo structure differently. For a specific amount of time, <CODE>ioi_Command</CODE> must be set to <CODE>TIMERCMD_DELAY</CODE>, and the TimeVal structure you supply must specify an amount of time instead of a certain time.<P>
+<H3>Getting Repeated Notifications </H3>
+Often, it is desirable to have a timer automatically generate a signal in regular fixed intervals. The <CODE>TIMERCMD_METRONOME</CODE> commands arranges to have a signal sent to your task for an undetermined length of time at a fixed rate.<P>
+<CODE>
+<PRE>
+IOInfo  ioInfo;
+TimeVal tv;
+int32   signals;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                          = TIMERCMD_METRONOME;
+ioInfo.ioi_Unit                         = TIMER_UNIT_USEC;
+ioInfo.ioi_CmdOptions     = signals;
+ioInfo.ioi_Send.iob_Buffer = &amp;tv;
+ioInfo.ioi_Send.iob_Len   = sizeof(tv);
+</CODE>
+</PRE>
+The <CODE>ioi_Comman</CODE>d field is set to <CODE>TIMERCMD_METRONOME</CODE> indicating that the timer acts as a metronome, and sends your task signals every time a specified amount of time passes. <CODE>ioi_Unit</CODE> indicates which unit of the timer device to use. <CODE>ioi_CmdOptions</CODE> specifies the signal mask that the timer device should use when signalling your task. <CODE>ioi_Send.iob_Buffer</CODE> points to a TimeVal structure. This contains the amount of time between each signal that the timer device sends your task. Finally, <CODE>ioi_Send.iob_Le</CODE>n holds the size of the TimeVal structure.<P>
+Send the I/O request to the timer device using <CODE>SendIO()</CODE>. Once this is done, the timer device will send a signal to your task every time the specified amount of time passes. To stop the timer device from sending these signals, you must abort the I/O request using the<CODE> AbortIO()</CODE> call.<P>
+<A NAME="XREF22584"><H2>The Vertical Blank Unit</A></H2>
+The vertical blank timer unit provides a fairly coarse measure of time, but is very stable over long periods of time. It offers a resolution of either 1/60th of a second on NTSC systems or 1/50th of a second on PAL systems. Vertical blanking is a characteristic of raster scan displays, and occurs on a fixed time-scale synchronized with the display hardware.<P>
+A <I>vblank</I> is the amount of time it takes for the video beam to perform an entire sweep of the display. Given that displays operate at different refresh rates in NTSC (60 Hz) compared to PAL (50 Hz), the amount of time taken by a vblank varies. Since the vblank unit of the timer device deals with time exclusively in terms of vblank units, waiting for a fixed number of vblanks will take different amounts of time on NTSC and PAL.<P>
+The advantages of the vertical blank timer are that it remains stable for very long periods of time; it involves slightly less overhead than the microsecond unit; and it is synchronized with the video beam. Being synchronized with the video beam is very important when creating animation sequences.<P>
+This vertical blank unit of the timer device deals in time quantities using the VBlankTimeVal structure, which is defined as:<P>
+<CODE>
+<PRE>
+typedef struct VBlankTimeVal
+{
+    uint32 vbltv_VBlankHi32;  * upper 32 bits of vblank counter */
+    uint32 vbltv_VBlankLo32;    /* lower 32 bits of vblank counter */
+} VBlankTimeVal;
+</CODE>
+</PRE>
+Vblanks are counted using a 64-bit counter. This is represented in two 32-bit words. The upper-32 bits, which are the most significant, are stored in the <CODE>vbltv_VBlankHi32</CODE> field, while the lower-32 bits are stored in the <CODE>vbltv_VBlankLo32</CODE> field.<P>
+<H3>Reading the Current System Time</H3>
+To read the current system time, you must initialize an IOInfo structure such as:<P>
+<CODE>
+<PRE>
+IOInfo       ioInfo;
+VBlankTimeVal vbltv;
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                        = CMD_READ
+ioInfo.ioi_Unit                        = TIMER_UNIT_VBLANK;
+ioInfo.ioi_Recv.iob_Buffer                        = &amp;vbltv;
+ioInfo.ioi_Recv.iob_Len                        = sizeof(vbltv);
+</CODE>
+</PRE>
+<CODE>ioi_Command</CODE> is set to <CODE>CMD_READ, </CODE>indicating that the current system time should be read. <CODE>ioi_Unit</CODE> indicates which unit of the timer device to query. <CODE>ioi_Recv.iob_Buffer</CODE> points to a VBlankTimeVal structure. This is where the timer device stores the current vblank count. Finally, <CODE>ioi_Recv.iob_Len</CODE> holds the size of the VBlankTimeVal structure.<P>
+Once the I/O is complete, the supplied VBlankTimeVal structure is filled with the current vblank count. Given that there are either 50 or 60 vblanks per second, over 800 days worth of vblanks can be stored in <CODE>vbltv_VBlankLo32</CODE>. Whenever <CODE>vbltv_VBlankLo32</CODE> exceeds the maximum value it can contain (2^32 - 1), then the value of <CODE>vbltv_VBlankHi32</CODE> is incremented by 1. This means that the VBlankTimeVal structure being used to store vblank counts can hold up to (2^32 * 800) days, which is probably longer than the time remaining before the sun goes supernova. <P>
+<H3>Waiting for a Specific Time</H3>
+Similar to the microsecond unit, the vblank unit can wait for a specific time. You specify this time in terms of vblanks. Unlike the microsecond unit, you do not specify the amount of time to wait using a TimeVal structure. Instead, set the<CODE> ioi_Offset</CODE> field of the IOInfo structure to the vblank count.<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                = TIMERCMD_DELAYUNTIL;
+ioInfo.ioi_Unit                = TIMER_UNIT_VBLANK;
+ioInfo.ioi_Offset                = vblankCountToWaitUntil;
+</CODE>
+</PRE>
+<H3>Waiting for a Specific Amount of Time</H3>
+The vblank unit can wait for a given number of vblanks, that is, a specific amount of time. This is done by initializing an IOInfo structure such as:<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                 = TIMERCMD_DELAY;
+ioInfo.ioi_Unit                 = TIMER_UNIT_VBLANK;
+ioInfo.ioi_Offset                 = numberOfVBlanksToWait;
+</CODE>
+</PRE>
+It is important to understand that the timer counts vblanks in a very strict way. Whenever the video beam reaches a known location on the display, the vblank counter is incremented. So if you ask the timer to wait for 1 vblank while the beam is near the trigger location, the I/O request will be returned in less than 
+1/60th or 1/50th of a second.<P>
+The <CODE>WaitVBL()</CODE> function is a wrapper function that initializes an <CODE>IOInfo</CODE> structure using the <CODE>TIMERCMD_DELAY</CODE> command, and sends it to the timer device.<P>
+<H3>Getting Repeated Notifications </H3>
+Similar to the microsecond unit, the vblank unit can automatically send you signals at specified intervals. You specify the interval time in terms of vblanks. Unlike with the microsecond unit, you do not specify the amount of time between signals using a TimeVal structure. Instead, set the<CODE> ioi_Offset</CODE> field of the IOInfo structure to the vblank count between signals.<P>
+<CODE>
+<PRE>
+IOInfo  ioInfo;
+int32   signals;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                          = TIMERCMD_METRONOME;
+ioInfo.ioi_Unit                         = TIMER_UNIT_VBLANK;
+ioInfo.ioi_CmdOptions     = signals;
+ioInfo.ioi_Offset        = vblanksBetweenSignals;
+</CODE>
+</PRE>
+You should send the I/O request to the timer device using <CODE>SendIO()</CODE>. Once this is done, the timer device will send a signal to your task every time the specified number of vblanks occurs. To stop the timer device from sending you these signals, you must abort the I/O request using the<CODE> AbortIO()</CODE> call.<P>
+<A NAME="XREF26630"><H2>High-Performance Timing</A></H2>
+It is sometimes necessary to measure very short time intervals with very high accuracy. This is especially useful when trying to measure the performance of various pieces of code. Although using the timer device and the <CODE>CMD_READ</CODE> command gives fairly accurate readings, the overhead involved in doing device I/O is often enough to skew the results of small time intervals.<P>
+Portfolio provides the <CODE>SampleSystemTime()</CODE> and <CODE>SampleSystemTimeTV()</CODE> functions that allow low-overhead sampling of the system clock. These functions are based on the same hardware clock as the microsecond unit of the timer device, and so refer to the same time base.<P>
+<CODE>SampleSystemTime()</CODE> returns the current seconds counter of the system clock. The function also returns the current microseconds counter in the R1 CPU register of the ARM processor. This value is only available if you program in assembly language. To get both values in C, you must use the <CODE>SampleSystemTimeTV()</CODE> function, which puts the current values of the seconds and microseconds counters in the TimeVal structure that you supply.<P>
+<H2>Time Arithmetic </H2>
+The following calls calculate or compare time values. <P>
+<UL>
+<LI>AddTimes(). Adds two time values, yielding the total time for both. This call is useful for time calculation.
+<p>
+<LI>CompareTimes(). Compares two time values. This call helps you determine what happens when.
+<p>
+<LI>SubTimes(). Subtracts one time value from another, yielding the time difference between the two.
+<p>
+<LI>TimeLaterThan(). Returns whether a time value comes before another time value.
+<p>
+<LI>TimeLaterThanOrEqual(<CODE>)</CODE>. Returns whether a time value comes before or at the same time as another time value.
+</UL>
+<H2>Simplified Timer Device Interface</H2>
+The following calls create I/O requests and wait fixed amounts of time. These are simple convenience calls that interface to the timer device for you. All of these routines use the microsecond timer unit.<P>
+<UL>
+<LI>CreateTimerIOReq(). Creates an I/O request for communication with the timer device.
+<p>
+<LI>DeleteTimerIOReq(). Frees any resources used in a previous call to <CODE>CreateTimerIOReq()</CODE>.
+<p>
+<LI WaitTime(). Puts the current context to sleep for a specific amount of time.
+<p>
+<LI>WaitUntil(). Puts the current context to sleep until the system clock reaches a given time.
+</UL>

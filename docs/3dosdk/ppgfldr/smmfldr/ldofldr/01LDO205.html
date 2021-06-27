@@ -1,0 +1,18 @@
+<Title>UnloadImage</Title>
+<A NAME="XREF24141"><H1>UnloadImage </A></H1>
+ Unloads an image<P>
+<H3>Synopsis</H3>
+<CODE>void UnloadImage (void *imageBuffer)</CODE><P>
+<H3>Description</H3>
+Unloads an image file previously loaded with <CODE>LoadImage()</CODE>, and frees all resources acquired during the load process. <P>
+Call this function only if you allowed <CODE>LoadImage()</CODE> to allocate the destination buffer for you by passing a NULL buffer pointer to <CODE>LoadImage()</CODE>. If you allocated your own image buffer and passed it to <CODE>LoadImage()</CODE>, you must free the buffer yourself. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>imageBuffer
+<DD>Pointer to a buffer which was allocated previously by the <CODE>LoadImage()</CODE> function. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, parse3do.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO118.html#XREF19482"><CODE>LoadImage</A></CODE><P>
+</CODE>

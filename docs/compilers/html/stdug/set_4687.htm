@@ -1,0 +1,17 @@
+<HTML><HEAD><TITLE>The set Data Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The set Data Abstraction</H2>
+<A HREF="sidebar.htm#sidebar23"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Sets, Ordered and Not</STRONG></A>
+
+<P>A <I>set</I> is a collection of values.  Because the container used to implement the <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> data structure maintains values in an ordered representation, sets are optimized for insertion and removal of elements, and for testing to see whether a particular value is contained in the collection.  Each of these operations can be performed in a logarithmic number of steps, whereas for a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A>, <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>, or <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A>, each operation requires in the worst case an examination of every element held by the container.  For this reason, sets should be the data structure of choice in any problem that emphasizes insertion, removal, and test for inclusion of values.  Like a <B><I>list</I></B>, a <B><I>set</I></B> is not limited in size, but rather expands and contracts as elements are added to or removed from the collection.</P>
+<P>There are two varieties of sets provided by the standard library.  In the <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> container, every element is unique.  Insertions of values that are already contained in the set are ignored.  In the <A HREF="../stdref/mul_0958.htm"><B><I>multiset</I></B></A> container, on the other hand, multiple occurrences of the same value are permitted.</P>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>Whenever you use a <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> or a <A HREF="../stdref/mul_0958.htm"><B><I>multiset</I></B></A>, you must include the set header file.</P>
+<PRE>   # include &#60;set>
+</PRE>
+
+<HR>
+<A HREF="set_3455.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="set_1754.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

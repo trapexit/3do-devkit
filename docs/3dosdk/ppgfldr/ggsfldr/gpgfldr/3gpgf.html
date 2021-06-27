@@ -1,0 +1,19 @@
+<TITLE>SPORT Transfers to the Frame Buffer</TITLE>
+<H1><LINK NAME="XREF24000">SPORT Transfers to the Frame Buffer</LINK></H1><HR>
+Compared to the inner workings of the cel engine, the details of transferring an image into the frame buffer with the SPORT bus are starkly simple. In essence, a background image is stored outside of the frame buffer in another section of VRAM. During the vertical interrupt of the NTSC display, the SPORT bus transfers the contents of the background-image bitmap into the frame buffer, effectively erasing everything there and laying out a fresh background for any cel projection or direct drawing to the frame buffer.<P>
+<H2>Restrictions</H2>
+The SPORT bus has the following restrictions imposed by its architecture-one timing restriction and three memory restrictions:<P>
+<UL>
+<LI>A SPORT transfer can only take place during a vertical blank interrupt; it cannot take place during a frame scan.
+<p>
+<LI>SPORT is available only in VRAM. It's impossible to use a SPORT transfer between DRAM and VRAM; it works only from VRAM to VRAM.
+<p>
+<LI>SPORT only reads and writes in full memory pages at a time. It does not read or write fractions of pages, so any block transfer carried out by SPORT must be one or more integral pages in size.
+<p>
+<LI>SPORT can transfer pages only within a single bank of VRAM. (Each bank is 1 megabyte in today's hardware.) In a 1 MB VRAM system, this restriction has no effect. In a 2 MB VRAM system, a SPORT transfer must begin and end within the same 1 MB bank, and cannot transfer between banks.
+</UL>
+Strategic memory allocation for SPORT transfers is crucial. The frame buffer must be in the same VRAM bank as the background bitmap for a SPORT background refresh to work. SPORT's full-page restriction requires that the frame buffer and bitmap both allocate full pages of VRAM for their operation; if the bitmap or the frame image use less than full pages for their contents, a fraction of a page is left unused, but is still allocated so that the SPORT transfer can write into it without harm to other processes.<P>
+As it turns out, there is little or no VRAM waste with full-page allocation because VRAM page sizes are 2 kilobytes in size (depending on available VRAM), and a standard 320-by-240 frame buffer uses exactly 75 2 KB pages of VRAM.<P>
+<H2>Clearing the Frame Buffer</H2>
+Many tasks will want to clear the frame buffer to a single color (black, for example) instead of laying down a background image for each frame. The SPORT bus features <I>FlashWrite</I>. It copies the contents of a single 32-bit register to all the pixels of the frame buffer. This clears the buffer without dedicating an entire page of VRAM to the clearance color. FlashWrite operations are not restricted to occurring during Vblank.<P>
+<A NAME="XREF17886"></A>

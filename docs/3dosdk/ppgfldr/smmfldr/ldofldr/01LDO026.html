@@ -1,0 +1,23 @@
+<Title>CenterRectCelListInSRect </Title>
+<A NAME="XREF27082"><H1>CenterRectCelListInSRect </A></H1>
+ Centers a list of cels within an SRect.<P>
+<H3>Synopsis</H3>
+<CODE>void CenterRectCelListInSRect(CCB *cel, SRect *rect)</CODE><P>
+<H3>Description</H3>
+Centers a list of one or more cels over or within the specified rectangle. The list of cels is treated as if it were a single logical entity. The first cel in the list is centered, then the X/Y coordinates of all remaining cels in the list are modified so that all cels maintain their original positional relationships. This is especially useful when the first cel in the list encompasses the area occupied by all the other cels; the effect is to center the group of cels as if they were all one cel. <P>
+The ccb_XPos and ccb_YPos fields are modified in the CCBs; other CCB fields are not modified. The centering is based on the first cel's projected size, not its source data size. If the first cel is projected to a non-rectangular shape, the result is invalid. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to a list of one or more cels to be centered. 
+</DL>
+<DL>
+<DT>rect
+<DD>Pointer to an SRect within which the cels are to be centered. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO024.html#XREF22801"><CODE>CenterRectCelListInCRect</A>, <A HREF="./01LDO018.html#XREF31346">CenterRectAACelInSRect</A>, <A HREF="./01LDO023.html#XREF13119">CenterRectCelInSRect</A> </CODE><P>

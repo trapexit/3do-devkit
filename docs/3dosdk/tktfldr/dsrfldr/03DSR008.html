@@ -1,0 +1,47 @@
+<Title>DumpStreamCCBs</Title>
+<A NAME="XREF22660"><H1>DumpStreamCCBs</A></H1>
+<A NAME="XREF10101"></A>Prints formatted summary of CCBs in a SANM stream.<P>
+<H3>Synopsis</H3>
+<CODE>dumpstreamccbs [options] -i &lt;filename&gt;</CODE><P>
+<H3>Description</H3>
+DumpStreamCCBs is an MPW tool to dump cel control blocks (CCB's) found in an SANM stream.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-i &lt;filename&gt;
+<DD>Input stream file name.
+</DL>
+<DL>
+<DT>-s &lt;time&gt;
+<DD>Start time for dump.
+</DL>
+<DL>
+<DT>-xf
+<DD>Hex file position output.
+</DL>
+<DL>
+<DT>-fbs
+<DD>Filler block sizes output only.
+</DL>
+<DL>
+<DT>-cf
+<DD>Dump nonstream cel file.
+</DL>
+<DL>
+<DT>-APOS
+<DD>Dump APOS chunks (default). Must be typed all uppercase.
+</DL>
+<DL>
+<DT>-ACCB
+<DD>Dump ACCB chunks (default). Must be typed all uppercase.
+</DL>
+<DL>
+<DT>-AMAP
+<DD>Dump AMAP chunks. Must be typed all uppercase.
+</DL>
+<H3>Examples</H3>
+Here is a typical command line:<P>
+<CODE>
+<PRE>
+dumpstreamccbs -i newSANM
+</CODE>
+</PRE>

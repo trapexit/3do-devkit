@@ -1,0 +1,12 @@
+<HTML><HEAD><TITLE>Does the Standard C++ Library Differ From Other Libraries?</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Does the Standard C++ Library Differ From Other Libraries?</H2>
+<P>A major portion of the Standard C++ Library is a collection of class definitions for standard data structures and a collection of algorithms commonly used to manipulate such structures.  This part of the library was formerly known as the Standard Template Library or STL.  The organization and design of the STL differs in almost all respects from the design of most other C++ libraries,<I> because it avoids encapsulation and uses almost no inheritance.</I>  </P>
+<P>An emphasis on encapsulation is a key hallmark of object-oriented programming.  The emphasis on combining data and functionality into an object is a powerful organizational principle in software development; indeed it is <I>the</I> primary organizational technique.  Through the proper use of encapsulation, even exceedingly complex software systems can be divided into manageable units and assigned to various members of a team of programmers for development. </P>
+<P>Inheritance is a powerful technique for permitting code sharing and software reuse, but it is most applicable when two or more classes share a common set of basic features.  For example, in a graphical user interface, two types of windows may inherit from a common base window class, and the individual subclasses will provide any required unique features.  In another use of inheritance, object-oriented container classes may ensure common behavior and support code reuse by inheriting from a more general class, and factoring out common member functions.  </P>
+<P>The designers of the STL decided against using an entirely object-oriented approach, and separated the tasks to be performed using common data structures from the representation of the structures themselves.  This is why the STL is properly viewed as a collection of algorithms and, separate from these, a collection of data structures that can be manipulated using the algorithms.</P>
+<HR>
+<A HREF="wha_6844.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="wha_3608.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

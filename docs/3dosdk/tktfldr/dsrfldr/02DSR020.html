@@ -1,0 +1,85 @@
+<Title>SubscriberMsg</Title>
+<A NAME="XREF15161"><H1>SubscriberMsg</A></H1>
+<A NAME="XREF34801">Subscriber message structure.</A><P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct SubscriberMsg {
+DS_MSG_HEADER
+
+union {
+ struct {
+  void* buffer;
+  } data;
+ 
+ struct {
+  long number;
+  long status;
+  } channel;
+ 
+ struct {
+  long controlArg1;
+  void* controlArg2;
+  } control;
+
+ struct {
+  unsigned long lock;
+  } sync;
+
+ struct {
+  unsigned long options;
+  } start;
+
+ struct {
+  unsigned long options;
+  } stop;
+
+ } msg;
+
+} SubscriberMsg, *SubscriberMsgPtr</CODE></pre><P>
+<H3>Description</H3>
+Sends an exit message to a data acquisition thread. <CODE>DisposeDataAcq()</CODE> also releases the memory allocated to the data acquisition thread.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>DS_MSG_HEADER</CODE>
+<DD>See the <A HREF="#XREF39372">DS_MSG_HEADER</A> manual page
+</DL>
+<H3>data</H3>
+<DL>
+<DT><CODE>buffer</CODE>
+<DD>Pointer to the data.
+</DL>
+<H3>channel</H3>
+<DL>
+<DT><CODE>number</CODE>
+<DD>Channel number to operate upon.
+</DL>
+<DL>
+<DT><CODE>status</CODE>
+<DD>Channel status (bits 31-16 subscriber defined).
+</DL>
+<H3>control</H3>
+<DL>
+<DT><CODE>controlArg1</CODE>
+<DD>Subscriber defined.
+</DL>
+<DL>
+<DT><CODE>controlArg2</CODE>
+<DD>Subscriber defined.
+</DL>
+<H3>sync</H3>
+<DL>
+<DT><CODE>clock</CODE>
+<DD>Current time.
+</DL>
+<H3>start</H3>
+<DL>
+<DT><CODE>options</CODE>
+<DD>Start options.
+</DL>
+<H3>stop</H3>
+<DL>
+<DT><CODE>options</CODE>
+<DD>Stop options.
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

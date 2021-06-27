@@ -1,0 +1,89 @@
+<TITLE>Detail display windows</TITLE>
+<H1><LINK NAME="XREF26423">Detail display windows</LINK></H1><HR>
+The 3DO Debugger tool offers the following detail displays for investigating program structure and working with breakpoints and variables:<P>
+
+<UL>
+<LI><A HREF="#XREF27248">The Registers window</A>
+<LI><A HREF="#XREF15141">The Symbol window</A>
+</UL>
+<A NAME="XREF27248"><H2>The Registers window</A></H2>
+The Registers window displays all CPU registers in Supervisor (SVC), User, FIRQ, IRQ, Abort, and Undefined modes with associated PC, SPSR (where applicable), and CPSR. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/RegistersWindow.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>CPU Registers window.</I><P>
+This section first provides an annotated illustration of the window, then discusses the different View options available from the pop-up menu. <P>
+<H3>Register Editing</H3>
+The following table illustrates performing edit operations in the Registers window. <P>
+<PRE>
+<B>Table 1: </B><I> Working with the CPU Registers window.</I>
+--------------------------------------------------------
+To...             |Do this...                           
+--------------------------------------------------------
+Change a register |Click on it to select it, then enter 
+                  |or paste any valid expression.       
+--------------------------------------------------------
+Set or Clear the  |Click the appropriate Status checkbox
+current status    |and check it to set the bit, clear it
+and/or interrupt  |to clear the bit. You can achieve the
+bits (CPSR)       |same result by editing the CPSR field
+                  |directly.                            
+--------------------------------------------------------
+Set or clear the  |Select and edit the SPSR displayed   
+saved status and  |value. If the SPSR field is not      
+interrupt bits    |associated with the correct mode, it 
+(SPSR)            |is dimmed and displays "not avbl."   
+                  |You cannot edit the field.           
+--------------------------------------------------------
+Change the program|Select and edit the displayed PC     
+counter (PC)      |value.                               
+--------------------------------------------------------
+</PRE>
+<P>
+<H3>Registers window View options</H3>
+
+<IMG SRC="Figures/002.Ch2Pics/RegistersOpt.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Registers window View options. </I><P>
+Use the Registers window View menu to select the operating mode.<P>
+<UL>
+<LI>To display a specific operating mode (Svc, User, FIRQ, IRQ, Abort, or Undefined) register set, select the desired mode from the View menu.
+<p>
+<LI>To always display the register set of the current operating mode, select Current.
+</UL>
+<A NAME="XREF15141"><H2>The Symbol window</A></H2>
+The Symbol window lists all symbols for the current program. You can copy symbols from the Symbol window and paste them into the Examine field of any other window.<P>
+
+<IMG SRC="Figures/002.Ch2Pics/SymbolWindow.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 3: </B><I>Symbol window.</I><P>
+The following table illustrates how you can work with the Symbol window. <P>
+<PRE>
+<B>Table 2: </B><I> Working with the Symbol window</I>
+--------------------------------------------------------
+To...          |Do this...                              
+--------------------------------------------------------
+Open the window|Press Command-Y or choose Symbols from  
+               |the View menu to view the Symbol window.
+               |                                        
+--------------------------------------------------------
+Change the     |By default, symbols are sorted by name. 
+sorting        |To sort them by address, click the      
+algorithm      |Address radio button. To resort them by 
+               |name, click the Name radio button.      
+--------------------------------------------------------
+Use auto-search|The Symbol window supports auto-search  
+               |in the Symbol field at the bottom of the
+               |window. Entering the beginning          
+               |characters of a symbol and pressing     
+               |Return highlights the first matching    
+               |symbol. If you're debugging C++ code,   
+               |the Symbol window shows mangled         
+               |names.After a search, you can copy a    
+               |symbol from the editable field at the   
+               |bottom of the window, even for a partial
+               |match.                                  
+--------------------------------------------------------
+</PRE>
+<P>
+<P>

@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>Selecting a Container</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Selecting a Container</H2>
+<P>The following series of questions can help you determine which type of container is best suited for solving a particular problem.</P>
+<P><I>How are values going to be accessed?</I></P>
+<P>If random access is important, than a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> or a <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> should be used.  If sequential access is sufficient, then one of the other structures may be suitable.</P>
+<P><I>Is the order in which values are maintained in the collection important?</I></P>
+<P>There are a number of different ways values can be sequenced.  If a strict ordering is important throughout the life of the container, then the <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> data structure is an obvious choice, as insertions into a set are automatically placed in order.  On the other hand, if this ordering is important only at one point (for example, at the end of a long series of insertions), then it might be easier to place the values into a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> or <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>, then sort the resulting structure at the appropriate time.  If the order that values are held in the structure is related to the order of insertion, then a <A HREF="../stdref/sta_9602.htm"><B><I>stack</I></B></A>, <A HREF="../stdref/que_0953.htm"><B><I>queue</I></B></A>, or <B><I>list</I></B> may be the best choice.</P>
+<P><I>Will the size of the structure vary widely over the course of execution?</I></P>
+<P>If true, then a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> or <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> might be the best choice.  A <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> or <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> will continue to maintain a large buffer even after elements have been removed from the collection.  Conversely, if the size of the collection remains relatively fixed, than a vector or deque will use less memory than will a list or set holding the same number of elements.</P>
+<P><I>Is it possible to estimate the size of the collection?</I></P>
+<P>The <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> data structure provides a way to pre-allocate a block of memory of a given size (using the <SAMP>reserve()</SAMP> member function).  This ability is not provided by the other containers.</P>
+<P><I>Is testing to see whether a value is contained in the collection a frequent operation?</I></P>
+<P>If so, then the <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> or <A HREF="../stdref/map_8018.htm"><B><I>map</I></B></A> containers would be a good choice.  Testing to see whether a value is contained in a set or map can be performed in a very small number of steps (logarithmic in the size of the container), whereas testing to see if a value is contained in one of the other types of collections might require comparing the value against every element being stored by the container.</P>
+<P><I>Is the collection indexed?  That is, can the collection be viewed as a series of key/value pairs?</I></P>
+<P>If the keys are integers between 0 and some upper limit, a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> or <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> should be employed.  If, on the other hand, the key values are some other ordered data type (such as characters, strings, or a user-defined type), the <A HREF="../stdref/map_8018.htm"><B><I>map</I></B></A> container can be used.</P>
+<P><I>Can values be related to each other?</I></P>
+<P>All values stored in any container provided by the standard library must be able to test for equality against another similar value, but not all need to recognize the relational less-than operator.  However, if values cannot be ordered using the relational less-than operator, they cannot be stored in a <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> or a <A HREF="../stdref/map_8018.htm"><B><I>map</I></B></A>.</P>
+<P><I>Is finding and removing the largest value from the collection a frequent operation?</I></P>
+<P>If the answer is "yes," the <B><I>priority queue</I></B> is the best data structure to use.</P>
+<P><I>At what positions are values inserted into or removed from the structure?</I></P>
+<P>If values are inserted into or removed from the middle, then a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> is the best choice.  If values are inserted only at the beginning, a <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> or a <B><I>list</I></B> is the preferred choice.  If values are inserted or removed only at the end, a <A HREF="../stdref/sta_9602.htm"><B><I>stack</I></B></A> or <A HREF="../stdref/que_0953.htm"><B><I>queue</I></B></A> may be a logical choice.</P>
+<P><I>Is a frequent operation the merging of two or more sequences into one?</I></P>
+<P>If so, a <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> or a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> would seem to be the best choice, depending whether the collection is maintained in order.  Merging two sets is a very efficient operation.  If the collections are not ordered, but the efficient <SAMP>splice()</SAMP> member function from class list can be used, then the list data type is to be preferred, since this operation is not provided in the other containers.</P>
+<P>In many situations any number of different containers may be applicable to a given problem.  In such cases one possibility is to compare actual execution timings to determine which alternative is best.</P>
+<HR>
+<A HREF="ove_0957.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="mem_0434.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

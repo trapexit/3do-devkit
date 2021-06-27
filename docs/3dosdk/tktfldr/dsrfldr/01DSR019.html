@@ -1,0 +1,96 @@
+<Title>DSClockSync</Title>
+<A NAME="XREF21260"><H1>DSClockSync</A></H1>
+<A NAME="XREF29299">Synchronizes the DataStreamer clock.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 DSClockSync (DSStreamCBPtr streamCBPtr, MemPoolPtr msgPoolPtr, 
+unsigned long nowTime)</CODE><P>
+<H3>Description</H3>
+Sends a clock synchronization message to all current subscribers to a 
+stream. <CODE>DSClockSync()</CODE> defines a subscriber message 
+<CODE>subMsg</CODE> containing the new time value, then calls 
+<CODE>DSSetClock()</CODE> directly to reset the DataStreamer clock and 
+broadcasts the synchronization message to the subscribers. The broadcast 
+of the synchronization message is asynchronous to the completion of 
+<CODE>DSClockSync()</CODE>.<P>
+<CODE>DSClockSync()</CODE> uses the pool of messages specified by 
+<CODE>msgPoolPtr</CODE>, allocating a synchronization message for each 
+subscriber to the specified stream.<P>
+Clock time in the DataStreamer is measured in standard Portfolio audio 
+clock ticks (the DataStreamer does not change the rate of the audio clock 
+or the duration of audio ticks). Since the DataStreamer does not own the 
+audio clock, however, external tasks can affect the DataStreamer clock by 
+altering the state of the audio clock.<P>
+Since the DataStreamer and acquisition threads determine stream 
+positioning and data flushing by the DataStreamer clock, resetting the 
+clock can affect the loading of streamed data chunks adversely. The 
+DataStreamer clock is normally reset only when a new stream is opened. 
+Streams can be started and stopped without requiring the DataStreamer 
+clock to be reset (see <CODE>DSStartStream()</CODE> and 
+<CODE>DSStopStream()</CODE>).<P>
+The Control subscriber usually synchronizes the clock. Any subscriber, 
+however, may set the clock (the audio subscriber normally sets the 
+clock).<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Pointer to the stream context block. 
+</DL>
+<DL>
+<DT><CODE>msgPoolPtr</CODE>
+<DD>Pointer to a pool of messages.
+</DL>
+<DL>
+<DT><CODE>nowTime</CODE>
+<DD>New clock time, measured relative to the start of the stream specified 
+by <CODE>streamCBPtr.
+</DL>
+<H3>Messages</H3>
+The members of </CODE><CODE>subMsg</CODE> are set to the following 
+values:<P>
+<DL>
+<DT><CODE>subMsg.whatToDo
+<DD>kStreamOpSync
+</DL>
+<DL>
+<DT><CODE>subMsg.privatePtr
+<DD>NULL
+</DL>
+<DL>
+<DT><CODE>subMsg.msg.sync.clock
+<DD>nowTime</CODE>
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+</DL>
+<DL>
+<DT>0
+<DD>None
+</DL>
+<DL>
+<DT><CODE>kDSNotRunning</CODE>
+<DD>Stream not running
+</DL>
+These values are returned if the DataStreamer encounters an error while 
+processing the message request:<P>
+<DL>
+<DT><CODE>kDSNoMsgErr</CODE>
+<DD>Could not allocate a synchronization message for each stream subscriber
+</DL>
+<DL>
+<DT><CODE>kDSNoReplyPortErr</CODE>
+<DD>Could not locate item of the reply port
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>SendMsg()</CODE> failed
+</DL>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a 
+listing of error messages returned by <CODE>SendMsg()</CODE>.<P>
+<H3>Associated Files</H3>
+DataStreamLib.h<P>
+<H3>See Also</H3>
+<A HREF="#XREF23945"><CODE>DSSetClock</A>, 
+<A HREF="../../ppgfldr/mgsfldr/mprfldr/001mpr058.html#XREF22869">OwnAudioClock</A>, 
+<A HREF="../../ppgfldr/pgsfldr/sprfldr/001spr122.html#XREF17036">SendMsg</A></CODE><P>

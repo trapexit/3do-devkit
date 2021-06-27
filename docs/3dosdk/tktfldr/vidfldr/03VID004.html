@@ -1,0 +1,14 @@
+<TITLE>Processing digitized materials</TITLE>
+<H1><LINK NAME="XREF17876">Processing digitized materials</LINK></H1><HR>
+After you've captured your materials, further processing might be needed before compression, including: <P>
+<UL>
+<LI>3-2 Pulldown for film-based video
+<LI>deinterlacing
+<LI>cropping and resizing
+</UL>
+<H2>3-2 Pulldown </H2>
+Film-based material starts out at 24 fps. Insertion of composite frames during the Telecine process increases the rate to 30 fps. Since Telecine uses certain frames as the odd or even field of the video frame, removing these composite frames will result in better-quality video. <P>
+Version 1.2 of the 3-2 Pulldown tool for removing composite frames is included on the 3DO Toolkit 1.5 CD. Additional documentation is covered in Chapter 5 of this manual. You might also use frame-by-frame comparison to remove composite frames in short video sequences. <P>
+<H2>Deinterlacing</H2>
+True video is 60 fields sampled every second, with two adjacent fields interlaced to construct a frame. When compressing 60-fps video with Cinepak use one field, either odd or even, and discard the other; that is, subsample each frame (captured at 640 x 480 at 30 fps) in the vertical direction. The resulting image is 640 x 240, with spatially aliased artifacts along diagonal lines in the vertical direction that appear as "edge crawl" on an NTSC screen. For some movies this is acceptable, but others will need edge reconstruction. CoSA After Effects is expected to include this function in their next release. Most capture routines will subsample if anything other than 640 x 480 is selected. <P>
+In summary, we recommend that you capture at 640 x 480 or 640 x 240, keep odd fields, and reconstruct even fields using the best available method (for example, CoSA). Then use bicubic interpolation to reduce to 320 x 240. <P>

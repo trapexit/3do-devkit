@@ -1,0 +1,79 @@
+<TITLE>Layout Tool Troubleshooting</TITLE>
+<H1>Layout Tool Troubleshooting<LINK NAME="XREF25054"></LINK></H1><HR>
+This section explains some of the error messages or problems you can 
+encounter while running the layout tool and provides possible solutions.<P>
+<H3>Error Message: Layout failed; unable to allocate avatar(s)</H3>
+The placement of avatars can result in insufficient contiguous space for a 
+large file and result in following message:<P>
+<CODE>
+<PRE>
+layout failed: unable to allocate avatar(s) 
+for:MyReallyBigMovieFile
+</CODE>
+</PRE>
+If that message appears, increase the total amount of space assigned to 
+the image file or reduce the number of avatars.<P>
+<H3>Error Message: CD Image creation error: "Could not assign avatar(s) 
+for launchme"</H3>
+This message indicates the layout tool could not write all the avatars 
+because the <I>cdrom.tcl</I> file did not allocate enough space for the 
+image. Try the following:<P>
+<OL>
+<LI>In the <I>cdrom.tcl</I> file, increase the amount of space allocated 
+for the <I>cdrom.image</I> file by editing the following line:
+<p>
+<DL>
+<DD><CODE>set megabytes n</CODE><BR>
+</DL>
+<DL>
+<DD><CODE>((size of takeme folder) * 1.1) </CODE><BR>
+</DL>
+<p>
+
+<LI>Decrease the number of directory avatars or root avatars in the<I> 
+cdrom.tcl</I> file.
+</OL>
+<H3>Error Message: CD Image creation error: "Unable to match glob 
+patterns"</H3>
+There is an empty folder in the directory you created; remove it. <P>
+<H3>Problem: Title does not run</H3>
+To track down the problem, ask yourself the following questions: <P>
+<UL>
+<p>
+<LI>Are there hard-coded pathnames using <I>/remote</I> in your program? 
+Your program must use aliases to <CODE>$boot</CODE>, which the system sets 
+to <I>/remote</I> when running through the Debugger, and to <I>/cd-rom</I> 
+when running from the CD-ROM image or disc.
+<p>
+<LI>When testing in Debugger mode, make sure to set the <CODE>$boot</CODE> 
+alias to 
+<CODE>/cd-rom</CODE> before running your application. On the command line 
+in the Debugger, type the following:
+</UL>
+<DL>
+<DD><CODE>alias boot /cd-rom</CODE><BR>
+</DL>
+<UL>
+<LI>Then run <I>launchme</I>.
+</UL>
+<UL>
+<LI>Make sure that you use the version of the layout tool distributed with 
+the most recent release of 3DO software.
+<p>
+<LI>When your application reads files from the CD-ROM, it must read an 
+integral number of disc blocks. For example, if <CODE>Cmd_Status</CODE> 
+reports that the blocksize is 2048 and the file size is 3277 bytes, the 
+program <I>must </I>read 4096 bytes. 
+</UL>
+<H3>Message: "O/S error -34 allocating space"</H3>
+This error indicates that there is not enough contiguous space on the hard 
+drive to lay down the CD-ROM image. Remember you need the amount of space 
+you have defined in the <I>cdrom.tcl</I> file. You can also edit the 
+<I>cdrom.tcl</I> file so the layout tool places the <I>cdrom.image</I> 
+file on a hard disk that has enough space.<P>
+<B>Note: </B>Consider defragmenting your hard disk if you have this 
+problem.<P>
+<H3>Problem: Layout is very slow</H3>
+If you're using a Macintosh operating system earlier than 7.5, set file 
+caching to 32 KB to speed up the layout tool. Note that this should not be 
+necessary with the layout tool included with 3DO Portfolio 2.5.<P>

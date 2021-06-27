@@ -1,0 +1,41 @@
+<Title>CreateUniqueMsgPort</Title>
+<A NAME="XREF20935"><H1>CreateUniqueMsgPort </A></H1>
+<A NAME="XREF23654"></A>Creates a message port with a unique name.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateUniqueMsgPort( const char *name, uint8 pri, uint32 signal )</CODE><P>
+<H3>Description</H3>
+This convenience procedure creates a message port item. It also creates a message queue for the port in system RAM. You can use this procedure in place of <CODE>CreateItem()</CODE> to create the item. <P>
+This function works much like <CODE>CreateMsgPort()</CODE>, except that it guarantees that no other message port item of the same name already exists. And once this port created, no other port of the same name will be allowed to be created. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the message port (see "Notes").
+</DL>
+<DL>
+<DT>pri
+<DD>The priority of the message port. The priority has no effect on the way message ports operate, but it does determine the order of the message ports in the global list of message ports and thus, the order in which message ports are found. 
+</DL>
+<DL>
+<DT>signal
+<DD>Specifies the bit in the signal word that is set when a message arrives at this port. If zero is supplied a new signal will be allocated. (See the description of AllocSignal() for information about allocating signal bits.) 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the new message port or an error code if an error occurs. If a port of the same name already existed when this call was made, the ER_Kr_UniqueItemExists error will be returned. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+When you no longer need a message port, use <CODE>DeleteMsgPort()</CODE> to delete it. <P>
+You can use <CODE>FindMsgPort()</CODE> to find a message port by name. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr024.html#XREF10430"><CODE>CreateMsg</A>(), <A HREF="./01spr034.html#XREF14458">DeleteMsg</A>(), <A HREF="./01spr035.html#XREF42671">DeleteMsgPort</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>(), <A HREF="./01spr124.html#XREF40209">SendSmallMsg</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF20935"></LINK></H1><HR>

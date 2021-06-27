@@ -1,0 +1,30 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut06_helicopter.patch,v 1.2 1994/10/26 21:36:42 peabody Exp $
+;*
+;*  Tutorial 6: Filtered noise modulated using triangle wave.
+;*
+;******************************************************************************
+
+LoadInstrument noise rednoise.dsp
+LoadInstrument tri triangle_lfo.dsp
+LoadInstrument svf svfilter.dsp
+LoadInstrument mod1 timesplus.dsp    ; for mixing control signals
+LoadInstrument out directout.dsp
+
+Tweak noise Amplitude 20000
+Tweak noise FRequency  3000
+Tweak svf Resonance 8280
+Tweak tri Frequency 4000        ; svf modulation rate
+Tweak mod1 InputB 734           ; svf modulation amount
+Tweak mod1 InputC 785           ; svf frequency offset
+
+Connect   tri   Output      mod1 InputA
+Connect   mod1  Output      svf  Frequency   ; modulation destination
+Connect   noise Output      svf Input
+Connect   svf   BandPass      out InputLeft
+Connect   svf   Output      out InputRight

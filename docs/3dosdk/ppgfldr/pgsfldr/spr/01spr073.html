@@ -1,0 +1,31 @@
+<TITLE>GetMemTrackSize</TITLE>
+<A NAME="XREF30642"><H1>GetMemTrackSize </A></H1>
+<A NAME="XREF15280"></A> Get the size of a block of memory allocated with MEMTYPE_TRACKSIZE.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetMemTrackSize( const void *p )</CODE><P>
+<H3>Description</H3>
+This function returns the size that was used to allocate a block of memory. The block of memory must have been allocated using the MEMTYPE_TRACKSIZE flag, otherwise this function will return garbage. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>p
+<DD>Pointer obtained from a system memory allocation routine. The block of memory must have been allocated using the MEMTYPE_TRACKSIZE flag, otherwise the value returned by this function will be random. 
+</DL>
+<H3>Return Value</H3>
+The function returns the size, in bytes, of the memory block. This size corresponds to the size provided to the system memory allocation routine when the block was first allocated. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveats</H3>
+This function will not return the correct value for allocations made using MEMTYPE_STARTPAGE and using a private MemList structure. Allocations done with <CODE>AllocMem()</CODE> will always work, since they use the task's memory lists and not any private MemList. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr004.html#XREF40501"><CODE>AllocMem</A>(), <A HREF="./01spr064.html#XREF31542">FreeMem</A>() </CODE><P>
+</CODE>
+<H1></H1><HR>

@@ -1,0 +1,128 @@
+<TITLE>Portability</TITLE>
+<H1><LINK NAME="XREF37490">Portability</LINK></H1><HR>
+The C programming language has gained a reputation for being portable across machines, while still providing machine-specific capabilities. However, the fact that a program is written in C gives little indication of the effort required to port it from one machine to another or, indeed, from one C system to another.<P>
+Obviously the most effort-consuming task is porting between two entirely different hardware environments, running different operating systems with different compilers. Because many users of the ARM C compiler will face just this situation, this section deals with the issues that the user should be aware of when porting software to or from the ARM C system environment. In outline:<P>
+<UL>
+<LI>general portability considerations;
+<p>
+<LI>the differences between ANSI C and the well-known K&amp;R C as defined in the book <I>The C Programming Language</I>, (first edition) by Kernighan and Ritchie;
+<p>
+<LI>using the ARM C compiler in -pcc compatibility mode;
+<p>
+<LI>environmental aspects of portability.
+</UL>
+In addition, the tool <I>topcc</I> is supplied as part of the ARM Software Development Toolkit. <I>topcc</I> translates ANSI C to PCC style C. <P>
+If code is to be used on a variety of different systems, there are certain issues that should be borne in mind to make porting an easy and relatively error-free process. It is essential to identify practices which may make software system-specific, and to avoid them. In the remainder of this section, we document the general portability issues for C programs.<P>
+<H2>Fundamental data types </H2>
+The size of fundamental data types such as char, int, long int, short int and float will depend mainly on the underlying architecture of the machine on which the C program is to run. Compiler writers usually implement these types in a way which is natural for the target. For example, Release 5 of the Microsoft C Compiler for DOS has int, short int and long int, occupying 2, 2 and 4 bytes respectively, while the ARM C Compiler uses 4, 2 and 4 bytes, respectively. Certain relationships are guaranteed by the ANSI C standard (such as sizeof(long int) &gt;= sizeof(short int)), but code which makes any assumptions about whether int and long int have the same size, will not be portable.<P>
+A common non-portable assumption is embedded in the use of hexadecimal constant values. For example:<P>
+<CODE>
+<PRE>
+int i = 0xffff;            /*    -1 if sizeof(int) == 2;
+                65535 if sizeof(int) == 4... */
+</CODE>
+</PRE>
+In non-ANSI dialects of C there are pitfalls with argument passing. Consider, for example:<P>
+<CODE>
+<PRE>
+int f(x)
+long int x;
+{...}
+</CODE>
+</PRE>
+and the (careless) invocation of f():<P>
+<CODE>
+<PRE>
+f(1);    /*    f(1L) was intended/required */
+</CODE>
+</PRE>
+If sizeof(int) == sizeof(long int), all will be well; otherwise there may be catastrophe.<P>
+A dual problem afflicts the format string of the printf() family, even in ANSI C. For example:<P>
+<CODE>
+<PRE>
+long int l1, l2, l3;
+...
+printf("L1 = %d, L2 = %d, L3 = %d\n", l1, l2, l3);
+    /* "...%ld...%ld...%ld..." is intended/required */
+</CODE>
+</PRE>
+Again, if sizeof(int) != sizeof(long) we have dangerous nonsense.<P>
+Another common assumption is about the signedness of characters, especially if chars are expected to be 7-bit quantities rather than 8-bit ones. For example, consider:<P>
+<CODE>
+<PRE>
+static char tr_tab[256] = {...};
+...
+int i, ch;
+...
+    i = fgetc(f);   /*should be i = (unsigned char) fgetc(f) */
+    ch = tr_tab[i]; /* WRONG if chars are signed... */
+</CODE>
+</PRE>
+Note that declaring <I>i </I>to be unsigned int doesn't help (it merely causes ch = tr_tab[i] to index a very long way off the other end of the array!).<P>
+In non-ANSI dialects of C there is no way to explicitly declare a signed char, so plain chars tend to be signed by default (as with the ARM C compiler in -pcc mode). In ANSI C, a char may be plain, signed or unsigned, so a plain char tends to be whatever is most natural for the target (<I>unsigned char</I> on the ARM).<P>
+<H2>Byte ordering</H2>
+A highly non-portable feature of many C programs is the implicit or explicit exploitation of byte ordering within a word of store. Such assumptions tend to arise when copying objects word by word (rather than byte by byte), when inputting and outputting binary values, and when extracting bytes from, or inserting bytes into, words using a mixture of shift-and-mask and byte addressing. A contrived example which illustrates the essential pitfalls is:<P>
+<CODE>
+<PRE>
+unsigned a;
+char *p = (char *)&amp;a;
+unsigned w = AN_ARBITRARY_VALUE;
+while (w != 0)                                /* put w in a */
+{    *p++ = w;                            /* or, maybe, w byte-reversed... */
+    w &gt;&gt;= 8;
+}
+</CODE>
+</PRE>
+This code will only work on a machine with 'little-endian' byte order.<P>
+The best solution to this class of problems is either to write code which does not rely on byte order, or to have separate code to deal appropriately with the different byte orders.<P>
+<H2>Store alignment</H2>
+The only guarantee given in the ANSI C Standard regarding the alignment of members of a struct is that a hole (caused by padding) cannot occur at the beginning of the struct.<P>
+The values of holes created by alignment restrictions are undefined, and you should not make assumptions about these values. Strictly, two structures with identical members, each having identical values, will only be found to be equal if field-by-field comparison is used; a byte-by-byte, or word-by-word, comparison need not indicate equality.<P>
+In practice, this can be a real problem for both auto structs and structs allocated dynamically using malloc. If byte-by-byte comparability of such structures is required, they must be zeroed using <I>memset()</I> before assigning field values.<P>
+Padding may also have implications for the space required by a large array of structs. For example:<P>
+<CODE>
+<PRE>
+#define ARRSIZE 10000
+typedef struct
+{    int i;
+    short s;
+} ELEM;
+ELEM arr[ARRSIZE];
+</CODE>
+</PRE>
+may require 40KB, 60KB or 80KB depending on the size and alignment of ints and shorts (assume a short occupies 2 bytes, 2-byte aligned; then consider a 2-byte int, a 4-byte int 2-byte aligned, and a 4-byte int 4-byte aligned).<P>
+<H2>Pointers and pointer arithmetic</H2>
+A deficiency of the original definition of C, and of its subsequent use, has been the relatively unrestrained conversion between pointers to different data types and integers or longs. Much existing code makes the assumption that a pointer can safely be held in either a long int or an int variable. While such an assumption may indeed be true in many implementations on many machines, it is a highly non-portable feature on which to rely. Furthermore, there is no single arithmetic type which is guaranteed to hold a pointer (long or unsigned long is probably a generally safer guess than int or unsigned int).<P>
+The problem is further compounded when taking the difference of two pointers by performing a subtraction. When the difference is large, this approach is full of potential errors. ANSI C defines a type <I>ptrdiff_t</I>, which is capable of reliably storing the result of subtracting two pointer values of the same type; a typical use of this mechanism would be to apply it to pointers into the same array.<P>
+Although the difference between any two pointers of similar type may be meaningful in a flat address space, only the difference between two pointers into the <I>same object</I> need be meaningful in a segmented address space.<P>
+Finally, there are problems of evaluation order with address arithmetic. Consider:<P>
+<CODE>
+<PRE>
+long int base, offset;
+char *p1, *p2;
+....
+offset = base + (p2 - p1);                    /*intended effect */
+</CODE>
+</PRE>
+Now suppose this latter expression were:<P>
+<CODE>
+<PRE>
+offset = (base + p2) - p1;
+</CODE>
+</PRE>
+In a flat address space without holes the expressions are equivalent. In a segmented address space, (p2 - p1) may well be a valid offset within a segment, whereas (base + p2) may be an invalid address. If, in the second case, the validity is checked before subtracting p1, then the expression will fault. This latter class of problem will be familiar to MS-DOS programmers, but alien to those whose main experience is of Unix.<P>
+<H2>Function-argument evaluation</H2>
+Whilst the evaluation of operands to operators as ',' and || is defined to be strictly left-to-right (including all side-effects), the same does not apply to function-argument evaluation. For example, in the function call:<P>
+<CODE>
+<PRE>
+i = 3;
+f(i, i++);
+</CODE>
+</PRE>
+it is unclear whether the call is <I>f(3, 3)</I> or<I> f(4, 3)</I>.<P>
+Of course, it is in general unwise for argument expressions to have side effects, for many reasons.<P>
+<H2>System-specific code</H2>
+The direct use of operating system calls is obviously non-portable, though often necessary. Isolating such code in target-specific modules, behind target-independent interfaces, helps.<P>
+File names and file-name processing are common sources of non-portability which are often surprisingly painful to deal with. Again, the best approach is to localise all such processing.<P>
+Binary data files are inherently non-portable. Often the only solution to this problem may be the use of some portable external representation.<P>
+<P>

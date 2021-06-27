@@ -1,0 +1,49 @@
+<TITLE>The Process of Using Instruments</TITLE>
+<H1><LINK NAME="XREF40976">The Process of Using Instruments</LINK></H1><HR>
+To use instruments, a task must first open the Audio folio then load and prepare the instruments. After the instrument environment is set, the task plays notes on the instruments. When it is finished, the task deletes all instruments and audio items it created and closes the Audio folio. The overall process is as follows:<P>
+<OL>
+<LI>Open the Audio folio
+<p>
+<LI>Prepare the instruments by loading an instrument template from disc.
+<p>
+<UL>
+<LI>Create an instrument from the instrument template, allocating RAM and audio resources.
+<LI>Set the tuning of any instrument or template (optional).
+<LI>Load a sample and attach it to the instrument (if it's a sampled sound instrument).
+<LI>Create and attach an envelope to an instrument (optional).
+<LI>Connect the output of one instrument to the input of another instrument (optional).
+<LI>Connect the audio outputs of all instruments to one or more mixers (mandatory if you want to hear the instruments' output).
+</UL><BR>
+
+
+<LI>Grab any of an instrument's knobs for later tweaking (optional).
+<p>
+<LI>Tweak knobs to set an instrument's starting characteristics (optional).
+<p>
+<LI>Allocate part of the system global amplitude and set individual instrument amplitudes accordingly (optional).
+<p>
+<LI>Play the instruments.
+<p>
+<UL>
+<LI>Start a note on an instrument.
+<LI>Wait a specified period of time.
+<LI>Tweak knobs to change an instrument's operation while playing (optional).
+<LI>Release a previously started note (sometimes optional).
+<LI>Stop a previously started note (sometimes optional).
+</UL><BR>
+<LI>Independently play an instrument's attachment, such as an envelope (optional) by starting, releasing, and stopping the attachment.
+<p>
+<LI>Clean up when finished:
+<p>
+<UL>
+<LI>Delete all unused instruments.
+<LI>Delete any unused instrument templates.
+<LI>Delete all other unused Audio folio items.
+<LI>Close the Audio folio.
+</UL><BR>
+</OL>
+As you can see, there are several optional steps. For example, many tasks do not have any need to set an instrument's tuning; they use the 12-tone, equal-tempered default tuning.<P>
+You should also note that the order shown above is not fixed, especially when it comes to playing an instrument. For example, a task can tweak instrument knobs before, during, or after note playing on the instrument. A task can also start a note on one instrument, then load and allocate a new instrument.<P>
+Nonetheless, there is some fixed order to the process: a task must load an instrument template before it can create an instrument; it must create an instrument before it can connect the instrument, grab and tweak knobs, or play notes on the instrument; and it must load and connect a sample to a sampled sound instrument before playing the instrument. Beyond the fact that audio items must be created before they are used, most Audio folio order is set by common sense and taste.<P>
+See <I>beep.c</I> and <I>playsample.c</I> for examples of the above.<P>
+<P>

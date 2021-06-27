@@ -1,0 +1,25 @@
+<Title>SEC_TO_USEC</Title>
+<A NAME="XREF40701"><H1>SEC_TO_USE </A></H1>
+ Converts seconds to microseconds.<P>
+<H3>Synopsis</H3>
+<CODE>int32 SEC_TO_USEC (value)</CODE><P>
+<H3>Description</H3>
+This macro converts a number of seconds to the equivalent number of 
+microseconds. True floating point constant values are legal, for example 
+SEC_TO_USEC(2.5). The compiler will resolve the constant at compile time 
+without needing runtime floating point support. Values up to 2147 seconds 
+(about 35 minutes) can be expressed without overflowing an int32. The 
+macro is usable in expression context and only evaluates its argument 
+once. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>value
+<DD>An integer constant or variable, or a floating point constant to be 
+converted to microseconds. 
+</DL>
+<H3>Return Value</H3>
+The number of microseconds. <P>
+<H3>Implementation</H3>
+Macro <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>

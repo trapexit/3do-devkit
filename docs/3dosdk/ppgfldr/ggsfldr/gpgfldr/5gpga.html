@@ -1,0 +1,27 @@
+<TITLE>An Overview of Cel Programming</TITLE>
+<H1><LINK NAME="XREF20566">An Overview of Cel Programming</LINK></H1><HR>
+"<A HREF="./1gpg.html#XREF31524">Understanding 3DO Graphics</A>" said that a cel consists of three principal parts:<P>
+<UL>
+<LI>Source data that contains the pixel values for the cel
+<LI>A preamble that contains information about the format of the source data
+<LI>A CCB that specifies how the cel is projected into a screen or bitmap
+</UL>
+However, a cel may also use a custom PLUT (pixel lookup table) that contains values used to decode cel pixels as they pass through the cel engine's pixel decoder.<P>
+To project a cel, a program typically imports the cel source data and preamble (and a custom PLUT if desired) from a file, and then either creates a CCB to control the cel, or imports a CCB along with the source data and preamble. The program then uses either <CODE>DrawCels()</CODE> or <CODE>DrawScreenCels()</CODE> to point to the CCB and point to a screen or bitmap on which to project the cel. Portfolio reads the CCB to determine the position and projection characteristics of the cel, and then reads the source data and projects its pixels according to the information stored in the CCB, preamble, and current PLUT.<P>
+<H2>The CCB</H2>
+The CCB is a collection of values to be stored in hardware registers of the cel engine. Each of those values controls a different aspect of cel engine operation. A cel projection call writes those values into the cel engine's registers and then uses the cel engine to project a cel; the register values determine how the cel is projected.<P>
+A program controls the cel engine's operation by setting appropriate CCB values and then loading them and using them with a projection call. A partial list of the CCB operating parameters includes:<P>
+<UL>
+<LI>Setting the cel's position within a bitmap or screen
+<LI>Setting the projection quadrilateral to stretch the cel
+<LI>Setting the pixel processor mode
+<LI>Turning clipping on and off
+<LI>Controlling back-face rendering
+<LI>Locking and unlocking the corner engines
+<LI>Linking one cel to another cel
+</UL>
+To change the cel engine's operation during execution (to move a cel to a new location, for example), a program changes the contents of a cel's CCB. It then uses a cel projection call to reproject the cel with the new CCB values. It is important to note that a CCB does not need to include all of the possible register values. If it includes only a partial set of values (it does not include back-face removal information, for example), only the values given are written to cel engine registers. The other cel engine registers retain their previous values.<P>
+<H2>The Cel Engine Control Word</H2>
+The CCB does not control the entire cel engine. Parts of the projector are controlled by the <I>cel engine control word,</I> a 32-bit value. Its bits primarily control how cornerweight and least-significant blue bits pass through the projector. The cel engine control word also enables and disables super clipping.<P>
+To set the projector with the cel engine control word, a program uses the <CODE>SetCEControl()</CODE> call to point to a bitmap and then to pass a 32-bit value to the cel engine. The value's parts are written into the appropriate cel engine registers, which changes the projector operation for that bitmap. The cel engine control word is intended to be a bitmap-global setting that does not change with each individual cel projection. If a setting in the cel engine control word conflicts with a setting in the CCB, the cel engine control word wins out. If, for example, the cel engine control word disables super clipping, a CCB cannot turn on super clipping.<P>
+<A NAME="XREF33327"></A>

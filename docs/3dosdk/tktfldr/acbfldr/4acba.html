@@ -1,0 +1,106 @@
+<TITLE>A simple C program</TITLE>
+<H1><LINK NAME="XREF26088">A simple</LINK> C program</H1><HR>
+<H2>About this recipe</H2>
+This recipe gives you a simple exercise in using the ARM Software 
+Development Toolkit (the toolkit) to write a program in C. By following 
+it, you will learn how to:<P>
+<UL>
+<LI>use the ARM C compiler <B>armcc</B> to create a runnable program;
+<LI>use the ARM source level debugger <B>armsd</B> to run your program on 
+a (simulated) ARM system;
+<LI>use <B>armcc</B> to compile a C program to an object file;
+<LI>use the ARM linker <B>armlink</B> to create a runnable program from an 
+object file and the ARM C library.
+</UL>
+<H2>Prerequisites</H2>
+Before you can try this recipe, the toolkit must be properly installed on 
+your computer. Instructions for installation are given in the installation 
+notes distributed with every toolkit. If you experience any difficulties, 
+please refer to these notes.<P>
+<H2>Making a simple runnable program</H2>
+The "Hello World" program shown below, is included in the on-line examples 
+as file <B>hellow.c</B> in the directory <B>examples</B>:<P>
+<CODE>
+<PRE>
+#include &lt;stdio.h&gt;
+
+int main( int argc, char **argv )
+{ 
+    printf("Hello World\n");
+      return 0;
+}
+</CODE>
+</PRE>
+If you set your working directory to be the <B>examples</B> directory you 
+can compile this program to runnable form in a single step using:<P>
+<CODE>
+<PRE>
+armcc hellow.c -li -apcs 3/32bit
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+The argument -li says that the target is little endian and -apcs 3/32bit 
+says that the 32 bit ARM procedure call standard should be used. If the 
+compiler has been <B>configured</B> to use these options by default then 
+these arguments need not be given.  The executable program is left in a 
+file called <B>hellow</B>.<P>
+<H2>Running the program</H2>
+You can run the program (technically an AIF Image) using <B>armsd</B>. You 
+should follow the sample dialog below:<P>
+<CODE>
+<PRE>
+host-prompt&gt; <B>armsd -li hellow</B>
+A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
+endian.
+Object program file hellow
+armsd: <B>go</B>
+Hello world
+Program terminated normally at PC = 0x000082a0
+      0x000082a0: 0xef000011 .... : &gt;  swi     0x11
+armsd: <B>quit</B>
+Quitting
+host-prompt&gt;
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+The -li argument to <B>armsd</B> tells it to emulate a little endian arm. 
+If armsd has been configured to be little endian by default then -li can 
+be omitted .<P>
+When armsd comes up with its "armsd:" prompt and waits for your command, 
+you should type "go<B>CR</B>". At the next prompt type "quit<B>CR</B>" to 
+exit <B>armsd</B>.<P>
+<H2>Separate compiling</H2>
+You can invoke the compiler and the linker separately. You can use:<P>
+<CODE>
+<PRE>
+armcc -c hellow.c -li -apcs 3/32bit
+</CODE>
+</PRE>
+to make an object file (in this example called <B>hellow.o</B>, by 
+default).<P>
+<H3>Explanation</H3>
+The -c flag tells the compiler to make an object file but not to link it 
+with the C library.<P>
+<H2>Separate linking</H2>
+When you have finished compiling, you can link your object file with the C 
+library to make a runnable program using:<P>
+<CODE>
+<PRE>
+armlink -o hellow hellow.o <B>somewhere</B>/armlib.321
+</CODE>
+</PRE>
+Where we have written <B>somewhere</B>, above, you must type the name of 
+the directory containing the ARM C libraries.<P>
+<H3>Notes</H3>
+You now have to be very explicit; you must specify:<P>
+<UL>
+<LI>the name of the file which will contain the runnable program (here, 
+<B>hellow</B>);
+<LI>the name of the object file (here, <B>hellow.o</B>);
+<LI>the location and name of the C library you wish to use.
+</UL>
+In simple cases, <B>armcc</B> can reduce the need to be so explicit.<P>
+<H2>Related topics</H2>
+Please refer to the index to find topics of particular interest.<P>
+<P>

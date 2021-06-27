@@ -1,0 +1,239 @@
+<TITLE>Connecting a Task to the Event Broker</TITLE>
+<H1><LINK NAME="XREF29824">Connecting a Task to the Event Broker</LINK></H1><HR>
+Before a task can work with the event broker, it must connect to the event broker by sending a message that requests connection as a listener. To do so, the task sends a message of the flavor <CODE>EB_Configure</CODE>, using Portfolio's standard message-sending procedure. The message also specifies input focus, and indicates the event types in which the task is interested.<P>
+<H2>Creating a Message Port</H2>
+Before creating a configuration message, a listener task must create its own message port to use as a reply port where the event broker will send messages. To do so, the listener uses the <CODE>CreateMsgPort()</CODE>call, which returns the item number of the new message port. <P>
+<A NAME="XREF13286"><H2>Creating a Configuration Message</A></H2>
+After a listener task creates a message port, it must create a message using <CODE>CreateMsg()</CODE> or <CODE>CreateBufferedMsg()</CODE>. Both calls accept a string that names the message, supplies an optional priority number for the message, and provides the item number of the listener message port. <CODE>CreateBufferedMsg()</CODE> also takes the size of the buffer to allocate with the message. Both calls return the item number of the newly created message.<P>
+<H2>Creating a Configuration Block</H2>
+To turn the newly created message into a configuration request, the listener task must create a configuration data block, which consists of the ConfigurationRequest structure, shown in Example 1.<P>
+<B>Example 1: </B><I>ConfigurationRequest structure.</I><P>
+<CODE>
+<PRE>
+typedef struct ConfigurationRequest
+{
+  EventBrokerHeader                            cr_Header;                     /* { EB_Configure } */
+  enum ListenerCategory                            cr_Category;                      /* focus, monitor, or 
+                                                 /* hybrid */
+  uint32                            cr_TriggerMask[8]; /* events to trigger on */
+  uint32                            cr_CaptureMask[8]; /* events to capture */
+  int32                            cr_QueueMax;                       /* max # events in 
+
+                                                 /* transit */
+  uint32                            rfu[8];                           /* must be 0 for now */
+} ConfigurationRequest;
+</CODE>
+</PRE>
+The listener task must fill in the following fields to set the parameters of its configuration request:<P>
+<UL>
+<LI><CODE>cr_Header</CODE> is an EventBrokerHeader data structure in which the event flavor <CODE>EB_Configure</CODE> must be set.
+<LI><CODE>cr_Category</CODE> defines the listener type of input focus. It has four possible values:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI><CODE>LC_FocusListener</CODE> sets the task to be a focus-dependent listener. It must have the focus to receive any events.
+<p>
+<LI><CODE>LC_FocusUI</CODE> sets the task to be a focus-interested listener. It must have the focus to receive user interface events, but gets all other event types regardless of focus.
+<p>
+<LI><CODE>LC_Observer</CODE> sets the task to be a focus-independent listener. It gets all event types regardless of focus.
+<p>
+<LI><CODE>LC_NoSeeUm</CODE> sets the task to ignore all events completely, the equivalent of not connecting to the event broker.
+</UL><BR>
+</DL>
+<UL>
+<LI><CODE>cr_TriggerMask</CODE> and <CODE>cr_CaptureMask</CODE> contain the event masks that specify events in which the task is interested. The trigger mask specifies each event type that will trigger the event broker to notify the task; the capture mask specifies each event type that the event broker reports on whenever it notifies the task of an event triggering. These masks are discussed in <A HREF="./12spg005.html#XREF21113">The Event Broker Trigger Mechanism</A>.
+<p>
+<LI><CODE>cr_QueueMax</CODE> specifies the maximum number of event reports that the event broker posts at any one moment in the task's event queue. This value can be set to the constant <CODE>EVENT_QUEUE_MAX_PERMITTED</CODE>, which sets the currently defined maximum number of events in the queue (20 in this release), or the constant <CODE>EVENT_QUEUE_DEFAULT</CODE>, which sets the currently defined default number of events (three in this release). The queue must have a minimum depth of at least two events.
+<p>
+<LI>The <CODE>rfu</CODE> field is reserved for future use, and currently must be set to 0.
+</UL>
+<H3>Event Types</H3>
+The 256 different event types available through the event broker are divided into two main bodies:<P>
+<UL>
+<LI><B>System events</B><I>. </I>128 system-defined generic events.
+<p>
+<LI><I></I><B>Custom events</B><B>. </B>128 task-defined events primarily used for communicating events in one event broker listener to other listeners. Custom events are not currently implemented.
+</UL>
+Both system events and custom events are divided into two types that are defined by the way the event broker reports them to focus-interested tasks:<P>
+<UL>
+<LI><B>UI events</B>, which are not reported to a focus-interested task if a task does not hold the focus. The event broker provides 64 system and 64 custom UI events.
+<p>
+<LI><I></I><B>Non-UI events</B>, which are reported to a focus-interested task even if the task does not hold the focus. The event broker provides 64 system and 64 custom non-UI events.
+</UL>
+Table 1 shows how the 256 different bit values in a bit mask are divided into system and custom events, and then UI and non-UI events. Custom event types are not supported in this release of Portfolio.<P>
+<PRE>
+<B>Table 1: </B><I>  Flag Bit constants defined in event.h.</I>
+-----------------------------------------------------------------
+System UI Event Type Constants  |Event Definition                
+-----------------------------------------------------------------
+EVENTBIT0_ControlButtonPressed  |A controller pad button was     
+                                |pressed.                        
+-----------------------------------------------------------------
+EVENTBIT0_ControlButtonReleased |A controller pad button was     
+                                |released.                       
+-----------------------------------------------------------------
+EVENTBIT0_ControlButtonUpdate   |A controller pad button was     
+                                |pressed or released, or control 
+                                |button information may be lost  
+                                |in an event queue overflow.     
+-----------------------------------------------------------------
+EVENTBIT0_ControlButtonArrived  |Data from a controller pad      
+                                |button has arrived (it arrives  
+                                |every field).                   
+-----------------------------------------------------------------
+EVENTBIT0_MouseButtonPressed    |A mouse button was pressed.     
+-----------------------------------------------------------------
+EVENTBIT0_MouseButtonReleased   |A mouse button was released.    
+-----------------------------------------------------------------
+EVENTBIT0_MouseUpdate           |A mouse button was pressed or   
+                                |released, the mouse has moved,  
+                                |or mouse info may be lost in an 
+                                |event queue overflow.           
+-----------------------------------------------------------------
+EVENTBIT0_MouseMoved            |A mouse has moved.              
+-----------------------------------------------------------------
+EVENTBIT0_MouseDataArrived      |Data from a mouse has arrived   
+                                |(it arrives every field).       
+-----------------------------------------------------------------
+EVENTBIT0_GunButtonPressed      |A gun button was pressed. This  
+                                |is not currently implemented.   
+-----------------------------------------------------------------
+EVENTBIT0_GunButtonReleased     |A gun button was released. This 
+                                |is not currently implemented.   
+-----------------------------------------------------------------
+EVENTBIT0_GunUpdate             |A gun button was pressed or     
+                                |released, or gun button         
+                                |information may be lost in an   
+                                |event queue overflow. This is   
+                                |not currently implemented.      
+-----------------------------------------------------------------
+EVENTBIT0_GunDataArrived        |Data from a gun has arrived (it 
+                                |arrives every field). This is   
+                                |not currently implemented.      
+-----------------------------------------------------------------
+EVENTBIT0_KeyboardKeyPressed    |A keyboard key was pressed. This
+                                |is not currently implemented.   
+-----------------------------------------------------------------
+EVENTBIT0_KeyboardKeyReleased   |A keyboard key was released.    
+                                |This is not currently           
+                                |implemented.                    
+-----------------------------------------------------------------
+EVENTBIT0_KeyboardUpdate        |A keyboard key was pressed or   
+                                |released, or keyboard           
+                                |information may be lost in an   
+                                |event queue overflow. This is   
+                                |not currently implemented.      
+-----------------------------------------------------------------
+EVENTBIT0_KeyboardDataArrived   |Data from a keyboard has arrived
+                                |(it arrives every field). This  
+                                |is not currently implemented.   
+-----------------------------------------------------------------
+EVENTBIT0_CharacterEntered      |A character was entered. This is
+                                |not currently implemented.      
+-----------------------------------------------------------------
+EVENTBIT0_GivingFocus           |This task was given focus.      
+-----------------------------------------------------------------
+EVENTBIT0_LosingFocus           |This task lost focus.           
+-----------------------------------------------------------------
+EVENTBIT0_LightGunButtonPressed |A light gun button was pressed. 
+-----------------------------------------------------------------
+EVENTBIT0_LightGunButtonReleased|A light gun button was released.
+-----------------------------------------------------------------
+EVENTBIT0_LightGunUpdate        |A light gun button was pressed  
+                                |or released, or light gun button
+                                |information may be lost in an   
+                                |event queue overflow.           
+-----------------------------------------------------------------
+EVENTBIT0_LightGunFireTracking  |Data from a light gun is being  
+                                |tracked.                        
+-----------------------------------------------------------------
+EVENTBIT0_LightGunDataArrived   |Data from a light gun has       
+                                |arrived (it arrives every       
+                                |field).                         
+-----------------------------------------------------------------
+EVENTBIT0_StickButtonPressed    |A joystick button was pressed.  
+-----------------------------------------------------------------
+EVENTBIT0_StickButtonReleased   |A joystick button was released. 
+-----------------------------------------------------------------
+EVENTBIT0_StickUpdate           |A joystick button was pressed or
+                                |released, or joystick button    
+                                |information may be lost in an   
+                                |event queue overflow.           
+-----------------------------------------------------------------
+EVENTBIT0_StickMoved            |A joystick has moved.           
+-----------------------------------------------------------------
+EVENTBIT0_StickDataArrived      |Data from a joystick has arrived
+                                |(it arrives every field).       
+-----------------------------------------------------------------
+EVENTBIT0_IRKeyPressed          |An IR key was pressed and a     
+                                |button code is returned. This is
+                                |device specific. This is not    
+                                |currently implemented.          
+-----------------------------------------------------------------
+EVENTBIT0_IRKeyReleased         |An IR key was released and a    
+                                |button code is returned. This is
+                                |device specific. This is not    
+                                |currently implemented.          
+-----------------------------------------------------------------
+</PRE>
+<P>
+Table 2 shows the flag bit constants defined in <I>event.h</I> for the system events, along with the meaning for each of the event types. These event type constants define flags for system-defined events, each of which can occur during a single control port polling.<P>
+<PRE>
+<B>Table 2: </B><I> Event type constants that define flags for system-defined events. </I>
+---------------------------------------------------------------
+System Non-UI Event Type      |Event Definition                
+Constants                     |                                
+---------------------------------------------------------------
+EVENTBIT2_DeviceOnline        |Media was inserted in a device. 
+---------------------------------------------------------------
+EVENTBIT2_DeviceOffline       |A device was removed.           
+---------------------------------------------------------------
+EVENTBIT2_FilesystemMounted   |A file system was mounted.      
+---------------------------------------------------------------
+EVENTBIT2_FilesystemOffline   |A file system went off-line.    
+---------------------------------------------------------------
+EVENTBIT2_FilesystemDismounted|A file system was dismounted.   
+---------------------------------------------------------------
+EVENTBIT2_ControlPortChange   |A new device was plugged into or
+                              |disconnected from the control   
+                              |port.                           
+---------------------------------------------------------------
+EVENTBIT2_PleaseSaveAndExit   |This task was requested to save 
+                              |current status and exit.        
+---------------------------------------------------------------
+EVENTBIT2_PleaseExitImmediatel|This task was requested to exit 
+y                             |immediately.                    
+---------------------------------------------------------------
+EVENTBIT2_EventQueueOverflow  |This task's event queue has     
+                              |overflowed and the task has lost
+                              |events.                         
+---------------------------------------------------------------
+</PRE>
+<P>
+<H3>Setting the Trigger and Capture Masks</H3>
+Each of the masks in the ConfigurationRequest data structure is an 8-element array of 32-bit words that provides 256 bits, 1 bit for each event type. To set a mask, the task logically ORs the desired constants defined for each word of the array, and stores the results in the appropriate word. The constant name identifies the appropriate word for storage. For example, all the desired flag constants starting with <CODE>EVENTBIT0</CODE> must be logically ORed and then stored in word 0 of the array. All the desired flag constants starting with <CODE>EVENTBIT2</CODE> must be logically ORed and then stored in the second word of the array.<P>
+<H2>Sending the Configuration Message</H2>
+Once the ConfigurationRequest data structure has been created and filled in, the listener task must send the message to the event broker. To do this, the task first must find the event broker message port using the <CODE>FindMsgPort()</CODE> call, as shown in Example 2.<P>
+<B>Example 2: </B><I>FindMsgPort().</I><P>
+<CODE>
+<PRE>
+{
+Item ebPortItem;
+
+    ebPortItem = FindMsgPort(EventPortName);
+    if (ebPortItem &lt; 0)
+    {
+        /* big trouble, the event broker can't be found! */
+    }
+}
+</CODE>
+</PRE>
+After the listener task has the event broker message port item number, the task sends its configuration message using <CODE>SendMsg()</CODE>:<P>
+<DL>
+<DD><CODE>SendMsg(ebPortItem, msg, &amp;configuration, sizeof(configuration));</CODE><BR>
+</DL>
+The <CODE>SendMsg()</CODE> call accepts four arguments: the item number of the event broker port, the item number of the message the task has created, a pointer to the ConfigurationRequest data structure the task has initialized, and the size of that data structure.<P>
+When the event broker receives the configuration message, it adds the task as a listener. The event broker reads the reply port contained in the message and uses that port whenever it needs to communicate with the listening task. The event broker also reads the ConfigurationRequest data structure and sets up the listener's configuration accordingly.<P>
+<H2>Receiving the Configuration Reply Message</H2>
+When the event broker finishes processing the configuration message, it changes the message to a configuration reply message. That message contains a pointer to a single data structure: an EventBrokerHeader with the value <CODE>EB_ConfigureReply</CODE>. The event broker returns the message to the task requesting configuration. The receiving task checks the configuration message's result field (<CODE>msg_Result</CODE>, which is cast to an <CODE>Err</CODE> type) to see if the operation was successful or not. If the value is a negative number, it is an error code, and the configuration was not successful (the task was not connected). If the value is 0 or a positive number, the configuration was successful and the task is connected.<P>

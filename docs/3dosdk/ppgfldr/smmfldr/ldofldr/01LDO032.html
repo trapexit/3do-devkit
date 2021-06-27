@@ -1,0 +1,24 @@
+<Title>CenterSRectInSRect </Title>
+<A NAME="XREF12986"><H1>CenterSRectInSRect </A></H1>
+ Centers an SRect within an SRect.<P>
+<H3>Synopsis</H3>
+<CODE>SRect * CenterSRectInSRect (SRect *dst, SRect *src)</CODE><P>
+<H3>Description</H3>
+Centers the destination rectangle (dst) over or within the source rectangle (src). If the destination rectangle is smaller than the source rectangle, its position values are modified to center it within the source rectangle. If the destination rectangle is larger than the source rectangle, its position values are modified to center it over the source rectangle. In either case, the resulting rectangle retains its original sizes; only the position changes. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to the SRect to be centered. 
+</DL>
+<DL>
+<DT>src
+<DD>Pointer to the SRect within which dst is to be centered. 
+</DL>
+<H3>Return Value</H3>
+Returns dst. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO009.html#XREF18327"><CODE>CenterCRectInCRect</A> </CODE><P>

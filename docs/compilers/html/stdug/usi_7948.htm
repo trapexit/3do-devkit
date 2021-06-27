@@ -1,0 +1,41 @@
+<HTML><HEAD><TITLE>Using the Traits Technique</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Using the Traits Technique</H2>
+<P>To implement a traits parameter for a class, you add it as an extra template parameter to your class.  You then supply a class for this parameter that encapsulates all the specific operations.  Usually that class is itself a template.</P>
+<P>As an example, let's look at the matrix problem described above.  By using the traits technique, when you want to add a new type to the matrix you simply specialize the traits class, not the entire matrix.  You do no more work than you have to and retain the ability to use the matrix on any reasonable number.</P>
+<P>Here's how the matrix traits template and specializations for <SAMP>long</SAMP> and <SAMP>int</SAMP> might look.  The example also includes a skeleton of the matrix class that uses the traits template.</P>
+<PRE>template &#60;class Num>
+class matrix_traits
+{
+  // traits functions and literals
+};
+template &#60;class Num, class traits>
+class matrix
+{
+  // matrix
+}
+
+class matrix_traits&#60;long> 
+{
+  // traits functions and literals specific to long
+};
+
+class matrix_traits&#60;int>
+{
+  // traits functions and literals specific to int
+};
+
+_ etc.
+
+matrix&#60;int, matrix_traits&#60;int> > int_matrix;
+matrix&#60;long, matrix_traits&#60;long> > long_matrix;
+</PRE>
+<P>Of course you don't even have to specialize on <SAMP>matrix_traits</SAMP>.  You just have to make sure you provide the interface that <SAMP>matrix</SAMP> expects from its traits template parameter. </P>
+<P>Most of the time, the operations contained in a traits class will be static functions so that there's no need to actually instantiate a <SAMP>traits</SAMP> object.</P>
+<P>The Standard Library uses this technique to give the <A HREF="../stdref/str_8586.htm"><B><I>string</I></B></A> class maximum flexibility and efficiency across a wide range of types.  The <B><I>string</I></B> traits class provides elementary operations on character arrays.  In the simplest case, this means providing <B><I>string</I></B> a <SAMP>wstring</SAMP> with access to the 'C' library functions for skinny and wide characters, for example <SAMP>Strcpy</SAMP> and <SAMP>wcstrcpy</SAMP>.</P>
+<P>See the <A HREF="../stdref/str_9893.htm"><B><I>string_char_traits</I></B></A> reference entry for a complete description of the traits class.</P>
+<HR>
+<A HREF="the_5255.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="exc_0293.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

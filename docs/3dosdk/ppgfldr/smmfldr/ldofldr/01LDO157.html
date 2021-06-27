@@ -1,0 +1,24 @@
+<Title>SetTextCelCoords</Title>
+<A NAME="XREF35286"><H1>SetTextCelCoords </A></H1>
+ Sets x and y coordinates for a cel.<P>
+<H3>Synopsis</H3>
+<CODE>void SetTextCelCoords (TextCel *tCel, Coord ccbX, Coord ccbY)</CODE><P>
+<H3>Description</H3>
+Sets the TextCel CCB coordinates (ccb_XPos and ccb_YPos). Use this call as a convenience so that you don't need to dereference two levels of pointers to update a CCB's on-screen position.<P>
+If you prefer, you can manipulate a CCB's position, size, and perspective fields directly; you don't have to use this function to safely modify the on-screen position. Other utility routines for positioning cels, such as <CODE>MapCel()</CODE>, may also be safely used. <P>
+The ccbX and ccbY values are interpreted as integer values if, when viewed as a longword, they are in the range of -1024&lt;value&lt;1024. (That is, if interpreting the values as frac16 types would result in a very small fraction almost zero they are assumed to be integers.) In this case, <CODE>SetTextCelCoords()</CODE> converts the values to frac16 before storing them into the CCB. Values outside that range are considered to be frac16 values already, and are stored into the CCB without conversion. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>ccbX
+<DD>X coordinate for the text cel CCB. 
+</DL>
+<DL>
+<DT>ccbY
+<DD>Y coordinate for the text cel CCB. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

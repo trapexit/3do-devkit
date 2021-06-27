@@ -1,0 +1,13 @@
+<Title>File alias</Title>
+<A NAME="XREF19248"><H1>File alias</A></H1>
+<A NAME="XREF25606"></A>A character string for referencing the pathname to a file or a directory of files. <P>
+<H3>Description</H3>
+A file alias is a character string for referencing the pathname to a file or directory of files on disk. Whenever the file folio parses pathnames, it looks for path components starting with $, and treats the rest of the component at the name of an alias. The file folio then finds the alias of that name, and extracts a replacement string from the alias to use as the path component.<P>
+<H3>Folio</H3>
+file<P>
+<H3>Item Type</H3>
+FILEALIASNODE <P>
+<H3>Create</H3>
+<CODE><A HREF="./02spr005.html#XREF26310">CreateAlias</A>()</CODE><P>
+<H3>Delete</H3>
+<A HREF="./01spr032.html#XREF18938"><CODE>DeleteItem</A>()</CODE><P>

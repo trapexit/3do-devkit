@@ -1,0 +1,37 @@
+<TITLE>GetMsg</TITLE>
+<A NAME="XREF37256"><H1>GetMsg </A></H1>
+<A NAME="XREF19698"></A>Gets a message from a message port.<P>
+<H3>Synopsis</H3>
+<CODE>Item GetMsg( Item mp )</CODE><P>
+<H3>Description</H3>
+This procedure gets the first message in the message queue for the specified message port and removes the message from the queue. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>mp
+<DD>The item number of the message port from which to get the message. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the first message in the message queue or an error code (a negative value) if an error occurs. Possible error codes include the following: <P>
+<DL>
+<DT>0
+<DD>The queue is empty. 
+</DL>
+<DL>
+<DT>BADITEM
+<DD>The mp argument does not specify a message port. 
+</DL>
+<DL>
+<DT>NOTOWNER
+<DD>The message port specified by the mp argument is not owned by this task. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr034.html#XREF14458"><CODE>DeleteMsg</A>(), <A HREF="./01spr083.html#XREF31956">GetThisMsg</A>(), <A HREF="./01spr113.html#XREF31623">ReplyMsg</A>(), <A HREF="./01spr114.html#XREF39369">ReplySmallMsg</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>(), <A HREF="./01spr124.html#XREF40209">SendSmallMsg</A>(), <A HREF="./01spr132.html#XREF19568">WaitPort</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF37256"></LINK></H1><HR>

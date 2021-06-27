@@ -1,0 +1,26 @@
+<Title>GetSCelListAndType</Title>
+<A NAME="XREF37350"><H1>GetSCelListAndType</A></H1>
+<A NAME="XREF12076"></A> Returns list of CCBs and type signature for current stream.<P>
+<H3>Synopsis</H3>
+<CODE>CCB* GetSCelListAndType (struct SCelContext* context,long channelNumber, long* celListType)</CODE><P>
+<H3>Description</H3>
+This call performs the same operation as <CODE>GetSCelList()</CODE>, but returns a 32-bit type signature for the cel list. This allows a client application to recognize cel lists that require special processing at run-time before they are displayed on screen.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>context </CODE>
+<DD>Pointer to context structure for the SCel subscriber.
+</DL>
+<DL>
+<DT><CODE>channelNumber</CODE> 
+<DD>Logical channel number.
+</DL>
+<DL>
+<DT><CODE>celListType </CODE>
+<DD>Type signature for returned cel list.
+</DL>
+<H3>Return Value</H3>
+Returns a pointer to a list of CCBs for the current stream time, or NULL if there is no cel list at the current stream time.<P>
+<H3>Caveat</H3>
+This function is part of the <I>Subscriber.lib</I> library file that can currently (Toolkit1.5) be found in <I>Attic:Streaming:2p1:DataStream:Subscribers:Subscriber.lib</I>. It will later be integrated into the main Streaming tree. <P>
+<H3>See Also</H3>
+<A HREF="./01DSR038.html#XREF23058"><CODE>GetSCelList</A></CODE><P>

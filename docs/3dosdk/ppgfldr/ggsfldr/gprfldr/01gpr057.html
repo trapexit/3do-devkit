@@ -1,0 +1,29 @@
+<Title>SetCEControl </Title>
+<A NAME="XREF34682"><H1>SetCEControl </A></H1>
+<A NAME="XREF29682"> Sets the cel engine control word.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err SetCEControl (Item bitmapItem,int32 controlWord,int32 controlMask)</CODE><P>
+<H3>Description</H3>
+This call sets the cel engine control word of the bitmap specified by the bitmapItem argument. After this call, the newly modified control word is used whenever the bitmap renders cels. The controlMask argument controls the bits of the bitmap's control word that are modified by a call to <CODE>SetCEControl()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>Item number of a bitmap structure. 
+</DL>
+<DL>
+<DT>controlWord
+<DD>Value of the new control word for the bitmap. 
+</DL>
+<DL>
+<DT>controlMask
+<DD>Bit mask that controls whether the corresponding bit in controlWord is transferred to the CEControl word. If the controlMask bit is set, the corresponding bit in controlWord is transferred to the CEControl word; if the controlMask bit is clear, the corresponding bit in controlWord is ignored. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr020.html#XREF25632"><CODE>DrawCels</A>(), <A HREF="./01gpr022.html#XREF27677">DrawScreenCels</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,26 @@
+<Title>LoadInsTemplate</Title>
+<A NAME="XREF12263"><H1>LoadInsTemplate </A></H1>
+<A NAME="XREF12171"></A> Loads template for creating instruments.<P>
+<H3>Synopsis</H3>
+<CODE>Item LoadInsTemplate (char *Name, Item AudioDevice)</CODE><P>
+<H3>Description</H3>
+This function loads an instrument template from the specified file. Note that the function doesn't create an instrument from the instrument template. Call <CODE>CreateInstrument()</CODE> to create an Instrument from this Template. <P>
+When you finish using the Template, call <CODE>UnloadInsTemplate()</CODE> to deallocate the template's resources. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Name
+<DD>Name of the file containing the instrument template (e.g. "directout.dsp"). 
+</DL>
+<DL>
+<DT>AudioDevice
+<DD>Audio device Item for instrument template. 0 indicates the default audio device, the DSP, which is the only valid audio device item at the present time. 
+</DL>
+<H3>Return Value</H3>
+The function returns a Template item number if successful (a positive value) or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr081.html#XREF38811"><CODE>UnloadInsTemplate</A>(), <A HREF="./01mpr018.html#XREF32118">CreateInsTemplate</A>(), <A HREF="./01mpr019.html#XREF12062">CreateInstrument</A>(), <A HREF="./01mpr052.html#XREF40571">LoadInstrument</A>(), <A HREF="./01mpr007.html#XREF30972">AttachSample</A>(), <A HREF="./01mpr006.html#XREF15951">AttachEnvelope</A>() </CODE><P>
+</CODE>

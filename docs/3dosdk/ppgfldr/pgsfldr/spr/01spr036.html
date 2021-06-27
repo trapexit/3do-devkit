@@ -1,0 +1,28 @@
+<Title>DeleteSemaphore</Title>
+<A NAME="XREF16912"><H1>DeleteSemaphore </A></H1>
+<A NAME="XREF17919"></A>Deletes a semaphore.<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteSemaphore( Item s )</CODE><P>
+<H3>Description</H3>
+This macro deletes a semaphore. <P>
+For information about semaphores, which are used to control access to shared resources, see the Sharing System Resources chapter in the 3DO Portfolio Programmer's Guide.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>s
+<DD>The item number of the semaphore to be deleted. 
+</DL>
+<H3>Return Value</H3>
+The macro returns a value greater than or equal to 0 if successful or an error code if an error occurred. <P>
+<H3>Implementation</H3>
+Macro implemented in semaphore.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>semaphore.h
+<DD>ANSI C Macro
+</DL>
+<H3>Notes</H3>
+As with all items, the item number of a deleted semaphore is not reused. If a task specifies the item number of a deleted semaphore, the kernel informs the task that the item no longer exists. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr026.html#XREF34382"><CODE>CreateSemaphore</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF16912"></LINK></H1><HR>

@@ -1,0 +1,325 @@
+<TITLE>Register usage under the ARM procedure call standard</TITLE>
+<H1><LINK NAME="XREF36909">Register usage under the ARM procedure 
+</LINK>call standard</H1><HR>
+<H2>About this recipe</H2>
+In this recipe you will learn about:<P>
+<UL>
+<LI>the basic issues involved with interfacing ARM Assembly Language code 
+to C programs;<P>
+<LI>the basic concepts of the ARM Procedure Call Standard (or 
+<B>APCS</B>), with more detail on register usage issues.
+</UL>
+The supporting example illustrates:<P>
+<UL>
+<LI>a simple function written in assembler which is linkable with C 
+modules;<P>
+<LI>some of the issues involved with the APCS.
+</UL>
+<H2>Introduction to the APCS</H2>
+The ARM Procedure Call Standard is a set of rules which govern calls 
+between functions which are visible between separately compiled or 
+assembled code fragments.<P>
+The following are defined by the APCS:<P>
+<UL>
+<LI>constraints on the use of registers;<P>
+<LI>stack conventions;<P>
+<LI>the format of a stack backtrace data structure;<P>
+<LI>argument passing and result return;<P>
+<LI>support for the ARM shared library mechanism.
+</UL>
+Code which is produced by compilers is expected to adhere to the APCS at 
+all times.  Such code is said to be <B>strictly conforming</B>.<P>
+Hand written code is expected to adhere to the APCS when making calls to 
+externally visible functions.  Such code is said to be 
+<B>conforming</B>.<P>
+The ARM Procdeure Call Standard comprises a family of variants.  The 
+following independent choices need to be made to fix the variant of the 
+APCS required:<P>
+<UL>
+<LI>Is the Program Counter 32-bit or 26-bit?<P>
+<LI>Is stack limit checking explicit or implicit? ie. is stack limit 
+checking performed by code, or is it checked by memory management 
+hardware?<P>
+<LI>Should floating point values be passed in floating point registers?<P>
+<LI>Is code reentrant or non-reentrant?
+</UL>
+Code which conforms to one APCS variant conforms to none of the other 
+variants.<P>
+For the full specification of the APCS see <A 
+HREF="../atsfldr/ats4frst.html#XREF28151">ARM Procedure Call 
+Standard</A>.<P>
+<H2>Register names and usage under the APCS</H2>
+The following table summarises the names and uses allocated to the ARM and 
+Floating Point registers under the APCS (note that not all ARM systems 
+support floating point):<P>
+<PRE>
+--------------------------------------------------------
+Name       |Register |APCS Role                         
+--------------------------------------------------------
+a1         |r0       |argument 1 / integer result       
+--------------------------------------------------------
+a2         |r1       |argument 2                        
+--------------------------------------------------------
+a3         |r2       |argument 3                        
+--------------------------------------------------------
+a4         |r3       |argument 4                        
+--------------------------------------------------------
+v1-v5      |r4-r8    |register variables                
+--------------------------------------------------------
+sb         |r9       |static base                       
+--------------------------------------------------------
+sl         |r10      |stack limit / stack chunk handle  
+--------------------------------------------------------
+fp         |r11      |frame pointer                     
+--------------------------------------------------------
+ip         |r12      |new-static base in inter-link-unit
+           |         |calls                             
+--------------------------------------------------------
+sp         |r13      |lower end of current stack frame  
+--------------------------------------------------------
+lr         |r14      |link address                      
+--------------------------------------------------------
+pc         |r15      |program counter                   
+--------------------------------------------------------
+f0         |f0       |FP argument 1 / FP result         
+--------------------------------------------------------
+f1         |f1       |FP argument 2                     
+--------------------------------------------------------
+f2         |f2       |FP argument 3                     
+--------------------------------------------------------
+f3         |f3       |FP argument 4                     
+--------------------------------------------------------
+f4-f7      |f4-f7    |FP register variables             
+--------------------------------------------------------
+</PRE>
+<P>
+Simplistically:<P>
+<PRE>
+-------------------------------------------------------
+Register      |Use                                     
+-------------------------------------------------------
+a1-a4, f0-f3  |Used to pass arguments to functions.  a1
+              |is also used to return integer results, 
+              |and f0 to return FP results.  These     
+              |registers can be corrupted by a called  
+              |function.                               
+-------------------------------------------------------
+v1-v5, f4-f7  |Used as register variables.  They must  
+              |be preserved by called functions.       
+-------------------------------------------------------
+sb,sl,fp,ip,sp|have a dedicated role in some APCS      
+,lr,pc        |variants, some of the time.  ie. there  
+              |are times when some of these registers  
+              |can be used for other purposes even when
+              |strictly conforming to the APCS.  In    
+              |some variants of the APCS sb and sl are 
+              |available as additional variable        
+              |registers v6 and v7 respectively.       
+-------------------------------------------------------
+</PRE>
+<P>
+As stated previously, hand coded assembler routines need not <B>conform 
+strictly</B> to the APCS, but need only <B>conform</B>.  This means that 
+all registers which do not need to be used in their APCS role by an 
+assembler routine (eg. fp) can be used as working registers as long as 
+their value on entry is restored before returning.<P>
+<A NAME="XREF31663"><H2>64 Bit integer addition</A></H2>
+The purpose of this example is to examine coding a small function in ARM 
+Assembly Language, in a way which will enable it to be used from C 
+modules.  First, however, the function is coded in C, and the compiler's 
+output examined.<P>
+Let us consider writing a 64 bit integer addition routine in C, where the 
+data structure used to store 64 bit integers is a two word structure.  The 
+obvious way to code the addition of these double length integers in 
+assembler is to make use of the Carry flag from the low word addition in 
+the high word addition.  However, there is no way to specify this in C.<P>
+A possible way to code around this in C is as follows:<P>
+<CODE>
+<PRE>
+void add_64(int64 *dest, int64 *src1, int64 *src2)
+{ unsigned hibit1=src1-&gt;lo &gt;&gt; 31, hibit2=src2-&gt;lo &gt;&gt; 31, hibit3;
+  dest-&gt;lo=src1-&gt;lo + src2-&gt;lo;
+  hibit3=dest-&gt;lo &gt;&gt; 31;
+  dest-&gt;hi=src1-&gt;hi + src2-&gt;hi +
+           ((hibit1 &amp; hibit2) || (hibit1!= hibit3));
+  return;
+}
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+The highest bits of the low words in the two operands are calculated 
+(shifting them into bit 0, while clearing the rest of the register). These 
+are then used to determine the value of the carry bit (in the same way as 
+the ARM itself does).<P>
+<H3>Examining the compiler's output</H3>
+If the 64 bit integer addition routine is used a great deal, then a poor 
+implementation such as this is likely to be inadequate.  To see just how 
+good or bad this implementation is let us look at the actual code which 
+the compiler produces.<P>
+Set the current directory to <B>examples</B>.  The above code can be found 
+in <B>add64_1.c</B>, which we can compile to ARM Assembly Language source 
+as follows:<P>
+<CODE>
+<PRE>
+armcc -li -apcs 3/32bit -S add64_1.c
+</CODE>
+</PRE>
+The -S flag tells <B>armcc</B> to produce ARM Assembly Language source 
+(suitable for <B>armasm</B>) rather than producing object code.  The -li 
+flag tells <B>armcc</B> to compile for a little-endian memory and the 
+-apcs option specifies that the 32 bit version of APCS 3 should be used.  
+<P>
+Looking at the output file, <B>add64_1.s</B>, we can see that this is 
+indeed an inefficient implementation.<P>
+<H3>Modifying the compiler's output</H3>
+Let us go back to the original intention of coding the 64 bit integer 
+addition using the ARM's Carry flag.  Since use of the Carry flag cannot 
+be specified in C, we can get the compiler to produce almost the right 
+code, and then modify it by hand.  Let us start with (incorrect) code 
+which does not perform the carry addition:<P>
+<CODE>
+<PRE>
+void add_64(int64 *dest, int64 *src1, int64 *src2)
+{ dest-&gt;lo=src1-&gt;lo + src2-&gt;lo;
+  dest-&gt;hi=src1-&gt;hi + src2-&gt;hi;
+  return;
+}
+</CODE>
+</PRE>
+To compile this to give assembler suitable for use with <B>armasm</B> 
+first set the current directory to <B>examples</B>, and issue this command 
+(the options used are described above):<P>
+<CODE>
+<PRE>
+armcc -li -apcs 3/32bit -S add64_2.c
+</CODE>
+</PRE>
+This will produce the source in <B>add64_2.s</B>, which will include the 
+following code:<P>
+<CODE>
+<PRE>
+add_64
+    LDR    a4,[a2,#0]
+    LDR    ip,[a3,#0]
+    ADD    a4,a4,ip
+    STR    a4,[a1,#0]
+    LDR    a2,[a2,#4]
+    LDR    a3,[a3,#4]
+    ADD    a2,a2,a3
+    STR    a2,[a1,#4]
+    MOV    pc,lr
+</CODE>
+</PRE>
+Looking at this carefully comparing it to the C source we can see that the 
+first ADD instruction produces the low order word, and the second produces 
+the high order word.  All we need to do to get the carry from the low to 
+high word right is change the first ADD to ADDS (add and set flags), and 
+the second ADD to an ADC (add with carry).  This modified code is 
+available in the <B>examples</B> directory as <B>add64_3.s</B>.<P>
+<H3>What effect did the APCS have on this example ?</H3>
+Look at the above code again.  The most obvious may in which the APCS has 
+affected the code produced is that the registers are all given APCS style 
+names, as introduced earlier in this recipe.<P>
+a1 clearly holds a pointer to the destination structure, a2 and a3 
+pointers to the operand structures.  Both a4 and ip are used as temporary 
+registers, which are not preserved.  The conditions under which ip can be 
+corrupted will be discussed later in this recipe.<P>
+This is a simple leaf function, which uses few temporary registers.  
+Therefore no registers are saved to the stack, and none need to be 
+restored on exit.  Thus a simple "MOV pc,lr" can be used to return.<P>
+If we had wished to return a result, perhaps the carry out from this 
+addition, then it would be loaded into a1 prior to exit.  In this example, 
+this could be done by changing the second ADD to ADCS (add with carry and 
+set flags), and adding the following instructions to load a1 with 1 or 0 
+depending on the carry out from the high order addition.<P>
+<CODE>
+<PRE>
+    MOV    a1, #0
+    ADC    a1, a1, #0
+</CODE>
+</PRE>
+<A NAME="XREF17179"><H3>Back to the first inefficient 
+implementation</A></H3>
+Although the first C implementation was inefficient, it shows us more 
+about the APCS than the more efficient hand modified version.<P>
+We have already seen a4 and ip being used as non-preserved temporary 
+registers.  However, here v1 and lr are also used as temporary registers.  
+v1 is preserved by storing it (together with lr) on entry.  lr is 
+corrupted, but a copy is saved, onto the stack, and is reloaded into pc at 
+the same time that v1 is restored.<P>
+Thus there is still only a single exit instruction, but now it is:<P>
+<CODE>
+<PRE>
+    LDMIA  sp!,{v1,pc}
+</CODE>
+</PRE>
+<H2>More detailed APCS register usage information</H2>
+It was stated initially that sb,sl,fp,ip,sp and lr are dedicated 
+registers, but in the example we saw ip and lr being used as temporary 
+registers.  Indeed, there are times when these registers are not used for 
+their APCS roles, and it is useful to know about these situations, so that 
+efficient (but safe) code can be written to make use of as many of the 
+registers as possible and thereby avoid doing unnecessary register saving 
+and restoring.<P>
+<PRE>
+--------------------------------------------------------
+Registe|Description                                     
+r      |                                                
+--------------------------------------------------------
+ip     |This register is used only during function call.
+       | It is conventionally used as a local code      
+       |generation temporary register.  At other times  
+       |it can be used as a corruptible temporary       
+       |register.                                       
+--------------------------------------------------------
+lr     |This register holds the address to which control
+       |must return on function exit.  It can be (and   
+       |often is) used as a temporary register after    
+       |pushing its contents onto the stack.  This value
+       |can then be reloaded straight into the PC.      
+--------------------------------------------------------
+sp     |This is the stack pointer, which is always valid
+       |in strictly conforming code, but need only be   
+       |preserved in hand written code.  Note, however, 
+       |that if any use of the stack is to be made by   
+       |hand written code, sp must be available.        
+--------------------------------------------------------
+sl     |This is the stack limit register.  If stack     
+       |limit checking is explicit (ie. it is performed 
+       |by code when stack pushes occur, rather than by 
+       |memory management hardware causing a trap when  
+       |stack overflow occurs), then sl must be valid   
+       |whenever sp is valid.  If stack checking is     
+       |implicit sl is instead treated as v7, an        
+       |additional register variable (which must be     
+       |preserved by called functions).                 
+--------------------------------------------------------
+fp     |This is the frame pointer register.  It contains
+       |either zero, or a pointer to the most recently  
+       |created stack backtrace data structure.  As with
+       |the stack pointer, this must be preserved, but  
+       |in hand written code need not be available at   
+       |all instants.  It should, however, be valid     
+       |whenever any strictly conforming functions are  
+       |called.                                         
+--------------------------------------------------------
+sb     |This is the static base register. If a the      
+       |variant of the APCS being used is reentrant,    
+       |then this register is used to access an array of
+       |static data pointers to allow code to access    
+       |data reentrantly.  However, if the variant of   
+       |the APCS being used is not reentrant then sb is 
+       |instead available as an additional register     
+       |variable, v6 (which must be preserved by called 
+       |functions).                                     
+--------------------------------------------------------
+</PRE>
+<P>
+Thus sp,sl,fp and sb must all be preserved on function exit for APCS 
+<B>conforming</B> code.<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./3acbb.html#XREF32701">Passing and returning structs</A>;
+<LI><A HREF="./3acbc.html#XREF35534">In-Line SWIs</A>.
+</UL>

@@ -1,0 +1,76 @@
+<Title>intlGetCharAttrs </Title>
+<A NAME="XREF40679"><H1>intlGetCharAttrs </A></H1>
+Returns attributes describing a given character.<P>
+<H3>Synopsis</H3>
+<CODE>uint32 intlGetCharAttrs(Item locItem, unichar character);</CODE><P>
+<H3>Description</H3>
+This function examines the provided UniCode character and returns general information about it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>locItem
+<DD>A locale item, as obtained from intlOpenLocale(). 
+</DL>
+<DL>
+<DT>character
+<DD>The character to get the attribute of. 
+</DL>
+<H3>Return Value</H3>
+Returns a bit mask, with bit sets to indicate various characteristics as defined by the UniCode standard. The possible bits are: <P>
+<DL>
+<DT><INTL_ATTRF_UPPERCASE         
+<DD>This character is uppercase.
+</DL>
+<DL>
+<DT>INTL_ATTRF_LOWERCASE         
+<DD> This character is lowercase.
+</DL>
+<DL>
+<DT>INTL_ATTRF_PUNCTUATION
+<DD> This character is a punctuation mark.
+</DL>
+<DL>
+<DT>INTL_ATTRF_DECIMAL_DIGIT
+<DD>This character is a numeric digit.
+</DL>
+<DL>
+<DT>INTL_ATTRF_NUMBER
+<DD> This character represent a numerical value not representable as a single decimal digit.
+For example, a character 0x00bc represents the constant 1/2.
+</DL>
+<DL>
+<DT>INTL_ATTRF_NONSPACING
+<DD>This character is a nonspacing mark.
+</DL>
+<DL>
+<DT>INTL_ATTRF_SPACE
+<DD> This character is a space character.
+</DL>
+<DL>
+<DT>INTL_ATTRF_HALF_WIDTH
+<DD>This character is HalfKana.
+</DL>
+<DL>INTL_ATTRF_FULL_WIDTH
+<DD>This character is FullKana.
+</DL>
+<DL>
+<DT>INTL_ATTRF_KANA
+<DD>This character is Kana (Katakana).
+</DL>
+<DT>INTL_ATTRF_HIRAGANA
+<DD>This character is Hiragana.
+</DL>
+<DL>
+<DT>INTL_ATTRF_KANJI
+<DD>This character is Kanji.
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in international folio V24. <P>
+<H3>Associated Files</H3>
+intl.h<P>
+<H3>Caveats</H3>
+This function currently does not report any attributes for many upper UniCode characters. Only the ECMA Latin-1 character page (0x0000 to
+0x00ff) is handled correctly at this time. If the language bound to the Locale structure is Japanese, then this function
+will also work correctly for Japanese characters.
+<H3>See Also</H3>
+<CODE><A HREF="./06spr008.html#XREF34028"><CODE>intlOpenLocale</A>(), <A HREF="./06spr003.html#XREF22219">intlConvertString</A>() </CODE><P>
+</CODE>

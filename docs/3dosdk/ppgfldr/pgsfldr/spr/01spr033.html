@@ -1,0 +1,18 @@
+<Title>DeleteMemDebug</Title>
+<A NAME="XREF10232"><H1>DeleteMemDebug </A></H1>
+<A NAME="XREF10600"></A>Releases memory debugging resources.<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteMemDebug(void);</CODE><P>
+<H3>Description</H3>
+Deletes any resources allocated by <CODE>CreateMemDebug()</CODE>. This function only actually does anything if MEMDEBUG is defined, otherwise it is a NOP. <P>
+This function also frees any memory allocated that has not been freed yet. <P>
+<H3>Return Value</H3>
+Returns &gt; = 0 if successful, or a negative error code if not.<P>
+<H3>Implementation</H3>
+Library call implemented in memdebug.lib V24. <P>
+<H3>Associated Files</H3>
+mem.h, memdebug.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr023.html#XREF16511"><CODE>CreateMemDebug</A>(), <A HREF="./01spr039.html#XREF34554">DumpMemDebug</A>(), <A HREF="./01spr117.html#XREF22887">SanityCheckMemDebug</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF10232"></LINK></H1><HR>

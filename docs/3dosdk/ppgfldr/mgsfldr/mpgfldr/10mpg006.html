@@ -1,0 +1,15 @@
+<TITLE>Streaming Sound Files</TITLE>
+<H1><LINK NAME="XREF41840">Streaming Sound Files</LINK></H1><HR>
+<H2>Streaming And Spooling</H2>
+<B>Q:   </B><I>Playsoundfile.c</I> and <I>spoolsoundfile.c</I>  are "spooling" as opposed to "streaming". I have tried using them before, but they were choppy when all the other game stuff was going on. What do you feel is the difference between "spooling" and "streaming"?<P>
+<B>A:   </B>The DataStreamer package from 3DO supports interwoven data such as audio and video. The SoundSpooler is only for audio. <P>
+The sound spooler in the Music library, or streamer, hiccups, or worse, if it is starved of data. This can occur if the application tries to read other files during the middle of playback, or if the spooling task is not given enough CPU access. You can reduce the chance of starvation by using larger buffers or more compressed data. Try mono, 22KHz, SQXD compressed sound. It sounds pretty good and is 1/8th the size of a "normal" audio track.<P>
+There have also been some improvements made in how the spooler recovers from data starvation. The old spooler could get confused and repeat segments. Try the new spooler in the 1.3 release or the advanced sound player.<P>
+<H2>Streaming Audio Sample Code</H2>
+<B>Q: </B>  Because everyone in the world seems to be streaming 44Khz 16-bit audio off the CD for their background music, I would like to see some sample code.<P>
+<B>A: </B>  Check out the example programs <I>playsoundfile.</I><CODE>c</CODE> or <I>spoolsoundfile.c</I>. They are basically the same but <I>spoolsoundfile.c</I> works in a thread. They are on the Portfolio CD. <P>
+The examples use the AIFF sound file playing routines in the Music library. The routines have been enhanced in V1.3 to use a new low level soundspooler library that could be used to write your own custom sound file player.<P>
+Many people find that using the 2:1 SQXD compression, and/or, using 22K also yields good fidelity and takes less disc space and bandwidth. You may want to use the advanced sound player. See <A HREF="./03mpg006.html#XREF41487">Loading and Attaching Samples</A>.<P>
+<H2>Playing Red Book Audio</H2>
+<B>Q:  </B> How can I play Red Book audio as part of my title?<P>
+<B>A:</B>  You cannot interleave the proprietary 3DO format with Redbook Audio. Convert the sounds to an AIFF file and use the sound spooler of the 3DO Data Streamer. You can extract sound from a Redbook CD using commercially available programs such as Disc-to-Disk. If you have sound files in other formats, you can convert them using SoundHack.<P>

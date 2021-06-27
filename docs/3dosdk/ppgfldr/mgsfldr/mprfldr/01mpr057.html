@@ -1,0 +1,22 @@
+<Title>OpenAudioFolio</Title>
+<A NAME="XREF36778"><H1>OpenAudioFolio </A></H1>
+<A NAME="XREF17912"></A> Opens the Audio folio.<P>
+<H3>Synopsis</H3>
+<CODE>Err OpenAudioFolio (void)</CODE><P>
+<H3>Description</H3>
+This function connects a task to the Audio folio and must be executed by each task before it makes any Audio folio calls. If a task makes an Audio folio call before it executes <CODE>OpenAudioFolio()</CODE>, the task fails. <P>
+Call <CODE>CloseAudioFolio()</CODE> to relinquish a task's access to the Audio folio. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>None
+<DD> 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in audio.lib V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr011.html#XREF27572"><CODE>CloseAudioFolio</A>() </CODE><P>
+</CODE>

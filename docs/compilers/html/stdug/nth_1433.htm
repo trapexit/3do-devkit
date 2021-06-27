@@ -1,0 +1,34 @@
+<HTML><HEAD><TITLE>nth Element</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>nth Element</H2>
+<P>Imagine we have the sequence 2 5 3 4 7, and we want to discover the median, or middle element.  We could do this with the function <SAMP>nth_element().</SAMP>  One result might be the following sequence:</P>
+<P>3 2 <B>|</B> 4 <B>|</B> 7 5</P>
+<P>The vertical bars are used to describe the separation of the result into three parts; the elements before the requested value, the requested value, and the values after the requested value.  Note that the values in the first and third sequences are unordered; in fact, they can appear in the result in any order.  The only requirement is that the values in the first part are no larger than the value we are seeking, and the elements in the third part are no smaller than this value.</P>
+<P>The three iterators provided as arguments to the algorithm <SAMP>nth_element()</SAMP> divide the argument sequence into the three sections we just described.  These are the section prior to the middle iterator, the single value denoted by the middle iterator, and the region between the middle iterator and the end.  Either the first or third of these may be empty.</P>
+<P>The arguments to the algorithm can be described as follows:</P>
+<PRE>void nth_element (RandomAccessIterator first, 
+   RandomAccessIterator nth, 
+   RandomAccessIterator last [, Compare ] );
+</PRE>
+<P>Following the call on <SAMP>nth_element(),</SAMP> the nth largest value will be copied into the position denoted by the middle iterator.  The region between the first iterator and the middle iterator will have values no larger than the nth element, while the region between the middle iterator and the end will hold values no smaller than the nth element.</P>
+<P>The example program illustrates finding the fifth largest value in a vector of random numbers.</P>
+<PRE>void nth_element_example ()
+      // illustrate the use of the nth_element algorithm
+{
+      // make a vector of random integers
+   vector&#60;int> aVec(10);
+   generate (aVec.begin(), aVec.end(), randomValue);
+
+      // now find the 5th largest
+   vector&#60;int>::iterator nth = aVec.begin() + 4;
+   nth_element (aVec.begin(), nth, aVec.end());
+
+   cout &#60;&#60; "fifth largest is " &#60;&#60; *nth &#60;&#60; endl;
+}
+</PRE>
+
+<HR>
+<A HREF="par_1934.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="bin_2092.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

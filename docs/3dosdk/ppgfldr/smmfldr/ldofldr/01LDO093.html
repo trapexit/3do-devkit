@@ -1,0 +1,18 @@
+<Title>GetTextCelTabStops</Title>
+<A NAME="XREF29784"><H1>GetTextCelTabStops </A></H1>
+ Retrieves tab stops table.<P>
+<H3>Synopsis</H3>
+<CODE>void GetTextCelTabStops (TextCel *tCel, uint16 tabStops[16])</CODE><P>
+<H3>Description</H3>
+Retrieves the tab stops table for the text cel. A full table of 16 values is stored even if some of the values are unused. The end of the valid entries in the table is marked with a zero. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>tabStops
+<DD>Pointer to an array of uint16 that receives the tab stops table. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

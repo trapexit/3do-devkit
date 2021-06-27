@@ -1,0 +1,21 @@
+<Title>DeleteTimerIOReq</Title>
+<A NAME="XREF26950"><H1>DeleteTimerIOReq </A></H1>
+<A NAME="XREF28578"></A> Delete a timer device I/O request.<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteTimerIOReq(Item ioreq);</CODE><P>
+<H3>Description</H3>
+Frees any resources used by a previous call to <CODE>CreateTimerIOReq()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ioreq
+<DD>The I/O request item, as returned by a previous call to CreateTimerIOReq(). 
+</DL>
+<H3>Return Value</H3>
+Return &gt;=0 if successful, or a negative error code for failure.<P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+time.h, clib.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./05spr003.html#XREF34332"><CODE>CreateTimerIOReq</A>(), <A HREF="./05spr008.html#XREF18385">WaitTime</A>(), <A HREF="./05spr009.html#XREF29740">WaitUntil</A>() </CODE><P>
+</CODE>

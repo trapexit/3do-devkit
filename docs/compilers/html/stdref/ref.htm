@@ -1,0 +1,366 @@
+<HTML><HEAD><TITLE>Standard C++ Library 1.2 Class Reference</TITLE></HEAD>
+<BODY><IMG SRC="images/banner.gif">
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<P>If you are accessing this for the first time, please read the <A HREF="license.htm">licensing statement</A>.<P>
+<P>Standard C++ Library also has a <A HREF="../stdug/ug.htm">User Guide</A>.</P>
+<H1>Standard C++ Library Class Reference</H1>
+<H2>Version 1.2</H2>
+<UL>
+<A HREF="#Introduction"><H4>Introduction</A><BR>
+<A HREF="#Standards Conformance">Standards Conformance</A><BR>
+<A HREF="#contents">Contents</A></H4>
+</UL>
+<A NAME="Introduction"><H2>Introduction</H2></A>
+<P>This reference guide is an alphabetical listing of all of the classes, algorithms, and function objects provided by this release of Rogue Wave's Standard C++ Library.  The gray band on the first page of each entry indicates the category (e.g., Algorithms, Containers, etc.) that the entry belongs to.  The table below lists the contents organized by category.</P>
+<P>For each class, the reference begins with a brief summary of the class; a synopsis, which indicates the header file(s); and the signature of a class object.  The reference continues with a text description of the class followed by the C++ code that describes the class interface.  Next, all methods associated with a class, including constructors, operators, member functions, etc. are grouped in categories according to their general use and described. The categories are not a part of the C++ language, but do provide a way of organizing the methods.  Following the member function descriptions, many of the classes include examples.  Finally, any warnings associated with using the class are described.</P>
+<P>Throughout the documentation, there are frequent references to "self," which should be understood to mean "<SAMP>*this</SAMP>".</P>
+<CENTER><TABLE BORDER CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD WIDTH="25%"><B>Algorithms</B>
+<P><SAMP>#include &#60;algorithm></SAMP></P></TD>
+<TD>adjacent_find
+binary_search
+copy
+copy_backward
+count
+count_if
+equal
+equal_range
+fill
+fill_n
+find
+find_end
+find_first_of
+find_if
+for_each
+generate
+generate_n
+includes
+inplace_merge
+iter_swap
+lexicographical_compare
+lower_bound
+make_heap
+max
+max_element
+merge
+min
+min_element
+mismatch
+next_permutation
+nth_element
+partial_sort
+partial_sort_copy
+partition
+pop_heap
+prev_permutation
+push_heap
+random_shuffle
+remove
+remove_copy
+remove_copy_if
+remove_if
+replace
+replace_copy
+replace_copy_if
+replace_if
+reverse
+reverse_copy
+rotate
+rotate_copy
+search  
+search_n
+set_difference
+set_intersection
+set_symmetric_difference
+set_union
+sort
+sort_heap
+stable_partition
+stable_sort
+swap
+swap_ranges
+transform
+unique
+unique_copy
+upper_bound</TD></TR>
+<TR VALIGN=top>
+<TD><B>Complex Number Library</B>
+<P><SAMP>#include &#60;complex></SAMP></P></TD>
+<TD>complex</TD></TR>
+<TR VALIGN=top>
+<TD><B>Containers</B>
+<P><SAMP>#include &#60;bitset></SAMP>
+<BR><SAMP>#include &#60;deque></SAMP>
+<BR><SAMP>#include &#60;list></SAMP>
+<BR><SAMP>#include &#60;map></SAMP> for map and multimap
+<BR><SAMP>#include &#60;queue></SAMP> for queue and priority_queue
+<BR><SAMP>#include &#60;set></SAMP> for set and multiset
+<BR><SAMP>#include &#60;stack></SAMP>
+<BR><SAMP>#include &#60;vector></SAMP></P></TD>
+<TD>bitset 
+deque
+list
+map
+multimap
+multiset
+priority_queue
+queue
+set
+stack
+vector</TD></TR>
+<TR VALIGN=top>
+<TD><B>Function Adaptors</B>
+<P><SAMP>#include &#60;functional></SAMP></P></TD>
+<TD>bind1st
+bind2nd
+not1
+not2
+ptr_fun</TD></TR>
+<TR VALIGN=top>
+<TD><B>Function Objects</B>
+<P><SAMP>#include &#60;functional></SAMP></P></TD>
+<TD>binary_function
+binary_negate
+binder1st
+binder2nd
+divides
+equal_to
+greater
+greater_equal
+less
+less_equal
+logical_and
+logical_not
+logical_or
+minus
+modulus
+negate
+not_equal_to
+plus
+pointer_to_binary-function
+pointer_to_unary_function
+times
+unary_function
+unary_negate</TD></TR>
+<TR VALIGN=top>
+<TD><B>Generalized Numeric Operations</B>
+<P><SAMP>#include &#60;numeric></SAMP></P></TD>
+<TD>accumulate
+adjacent_difference
+accumulate
+inner_product
+partial_sum</TD></TR>
+<TR VALIGN=top>
+<TD><B>Insert Iterators</B>
+<P><SAMP>#include &#60;iterator></SAMP></P></TD>
+<TD>back_insert_iterator
+back_inserter
+front_insert_iterator
+front_inserter
+insert_iterator
+inserter</TD></TR>
+<TR VALIGN=top>
+<TD><B>Iterators</B>
+<P><SAMP>#include &#60;iterator></SAMP></P></TD>
+<TD>bidirectional iterator
+forward iterator
+input iterator
+output iterator
+random access iterator
+reverse_bidirectional_iterator
+reverse_iterator</TD></TR>
+<TR VALIGN=top>
+<TD><B>Iterator operations</B>
+<P><SAMP>#include &#60;iterator></SAMP></P></TD>
+<TD>advance
+distance</TD></TR>
+<TR VALIGN=top>
+<TD><B>Memory Handling Primitives</B>
+<P><SAMP>#include &#60;memory></SAMP></P></TD>
+<TD>get_temporary_buffer
+return_temporary_buffer</TD></TR>
+<TR VALIGN=top>
+<TD><B>Memory Management</B>
+<P><SAMP>#include &#60;memory></SAMP></P></TD>
+<TD>allocator
+auto_ptr 
+raw_storage_iterator
+uninitialized_copy
+uninitialized_fill
+uninitialized_fill_n</TD></TR>
+<TR VALIGN=top>
+<TD><B>Numeric Limits Library</B>
+<P><SAMP>#include &#60;limits></SAMP></P></TD>
+<TD>numeric limits</TD></TR>
+<TR VALIGN=top>
+<TD><B>String Library</B>
+<P><SAMP>#include &#60;string></SAMP></P></TD>
+<TD>basic_string
+string
+wstring</TD></TR>
+<TR VALIGN=top>
+<TD><B>Utility Classes</B>
+<P><SAMP>#include &#60;utility></SAMP></P></TD>
+<TD>pair</TD></TR>
+<TR VALIGN=top>
+<TD><B>Utility Operators</B>
+<P><SAMP>#include &#60;utility></SAMP></P></TD>
+<TD>operator!=
+operator>
+operator&#60;=
+operator>=</TD></TR>
+</TABLE></CENTER>
+<A NAME="Standards Conformance"><H3>Standards Conformance</H3></A>
+<P>The information presented in this reference conforms with the requirements of the ANSI X3J16/ISO WG21 Joint C++ Committee.</P>
+<A NAME="contents"><H2>Contents</H2></A>
+<UL>
+<A HREF="acc_0611.htm"><LI>accumulate</LI></A>
+<A HREF="adj_9476.htm"><LI>adjacent_difference</LI></A>
+<A HREF="adj_8817.htm"><LI>adjacent_find</LI></A>
+<A HREF="adv_9283.htm"><LI>advance</LI></A>
+<A HREF="Alg_5157.htm"><LI>Algorithms</LI></A>
+<A HREF="all_7029.htm"><LI>allocator</LI></A>
+<A HREF="Ass_0034.htm"><LI>Associative Containers</LI></A>
+<A HREF="aut_3512.htm"><LI>auto_ptr </LI></A>
+<A HREF="bac_0189.htm"><LI>back_insert_iterator, back_inserter</LI></A>
+<A HREF="bas_0007.htm"><LI>basic_string</LI></A>
+<A HREF="Bid_7861.htm"><LI>Bidirectional Iterators</LI></A>
+<A HREF="bin_7851.htm"><LI>binary_function</LI></A>
+<A HREF="bin_1825.htm"><LI>binary_negate</LI></A>
+<A HREF="bin_2217.htm"><LI>binary_search</LI></A>
+<A HREF="bin_1899.htm"><LI>bind1st, bind2nd, binder1st, binder2nd</LI></A>
+<A HREF="bit_0857.htm"><LI>bitset</LI></A>
+<A HREF="com_8038.htm"><LI>complex</LI></A>
+<A HREF="com_8038.htm"><LI>complex</LI></A>
+<A HREF="Con_2487.htm"><LI>Containers</LI></A>
+<A HREF="cop_4514.htm"><LI>copy, copy_backward</LI></A>
+<A HREF="cou_2233.htm"><LI>count, count_if</LI></A>
+<A HREF="deq_4164.htm"><LI>deque </LI></A>
+<A HREF="dis_0186.htm"><LI>distance</LI></A>
+<A HREF="dis_6675.htm"><LI>distance_type</LI></A>
+<A HREF="div_3309.htm"><LI>divides</LI></A>
+<A HREF="equ_0708.htm"><LI>equal</LI></A>
+<A HREF="equ_3232.htm"><LI>equal_range</LI></A>
+<A HREF="equ_8796.htm"><LI>equal_to</LI></A>
+<A HREF="exc_9785.htm"><LI>exception</LI></A>
+<A HREF="fil_4628.htm"><LI>fill, fill_n</LI></A>
+<A HREF="fin_7988.htm"><LI>find</LI></A>
+<A HREF="fin_7707.htm"><LI>find_end</LI></A>
+<A HREF="fin_8583.htm"><LI>find_first_of</LI></A>
+<A HREF="fin_2105.htm"><LI>find_if</LI></A>
+<A HREF="for_7707.htm"><LI>for_each</LI></A>
+<A HREF="For_5773.htm"><LI>Forward Iterators</LI></A>
+<A HREF="fro_0713.htm"><LI>front_insert_iterator, front_inserter</LI></A>
+<A HREF="Fun_7437.htm"><LI>Function Objects</LI></A>
+<A HREF="gen_0186.htm"><LI>generate, generate_n</LI></A>
+<A HREF="get_8241.htm"><LI>get_temporary_buffer</LI></A>
+<A HREF="gre_0376.htm"><LI>greater</LI></A>
+<A HREF="gre_2866.htm"><LI>greater_equal</LI></A>
+<A HREF="Hea_4928.htm"><LI>Heap Operations</LI></A>
+<A HREF="inc_3676.htm"><LI>includes</LI></A>
+<A HREF="inn_8576.htm"><LI>inner_product</LI></A>
+<A HREF="inp_3138.htm"><LI>inplace_merge </LI></A>
+<A HREF="Inp_4853.htm"><LI>Input Iterators</LI></A>
+<A HREF="Ins_1844.htm"><LI>Insert Iterators</LI></A>
+<A HREF="ins_0081.htm"><LI>insert_iterator, inserter</LI></A>
+<A HREF="ist_4337.htm"><LI>istream_iterator</LI></A>
+<A HREF="ite_7451.htm"><LI>iterator_category</LI></A>
+<A HREF="Ite_5295.htm"><LI>Iterators</LI></A>
+<A HREF="ite_4254.htm"><LI>iter_swap</LI></A>
+<A HREF="les_7517.htm"><LI>less</LI></A>
+<A HREF="les_5595.htm"><LI>less_equal</LI></A>
+<A HREF="lex_3806.htm"><LI>lexicographical_compare</LI></A>
+<A HREF="lim_2532.htm"><LI>limits</LI></A>
+<A HREF="lis_3222.htm"><LI>list</LI></A>
+<A HREF="log_2801.htm"><LI>logical_and</LI></A>
+<A HREF="log_1866.htm"><LI>logical_not</LI></A>
+<A HREF="log_7695.htm"><LI>logical_or</LI></A>
+<A HREF="low_4395.htm"><LI>lower_bound</LI></A>
+<A HREF="mak_0285.htm"><LI>make_heap</LI></A>
+<A HREF="map_8018.htm"><LI>map </LI></A>
+<A HREF="max_6671.htm"><LI>max</LI></A>
+<A HREF="max_8656.htm"><LI>max_element</LI></A>
+<A HREF="mer_0626.htm"><LI>merge</LI></A>
+<A HREF="min_9233.htm"><LI>min</LI></A>
+<A HREF="min_9998.htm"><LI>min_element</LI></A>
+<A HREF="min_5058.htm"><LI>minus</LI></A>
+<A HREF="mis_8857.htm"><LI>mismatch</LI></A>
+<A HREF="mod_6765.htm"><LI>modulus</LI></A>
+<A HREF="mul_8396.htm"><LI>multimap</LI></A>
+<A HREF="mul_0958.htm"><LI>multiset</LI></A>
+<A HREF="neg_4682.htm"><LI>negate</LI></A>
+<A HREF="Neg_5086.htm"><LI>Negators</LI></A>
+<A HREF="nex_1756.htm"><LI>next_permutation</LI></A>
+<A HREF="not_6483.htm"><LI>not1</LI></A>
+<A HREF="not_2978.htm"><LI>not2</LI></A>
+<A HREF="not_5572.htm"><LI>not_equal_to</LI></A>
+<A HREF="nth_9772.htm"><LI>nth_element</LI></A>
+<A HREF="num_5679.htm"><LI>numeric_limits</LI></A>
+<A HREF="ope_9743.htm"><LI>operator!=, operator>, operator&#60;=, operator>=</LI></A>
+<A HREF="ost_2238.htm"><LI>ostream_iterator</LI></A>
+<A HREF="Out_3702.htm"><LI>Output Iterators</LI></A>
+<A HREF="pai_5818.htm"><LI>pair</LI></A>
+<A HREF="par_4963.htm"><LI>partial_sort</LI></A>
+<A HREF="par_1563.htm"><LI>partial_sort_copy</LI></A>
+<A HREF="par_6923.htm"><LI>partial_sum</LI></A>
+<A HREF="par_0264.htm"><LI>partition</LI></A>
+<A HREF="per_9476.htm"><LI>permutation</LI></A>
+<A HREF="plu_3223.htm"><LI>plus</LI></A>
+<A HREF="poi_3537.htm"><LI>pointer_to_binary_function</LI></A>
+<A HREF="poi_7375.htm"><LI>pointer_to_unary_function</LI></A>
+<A HREF="pop_9596.htm"><LI>pop_heap</LI></A>
+<A HREF="Pre_1511.htm"><LI>Predicates</LI></A>
+<A HREF="pre_1548.htm"><LI>prev_permutation</LI></A>
+<A HREF="pri_2327.htm"><LI>priority_queue</LI></A>
+<A HREF="ptr_4059.htm"><LI>ptr_fun</LI></A>
+<A HREF="pus_5295.htm"><LI>push_heap</LI></A>
+<A HREF="que_0953.htm"><LI>queue</LI></A>
+<A HREF="Ran_7047.htm"><LI>Random Access Iterators</LI></A>
+<A HREF="ran_2368.htm"><LI>random_shuffle </LI></A>
+<A HREF="raw_6773.htm"><LI>raw_storage_iterator</LI></A>
+<A HREF="rem_4572.htm"><LI>remove</LI></A>
+<A HREF="rem_6253.htm"><LI>remove_copy</LI></A>
+<A HREF="rem_9276.htm"><LI>remove_copy_if</LI></A>
+<A HREF="rem_0514.htm"><LI>remove_if</LI></A>
+<A HREF="rep_6131.htm"><LI>replace</LI></A>
+<A HREF="rep_5264.htm"><LI>replace_copy</LI></A>
+<A HREF="rep_8915.htm"><LI>replace_copy_if</LI></A>
+<A HREF="rep_6837.htm"><LI>replace_if</LI></A>
+<A HREF="ret_6218.htm"><LI>return_temporary_buffer</LI></A>
+<A HREF="rev_6652.htm"><LI>reverse</LI></A>
+<A HREF="rev_5984.htm"><LI>reverse_bidirectional_iterator, reverse_iterator</LI></A>
+<A HREF="rev_6851.htm"><LI>reverse_copy</LI></A>
+<A HREF="rev_1561.htm"><LI>reverse_iterator</LI></A>
+<A HREF="rot_3525.htm"><LI>rotate, rotate_copy</LI></A>
+<A HREF="sea_8558.htm"><LI>search, search_n</LI></A>
+<A HREF="Seq_6405.htm"><LI>Sequences</LI></A>
+<A HREF="set_1649.htm"><LI>set</LI></A>
+<A HREF="set_0972.htm"><LI>set_difference</LI></A>
+<A HREF="set_9182.htm"><LI>set_intersection</LI></A>
+<A HREF="set_1735.htm"><LI>set_symmetric_difference </LI></A>
+<A HREF="set_6462.htm"><LI>set_union</LI></A>
+<A HREF="sor_1439.htm"><LI>sort</LI></A>
+<A HREF="sor_3899.htm"><LI>sort_heap</LI></A>
+<A HREF="sta_4791.htm"><LI>stable_partition</LI></A>
+<A HREF="sta_5767.htm"><LI>stable_sort</LI></A>
+<A HREF="sta_9602.htm"><LI>stack</LI></A>
+<A HREF="Str_9238.htm"><LI>Stream Iterators</LI></A>
+<A HREF="str_8586.htm"><LI>string</LI></A>
+<A HREF="str_9893.htm"><LI>string_char_traits </LI></A>
+<A HREF="swa_4514.htm"><LI>swap</LI></A>
+<A HREF="swa_1153.htm"><LI>swap_ranges</LI></A>
+<A HREF="tim_4491.htm"><LI>times</LI></A>
+<A HREF="tra_4787.htm"><LI>transform</LI></A>
+<A HREF="una_4659.htm"><LI>unary_function</LI></A>
+<A HREF="una_8062.htm"><LI>unary_negate</LI></A>
+<A HREF="uni_4265.htm"><LI>uninitialized_copy</LI></A>
+<A HREF="uni_0077.htm"><LI>uninitialized_fill</LI></A>
+<A HREF="uni_6183.htm"><LI>uninitialized_fill_n</LI></A>
+<A HREF="uni_8586.htm"><LI>unique, unique_copy</LI></A>
+<A HREF="upp_0967.htm"><LI>upper_bound</LI></A>
+<A HREF="val_9388.htm"><LI>value_type</LI></A>
+<A HREF="vec_0251.htm"><LI>vector</LI></A>
+<A HREF="wst_4531.htm"><LI>wstring</LI></A>
+</UL>
+</BODY></HTML>

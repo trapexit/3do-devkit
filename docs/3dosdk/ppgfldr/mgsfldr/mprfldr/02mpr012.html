@@ -1,0 +1,25 @@
+<Title>GetObjectInfo</Title>
+<A NAME="XREF21127"><H1>GetObjectInfo </A></H1>
+<A NAME="XREF23462"></A> Gets the current settings of an object.<P>
+<H3>Synopsis</H3>
+<CODE>Err GetObjectInfo( CObject *obj, TagArg *tags )</CODE><P>
+<H3>Description</H3>
+This is a method macro that is part of the Juggler object-oriented toolbox.  An object's method can be called explicitly through the class structure function pointer, or with one of the defined method macros.  This method macro replaces the TagArg values in the specified tag argument list with the values currently defined for the object.  Use this function to get information about the current state of an object. <P>
+See <CODE>SetObjectInfo()</CODE> for a list of the tag arguments supported. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>obj
+<DD>A pointer to the CObject data structure for the object. 
+</DL>
+<DL>
+<DT>tags
+<DD>A pointer to the TagArg list. 
+</DL>
+<H3>Return Value</H3>
+This macro returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in cobj.h V20. <P>
+<H3>Associated Files</H3>
+cobj.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr016.html#XREF30718"><CODE>SetObjectInfo</A>(), <A HREF="./02mpr018.html#XREF26053">StopObject</A>(), <A HREF="./02mpr005.html#XREF31433">AllocObject</A>(), <A HREF="./02mpr010.html#XREF17884">FreeObject</A>(), <A HREF="./02mpr011.html#XREF36448">GetNthFromObject</A>(), <A HREF="./02mpr015.html#XREF30804">RemoveNthFromObject</A>(), <A HREF="./02mpr014.html#XREF34902">PrintObject</A>(),  <A HREF="./02mpr017.html#XREF20324">StartObject</A>() </CODE></CODE><P>

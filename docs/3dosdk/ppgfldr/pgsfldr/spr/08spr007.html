@@ -1,0 +1,33 @@
+<Title>FeedCompressor</Title>
+<A NAME="XREF24354"><H1>FeedCompressor </A></H1>
+<A NAME="XREF17404"></A>Gives data to a compression engine.<P>
+<H3>Synopsis</H3>
+<CODE>Err FeedCompressor(Compressor *comp, void *data,uint32 numDataWords);</CODE><P>
+<H3>Description</H3>
+Gives data to a compressor engine for compression. As data is compressed, the call back function supplied when the compressor was created is called for every word of compressed data generated. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>comp
+<DD>An active compression handle, as obtained from CreateCompressor(). 
+</DL>
+<DL>
+<DT>data
+<DD>A pointer to the data to compress. 
+</DL>
+<DL>
+<DT>numDataWords
+<DD>The number of words of data being given to the compressor. 
+</DL>
+<H3>Return Value</H3>
+Returns &gt;= 0 for success, or a negative error code if it fails. Possible error codes include: <P>
+<DL>
+<DT>COMP_ERR_BADPTR
+<DD>An invalid compression handle was supplied. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in compression folio V24. <P>
+<H3>Associated Files</H3>
+compression.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./08spr002.html#XREF38875"><CODE>CreateCompressor</A>(), <A HREF="./08spr005.html#XREF27597">DeleteCompressor</A>() </CODE><P>
+</CODE>

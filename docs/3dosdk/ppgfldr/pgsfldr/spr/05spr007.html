@@ -1,0 +1,32 @@
+<Title>TimeLaterThanOrEqual</Title>
+<A NAME="XREF41840"><H1>TimeLaterThanOrEqual </A></H1>
+<A NAME="XREF36772"></A>Returns whether a time value comes before or at the same time as another.<P>
+<H3>Synopsis</H3>
+<CODE>bool TimeLaterThanOrEqual(const TimeVal *tv1,const TimeVal *tv2);</CODE><P>
+<H3>Description</H3>
+Returns whether tv1 comes chronologically after tv2, or is the same as tv2. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tv1
+<DD>The first time value. 
+</DL>
+<DL>
+<DT>tv2
+<DD>The second time value. 
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>TRUE
+<DD>if tv1 comes after tv2 or is the same as tv2 
+</DL>
+<DL>
+<DT>FALSE
+<DD>if tv1 comes before tv2 
+</DL>
+<H3>Implementation</H3>
+Macro implemented in time.h V24. <P>
+<H3>Associated Files</H3>
+time.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./05spr002.html#XREF39340"><CODE>CompareTimes</A>(), <A HREF="./05spr006.html#XREF24661">TimeLaterThan</A>() </CODE><P>
+</CODE>

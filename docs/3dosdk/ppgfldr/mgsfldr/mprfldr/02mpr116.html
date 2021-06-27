@@ -1,0 +1,25 @@
+<Title>ssplSetSoundBufferFunc</Title>
+<A NAME="XREF16970"><H1>ssplSetSoundBufferFunc </A></H1>
+<A NAME="XREF14841"></A> Install new SoundBufferFunc in SoundSpooler.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplSetSoundBufferFunc ( SoundSpooler *sspl, SoundBufferFunc func )</CODE><P>
+<H3>Description</H3>
+Installs a new SoundBufferFunc callback function in a SoundSpooler. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>SoundSpooler to affect. 
+</DL>
+<DL>
+<DT>func
+<DD>New callback function pointer to install, or NULL to disable callback. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V22. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr095.html#XREF25499"><CODE>SoundBufferFunc</A>() </CODE><P>
+</CODE>

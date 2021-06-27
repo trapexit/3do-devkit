@@ -1,0 +1,16 @@
+<TITLE>Introduction</TITLE>
+<H1><LINK NAME="XREF14097">Introduction</LINK></H1><HR>
+Some of the devices currently in the 3DO system include:<P>
+<UL>
+<LI>Timer device
+<LI>File device
+<LI>SPORT device
+<LI>CD-ROM device (not documented here)
+<LI>RAM device (not documented here)
+<LI>xbus device (not documented here)
+</UL>
+All devices use I/O request items for communicating information between tasks and the device. Refer to <A HREF="./09spg.html#XREF37505">The Portfolio I/O Model</A>, for more information on devices and I/O requests. <P>
+The first step in the I/O process is for the task to open the device with the <CODE>OpenNamedDevice()</CODE> call. <P>
+A task must also get its own IOReq and IOInfo data structures to pass information to and from the device. The IOReq data structure is created using the call <CODE>CreateIOReq()</CODE>. The IOInfo data structure is allocated by the task either via a memory allocation call or on the stack. <P>
+<B>Note: </B>The IOInfo structure must be cleared of all unused bits before it is used.<P>
+After setting the IOInfo fields, a task uses the <CODE>SendIO()</CODE> or <CODE>DoIO()</CODE> functions to pass the item number of the I/O request structure and a pointer to the IOInfo structure to the device. The I/O request is passed to the device, and the appropriate action is taken by the device as specified by the IOInfo structure fields. <P>

@@ -1,0 +1,31 @@
+<Title>SubmitVDL </Title>
+<A NAME="XREF12966"><H1>SubmitVDL </A></H1>
+<A NAME="XREF35130"> Submits a VDL for approval by the system.</A><P>
+<H3>Synopsis</H3>
+<CODE>Item SubmitVDL (VDLEntry *VDLDataPtr,int32 length,int32 type)</CODE><P>
+<H3>Description</H3>
+This call accepts an absolute VDL specified by the VDLDataPtr argument and proofs it for use in the 3DO system. As part of the approval process, the VDL is copied into system data space and therefore can't be directly modified by the application after the call to <CODE>SubmitVDL()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>VDLDataPtr
+<DD>Pointer to the VDL to be approved by the system. 
+</DL>
+<DL>
+<DT>length
+<DD>The total length of the VDL in words. 
+</DL>
+<DL>
+<DT>type
+<DD>The type of the VDL being submitted (currently, only VDLTYPE_FULL is accepted). 
+</DL>
+<H3>Return Value</H3>
+This call returns an item number for the VDL or an error code (a negative value) if an error occurs. GRAFERR_PROOF_ERR is returned if the VDL is rejected due to illegal opcodes, bad headers, bad pointers, or illegal control values. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>Caveats</H3>
+Under certain circumstances, the system VDL that is created may need more memory than the VDL list passed in. This can be caused by alignment constraints in the hardware. One way to avoid this problem is to pad every line in the input VDL list to a multiple of four words (but without increasing the length count in the DMA control word). <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr019.html#XREF19909"><CODE>DisplayScreen</A>(), <A HREF="./01gpr046.html#XREF39861">ModifyVDL</A>(), <A HREF="./01gpr067.html#XREF20050">SetVDL</A>(), <A HREF="./01gpr014.html#XREF24670">DeleteVDL</A>() </CODE><P>
+</CODE>

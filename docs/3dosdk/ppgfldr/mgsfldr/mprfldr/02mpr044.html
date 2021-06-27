@@ -1,0 +1,40 @@
+<Title>SetPIMapEntry</Title>
+<A NAME="XREF35488"><H1>SetPIMapEntry </A></H1>
+<A NAME="XREF17970"></A> Specifies the instrument to use when a MIDI program change occurs.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetPIMapEntry( ScoreContext *scon, int32 ProgramNum,Item InsTemplate, int32 MaxVoices, int32 Priority )</CODE><P>
+<H3>Description</H3>
+This function specifies the instrument type to use when a MIDI program change occurs. <P>
+This function directly sets a PIMap entry, assigning an instrument template, a maximum voice value, and an instrument priority to a MIDI program number.  When a MIDI program change occurs, a new instrument specified by the instrument template is used for notes played after the program change. <P>
+The variable "ProgramNum" ranges from 0 to 127 (unlike some synthesizers, which range program numbers from 1 to 128).  It must not exceed the number of programs allocated in <CODE>CreateScoreContext()</CODE>. <P>
+Note that it's easier to create a full PIMap using <CODE>LoadPIMap()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>A pointer to the ScoreContext data structure whose PIMap is to be changed. 
+</DL>
+<DL>
+<DT>ProgramNum
+<DD>Value indicating a program number, ranging from 0127; not to exceed the maximum number allocated in <CODE>CreateScoreContext()</CODE>. 
+</DL>
+<DL>
+<DT>InsTemplate
+<DD>The item number of an instrument template. 
+</DL>
+<DL>
+<DT>MaxVoices
+<DD>The maximum number of voices that can play simultaneously for this program. 
+</DL>
+<DL>
+<DT>Priority
+<DD>An instrument priority value from 0 to 200. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if all went well; or an error code (less then 0) indicating that an error occurred. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr034.html#XREF17989"><CODE>LoadPIMap</A>(), <A HREF="./02mpr049.html#XREF11195">UnloadPIMap</A>() </CODE><P>
+</CODE>

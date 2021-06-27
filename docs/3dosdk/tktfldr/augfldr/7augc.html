@@ -1,0 +1,33 @@
+<TITLE>Generic coprocessor instructions</TITLE>
+<H1><LINK NAME="XREF19413">Generic coprocessor instructions</LINK></H1><HR>
+These are the generic coprocessor instructions implemented by all ARM processors with a coprocessor interface. Up to 16 coprocessors can be supported; all coprocessors have a number (CP#) in the range 0 to 15, and this must be specified in the instructions. Coprocessor 15 is used for cache, write-buffer and memory management control in several ARM processors, while coprocessors 1 and 2 are conventionally floating point units.<P>
+Coprocessors may have up to 16 directly addressable registers, C0-C15.<P>
+<H2>Coprocessor data transfers </H2>
+These instructions transfer data between a coprocessor and memory. The syntax is:<P>
+<CODE>
+<PRE>
+op{condition}{L} CP#,Cd,[Rn {,#offset}]{!}
+            [Rn],#offset
+
+</CODE>
+</PRE>
+The memory address can be expressed in one of three ways, as shown above. In the first, pre-indexed form, an ARM register, <I>Rn</I>, holds the base address to which an offset can be added if necessary. Writeback of the effective address to <I>Rn</I> can be enabled using<I> !</I>. The offset must be divisible by 4, and within the range -1020 to 1020 bytes. With the second, post-indexed form, write-back of Rn+<I>offset</I> to Rn after the transfer, is automatic. Alternatively, a <I>program-or-register-relative-expression</I> can be used, in which case the assembler will generate a PC- or register-relative, pre-indexed address; if it is out of range an error will result. <P>
+<I>L</I> appended to the instruction specifies a long transfer; otherwise a short transfer takes place. The meaning of this is coprocessor-specific.<P>
+<H2>Coprocessor data operations </H2>
+This instruction is used for internal coprocessor operations. The syntax is:<P>
+<CODE>
+<PRE>
+CDP{condition} CP#,CPOp,CRd,CRn,CRm{,CPOp2}
+</CODE>
+</PRE>
+<I>CPOp</I> represents the coprocessor operation to be performed (four bits); details of such operations are coprocessor-specific and can be found in the appropriate datasheet. The operation is performed on <I>CRn</I> and <I>CRm</I> and the result written to <I>CRd</I>. The second, optional, <I>CPOp2</I> field allows further variations on the operation (three bits).<P>
+<H2>Coprocessor register transfers </H2>
+The syntax of these two instructions is:<P>
+<CODE>
+<PRE>
+op{condition} CP#,CPOp,Rd,Cn,Cm{,CPOp2}
+</CODE>
+</PRE>
+<I>CPOp</I> is a 3-bit constant which specifies which variant of the instruction to perform. The selected operation is performed using the coprocessor registers <I>Cn</I> and <I>Cm</I>, and the result transferred to the ARM register <I>Rd</I>. If R15 is specified as the destination, only bits 28-31 of the result are transferred and are used to set the N, Z, C and V flags in the PSR without affecting the program counter. <I>CPOp2</I>, where present, is a 3-bit constant which sets the ARM condition flags, supporting the further coprocessor-specific sub-operations.<P>
+MRC is often used to read a coprocessor's status register(s), while MCR is used to write its control register(s). MRC, with R15 as the destination, supports execution of ARM code conditional on the result of an earlier coprocessor operation, (e.g. floating point compare).<P>
+<P>

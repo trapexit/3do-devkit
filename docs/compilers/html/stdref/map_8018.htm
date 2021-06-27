@@ -1,0 +1,387 @@
+<HTML><TITLE>map </TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>map </H2>
+<HR><PRE>     Container</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>An associative container providing access to non-key values using unique keys.  A <B><I>map</B></I> supports bidirectional iterators.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Constructors and Destructors"><LI>Constructors and Destructors</LI></A>
+<A HREF="#Allocator"><LI>Allocator</LI></A>
+<A HREF="#Iterators"><LI>Iterators</LI></A>
+<A HREF="#Member Operators"><LI>Member Operators</LI></A>
+<A HREF="#Allocator"><LI>Allocator</LI></A>
+<A HREF="#Member Functions"><LI>Member Functions</LI></A>
+<A HREF="#Non-member Operators"><LI>Non-member Operators</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;map></PRE>
+<PRE>
+template &#60;class Key, class T, class Compare = less&#60;Key> 
+          class Allocator = allocator>
+class <B>map</B>;</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P><B><I>map &#60;Key, T, Compare, Allocator></B></I> provides fast access to stored values of type <SAMP>T</SAMP>  which are indexed by unique keys of type <B><I>Key</B></I>.  The default operation for key comparison is the <SAMP>&#60;</SAMP> operator. </P>
+<P><B><I>map</B></I> provides bidirectional iterators  that point to an instance of  <SAMP>pair&#60;const Key x, T y></SAMP> where <SAMP>x</SAMP> is the key and <SAMP>y</SAMP> is the stored value associated with that key.  The definition of <B><I>map</B></I> provides a <SAMP>typedef</SAMP> to this pair called <SAMP>value_type</SAMP>. </P>
+<P>The types used for both the template parameters  <SAMP>Key</SAMP>  and<SAMP> T</SAMP> must provide the following (where <SAMP>T</SAMP> is the <SAMP>type</SAMP>, <SAMP>t</SAMP> is a <SAMP>value</SAMP> of <SAMP>T</SAMP> and <SAMP>u</SAMP> is a <SAMP>const</SAMP> <SAMP>value</SAMP> of <SAMP>T</SAMP>): </P>
+<PRE>  Copy constructors -  T(t) and T(u)
+  Destructor        -  t.~T()
+  Address of        -  &#38;t and &#38;u yielding T* and
+                       const T* respectively
+  Assignment        -  t = a where a is a
+                       (possibley const) value of T
+</PRE><P>The type used for the <SAMP>Compare</SAMP> template parameter must satisfy the requirements for binary functions. </P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class Key, class T, class Compare = less&#60;Key>
+          class Allocator = allocator, >
+ class map {
+
+public:
+// types
+   typedef Key key_type;
+   typedef T mapped_type;
+   typedef pair&#60;const Key, T> value_type;
+   typedef Compare key_compare;
+   typedef Allocator allocator_type;
+   typename reference;
+   typename const_reference;
+   typename iterator;
+   typename const_iterator;
+   typename size_type;
+   typename difference_type;
+   typename reverse_iterator;
+   typename const_reverse_iterator;
+   class value_compare
+      : public binary_function&#60;value_type, value_type, bool>
+   {
+     friend class map&#60;Key, T, Compare, Allocator>;
+     public :
+       bool operator() (const value_type&#38;,
+                        const value_type&#38;) const;
+   };
+// Construct/Copy/Destroy
+   explicit map (const Compare&#38; = Compare(),
+                 const Allocator&#38; = Allocator ());
+   template &#60;class InputIterator>
+    map (InputIterator, InputIterator,
+         const Compare&#38; = Compare(),
+         const Allocator&#38; = Allocator ());
+   map (const map&#60;Key, T, Compare, Allocator>&#38;);
+   ~map();
+   map&#60;Key, T, Compare, Allocator>&#38; 
+    operator= (const map&#60;Key, T, Compare, Allocator>&#38;);
+   allocator_type get_allocator () const;
+// Iterators
+   iterator begin();
+   const_iterator begin() const;
+   iterator end();
+   const_iterator end() const;
+   reverse_iterator rbegin();
+   const_reverse_iterator rbegin() const;
+   reverse_iterator rend();
+   const_reverse_iterator rend() const;
+// Capacity
+   bool empty() const;
+   size_type size() const;
+   size_type max_size() const;
+// Element Access
+   mapped_type&#38; operator[] (const key_type&#38;);
+   const mapped_type&#38; operator[] (const key_type&#38;) const;
+// Modifiers
+   pair&#60;iterator, bool> insert (const value_type&#38;);
+   iterator insert (iterator, const value_type&#38;);
+   template &#60;class InputIterator>
+    void insert (InputIterator, InputIterator);
+   iterator erase (iterator);
+   size_type erase (const key_type&#38;);
+   iterator erase (iterator, iterator);
+   void swap (map&#60;Key, T, Compare, Allocator>&#38;);
+// Observers
+   key_compare key_comp() const;
+   value_compare value_comp() const;
+// Map operations
+   iterator find (const key_value&#38;);
+   const_iterator find (const key_value&#38;) const;
+   size_type count (const key_type&#38;) const;
+   iterator lower_bound (const key_type&#38;);
+   const_iterator lower_bound (const key_type&#38;) const;
+   iterator upper_bound (const key_type&#38;);
+   const_iterator upper_bound (const key_type&#38;) const;
+   pair&#60;iterator, iterator> equal_range (const key_type&#38;);
+   pair&#60;const_iterator, const_iterator>
+     equal_range (const key_type&#38;) const;
+};
+// Non-member Map Operators
+template &#60;class Key, class T, class Compare, class Allocator>
+ <SAMP>bool</SAMP> operator== (const map&#60;Key, T, Compare, Allocator>&#38;,
+                  const map&#60;Key, T, Compare, Allocator>&#38;);
+template &#60;class Key, class T, class Compare, class Allocator>
+ bool <B>operator&#60;</B> (const map&#60;Key, T, Compare, Allocator>&#38;,
+                 const map&#60;Key, T, Compare, Allocator>&#38;);
+// Specialized Algorithms
+template &#60;class Key, class T, class Compare, class Allocator>
+ void <B>swap</B> (map&#60;Key,T,Compare,Allocator>&#38;,
+            map&#60;Key,T,Compare,Allocator>&#38;);
+</PRE>
+<A NAME="Constructors and Destructors"><H3>Constructors and Destructors</H3></A>
+<PRE>explicit <B>map</B> (const Compare&#38; comp = Compare (),
+              const Allocator&#38; alloc = Allocator());</PRE>
+<UL><P>Default constructor.  Constructs an empty map that  will use the relation <SAMP>comp</SAMP> to order keys, if it is supplied.  The map will use the allocator <SAMP>alloc</SAMP> for all storage management.</P>
+</UL>
+<PRE>template &#60;class InputIterator>
+<B>map</B> (InputIterator first, InputIterator last,
+     const Compare&#38; comp = Compare (),
+     const Allocator&#38; alloc = Allocator());</PRE>
+<UL><P>Constructs a map containing values in the range <SAMP>[first, last)</SAMP>.  Creation of the new map is only guaranteed to succeed if the iterators <SAMP>first</SAMP> and  <SAMP>last</SAMP> return values of type <SAMP>pair&#60;class Key, class Value></SAMP> and all values of <SAMP>Key</SAMP> in the <SAMP>range[first, last)</SAMP> are unique. The map will use the relation <SAMP>comp</SAMP> to order keys, and the allocator <SAMP>alloc</SAMP> for all storage management.</P>
+</UL>
+<PRE><B>map</B> (const map&#60;Key,T,Compare,Allocator>&#38; x);</PRE>
+<UL><P>Copy constructor.  Creates a new map by copying all pairs of <SAMP>key</SAMP> and <SAMP>value</SAMP> from <SAMP>x</SAMP>. </P>
+</UL>
+<PRE>~<B>map</B> ();</PRE>
+<UL><P>The destructor.  Releases any allocated memory for this map.</P>
+</UL>
+<A NAME="Allocator"><H3>Allocator</H3></A>
+<PRE>allocator_type <B>get_allocator</B> () const;</PRE>
+<UL><P>Returns a copy of the allocator used by self for storage management.</P>
+</UL>
+<A NAME="Iterators"><H3>Iterators</H3></A>
+<PRE>iterator <B>begin</B>() ;</PRE>
+<UL><P>Returns an <SAMP>iterator</SAMP> pointing to the first element stored in the map.  "First" is defined by the map's comparison operator, <SAMP>Compare</SAMP>. </P>
+</UL>
+<PRE>const_iterator <B>begin</B>() const;</PRE>
+<UL><P>Returns a <SAMP>const_iterator</SAMP> pointing to the first element stored in the map. </P>
+</UL>
+<PRE>iterator <B>end</B>() ;</PRE>
+<UL><P>Returns an <SAMP>iterator</SAMP> pointing to the last element  stored in the map, i.e., the off-the-end value. </P>
+</UL>
+<PRE>const_iterator <B>end</B>() const;</PRE>
+<UL><P>Returns a <SAMP>const_iterator</SAMP> pointing to the last element stored in the map. </P>
+</UL>
+<PRE>reverse_iterator <B>rbegin</B>();</PRE>
+<UL><P>Returns a <SAMP>reverse_iterator</SAMP> pointing to the first element stored in the map.  "First" is defined by the map's comparison operator, <SAMP>Compare</SAMP>. </P>
+</UL>
+<PRE>const_reverse_iterator <B>rbegin</B>() const;</PRE>
+<UL><P>Returns a <SAMP>const_reverse_iterator</SAMP> pointing to the  first element stored in the map. </P>
+</UL>
+<PRE>reverse_iterator <B>rend</B>() ;</PRE>
+<UL><P>Returns a <SAMP>reverse_iterator </SAMP>pointing to the last element stored in the map, i.e., the off-the-end value.</P>
+</UL>
+<PRE>const_reverse_iterator <B>rend</B>() const;</PRE>
+<UL><P>Returns a <SAMP>const_reverse_iterator</SAMP> pointing to the last element stored in the map</P>
+</UL>
+<A NAME="Member Operators"><H3>Member Operators</H3></A>
+<PRE>map&#60;Key, T, Compare, Allocator>&#38; 
+<B>operator= </B>(const map&#60;Key, T, Compare, Allocator>&#38; x);</PRE>
+<UL><P>Assignment.  Replaces the contents of <SAMP>*this</SAMP> with a copy of the map <SAMP>x</SAMP>. </P>
+</UL>
+<PRE>mapped_type&#38; <B>operator[]</B> (const key_type&#38; x);</PRE>
+<UL><P>If an element with the key <SAMP>x</SAMP> exists in the map, then a reference to its  associated value will be returned. Otherwise the pair <SAMP>x,T() </SAMP>will be inserted into the map and a reference to the default object <SAMP>T()</SAMP> will be returned. </P>
+</UL>
+<A NAME="Allocator"><H3>Allocator</H3></A>
+<PRE>allocator_type <B>get_allocator</B> () const;</PRE>
+<UL><P>Returns a copy of the allocator used by self for storage management.</P>
+</UL>
+<A NAME="Member Functions"><H3>Member Functions</H3></A>
+<PRE>void
+<B>clear</B> ();</PRE>
+<UL><P>Erases all elements from the self.</P>
+</UL>
+<PRE>size_type 
+<B>count</B> (const key_type&#38; x) const;</PRE>
+<UL><P>Returns a 1 if a value with the key <SAMP>x</SAMP> exists in  the map, otherwise returns a 0. </P>
+</UL>
+<PRE>bool 
+<B>empty</B>() const;</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if the map is empty, <SAMP>false</SAMP> otherwise.</P>
+</UL>
+<PRE>pair&#60;iterator, iterator> 
+<B>equal_range</B>  (const  key_type&#38; x);</PRE>
+<UL><P>Returns the pair,<SAMP> (lower_bound(x), upper_bound(x))</SAMP>.</P>
+</UL>
+<PRE>pair&#60;const_iterator,const_iterator> 
+<B>equal_range </B>(const key_type&#38; x) const;</PRE>
+<UL><P>Returns the pair,<SAMP> (lower_bound(x), upper_bound(x))</SAMP>.</P>
+</UL>
+<PRE>iterator
+<B>erase</B> (iterator position);</PRE>
+<UL><P>Deletes the map element pointed to by the iterator <SAMP>position</SAMP>. Returns an iterator pointing to the element following the deleted element, or <SAMP>end()</SAMP> if the deleted item was the last one in this list.</P>
+</UL>
+<PRE>iterator
+<B>erase</B> (iterator first, iterator last);</PRE>
+<UL><P>Providing the iterators <SAMP>first</SAMP> and <SAMP>last</SAMP> point to the same map and last is reachable from first, all elements in the range (<SAMP>first, last</SAMP>) will be deleted from the map. Returns an iterator pointing to the element following the last deleted element, or <SAMP>end()</SAMP> if there were no elements after the deleted range.</P>
+</UL>
+<PRE>size_type 
+<B>erase</B> (const key_type&#38; x);</PRE>
+<UL><P>Deletes the element with the key value <SAMP>x</SAMP> from the map, if one exists. Returns 1 if <SAMP>x</SAMP> existed  in the map, 0 otherwise. </P>
+</UL>
+<PRE>iterator 
+<B>find</B> (const key_type&#38; x);</PRE>
+<UL><P>Searches the map for a pair with the key value <SAMP>x</SAMP> and returns an <SAMP>iterator</SAMP> to that pair if it is found.  If such  a  pair is not found  the value <SAMP>end()</SAMP> is returned. </P>
+</UL>
+<PRE>const_iterator <B>find</B> (const key_type&#38; x) const; </PRE>
+<UL><P>Same as <SAMP>find</SAMP> above but returns a <SAMP>const_iterator</SAMP>.</P>
+</UL>
+<PRE>pair&#60;iterator, bool> 
+<B>insert</B> (const value_type&#38; x);
+iterator 
+<B>insert</B> (iterator position, const value_type&#38; x);</PRE>
+<UL><P>If a <SAMP>value_type</SAMP> with the same key as  <SAMP>x</SAMP>  is  not present in the map, then <SAMP>x</SAMP> is inserted into the map. Otherwise, the pair is not inserted. A position may be supplied as a hint regarding where to do the insertion.  If the insertion may be done right after <SAMP>position</SAMP> then it  takes  amortized  constant time.  Otherwise it will take<SAMP> O(log N)</SAMP> time. </P>
+</UL>
+<PRE>template &#60;class InputIterator>
+void  
+<B>insert</B> (InputIterator first, InputIterator last);</PRE>
+<UL><P>Copies of each element in the range <SAMP>[first, last)</SAMP> which  posess a unique key, one not already in the map, will be inserted into the map.  The  iterators <SAMP>first</SAMP> and <SAMP>last</SAMP> must return values of <SAMP>type</SAMP> <SAMP>pair&#60;T1,T2></SAMP>.  This  operation takes approximately<SAMP> O(N*log(size()+N)) </SAMP>time. </P>
+</UL>
+<PRE>key_compare 
+<B>key_comp </B>() const;</PRE>
+<UL><P>Returns a function object capable of comparing key values using the comparison operation, <SAMP>Compare</SAMP>, of the current map. </P>
+</UL>
+<PRE>iterator 
+<B>lower_bound</B> (const key_type&#38; x);</PRE>
+<UL><P>Returns a reference to the first entry with a key greater than or equal to <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>const_iterator 
+<B>lower_bound</B> (const key_type&#38; x) const;</PRE>
+<UL><P>Same as  <SAMP>lower_bound</SAMP> above but returns a <SAMP>const_iterator</SAMP>. </P>
+</UL>
+<PRE>size_type 
+<B>max_size</B>() const;</PRE>
+<UL><P>Returns the maximum possible size of the map.   This size is only constrained by the number of unique keys which can be represented by the type <SAMP>Key</SAMP>. </P>
+</UL>
+<PRE>size_type 
+<B>size</B>() const;</PRE>
+<UL><P>Returns the number of elements in the map.</P>
+</UL>
+<PRE>void <B>swap</B> (map&#60;Key, T, Compare, Allocator>&#38; x);</PRE>
+<UL><P>Swaps the contents of the map <SAMP>x</SAMP> with the current map, <SAMP>*this</SAMP>.  </P>
+</UL>
+<PRE>iterator 
+<B>upper_bound</B> (const key_type&#38; x);</PRE>
+<UL><P>Returns a reference to the first entry with a key less than or equal to <SAMP>x</SAMP>.</P>
+</UL>
+<PRE>const_iterator 
+<B>upper_bound</B> (const key_type&#38; x) const;</PRE>
+<UL><P>Same as <SAMP>upper_bound</SAMP> above but returns a <SAMP>const_iterator.</SAMP></P>
+</UL>
+<PRE>value_compare  
+<B>value_comp</B> () const;</PRE>
+<UL><P>Returns a function object  capable of comparing <SAMP>pair&#60;const Key, T></SAMP> values using the comparison operation,<SAMP> Compare</SAMP>, of the current map.  This function is identical to <SAMP>key_comp</SAMP> for sets. </P>
+</UL>
+<A NAME="Non-member Operators"><H3>Non-member Operators</H3></A>
+<PRE>template &#60;class Key, class T, class Compare, class Allocator>
+bool <B>operator==</B> (const map&#60;Key, T, Compare, Allocator>&#38; x,
+                 const map&#60;Key, T, Compare, Allocator>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if all elements in <SAMP>x</SAMP> are element-wise equal to all elements in <SAMP>y</SAMP>, using<SAMP> (T::operator==)</SAMP>. Otherwise it returns <SAMP>false</SAMP>. </P>
+</UL>
+<PRE>template &#60;class Key, class T, class Compare, class Allocator>
+bool <B>operator&#60; </B>(const map&#60;Key, T, Compare, Allocator>&#38; x,
+                const map&#60;Key, T, Compare, Allocator>&#38; y);</PRE>
+<UL><P>Returns <SAMP>true</SAMP> if <SAMP>x</SAMP> is lexicographically less than  <SAMP>y</SAMP>. Otherwise, it returns <SAMP>false</SAMP>.</P>
+</UL>
+<PRE>template &#60;class Key, class T, class Compare, class Allocator>
+void <B>swap </B>(map&#60;Key, T, Compare, Allocator>&#38; a,
+           map&#60;Key, T, Compare, Allocator>&#38; b);</PRE>
+<UL><P>Efficiently swaps the contents of <SAMP>a</SAMP> and <SAMP>b</SAMP>.</P>
+</UL>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// map.cpp
+//
+ #include &#60;string>
+ #include &#60;map>
+ #include &#60;iostream.h>
+ typedef <B>map</B>&#60;string, int, less&#60;string> > months_type;
+ // Print out a pair
+ template &#60;class First, class Second>
+ ostream&#38; operator&#60;&#60;(ostream&#38; out, 
+                     const pair&#60;First,Second> &#38; p)
+ {
+   cout &#60;&#60; p.first &#60;&#60; " has " &#60;&#60; p.second &#60;&#60; " days";
+   return out;
+ }
+ // Print out a map
+ ostream&#38; operator&#60;&#60;(ostream&#38; out, const months_type &#38; l)
+ {
+   copy(l.begin(),l.end(), ostream_iterator
+                &#60;months_type::value_type>(cout,"\n"));
+   return out;
+ }
+ int main(void)
+ {
+   // create a map of months and the number of days 
+   // in the month
+   months_type months;
+   typedef months_type::value_type value_type;
+  
+   // Put the months in the multimap
+   months.insert(value_type(string("January"),   31));
+   months.insert(value_type(string("Febuary"),   28));
+   months.insert(value_type(string("Febuary"),   29));
+   months.insert(value_type(string("March"),     31));
+   months.insert(value_type(string("April"),     30));
+   months.insert(value_type(string("May"),       31));
+   months.insert(value_type(string("June"),      30));
+   months.insert(value_type(string("July"),      31));
+   months.insert(value_type(string("August"),    31));
+   months.insert(value_type(string("September"), 30));
+   months.insert(value_type(string("October"),   31));
+   months.insert(value_type(string("November"),  30));
+   months.insert(value_type(string("December"),  31));
+   // print out the months
+   // Second Febuary is not present
+   cout &#60;&#60; months &#60;&#60; endl;
+   // Find the Number of days in June
+   months_type::iterator p = months.find(string("June"));
+   // print out the number of days in June
+   if (p != months.end())
+     cout &#60;&#60; endl &#60;&#60; *p &#60;&#60; endl;
+  
+   return 0;
+ }
+Output :
+April has 30 days
+August has 31 days
+December has 31 days
+February has 28 days
+January has 31 days
+July has 31 days
+June has 30 days
+March has 31 days
+May has 31 days
+November has 30 days
+October has 31 days
+September has 30 days
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>Member function templates are used in all containers provided by the Standard Template Library.  An example of this feature is the constructor for <SAMP>map&#60;Key,T,Compare,Allocator></SAMP> that takes two templated iterators:</P>
+<PRE></PRE>
+<PRE>template &#60;class InputIterator>
+ map (InputIterator, InputIterator, const Compare&#38; = Compare(),
+      const Allocator&#38; = Allocator());
+</PRE><P><B><I>map</B></I> also has an insert function of this type.  These functions, when not restricted by compiler limitations, allow you to use any type of input iterator as arguments.  For compilers that do not support this feature, we provide substitute functions that allow you to use an iterator obtained from the same type of container as the one you are constructing (or calling a member function on), or you can  use a pointer to the type of element you have in the container.  </P>
+<P>For example, if your compiler does not support member function templates, you can construct a <B><I>map</B></I> in the following two ways: </P>
+<PRE>map&#60;int, int, less&#60;int> >::value_type intarray[10];
+map&#60;int, int, less&#60;int> > first_map(intarray, intarray + 10);
+map&#60;int, int, less&#60;int> > second_map(first_map.begin(),
+                                     first_map.end());
+</PRE><P>But not this way:</P>
+<PRE>map&#60;long, long, less&#60;long> > long_map(first_map.begin(),
+                                      first_map.end());</PRE>
+<P>Since the <SAMP>long_map</SAMP> and <SAMP>first_map</SAMP> are not the same type.</P>
+<P>Also, many compilers do not support default template arguments.  If your compiler is one of these, you need to always supply the <SAMP>Compare</SAMP> template argument and the <SAMP>Allocator</SAMP> template argument. For instance, you'll have to write: </P>
+<PRE>map&#60;int, int, less&#60;int>,  allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>map&#60;int, int></PRE>
+<PRE></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="all_7029.htm"><B><I>allocator</B></I></A>, <A HREF="Con_2487.htm"><B><I>Containers</B></I></A>, <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A>, <A HREF="mul_8396.htm"><B><I>multimap</B></I></A></P>
+<HR>
+<A HREF="mak_0285.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="max_6671.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

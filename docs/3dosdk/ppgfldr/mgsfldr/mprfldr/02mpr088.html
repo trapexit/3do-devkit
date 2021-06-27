@@ -1,0 +1,31 @@
+<Title>spSetDefaultDecisionFunction</Title>
+<A NAME="XREF33640"><H1>spSetDefaultDecisionFunction </A></H1>
+<A NAME="XREF41363"></A> Install a global decision function to be called for every marker.<P>
+<H3>Synopsis</H3>
+<CODE>Err spSetDefaultDecisionFunction (SPPlayer *player,SPDecisionFunction decisionFunc, void *decisionData)</CODE><P>
+<H3>Description</H3>
+Install a global decision function that is to be called when the player reaches each marker. This can be used as a way to do some common operation at multiple locations during playback (e.g. processing a script). <P>
+Clear the global decision function with <CODE>spClearDefaultDecisionFunction()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>SPPlayer to which to install default decision function. 
+</DL>
+<DL>
+<DT>decisionFunc
+<DD>An SPDecisionFunction to install, or NULL to clear. 
+</DL>
+<DL>
+<DT>decisionData
+<DD>A pointer to client-supplied data to be passed to decisionFunc when called. Can be NULL. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Notes</H3>
+The player normally optimizes reading data from disc by ignoring markers that have neither a branch destination nor a marker decision function. When a default decision function is installed, the player must interrupt reading data from disc in preparation for a potential branch at EVERY marker, even if the default decision function does nothing. This can severely impact performance depending on the placement of markers. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr066.html#XREF39335"><CODE>spClearMarkerDecisionFunction</A>(), <A HREF="./02mpr089.html#XREF13040">spSetMarkerDecisionFunction</A>(), <A HREF="./02mpr069.html#XREF41344">SPDecisionFunction</A> </CODE></CODE><P>

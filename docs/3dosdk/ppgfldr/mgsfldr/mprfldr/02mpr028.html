@@ -1,0 +1,27 @@
+<Title>FreeChannelInstruments</Title>
+<A NAME="XREF37097"><H1>FreeChannelInstruments </A></H1>
+<A NAME="XREF40823"></A> Frees all of a MIDI channel's instruments.<P>
+<H3>Synopsis</H3>
+<CODE>Err FreeChannelInstruments( ScoreContext *scon,int32 Channel )</CODE><P>
+<H3>Description</H3>
+This function frees all instruments currently allocated to a MIDI channel of a score context, an action that abruptly stops any notes the instruments may be playing. <P>
+This call is useful because allocated instruments may accumulate in a channel as dynamic voice allocation creates instruments to handle simultaneous note playback within the channel.  As notes stop, the instruments used to play the notes are abandoned, but not freed, remaining in existence so they can be used to immediately play incoming notes. These abandoned instruments use up system resources. <P>
+If a task knows that it will not play notes in a MIDI channel for a period of time, it can use <CODE>FreeChannelInstruments()</CODE> to free all allocated instruments dedicated to a channel.  This frees all of the system resources used to support those instruments, making them available for other audio jobs.  When notes are played in a channel after all of its voices are freed, dynamic voice allocation immediately allocates new instruments to play those notes. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>Pointer to a ScoreContext data structure. 
+</DL>
+<DL>
+<DT>Channel
+<DD>The number of the MIDI channel for which to free instruments. 
+</DL>
+<H3>Return Value</H3>
+This macro returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr042.html#XREF14731"><CODE>ReleaseScoreNote</A>(), <A HREF="./02mpr046.html#XREF33263">StartScoreNote</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,21 @@
+<Title>varmono8..dsp</Title>
+<A NAME="XREF26652"><H1>varmono8.dsp </A></H1>
+<A NAME="XREF18548"></A> Rate-variable 8-bit sample player.<P>
+<H3>Function</H3>
+This instrument is a rate-variable 8-bit sample player. <P>
+This instrument is limited to a pitch one octave above base pitch, if recorded at 44.1 kHz.  If it is recorded at 22 kHz, the pitch can go two octaves up.  A rate of 0x8000 corresponds to one data sample per DAC sample frame.  0xFFFF is the highest possible rate. <P>
+<H3>Knobs</H3>
+Frequency  -  units are fixed point phase increment.  $8000 equals the normal sample rate, with 1 sample per frame.  Thus, you can go from zero to one octave above the original. <P>
+Amplitude - 0  =&gt;  $7FFF <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+InFIFO <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 38 <P>
+N memory = 50 words <P>
+<P>

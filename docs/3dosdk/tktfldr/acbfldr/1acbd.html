@@ -1,0 +1,114 @@
+<TITLE>Flexibility of load and store multiple</TITLE>
+<H1><LINK NAME="XREF26996">Flexibility of load and store 
+multiple</LINK></H1><HR>
+<H2>About this recipe</H2>
+In this recipe you learn about:<P>
+<UL>
+<LI>the benefits and capabilities of the load and store multiple 
+instructions;<P>
+<LI>types of stacks supported directly by load and store multiple.
+</UL>
+<H2>Multiple vs single transfers</H2>
+The Load and Store Multiple instructions provide a way to efficiently move 
+the contents of several registers to and from memory.  The advantages of 
+using a single load or store multiple instruction over a series of load or 
+store single instructions are:<P>
+<UL>
+<LI>Smaller code size;<P>
+<LI>On Von Neumann architectures such as all ARMs up to the ARM6 family, 
+there is only a single instruction fetch overhead, rather than many 
+instruction fetches.  <P>
+<LI>On Von Neumann architectures, only one register write back cycle is 
+required for a load multiple, as opposed to one for every load single;<P>
+<LI>On uncached ARM processors, the first word of data transfered by a 
+load or store multiple will always be a non-sequential memory cycle, but 
+all subsequent words transferred can be sequential (faster) memory cycles. 
+</UL>
+<H2>The register list</H2>
+The registers the load and store multiple instructions transfer are 
+encoded into the instruction by one bit for each of the registers R0 to 
+R15.  A set bit indicates the register will be transferred, and a clear 
+bit indicates that it will not be transferred.  Thus it is possible to 
+transfer any subset of the registers in a single instruction.<P>
+The way the subset of registers to be transferred is specified is simply 
+by listing those registers which are to be transferred in curly brackets 
+eg.<P>
+<CODE>
+<PRE>
+{R1, R4-R6, R8, R10}
+</CODE>
+</PRE>
+<H2>Increment / Decrement, Before / After</H2>
+The base address for the transfer can either be incremented or decremented 
+between register transfers, and this can happen either before or after 
+each register transfer.  eg.<P>
+<CODE>
+<PRE>
+STMIA R10, {R1, R3-R5, R8}
+</CODE>
+</PRE>
+The suffix IA could also have been IB, DA or DB, where I indicates 
+increment, D decrement, A after and B before.<P>
+<H2>Base register writeback</H2>
+In the last instruction, although the address of the transfer was changed 
+after each transfer, the base register was not updated at any point. 
+Register writeback can be specified so that the base register is updated. 
+Clearly the base register will change by the same amount whether "before" 
+or "after" is selected.  An example of a load multiple using base 
+writeback is:<P>
+<CODE>
+<PRE>
+LDMDB R11!, {R9, R4-R7}
+</CODE>
+</PRE>
+<H3>Note</H3>
+In all cases the lowest numbered register is transferred to or from the 
+lowest memory address, and the highest numbered register to or from the 
+highest address.  [The order in which the registers are listed in the 
+register list makes no difference.  Also, the ARM always performs 
+sequential memory accesses in increasing memory address order.  Therefore 
+'decrementing' transfers actually perform a subtraction first and then 
+increment the transfer address register by register].<P>
+<H2>Stack notation</H2>
+Since the load and store multiple instructions have the facility to update 
+the base register (which for stack operations can be the stack pointer), 
+these instructions provide single instruction push and pop operations for 
+any number of registers.  Load multiple being pop, and store multiple 
+being push.<P>
+There are several types of stack which the Load and Store Multiple 
+Instructions can be used with:<P>
+<UL>
+<LI>Ascending or descending stacks.  ie. the stack grows up memory or down 
+memory.  [Sometimes a pair of stacks, one of which grows up memory and one 
+of which grows downwards are used - thus choosing the direction is not 
+always just a matter of taste].<P>
+<LI>Empty or Full stacks.  The stack pointer can either point to the top 
+item in the stack (a full stack), or the next free space on the stack (an 
+empty stack).
+</UL>
+As stated above, pop and push operations for these stacks can be 
+implemented directly by load and store multiple instructions.  To make it 
+easier for the programmer special stack sufficies can be added to the LDM 
+and STM instructions (as an alternative to Increment / Decrement and 
+Before / After sufficies) as follows:<P>
+<CODE>
+<PRE>
+STMFA R10!, {R0-R5}   ; Push R0-R5 onto a Full Ascending Stack
+LDMFA R10!, {R0-R5}   ; Pop  R0-R5 from a Full Ascending Stack
+
+STMFD R10!, {R0-R5}   ; Push R0-R5 onto a Full Descending Stack
+LDMFD R10!, {R0-R5}   ; Pop  R0-R5 from a Full Descending Stack
+
+STMEA R10!, {R0-R5}   ; Push R0-R5 onto an Empty Ascending Stack
+LDMEA R10!, {R0-R5}   ; Pop  R0-R5 from an Empty Ascending Stack
+
+STMED R10!, {R0-R5}   ; Push R0-R5 onto an Empty Descending Stack
+LDMED R10!, {R0-R5}   ; Pop  R0-R5 from an Empty Descending Stack
+</CODE>
+</PRE>
+<H2>Related topics</H2>
+For more information on using stacks in assembly language see <A 
+HREF="./2acba.html#XREF30897">Stacks in assembly language</A>.<P>
+For further discussion of some of the benefits which can be gained by 
+using LDM and STM see <A HREF="./2acbk.html#XREF13443">Loop 
+unrolling</A>.<P>

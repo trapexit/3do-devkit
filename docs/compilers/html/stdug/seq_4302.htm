@@ -1,0 +1,94 @@
+<HTML><HEAD><TITLE>Sequence-Generating Algorithms</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Sequence-Generating Algorithms</H2>
+<A HREF="sidebar.htm#sidebar69"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Source</STRONG></A>
+
+<P>The algorithms described in this section are all used to generate a new sequence from an existing sequence by performing some type of transformation.  In most cases, the output sequence is described by an output iterator.  This means these algorithms can be used to overwrite an existing structure (such as a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>).  Alternatively, by using an insert iterator (<i>see <a href="ins_0332.htm">Chapter 2</a></i>), the algorithms can insert the new elements into a variable length structure, such as a <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> or <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A>.  Finally, in some cases which we will note, the output iterator can be the same as one of the sequences specified by an input iterator, thereby providing the ability to make an in-place transformation.</P>
+<P>The functions <SAMP>partial_sum()</SAMP> and <SAMP>adjacent_difference()</SAMP> are declared in the header file <SAMP>numeric</SAMP>, while the other functions are described in the header file <SAMP>algorithm</SAMP>.</P>
+<A NAME="transformoneortwosequences"><H3>Transform One or Two Sequences</H3></A>
+<P>The algorithm <SAMP>transform()</SAMP> is used either to make a general transformation of a single sequence, or to produce a new sequence by applying a binary function in a pair-wise fashion to corresponding elements from two different sequences.  The general definition of the argument and result types are as follows:</P>
+<PRE>OutputIterator transform (InputIterator first, InputIterator last,
+   OutputIterator result, UnaryFunction);</PRE>
+<!--ASQ-1 The style "teletype gap" is not associated; its content follows: --><PRE>OutputIterator transform 
+   (InputIterator first1, InputIterator last1,
+   InputIterator first2,  OutputIterator result, BinaryFunction);
+</PRE><P>The first form applies a unary function to each element of a sequence.  In the example program given below, this is used to produce a vector of integer values that hold the arithmetic negation of the values in a linked list.  The input and output iterators can be the same, in which case the transformation is applied in-place, as shown in the example program.</P>
+<P>The second form takes two sequences and applies the binary function in a pair-wise fashion to corresponding elements.  The transaction assumes, but does not verify, that the second sequence has at least as many elements as the first sequence.  Once more, the result can either be a third sequence, or either of the two input sequences.</P>
+<PRE>int square(int n) { return n * n; }
+
+void transform_example ()
+// illustrate the use of the transform algorithm
+{
+// generate a list of value 1 to 6
+   list&#60;int> aList;
+   generate_n (inserter(aList, aList.begin()), 6, iotaGen(1));
+
+// transform elements by squaring, copy into vector
+   vector&#60;int> aVec(6);
+   transform (aList.begin(), aList.end(), aVec.begin(), square);
+
+// transform vector again, in place, yielding 4th powers
+   transform (aVec.begin(), aVec.end(), aVec.begin(), square);
+   
+// transform in parallel, yielding cubes
+   vector&#60;int> cubes(6);
+   transform (aVec.begin(), aVec.end(), aList.begin(),
+      cubes.begin(), divides&#60;int>());
+}
+</PRE>
+
+<A NAME="partialsums"><H3>Partial Sums</H3></A>
+<P>A partial sum of a sequence is a new sequence in which every element is formed by adding the values of all prior elements.  For example, the partial sum of the vector 1 3 2 4 5 is the new vector 1 4 6 10 15.  The element 4 is formed from the sum 1 + 3, the element 6 from the sum 1 + 3 + 2, and so on.  Although the term "sum" is used in describing the operation, the binary function can, in fact, be any arbitrary function.  The example program illustrates this by computing partial products.  The arguments to the partial sum function are described as follows:</P>
+<PRE>OutputIterator partial_sum 
+      (InputIterator first, InputIterator last,
+       OutputIterator result [, BinaryFunction] );
+</PRE>
+<P>By using the same value for both the input iterator and the result the partial sum can be changed into an in-place transformation.</P>
+<PRE>void partial_sum_example ()
+// illustrate the use of the partial sum algorithm
+{
+// generate values 1 to 5
+   vector&#60;int> aVec(5);
+   generate (aVec.begin(), aVec.end(), iotaGen(1));
+
+// output partial sums
+   partial_sum (aVec.begin(), aVec.end(),
+      ostream_iterator&#60;int> (cout, " ")), cout &#60;&#60; endl;
+
+// output partial products
+   partial_sum (aVec.begin(), aVec.end(),
+      ostream_iterator&#60;int> (cout, " "),
+      times&#60;int>() );
+}
+</PRE>
+
+<A NAME="adjacentdifferences"><H3>Adjacent Differences</H3></A>
+<P>An adjacent difference of a sequence is a new sequence formed by replacing every element with the difference between the element and the immediately preceding element.  The first value in the new sequence remains unchanged.  For example, a sequence such as (1, 3, 2, 4, 5) is transformed into (1, 3-1, 2-3, 4-2, 5-4), and in this manner becomes the sequence (1, 2, -1, 2, 1).</P>
+<P>As with the algorithm <SAMP>partial_sum()</SAMP>, the term "difference" is not necessarily accurate, as an arbitrary binary function can be employed.  The adjacent sums for this sequence are (1, 4, 5, 6, 9), for example.  The adjacent difference algorithm has the following declaration:</P>
+<PRE>OutputIterator adjacent_difference (InputIterator first, 
+   InputIterator last, OutputIterator result [, BinaryFunction ]);
+</PRE>
+<P>By using the same iterator as both input and output iterator, the adjacent difference operation can be performed in place.</P>
+<PRE>void adjacent_difference_example ()
+// illustrate the use of the adjacent difference algorithm
+{
+// generate values 1 to 5
+   vector&#60;int> aVec(5);
+   generate (aVec.begin(), aVec.end(), iotaGen(1));
+
+// output adjacent differences
+   adjacent_difference (aVec.begin(), aVec.end(),
+      ostream_iterator&#60;int> (cout, " ")), cout &#60;&#60; endl;
+
+// output adjacent sums
+   adjacent_difference (aVec.begin(), aVec.end(),
+      ostream_iterator&#60;int> (cout, " "),
+      plus&#60;int>() );
+}
+</PRE>
+
+<HR>
+<A HREF="sca_1926.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="mis_2456.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

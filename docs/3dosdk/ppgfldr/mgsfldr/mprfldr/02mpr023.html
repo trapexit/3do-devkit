@@ -1,0 +1,29 @@
+<Title>ChangeScoreProgram</Title>
+<A NAME="XREF39934"><H1>ChangeScoreProgram </A></H1>
+<A NAME="XREF25499"></A> Changes the MIDI program for a channel.<P>
+<H3>Synopsis</H3>
+<CODE>Err ChangeScoreProgram( ScoreContext *ScoreCon,int32 Channel, int32 ProgramNum )</CODE><P>
+<H3>Description</H3>
+This function changes the current MIDI program used to play notes in a MIDI channel.  It's the equivalent of a MIDI program change message. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ScoreCon
+<DD>Pointer to a ScoreContext data structure controlling playback. 
+</DL>
+<DL>
+<DT>Channel
+<DD>The number of the MIDI channel for which to change the program. 
+</DL>
+<DL>
+<DT>ProgramNum
+<DD>The number of the new MIDI program to use for the channel. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr021.html#XREF34990"><CODE>ChangeScoreControl</A>(), <A HREF="./02mpr022.html#XREF24439">ChangeScorePitchBend</A>(), <A HREF="./02mpr033.html#XREF12999">InterpretMIDIMessage</A>(), <A HREF="./02mpr046.html#XREF33263">StartScoreNote</A>(), <A HREF="./02mpr047.html#XREF12834">StopScoreNote</A>() </CODE><P>
+</CODE>

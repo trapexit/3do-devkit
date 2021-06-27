@@ -1,0 +1,25 @@
+<Title>PauseInstrument</Title>
+<A NAME="XREF14745"><H1>PauseInstrument </A></H1>
+<A NAME="XREF26638"></A> Pauses an instrument's playback.<P>
+<H3>Synopsis</H3>
+<CODE>Err PauseInstrument (Item Instrument)</CODE><P>
+<H3>Description</H3>
+This function pauses an instrument during playback. A paused instrument ceases to play, but retains its position in playback so that it can resume playback at that point. <CODE>ResumeInstrument()</CODE> allows a paused instrument to continue its playback. <P>
+This function is intended primarily for sampled sound instruments, where a paused instrument retains its playback position within a sampled sound. <CODE>PauseInstrument()</CODE> and <CODE>ResumeInstrument()</CODE> used with sound synthesis instruments may not have effects any different from <CODE>StartInstrument()</CODE>  and <CODE>StopInstrument()</CODE>. <P>
+The paused state is superceded by a call to <CODE>StartInstrument()</CODE> or <CODE>StopInstrument()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>The item number for the instrument. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>Caveats</H3>
+This function will not pause an envelope attached to an instrument. The envelope will continue to play while the instrument is paused. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr064.html#XREF15774"><CODE>ResumeInstrument</A>(), <A HREF="./01mpr073.html#XREF13758">StartInstrument</A>(), <A HREF="./01mpr075.html#XREF37581">StopInstrument</A>(), <A HREF="./01mpr062.html#XREF38726">ReleaseInstrument</A>() </CODE><P>
+</CODE>

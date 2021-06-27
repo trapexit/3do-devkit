@@ -1,0 +1,101 @@
+<TITLE>Creating uncoded cels</TITLE>
+<H1><LINK NAME="XREF15734">Creating uncoded cels</LINK></H1><HR>
+This section discusses creating uncoded cels in several ways:<P>
+
+<UL>
+<LI><A HREF="#XREF40993">How to convert 16-bit source art to a 16-bit 
+uncoded cel</A>
+<LI><A HREF="#XREF36604">How to convert 24-bit source art to an 8-bit 
+uncoded cel</A>
+</UL>
+<A NAME="XREF40993"><H2>How to convert 16-bit source art to a 16-bit 
+uncoded cel</A></H2>
+To convert 16-bit source art to a simple 16-bit uncoded cel, follow these 
+steps: <P>
+<OL>
+<LI>Load the source art into Photoshop. 
+<p>
+<LI>From the File menu, choose Export &gt; 3DO CelWriter, then choose Save 
+in the dialog. An extension .cel or .CEL is recommended. 
+<p>
+<p>The CelWriter dialog appears.
+<p>
+<IMG SRC="Figures/PLU2.figs/CelWritDialog.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>3DO CelWriter dialog.</I><P>
+<p>
+<LI>In the dialog, select Uncoded in the Type box.
+<p>
+<LI>Select the number of bits per pixel. 
+<p>
+<p>If you started with 24-bit source art and choose 16 bits per pixel, 
+the tool discards the bottom three bits in the red, green, and blue 
+channels while it saves the cel. This may result in a color distortion of 
+the cel. 
+<p>
+<LI>Choose Save to export the cel.
+</OL>
+<A NAME="XREF36604"><H2>How to convert 24-bit source art to an 8-bit 
+uncoded cel</A></H2>
+If the source art image used is 24 or 16 bits per pixel and you want to 
+save an 8-bit uncoded cel, you need to index the colors into a different 
+color table before you start the export process, since you can't save all 
+the bits in the cel. <P>
+<OL>
+<LI>From the Mode menu in Photoshop, choose Indexed Color.
+<p>
+<LI>In the dialog that appears, choose a resolution of 8 bits per pixel, 
+and a custom palette.
+In many situations, it also helps to choose a diffusion dither. <P>
+<p>
+<IMG SRC="Figures/PLU2.figs/IndexColor.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Photoshop color conversion dialog. </I><P>
+<p>
+<LI>When you click OK, a Color Table dialog appears. 
+<p>
+<LI>Choose Load and use the file selection dialog to specify one of the 
+3DO-supplied color tables, 3-3-2 Color Table (REP8 clear) or 3-3-2 Color 
+Table (REP8 set).<P>
+
+<IMG SRC="Figures/PLU2.figs/ColorTable.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>Photoshop color table dialog. </I><P>
+<p>
+<LI>After the color table has been loaded, choose OK to apply it to the 
+source art.
+<p>
+<LI>From the Mode menu, choose RGB color, since the CelWriter cannot save 
+files in indexed color. 
+<p>
+<LI>From the File menu, choose Export &gt; 3DO CelWriter, then choose Save 
+in the file selection dialog. An extension .cel or .CEL is recommended.
+<p>
+<LI>In the dialog, select Uncoded in the Type box.
+<p>
+<LI>Select the number of bits per pixel. 
+<p>
+<LI>If you started with 24-bit source art and choose 16 bits per pixel, 
+the tool discards the bottom three bits in the red, green, and blue 
+channels while it saves the cel. This may result in a color distortion of 
+the cel. 
+<p>
+<LI>In the CelWriter dialog, click Set Cel Flags and make sure the color 
+table matches the Control Settings:
+<p>
+<UL>
+<LI>If you select 3-3-2 Color Table (REP8 clear), make sure the box 
+"Replicate LSB's in RGB 8 bit Cel" box in the Control Settings dialog is 
+unchecked. 
+<p>
+<LI>If you select 3-3-2 Color Table (REP8 set), make sure the box is 
+checked.
+</UL><BR>
+
+<LI>Choose Save to export the cel.
+</OL><P>
+<B>Note: </B> If you need more control over the color table, use the 3DO 
+Animator tool instead. <P>

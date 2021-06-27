@@ -1,0 +1,14 @@
+<Title>GetTimerIOReq</Title>
+<A NAME="XREF14731"><H1>GetTimerIOReq </A></H1>
+ Gets an IOReq for use with timer utilities.<P>
+<H3>Synopsis</H3>
+<CODE>Item GetTimerIOReq (void)</CODE><P>
+<H3>Description</H3>
+Obtains an IOReq item for use with the other timer utilities that take an IOReq parameter. Use <CODE>DeleteItem()</CODE> to release the IOReq item when you no longer need it. <P>
+Timer-related functions which take an IOReq parameter perform much faster if you allocate the IOReq using this function and pass it to the other functions. Letting the other functions create and delete an IOReq on each call is appropriate only if you're planning to call the function just a few times throughout the run of your program. <P>
+<H3>Return Value</H3>
+An IOReq item number, or a negative error code. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>

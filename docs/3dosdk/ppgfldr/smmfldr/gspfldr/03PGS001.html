@@ -1,0 +1,30 @@
+<TITLE>3DO Animation Basics</TITLE>
+<H1><LINK NAME="XREF36988">3DO Animation Basics</LINK></H1><HR>
+This section provides background information about the following topics: <P>
+
+<UL>
+<LI><A HREF="#XREF35843">Animation File Formats</A>
+<LI><A HREF="#XREF20982">Tools for Creating 3DO Animations</A>
+<LI><A HREF="#XREF29567">Double Buffering</A>
+</UL>
+<A NAME="XREF35843"><H2>Animation File Formats</A></H2>
+The 3DO system supports two animation file formats: <P>
+<UL>
+<LI>ANIM Files. A simple animation (ANIM) is one file consisting of 3DO cels and information about the frame rate. 
+<p>
+<LI>SANM Files. A streamed animation (SANM) is an animation which has been prepared for display with the 3DO DataStreamer library. 
+</UL>
+<A NAME="XREF20982"><H2>Tools for Creating 3DO Animations</A></H2>
+A 3DO animation is a linked list of 3DO cels. You can therefore create animations using one of the available graphics tools, or by linking cels directly using one of the following tools: <P>
+<UL>
+<LI>3DO Animator-Create animations from scratch using a variety of features including distortion and a light table. You can also convert a QuickTime movie into an animation. The animation can then be saved in 3DO ANIM format. 
+<p>
+<LI>DeBabelizer CCM-Convert a list of files or a QuickTime movie to 3DO ANIM or 3DO SANM format. An SANM is a streamed animation that can be used directly by the 3DO DataStreamer. 
+<p>
+<LI>MPW-Use MPW to concatenate a list of cel files. 
+<p>
+<LI>StreamMaker-Convert an ANIM file to an SANM file for use with the 3DO DataStreamer. 
+</UL>
+<A NAME="XREF29567"><H2>Double Buffering</A></H2>
+The process of showing a display buffer on the TV screen is not instantaneous; it takes a full 1/30 of a second to move the entire buffer to the screen. The display hardware is completely separate from the cel hardware, so the display-to-TV process happens continuously in the background. Because of this, it is possible to draw cels to a display buffer that is at the same time being shown on the screen. However, when you draw to an active display buffer, cels may tear or not draw completely. To avoid drawing to an active display buffer, you can create two display buffers, switching between them every frame. This technique is known as double buffering<I>,</I> and you'll find it necessary for most 3DO applications.<P>
+Double buffering is used for displaying images-as in the slide show example- or for displaying animations, as in all other examples with the exception of jsshowcel. The <CODE>CreateBasicDisplay()</CODE> function in Lib3DO sets up a <CODE>TheScreen</CODE> structure, which contains, among other things, an array of screen items. An index counter flips between two screens every frame. At the end of a draw cycle, the code calls <CODE>DisplayScreen()</CODE> which waits until the next vertical blank and then switches the hardware to display the new buffer.<P>

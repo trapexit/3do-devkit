@@ -1,0 +1,48 @@
+<Title>spStartReading</Title>
+<A NAME="XREF25186"><H1>spStartReading </A></H1>
+<A NAME="XREF29612"></A> Start SPPlayer reading from an SPSound.<P>
+<H3>Synopsis</H3>
+<CODE>Err spStartReading (SPSound *startSound, const char *startMarkerName)</CODE><P>
+<H3>Description</H3>
+This function begins the process of spooling data for an SPPlayer, processing marker actions along the way. It completely fills the spooler buffers belonging to the SPPlayer in preparation for playback, which can take an unpredictable amount of time. Therefore, the actual function to begin playback, <CODE>spStartPlaying()</CODE>, is a separate call so that starting the actual sound playback may be synchronized to some user event. <P>
+Normally this function is called while the player's SP_STATUS_F_READING status flag is cleared (see <CODE>spGetPlayerStatus()</CODE>), in which case it merely begins reading at the specified location. The SP_STATUS_F_READING flag is then set. If the entire sound data to be played fits completely into the buffers, this flag is cleared again before this function returns. <P>
+This function can also be called while the SP_STATUS_F_READING flag is set  in order to force the playback to a different location without waiting for a marker branch or decision function. This abnormal method of relocating sound playback will almost certainly produce unpleasant sound output, but there may be times when it is necessary. Note that this merely causes reading to begin at a new location. It does not does not flush the spooler. Anything buffered already will continue play. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>startSound
+<DD>Pointer to SPSound to start reading from. 
+</DL>
+<DL>
+<DT>startMarkerName
+<DD>Name of marker in startSound to start reading from. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+// error checking omitted for brevity
+{
+    const int32 playersigs = spGetPlayerSignalMask (player);
+        // read from beginning of one of the sounds
+    spStartReading (player, sound1, SP_MARKER_NAME_BEGIN);
+        // could wait for some event to trigger playback here
+        // begin playback
+    spStartPlayingVA (player,
+                      AF_TAG_AMPLITUDE, 0x7fff,
+                      TAG_END);
+        // service player until it's done
+    while (spGetPlayerStatus(player) &amp; SP_STATUS_F_BUFFER_ACTIVE) {
+        const int32 sigs = WaitSignal (playersigs);
+        spService (player, playersigs);
+    }
+}
+</CODE>
+</PRE>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr091.html#XREF15941"><CODE>spStartPlaying</A>(), <A HREF="./02mpr093.html#XREF20856">spStop</A>(), <A HREF="./02mpr086.html#XREF41970">spService</A>(), <A HREF="./02mpr077.html#XREF27522">spGetPlayerStatus</A>() </CODE><P>
+</CODE>

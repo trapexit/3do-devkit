@@ -1,0 +1,96 @@
+<TITLE>Decision Functions</TITLE>
+<H1><LINK NAME="XREF21674">Decision Functions</LINK></H1><HR>
+So far, this chapter has described how to perform primarily static actions. These actions include the ability to instruct playback to always branch, continue, or stop at any given <CODE>SPMarker</CODE>. Any <CODE>SPMarker</CODE> can have precisely one static action at any time. This can be changed dynamically during playback, but in order to do this intelligently, it is important to know precisely <I>when</I>. <P>
+The advanced sound player provides a dynamic action facility known as decision functions. A decision function is a callback function that the advanced sound player calls during playback in order to determine what action to take at selected <CODE>SPMarker</CODE>s.<P>
+Before going into more detail, it is important to understand when decisions about sound playback need to be made. Sound data is read from whatever sound source it comes from (file or memory) and then enqueued to a sound spooler, which is in turn played by the Audio folio. Because of the spooling, there is an certain amount of delay between the time that sound is read and when it is actually played. All decisions about where to branch, or when to stop, take place while <I>reading</I> the sound. Branches do not cause the sound data in the spooler to be flushed, they merely cause the reader to read from a different location in the sound data. Therefore, all decisions have a certain amount of latency before the results are actually heard.<P>
+<B>Note: </B>Since the amount of latency is directly related to the size of the sound buffers you supply to the advanced sound player, you have some important design decisions to make when writing a program that uses the advanced sound player. See the Caveats at the end of this chapter.<P>
+Decision functions are called when selected <CODE>SPMarker</CODE>s are encountered while reading sound data. There are two kinds of decision functions:<P>
+<UL>
+<LI>Marker decision functions
+<LI>Default decision functions
+</UL>
+Each <CODE>SPMarker</CODE> can have its own marker decision function installed, in addition to whatever static action it may have. An <CODE>SPMarker</CODE>'s decision function is called when that <CODE>SPMarker</CODE> is encountered while reading. Each <CODE>SPPlayer</CODE> can have its own default decision function which is called for every <CODE>SPMarker</CODE> encountered while reading.<P>
+Just like static actions set in an <CODE>SPMarker</CODE>, decision functions can return an action to perform: branch to another <CODE>SPMarker</CODE> or stop reading. Also, decision functions have the ability to return a <I>don't care</I> result, which causes the advanced sound player to act as if the decision function had never been installed.<P>
+The following pseudocode shows the steps that are used in determining what action the advanced sound player takes at an <CODE>SPMarker</CODE>:<P>
+<PRE>
+     if SPMarker has a decision function and that decision function specifies an action
+
+     take action specified by decision function
+
+     else if SPPlayer has a default decision function and that decision function specifies an action
+
+     take action specified by decision function
+
+     else if SPMarker has a static action (branch or stop) 
+
+     take action specified in the SPMarker 
+
+     else if playback has reached the end of the current sound data 
+
+     stop 
+ 
+     else 
+
+     continue playback after the current SPMarker
+</PRE>
+<H2>Decision Functions and Actions</H2>
+Decision functions are functions whose type can be cast to </I><CODE>SPDecisionFunction</CODE>. This is defined in <I>&lt;soundplayer.h&gt;</I> as follows:<P>
+<DL>
+<DD><CODE>typedef Err (*SPDecisionFunction) (SPAction *resultAction,<BR>
+                                   void *decisionData,<BR>
+                                   SPSound *sound,<BR>
+                                   const char *markerName)</CODE><BR>
+</DL>
+Decision functions are called with a client supplied data pointer, information about the SPMarker at which the decision is to be made, and an <CODE>SPAction</CODE> to fill out.<P>
+<CODE>SPAction</CODE> is a black box data type that is used to contain the action that the decision function wishes the advanced sound player to take. The decision function can call either <CODE>spSetBranchAction()</CODE> or <CODE>spSetStopAction()</CODE> to set the <CODE>SPAction</CODE> to instruct the advanced sound player to branch to another <CODE>SPMarker</CODE> or stop reading. Alternatively, the decision function can simply not set the <CODE>SPAction</CODE> at all. In this case, the advanced sound player continues as if the decision function had not been installed. This can be used to permit whatever static action is set up in the <CODE>SPMarker</CODE> to normally take place, but to override this occasionally with some other action from the decision function.<P>
+<H2>Example Decision Function</H2>
+Here are some simple modifications to the previous annotated example to do some simple branching.<P>
+<H3>Loop a Sound File a Fixed Number of Times</H3>
+Substitute this step in the annotated example to play a sound file four times in a loop. This is excerpted from <I>tsp_spoolsoundfile.c</I>.<P>
+
+Set up sound to loop by default. Install a Decision Function at the end <CODE>SPMarker</CODE> to be called each time playback reaches the end of the sound.
+
+<DL>
+<DD><CODE>spLoopSound (sound);<BR>
+RemainingCount = 4;    /* play 4 times */<BR>
+spSetMarkerDecisionFunction (<BR>
+    sound, SP_MARKER_NAME_END,<BR>
+    (SPDecisionFunction)LoopDecisionFunction,<BR>
+    &amp;RemainingCount);</CODE><BR>
+</DL>
+The decision function, <CODE>LoopDecisionFunction()</CODE>, looks like this:<P>
+<DL>
+<DD><CODE>/*<BR>
+    This decision function decrements the RemainingCount variable.<BR>
+    Normally it does nothing. When the count is exhausted, it<BR>
+    instructs the advanced sound player to stop reading.<BR>
+*/<BR>
+Err LoopDecisionFunction (<BR>
+    SPAction *resultAction, int32 *remainingCountP,<BR>
+    SPSound *sound, const char *markerName)<BR>
+{<BR>
+        /* decrement remaining repeat count */<BR>
+    (*remainingCountP)--;<BR>
+<BR>
+        /* loop back to beginning (default action) or stop if<BR>
+           no more repeats */<BR>
+    if (*remainingCountP &lt;= 0)<BR>
+        return spSetStopAction (resultAction);<BR>
+    else<BR>
+        return 0;<BR>
+}</CODE><BR>
+</DL>
+<H2>Rules for Decision Functions</H2>
+Besides setting an <CODE>SPAction</CODE>, a decision function can do almost anything to the <CODE>SPPlayer</CODE> that owns this marker including adding new <CODE>SPSound</CODE>s or <CODE>SPMarker</CODE>s, changing the static action for this or any other <CODE>SPMarker</CODE>, changing the default or marker decision functions for this or any other <CODE>SPMarker</CODE>, deleting this or any other <CODE>SPMarker</CODE> or <CODE>SPSound</CODE> (with the caveats listed below in mind).<P>
+A decision function <I>must not</I> do any of the following:<P>
+<UL>
+<LI>Call any function that changes the player state (e.g. <CODE>spDeletePlayer()</CODE>, <CODE>spStop()</CODE>, <CODE>spStartReading()</CODE>, <CODE>spStartPlaying()</CODE>, <CODE>spService()</CODE>, etc.) for the current <CODE>SPMarker</CODE>'s <CODE>SPPlayer</CODE>.
+<P>
+<LI>Delete the current <CODE>SPMarker</CODE>'s <CODE>SPSound</CODE> since this has the side effect of calling <CODE>spStop()</CODE>.
+<P>
+<LI>Delete the current <CODE>SPMarker</CODE> without setting up resultAction to stop or branch to another <CODE>SPMarker</CODE>.
+<P>
+<LI>Take a long time to execute.
+</UL>
+Also note that because decision functions are called on the reader's schedule, not the player's schedule, they cannot be used for notification that a particular part of the sound has actually been played.<P>
+See <A HREF="../mprfldr/02mpr069.html#XREF41344">SPDecisionFunction</A> in <A HREF="../mprfldr/02mpr.html#XREF20449">Music Library Calls</A> for more complete information.<P>

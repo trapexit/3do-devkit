@@ -1,0 +1,26 @@
+<Title>Message port</Title>
+<A NAME="XREF21088"><H1>Message port</A></H1>
+An item through which a task receives messages.<P>
+<H3>Description</H3>
+A message port is an item through which a task receives messages.<P>
+<H3>Folio</H3>
+kernel<P>
+<H3>Item Type</H3>
+MSGPORTNODE<P>
+<H3>Create</H3>
+<CODE><A HREF="./01spr025.html#XREF19499">CreateMsgPort</A>(), <A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE><P>
+<H3>Delete</H3>
+<A HREF="./01spr035.html#XREF42671"><CODE>DeleteMsgPort</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE><P>
+<H3>Query</H3>
+<A HREF="./01spr053.html#XREF23701"><CODE>FindMsgPort</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>(), <A HREF="./01spr054.html#XREF34211">FindNamedItem</A>(), <A HREF="./01spr061.html#XREF25874">FindVersionedItem</A>()</CODE><P>
+<H3>Use </H3>
+<A HREF="./01spr132.html#XREF19568"><CODE>WaitPort</A>(), <A HREF="./01spr075.html#XREF37256">GetMsg</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>(), <A HREF="./01spr124.html#XREF40209">SendSmallMsg</A>(), <A HREF="./01spr113.html#XREF31623">ReplyMsg</A>(), <A HREF="./01spr114.html#XREF39369">ReplySmallMsg</A>()</CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>CREATEPORT_TAG_SIGNAL 
+<DD>(int32) Create. Whenever a message arrives at a message port, the kernel sends a signal to the owner of the message port. This tag lets you specify which signal should be sent. If this tag is not provided, the kernel will allocate a signal for the message port itself.
+</DL>
+<DL>
+<DT>CREATEPORT_TAG_USERDATA
+<DD>(void *) Create. Lets you specify the 32-bit value that gets put into the mp_UserData field of the MsgPort structure. This can be anything you want, and is sometimes useful to idenify a message port.
+</DL>

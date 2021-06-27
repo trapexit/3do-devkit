@@ -1,0 +1,33 @@
+<TITLE>The Interpolator</TITLE>
+<H1><LINK NAME="XREF24916">The Interpolator</LINK></H1><HR>
+The interpolator receives both a 24-bit color value and (if interpolation is turned on) a 2-bit VH value for each pixel in the 320-by-240 frame buffer. It proceeds to break each pixel down into four subpixels, increasing the resolution to 640 by 480. When interpolation is turned off, the four subpixels all receive the same 24-bit color value that the parent pixel had. When interpolation is turned on, each resulting subpixel receives an independent 24-bit color value that depends on the proximity of cornerweights in surrounding pixels. Interpolation can be enabled vertically, horizontally, or disabled.<P>
+<H2>Specifying Cornerweight Location</H2>
+Each 320-by-240 pixel in the frame buffer contains only one cornerweight. 
+The location of that cornerweight is specified by the two bits in the VH 
+value for that pixel. Those two bits can be interpreted in any possible way 
+and in any possible order; the VDLP defines the interpretation. Figure 1 
+shows the four possible cornerweight locations within a pixel, and shows a 
+typical interpretation of the VH bits. <P>
+<IMG SRC="figures/G.2-4.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Possible cornerweight location</I><P>
+<H2>Color Averaging</H2>
+The interpolator works out the color value for each of the four subpixels it creates from a parent pixel. To do so, it follows a weighting algorithm: the subpixel located at the same spot as the cornerweight takes the same color value as the parent pixel. The three other subpixels start with the parent pixel color value, and then grade that color value toward the color values in the three pixels adjacent to each subpixel. The closer the cornerweight is in each adjacent pixel, the more it influences the color gradation in the subpixel.<P>
+For example, consider the two subpixels labeled P and X in Figure 2. Because subpixel P contains the cornerweight, it assumes the parent pixel's color value without modification. Subpixel X starts with the parent's color value, and grades it toward the color values in the three adjacent pixels. It's most strongly influenced by pixel 1, whose cornerweight is very close. It's less influenced by pixel 3, whose cornerweight is more distant. And it's least influenced by pixel 2, whose cornerweight is farthest away.
+<P>
+<IMG SRC="figures/G.2-5.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 2: </B><I>Cornerweight locations.</I><P>
+<B>Note: </B>Most images in the frame buffer use the same cornerweight position 
+for each of their pixels. The example in Figure 2, which shows varying cornerweight positions, is a rare case. Cornerweight positions can be used to give objects 640 x 480 vertical positions.<P>
+<H2>Changing Cornerweight Positions in a Moving Cel</H2>
+When the cel engine specifies a cel's projection position in the frame buffer, it can specify that position in a high-resolution grid of 640 by 480, even though the frame buffer grid is a low-resolution 320 by 240. This allows the cel to move across the frame buffer in subpixel increments, which creates a feeling of very smooth motion.<P>
+When the cel engine projects this kind of fine-positioned cel, it uses the 640-by-480 position to set a uniform cornerweight position for each cel pixel-one that corresponds to the cel corner's position within a frame buffer pixel. For example, consider a cel projected so that its origin corner is in the upper-left corner of a frame buffer pixel. All the cel's cornerweights are set to the upper-left corner of each pixel. When the cel moves one subpixel to the right so the cel corner is in the upper-right corner of a frame buffer pixel, all the cel's cornerweights are set to the upper-right corner of each pixel. It's the shifting cornerweight positions that make the cel appear to move smoothly.<P>
+One interesting consequence of fine motion appears along the borders of the moving cel: you may see some jitter as the cel moves if the cel border is complex. That's because the cel pixels along the border constantly change their cornerweight relationship to the background pixels' cornerweights, which remain fixed. The cel's interior pixels retain the same cornerweight relationship to each other, because they all change to the same cornerweight position while the cel moves.<P>
+For example, consider Figure 3, where a cel shifts one-half pixel down. The cornerweights all around the border of the cel have all changed distances from cornerweights across the border, which change the graded colors of the subpixels between the cornerweights. The cornerweights within the cel all remain the same distance from each other, so the graded colors remain the same within the cel.
+<P>
+<IMG SRC="figures/G.2-6.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 3: </B><I>Moving a cel by one-half pixel.</I><P>

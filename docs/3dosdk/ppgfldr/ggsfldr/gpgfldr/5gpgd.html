@@ -1,0 +1,70 @@
+<TITLE>Creating Cel Source Data</TITLE>
+<H1>Creating Cel Source Data</H1><HR>
+Cel source data is, for the most part, created with a 3DO tool such as a paint program and then imported to the 3DO system from disk. The source data can also be extracted from existing image data such as the frame buffer or the source data of another cel. And on some occasions, source data is generated from scratch. If you create a cel that derives its source data from existing image data or that creates its source data from scratch, then it is important to understand the source data file format.<P>
+A cel's type determines how the cel's pixels are stored in a source data file. Cels can devote 1, 2, 4, 6, 8, or 16 bits per pixel (bpp); and that a cel can be either packed to compress the pixel data, or unpacked so each pixel is stored in fully intact.<P>
+<H2>Unpacked Source Data</H2>
+Unpacked source data means that each pixel of the cel is stored in the source data file using as many bits per pixel as the cel specifies. For example, source data for an unpacked 16-bpp cel fits two 16-bit pixels per 32-bit memory word when the file is stored in RAM. An unpacked 2 bpp cel fits 16 pixels per word. And an unpacked 6-bpp cel fits 5 1/3 cels per word. The last pixel in a word can cross the word boundary and use the beginning bits of the next word to finish storing its contents.<P>
+Pixels are stored in a source data file in sequential order, starting at the upper-left corner of the cel, reading each pixel row from left to right, and moving from top to bottom as each row is stored. There is no data interposed between pixels to mark the end of a row or the end of the cel; the cel dimensions supplied in the cel's preamble tell the cel engine when one row starts and another begins, and when all the cel's pixels have been read. However, it is important that each new row of pixels starts on a word boundary. If there are unused bits in the last word of a row, they may be filled with 0s or random values-the cel engine will not read them. These should be filled with 0s for future compatibility.<P>
+Although an unpacked source data file can take much more RAM than a packed source data file, and can be slower to read, unpacked source data has two main advantages:<P>
+<UL>
+<LI>Unpacked pixels are arrayed regularly in memory; it is easy to find one pixel out of the cel or to define a subrectangle within the cel source data.
+<p>
+<LI>The unpacked format allows real-time digital data such as video to be projected.
+</UL>
+<H2>Packed Source Data</H2>
+Packed source data is not stored as regularly as unpacked source data, so you cannot easily copy a subrectangle from a packed cel. (To do so, project the cel into a bitmap and copy the subrectangle from the image there.) Packed source data is extremely compact, however, and because it doesn't choke the data path to the cel engine, it is often faster to project than unpacked data.<P>
+To pack a cel's pixels, you must first divide the cel image into rows. Each row is compressed and then stored as a discrete unit within the source data file. Packed pixels are stored from left to right within a row. And compressed rows are stored from top to bottom within the source data file.<P>
+Each row in the data file has two parts:<P>
+<UL>
+<LI>An <I>offset</I> to the first word of the next row
+<p>
+<LI>The <I>compressed data</I> for the pixels in that row
+</UL>
+<H3>The Offset</H3>
+The offset is an 8- or 10-bit positive integer that is the distance from the beginning word of the current row's location in RAM to the beginning word of the next row's location in RAM (minus 2). If the cel is an 8- or 16-bpp cel, the offset is a 10-bit integer; if the cel is 1-, 2-, 4-, or 6-bpp, the offset is an 8-bit integer.<P>
+The offset is always stored in the first byte of a 32-bit word. If the offset is an 8-bit value, then use bits 31-24 of the word, and store cel image data in the second, third, and fourth bytes of the word. If the offset is a 10-bit value, then use bits 25-16 in the first two bytes of the word and set bits 31-26 to 0. Bytes three and four of the word are used for cel image data.<P>
+The offset must subtract 2 from the next row's beginning address before it calculates the distance from the current row's beginning address to accommodate the pipelined architecture of the cel engine.<P>
+<H3>The Compressed Data</H3>
+The data following the offset is encoded into packets. Each packet starts with a 2-bit specifier that tells what kind of packet it is. If necessary, the specifier is followed by a 6-bit value that stores the count, plus 1, of the pixels stored in the packet, and ends with as many bits as are necessary to store the pixel contents. There are four types of packets:<P>
+<UL>
+<LI><B>Literal packets</B>, which use the pixel data to store the literal contents of each pixel. Its 6-bit pixel count stores the number of pixels plus 1. Literal packets are used to store stretches of pixels that change from one pixel to the next.
+<p>
+<LI><B>Repeating packets</B>, which use the pixel data to store a single pixel. Its 6-bit pixel count stores the number of times that the pixel should be repeated plus 1. Repeating packets store stretches of identical pixels in a very small amount of space.
+<p>
+<LI><B>Transparent packets</B>, which contain no pixel data, only a 6-bit pixel count plus 1 of the number of transparent pixels stored here. Transparent packets store stretches of transparent pixels that, because they are not processed by the data decoder or the pixel processor, are dispatched quickly. This speeds up cel projection.
+<p>
+<LI><B>EOL packets</B>, which have no pixel count or pixel data. They specify the end of a line (row) of pixels, and are optionally added as the last packet of a row. For example, a packed cel with only 1 pixel on a row might need an EOL packet to tell the system that it is finished unpacking pixels.
+</UL>
+Table 6 shows the four packet types along with their contents. The constant names shown in Table 6 are defined in the header file <I>hardware.h</I> and can be used for packing pixels in your own code.<P>
+<P>
+<PRE>
+<B>Table 1: </B><I> Types of data packets.</I>
+---------------------------------------------------------
+Data Type(2 bits)   |Output Pixel Count(6|Pixel Data(N   
+                    |bits)               |bits)          
+---------------------------------------------------------
+PACK_LITERAL (01)   |Output count +1 of  |One or more    
+                    |the literal pixels  |literal pixels 
+                    |that follow         |               
+---------------------------------------------------------
+PACK_REPEAT (11)    |Output count +1 of  |One pixel      
+                    |the number of times |               
+                    |the single pixel    |               
+                    |that follows is     |               
+                    |repeated            |               
+---------------------------------------------------------
+PACK_TRANSPARENT    |Output count +1 of  |No pixel data  
+(10)                |transparent pixel in|               
+                    |this packet         |               
+---------------------------------------------------------
+PACK_EOL (00)       |No count, no count  |No pixel data  
+                    |bits                |               
+---------------------------------------------------------
+</PRE>
+<P>
+When a row of 8-bit pixels is compressed into packets and stored, the row might look like the one in Figure 1. Packets are bit-packed together; they do not have to be boundary aligned. If the last packet ends before the next word boundary, the empty bits in the current word are filled with 0s. Because the EOL packet is just two 0s in a row, any word filled with two or more 0s at its end automatically supplies an EOL packet.
+<p>
+<IMG SRC="figures/G.5-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 1: </B><I>A row of compressed data.</I><P>

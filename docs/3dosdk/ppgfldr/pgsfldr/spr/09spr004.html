@@ -1,0 +1,80 @@
+<Title>Envelope </Title>
+<A NAME="XREF24551"><H1>Envelope </A></H1>
+<A NAME="XREF15334"> Audio envelope.</A><P>
+<H3>Description</H3>
+An envelope is a time-variant control signal which can be used to control parameters of sounds that are to change over time (e.g. amplitude, frequency, filter characteristics, modulation amount, etc.). <P>
+Envelope Items use a function defined by a set of points in time-level space described by an array of DataTimePairs (defined in audio.h). The function is a continuous set of line segments drawn between the points in the DataTimePair array. <P>
+Envelopes are used in conjunction with Instruments that accept the Envelope Item's data and output the control signal (e.g. envelope.dsp). <P>
+<H3>Folio</H3>
+audio <P>
+<H3>Item Type</H3>
+AUDIO_ENVELOPE_NODE <P>
+<H3>Create</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr017.html#XREF13206">CreateEnvelope</A>()  </CODE><P>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()  </CODE><P>
+<H3>Delete</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr028.html#XREF17495">DeleteEnvelope</A>()  </CODE><P>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()  </CODE><P>
+<H3>Query</H3>
+None <P>
+<H3>Modify</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr067.html#XREF20838">SetAudioItemInfo</A>()  </CODE><P>
+<H3>Use</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr006.html#XREF15951">AttachEnvelope</A>()  </CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_ADDRESS
+<DD>(const DataTimePair *) Create, Modify. Pointer to array of DataTimePairs used to define the envelope. All of the points in this array must be sorted in increasing order by time. The length of the array is specified with AF_TAG_FRAMES. 
+</DL>
+<DL>
+<DT>AF_TAG_CLEAR_FLAGS
+<DD>(uint32) Create, Modify. Set of AF_ENVF_ flags to clear. Clears every flag for which a 1 is set in ta_Arg. 
+</DL>
+<DL>
+<DT>AF_TAG_FRAMES
+<DD>(int32) Create, Modify. Number of DataTimePairs in array pointed to by AF_TAG_ADDRESS. 
+</DL>
+<DL>
+<DT>AF_TAG_MICROSPERUNIT
+<DD>(int32) Create, Modify. Number of microseconds for each time unit specified in DataTimePairs and time related envelope tags. Defaults to 1000 on creation, which sets each time unit equal to one millisecond. 
+</DL>
+<DL>
+<DT>AF_TAG_RELEASEBEGIN
+<DD>(int32) Create, Modify. Index in DataTimePair array for beginning of release loop. -1 indicates no loop, which is the default on creation. If not -1, must &lt;= the value set by AF_TAG_RELEASEEND. 
+</DL>
+<DL>
+<DT>AF_TAG_RELEASEEND
+<DD>(int32) Create, Modify. Index in DataTimePair array for end of release loop. -1 indicates no loop, which is the default on creation. If not -1, must &gt;= the value set by AF_TAG_RELEASEBEGIN. 
+</DL>
+<DL>
+<DT>AF_TAG_RELEASEJUMP
+<DD>(int32) Create, Modify. Index in DataTimePair array to jump to on release. When set, release causes escape from normal envelope processing to the specified index without disturbing the current output envelope value. From there, the envelope proceeds to the next DataTimePair from the current value. -1 to disable, which is the default on creation. 
+</DL>
+<DL>
+<DT>AF_TAG_RELEASETIME
+<DD>(int32) Create, Modify. The time in units used when looping from the end of the release loop back to the beginning. Defaults to 0 on creation. 
+</DL>
+<DL>
+<DT>AF_TAG_SET_FLAGS
+<DD>(uint32) Create, Modify. Set of AF_ENVF_ flags to set. Sets every flag for which a 1 is set in ta_Arg. 
+</DL>
+<DL>
+<DT>AF_TAG_SUSTAINBEGIN
+<DD>(int32) Create, Modify. Index in DataTimePair array for beginning of sustain loop. -1 indicates no loop, which is the default on creation. If not -1, &lt;= the value set by AF_TAG_SUSTAINEND. 
+</DL>
+<DL>
+<DT>AF_TAG_SUSTAINEND
+<DD>(int32) Create, Modify. Index in DataTimePair array for end of sustain loop. -1 indicates no loop, which is the default on creation. If not -1, &gt;= the value set by AF_TAG_SUSTAINBEGIN. 
+</DL>
+<DL>
+<DT>AF_TAG_SUSTAINTIME
+<DD>(int32) Create, Modify. The time in units used when looping from the end of the sustain loop back to the beginning. Defaults to 0 on creation. 
+</DL>
+<H3>Flags</H3>
+<DL>
+<DT>AF_ENVF_FATLADYSINGS
+<DD>The state of this flag indicates the default setting for the AF_ATTF_FATLADYSINGS flag whenever this envelope is attached to an instrument. 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./09spr001.html#XREF27996"><CODE>Attachment</A>, <A HREF="./09spr009.html#XREF16655">Instrument</A>, <A HREF="../../mgsfldr/mprfldr/03mpr018.html#XREF22664">envelope.dsp</A> </CODE><P>
+</CODE>

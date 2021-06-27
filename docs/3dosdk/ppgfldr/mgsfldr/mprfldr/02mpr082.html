@@ -1,0 +1,24 @@
+<Title>spPause</Title>
+<A NAME="XREF24746"><H1>spPause </A></H1>
+<A NAME="XREF23734"></A> Pause an SPPlayer.<P>
+<H3>Synopsis</H3>
+<CODE>Err spPause (SPPlayer *player)</CODE><P>
+<H3>Description</H3>
+Pauses playback of an SPPlayer. Use this to stop playback dead in its tracks and be able to pick up at the same spot. This differs from <CODE>spStop()</CODE>  in that playback cannot be restarted at the position at which <CODE>spStop()</CODE>  occurred. Resume playback with <CODE>spResume()</CODE>. <P>
+Sets SP_STATUS_F_PAUSED. Calling <CODE>spPause()</CODE> multiple times has no effect, the calls do not nest. Calling <CODE>spPause()</CODE> while the SPPlayer's SP_STATUS_F_PLAYING flag is not set has no effect. The paused state is superceded by a call to <CODE>spStop()</CODE> or <CODE>spStartPlaying()</CODE>. <P>
+There is presently no way to know if an SPPlayer is paused. <P>
+Data can still be spooled while paused if there were any completed buffers prior to pausing. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to SPPlayer to pause. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr085.html#XREF28772"><CODE>spResume</A>(), <A HREF="./02mpr091.html#XREF15941">spStartPlaying</A>(), <A HREF="./02mpr093.html#XREF20856">spStop</A>() </CODE><P>
+</CODE>

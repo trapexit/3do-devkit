@@ -1,0 +1,29 @@
+<Title>CreateAlias</Title>
+<A NAME="XREF26310"><H1>CreateAlias </A></H1>
+<A NAME="XREF20476"></A> Creates a file system alias.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateAlias( char *aliasPath, char *realPath )</CODE><P>
+<H3>Description</H3>
+This function creates an alias for a file. The alias can be used in place 
+of the full pathname for the file. Note that the file system maintains 
+separate alias entries for each task. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>aliasPath
+<DD>The alias name. 
+</DL>
+<DL>
+<DT>realPath
+<DD>The substitution string for the alias. 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number for the file alias that is created, 
+or a negative error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr016.html#XREF10715"><CODE>OpenDiskFile</A>(), <A 
+HREF="./02spr017.html#XREF22921">OpenDiskFileInDir</A>() </CODE><P>
+</CODE>

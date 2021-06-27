@@ -1,0 +1,32 @@
+<Title>CloneCel </Title>
+<A NAME="XREF41603"><H1>CloneCel </A></H1>
+ Creates a copy of a cel.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * CloneCel (CCB *src, int32 options)</CODE><P>
+<H3>Description</H3>
+Makes a copy of a CCB, and optionally of the pixels and/or the pixel lookup table (PLUT). The values in the cloned CCB are identical to the source CCB, except that the CCB_LAST flag is set and the ccb_NextPtr field is NULL in the clone. <P>
+The options parameter is one or more of the following values, ORed together as necessary: CLONECEL_CCB_ONLY, CLONECEL_COPY_PIXELS, CLONECEL_COPY_PLUT. <P>
+When COPY_PIXELS is specified, a new cel data buffer is allocated, and the pixels in the source (src) cel's buffer are copied to the new buffer. <P>
+When COPY_PIXELS is not specified, the new cels ccb_SourcePtr field points to the source cel's data buffer.<P>
+When COPY_PLUT is specified, a new PLUT is allocated, and the values from the src cel's PLUT are copied to the new PLUT.<P>
+When COPY_PLUT is not specified, the new cels ccb_PLUTPtr field points to the source cel's PLUT. If the cel is uncoded, the COPY_PLUT option has no effect. <P>
+You may change any of the values in the CCB fields of the newly created cel. Be careful about changing preamble words when the CCB_CCBPRE flag is not set and the CLONECEL_COPY_PIXELS option was not used. In that situation, the preamble words you change would be those belonging to the original cel, not the copy. <P>
+Use <CODE>DeleteCel()</CODE> to release all resources allocated for the clone. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>src
+<DD>Pointer to a cel to copy. 
+</DL>
+<DL>
+<DT>options
+<DD>Bitmapped options, as described above. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the new CCB, or NULL if there is not enough memory to make the clone. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO043.html#XREF35656"><CODE>CreateCel</A>, <A HREF="./01LDO055.html#XREF42213">DeleteCel</A> </CODE><P>
+</CODE>

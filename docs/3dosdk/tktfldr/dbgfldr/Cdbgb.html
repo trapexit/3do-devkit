@@ -1,0 +1,143 @@
+<title>items</title>
+<H1><LINK NAME="XREF28372">items</LINK></H1><HR><P>
+<A NAME="XREF26435"></A>Displays lists of active items.<P>
+<H3>Synopsis</H3>
+<CODE>items [] [-name ] [-type ] [-owner &lt;task name&gt;] [-full]</CODE><P>
+<H3>Description</H3>
+Displays information about the items that currently exist in the system. The information is sent out to the debugging terminal.<P>
+<H3>Arguments </H3>
+<DL>
+<DT>[]
+<DD>Displays only information on the item supplied. The item number can be in decimal or hexadecimal format, starting with 0x or $.
+</DL>
+<DL>
+<DT>name
+<DD>Displays only items with the supplied name. 
+</DL>
+<DL>
+<DT>type
+<DD>Displays only items with the supplied type be listed. The currently supported types are: 
+</DL>
+<DL>
+<DT>List
+</DL>
+<DL>
+<DT>MemFree
+</DL>
+<DL>
+<DT>MemHdr
+</DL>
+<DL>
+<DT>Folio
+</DL>
+<DL>
+<DT>Task
+</DL>
+<DL>
+<DT>Firq
+</DL>
+<DL>
+<DT>Sema4
+</DL>
+<DL>
+<DT>Sema4Wait
+</DL>
+<DL>
+<DT>Message
+</DL>
+<DL>
+<DT>MsgPort
+</DL>
+<DL>
+<DT>MemList
+</DL>
+<DL>
+<DT>RomTag
+</DL>
+<DL>
+<DT>Driver
+</DL>
+<DL>
+<DT>IoReq
+</DL>
+<DL>
+<DT>Device
+</DL>
+<DL>
+<DT>Timer
+</DL>
+<DL>
+<DT>ErrorText
+</DL>
+<DL>
+<DT>HLInt
+</DL>
+<DL>
+<DT>ScreenGroup
+</DL>
+<DL>
+<DT>Screen
+</DL>
+<DL>
+<DT>Bitmap
+</DL>
+<DL>
+<DT>VDL
+</DL>
+<DL>
+<DT>DisplayInfo
+</DL>
+<DL>
+<DT>Overlay
+</DL>
+<DL>
+<DT>FileSystem
+</DL>
+<DL>
+<DT>File
+</DL>
+<DL>
+<DT>Alias
+</DL>
+<DL>
+<DT>Locale
+</DL>
+<DL>
+<DT>Template
+</DL>
+<DL>
+<DT>Instrument
+</DL>
+<DL>
+<DT>Knob
+</DL>
+<DL>
+<DT>Sample
+</DL>
+<DL>
+<DT>Cue
+</DL>
+<DL>
+<DT>Envelope
+</DL>
+<DL>
+<DT>Attachment
+</DL>
+<DL>
+<DT>Tuning
+</DL>
+<DL>
+<DT>Probe
+</DL>
+<DL>
+<DT>owner &lt;task name&gt;         
+<DD>Displays only items owned by the supplied task.
+</DL>
+<DL>
+<DT>full
+<DD>Displays any extra information available on the listed items. 
+</DL>
+<H3>Implementation </H3>
+Command implemented in V20. <P>
+<H3>Associated Files</H3>
+$c/items<P>

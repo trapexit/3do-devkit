@@ -1,0 +1,82 @@
+<HTML><TITLE>binary_search</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>binary_search</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Performs a binary search for a value on a container.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class ForwardIterator, class T>
+bool
+<B>binary_search</B>(ForwardIterator first, ForwardIterator last,
+              const T&#38; value);
+template &#60;class ForwardIterator, class T, class Compare>
+bool
+<B>binary_search</B>(ForwardIterator first, ForwardIterator last,
+              const T&#38; value, Compare comp);</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>binary_search</B></I> algorithm, like other related algorithms (<A HREF="equ_3232.htm"><B><I>equal_range</B></I></A>, <A HREF="low_4395.htm"><B><I>lower_bound</B></I></A> and <A HREF="upp_0967.htm"><B><I>upper_bound</B></I></A>) performs a binary search on ordered containers.  All binary search algorithms have two versions.  The first version uses the less than operator (<SAMP>operator &#60;</SAMP>) to perform the comparison, and assumes that the sequence has been sorted using that operator.  The second version allows you to include a function object of type <SAMP>Compare</SAMP>, which it assumes was the function used to sort the sequence.  The function object must be a binary predicate. </P>
+<P>The <B><I>binary_search</B></I> algorithm returns <SAMP>true</SAMP> if a sequence contains an element equivalent to the argument <SAMP>value</SAMP>.  The first version of <B><I>binary_search</B></I> returns <SAMP>true</SAMP> if the sequence contains at least one element that is equal to the search value.  The second version of the <B><I>binary_search</B></I> algorithm returns <SAMP>true</SAMP> if the sequence contains at least one element that satisfies the conditions of the comparison function.  Formally, <B><I>binary_search</B></I> returns <SAMP>true</SAMP> if there is an iterator <SAMP>i</SAMP> in the range <SAMP>[first, last)</SAMP> that satisfies the corresponding conditions:</P>
+<PRE>!(*i &#60; value) &#38;&#38; !(value &#60; *i) </PRE>
+<PRE></PRE><P>or </P>
+<PRE>comp(*i, value) == false &#38;&#38; comp(value, *i) == false</PRE>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P><B><I>binary_search</B></I> performs at most <SAMP>log(last - first) + 2 </SAMP> comparisons.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>   //
+   // b_serach.cpp
+   //
+ #include &#60;vector>
+ #include &#60;algorithm>
+ #include &#60;iostream.h>
+ int main()
+ {
+   typedef vector&#60;int>::iterator iterator;
+   int d1[10] = {0,1,2,2,3,4,2,2,6,7};
+   //
+   // Set up a vector
+   //
+   vector&#60;int> v1(d1,d1 + 10);
+   //
+   // Try binary_search variants
+   //
+   sort(v1.begin(),v1.end());
+   bool b1 = binary_search(v1.begin(),v1.end(),3);
+   bool b2 = binary_search(v1.begin(),v1.end(),11,less&#60;int>());
+   //
+   // Output results
+   //
+   cout &#60;&#60; "In the vector: ";
+   copy(v1.begin(),v1.end(),
+           ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; "The number 3 was " 
+        &#60;&#60; (b1 ? "FOUND" : "NOT FOUND");
+   cout &#60;&#60; endl &#60;&#60; "The number 11 was "
+        &#60;&#60; (b2 ? "FOUND" : "NOT FOUND") &#60;&#60; endl;
+   return 0;
+ }
+Output : 
+In the vector: 0 1 2 2 2 2 3 4 6 7
+The number 3 was FOUND
+The number 11 was NOT FOUND</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you'll have to write:</P>
+<PRE>vector&#60;int,allocator></PRE>
+<PRE></PRE><P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="equ_3232.htm"><B><I>equal_range</B></I></A>, <A HREF="low_4395.htm"><B><I>lower_bound</B></I></A>, <A HREF="upp_0967.htm"><B><I>upper_bound</B></I></A></P>
+<HR>
+<A HREF="bin_1825.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="bin_1899.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

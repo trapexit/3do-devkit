@@ -1,0 +1,25 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut02_lfo_freq_pulse.patch,v 1.2 1994/10/26 21:36:42 peabody Exp $
+;*
+;*  Tutorial 2: Triangle lfo modulating the frequency of a pulse wave
+;*
+;******************************************************************************
+
+LoadInstrument lfo triangle_lfo.dsp
+LoadInstrument osc pulse.dsp
+LoadInstrument mod timesplus.dsp
+LoadInstrument out directout.dsp
+
+Tweak  lfo Frequency 1000      ; modulation rate
+Tweak  mod InputB 50           ; modulation depth
+Tweak  mod InputC 300          ; frequency offset
+
+Connect   lfo  Output       mod  InputA
+Connect   mod  Output       osc  Frequency   ; modulation destination
+Connect   osc  Output       out  InputLeft
+Connect   osc  Output       out  InputRight

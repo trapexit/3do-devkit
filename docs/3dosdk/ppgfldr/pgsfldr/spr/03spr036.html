@@ -1,0 +1,32 @@
+<Title>DivRemU32</Title>
+<A NAME="XREF23483"><H1>DivRemU32 </A></H1>
+<A NAME="XREF20740"></A> Computes the quotient and remainder of a 32-bit division.<P>
+<H3>Synopsis</H3>
+<CODE>uint32 DivRemU32( uint32 *rem, uint32 d1, uint32 d2 )</CODE><P>
+<H3>Description</H3>
+This function divides one unsigned 32-bit integer by another and returns the quotient and remainder. <P>
+This function calls the standard C function for division. If only the quotient or only the remainder is desired, the standard C notation for divide should be used. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>rem
+<DD>A pointer to a unsigned 32-bit integer to store the remainder. 
+</DL>
+<DL>
+<DT>d1
+<DD>The dividend. 
+</DL>
+<DL>
+<DT>d2
+<DD>The divisor. 
+</DL>
+<H3>Return Value</H3>
+The function returns the quotient of the division. The remainder is deposited in the location pointed to by the rem argument. <P>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>Caveats</H3>
+The function does not detect overflows. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr035.html#XREF40125"><CODE>DivRemSF16</A>(), <A HREF="./03spr034.html#XREF29500">DivRemS32</A>(), <A HREF="./03spr040.html#XREF32762">DivU64</A>(), <A HREF="./03spr039.html#XREF27188">DivSF16</A>(), <A HREF="./03spr041.html#XREF19153">DivUF16</A>(), <A HREF="./03spr037.html#XREF21065">DivRemUF16</A>(), <A HREF="./03spr038.html#XREF40748">DivS64</A>() </CODE><P>
+</CODE>

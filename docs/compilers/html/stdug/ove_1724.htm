@@ -1,0 +1,13 @@
+<HTML><HEAD><TITLE>Overview</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Overview</H2>
+<P>A new feature of the C++ Standard Library is an organized mechanism for describing the characteristics of the fundamental types provided in the execution environment.  In older C and C++ libraries, these characteristics were often described by large collections of symbolic constants.  For example, the smallest representable value that could be maintained in a character would be found in the constant named <SAMP>CHAR_MIN</SAMP>, while the similar constant for a <SAMP>short</SAMP> would be known as <SAMP>SHRT_MIN</SAMP>, for a float <SAMP>FLT_MIN</SAMP>, and so on.</P>
+<A HREF="sidebar.htm#sidebar78"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Two Mechanisms, One Purpose</STRONG></A>
+
+<P>The template class <A HREF="../stdref/num_5679.htm"><B><I>numeric_limits</I></B></A> provides a new and uniform way of representing this information for all numeric types.  Instead of using a different symbolic name for each new data type, the class defines a  single static function, named <SAMP>min(),</SAMP> which returns the appropriate values. Specializations of this class then provide the exact value for each supported type.  The smallest character value is in this fashion yielded as the result of invoking the function <SAMP>numeric_limits&#60;char>::min(),</SAMP> while the smallest floating point value is found by invoking <SAMP>numeric_limits&#60;float>::min(),</SAMP> and so on.</P>
+<P>Solving this problem by using a template class not only greatly reduces the number of symbolic names that need to be defined to describe the operating environment, but it also ensures consistency between the descriptions of the various types.</P>
+<HR>
+<A HREF="num_8453.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="fun_3734.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

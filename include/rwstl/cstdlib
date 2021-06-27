@@ -1,0 +1,12 @@
+/*
+ * C++ header for C header stdlib.h
+ * Copyright (C) Advanced RISC Machines Limited, 1997. All rights reserved.
+ */
+
+/*
+ * RCS $Revision: 1.1 $
+ * Checkin $Date: 1997/10/21 12:01:23 $
+ * Revising $Author: achapman $
+ */
+
+#include <stdlib.h>

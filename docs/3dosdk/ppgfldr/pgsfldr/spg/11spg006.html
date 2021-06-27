@@ -1,0 +1,49 @@
+<TITLE>Loading and Executing an Application</TITLE>
+<H1><LINK NAME="XREF18422">Loading and Executing an Application</LINK></H1><HR>
+The File folio provides six functions to load and run executable code:<P>
+<UL>
+<LI><CODE>LoadProgram()</CODE> 
+<LI><CODE>LoadProgramPrio()</CODE> 
+<LI><CODE>LoadCode()</CODE>
+<LI><CODE>UnloadCode()</CODE> 
+<LI><CODE>ExecuteAsSubroutine()</CODE>
+<LI><CODE>ExecuteAsThread()</CODE> 
+</UL>
+<H2>Loading and Launching a Task</H2>
+<CODE>LoadProgram()</CODE> loads an executable file from disk and launches a new task which executes the code in the file. <P>
+<DL>
+<DD><CODE>Item LoadProgram(char *cmdLine);</CODE><BR>
+</DL>
+The only argument of this function is a command line to interpret. The first component of the command line is taken as the name of the file to load. The entire command line is passed to the new task as <CODE>argc</CODE> and <CODE>argv</CODE> in the <CODE>main()</CODE> function. The file name component of the command line specifies either a fully qualified pathname, or a pathname relative to the current directory.<P>
+The priority of the new task is the same as the priority of the current task. If the task should have a different priority, use the <CODE>LoadProgramPrio()</CODE> function.<P>
+<CODE>LoadProgramPrio()</CODE> is identical to <CODE>LoadProgram()</CODE> except that it specifies a task priority for the new task.<P>
+<DL>
+<DD><CODE>Item LoadProgramPrio(char *cmdLine, int32 priority);</CODE><BR>
+</DL>
+You give this function a command line to interpret. The first component of the command line is taken as the name of the file to load. Like <CODE>LoadProgram()</CODE>, the entire command line is passed to the new task as <CODE>argc</CODE> and <CODE>argv</CODE> in the <CODE>main()</CODE> function. The file name component of the command line specifies either a fully qualified pathname, or a pathname relative to the current directory.<P>
+The <CODE>priority</CODE> argument specifies the task priority for the new task. If you simply want the new task to have the same priority as the current task, use the <CODE>LoadProgram()</CODE> function instead. Alternatively, passing a negative priority to this function will also give the new task the same priority as the current task. <CODE>LoadProgram()</CODE> and <CODE>LoadProgramPrio()</CODE> will set the current directory of the newly created task to the directory from which the executable was loaded.<P>
+<H2>Loading a Code Module</H2>
+<CODE>LoadCode()</CODE> loads an executable file from disk into memory. Once loaded, the code can be spawned as a thread, or executed as a subroutine.<P>
+<DL>
+<DD><CODE>Err LoadCode(char *fileName, CodeHandle *code);</CODE><BR>
+</DL>
+In order to work correctly with this and associated functions, the executable file being loaded must have been linked with <I>threadstartup.o</I> or <I>subroutine</I><I>startup.o</I> instead of <I>cstartup.o</I><P>
+This function requires the name of the executable file to load, as well as a pointer to a <CODE>CodeHandle</CODE> variable, where the handle for the loaded code will be stored. <P>
+<CODE><B>Note: </B>code</CODE> must point to a valid <CODE>CodeHandle</CODE> variable, because LoadCode() uses this location to put a pointer to the loaded code.<P>
+<H2>Executing a Loaded Code Module</H2>
+To execute the loaded code, you must call either the <CODE>ExecuteAsThread()</CODE> function or the <CODE>ExecuteAsSubroutine()</CODE> function. If the loaded code is reentrant, the same loaded code can be spawned multiple times simultaneously as a thread.<P>
+<CODE>ExecuteAsSubroutine()</CODE> executes a chunk of code that was previously loaded from disk using<CODE> LoadCode()</CODE>. <P>
+<DL>
+<DD><CODE>int32 ExecuteAsSubroutine(CodeHandle code, int32 argc, char **argv);</CODE><BR>
+</DL>
+This function runs the code as a subroutine of the current task or thread.To work correctly, code that is run as a subroutine should be linked with <I>subroutinestartup.o</I> instead of the usual <I>cstartup.o</I><P>
+The parameters in <CODE>argc</CODE> and <CODE>argv</CODE> are passed directly to the <CODE>main()</CODE> entry point of the loaded code. The return value of this function is the value returned by <CODE>main()</CODE> of the code being run.<P>
+The values you supply for <CODE>argc</CODE> and <CODE>argv</CODE> are irrelevant to this function. They are simply passed through to the loaded code. Therefore, their meaning must be agreed upon by the caller of this function, and by the loaded code.<P>
+<CODE>ExecuteAsThread()</CODE> executes a chunk of code that was previously loaded from disk using <CODE>LoadCode()</CODE>. This function executes code that will execute as a thread of the current task.<P>
+<DL>
+<DD><CODE>Item ExecuteAsThread(CodeHandle code, int32 argc, char **argv, char *threadName, int32 priority);</CODE><BR>
+</DL>
+To work correctly, code being run as a thread should be linked with <I>threadstartup.o</I> instead of the usual <I>cstartup.o</I> <P>
+The <CODE>argc </CODE>and <CODE>argv</CODE> parameters are passed directly to the <CODE>main()</CODE> entry point of the loaded code.The values you supply for <CODE>argc </CODE>and <CODE>argv</CODE> are irrelevant to this function. They are simply passed through to the loaded code. Therefore, their meaning must be agreed upon by the caller of this function, and by the loaded code. <CODE>threadName</CODE> specifies the name of the thread. <CODE>priority</CODE> specifies the priority the new thread should have. Providing a negative priority makes the thread inherit the priority of the current task or thread.<P>
+<H2>Unloading a Code Module</H2>
+Once you are done using the loaded code, you can remove it from memory by passing the code handle to the <CODE>UnloadCode() </CODE>function. <CODE>UnloadCode()</CODE> frees any resources allocated by <CODE>LoadCode()</CODE>. Once <CODE>UnloadCode()</CODE> has been called, the code handle supplied becomes invalid and cannot be used again.<P>

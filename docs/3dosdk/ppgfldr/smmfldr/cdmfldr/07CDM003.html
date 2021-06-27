@@ -1,0 +1,16 @@
+<TITLE>Head Seeks and CD-ROM Mechanism Lifetime</TITLE>
+<H1><LINK NAME="XREF13860">Head Seeks and CD-ROM Mechanism Lifetime</LINK></H1><HR>
+Many 3DO titles employ creatively authored "attract mode" sequences where the application, in the absence of user intervention, displays interesting or attractive sequences of audio and video. In general, this is a good thing. Some of these sequences, however, are designed in such a way that the CD-ROM drive has to do a great deal of seeking - causing a condition known as "disc thrashing." The result is more sluggish performance, and much more wear and tear on the CD-ROM mechanisms than is necessary.<P>
+CD-ROM mechanism lifetime is limited by several factors. If the drive is not operating, then it will last a very long time. If it is in linear play (like a car cruising down the freeway), then it will still last a reasonably long time. If it is constantly seeking back and forth (like a car in stop and go traffic, constantly accelerating, and braking() then its lifetime will be severely reduced.<P>
+Here, then, are strongly-recommended guidelines for attract mode screens:<P>
+<UL>
+<LI>If possible, make attract mode sequences load once and run continuously without accessing the disc;
+<p>
+<LI>If the application requires something fancier, then make the disc accesses linear. Typically, this would involve a sequence of canned video. 3DO provides many tools to help author such sequences, and to weave the audio and video into a single stream so that no seeks are required. Avoid non linear disc accesses;
+<p>
+<LI>Make the best use of the latest layout tools. Call and verify the versions of the tools you have. The layout tools work to minimize seeks under all conditions;
+<p>
+<LI>Make use of any or all of the other suggestions in the sections above;
+</UL>
+Seek time is simply wasted time that wears out the hardware. <P>
+<P>

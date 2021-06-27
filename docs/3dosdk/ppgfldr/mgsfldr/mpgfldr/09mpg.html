@@ -1,0 +1,30 @@
+<TITLE>Playing MIDI Scores</TITLE>
+<H1><LINK NAME="XREF20742">Playing MIDI Scores</LINK></H1><HR>
+This chapter discusses techniques that use the Music library to import a MIDI score from a standard MIDI file and then play the score back using Audio folio resources.<P>
+This chapter shows how Music library functions can import a MIDI score file from an external source (a composition program on the Macintosh, for example) and turn that score into a Juggler object that can be played using Audio folio instruments, all without a MIDI port or any internal MIDI hardware. The chapter takes a close look at different aspects of MIDI score playback: the process of score translation, the MIDI environment created by the Music library, and the process of MIDI message playback using the Juggler.<P>
+To understand the topics discussed here, you need a good working knowledge of the MIDI standard, how it is usually applied to synthesizer setups, what constitutes a MIDI message, and the variety of messages available. There is a brief review of MIDI basics at the beginning of this chapter, but explaining the full MIDI standard is beyond the scope of this book.<P>
+If what you really want to do is simply set up a task to play back a MIDI score without having to know all the details behind playback, you can use <I>playmf.c</I>, the example program shown at the end of this chapter. The source code for this program is included on the Portfolio release disc. <I>playmf.c</I> is set up in modules that allow you to easily modify the code to play your MIDI score. You can refer back to sections of this chapter as necessary if you do not understand what is going on, and what needs to be changed. The example file <I>MFLoopTest.c</I> also provides an example of playing MIDI scores.<P>
+If you do not need to write MIDI playing code, and are only interested in 
+creating a MIDI score for playback, then the two sections of this chapter 
+you need to read are 
+<A HREF="./09mpg005.html#XREF34181">Setting PIMap Entries</A> and 
+<A HREF="./09mpg012.html#XREF36723">Creating a MIDI Score for Playback</A>.<P>
+This chapter contains the following topics:<P>
+
+<UL>
+<LI><A HREF="./09mpg001.html#XREF24854">A Brief MIDI Review</A>
+<LI><A HREF="./09mpg002.html#XREF13623">Creating an Internal MIDI Environment</A>
+<LI><A HREF="./09mpg003.html#XREF29556">An Overview of the MIDI Score-Playing Process</A>
+<LI><A HREF="./09mpg004.html#XREF28529">Setting Up</A>
+<LI><A HREF="./09mpg005.html#XREF20183">Creating a MIDI Environment</A>
+<LI><A HREF="./09mpg006.html#XREF25985">Importing a MIDI Score</A>
+<LI><A HREF="./09mpg007.html#XREF35189">Setting the Tempo</A>
+<LI><A HREF="./09mpg008.html#XREF34300">Playing the MIDI Score</A>
+<LI><A HREF="./09mpg009.html#XREF25041">Using MIDI Functions</A>
+<LI><A HREF="./09mpg010.html#XREF38885">Changing Characteristics During Playback</A>
+<LI><A HREF="./09mpg011.html#XREF22304">Cleaning Up</A>
+<LI><A HREF="./09mpg012.html#XREF36723">Creating a MIDI Score for Playback</A>
+<LI><A HREF="./09mpg013.html#XREF14372">An Example Program</A>
+<LI><A HREF="./09mpg014.html#XREF34487">Primary Data Structures</A>
+<LI><A HREF="./09mpg015.html#XREF22540">Function Calls</A>
+</UL>

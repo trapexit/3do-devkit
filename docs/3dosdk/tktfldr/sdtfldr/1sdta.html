@@ -1,0 +1,47 @@
+<TITLE>Resource allocation and planning</TITLE>
+<H1><LINK NAME="XREF25387"></LINK><LINK NAME="XREF21216">Resource allocation and planning</LINK></H1><HR>
+Before starting audio production, it's helpful to decide how a title will use audio and where the audio files will reside. This section discusses the following choices. <P>
+<UL>
+<LI>Type of audio: Samples (AIFF files) for music and sound effects or MIDI scores, with either samples or synthetic instruments attached to MIDI notes.
+<p>
+<LI>Run-time location of files: RAM-resident or CD-ROM-resident.
+<p>
+<LI>Playback for CD-ROM-resident sounds: spooled or streamed from disc. 
+<p>
+<LI>RAM budget: stereo or mono, sample rate, and/or 2:1 compression.
+</UL>
+<H2>RAM-resident vs. ROM-resident sound</H2>
+First decide whether the title itself will be RAM-resident or will use data streaming. <P>
+<UL>
+<LI>A RAM-resident title places all necessary code within the 3 MB-or actually 2.2 MB-of the available system RAM during any run-time segment. RAM-resident titles leave the CD-ROM available for accessing audio through spooling, streaming, or loading. 
+<p>
+<LI>Titles stream most data and code on a real-time, interactive basis from the CD-ROM. In this case, you cannot spool an audio sample file, but you <I>can </I>include audio as part of the data stream.
+</UL>
+<UL>
+<LI>Since seek times-the time it takes to find the sound on the CD-ROM-limit how interactive sound can be, RAM-resident sounds have a distinct advantage. It is possible, however, to have multiple audio streams and dynamically fade, pan, and mix them according to what's going on in the title. 
+</UL>
+<H2>Spooled vs. streamed sound</H2>
+Spooled sound comes directly from a file on disc. A program can play short individual sound effects like an explosion or a door opening. Background music can be spooled in using a separate task. <P>
+Streamed sound is played using functions from the 3DO Data Streamer library. The advantage of working with streamed audio is that it allows a title to benefit from audio sample files, even though the title is not RAM-resident. Note that you can't stream more than 300 KB/sec total of video and audio data.<P>
+<H3>For more information</H3>
+<UL>
+<LI>The<I> 3DO Jumpstart for Programmers</I> provides examples for playing a sound effect and for spooling sound with the Sound Spooler. 
+</UL>
+<UL>
+<LI>The <I>3DO DataStreamer Programmer's Guide </I>discusses the DataStreamer.
+</UL>
+<H2>Sound file characteristics</H2>
+Decisions about where sound will reside and how it will be played influence decisions about the characteristics of the sound file you generate. There's always a trade-off between file size and sound quality. <P>
+<H3>Stereo vs. mono</H3>
+An early consideration should be whether to use stereo or mono sounds. Remember that stereo sound at a 44.1 kHz sample rate requires 10 MB per minute. If mono is adequate, the size is cut in half. Certain sound effects require stereo (panning, flanging, tennis matches, etc.), but many sound effects can be mono. If CD-ROM space is available, spooled or streamed files should be stereo, since more and more television sets provide stereo sound.<P>
+<H3>Sample rate</H3>
+When you decide on the sample rate, remember that many televisions produce high-quality sound. You may not be able to get by with 22 kHz samples. Take care to avoid audio aliasing: Sample any given sound at twice the frequency of its highest component. Human speech and other sounds with many upper partials may sound boxy at 22 kHz.<P>
+<H3>Compression</H3>
+You can use compressed sound as long as the correct DSP instrument is attached during playback. <P>
+<UL>
+<LI>For 2:1 compression, use the SquashSound MPW tool, which is part of the 3DO system release, or the SoundHack tool, which is documented in this book. 
+<p>
+<LI>For 4:1 ADPMC compression, you can also use SoundHack. At 3DO, developers have found, however, that a 22 kHz sound compressed at a 2:1 ratio is preferable to a 44.1 kHz sound compressed at a 4:1 ratio. 
+</UL>
+When you decide whether to compress your audio files, remember that there is a DSP bandwidth trade-off: Compression saves RAM/ROM but decompression can result in a big system resource overhead hit because the DSP code required to decompress sample files takes up more DSP cycles and code space. <P>
+<P>

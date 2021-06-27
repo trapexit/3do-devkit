@@ -1,0 +1,58 @@
+<TITLE>Working with PatchDemox</TITLE>
+<H1><LINK NAME="XREF30778">Working with PatchDemo</LINK></H1><HR>
+PatchDemo runs on the 3DO development system. <P>
+Using PatchDemo involves three basic steps, discussed in more detail in this section:<P>
+
+<UL>
+<LI><A HREF="#XREF42667">Creating a patch file</A> (text file describing DSP instrument connections).
+<LI><A HREF="#XREF35807">Running a patch</A>.
+<LI>Listening to your patch, adjusting instrument knobs using the control pad controller.
+</UL>
+Refer to Chapter 12 in the <I>3DO Programmer's Reference</I> for a complete list of DSP instruments. <P>
+<A NAME="XREF42667"><H2>Creating a patch file</A></H2>
+This section first discusses how patch files are used by PatchDemo, then provides a list of available commands.<P>
+<H3>About patch files</H3>
+PatchDemo reads commands from a text file describing the patch (the patch file). Each line in a patch file can be a blank line, a comment, or a command. Either UNIX or Mac end of line sequences are acceptable (CR/LF doesn't actually affect the patch, but confuses the line count used for diagnostics). Comments are preceded by a semicolon or pound sign and extend to the end of the line. They may appear on any line. Blank lines are ignored. The example below illustrates the command syntax.<P>
+<B>Example 1: </B><I>Patch file command syntax.</I><P>
+<CODE>
+<PRE>
+# this is a comment
+; so is this
+LoadInstrument osc sawtooth.dsp                                            ; everything after the
+                                    ; semicolon is a comment
+</CODE>
+</PRE>
+Command lines consist of a command and its arguments, separated by white space (any number of spaces or tabs). Commands are not case-sensitive. Arguments (file names, symbol names, and so on) must not contain white space. Quotes around arguments are not supported. <P>
+Commands either create or act on <I>symbols</I>. A symbol is the name of an object created during the patch file processing-for example, a DSP instrument, or a sample. You can connect one instrument to another, adjust an instrument's knob, and so on. There is a separate name space for instruments, samples, and sample attachments, and each symbol must be unique in its name space. Symbols are not case-sensitive. A symbol must have been created before it's used. The example below shows example command lines.<P>
+<B>Example 2: </B><I>Typical command lines.</I><P>
+<CODE>
+<PRE>
+Tweak osc Amplitude 4000                                                                                ; error; osc not defined yet.
+LoadInstrument osc sampler.dsp                                        ; OK
+Tweak osc Amplitude 4000                                        ; OK now; osc is now defined.
+</CODE>
+</PRE>
+<B>Note: </B>If an error occurs while reading a patch file, PatchDemo quits after printing an error message containing the line number of the offending line. These errors include unknown commands, missing arguments, duplicate symbol names, undefined symbols, filing errors, lack of memory, and other various system failures.<P>
+<A NAME="XREF12797"><H3>Patch file commands</A></H3>
+The table below provides a quick summary of each command, followed by the page number where you'll find the command described.<P>
+
+<UL>
+<LI><A HREF="./8sdta.html#XREF30661">AttachSample</A>-Attaches a sample to an instrument
+<LI><A HREF="./8sdtb.html#XREF18932">Connect</A>-Connects an output from one instrument to an input or know of another instrument.
+<LI><A HREF="./8sdtc.html#XREF37273">DelayLine</A>-Creates a delay line.
+<LI><A HREF="./8sdtd.html#XREF25124">LoadInstrument</A>-Loads a DSP instrument.
+<LI><A HREF="./8sdte.html#XREF16747">LoadSample</A>-Loads an AIFF sample.
+<LI><A HREF="./8sdtf.html#XREF19693">Tweak</A>-Adjusts a knob in an instrument.
+</UL>
+<A NAME="XREF35807"><H2>Running a patch</A></H2>
+To run a patch, issue the following command:<P>
+<CODE>
+<PRE>
+patchdemo.arm &lt;patch file&gt;
+</CODE>
+</PRE>
+&lt;patch file&gt; is the name of a patch description file to load. The patch file is a text file containing the description of the patch. See <A HREF="#XREF42667">Creating a patch file</A>.<P>
+After a patch file is successfully read, the patch is started (makes a sound) and a page of faders appears on the screen. You can adjust all of the knobs for all of the instruments in the patch except those that have been connected to another instrument. See "Connect" on page  for more information. The knobs for each instrument appear on a separate page; there is one page per instrument. <P>
+<B>Note: </B>If an instrument has no knobs or all of its knobs are connected to other instruments, PatchDemo will not display a page for the instrument. If all the instruments in a patch do not contain knobs or if all the knobs of al the instruments in a patch are connected to other instruments, PatchDemo will exit with an error message.<P>
+<TITLE></TITLE>
+<H1></H1><HR>

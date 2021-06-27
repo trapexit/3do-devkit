@@ -1,0 +1,17 @@
+<Title>CreateVBLIOReq </Title>
+<A NAME="XREF23824"><H1>CreateVBLIOReq </A></H1>
+ Returns an I/O request for use with WaitVBL() and WaitVBLDefer().<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateVBLIOReq (void)</CODE><P>
+<H3>Description</H3>
+This call is a convenience call for the vbl timer. This call creates and returns an 
+I/O request that is suitable for use with <CODE>WaitVBL()</CODE> and <CODE>WaitVBLDefer()</CODE>. <P>
+<H3>Return Value</H3>
+<CODE>CreateVBLIOReq()</CODE> returns the item number of the I/O request or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in graphics.h V24. <P>
+<H3>Associated Files</H3>
+graphics.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr013.html#XREF40157"><CODE>DeleteVBLIOReq</A>() </CODE><P>
+</CODE>

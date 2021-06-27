@@ -1,0 +1,349 @@
+<TITLE>Digital signal processing on the ARM</TITLE>
+<H1><LINK NAME="XREF29872">Digital signal processing on the 
+ARM</LINK></H1><HR>
+<H2>About this recipe</H2>
+This recipe is designed to explain the issues when performing digital 
+signal processing (DSP) on the ARM.<P>
+DSP often needs to be performed in real-time, so it is important to 
+achieve the highest possible throughput.  In such instances, careful speed 
+optimisation  of ARM assembly code is often necessary to achieve the 
+performance required.<P>
+<H2>Introduction</H2>
+DSP is finding a growing number of applications as all kinds of signals 
+are now processed digitally eg. Compact Disc, telephone speech compression 
+(GSM, G.721 etc.), PhotoCD, JPEG, MPEG...<P>
+The ARM cannot match a dedicated DSP chip for raw performance, but not all 
+applications require ultra-high performance.  The ARM processor can also 
+perform other tasks; DSP chips are severely limited in their range of 
+functions due to their specialised architecture.<P>
+<H3>Features of most DSP chips</H3>
+<UL>
+<LI>single cycle multiply-accumulate<P>
+<LI>no-overhead loops (dedicated loop counter register is decremented in 
+parallel with executing body of loop)<P>
+<LI>address generators (with circular buffer support, and bit-reversed 
+addressing)<P>
+<LI>Harvard architecture to funnel data into multiply-accumulate
+</UL>
+There is just one main operation which DSP chips perform very fast: the 
+weighted sum.  This is a scalar product where each element of one array of 
+data is multiplied by a corresponding element in another array, and the 
+total is accumulated.<P>
+In any book on digital signal processing, there are hundreds of equations 
+using sigma notation which denotes a weighted sum.  This single operation  
+is required for the all the major DSP functions: correlation, 
+autocorrelation, FIR filters, IIR filters, convolution, DCT etc.<P>
+<H3>Features of the ARM which are advantageous for DSP</H3>
+<UL>
+<LI>barrel shifter in parallel with data processing instructions;
+<LI>MUL instruction;
+<LI>auto-update load/store instructions;
+<LI>auto-update load/store multiple (quick sequential addresses).
+</UL>
+<H2>Examples of some DSP code on the ARM</H2>
+These examples demonstrate typical DSP code.  The MLA accumulates the 
+products in a single 32-bit register, so care must be taken to ensure that 
+the value will not overflow.  If 1024 products are to be accumulated, the 
+number of bits in the result should not exceed 22 otherwise the total may 
+overflow.<P>
+<H3>Naive version of weighted-sum ARM code:</H3>
+This is the obvious version of the weighted-sum code which uses 2 load 
+instructions and a MLA.<P>
+    <CODE>
+<PRE>
+    MOV    r10, #0                                 ; initialise total
+naive_sigma_loop
+    LDR    r0, [r8], #4                            ; load data A &amp; update pointer
+    LDR    r1, [r9], #4                            ; load data B &amp; update pointer
+    MLA    r10, r0, r1, r10
+    SUBS   r11, r11, #1                            ; decrement counter
+    BNE    naive_sigma_loop
+</CODE>
+</PRE>
+<H3>Faster version of weighted-sum ARM code:</H3>
+This shows how to unwind the loop 4 times (to lower the branch overhead). 
+Load-multiple (LDM) is used instead of a single register load; this 
+improves performance significantly.  It is possible to use more registers 
+and unwind the loop more.<P>
+    <CODE>
+<PRE>
+    MOV    r10, #0                         ; initialise total
+faster_sigma_loop
+    LDMIA  r8!, {r0-r3}                    ; load 4 data A values &amp; update pointer
+    LDMIA  r9!, {r4-r7}                    ; load 4 data B values &amp; update pointer
+    MLA    r10, r0, r4, r10
+    MLA    r10, r1, r5, r10
+    MLA    r10, r2, r6, r10
+    MLA    r10, r3, r7, r10
+    SUBS   r11, r11, #1                    ; decrement counter
+    BNE    faster_sigma_loop
+</CODE>
+</PRE>
+<H3>Cross-correlation:</H3>
+This example performs cross-correlation; this particular code was written 
+for a telephone-quality speech compressor.  It demonstrates careful 
+optimisation for  this specific function; there are 10 MLA instructions to 
+every 1 LDM  instruction.  All the registers (apart from r15) are used in 
+order to reduce load operations.<P>
+Cross-correlation involves multiplying every element of one list with the 
+corresponding element in another list and accumulating the total (a 
+weighted sum).  To calculate the cross-correlation function, the offset is 
+varied as in this example:<P>
+<CODE>
+<PRE>
+     i1   i2   i3   i4
+      *    *    *    *                             = cross_corr_0
+     j1   j2   j3   j4   j5   j6   j7   j8   j9
+
+          i1   i2   i3   i4
+           *    *    *    *                        = cross_corr_1
+     j1   j2   j3   j4   j5   j6   j7   j8   j9
+
+     and so on until:
+                              i1   i2   i3   i4
+                               *    *    *    *    = cross_corr_5
+     j1   j2   j3   j4   j5   j6   j7   j8   j9
+</CODE>
+</PRE>
+Notice that 'i' has 4 elements and 'j' has 9 elements, so the cross_corr 
+list has (9-4+1)=6 elements.<P>
+The routine given here is designed to process 4 elements from 'i' and 4 
+elements from 'j' per block.  The block can be repeated to process the 
+entire 'i' list (which should be a multiple of 4). The 'i'-list should be 
+the smaller of the two, so that it is traversed completely.  This yields 5 
+totals which are cross-correlation results.  An  outer loop can be used to 
+update the start position in 'j' in order to  calculate the full 
+cross-correlation function.<P>
+<CODE>
+<PRE>
+    LDMIA  r8!, {r0-r3}      ; initialise: load j1-j4              
+(1)
+
+    LDMIA  r9!, {r4-r7}      ; repeating block start, load i1-i4   
+(2)
+    MLA    r10, r0, r4, r10
+    MLA    r10, r1, r5, r10
+    MLA    r10, r2, r6, r10
+    MLA    r10, r3, r7, r10
+    MLA    r11, r1, r4, r11
+    MLA    r11, r2, r5, r11
+    MLA    r11, r3, r6, r11
+    MLA    r12, r2, r4, r12
+    MLA    r12, r3, r5, r12
+    MLA    r13, r3, r4, r13
+    LDMIA  r8!, {r0-r3}      ; load j5-j8                          
+(3)
+    MLA    r14, r0, r4, r14
+    MLA    r14, r1, r5, r14
+    MLA    r14, r2, r6, r14
+    MLA    r14, r3, r7, r14
+    MLA    r13, r0, r5, r13
+    MLA    r13, r1, r6, r13
+    MLA    r13, r2, r7, r13
+    MLA    r12, r0, r6, r12
+    MLA    r12, r1, r7, r12
+    MLA    r11, r0, r7, r11  ; repeating block end
+; repeat block in order to traverse 'i'-list
+</CODE>
+</PRE>
+The 22-instruction block calculates 5 cross-correlation sums (in r10-r14), 
+according to the following diagram:<P>
+<CODE>
+<PRE>
+     i1   i2   i3   i4                         |
+      *    *    *    *                         |                        Total in r10
+     j1   j2   j3   j4                         | j5   j6   j7   j8
+                                               |
+                                               |
+          i1   i2   i3                         | i4
+           *    *    *                         |  *   	                Total in r11
+     j1   j2   j3   j4                         | j5   j6   j7   j8
+                                               |
+                                               |
+               i1   i2                         | i3   i4
+                *    *                         |  *    *                Total in r12
+     j1   j2   j3   j4                         | j5   j6   j7   j8
+                                               |
+                                               |
+                    i1                         | i2   i3   i4
+                     *                         |  *    *    *           Total in r13
+     j1   j2   j3   j4                         | j5   j6   j7   j8
+                                               |
+                                               |
+                                               | i1   i2   i3   i4
+                                               |  *    *    *    *      Total in r14
+     j1   j2   j3   j4                         | j5   j6   j7   j8|
+                                               |
+     First half of                             | Second half of
+     repeating block                           | repeating block
+</CODE>
+</PRE>
+The j1-j4 values are loaded into r0-r3 by (1).  In the repeating block, 
+the next i1-i4 values are loaded by (2).  This data is sufficient to 
+calculate the products on the left side of the dividing line; this is done 
+by the first 10 MLA instructions.<P>
+The clever bit is reusing r0-r3 to hold the j5-j8 values which are loaded 
+in  (3).  By arranging the MLA instructions into 2 groups (left and right 
+of the  dividing line), it is possible to use the j1-j4 values first, and 
+then use  j5-j8 second.<P>
+At the end of the block, r0-r3 (j5-j8) are used as j1-j4 for the next 
+block (because the pointers have moved on by 4).<P>
+This technique could also be applied to reduce the memory load traffic of  
+other DSP functions.<P>
+<A NAME="XREF10770"><H3>Fixed-point arithmetic</A></H3>
+Fixed-point arithmetic is an important part of DSP (for example, weighting 
+coefficients are often in the range -1..1).  The MUL instruction is an 
+integer multiplier, so shifting will be necessary to justify the result 
+correctly.  Fortunately, the ARM barrel shifter makes this very easy.<P>
+When a single MUL is being used to multiply fixed-point numbers, it may be 
+necessary to right-shift the multiply operands so that the result fits in  
+32-bits to avoid overflow.<P>
+As you would expect, add and subtract are unaffected if the operands are 
+fixed-point numbers, provided that both operands are the same fixed-point  
+format.  Naturally, the barrel shifter can be applied to the second 
+operand  (with no overhead) if it is necessary to align the formats.<P>
+<A NAME="XREF40554"><H2>ARM6 </A>multiplier performance issues</A></H2>
+The performance of the MUL instruction is important for many DSP 
+applications where multiply is used extensively (eg. digital filters, 
+correlation etc.)<P>
+This section explains how to predict the timing of a MUL instruction, and 
+suggests some ideas to improve the performance of speed-critical programs. 
+This section is specific to the 2-bit Booth's Multiplier in the ARM6, 
+ARM2  and ARM3.<P>
+<H3>Explanation of Booth's multiplication</H3>
+Consider the instruction:<P>
+<CODE>
+<PRE>
+    MUL   Rd, Rm, Rs
+                  ^^
+</CODE>
+</PRE>
+The speed of the multiply depends on the value in Rs.  It is important to 
+place the smallest number in Rs so that the multiply takes the least 
+number of cycles.  The rest of this section explains how the value in Rs 
+affects the time taken to perform the multiplication.<P>
+In the ARM6 core, the value in Rs is transferred to the Booth's multiplier 
+register during the first cycle of the instruction.  Thereafter, a number 
+of  internal I-cycles are required to perform the multiplication.<P>
+The Booth's multiplier operates in the following way: a 32-bit multiplier 
+register is initialised with the second operand of the multiplication.  
+This register is extended at the low end with an extra bit, which is 
+initialised to zero. So, the register's contents after initialisation 
+are:<P>
+<CODE>
+<PRE>
+  M31 M30 M29 M28 ... M5 M4 M3 M2 M1 M0 0
+</CODE>
+</PRE>
+On each iteration, the bottom 3 bits of this register are used to generate 
+a Booth digit, which controls what is done on the datapath with the 
+destination register and the first operand register. Then this register is 
+shifted right by 2 bits, losing the two bits at the right hand end.  The 2 
+leftmost bits are filled with zeros.<P>
+Early termination occurs if and when the entire multiplier register is all 
+zeros, with the process terminating after 16 iterations in any case.<P>
+So, after the first iteration the multiplier register's contents are:<P>
+<CODE>
+<PRE>
+  0 0 M31 M30 ... M7 M6 M5 M4 M3 M2 M1
+</CODE>
+</PRE>
+and the Booth digit which was used on the first iteration was based on the 
+three bits "<CODE>M1 M0 0</CODE>".<P>
+The second Booth digit will hence be "<CODE>M3 M2 M1</CODE>".<P>
+Each Booth digit takes an I-cycle to process, as the ARM datapath is 
+involved in accumulating the partial product.  The total time for a MUL is 
+thus 1S + nI cycles where n depends on the value in Rs.  From the above 
+explanation it can be shown that n has the following relationship to the 
+value in Rs:<P>
+Multiplication by 2^(2n-3) and 2^(2n-1)-1 inclusive takes 1S + nI-cycles 
+(n&gt;1). (Multiplication by 0 or 1 takes 1S + 1I-cycle).<P>
+(These speeds are taken straight from the ARM6 datasheet)<P>
+<H3>Overflow issues</H3>
+It is common to use the current multiply instruction in (for instance) a 
+16bit x 16bit -&gt; 32bit mode to avoid overflow.<P>
+This situation can be generalised, as the number of result bits is just 
+the sum of the operand bits.  Thus, the MUL can perform 16bit x 16bit 
+-&gt; 32bit, 8bit x 24bit -&gt; 32bit etc. all without overflow.  For MLA, 
+the total is accumulated (overflow of the total must be avoided).  Hence, 
+MLA would be used as (for example) 12x12-&gt;24 leaving 8 bits to 
+accumulate up to  256 values without the possibility of overflow.<P>
+So, although the worst-case multiply is 1S + 16I-cycles, in practice it is 
+possible to arrange for a worst case which is at most 1S + 9I-cycles (by 
+putting the operand with the least number of bits into Rs, so that Rs 
+&lt;= 16bits), but often considerably better.<P>
+<H3>Negative operands</H3>
+The multiplier yields correct results for negative operand values, so the 
+sign of the operands can be ignored.  For positive values of Rs, a 
+16x16-&gt;32 MUL takes at most 1S + 9I-cycles (the average should be 
+better than this).  But, the MUL *always* takes 1S + 16I-cycles if Rs is 
+negative.  Early termination  cannot take place because the top bit of Rs 
+is a 1, so the Booth's multiplier  register never contains all 0s (the 
+maximum-of-16 limit is reached instead).<P>
+Obviously, you could guard the multiply instruction like this:<P>
+<CODE>
+<PRE>
+    CMP    Rs, #0
+    RSBMI  Rs, Rs, #0
+    MUL    Rd, Rm, Rs
+    RSBMI  Rd, Rd, #
+</CODE>
+</PRE>
+but this does not really improve things unless Rs is very small so that 
+the gain exceeds the (3-instruction) overhead.  It is sometimes possible 
+to do away  with the CMP by incorporating this into another instruction 
+(see below).<P>
+In the special case when squaring, the result does not need to be negated 
+after the multiplication as it will always be positive (thus the second 
+RSB instruction can be eliminated).<P>
+For example, consider this critical bit of code which uses MUL to square 
+signed  5-bit input values.  This demonstrates the importance of ensuring 
+that Rs is  positive, as the worst-case performance is improved to just 1S 
++ 3I-cycles for the MUL or MLA.<P>
+<CODE>
+<PRE>
+AND    r1, r8, #31                        ; extract 5-bit field of interest
+AND    r2, r9, #31                        ; extract 5-bit field of interest
+SUBS   r1, r1, r2
+RSBMI  r1, r1, #0
+MUL    r0, r1, r1
+</CODE>
+</PRE>
+As you can see, it has been arranged to only cost 1 S-cycle (for the RSBMI 
+instruction) to ensure the multiply is fast.<P>
+The issue of negating the value in Rs is more complicated if MLA is used, 
+as it is not possible to negate the product before the accumulate. There 
+are two possible solutions to this:<P>
+(1)  Negate the total<P>
+<CODE>
+<PRE>
+CMP    Rs, #0
+RSBMI  Rs, Rs, #0
+RSBMI  Ra, Ra, #0
+MLA    Ra, Rm, Rs, Ra
+RSBMI  Ra, Ra, #0
+</CODE>
+</PRE>
+(2)  Negate the other operand<P>
+<CODE>
+<PRE>
+CMP    Rs, #0
+RSBMI  Rs, Rs, #0
+RSBMI  Rm, Rm, #0
+MLA    Ra, Rm, Rs, Ra
+</CODE>
+</PRE>
+<H3>Multiplication by constant</H3>
+This technique replaces a MUL by a sequence of arithmetic instructions 
+which are equivalent to multiplying by a constant.  The gains depend on 
+the value of the constant (smaller constants are generally faster).  For 
+more details, please see <A HREF="./2acbb.html#XREF38728">Multiply by a 
+constant</A>.<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./2acbb.html#XREF38728">Multiply by a constant</A>;
+<LI><A HREF="./2acbc.html#XREF21356">Division by a constant</A>;
+<LI><A HREF="./2acbk.html#XREF12134">ARM assembly programming performance 
+issues</A>.
+</UL>

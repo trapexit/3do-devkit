@@ -1,0 +1,23 @@
+<Title>MapAACelToCQuad</Title>
+<A NAME="XREF32579"><H1>MapAACelToCQuad </A></H1>
+ Maps an anti-aliased cel to a quad.<P>
+<H3>Synopsis</H3>
+<CODE>void MapAACelToCQuad (CCB *aacel, CQuad *quad)</CODE><P>
+<H3>Description</H3>
+Maps an anti-aliased cel to a specified quad. It is effectively a standard <CODE>MapCel()</CODE> call that stores its results into both the data and alpha-channel CCBs. It also works correctly if aacel points to a single standalone cel. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>aacel
+<DD>Pointer to the cel to be mapped. 
+</DL>
+<DL>
+<DT>quad
+<DD>Pointer to the CQuad to which the cel is to be mapped. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO129.html#XREF24272"><CODE>MapCelToCQuad</A>, <A HREF="./01LDO124.html#XREF20390">MapCelListToCQuad</A></CODE><P>
+</CODE>

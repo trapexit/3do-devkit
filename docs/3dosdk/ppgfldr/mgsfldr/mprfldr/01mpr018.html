@@ -1,0 +1,89 @@
+<Title>CreateInsTemplate</Title>
+<A NAME="XREF32118"><H1>CreateInsTemplate </A></H1>
+<A NAME="XREF31905"></A> Generic template creation function.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateInsTemplate (TagArg *tagList)<BR>
+Item CreateInsTemplateVA (uint32 tag1, ...)</CODE><P>
+<H3>Description</H3>
+This is the general function to create an instrument Template. It is used internally by all the other template creation functions (e.g. <CODE>LoadInsTemplate()</CODE>, <CODE>DefineInsTemplate()</CODE>, etc) to actually perform the template creation. Use it if you need to do something that these other functions don't provide. <P>
+Call <CODE>UnloadInsTemplate()</CODE> to dispose of the Item created by this function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>None
+<DD> 
+</DL>
+Tags to Load Template File Required: <P>
+<DL>
+<DT>AF_TAG_NAME
+<DD>(const char *) Name of template file to load. 
+</DL>
+Optional: <P>
+<DL>
+<DT>AF_TAG_DEVICE
+<DD>(Item) Audio device Item for instrument template. 0 indicates the default audio device, the DSP, which is the only valid audio device item at the present time. Conveniently defaults to 0, so you should never need to use this tag. 
+</DL>
+<DL>
+<DT>AF_TAG_ALLOC_FUNCTION
+<DD>(void *(*)(uint32 memsize, uint32 memflags)) Sets custom memory allocation function to be called during template creation for objects that can be created in user memory. Currently this only applies to samples embedded in ARIA instruments. Defaults to <CODE>AllocMem()</CODE>. If you supply a custom allocation function you must also provide a custom free function with AF_TAG_FREE_FUNCTION. 
+</DL>
+<DL>
+<DT>AF_TAG_FREE_FUNCTION
+<DD>(void (*)(void *memptr, uint32 memsize)) Sets custom memory free function to be called during template deletion. Defaults to <CODE>FreeMem()</CODE>. If you supply a custom free function you must also provide a custom allocation function with AF_TAG_ALLOC_FUNCTION. 
+</DL>
+Tags to Parse Template File Image in Memory Required: <P>
+<DL>
+<DT>AF_TAG_IMAGE_ADDRESS
+<DD>(const char *) Specifies a memory location containing a template file image from which to read instrument template. Unless AF_TAG_LEAVE_IN_PLACE is set, this memory does not need to remain valid after calling <CODE>CreateInsTemplate()</CODE>. Must use in conjunction with AF_TAG_IMAGE_LENGTH. 
+</DL>
+<DL>
+<DT>AF_TAG_IMAGE_LENGTH
+<DD>(uint32) Specifies number of bytes in template file image pointed to by AF_TAG_IMAGE_ADDRESS. 
+</DL>
+Optional: <P>
+<DL>
+<DT>AF_TAG_DEVICE
+<DD>(Item) See above. 
+</DL>
+<DL>
+<DT>AF_TAG_ALLOC_FUNCTION
+<DD>(void *(*)(uint32 memsize, uint32 memflags)) See above. Mutually exclusive with AF_TAG_LEAVE_IN_PLACE. 
+</DL>
+<DL>
+<DT>AF_TAG_FREE_FUNCTION
+<DD>(void (*)(void *memptr, uint32 memsize)) See above. 
+</DL>
+<DL>
+<DT>AF_TAG_LEAVE_IN_PLACE
+<DD>(bool) When TRUE causes any objects that would otherwise be copied to user memory to be left in place. Currently this only applies to samples embedded in an ARIA instrument. See <CODE>CreateSample()</CODE> for more information and caveats regarding this tag. This is potentially useful for ARIA instruments that contain large samples, but otherwise is not too helpful, mainly because you must leave the entire template file image in memory regardless of how little of that memory is actually used for samples. Defaults to FALSE. Mutually exclusive with AF_TAG_ALLOC_FUNCTION. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns an instrument Template Item number (a positive value) if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in audio folio V20. <P>
+<H3>Caveats</H3>
+Ideally there should be a <CODE>DeleteInsTemplate()</CODE> function, but there isn't one yet. Sorry for any confusion that might arise from pairing <CODE>CreateInsTemplate()</CODE> with <CODE>UnloadInsTemplate()</CODE>. <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+    // These two calls are equivalent
+LoadInsTemplate ("directout.dsp", 0);
+CreateInsTemplateVA ( AF_TAG_NAME, "directout.dsp",TAG_END);
+
+   // These two calls are also equivalent
+DefineInsTemplate (dspFileImage, dspFileLength, 0, "foo.dsp");
+CreateInsTemplateVA ( AF_TAG_IMAGE_ADDRESS, dspFileImage,AF_TAG_IMAGE_LENGTH,  dspFileLength, TAG_END);
+</CODE>
+</PRE>
+<H3>Associated Files</H3>
+audio.h<P>
+
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr081.html#XREF38811"><CODE>UnloadInsTemplate</A>(), 
+<A HREF="./01mpr051.html#XREF12263">LoadInsTemplate</A>(), 
+<A HREF="./01mpr024.html#XREF26906">DefineInsTemplate</A>(), 
+<A HREF="../../pgsfldr/spr/09spr020.html#XREF24399">Template</A>, 
+<A HREF="./01mpr019.html#XREF12062">CreateInstrument</A>(), 
+<A HREF="./01mpr052.html#XREF40571">LoadInstrument</A>(), 
+<A HREF="./01mpr007.html#XREF30972">AttachSample</A>(), 
+<A HREF="./01mpr006.html#XREF15951">AttachEnvelope</A>() </CODE><P>
+</CODE>

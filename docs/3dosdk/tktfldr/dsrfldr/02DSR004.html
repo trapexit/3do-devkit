@@ -1,0 +1,39 @@
+<Title>DataAcqOpcode</Title>
+<A NAME="XREF10511"><H1>DataAcqOpcode</A></H1>
+<A NAME="XREF24436"></A>Data acquisition operation codes.<P>
+<H3>Synopsis</H3>
+<PRE>
+<CODE>typedef enum DataAcqOpcode {
+  kAcqOpGetData 0,
+  kAcqOpGoMarker,
+  kAcqOpConnect,
+  kAcqOpDisconnect,
+  kAcqOpExit
+}</CODE></PRE><P>
+<H3>Description</H3>
+Opcode values as passed in whatToDo.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>kAcqOpGetData</CODE>
+<DD>Fill buffer with data.
+</DL>
+<DL>
+<DT><CODE>kAcqOpGoMarker</CODE>
+<DD>Seek to a marker in the stream.
+</DL>
+<DL>
+<DT><CODE>kAcqOpConnect</CODE>
+<DD>Stream connecting, perform initializations.
+</DL>
+<DL>
+<DT><CODE>kAcqOpDisconnect</CODE>
+<DD>Stream disconnecting, no more data requests follow.
+</DL>
+<DL>
+<DT><CODE>kAcqOpExit</CODE>
+<DD>Release resources and exit.
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR048.html#XREF21532"><CODE>NewDataAcq</A></CODE><P>

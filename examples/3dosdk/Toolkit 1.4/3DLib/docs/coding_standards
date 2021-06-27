@@ -1,0 +1,117 @@
+Coding Standards for 3Dlib (March 31, 1993):
+
+
+The object of coding standards is twofold : To make the program text 
+uniform when more than one programmer is working on it, and to make it 
+readable. If your mom can't read the text, neither will you 3 days from 
+now. Since this code is meant to be handed out we ought to maintain some
+fairly rigorous standards to style for both readability AND to be
+a good example.
+
+So without further adieu, and in no particular order, here we go:
+
+   1) All arguments and automatic variables are lower-case, and use 
+      underscore to separate words.
+
+   2) All global variables begin with an uppercase character to make it 
+      easily identifiable in the body of text.
+
+   3) All #defines are entirely uppercase. (industry standard)
+      Except in the case of Macros, since macros may eventually work their
+      way into system routines, so the naming convention should stay the 
+      same.
+
+   4) Applications level routines are all lowercase to isolate them from 
+      the user library calls which use UC characters.
+
+   5) Indent 3 spaces.
+
+   6) Use white space liberally. Use it to seperate logical blocks.
+
+   7) Open and close braces should be vertically aligned :
+        
+           Good -     if(foo)
+                      {
+                         <do funky stuff>
+                      }
+
+           or (RJ sez so...)
+
+                      if(foo)
+                         {
+                         <do funky stuff>
+                         }
+
+           Bad, baaaaaaaaad  -
+                      if(foo){
+                         <do more funky stuff>
+                      }
+
+           The unpardonable sin -
+
+                      if(foo){if(bar){a->b->c->.xyz[xxx]}else{return(-1)}};
+
+   8) Comments come in three types : program and routine headers,
+      block comments and in-line comments.
+
+      Use the following for a header template :
+
+/**************************************************************************
+ * routine name : brief discription                                       *
+ ************************************************************************** 
+ * NOTE : additional important general notes                              *
+ **************************************************************************/
+
+      Block comments are used when you are feeling talkative and need to 
+      say alot about the next section of code. They are set off by "***"
+      at the beginning. This keeps them from looking like a routine
+      header and makes 'em stand out from code that may be commented out.
+
+/*** this is an example of a block comment. Notice how it stands out 
+ *** from the rest of the text. Block comments are indented to 
+ *** match the body of code they deal with. ***/
+
+      In-line comments are the typical variety if what needs to be said
+      can be said in brief and is isolated to a single line of text. And
+      they should be roughly aligned :
+
+      good -
+           a=x;      /* hi there */
+           b=c;      /* foobar *
+           a=++;     /* aardvark */
+
+      bad -
+           a=x;      /* hi there */
+           b=c;           /* foobar *
+           a=++;        /* aardvark */
+
+   9) Avoid jamming too much stuff into one line of code, break it up into
+      little pieces. (Particularly when calculating array indices).
+
+  10) Keep routines relatively short. Short enough to fit in a single
+      window on the Mac, 40 lines or so.
+
+  11) (real nitpicky stuff) Never use more than a single blank line in 
+      a row.
+
+  12) Adopt common argument names. If routines a(), b() and c() process
+      the worldport use the same arg name in all 3, such as "world" or
+      "wport". This makes it really easy to exchange code across routines.
+
+  13) Typedefs and struct names begin with capitals, so you can have 
+      something like : "struct World world" without causing the
+      compiler fits.
+
+  14) Avoid loops nested more than 3 deep. If you have to do that, chances
+      you're getting too complicated or the routine should be split.
+
+  15) Routines should be in alphabetical order in the file.
+
+  18) Debug code is goes flush left, so it makes it clearly visible from
+      the real stuff.
+
+  19) Prototype everything, in one centralized location.
+
+  20) All code MUST compile without warnings.
+
+

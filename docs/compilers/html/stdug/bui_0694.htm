@@ -1,0 +1,97 @@
+<HTML><HEAD><TITLE>Building on the Standard Containers</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Building on the Standard Containers</H2>
+<P>Let's examine a few of the ways you can use existing Standard C++ Library containers to create your own containers.  For example,  say you want to implement a set container that enforces unique values that are not inherently sorted.  You also want a group of algorithms to operate on that set.  The container is certainly a sequence, but not an associative container, since an associative container is, by definition, sorted.  The algorithms will presumably work on other sequences, assuming those sequences provide appropriate iterator types, since the iterator required by a set of algorithms determines the range of containers those algorithms can be applied to.  The algorithms will be universally available if they only require forward iterators.  On the other hand, they'll be most restrictive if they require random access iterators.</P>
+<P>Simple implementations of this set container could make use existing Standard Library containers for much of their mechanics.  Three possible ways of achieving this code re-use are:</P>
+<UL><LI><P>Inheritance;</P>
+</LI>
+<LI><P>Generic inheritance;</P>
+</LI>
+<LI><P>Generic composition.</P></UL>
+<P>Let's take a look at each of these approaches.</P>
+<A NAME="inheritance"><H3>Inheritance </H3></A>
+<P>The new container could derive from an existing standard container, then override certain functions to get the desired behavior.  One approach would be to derive from the <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> container, as shown here:</P>
+<PRE>#include &#60;vector>
+
+// note the use of a namespace to avoid conflicts with standard // or global names
+
+namespace my_namespace {
+
+template &#60;class T, class Allocator = std::allocator>
+class set : public std::vector&#60;T,Allocator>
+{
+public:
+// override functions such as insert
+  iterator insert (iterator position, const T&#38; x)
+  {
+      if (find(begin(),end(),x) == end())
+        return vector&#60;T,Allocator>::insert(position,x);
+      else
+        return end(); // This value already present!
+  }
+_
+
+};
+
+} // End of my_namespace
+
+</PRE>
+<A NAME="genericinheritance"><H3>Generic Inheritance</H3></A>
+<P>A second approach is to create a generic adaptor, rather than specifying <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>.  You do this by providing the underlying container through a template parameter:</P>
+<PRE>namespace my_namespace {
+
+template &#60;class T, class Container = std::vector&#60;T> >
+class set : public Container
+{
+public:
+// Provide typedefs (iterator only for illustration)
+  typedef  typename Container::iterator iterator;
+
+// override functions such as insert
+  iterator insert (iterator position, const T&#38; x)
+  {
+      if (find(begin(),end(),x) == end())
+        return Container::insert(position,x);
+      else
+        return end();  // This value already present!
+  }
+_
+
+};
+
+} // End of my_namespace
+</PRE>
+<P>If you use generic inheritance through an adaptor, the adaptor and users of the adaptor cannot expect more than default capabilities and behavior from any container used to instantiate  it.  If the adaptor or its users expect functionality beyond what is required of a basic container, the documentation must specify precisely what is expected.</P>
+<A NAME="genericcomposition"><H3>Generic Composition</H3></A>
+<P>The third approach uses <I>composition</I> rather than inheritance. (You can see the spirit of this approach in the Standard adaptors <A HREF="../stdref/que_0953.htm"><B><I>queue</I></B></A>, <A HREF="../stdref/pri_2327.htm"><B><I>priority_queue</I></B></A> and <A HREF="../stdref/sta_9602.htm"><B><I>stack</I></B></A>. )  When you use generic composition, you have to implement all of the desired interface.  This option is most useful when you want to limit the behavior of  an adaptor by providing only a subset of the interface provided by the container.</P>
+<PRE>namespace my_namespace {
+
+template &#60;class T, class Container = std::vector&#60;T> >
+class set 
+{
+protected:
+   Container c;
+public:
+// Provide needed typedefs 
+  typedef  typename Container::iterator iterator;
+
+// provide all necessary functions such as insert
+  iterator insert (iterator position, const T&#38; x)
+  {
+      if (find(c.begin(),c.end(),x) == c.end())
+        return c.insert(position,x);
+      else
+        return c.end();  // This value already present!
+  }
+_
+
+};
+
+} // End of my_namespace
+</PRE>
+<P>The advantages of adapting existing containers are numerous.  For instance, you get to reuse the implementation and reuse the specifications of the container that you're adapting.</P>
+<HR>
+<A HREF="ext_4563.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="cre_5716.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

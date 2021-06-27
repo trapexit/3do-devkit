@@ -1,0 +1,82 @@
+#  Example Script to demonstrate Processing Graphics with PPM Tools
+#  David Maynard
+#  The 3DO Comapany
+#  January 6, 1994
+#
+#  This example takes 10 Targa files and creates a 3DO anim file.
+#  
+#  These files were created on an IBM PC using software from 
+#     "Photorealism and Ray Tracing in C"
+#       by Christopher D. Watkins
+#          Stephen B. Coy
+#          and Mark Finlay
+#       (c) 1992 by M&T Publishing, Inc.
+#       ISBN # 1-55851-247-0
+#
+#  These files were ray traced in 24 Bit color and converted 
+#  to TGA (Targa) format on the IBM PC
+#
+#  Lets create an uncoded 16 anim file.
+#
+#   Convert each Targa File to PPM format
+echo "You must have the following MPW tools: "
+echo "    tgatoppm"
+echo "    ppmto3do"
+echo "    makecel"
+echo " availble either in your current directory, or in your MPW search path"
+echo " These tools can be found in the PPMTools folder on the release CD"
+echo " "
+echo "Converting files to PPM format"
+tgatoppm ani00.tga > ani00.ppm
+tgatoppm ani01.tga > ani01.ppm
+tgatoppm ani02.tga > ani02.ppm
+tgatoppm ani03.tga > ani03.ppm
+tgatoppm ani04.tga > ani04.ppm
+tgatoppm ani05.tga > ani05.ppm
+tgatoppm ani06.tga > ani06.ppm
+tgatoppm ani07.tga > ani07.ppm
+tgatoppm ani08.tga > ani08.ppm
+tgatoppm ani09.tga > ani09.ppm
+
+
+#   now convert to .img format
+#    note we MUST use the -c switch to create non-LR form image
+echo "Converting files to 3do image format"
+ppmto3DO -c ani00.ppm  ani00.img
+ppmto3DO -c ani01.ppm  ani01.img
+ppmto3DO -c ani02.ppm  ani02.img
+ppmto3DO -c ani03.ppm  ani03.img
+ppmto3DO -c ani04.ppm  ani04.img
+ppmto3DO -c ani05.ppm  ani05.img
+ppmto3DO -c ani06.ppm  ani06.img
+ppmto3DO -c ani07.ppm  ani07.img
+ppmto3DO -c ani08.ppm  ani08.img
+ppmto3DO -c ani09.ppm  ani09.img
+
+#  Now convert to cel format  using uncoded 16 packed cels
+echo "Converting files to 3do cel format - uncoded 16 bit"
+makecel -b16 -uc ani00.img ani00.cel
+makecel -b16 -uc ani01.img ani01.cel
+makecel -b16 -uc ani02.img ani02.cel
+makecel -b16 -uc ani03.img ani03.cel
+makecel -b16 -uc ani04.img ani04.cel
+makecel -b16 -uc ani05.img ani05.cel
+makecel -b16 -uc ani06.img ani06.cel
+makecel -b16 -uc ani07.img ani07.cel
+makecel -b16 -uc ani08.img ani08.cel
+makecel -b16 -uc ani09.img ani09.cel
+
+#  Now create an animation by concatenating the cel files
+echo "Concatemating cel files into test.ani file"
+catenate ani00.cel ani01.cel ani02.cel ani03.cel ani04.cel ani05.cel ani06.cel ani07.cel ani08.cel ani09.cel > test16.ani
+
+# Now test it out
+echo "Now copy the files /vspics/reef.img and example2"
+echo "   from the Sample Apps & Data folder on the release CD"
+echo "   to your remote folder"
+echo "Then copy the newly created test.ani file into the remote folder"
+echo "Then start up the 3Dodebugger and type"
+echo "   Example2 reef.img test16.ani"
+echo "You can adjust the animation rate by holding down the A button"
+echo "and hitting left to slow down or right arrow to speed up"
+

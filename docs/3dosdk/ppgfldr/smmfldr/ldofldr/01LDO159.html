@@ -1,0 +1,24 @@
+<Title>SetTextCelFormatFlags</Title>
+<A NAME="XREF28435"><H1>SetTextCelFormatFlags </A></H1>
+ Sets text formatting flags.<P>
+<H3>Synopsis</H3>
+<CODE>void SetTextCelFormatFlags (TextCel *tCel, uint32 formatFlags)</CODE><P>
+<H3>Description</H3>
+Sets text formatting options used for subsequent rendering. <P>
+The formatFlags parameter contains one or more formatting options, ORed together.   Available options are: <P>
+ TC_FORMAT_LEFT_JUSTIFY-left-justify text <P>
+ TC_FORMAT_RIGHT_JUSTIFY-right-justify text<P>
+ TC_FORMAT_CENTER_JUSTIFY-center-justify text<P>
+ TC_FORMAT_WORDWRAP-auto-word-wrap text <P>
+Changing the formatting options does not affect pixels already in the cel. You can make a series of calls to <CODE>UpdateTextInCel() </CODE>with the replaceExisting flag set to FALSE, intermixed with calls to <CODE>SetTextCelFormatFlags()</CODE>.   This allows you to create, for example, a paragraph of word-wrapped text, followed by a line of centered text, followed by another word-wrapped paragraph. Turning word wrap on and off at locations other than a paragraph boundary might produce undesirable results. Word wrapping should only be changed immediately following a newline. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>formatFlags
+<DD>New formatting options. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

@@ -1,0 +1,65 @@
+<Title>Task</Title>
+<A NAME="XREF14127"><H1>Task</A></H1>
+<A NAME="XREF23586"> A process.</A> <P>
+<H3>Description</H3>
+A task item contains all the information needed by the kernel to support multitasking. It contains room to store CPU registers when the associated task context goes to sleep, it contains pointers to various resources used by the task, and it specifies the task's priority. There is one task item for every task or thread that exists.<P>
+<H3>Folio</H3>
+kernel<P>
+<H3>Item Type</H3>
+TASKNODE<P>
+<H3>Create Call</H3>
+<CODE><A HREF="./01spr028.html#XREF27054">CreateThread</A>(), <A HREF="./02spr009.html#XREF27642">ExecuteAsThread</A>(), <A HREF="./02spr012.html#XREF40015">LoadProgram</A>(), <A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE><P>
+<H3>Delete</H3>
+<A HREF="./01spr037.html#XREF28597"><CODE>DeleteThread</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE><P>
+<H3>Query</H3>
+<A HREF="./01spr060.html#XREF22836"><CODE>FindTask</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>()</CODE><P>
+<H3>Modify</H3>
+<A HREF="./01spr125.html#XREF39158"><CODE>SetItemOwner</A>(), <A HREF="./01spr126.html#XREF17657">SetItemPri</A>()</CODE><P>
+<H3>Tags</H3>
+CREATETASK_TAG_MAXQ-a value indicating the maximum quanta for the task.<P>
+CREATETASK_TAG_PC-initial PC.<P>
+CREATETASK_TAG_STACKSIZE-the size of a task's call stack.<P>
+CREATETASK_TAG_ARGC-the initial argc value passed to the task when it starts up.<P>
+CREATETASK_TAG_ARGP-the initial argp value passed to the task when it starts up.<P>
+CREATETASK_TAG_SP-initial stack pointer value (thread only).<P>
+CREATETASK_TAG_BASE-the initial r9 value.<P>
+<DL>
+<DT>TAG_ITEM_NAME
+<DD>(char *) Create. Provide a pointer to the name of the task.
+</DL>
+<DL>
+<DT>TAG_ITEM_PRI
+<DD>(uint8) Create. Provide a priority for the taskin the range 10 to 199. If this tag is not given, the task will inherit the priority of the current context.
+</DL>
+<DL>
+<DT>CREATETASK_TAG_PC
+<DD></B>(void *) Create. Provide a pointer to the code to be executed.
+</DL>
+<DL>
+<DT>CREATETASK_TAG_SP 
+<DD>(void *) Create. Provide a pointer to the memory buffer to use as stack for a thread. When this tag is present, a thread is created. If the tag is not present, then a task is created.
+</DL>
+<DL>
+<DT>CREATETASK_TAG_STACKSIZE 
+<DD>(uint32) Create. Specifies the size in bytes of the memory buffer reserved for a thread's stack.
+</DL>
+<DL>
+<DT>CREATETASK_TAG_ARGC 
+<DD>(uint32) Create. A 32-bit value that will be passed to the task or thread being launched as a first argument. If this is omitted, the first argument will be 0.
+</DL>
+<DL>
+<DT>CREATETASK_TAG_ARGP 
+<DD>(void *) Create. A 32-bit value that will be passed to the task or thread being launched as a second argument. If this is omitted, the second argument will be 0.
+</DL>
+<DL>
+<DT>CREATETASK_TAG_USERONLY 
+<DD>Create. Specifies that a thread being launched will not make any folio calls. This will be the case for some threads which are used as pure computation engines. Specifying this tag causes the thread to use fewer system resources (no supervisor stack is allocated), but prevents the task from making any calls to a folio.
+</DL>
+<DL>
+<DT>CREATETASK_TAG_MSGFROMCHILD 
+<DD>(Item) Create. Provides the item number of a message port.  The kernel will send a status message to this port whenever the thread or task being created exits. The message is sent by the kernel after the task has been deleted. The <CODE>msg_Result</CODE> field of the message contains the exit status of the task. This is the value the task provided to <CODE>exit()</CODE>, or the value returned by the task's primary function. The <CODE>msg_DataPtr</CODE> field of the message contains the item number of the task that just terminated. Finally, the <CODE>msg_DataSize</CODE> field contains the item number of the thread or task that terminated the task. If the task exited on its own, this will be the item number of the task itself.  It is the responsibility of the task that receives the status message to delete it when it is no longer needed by using <CODE>DeleteMsg().
+</DL>
+</CODE><DL>
+<DT>CREATETASK_TAG_ALLOCDTHREADSP 
+<DD>Create. When this tag is supplied, it tells the kernel that if this thread dies by itself, by either returning to the kernel or by calling <CODE>exit()</CODE>, then the memory used for its stack must be freed automatically. When this tag is not provided, you are responsible for freeing the stack whenever the thread terminates. 
+</DL>

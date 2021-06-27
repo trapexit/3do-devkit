@@ -1,0 +1,24 @@
+<Title>file</Title>
+<A NAME="XREF13262"><H1>file</A></H1>
+<A NAME="XREF42182"></A> Defines input stream file.<P>
+<H3>Synopsis</H3>
+<CODE>file &lt;input_file&gt; &lt;priority&gt; &lt;time_offset&gt;</CODE><P>
+<H3>Description</H3>
+Defines an input stream file to weave with other input stream files. <P>
+The priority determines the order in which chunks with overlapping times are written to the output stream. Smaller priority numbers are higher. The time offset is similar to the <CODE>streamstarttime</CODE> offset except it offsets only this stream file when weaving it into the output stream. <P>
+The maximum number of files you can weave with Weaver is set to 20 (although the number varies based on the size of the input files). If you need to weave more than twenty files, set <CODE>USE_MAC_IO</CODE> to 1 and recompile Weaver.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>input_file
+<DD>Name of a chunked file to weave.
+</DL>
+<DL>
+<DT>priority
+<DD>Priority in relation to parent task; 0 to 7FFFFFFF (hex). Priority and parent tasks priority should not exceed 200.
+</DL>
+<DL>
+<DT>time_offset
+<DD>Offsets only this stream file when weaving it into the output stream; 0 to 7FFFFFFF (hex), in audio ticks. 
+</DL>
+<H3>Caveats</H3>
+None.<P>

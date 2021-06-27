@@ -1,0 +1,22 @@
+<Title>XCORNERFROMSRECT</Title>
+<A NAME="XREF38961"><H1>XCORNERFROMSRECT </A></H1>
+ Calculates the opposite corner X location for an SRect.<P>
+<H3>Synopsis</H3>
+<CODE>int32 XCORNERFROMSRECT (SRect *rect)</CODE><P>
+<H3>Description</H3>
+ This macro evaluates to the X location for the corner opposite to the
+    corner described by rect->pos.<P>
+This macro evaluates its argument more than once; be careful of side effects. It is usable in expression context. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>rect
+<DD>Pointer to an SRect. 
+</DL>
+<H3>Return Value</H3>
+The X location of the opposite corner. <P>
+<H3>Implementation</H3>
+Macro <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO101.html#XREF11198"><CODE>ICornerFromSRect</A><CODE>, </CODE><A HREF="./01LDO213.html#XREF38828">YCORNERFROMSRECT</A> </CODE><P>

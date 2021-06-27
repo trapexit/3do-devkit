@@ -1,0 +1,21 @@
+<Title>IS_LASTCEL</Title>
+<A NAME="XREF17034"><H1>IS_LASTCEL </A></H1>
+ Determines whether a cel is the last in a list.<P>
+<H3>Synopsis</H3>
+<CODE>Boolean IS_LASTCEL (CCB *ccb)</CODE><P>
+<H3>Description</H3>
+This macro evaluates to TRUE if no cels are linked to ccb, or FALSE if other cels are linked to ccb. <P>
+This macro evaluates its argument more than once; be careful of side effects.   It is usable in expression context. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ccb
+<DD>Pointer to a cel. 
+</DL>
+<H3>Return Value</H3>
+TRUE if no cels are linked to this one; FALSE if cels are linked to this one. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO111.html#XREF14192"><CODE>LastCelInList</A></CODE><P>

@@ -1,0 +1,73 @@
+<Title>DSConnect</Title>
+<A NAME="XREF42517"><H1>DSConnect</A></H1>
+<A NAME="XREF25325">Connects to the DataStreamer.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 DSConnect (Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr, Item acquirePort)</CODE><P>
+<H3>Description</H3>
+Sends a message to the DataStreamer requesting a data acquisition connection. <CODE>DSConnect()</CODE> is normally used to initialize a data acquisition source for a stream or to switch between data acquisition sources. <P>
+<CODE>DSConnect()</CODE> sets the members of the message data structure required to claim the specified DataStreamer port. (The message is the <CODE>DSRequestMsg</CODE> identified by<CODE> reqMsg</CODE>.) If a message is specified, <CODE>DSConnect()</CODE> sends the message and returns immediately. If no message is specified (if <CODE>reqMsg</CODE> is <CODE>NULL</CODE>), <CODE>DSConnect()</CODE> creates a message, sends it to the DataStreamer, and waits until the message has been received before returning.<P>
+When the DataStreamer connects to a new acquisition thread, it sends a disconnect message to the previous acquisition thread.<P>
+Passing NULL as the acquirePort argument causes a disconnect. <P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>msgItem</CODE>
+<DD>Item of the request message.
+</DL>
+<DL>
+<DT><CODE>reqMsg</CODE>
+<DD>Pointer to the <CODE>DSRequestMsg</CODE> message that is formatted and sent to the DataStreamer. A value of <CODE>NULL</CODE> forces creation of an internal <CODE>DSRequestMsg</CODE> message and synchronous operation.
+</DL>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Pointer to the stream context block.
+</DL>
+<DL>
+<DT><CODE>acquirePort</CODE>
+<DD>DataStreamer port to which a connection is requested. If NULL, causes a disconnect.
+</DL>
+<H3>Messages</H3>
+The members of <CODE>reqMsg</CODE> are set to the following values:<P>
+<DL>
+<DT><CODE>whatToDo
+<DD>kDSOpConnect
+</DL>
+<DL>
+<DT><CODE>msg.connect.acquirePort
+<DD>acquirePort</CODE>
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+</DL>
+<DL>
+<DT>(First Free entry in the memory pool)
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSInvalidDSRequest</CODE>
+<DD>Could not acquire port specified by <CODE>acquirePort
+</DL>
+These values are returned if the DataStreamer encounters an error while processing the message request:</CODE><P>
+<DL>
+<DT><CODE>kDSInvalidDSRequest</CODE>
+<DD>Invalid message (<CODE>whatToDo</CODE> set to invalid value)
+</DL>
+<DL>
+<DT><CODE>kDSNoReplyPortErr</CODE>
+<DD>Could not locate item of the reply port
+</DL>
+<DL>
+<DT>-1
+<DD>Could not locate pointer to msgItem
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>SendMsg()</CODE> or <CODE>WaitPort()</CODE> failed
+</DL>
+The DataStreamer checks only the validity of messages if message checking is enabled when the DataStreamer is was compiled (if the <CODE>VALIDATE_REQUEST_CODE</CODE> symbol was enabled). <CODE>DSConnect()</CODE> checks whether it can acquire the specified port only if port checking is enabled when the DataStreamer is compiled (if the <CODE>VALIDATE_CONNECT_PORT</CODE> symbol is enabled).<P>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a listing of error messages returned by <CODE>SendMsg()</CODE> and <CODE>WaitPort()</CODE>.<P>
+<H3>Associated Files</H3>
+DataStreamLib.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR048.html#XREF21532"><CODE>NewDataAcq</A></CODE><P>

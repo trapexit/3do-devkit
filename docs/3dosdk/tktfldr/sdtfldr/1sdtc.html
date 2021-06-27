@@ -1,0 +1,28 @@
+<TITLE>Incorporating 
+sound effects into your title</TITLE>
+<H1><LINK NAME="XREF35299"></LINK><LINK NAME="XREF16640">Incorporating sound 
+effects into your title</LINK></H1><HR>
+Once you're satisfied with the sound effects or music you have produced, a 
+programmer has to incorporate it into the title in the appropriate way. 
+This section explains how sound can be played on the 3DO system. It helps 
+nonprogrammers understand the principles behind audio on the 3DO system 
+and gives references to the appropriate sections of the <I>3DO Portfolio 
+Programmer's Guide</I> for more in-depth coverage. <P>
+<H2>Playing MIDI scores </H2>
+The 3DO system is set up to allow MIDI score playing, which is more 
+interactive than spooling. You can use the ARIA tool to develop synthetic 
+patches (instruments) or to attach sample files to MIDI notes.<P>
+You can attach MIDI notes to synthetic sounds or AIFF samples, depending 
+on RAM availability and system resources. Synthetic instruments take the 
+least amount of RAM, but may result in involve a small processing 
+overhead. On the Toolkit 1.4 CD-ROM (and later), you can find a library of 
+AIFF samples to use in your titles. An overview is provided in 
+<A HREF="sdtBfrst.html#XREF25541">AIFF Samples</A> .<P>
+You can use hierarchical score structures for dramatic construction; for 
+more information, see the documentation on the Music Library.<P>
+<H2>Streaming audio data with the 3DO DataStreamer</H2>
+You can fade or mix several channels of digital audio samples for dramatic 
+purposes, but remember bandwidth limitations. The <I>3DO Data Streamer 
+Programmer's Guide</I> discusses data streaming and provides manpages for 
+all relevant functions in the DataStreamer library. <P>
+<A NAME="XREF42313"></A>

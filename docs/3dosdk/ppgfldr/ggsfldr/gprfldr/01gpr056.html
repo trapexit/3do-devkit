@@ -1,0 +1,24 @@
+<Title>SetBGPen </Title>
+<A NAME="XREF24897"><H1>SetBGPen </A></H1>
+<A NAME="XREF30937"> Sets the background pen of a GrafCon.</A><P>
+<H3>Synopsis</H3>
+<CODE>void SetBGPen (GrafCon *gc,Color c)</CODE><P>
+<H3>Description</H3>
+This call sets the background pen of the specified GrafCon to the specified color. The color value is a coded 15-bit RGB format value, with each 5-bit value acting as an index into the CLUT color registers. After this call, the surrounding white space of text (and other graphical elements that use the background pen) is rendered in the new background color. <P>
+The color values produced by this call are different from the color values produced by <CODE>MakeCLUTColorEntry()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>gc
+<DD>Pointer to a GrafCon structure. 
+</DL>
+<DL>
+<DT>c
+<DD>Value to be stored as the new background pen color. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr043.html#XREF27404"><CODE>MakeRGB15</A>(), <A HREF="./01gpr063.html#XREF41179">SetFGPen</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,21 @@
+<Title>DeleteEnvelope</Title>
+<A NAME="XREF17495"><H1>DeleteEnvelope </A></H1>
+<A NAME="XREF26794"></a> Deletes an envelope created by CreateEnvelope().<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteEnvelope (Item Envelope)</CODE><P>
+<H3>Description</H3>
+This function deletes the specified envelope, freeing its resources. It also deletes any attachments to the envelope. It does not delete the array of DataTimePairs used to define the envelope, which must be freed directly by the task that created it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Envelope
+<DD>Item number of the envelope to delete. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr017.html#XREF13206"><CODE>CreateEnvelope</A>(), <A HREF="./01mpr032.html#XREF27420">DetachEnvelope</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,35 @@
+<Title>DefineSampleHere</Title>
+<A NAME="XREF29821"><H1>DefineSampleHere </A></H1>
+<A NAME="XREF10809"></A> Defines a sample from a data stream.<P>
+<H3>Synopsis</H3>
+<CODE>Item DefineSampleHere( uint8 *AIFFImage, int32 NumBytes,void *(*CustomAllocMem)(), void (*CustomFreeMem)() )</CODE><P>
+<H3>Description</H3>
+This call uses a custom allocation function to allocate memory for a sample buffer.  It then finds an image of an AIFF file contained within a data stream and creates a sample using that image, placing the sample in the allocated memory.  The function specifies a custom memory-deallocation function to be called when the sample is unloaded. <P>
+See the description of <CODE>LoadSampleHere()</CODE> for the parameters passed to the custom memory calls. <P>
+When you finish with the created sample, you should call <CODE>UnloadSample()</CODE> to deallocate its resources.  After you have called <CODE>DefineSampleHere()</CODE>, the image that you have read is no longer needed and can be freed.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>AIFFImage
+<DD>Pointer to the AIFF image in RAM. 
+</DL>
+<DL>
+<DT>NumBytes
+<DD>Value specifying the  number of bytes in the sample. 
+</DL>
+<DL>
+<DT>CustomAllocMem
+<DD>Pointer to a custom memory-allocation function. 
+</DL>
+<DL>
+<DT>CustomFreeMem
+<DD>Pointer to a custom memory-freeing function. 
+</DL>
+<H3>Return Value</H3>
+This returns the item number of the sample or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr024.html#XREF26906"><CODE>DefineInsTemplate</A>() </CODE><P>
+</CODE>

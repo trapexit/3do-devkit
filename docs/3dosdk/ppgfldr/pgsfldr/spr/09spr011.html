@@ -1,0 +1,50 @@
+<Title>Knob </Title>
+<A NAME="XREF23454"></A><A NAME="XREF15386"><H1>Knob </A></H1>
+<A NAME="XREF38147"> An item for adjusting an Instrument's parameters.</A><P>
+<H3>Description</H3>
+A Knob is an Item for adjusting an Instrument's parameters. <P>
+<H3>Folio</H3>
+audio <P>
+<H3>Item Type</H3>
+AUDIO_KNOB_NODE <P>
+<H3>Create</H3>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr049.html#XREF29402">GrabKnob</A>()  </CODE><P>
+<H3>Delete</H3>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr063.html#XREF20424">ReleaseKnob</A>()  </CODE><P>
+<H3>Query</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr043.html#XREF15941">GetAudioItemInfo</A>()  </CODE><P>
+<H3>Modify</H3>
+None <P>
+<H3>Use</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr079.html#XREF16593">TweakKnob</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr080.html#XREF10802">TweakRawKnob</A>()  </CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_CURRENT
+<DD>(int32) Query. Returns the current raw value of knob. 
+</DL>
+<DL>
+<DT>AF_TAG_DEFAULT
+<DD>(int32) Query. Returns the default raw value of knob. 
+</DL>
+<DL>
+<DT>AF_TAG_INSTRUMENT
+<DD>(Item) Create. Specifies from which instrument to grab knob. 
+</DL>
+<DL>
+<DT>AF_TAG_MAX
+<DD>(int32) Query. Returns maximum raw value of knob. 
+</DL>
+<DL>
+<DT>AF_TAG_MIN
+<DD>(int32) Query. Returns minimum raw value of knob. 
+</DL>
+<DL>
+<DT>AF_TAG_NAME
+<DD>(const char *) Create, Query. Knob name. On creation, specifies name of knob to grab. On query, returns a pointer to knob's name. 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./09spr009.html#XREF16655"><CODE>Instrument</A>, <A HREF="./09spr015.html#XREF40705">Probe</A> </CODE><P>
+</CODE>

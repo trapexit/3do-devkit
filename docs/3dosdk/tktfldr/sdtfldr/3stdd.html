@@ -1,0 +1,78 @@
+<TITLE>Interacting with a patch</TITLE>
+<H1><LINK NAME="XREF31632">Interacting with a patch</LINK></H1><HR>
+This document discusses different ways for interacting with a patch. You 
+learn about<P>
+
+<UL>
+<LI><A HREF="#XREF23144">Using the 3DO control pad for input</A>
+<LI><A HREF="#XREF25253">Playing patches from the keyboard</A>
+</UL>
+<A NAME="XREF23144"><H2>Using the 3DO control pad for input</A></H2>
+When you play a patch, ARIA lets you observe the output signal with a 
+simple oscilloscope on the TV monitor and interact with it using the 3DO 
+control pad. To interact with the patch, follow the instructions on-line, 
+shown in Table 1: <P>
+<PRE>
+<B>Table 1: </B><I> Control pad input for interacting with a patch. </I>
+--------------------------------------------------------
+Input                |Result                            
+--------------------------------------------------------
+Move cross left/right|Changes X scale of wave display   
+--------------------------------------------------------
+Move cross up/down   |Changes Y scale of wave display   
+--------------------------------------------------------
+Shift left/right     |Scrolls wave                      
+--------------------------------------------------------
+A button             |Refresh                           
+--------------------------------------------------------
+C button             |Audio Monitor (see next paragraph)
+--------------------------------------------------------
+</PRE>
+<P>
+<H3>Audio Monitor</H3>
+During patch playback, the Audio Monitor displays, in real time, usage of 
+a number of DSP resources. The display shows the usage at the left as a 
+numeric absolute value. A histogram on the right shows the usage as a 
+proportion of the maximum available. If a patch is not working because it 
+exhausts available resources, this histogram helps you find out which 
+resource you have run out of.<P>
+<B>Note: </B>Future versions of 3DO hardware may allocate these resources 
+differently; use them only as a rough guide. <P>
+Here are some of the resources Audio Monitor displays:<P>
+<PRE>
+-------------------------------------------------------
+TKR    |DSP ticks really used at this moment.          
+-------------------------------------------------------
+TKA    |DSP ticks allocated.                           
+-------------------------------------------------------
+COD    |Code memory allocated. Note that this can      
+       |become fragmented.                             
+-------------------------------------------------------
+KNB    |Space for storing knob values.                 
+-------------------------------------------------------
+VAR    |Space for internal temporary variables.        
+-------------------------------------------------------
+InF    |Number of FIFO channels (for example, for      
+       |sample playback).                              
+-------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF25253"><H2>Playing patches from the keyboard</A></H2>
+A 3DO DSP instrument has three phases: start, release, and stop. When you 
+play a patch from the Macintosh keyboard or a MIDI keyboard, the patch is 
+started when you press the key, and released when you release it. The 
+patch is never <I>stopped</I>, so if you have no amplitude envelope to 
+fade out the patch, or if you have an amplitude envelope with a release 
+loop that continues to play after the release point, the note continues to 
+play until you press another key or the space bar.<P>
+ARIA cuts off unstopped notes about 10 seconds after release.<P>
+<H3>Using the Macintosh keyboard for input</H3>
+While you're playing the patch, you can use the Macintosh keyboard as a 
+mini-keyboard to play notes. The second row (q, w, e, and so on) has the 
+black notes, the third row (a, s, d, and so on) the white notes on a 
+piano. <P>
+<H3>Using a MIDI keyboard for input</H3>
+To play a patch from a MIDI keyboard, you must install the Apple MIDI 
+Driver, MIDI manager, and PatchBay, as described in <A 
+HREF="./2sdtb.html#XREF25707">Setup for working with MIDI</A>.<A 
+NAME="XREF29411"></A><P>

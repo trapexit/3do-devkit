@@ -1,0 +1,9 @@
+<TITLE>Transferring Memory to Other Tasks</TITLE>
+<H1>Transferring Memory to Other Tasks</H1><HR>
+The previous section explained how to use <CODE>ControlMem()</CODE> to grant and revoke write access to memory pages. You can also use <CODE>ControlMem()</CODE> to transfer
+ownership of memory pages to other tasks:<P>
+<DL>
+<DD><CODE>Err ControlMem( void *p, int32 size, int32 cmd, Item task )</CODE><BR>
+</DL>
+If the value of the <CODE>cmd</CODE> argument is <CODE>MEMC_GIVE</CODE>, the call gives the memory pages to the task specified by the task argument. In this case, the <CODE>p</CODE> argument, a pointer to a memory location, and the <CODE>size</CODE> argument, the amount of the contiguous memory, in bytes, beginning at the memory location specified by the <CODE>p</CODE> argument, together specify the memory to give away. If these two arguments specify any part of a page, the entire page is given away.<P>
+You can also give memory pages back to the kernel-and thereby return them to the system-wide free memory pool-by calling <CODE>ControlMem()</CODE> as described here, but with 0 as the value of the task argument. Memory pages can be returned to the kernel automatically when a task calls the <CODE>ScavengeMem()</CODE> function described in <A HREF="./05spg004.html#XREF33449">Reclaiming Memory for Other Tasks</A>.<P>

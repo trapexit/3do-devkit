@@ -1,0 +1,24 @@
+<Title>SleepTSec</Title>
+<A NAME="XREF26548"><H1>SleepTSec </A></H1>
+ Sleeps for a number of tenths of a second.<P>
+<H3>Synopsis</H3>
+<CODE>Err SleepTSec (Item ioreq, uint32 tseconds)</CODE><P>
+<H3>Description</H3>
+Puts the calling task in a wait state for the specified number of tenths-of-a-second. The function does not return until the time has passed. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ioreq
+<DD>IOReq item obtained from GetTimerIOReq(), or zero to have an IOReq dynamically created/deleted during the call. 
+</DL>
+<DL>
+<DT>tseconds
+<DD>Number of tenths-of-a-second to sleep. This value can be larger than 10. 
+</DL>
+<H3>Return Value</H3>
+Zero for success, or a negative error code. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO096.html#XREF14731"><CODE>GetTimerIOReq</A> </CODE><P>

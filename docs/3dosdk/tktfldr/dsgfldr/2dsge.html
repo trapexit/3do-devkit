@@ -1,0 +1,67 @@
+<TITLE>Playing back a simple stream</TITLE>
+<H1><LINK NAME="XREF10721">Playing back a simple stream</LINK></H1><HR>
+After you've converted your data and created a stream file, you are ready to play it. The <I>Streaming</I> and <I>Attic</I> folders contain a variety of examples that you can use or modify to play a stream file with your own data. <P>
+This section first lists available example applications, then looks in some more detail at special considerations for certain kinds of data. <P>
+<H2>Playback example applications</H2>
+The following table  lists example applications you can use to stream different kinds of data. You can examine them to better understand data streaming and modify them to suit your own data. <P>
+<PRE>
+<B>Table 1: </B><I> Playback example applications.</I>
+---------------------------------------------------------
+Example   |Description                    |Location      
+---------------------------------------------------------
+NuPlayer  |High level Cinepak movie       |DataStreaming:
+          |playback.                      |version:Exampl
+          |                               |es            
+---------------------------------------------------------
+PlaySAnim |Example of a multi-channel     |DataStreaming:
+          |streamed animation file player.|version:Exampl
+          |                               |es            
+---------------------------------------------------------
+SCelPlayer|Plays woven data streams       |Attic         
+          |containing SCEL-chunk data.    |              
+---------------------------------------------------------
+PlaySA    |Plays streamed audio. It's     |DataStreaming:
+          |possible to have different     |version:Exampl
+          |audio in different channels.   |es            
+---------------------------------------------------------
+TextPlayer|Plays a text stream.           |Attic         
+---------------------------------------------------------
+</PRE>
+<P>
+For each example application, your own program should call the appropriate initialization and rendering functions to play back the data. <P>
+<A NAME="XREF14301"><H3>Example: Streaming compressed video to cels</A></H3>
+If you decide to use the <I>NuPlayer</I> application to draw streamed video to different small cel regions on screen, you need to call the following functions in <I>NuPlayer.c</I>:<P>
+<UL>
+<LI><CODE>InitCPackCel()</CODE> performs setup and initializes several channels, each with its own context structure. It also initializes frame timing information for a particular channel. 
+<p>
+<LI><CODE>GetCPackCel()</CODE> and <CODE>DrawCPakToBuffer()</CODE> actually draw the video to the screen. 
+</UL>
+<A NAME="XREF25998"><H2>Special considerations for different types of data</A></H2>
+For each type of data (video, text, and so on) you want to stream to the 3DO Station, your program needs to make the appropriate subscriber available. The following table provides an overview of different types of data, available chunk types, and the subscriber used to play it. <P>
+<PRE>
+<B>Table 2: </B><I> Available data types, chunk types and subscribers.</I>
+------------------------------------------------------
+Type of    |Chunk type             |Subscriber        
+data       |                       |                  
+------------------------------------------------------
+video      |CPAK                   |CPakSubscriber    
+------------------------------------------------------
+cel/anim   |SCEL                   |SCel subscriber   
+------------------------------------------------------
+cel/anim   |SANM                   |SAnimSubscriber   
+------------------------------------------------------
+AIFF file  |SSND                   |SAudio subscriber 
+------------------------------------------------------
+text       |TEXT                   |Text subscriber   
+------------------------------------------------------
+any data   |JOIN                   |Join subscriber   
+------------------------------------------------------
+           |GOTO, ALRM, PAUS, STOP,|Control subscriber
+           |SYNC                   |                  
+------------------------------------------------------
+</PRE>
+<P>
+<B>Note: </B>A subscriber for playing MIDI score files is planned for the future. Check the 3DO Release Notes for more information.<P>
+<H3>Where to find subscriber examples</H3>
+The subscribers listed in in the table above are either in the <I>Streaming</I> folder or in the <I>Attic </I>folder on the 3DO Toolkit CD-ROM. <I></I><P>
+<P>

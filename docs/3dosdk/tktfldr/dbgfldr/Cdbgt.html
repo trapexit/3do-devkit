@@ -1,0 +1,25 @@
+<TITLE>showmemmap</TITLE>
+<H1><LINK NAME="XREF10766">showmemmap</LINK></H1><HR><P>
+<A NAME="XREF39854"></A>Displays a page map showing used and free memory 
+pages, and showing which task owns which pages.<P>
+<H3>Synopsis</H3>
+<CODE>showmemmap [task name | task item number]</CODE><P>
+<H3>Description</H3>
+Displays a page map on the debugging terminal showing all memory pages in 
+the system, and which task owns each page. <P>
+<H3>Arguments </H3>
+<DL>
+<DT>task name | task item num 
+<DD>Name or item number of a task. The item number can be in decimal or 
+hexadecimal format, starting with 0x or $. When a task is specified, any 
+pages owned by that task will be marked with an asterix. This speeds up 
+finding pages used by a specific task.
+</DL>
+<H3>Implementation</H3>
+Command implemented in shell V20. <P>
+Built-in shell command. <P>
+<H3>Synonyms </H3>
+<CODE>memmap</CODE><P>
+<H3>See Also </H3>
+<A HREF="Cdbgo.html#XREF25877"><CODE>showavailmem</A>, <A 
+HREF="Cdbgs.html#XREF15832">showmemlist</A></CODE><P>

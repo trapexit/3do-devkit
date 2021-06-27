@@ -1,0 +1,12 @@
+<TITLE>Overview</TITLE>
+<H1>Overview</H1><HR>
+EZ Squeeze first converts a "raw" QuickTime image into an internal format.  If the alpha channel contains a transparency mask (see -a option in "Command Line Arguments" below), pixels not protected by the mask are forced to become  transparent (0,0,0), and pixels that are protected by the mask and also transparent are changed to nontransparent  (0,0,1).  The source image is encoded and the results are written to the output stream.  As in processing Cinepak video with MovieToStream, the EZ Squeeze output stream is formatted to input to the DataStream Weaver tool.  Options to control frame rate and compression quality are described in "Command Line Arguments."<P>
+This Beta version is useful for compressing headshots, small-frame video, and blue-screen video. Homogeneous areas are handled separately, so blue-screen video can use a large format frame if the foreground content does not exceed the pixel capacity of the decoder.<P>
+<H2>Caveats </H2>
+The primary limitation of this version is its data rate. EZ Squeeze handles an image size of 156 x 208 pixels at approximately 15 frames per second. Larger images require lower frame rates and smaller images allow faster rates.<P>
+EZ Squeeze works on the Red, Green, and Blue (RGB) color space.  Two types of artifacts may be noticeable: jagged edges and slight color bleed.  Both can be controlled, though not eliminated, by adjusting compression parameters.<P>
+Compressing extremely dark images with a small dynamic range with EZ Squeeze is difficult, partly because the standard 3DO color palette doesn't produce these images well. Adjusting certain parameters will improve the image quality somewhat, but these scenes remain difficult.<P>
+<H2>Audience</H2>
+EZ Squeeze is for programmers familiar with data streaming and Cinepak.<P>
+<H2>Updates</H2>
+Updates to the EZ Squeeze package will be posted to the 3DO BBS; please check there for the latest versions of the code.<P>

@@ -1,0 +1,36 @@
+<Title>Cue </Title>
+<A NAME="XREF27124"><H1>Cue </A></H1>
+<A NAME="XREF37772"> Audio Cue Item.</A><P>
+<H3>Description</H3>
+This Item type is used to receive completion notification from the Audio folio for these kinds of operations: <P>
+sample playback completion <P>
+envelope completion <P>
+audio timer request completion <P>
+Each Cue has a signal bit associated with it. Because signals are task-relative, Cues cannot be shared between multiple tasks. <P>
+<H3>Folio</H3>
+audio <P>
+<H3>Item Type</H3>
+AUDIO_CUE_NODE <P>
+<H3>Create</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr015.html#XREF24403">CreateCue</A>()  </CODE><P>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()  </CODE><P>
+<H3>Delete</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr026.html#XREF10734">DeleteCue</A>()  </CODE><P>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()  </CODE><P>
+<H3>Query</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr046.html#XREF11073">GetCueSignal</A>()  </CODE><P>
+<H3>Modify</H3>
+None <P>
+<H3>Use</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr002.html#XREF41864">AbortTimerCue</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr056.html#XREF24049">MonitorAttachment</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr069.html#XREF10773">SignalAtTime</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr071.html#XREF19984">SleepUntilTime</A>()  </CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>None
+<DD> 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./09spr001.html#XREF27996"><CODE>Attachment</A> </CODE><P>
+</CODE>

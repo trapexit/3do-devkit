@@ -1,0 +1,497 @@
+<HTML><HEAD><TITLE>Numeric Limit Members</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Numeric Limit Members</H2>
+<P>Since a number of the fields in the <SAMP>numeric_limits</SAMP> structure are meaningful only for floating point values, it is useful to separate the description of the members into common fields and floating-point specific fields.</P>
+<A NAME="memberscommontoalltypes"><H3>Members Common to All Types</H3></A>
+<P>The following table summarizes the information available through the <A HREF="../stdref/num_5679.htm"><B><I>numeric_limits</I></B></A> static member data fields and functions.</P>
+<CENTER><TABLE BORDER CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+Type<BR>
+</TD>
+
+<TD>
+Name<BR>
+</TD>
+
+<TD>
+Meaning <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>is_specialized</SAMP><BR>
+</TD>
+
+<TD>
+true if a specialization exists, false otherwise <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>min()</SAMP><BR>
+</TD>
+
+<TD>
+smallest finite value<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>max()</SAMP><BR>
+</TD>
+
+<TD>
+largest finite value<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>radix</SAMP><BR>
+</TD>
+
+<TD>
+the base of the representation<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>digits</SAMP><BR>
+</TD>
+
+<TD>
+number of <SAMP>radix</SAMP> digits that can be represented without change<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>digits10</SAMP><BR>
+</TD>
+
+<TD>
+number of base-10 digits that can be represented without change<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>is_signed</SAMP><BR>
+</TD>
+
+<TD>
+true if the type is signed<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>is_integer</SAMP><BR>
+</TD>
+
+<TD>
+true if the type is integer<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>is_exact</SAMP><BR>
+</TD>
+
+<TD>
+true if the representation is exact<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>is_bounded</SAMP><BR>
+</TD>
+
+<TD>
+true if representation is finite<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>is_modulo</SAMP><BR>
+</TD>
+
+<TD>
+true if type is modulo<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>traps</SAMP><BR>
+</TD>
+
+<TD>
+true if trapping is implemented for the type<BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<P>Radix represents the internal base for the representation.  For example, most machines use a base 2 radix for integer data values, however some may also support a representation, such as BCD, that uses a different base.  The <SAMP>digits</SAMP> field then represents the number of such radix values that can be held in a value.  For an integer type, this would be the number of non-sign bits in the representation.</P>
+<P>All fundamental types are bounded.  However, an implementation might choose to include, for example, an infinite precision integer package that would not be bounded.</P>
+<P>A type is <I>modulo</I> if the value resulting from the addition of two values can wrap around, that is, be smaller than either argument. The fundamental unsigned integer types are all modulo.</P>
+<A NAME="membersspecifictofloatingpointvalues"><H3>Members Specific to Floating Point Values</H3></A>
+<P>The following members are either specific to floating point values, or have a meaning slightly different for floating point values than the one described earlier for non-floating data types.</P>
+<CENTER><TABLE BORDER CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+Type<BR>
+</TD>
+
+<TD>
+Name<BR>
+</TD>
+
+<TD>
+Meaning<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>min()</SAMP><BR>
+</TD>
+
+<TD>
+the minimum positive normalized value<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>digits</SAMP><BR>
+</TD>
+
+<TD>
+the number of digits in the mantissa<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>radix</SAMP><BR>
+</TD>
+
+<TD>
+the base (or radix) of the exponent representation<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>epsilon()</SAMP><BR>
+</TD>
+
+<TD>
+the difference between 1 and the least representable value greater than 1<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>round_error()</SAMP><BR>
+</TD>
+
+<TD>
+a measurement of the rounding error<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>min_exponent</SAMP><BR>
+</TD>
+
+<TD>
+minimum negative exponent<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>min_exponent10</SAMP><BR>
+</TD>
+
+<TD>
+minimum value such that 10 raised to that power is in range<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>max_exponent</SAMP><BR>
+</TD>
+
+<TD>
+maximum positive exponent<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>max_exponent10</SAMP><BR>
+</TD>
+
+<TD>
+maximum value such that 10 raised to that power is in range<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>has_infinity</SAMP><BR>
+</TD>
+
+<TD>
+true if the type has a representation of positive infinity<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>infinity()</SAMP><BR>
+</TD>
+
+<TD>
+representation of infinity, if available<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>has_quiet_NaN</SAMP><BR>
+</TD>
+
+<TD>
+true if there is a representation of a quiet ``Not a Number"<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>quiet_NaN()</SAMP><BR>
+</TD>
+
+<TD>
+representation of quiet NaN, if available<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>has_signaling_NaN</SAMP><BR>
+</TD>
+
+<TD>
+true if there is a representation for a signaling NaN<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>signaling_NaN()</SAMP><BR>
+</TD>
+
+<TD>
+representation of signaling NaN, if available<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>has_denorm</SAMP><BR>
+</TD>
+
+<TD>
+true if the representation allows denormalized values<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>T</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>denorm_min()</SAMP><BR>
+</TD>
+
+<TD>
+Minimum positive denormalized value <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>is_iec559</SAMP><BR>
+</TD>
+
+<TD>
+true if representation adheres to IEC 559 standard.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>tinyness_before</SAMP><BR>
+</TD>
+
+<TD>
+true if tinyness is detected before rounding<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>&nbsp;</TD>
+
+<TD>
+<SAMP>round_style</SAMP><BR>
+</TD>
+
+<TD>
+rounding style for type<BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<P>For the <SAMP>float </SAMP>data type, the value in field <SAMP>radix</SAMP>, which represents the base of the exponential representation, is equivalent to the symbolic constant <SAMP>FLT_RADIX</SAMP>.</P>
+<P>For the types <SAMP>float, double</SAMP> and <SAMP>long double</SAMP> the value of <SAMP>epsilon</SAMP> is also available as <SAMP>FLT_EPSILON, DBL_EPSILON</SAMP>, and <SAMP>LDBL_EPSILON</SAMP>.</P>
+<P>A NaN is a "Not a Number."  It is a representable value that nevertheless does not correspond to any numeric quantity.  Many numeric algorithms manipulate such values.</P>
+<P>The IEC 559 standard is a standard approved by the International Electrotechnical Commission.  It is the same as the IEEE standard 754.</P>
+<P>Value returned by the function <SAMP>round_style()</SAMP> is one of the following: <SAMP>round_indeterminate, round_toward_zero, round_to_nearest, round_toward_infinity</SAMP>, or<SAMP> round_toward_neg_infinity.</SAMP></P>
+<HR>
+<A HREF="fun_3734.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="glo_3764.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

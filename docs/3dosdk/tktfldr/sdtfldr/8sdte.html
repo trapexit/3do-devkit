@@ -1,0 +1,29 @@
+<TITLE>LoadSample</TITLE>
+<H1><LINK NAME="XREF16747">LoadSample</LINK></H1><HR>
+<A NAME="XREF18245"><H1>LoadSample</A></H1>
+<A NAME="XREF14976"> Loads an AIFF sample file</A><P>
+<H3>Synopsis</H3>
+<CODE>LoadSample &lt;symbol&gt; &lt;file name&gt;</CODE><P>
+<H3>Argument</H3>
+<DL>
+<DT>&lt;symbol&gt;
+<DD>New symbol in the sample name space to give this 
+<DD>
+<DD>sample.
+</DL>
+<DL>
+<DT>&lt;file name&gt;
+<DD>Name of an AIFF sample file to load.
+</DL>
+<H3>Examples</H3>
+The following shows a patch file that uses <CODE>LoadSample</CODE>.<P>
+<CODE>
+<PRE>
+LoadSample horn trumpet.aiff                                ; load the sample file named 
+                                ; trumpet.aiff                             and call it horn
+                                ; (for later attachment to sample
+                                ; player instruments).
+</CODE>
+</PRE>
+<H3>See Also</H3>
+<CODE>AttachSample</CODE><P>

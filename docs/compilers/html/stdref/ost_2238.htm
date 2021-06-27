@@ -1,0 +1,102 @@
+<HTML><TITLE>ostream_iterator</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>ostream_iterator</H2>
+<HR><PRE>     Iterator</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Stream iterators  provide  iterator capabilities for ostreams and istreams.  They allow generic algorithms to be used directly on streams.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Constructors"><LI>Constructors</LI></A>
+<A HREF="#Destructor"><LI>Destructor</LI></A>
+<A HREF="#Operators"><LI>Operators</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;iterator></PRE>
+<PRE>
+template &#60;class T>
+class <B>ostream_iterator</B> : public output_iterator;</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Stream iterators provide the standard iterator interface for input and output streams.</P>
+<P>The class <B><I>ostream_iterator</B></I>  writes elements to an output stream.  If  you use the constructor that has a second, <SAMP>char *</SAMP> argument, then that string will  be  written  after  every element .  (The string must be null-terminated.) Since an ostream iterator is an output iterator, it is not possible to get an element out of the iterator.  You can only assign to it.</P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class T>
+ class ostream_iterator  :  public  output_iterator 
+{
+
+ public:
+    ostream_iterator(ostream&#38;);
+    ostream_iterator (ostream&#38;, const char*); 
+    ostream_iterator (const ostream_iterator&#60;T>&#38;);
+    ~ostream_itertor ();
+    ostream_iterator&#60;T>&#38; operator=(const T&#38;);
+    ostream_iterator&#60;T>&#38; operator* () const;
+    ostream_iterator&#60;T>&#38; operator++ ();
+    ostream_iterator&#60;T>  operator++ (int);
+ };
+</PRE>
+<A NAME="Constructors"><H3>Constructors</H3></A>
+<PRE><B>ostream_iterator</B> (ostream&#38; s);</PRE>
+<UL><P>Construct an<B><I> ostream_iterator</B></I> on the given stream.</P>
+</UL>
+<PRE><B>ostream_iterator</B> (ostream&#38; s, const char* delimiter);</PRE>
+<UL><P>Construct an<B><I> ostream_iterator</B></I> on the given stream.  The null terminated string delimitor is written to the stream after every element.</P>
+</UL>
+<PRE><B>ostream_iterator</B> (const ostream_iterator&#60;T>&#38; x);</PRE>
+<UL><P> Copy constructor.</P>
+</UL>
+<A NAME="Destructor"><H3>Destructor</H3></A>
+<PRE><B>~ostream_iterator</B> ();</PRE>
+<UL><P> Destructor</P>
+</UL>
+<A NAME="Operators"><H3>Operators</H3></A>
+<PRE>const T&#38; 
+<B>operator= </B>(const T&#38; value);</PRE>
+<UL><P> Shift the value <SAMP>T</SAMP> onto the output stream.</P>
+</UL>
+<PRE>const T&#38; ostream_iterator&#60;T>&#38; 
+<B>operator*</B> ();
+ostream_iterator&#60;T>&#38;  
+<B>operator++</B>();
+ostream_iterator&#60;T>
+<B>operator++ </B>(int);</PRE>
+<UL><P>These operators all do nothing.  They simply allow  the iterator to be used in common constructs.</P>
+</UL>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE> #include &#60;iterator></PRE>
+<PRE> #include &#60;numeric>
+ #include &#60;deque>
+ #include &#60;iostream.h>
+ int main ()
+ {
+   //
+   // Initialize a vector using an array.
+   //
+   int arr[4] = { 3,4,7,8 };
+   int total=0;
+   deque&#60;int> d(arr+0, arr+4);
+   //
+   // stream the whole vector and a sum to cout
+   //
+   copy(d.begin(),d.end()-1,<B>ostream_iterator</B>&#60;int>(cout," + "));
+   cout &#60;&#60; *(d.end()-1) &#60;&#60; " = " &#60;&#60;
+          accumulate(d.begin(),d.end(),total) &#60;&#60; endl;
+   return 0;
+ }
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you will need to write :</P>
+<P><SAMP>deque&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>deque&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="ist_4337.htm"><B><I>istream_iterator</B></I></A>, <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A></P>
+<HR>
+<A HREF="ope_9743.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Out_3702.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

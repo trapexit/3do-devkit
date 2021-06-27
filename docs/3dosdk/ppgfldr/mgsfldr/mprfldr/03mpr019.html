@@ -1,0 +1,18 @@
+<Title>envfollower.dsp</Title>
+<A NAME="XREF39052"><H1>envfollower.dsp </A></H1>
+<A NAME="XREF14045"></A> Track the contour of a signal.<P>
+<H3>Function</H3>
+This instrument tracks the positive peaks of an input signal.  It decays exponentially based on the droop factor.  It outputs a fairly smooth signal that can be used to control other signals. <P>
+<H3>Knobs</H3>
+Droop  - -$0 =&gt;  $7FFF, default = $7FF0 = number to multiply previous result by to generate exponential decay.  Higher numbers give slower decay. <P>
+<H3>Inputs</H3>
+Input<P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 15 <P>
+N memory = 15 words <P>

@@ -1,0 +1,32 @@
+<Title>Folio</Title>
+<A NAME="XREF34028"><H1>Folio</A></H1>
+<A NAME="XREF19633"> A family of function calls.</A> <P>
+<H3>Description</H3>
+A folio is a family of function calls available in the Portfolio operating system.<P>
+Folios provide a standard way to package groups of related functions. Portfolio is composed of a number of folios, such as the kernel folio, the graphics folio, and the compression folio. Some folios are permanent, such as the kernel folio, while other are demand-loaded, which means they only exist when they are needed.<P>
+You can create folios for your own use. It is a convenient way to share code amongst multiple independant tasks or threads.<P>
+<H3>Folio</H3>
+kernel<P>
+<H3>Item Type</H3>
+FOLIONODE<P>
+<H3>Create</H3>
+<A HREF="./01spr022.html#XREF15505"><CODE>CreateItem</A>(), CreateNamedItem(), CreateVersionedItem()</CODE><P>
+<H3>Delete</H3>
+<A HREF="./01spr032.html#XREF18938"><CODE>DeleteItem</A>()</CODE><P>
+<H3>Query</H3>
+<A HREF="./01spr050.html#XREF25448"><CODE>FindItem</A>(), <A HREF="./01spr049.html#XREF42557">FindFolio</A>(), <A HREF="./01spr055.html#XREF11199">FindNamedNode</A>(), <A HREF="./01spr061.html#XREF25874">FindVersionedItem</A>()</CODE><P>
+<H3>Modify</H3>
+<A HREF="./01spr104.html#XREF35423"><CODE>OpenItem</A>(), <A HREF="./01spr016.html#XREF39128">CloseItem</A>(), <A HREF="./01spr046.html#XREF40895">FindAndOpenItem</A>(), <A HREF="./01spr045.html#XREF17023">FindAndOpenFolio</A>()</CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>CREATEFOLIO_TAG_NUSERVECS
+</DL>
+<DL>
+<DT>(uint32) Create. This value indicates the number of elements in the function table.
+</DL>
+<DL>
+<DT>CREATEFOLIO_TAG_USERFUNCS
+</DL>
+<DL>
+<DT>(void *) Create. A pointer to a table of function pointers. Once the folio is created, clients of the folio will be able to call the functions within this table.
+</DL>

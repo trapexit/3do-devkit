@@ -1,0 +1,42 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut08_saw_pulse_svf.patch,v 1.2 1994/10/26 21:36:42 peabody Exp $
+;*
+;*  Tutorial 8: Impulse wave through filter
+;*
+;*  triangle_lfo modulates impulse frequency
+;*  sawtooth modulates filter frequency
+;*
+;******************************************************************************
+
+    ; oscillator
+LoadInstrument osc impulse.dsp
+LoadInstrument tri triangle_lfo.dsp
+LoadInstrument saw sawtooth.dsp
+LoadInstrument svf svfilter.dsp
+LoadInstrument mod1 timesplus.dsp
+LoadInstrument mod2 timesplus.dsp
+LoadInstrument out directout.dsp
+
+Tweak osc Amplitude 26000
+Tweak svf Resonance  3000
+Tweak saw Frequency     5        ; svf modulation rate
+Tweak saw Amplitude 32767
+Tweak mod1 InputB 3000           ; svf modulation amount
+Tweak mod1 InputC 5000           ; svf modulation bias
+Tweak tri  Frequency 1200        ; fr modulation rate
+Tweak mod2 InputB 200            ; fr modulation amount
+Tweak mod2 InputC 300            ; fr modulation bias
+
+Connect     saw  Output      mod1 InputA
+Connect     mod1 Output      svf  Frequency   ; modulation destination
+Connect     tri  Output      mod2 InputA
+Connect     mod2 Output      osc  Frequency   ; modulation destination
+
+Connect osc Output svf Input
+Connect svf Output out InputLeft
+Connect svf Output out InputRight

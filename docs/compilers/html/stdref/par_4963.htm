@@ -1,0 +1,100 @@
+<HTML><TITLE>partial_sort</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>partial_sort</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Templated algorithm for sorting collections of entities.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class RandomAccessIterator>
+ void <B>partial_sort</B> (RandomAccessIterator first,
+                    RandomAccessIterator middle,
+                    RandomAccessIterator last);
+template &#60;class RandomAccessIterator, class Compare>
+ void <B>partial_sort</B> (RandomAccessIterator first,
+                    RandomAccessIterator middle, 
+                    RandomAccessIterator last, Compare comp);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>partial_sort</B></I> algorithm takes the range <SAMP>[first,last)</SAMP> and places the  first <SAMP>middle - first</SAMP> values into sorted order.  The result is that the range <SAMP>[first, middle)</SAMP>is sorted like it would be if the entire range <SAMP>[first,last)</SAMP> were sorted.  The remaining elements in the range (those in <SAMP>[middle, last)</SAMP>) are not in any defined order.  The first version of the algorithm uses less than (<SAMP>operator&#60;</SAMP>) as the comparison operator for the sort.  The second version uses the comparision function <SAMP>comp.</SAMP></P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P><B><I>partial_sort</B></I> does approximately<SAMP> (last  - first) * log(middle-first) </SAMP>comparisons.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// partsort.cpp
+//
+#include &#60;vector>
+#include &#60;algorithm>
+#include &#60;iostream.h>
+int main()
+ {
+   int d1[20] = {17, 3,  5,  -4, 1, 12, -10, -1, 14, 7,
+                 -6, 8, 15, -11, 2, -2,  18,  4, -3, 0};
+   //
+   // Set up a vector.
+   //
+   vector&#60;int> v1(d1+0, d1+20);
+   //
+   // Output original vector.
+   //
+   cout &#60;&#60; "For the vector: ";
+   copy(v1.begin(), v1.end(), ostream_iterator&#60;int>(cout," "));
+   //
+   // Partial sort the first seven elements.
+   //
+   <B>partial_sort</B>(v1.begin(), v1.begin()+7, v1.end());
+   //
+   // Output result.
+   //
+   cout &#60;&#60; endl &#60;&#60; endl &#60;&#60; "A partial_sort of seven elements   
+                            gives: "
+        &#60;&#60; endl &#60;&#60; "     ";
+   copy(v1.begin(), v1.end(), ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl;
+   //
+   // A vector of ten elements.
+   //
+   vector&#60;int> v2(10, 0);
+   //
+   // Sort the last ten elements in v1 into v2.
+   //
+   partial_sort_copy(v1.begin()+10, v1.end(), v2.begin(),  
+                     v2.end());
+   //
+   // Output result.
+   //
+   cout &#60;&#60; endl &#60;&#60; "A partial_sort_copy of the last ten elements 
+                    gives: "
+        &#60;&#60; endl &#60;&#60; "     ";
+   copy(v2.begin(), v2.end(), ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl;
+   return 0;
+ }
+Output :
+For the vector: 17 3 5 -4 1 12 -10 -1 14 7 -6 8 15 -11 2 -2 18 4 -3 0
+A partial_sort of seven elements gives:
+     -11 -10 -6 -4 -3 -2 -1 17 14 12 7 8 15 5 3 2 18 4 1 0
+A partial_sort_copy of the last ten elements gives:
+     0 1 2 3 4 5 7 8 15 18
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always provide the <SAMP>Allocator</SAMP> template argument.  For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="sor_1439.htm"><B><I>sort</B></I></A>, <A HREF="sta_5767.htm"><B><I>stable_sort</B></I></A>, <A HREF="par_1563.htm"><B><I>partial_sort_copy</B></I></A></P>
+<HR>
+<A HREF="pai_5818.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="par_1563.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

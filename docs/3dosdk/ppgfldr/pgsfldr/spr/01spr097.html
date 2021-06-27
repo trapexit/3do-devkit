@@ -1,0 +1,36 @@
+<TITLE>LockItem</TITLE>
+<A NAME="XREF32838"><H1>LockItem </A></H1>
+<A NAME="XREF12727"></A>Locks an item.<P>
+<H3>Synopsis</H3>
+<CODE>int32 LockItem( Item s, uint32 flags )</CODE><P>
+<H3>Description</H3>
+This procedure locks an item. <P>
+<B>Note: </B> Currently, semaphores are the only items that can be locked. You can lock semaphores by calling <CODE>LockSemaphore()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>s
+<DD>The number of the item to be locked. 
+</DL>
+<DL>
+<DT>flags
+<DD>Semaphore flags. 
+</DL>
+Only one flag is currently defined: <P>
+<DL>
+<DT>SEM_WAIT
+<DD>If the item to be locked is already locked, put the calling task into wait state until the item is available. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 1 if the item was successfully locked. If the item is already locked and the SEM_WAIT flag is not set (which indicates that the calling task does not want to wait until the item is available), the procedure returns 0. If an error occurs, the procedure returns an error code. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+This is the same SWI as <CODE>LockSemaphore()</CODE> <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr032.html#XREF18938"><CODE>DeleteItem</A>(), <A HREF="./01spr129.html#XREF25491">UnlockItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF32838"></LINK></H1><HR>

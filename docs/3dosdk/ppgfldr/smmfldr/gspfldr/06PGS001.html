@@ -1,0 +1,60 @@
+<TITLE>Accessing Low Memory</TITLE>
+<H1>Accessing Low Memory</H1><HR>
+<H3>What is it:</H3>
+Accessing the low area of memory reserved for the system in inappropriate ways. This often, but not always, involves using the return value of a system or user function as the base address for a structure without checking whether that value was NULL.<P>
+<H3>Why it's bad:</H3>
+Even though titles that access low memory may run without errors on the current 3DO player, they may not work on future hardware for two reasons:<P>
+Hardware provided by different manufacturers may return different values upon low memory access. Even if a title accidentally makes the right decision based on the value returned from low memory on current hardware, the value returned from low memory will be different on future hardware. <P>
+Future hardware or operating system releases may not allow low memory access at all. <P>
+<H3>What to do</H3>
+Check your title for low memory access using a 3DO Station with a low memory board installed.<P>
+<H2>Example and Discussion</H2>
+This section discusses: <P>
+
+<UL>
+<LI><A HREF="#XREF34618">Software Requirements for Low Memory Detection</A> 
+<LI><A HREF="#XREF19366">The Detection Process</A>
+</UL>
+<A NAME="XREF34618"><H3>Software Requirements for Low Memory Detection</A></H3>
+To detect and remove low memory pointers, you need the following:<P>
+<UL>
+<LI>A version of your application. You can work with a development version, a cdrom.image file, or a CD-ROM.
+<p>
+<LI>The symbols file for your program. You need this file to more easily understand where your program contains pointers to low memory. 
+<p>
+<LI>The 3DO Debugger 1.9b5 or later.
+<p>
+<LI>The 3DO operating system 1.3.1 or later. 
+</UL>
+<A NAME="XREF19366"><H3>The Detection Process</A></H3>
+With all required files available, go through the following steps: <P>
+<OL>
+<LI>Run your application from the Debugger on the machine with the low memory detection board. 
+<p>
+<LI>Make sure you have the following windows open: 
+<p>
+<UL>
+<LI>Terminal window
+<LI>Disassembly window
+<LI>Register window
+<LI>Source window
+</UL><BR>
+<LI>If you can test all parts of your application with no problem, no additional action is necessary. 
+<p>
+<LI>If the program accesses low memory, it aborts at the area responsible with 
+the following message: 
+<p>
+ <DL>
+<DD><CODE>3DO Debug: Abort (Dat) = PC@<I>address</CODE></CODE>
+</DL>
+<p>
+<p>where <CODE>address</CODE> is the point in the program where the problem 
+occurred. 
+<p>
+<p>If you now look at the Disassembly window and Register window, you are likely to find that the title stopped at a Register 0. 
+<p>
+<p>If you look at the Source window, you are likely to find an error return value. In most cases, that means you have to modify your source code to check for NULL. 
+<p>
+
+<LI>You can now note of the problem location for later correction and attempt to continue from the Debugger, repeating that process until you have found all instances of low memory access. In some cases, for example, if the access happens during a loop, you may have to fix one problem and recompile your application before you can continue. 
+</OL>

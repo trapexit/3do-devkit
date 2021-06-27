@@ -1,0 +1,24 @@
+<TITLE>The Video Display List Processor</TITLE>
+<H1><LINK NAME="XREF29857">The Video Display List Processor</LINK></H1><HR>
+The Graphics folio component that controls the display generator is the 
+video display list processor (VDLP). It reads the display control commands 
+in the video display list (VDL), and executes them according to their 
+timing: Each command is linked to one line in the video display. During 
+each horizontal blank, the VDLP checks to see what commands in the VDL 
+need to be executed, and then executes them.<P>
+The display control commands sets the display mode of the frame buffer, 
+change the contents of the custom CLUT set registers, set the pointer to 
+the location of the frame buffer, and do much more. You'll find details in 
+the graphics programming chapters that follow this one.<P>
+In 3DO Portfolio's multitasking environment, multiple tasks can have 
+something to display on the screen at the same time. The VDLP recognizes 
+only one task as the display owner and only allows that task full control, 
+setting CLUT registers and performing other display alterations. Other 
+tasks are subordinate display users and operate under the parameters set 
+by the display owner; they can modify only a small and limited set of 
+display parameters.<P>
+This brings us to the end of the detailed look at the display generator. 
+You'll find programming information about the display generator in <A 
+HREF="./4gpg.html#XREF35750">Using the Display 
+Generator</A>. The next chapter is another overview chapter, this one 
+containing details about the cel engine.<P>

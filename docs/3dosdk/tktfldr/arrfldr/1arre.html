@@ -1,0 +1,321 @@
+<TITLE>Standard implementation definition </TITLE>
+<H1><LINK NAME="XREF27918"></LINK><LINK NAME="XREF25744"></LINK><LINK NAME="XREF40061"></LINK><LINK NAME="XREF12164">Standard implementation definition </LINK></H1><HR>
+This section discusses aspects of the ARM C compiler and ANSI C library not defined by the ANSI C standard, and which are implementation-defined.<P>
+Appendix A.6 of the ANSI C standard collects together information about portability issues; section A.6.3 lists those points which must be defined by each implementation. This section corresponds to appendix A.6.3, dealing with the points listed there, under the same headings and in the same order.<P>
+<H2>Translation </H2>
+Diagnostic messages produced by the compiler are of the form:<P>
+<CODE>
+<PRE>
+"source-file", line-number: severity: explanation
+</CODE>
+</PRE>
+where <I>severity</I> is one of:<P>
+<UL>
+<LI>Warning-not a diagnostic in the ANSI sense, but an attempt by the compiler to be helpful.
+<p>
+<LI><I></I>Error-a violation of the ANSI specification from which the compiler was able to recover by guessing the user's intentions.
+<p>
+<LI><I></I>Serious error-a violation of the ANSI specification from which no recovery was possible because the compiler could not reliably guess what was intended.
+<p>
+<LI><I></I>Fatal (for example, not enough memory)-not really a diagnostic but an indication that the compiler's limits have been exceeded or that the compiler has detected a fault in itself.
+</UL>
+<H2>Environment </H2>
+The mapping of a command line from the ARM-based environment into arguments to <CODE>main()</CODE> is implementation-specific. The generic ARM C library supports the following:<P>
+<UL>
+<LI>The arguments given to <CODE>main()</CODE> are the words of the <I>command line</I> (not including I/O redirections, covered below), delimited by white space, except where the white space is contained in double quotes. A white space character is any character of which <CODE>isspace()</CODE> is true. A double quote or backslash character (\) inside double quotes must be preceded by a backslash character. An I/O redirection will not be recognised inside double quotes.
+</UL>
+In an unhosted implementation of the ARM C library, the term <I>interactive device </I>may be meaningless. The generic ARM C library supports a pair of devices, both called <I>:tt</I>, intended to handle a keyboard and a VDU screen. In the generic implementation:<P>
+<UL>
+<LI>No buffering is done on any stream connected to :tt unless I/O redirection has taken place. If I/O redirection other than to :tt has taken place, full file buffering is used except where both stdout and stderr have been redirected to the same file, in which case line buffering is used.
+</UL>
+Using the generic ARM C library, the standard input, output and error streams, <I>stdin</I>, <I>stdout</I>, and <I>stderr</I> can be redirected at run time in the way shown. For example, if <I>mycopy</I> is a program which simply copies the standard input to the standard output, the following line: <P>
+<CODE>
+<PRE>
+mycopy &lt; infile &gt; outfile 2&gt; errfile
+</CODE>
+</PRE>
+runs the program, redirecting stdin to the file <I>infile</I>, stdout to the file <I>outfile</I>, and stderr to the file <I>errfile</I>.<P>
+The following shows the allowed redirections:<P>
+<PRE>
+--------------------------------------------------------
+0&lt; filename    |read stdin from filename                
+--------------------------------------------------------
+&lt; filename     |read stdin from filename                
+--------------------------------------------------------
+               |                                        
+--------------------------------------------------------
+1&gt; filename    |write stdout to filename                
+--------------------------------------------------------
+&gt; filename     |write stdout to filename                
+--------------------------------------------------------
+               |                                        
+--------------------------------------------------------
+2&gt; filename    |write stderr to filename                
+--------------------------------------------------------
+2&gt;&amp;1       |write stderr to same place as stdout    
+--------------------------------------------------------
+               |                                        
+--------------------------------------------------------
+&gt;&amp;         |write both stdout and stderr to filename
+filename       |                                        
+--------------------------------------------------------
+&gt;&gt;          |append stdout to filename               
+filename       |                                        
+--------------------------------------------------------
+&gt;&gt;&amp;     |append both stdout and stderr to        
+filename       |filename                                
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Identifiers</H2>
+256 characters are significant in identifiers without external linkage. Allowed characters are letters, digits, and underscores.<P>
+256 characters are significant in identifiers with external linkage. Allowed characters are letters, digits, and underscores.<P>
+Case distinctions<I> </I><I>are</I> significant in identifiers with external linkage.<P>
+In pcc mode (-pcc option) and "limited pcc" or "system programming" mode (-fc option), the character '$' is also valid in identifiers.<P>
+<H2>Characters</H2>
+The characters in the source character set are assumed to be ISO 8859-1 (Latin-1 Alphabet), a superset of the ASCII character set. The printable characters are those in the range 32 to 126 and 160 to 255. Any printable character may appear in a string or character constant, and in a comment.<P>
+Other properties of the source character set are host specific, save that the ARM C compiler has no support for multi-byte character sets.<P>
+The properties of the execution character set are target specific. In its generic form, the ARM C library supports the ISO 8859-1 (Latin-1) character set, so the following points are expected to hold:<P>
+<UL>
+<LI>The execution character set is identical to the source character set.
+<p>
+<LI>There are four chars/bytes in an int. If the ARM processor is configured to operate with a <I>little-endian</I> memory system, the bytes are ordered from least significant at the lowest address to most significant at the highest address. If the ARM is configured to operate with a <I>big-endian</I> memory system the bytes are ordered from least significant at the highest address to most significant at the lowest address.
+<p>
+<LI>A character constant containing more than one character has the type int. Up to four characters of the constant are represented in the integer value. The first character in the constant occupies the lowest-addressed byte of the integer value; up to three following characters are placed at ascending addresses. Unused bytes are filled with the NUL (or '\0') character.
+<p>
+<LI>There are eight bits in a character in the execution character set.
+<p>
+<LI>All integer character constants that contain a single character or character escape sequence are represented in both the source and execution character sets (by an assumption which may be violated in any given retargeting of the generic ARM C library).
+<p>
+<LI>Characters of the source character set in string literals and character constants map identically into the execution character set (by an assumption which may be violated in any given retargeting of the generic ARM C library).
+<p>
+<LI>No locale is used to convert multibyte characters into the corresponding wide characters (codes) for a wide character constant (not relevant to the generic implementation).
+<p>
+<LI>A plain char is treated as unsigned (but as signed in -pcc mode).
+<p>
+<LI>The character escape codes are:
+<PRE>
+---------------------------------------------------------
+Escape        |Char value|Description                    
+sequence      |          |                               
+---------------------------------------------------------
+\a            |7         |Attention (bell)               
+---------------------------------------------------------
+\b            |8         |Backspace                      
+---------------------------------------------------------
+\f            |9         |Form feed                      
+---------------------------------------------------------
+\n            |10        |Newline                        
+---------------------------------------------------------
+\r            |11        |Carriage return                
+---------------------------------------------------------
+\t            |12        |Tab                            
+---------------------------------------------------------
+\v            |13        |Vertical tab                   
+---------------------------------------------------------
+\xnn          |0xnn      |ASCII code in hexadecimal      
+---------------------------------------------------------
+\nnn          |0nnn      |ASCII code in octal            
+---------------------------------------------------------
+</PRE>
+
+</UL>
+<H2>Integers</H2>
+The representations and sets of values of the integral types are set out in <A HREF="./1arrd.html#XREF36789">Data Elements</A>. Note also:<P>
+<UL>
+<LI>The result of converting an integer to a shorter signed integer (if the value cannot be represented) is as if the bits in the original value which cannot be represented in the final value are masked out, and the resulting integer sign-extended. The same applies when an unsigned integer is converted to a signed integer of equal length.
+<p>
+<LI>Bitwise operations on signed integers yield the expected result given two's complement representation. No sign extension takes place.
+<p>
+<LI>The sign of the remainder on integer division is the same as defined for the function <CODE>div()</CODE>.
+<p>
+<LI>Right shift operations on signed integral types are arithmetic.
+</UL>
+<H2>Floating point</H2>
+The representations and ranges of values of the floating point types have been given in <A HREF="./1arrd.html#XREF36789">Data Elements</A>.  Note also that:<P>
+<UL>
+<LI>When a floating point number is converted to a shorter floating point one, it is rounded to the nearest representable number.
+<p>
+<LI>The properties of floating point arithmetic accord with IEEE 754.
+</UL>
+<H2>Arrays and pointers </H2>
+The ANSI draft standard specifies three areas in which the behaviour of arrays and pointers must be documented. The points to note are:<P>
+<UL>
+<LI>The type size_t is unsigned int (signed int in -pcc mode).
+<p>
+<LI>Casting pointers to integers and vice versa involves no change of representation.
+<p>
+<LI>The type ptrdiff_t is defined as (signed int).
+</UL>
+<A NAME="XREF42370"><H2>Registers </A></H2>
+Using the ARM C compiler, you can declare any number of objects to have the storage class <I>register</I>. Depending on which variant of the ARM Procedure Call Standard is in use, there are between five and seven registers available. Declaring more than this number of objects with register storage class must result in at least one of them not being held in a register. In general, it is advisable to declare no more than four. The valid types are:<P>
+<UL>
+<LI>any integer type;
+<p>
+<LI>any pointer type;
+<p>
+<LI>any integer-like structure (any one word struct or union in which all addressable fields have the same address or any one word structure containing only bitfields).
+</UL>
+Note that other variables, not declared with the register storage class, may be held in registers for extended periods, and that register variables may be held in memory for some periods.<P>
+Note also that there is a #pragma which assigns a file-scope variable to a specified register everywhere within a compilation unit.<P>
+<H2>Structures, unions, enumerations and bitfields </H2>
+The ARM C compiler handles structures in the following way:<P>
+<UL>
+<LI>When a member of a union is accessed using a member of a different type, the resulting value can be predicted from the representation of the original type. No error is given.
+<p>
+<LI>Structures are aligned on word boundaries. Characters are aligned in bytes, shorts on even numbered byte boundaries, and all other types, except bitfields, are aligned on word boundaries. Bitfields are subfields of ints, themselves aligned on word boundaries.
+<p>
+<LI>A plain bitfield (declared as int) is treated as unsigned int (signed int in -pcc mode).
+<p>
+<LI>A bitfield which does not fit into the space remaining in the current int is placed in the next int.
+<p>
+<LI>The order of allocation of bitfields within ints is such that the first field specified occupies the lowest-addressed bits of the word.
+<p>
+<LI>Bitfields do not straddle storage unit (int) boundaries.
+<p>
+<LI>The integer type chosen to represent the values of an enumeration type is <I>int</I>.
+</UL>
+<H2>Qualifiers</H2>
+An object that has volatile-qualified type is<I> accessed</I> if any word or byte of it is read or written. For volatile-qualified objects, reads and writes occur as directly implied by the source code, in the order implied by the source code.<P>
+The effect of accessing a volatile-qualified short is undefined.<P>
+<H2>Declarators</H2>
+The number of declarators that may modify an arithmetic, structure or union type is limited only by available memory.<P>
+<H2>Statements</H2>
+The number of case values in a switch statement is limited only by memory.<P>
+<H2>Preprocessing directives</H2>
+A single-character constant in a preprocessor directive cannot have a negative value.<P>
+The ANSI standard header files are contained within the compiler itself and may be referred to in the way described in the standard (using, for example, #include &lt;stdio.h&gt;, etc.).<P>
+Quoted names for includable source files are supported. The rules for directory searching are given in <A HREF="./1arrc.html#XREF17731">Included files</A>. The compiler will accept host file names or Unix file names. In the latter case, on non-Unix hosts, the compiler does its best to translate the file name to a local equivalent.  See <A HREF="./1arrc.html#XREF39126">File naming conventions</A> for more details.<P>
+The recognized #pragma directives and their meanings are described in <A HREF="./1arri.html#XREF38246">Pragma directives</A>.<P>
+The date and time of translation are always available, so __DATE__ and __TIME__ always give respectively the date and time.<P>
+<H2>Library functions</H2>
+The precise attributes of a C library are specific to a particular implementation of it. The generic ARM C library has or supports the following features:<P>
+<UL>
+<LI>The macro NULL expands to the integer constant 0.
+<p>
+<LI>If a program redefines a reserved external identifier, then an error may occur when the program is linked with the standard libraries. If it is not linked with standard libraries, then no error will be detected.
+<p>
+<LI>The <CODE>assert()</CODE> function prints the following message and then calls the <I>abort()</I> function:
+<CODE>
+<PRE>
+   *** assertion failed: expression, file file-name, line
+</CODE>
+</PRE>
+</UL>
+<UL>
+<LI>The functions: <I>isalnum()</I>, <I>isalpha()</I>, <I>iscntrl()</I>, <I>islower()</I>, <I>isprint()</I>, <I>isupper()</I>, and <I>ispunct()</I> usually test only for characters whose values are in the range 0 to 127 (inclusive). Characters with values greater than 127 return a result of 0 for all of these functions, except <I>iscntrl()</I> which returns non-zero for 0 to 31, and 128 to 255.
+</UL>
+After the call setlocale(LC_CTYPE, "ISO8859-1"), the following statements also apply to character codes and affect the results returned by the <I>ctype</I> functions:<P>
+<UL>
+<LI>codes 128-159 are control characters;
+<LI>codes 192 to 223 except 215 are upper case;
+<LI>codes 224 to 255 except 247 are lower case;
+<LI>code 160 to 191, 215 and 247 are punctuation.
+</UL>
+The mathematical functions return the following values on domain errors:<P>
+<PRE>
+---------------------------------------------------------
+Function   |Condition      |Return value                 
+---------------------------------------------------------
+log(x)     |x &lt;= 0         |-HUGE_VAL                    
+---------------------------------------------------------
+log10(x)   |x &lt;= 0         |-HUGE_VAL                    
+---------------------------------------------------------
+sqrt(x)    |x &lt; 0          |-HUGE_VAL                    
+---------------------------------------------------------
+atan2(x,y) |x = y = 0      |-HUGE_VAL                    
+---------------------------------------------------------
+asin(x)    |abs(x) &gt; 1     |-HUGE_VAL                    
+---------------------------------------------------------
+acos(x)    |abs(x) &gt; 1     |-HUGE_VAL                    
+---------------------------------------------------------
+</PRE>
+<P>
+Where <I>-HUGE_VAL</I> is written above, a number is returned which is defined in the header math.h. Consult the errno variable for the error number.<P>
+The mathematical functions set errno to ERANGE on underflow range errors.<P>
+A domain error occurs if the second argument of fmod is zero, and HUGE_VAL is returned.<P>
+The set of signals for the generic <CODE>signal()</CODE> function is as follows: <P>
+<PRE>
+--------------------------------------------------------
+SIGABRT              |Abort                             
+--------------------------------------------------------
+SIGFPE               |Arithmetic exception              
+--------------------------------------------------------
+SIGILL               |Illegal instruction               
+--------------------------------------------------------
+SIGINT               |Attention request from user       
+--------------------------------------------------------
+SIGSEGV              |Bad memory access                 
+--------------------------------------------------------
+SIGTERM              |Termination request               
+--------------------------------------------------------
+SIGSTAK              |Stack overflow                    
+--------------------------------------------------------
+</PRE>
+<P>
+The default handling of all recognised signals is to print a diagnostic message and call exit. This default behaviour applies at program start-up.<P>
+When a signal occurs, if func points to a function, the equivalent of signal(sig, SIG_DFL) is first executed.<P>
+If the SIGILL signal is received by a handler specified to the signal function, the default handling is reset.<P>
+The generic ARM C library also has the following characteristics relating to I/O, (of course, any particular targeting of it may not have):<P>
+<UL>
+<LI>The last line of a text stream does not require a terminating newline character.
+<p>
+<LI>Space characters written out to a text stream immediately before a newline character do appear when read back in.
+<p>
+<LI>No null characters are appended to a binary output stream.
+<p>
+<LI>The file position indicator of an append mode stream is initially placed at the end of the file.
+<p>
+<LI>A write to a text stream does not cause the associated file to be truncated beyond that point (device dependent).
+<p>
+<LI>The characteristics of file buffering are as intended by section 4.9.3 of the ANSI C standard.
+<p>
+<LI>A zero-length file (on which no characters have been written by an output stream) does (is intended to) exist.
+<p>
+<LI>The same file can be opened many times for reading, but only once for writing or updating. A file cannot be open for reading on one stream and for writing or updating on another.
+<p>
+<LI>Local time zones and Daylight Saving Time are not implemented. The values returned will always indicate that the information is not available.
+<p>
+<LI><CODE>fprintf()</CODE> prints %p arguments in hexadecimal format (lower case) as if a precision of 8 had been specified. If the variant form (%#p) is used, the number is preceded by the character '@'.
+<p>
+<LI><CODE>fscanf()</CODE> treats %p arguments identically to %x arguments.
+<p>
+<LI><CODE>fscanf()</CODE> always treats the character '-' in a %...[...] argument as a literal character.
+<p>
+<LI><CODE>ftell()</CODE> and<I> </I><CODE>fgetpos()</CODE> set errno to the value of EDOM on failure.
+<p>
+<LI><CODE>perror()</CODE> generates the following messages:
+<PRE>
+--------------------------------------------------------
+Error   |Message                                        
+--------------------------------------------------------
+0       |No error (errno = 0)                           
+--------------------------------------------------------
+EDOM    |EDOM - function argument out of range          
+--------------------------------------------------------
+ERANGE  |ERANGE - function result not representable     
+--------------------------------------------------------
+ESIGNUM |ESIGNUM - illegal signal number to signal() or 
+        |raise()                                        
+--------------------------------------------------------
+others  |Error code number has no associated message    
+--------------------------------------------------------
+</PRE>
+
+<LI><CODE>calloc()</CODE>, <CODE>malloc()</CODE> and <CODE>realloc()</CODE>, if the size of area requested is zero, return NULL.
+<p>
+<LI><CODE>abort()</CODE> closes all open files, and deletes all temporary files.
+<p>
+<LI>The status returned by <CODE>exit()</CODE> is the same value that was passed to it. For definitions of EXIT_SUCCESS and EXIT_FAILURE refer to the header file stdlib.h
+<p>
+<LI>The error messages returned by the <CODE>strerror()</CODE> function are identical to those given by the<CODE> perror()</CODE> function.
+</UL>
+The following characteristics, required to be specified in an ANSI-compliant implementation, are unspecified in the generic ARM C library:<P>
+<UL>
+<LI>The validity of a file name.
+<LI>Whether <CODE>remove()</CODE> can remove an open file.
+<LI>The effect of calling the <CODE>rename()</CODE> function when the new name already exists.
+<LI>The effect of calling <CODE>getenv()</CODE> (the default is to return NULL-no value available).
+<LI>The effect of calling <CODE>system()</CODE>.
+<LI>The value returned by <CODE>clock()</CODE>.
+</UL>

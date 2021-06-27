@@ -1,0 +1,27 @@
+<Title>DrawScreenCels </Title>
+<A NAME="XREF27677"><H1>DrawScreenCels </A></H1>
+<A NAME="XREF16700"> Draws a list of cels (one or more) to the bitmaps of a </A>screen.<P>
+<H3>Synopsis</H3>
+<CODE>Err DrawScreenCels (Item screenItem,CCB *ccb)</CODE><P>
+<H3>Description</H3>
+DrawScreenCels traverses the list of bitmaps associated with the screen specified by the screenItem argument, calling <CODE>DrawCels()</CODE> for each bitmap. When this call returns, all cels are rendered into all bitmaps of the screen. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screenItem
+<DD>Item number of a screen structure. 
+</DL>
+<DL>
+<DT>ccb
+<DD>Pointer to the first of one or more CCB structures. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. It became an SWI in Graphics folio V24. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>Notes</H3>
+<CODE>DrawScreenCels()</CODE> operates faster when the task or thread calling it owns bitmap, as opposed to simply calling <CODE>OpenItem()</CODE> on the bitmap. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr020.html#XREF25632"><CODE>DrawCels</A>() </CODE><P>
+</CODE>

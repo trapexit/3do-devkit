@@ -1,0 +1,47 @@
+<Title>CreateBufferedMsg</Title>
+<A NAME="XREF20657"><H1>CreateBufferedMsg </A></H1>
+<A NAME="XREF25801"></A>Creates a buffered message.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateBufferedMsg( const char *name, uint8 pri, Item mp,uint32 datasize )</CODE><P>
+<H3>Description</H3>
+One of the ways tasks communicate is by sending messages to each other. This procedure creates an item for a buffered message (a message that includes an internal buffer for sending data to the receiving task). You can use this procedure in place of <CODE>CreateItem()</CODE> to create the message. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the message (see "Notes").
+</DL>
+<DL>
+<DT>pri
+<DD>The priority of the message. This determines the position of the message in the receiving task's message queue and thus, how soon it is likely to be handled. A larger number specifies a higher priority. 
+</DL>
+<DL>
+<DT>mp
+<DD>The item number of the message port at which to receive the reply. 
+</DL>
+<DL>
+<DT>datasize
+<DD>The maximum size of the message's internal buffer, in bytes. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the message or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+The advantage of using a buffered message instead of a standard message is that the sending task doesn't need to keep the data block containing the message data after the message is sent. All the necessary data is included in the message. <P>
+The same message item can be resent any number of times. When you are finished with a message item, use <CODE>DeleteMsg()</CODE> to delete it. <P>
+You can use <CODE>FindNamedItem()</CODE> to find a message item by name. When creating messages, you should assign unique names whenever possible. <P>
+<H3>Caveats</H3>
+The priority value (set with the pri argument) is not used consistently. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr024.html#XREF10430"><CODE>CreateMsg</A>(), <A HREF="./01spr025.html#XREF19499">CreateMsgPort</A>(), <A HREF="./01spr027.html#XREF18113">CreateSmallMsg</A>(), <A HREF="./01spr034.html#XREF14458">DeleteMsg</A>(), <A HREF="./01spr035.html#XREF42671">DeleteMsgPort</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF20657"></LINK></H1><HR>

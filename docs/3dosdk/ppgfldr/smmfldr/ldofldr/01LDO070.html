@@ -1,0 +1,35 @@
+<Title>FinishAsyncLoadFile</Title>
+<A NAME="XREF31057"><H1>FinishAsyncLoadFile </A></H1>
+ Finalizes an async file load operation.<P>
+<H3>Synopsis</H3>
+<CODE>Err FinishAsyncLoadFile (LoadFileInfo *lf, Err loadStatus)</CODE><P>
+<H3>Description</H3>
+Releases resources no longer needed after completion of an async file 
+load, leaving just the file data in the buffer (if the load was 
+successful). <P>
+If you received I/O completion nofitication via message, call this
+    function passing ioreqPtr->io_Error as the loadStatus value and
+    ioreqPtr->io_User as the LoadFileInfo pointer.  If you detected I/O
+    completion using <CODE>CheckAsyncLoadFile()</Code>, pass the return value from that
+    function as the loadStatus value.<P>
+If the loadStatus value is negative and a buffer was automatically 
+allocated by <CODE>AsyncLoadFile()</CODE> this function frees the buffer. 
+It release other resources (IOReq, etc.) in all cases. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>lf
+<DD>Pointer to the LoadFileInfo structure for the load operation. 
+</DL>
+<DL>
+<DT>loadStatus
+<DD>Status returned by CheckAsyncLoadFile() or contained in the I/O 
+completion message you received. 
+</DL>
+<H3>Return Value</H3>
+Returns the loadStatus value you passed in. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, blockfile.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO002.html#XREF32442"><CODE>AsyncLoadFile</A></CODE><P>

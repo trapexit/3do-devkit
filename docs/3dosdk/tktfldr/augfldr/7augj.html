@@ -1,0 +1,45 @@
+<TITLE>Macros</TITLE>
+<H1><LINK NAME="XREF31690">Macros</LINK></H1><HR>
+<H2>Usage</H2>
+Macros are useful when a group of instructions and/or directives is frequently needed. <I>armasm</I> will replace the macro name with its definition. Macros may contain calls to other macros, nested up to 255 levels.<P>
+<H2>Defining a macro</H2>
+Two directives are used to define a macro. The syntax is:<P>
+    <CODE>
+<PRE>
+MACRO
+{$label} macroname {$parameter1}{,$parameter2}{,$parameter3}..
+    ...code...
+    MEND
+</CODE>
+</PRE>
+The directive MACRO must be followed by a macro prototype statement on the next line. This tells the assembler the name of the macro and its parameters. A label is optional, but useful if calls of the macro may be labelled. Any number of parameters can be used; each must begin with `$' to distinguish them from ordinary program symbols.<P>
+Within the macro body, <I>$label</I>, <I>$parameter</I>, etc., can be used in the same way as any other variables (see<A HREF="./7augf.html#XREF42681">Local and global variables - GBL, LCL and SET</A>, and section <A HREF="./7augf.html#XREF17481">Variable substitution - $</A>). They will be given new values each time the macro is called.<P>
+Sometimes a macro parameter or label needs to be appended by a value. The appended value should be separated by a dot, which the assembler will ignore once it has used it to recognise the end of the parameter and label. For example:<P>
+<CODE>
+<PRE>
+$label.$count
+</CODE>
+</PRE>
+The end of the macro definition is signified by the MEND directive.There must be no un-closed WHILE/WEND loops or conditional assembly when the MEND directive is reached. Macro expansion terminates at MEND. However it can also be terminated with the MEXIT directive, which can be used in conjunction with WHILE/WEND or conditional assembly.<P>
+<H2>Setting default parameter values</H2>
+Default values can be set for parameters by following them with an equals sign and the default value. If the default has a leading or trailing space, the whole value should appear in quotes, as shown below:<P>
+<CODE>
+<PRE>
+...{$parameter="default value"}
+</CODE>
+</PRE>
+<H2>Macro invocation</H2>
+A macro defined with a pattern such as:<P>
+<CODE>
+<PRE>
+$lab    xxxx $arg1,$arg2=5,$arg3
+</CODE>
+</PRE>
+can be invoked as:<P>
+<CODE>
+<PRE>
+Label    xxxx val1,val2,val3
+</CODE>
+</PRE>
+An omitted actual argument is given a null (empty string) value. To force use of the default value, use `|' as the actual argument. <P>
+<P>

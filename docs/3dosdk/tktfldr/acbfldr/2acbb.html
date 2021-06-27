@@ -1,0 +1,209 @@
+<TITLE>Multiply by a constant</TITLE>
+<H1><LINK NAME="XREF38728">Multiply by a constant</LINK></H1><HR>
+<H2>About this recipe</H2>
+This recipe shows you how to construct a sequence of ARM instructions to 
+multiply by a constant.<P>
+For some applications multiply is used extensively, so it is important to 
+make the application run as fast as possible.  For instance, most DSP 
+(Digital Signal Processing) applications perform a lot of 
+multiplication.<P>
+In many cases where a multiply is used, one of the values is a constant 
+(eg. weeks*7).  A naive programmer would assume that the only way to 
+calculate this would be to use the MUL instruction - but there is an 
+alternative...<P>
+This recipe demonstrates how to improve the speed of multiply-by-constant 
+by using a sequence of arithmetic instructions instead of the 
+general-purpose multiplier.<P>
+<H2>Introduction</H2>
+Throughout this recipe, registers are referred to using register names 
+(eg. Rd, Rm, Rs), but you should use only register names which have been 
+declared using the RN directive (eg. a1, r4 etc.) in assembler source 
+code.  This recipe does not refer to any example programs; it should be 
+viewed as an explanation of the multiply-by-constant technique.<P>
+MUL has the following syntax:<P>
+<CODE>
+<PRE>
+MUL    Rd, Rm, Rs
+</CODE>
+</PRE>
+The timing of this instruction depends on the value in Rs.  The ARM6 
+datasheet specifies that for Rs between 2^(2m-3) and 2^(2m-1)-1 inclusive 
+takes 1S + mI cycles.  For more details on the multiplier, see <A 
+HREF="./2acbe.html#XREF40554">ARM6 multiplier performance issues</A>.  
+There is, of course, no guarantee that MUL will not be implemented 
+differently (possibly faster) in the future...<P>
+When multiplying by a constant value, it is possible to replace the 
+general multiply with a fixed sequence of adds and subtracts which have 
+the same effect.  For instance, multiply by 5 could be achieved using a 
+single instruction:<P>
+<CODE>
+<PRE>
+ADD    Rd, Rm, Rm, LSL #2                 ; Rd = Rm + (Rm * 4) = Rm * 5
+</CODE>
+</PRE>
+This ADD version is obviously better than the MUL version below:<P>
+<CODE>
+<PRE>
+    MOV    Rs, #5
+    MUL    Rd, Rm, Rs
+</CODE>
+</PRE>
+The 'cost' of the general multiply includes the instructions needed to 
+load the constant into a register (up to 4 may be needed, or an LDR from a 
+literal  pool) as well as the multiply itself.<P>
+<H2>The problem of finding the optimum sequence</H2>
+The difficulty in using a sequence of arithmetic instructions is that the 
+constant must be decomposed into a set of operations which can be done by 
+one instruction each.  Consider multiply by 105:<P>
+This could be achieved by decomposing thus:<P>
+<CODE>
+<PRE>
+    105 == 128 - 13
+        == 128 - 16 + 3
+        == 128 - 16 + 2 + 1
+
+    ADD    Rd, Rm, Rm, LSL #1                        ; Rd = Rm*3
+    SUB    Rd, Rd, Rm, LSL #4                        ; Rd = Rm*3 - Rm*16
+    ADD    Rd, Rd, Rm, LSL #7                        ; Rd = Rm*3 - Rm*16 + Rm*128
+</CODE>
+</PRE>
+Or, decomposing differently:<P>
+<CODE>
+<PRE>
+    105 == 15 * 7
+        == (16 - 1) * (8 - 1)
+
+    RSB    Rt, Rm, Rm, LSL #4                        ; Rt = Rm*15 (tmp reg)
+    RSB    Rd, Rt, Rt, LSL #3                        ; Rd = Rt*7 = Rm*105
+</CODE>
+</PRE>
+The second method is the optimal solution (fairly easy to find for small 
+values such as 105).  However, the problem of finding the optimum becomes 
+much  more difficult for larger constant values.  A program can be written 
+to search exhaustively for the optimum, but it may take a long time to 
+execute.  There are no known algorithms which solve this problem 
+quickly.<P>
+Temporary registers can be used to store intermediate results to help 
+achieve the shortest sequence.  For a large constant, more than one 
+temporary may be needed, otherwise the sequence will be longer.<P>
+The C-compiler restricts the amount of searching it performs in order to 
+minimise the impact on compilation time.  The current version of armcc has 
+a cut-off so that it uses a normal MUL if the number of instructions used 
+in the multiply-by-constant sequence exceeds some number N.  This is to 
+avoid the sequence becoming too long.<P>
+<H2>Experimenting with armcc assembly output</H2>
+When writing a speed-critical ARM assembler program, it is a good idea to 
+code it in C first (to check the algorithm) before converting it to hand 
+tuned assembler.  It is helpful to see the ARM code which the compiler 
+generates as a starting point for your work.<P>
+Invoking <B>armcc</B> with the -S  flag will generate an assembly file 
+instead of an object file.  For example, consider the following simple C 
+code:<P>
+<CODE>
+<PRE>
+int mulby105( int num )
+{
+    return num * 105;
+}
+</CODE>
+</PRE>
+Compile this using:<P>
+<CODE>
+<PRE>
+armcc -li -S mulby105.c
+</CODE>
+</PRE>
+Now, examine the file <B>mulby105.s</B> which has been created:<P>
+<CODE>
+<PRE>
+; generated by Norcroft ARM C vsn 4.41 (Advanced RISC Machines)
+    AREA |C$$code|, CODE, READONLY
+|x$codeseg|
+
+    EXPORT  mulby105
+mulby105
+    RSB    a1,a1,a1,LSL #4
+    RSB    a1,a1,a1,LSL #3
+    MOV    pc,lr
+
+    AREA |C$$data|,DATA
+
+|x$dataseg|
+
+    END
+</CODE>
+</PRE>
+Notice that the compiler has found the short multiply-by-constant 
+sequence.<P>
+<H2>Discussion of speed improvement</H2>
+To evaluate the speed gains from using multiply-by-constant, consider 
+multiplying by 11585 (which is 8192*sqr2) as an example:<P>
+A normal multiply consists of:<P>
+<CODE>
+<PRE>
+    MOV    Rs, #0x2D &lt;&lt; 8                       ; load constant
+    ORR    Rs, Rs, #0x41                        ; load constant, now Rs = 11585
+    MUL    Rd, Rm, Rs                           ; do the multiply
+</CODE>
+</PRE>
+The load-a-constant stage may take up to four 4 instructions (in this case 
+2) or an LDR,= and the multiply takes 1 instruction fetch plus a number of 
+internal cycles to calculate the multiply (on ARM6 based processors) .<P>
+The optimal multiply-by-constant sequence consists of:<P>
+<CODE>
+<PRE>
+    ADD    Rd, Rm, Rm, LSL #1                        ; Rd = Rm*3
+    RSB    Rd, Rd, Rd, LSL #4                        ; Rd = Rd*15 = Rm*45
+    ADD    Rd, Rm, Rd, LSL #8                        ; Rd = Rm + Rd*256 = Rm*11521
+    ADD    Rd, Rd, Rm, LSL #6                        ; Rd = Rd + Rm*64 = Rm*11585
+</CODE>
+</PRE>
+This is just 4 data processing instructions.<P>
+<PRE>
+-----------------------------------------------------
+Method               |Cycles                         
+-----------------------------------------------------
+Normal multiply      |3 instructions + MUL internal  
+                     |cycles                         
+-----------------------------------------------------
+Multiply-by-constant |4 instructions                 
+-----------------------------------------------------
+</PRE>
+<P>
+Considering the ARM6 family, the 2-bit Booth's Multiplier used by MUL 
+takes a number of I-cycles depending on the value in Rs (in this case m=8, 
+as Rs lies  between 8192 and 32767).<P>
+Hence multiply-by-constant looks to be the winner in this case.<P>
+An instruction fetch is an external memory S-cycle on the ARM60, or a 
+cache F-cycle (if there is a cache hit) on cached processors like the 
+ARM610.<P>
+With slow memory systems and non-cached processors, I-cycles can be much 
+faster  than other cycles because they are internal to the ARM core.  This 
+means that  the general multiply can sometimes be the fastest option (for 
+large constants where an efficient solution cannot be found)- it should 
+also use less memory. If the load-a-constant stage could be moved outside 
+a loop, the balance would tip further in favour of the general multiply as 
+there is only the MUL to execute.<P>
+<PRE>
+----------------------------------------------------------
+Method           |Cycles on ARM60|Cycles on ARM610        
+----------------------------------------------------------
+Normal multiply  |3S + 8I        |11F                     
+----------------------------------------------------------
+Multiply-by-const|4S             |4F                      
+ant              |               |                        
+----------------------------------------------------------
+</PRE>
+<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./2acbe.html#XREF29872">Digital signal processing on the 
+ARM</A>;
+<LI><A HREF="./2acbe.html#XREF40554">ARM6 multiplier performance 
+issues</A>;
+<LI><A HREF="./3acbb.html#XREF41890">Multiplication - Returning a 64-bit 
+result</A>;
+<LI><A HREF="./2acbk.html#XREF12134">ARM assembly programming performance 
+issues</A>.
+</UL>

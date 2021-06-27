@@ -1,0 +1,36 @@
+<TITLE>iostress</TITLE>
+<H1><A NAME="XREF33559"></A>iostress</H1><HR><p>
+Stresses the IO subsystem to uncover bugs.<P>
+<H3>Synopsis</H3>
+<CODE>iostress [-quit]</CODE><P>
+<H3>Description</H3>
+Installs a set of monitoring routines that catch incorrect use of the IO 
+subsystem.<P>
+The monitoring routines ensure the following:<P>
+<UL>
+<LI>When writing data, the routines guarantee that the buffer used for the 
+IO remains consistent and does not get altered while the write operation 
+occurs. This guarantees that a title is not manipulating data that are 
+being fetched by an IO module.
+<LI> When reading data, the routines guarantee that it is not possible to 
+read any data associated with the IO request until the IO request has been 
+completed. This guarantees that a title is not reading data before it has 
+been completely transferred.
+<LI>The monitoring routines do their work by allocating temporary buffers 
+and using these for the IO transactions. Doing so requires some extra 
+memory, and requires some extra CPU time to copy data between the buffers. 
+This can affect the performance of a title, possibly causing some jerky 
+animations, but should never cause a crash, or trashed sound or graphics. 
+If these things happen, then the title has a bug.
+<H3>Arguments </H3>
+</UL>
+<DL>
+<DT>-quit
+<DD>Tells a previously started version of iostress to exit. 
+</DL>
+<H3>Implementation </H3>
+Command implemented in V24. <P>
+$c/iostress<P>
+<H3>Caveats</H3>
+Quitting is a tricky operation and does not always work. The safest way to 
+"quit" is to reset the system.<P>

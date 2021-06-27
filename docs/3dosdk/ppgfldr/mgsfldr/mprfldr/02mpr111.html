@@ -1,0 +1,60 @@
+<Title>ssplRequestBuffer</Title>
+<A NAME="XREF24497"><H1>ssplRequestBuffer </A></H1>
+<A NAME="XREF23599"></A> Asks for an available buffer.<P>
+<H3>Synopsis</H3>
+<CODE>SoundBufferNode *ssplRequestBuffer ( SoundSpooler *sspl )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplRequestBuffer()</CODE> returns an available SoundBufferNode from the free queue or NULL if none are available (all are in the active queue). When an available SoundBufferNode is returned, the client can attach sample data to it (by calling <CODE>ssplSetBufferAddressLength()</CODE>)  and submit it to the active queue (by calling <CODE>ssplSendBuffer()</CODE>). This function is automatically done for you by the convenience functions <CODE>ssplSpoolData()</CODE> and <CODE>ssplPlayData()</CODE>. <P>
+This function gives you write permission to the returned SoundBufferNode. You have that write permission until the SoundBufferNode is returned to the <P>
+SoundSpooler with <CODE>ssplSendBuffer()</CODE> or <CODE>ssplUnrequestBuffer()</CODE>. <P>
+<H3>Argument</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<H3>Return Value</H3>
+Pointer to a SoundBufferNode if one is available, or NULL if no buffers are available. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Examples</H3>
+
+The following code fragment shows proper use of ssplRequestBuffer(),
+ssplUnrequestBuffer(), ssplSetBufferAddressLength(), and
+ssplSendBuffer().
+<p><CODE>
+<PRE>Err sendbuffer (SoundSpooler *sspl)
+{
+    SoundBufferNode *sbn;
+    Err errcode;
+        // request a buffer
+    if ((sbn = ssplRequestBuffer (sspl)) != NULL) {
+            // fill buffer, on failure return unused buffer
+            // to free queue
+        if ((errcode = fillbuffer (sspl, sbn)) &lt; 0) {
+            ssplUnrequestBufffer (sspl, sbn);
+            return errcode;
+        }
+            // on success, send buffer (always moves buffer to
+            // either free or active queue - no need to unrequest it)
+        if ((errcode = ssplSendBuffer (sspl, sbn)) &lt; 0) return 
+errcode;
+    }
+    return 0;
+}
+Err fillbuffer (SoundSpooler *sspl, SoundBufferNode *sbn)
+{
+    void *addr;
+    uint32 len;
+    // your code here to fill buffer - results in addr, len
+    return ssplSetBufferAddressLength (sspl, sbn, addr, len);
+}
+</CODE>
+</PRE>
+<H3>Notes</H3>
+Prior to music.lib V24, SoundBufferNodes were actually _removed_ from the free list; all knowledge of them was lost by the sound spooler until they were passed back to <CODE>ssplSendBuffer()</CODE> to put them back into one of the SoundSpooler's queues. If lost, <CODE>ssplDeleteSoundSpooler()</CODE> would lose memory and be unable t o free some items. <P>
+Starting with V24, the sound spooler automatically tracks all sound buffer nodes requested by <CODE>ssplRequestBuffer()</CODE> in a "requested" queue. Any buffers that are not submitted or "unrequested", get put back into the free list by <CODE>ssplReset()</CODE> and freed by <CODE>ssplDeleteSoundSpooler()</CODE>. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr122.html#XREF21344"><CODE>ssplUnrequestBuffer</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>(), <A HREF="./02mpr115.html#XREF33138">ssplSetBufferAddressLength</A>(), <A HREF="./02mpr118.html#XREF33759">ssplSpoolData</A>(), <A HREF="./02mpr109.html#XREF11288">ssplPlayData</A>() </CODE><P>
+</CODE>

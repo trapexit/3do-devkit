@@ -1,0 +1,50 @@
+<Title>spAddSoundFile</Title>
+<A NAME="XREF36046"><H1>spAddSoundFile </A></H1>
+<A NAME="XREF13401"></A> Create an SPSound for an AIFF sound file.<P>
+<H3>Synopsis</H3>
+<CODE>Err spAddSoundFile (SPSound **resultSound, SPPlayer *player, const char *fileName)</CODE><P>
+<H3>Description</H3>
+Creates an SPSound for the specified AIFF sound file and adds it to the specified player. SPSounds created this way cause the player to spool the sound data directly off of disc instead of buffering the whole sound in memory. This is useful for playing back really long sounds. <P>
+This function opens the specified AIFF file and scans collects its properties (e.g. number of channels, size of frame, number of frames, markers, etc.). The sound is checked for sample frame formatting compatibility with the other SPSounds in the SPPlayer and for buffer size compatibility. A mismatch causes an error to be returned. <P>
+Once that is done, all of the markers from the AIFF file are translated int o SPMarkers. Additionally the following special markers are created: <P>
+SP_MARKER_NAME_BEGIN - set to the beginning of the sound data <P>
+SP_MARKER_NAME_END - set to the end of the sound data <P>
+SP_MARKER_NAME_SUSTAIN_BEGIN - set to the beginning of the sustain loop if the sound file has a sustain loop. <P>
+SP_MARKER_NAME_SUSTAIN_END - set to the end of the sustain loop if the sound file has a sustain loop. <P>
+SP_MARKER_NAME_RELEASE_BEGIN - set to the beginning of the release loop if the sound file has a release loop. <P>
+SP_MARKER_NAME_RELEASE_END - set to the end of the release loop if the sound file has a release loop. <P>
+The file is left open for the entire life of this type of SPSound for later reading by the player. <P>
+The length of the sound file and all of its markers must be DMA-aligned or else this function will return ML_ERR_BAD_SAMPLE_ALIGNMENT. <P>
+All SPSounds added to an SPPlayer are automatically disposed of when the SPPlayer is deleted with <CODE>spDeletePlayer()</CODE> (by calling <CODE>spRemoveSound()</CODE>). You can manually dispose of an SPSound with <CODE>spRemoveSound()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>resultSound
+<DD>Pointer to buffer to write resulting SPSound pointer. Must be supplied or else this function returns ML_ERR_BADPTR. 
+</DL>
+<DL>
+<DT>player
+<DD>Pointer to an SPPlayer. 
+</DL>
+<DL>
+<DT>fileName
+<DD>Name of an AIFF file to read. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Outputs</H3>
+A pointer to an allocated SPSound is written to the buffer pointed to by resultSound on success. NULL is written to this buffer on failure. <P>
+<H3>Notes</H3>
+SoundDesigner II has several classes of markers that it supports in sound: loop, numeric, and text. When it saves to an AIFF file, it silently throws  away all but the first 2 loops that may be in the edited sound. Numeric markers  are written to an AIFF file with a leading "#" which SDII apparently uses to recognize numeric markers when reading an AIFF file. It unfortunately ignores the rest of the marker name in that case, making the actual numbers somewhat variable. Text markers, thankfully, have user editable names that are saved verbatim in an AIFF file. For this reason, we recommend using only text markers (and possibly loops 1 and 2) when preparing AIFF files for use with the sound player in SoundDesigner II. <P>
+Since all SPSounds belonging to an SPPlayer are played by the same sample player instrument, they must all have the same frame sample frame characteristics (width, number of channels, compression type, and compression ratio). <P>
+SPSound to SPSound cross verification is done: an error is returned if they don't match. However, there is no way to verify the correctness of  sample frame characteristics for the instrument supplied to <CODE>spCreatePlayer()</CODE>. <P>
+<H3>Caveats</H3>
+The sound player will not work correctly unless the sample frame size for the sample follows these rules: <P>
+If frame size (in bytes) &lt; 4, then it must divide into 4 evenly. <P>
+If frame size (in bytes) &gt; 4, then it must be a multiple of 4. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr084.html#XREF24744"><CODE>spRemoveSound</A>(), <A HREF="./02mpr062.html#XREF39542">spAddSample</A>() </CODE><P>
+</CODE>

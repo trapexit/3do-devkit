@@ -1,0 +1,72 @@
+<TITLE>Changing time within a stream</TITLE>
+<H1>Changing time within a stream</H1><HR>
+An interactive application is almost never played in linear order from beginning to end. Instead, the end-users of your application may be interested in a variety of interactions discussed in this section: <P>
+
+<UL>
+<LI><A HREF="#XREF18435">Starting and stopping a stream</A>
+<LI><A HREF="#XREF27011">Jumping to a new location</A>
+</UL>
+<A NAME="XREF18435"><H2>Starting and stopping a stream</A></H2>
+To start, stop, or pause a stream, use the functions <CODE>DSStartStream()</CODE> and <CODE>DSStopStream()</CODE>. How you use <CODE>DSStopStream() </CODE>depends on whether you expect to resume playing. If you use SOPT_FLUSH as the last argument, all buffers will be flushed. If you use SOPT_NOFLUSH, buffers remain unchanged. <P>
+The following example is from <I>NuPlayer.c</I>, which is part of the NuPlayer application. <P>
+<B>Example 1: </B><I>Starting and stopping a stream. </I><P>
+<CODE>
+<PRE>
+else if ( jp-&gt;startBtn )
+        {
+        /* Pause / Unpause the stream
+         */
+        if ( ctx-&gt;streamCBPtr-&gt;streamFlags &amp; STRM_RUNNING )
+            {
+            /* Note: we don't use the SOPT_FLUSH option when we stop
+             * here so that the "A" button acts like a pause/resume
+             * key. Using the SOPT_FLUSH option will cause buffered
+             * data to be flushed, so that once resumed, any queued
+             * audio will vanish. This is not what is usually desired 
+             * for pause/resume.
+             */
+            status = DSStopStream( ctx-&gt;messageItem, NULL, ctx-&gt;streamCBPtr, 
+
+                            SOPT_NOFLUSH );
+            CHECK_DS_RESULT( "DSStopStream", status );
+            }
+        else
+            {
+            status = DSStartStream( ctx-&gt;messageItem, NULL, 
+
+                    ctx-&gt;streamCBPtr, SOPT_NOFLUSH );
+            CHECK_DS_RESULT( "DSStartStream", status );
+            }
+</CODE>
+</PRE>
+<A NAME="XREF37759"><H3>Using Weaver script commands to place markers</A></H3>
+To specify the exact points at which a stream may start or stop, it is best to use the <CODE>writestopchunk</CODE> or <CODE>writehaltchunk</CODE> Weaver script commands.<P>
+<B>Note: </B>The Weaver always places markers at the beginning of a block, even if the time you specify actually falls in the middle of a block. This makes using markers advisable in all situations.<P>
+The following figure shows a Weaver script that include commands for placing markers.<P>
+
+<IMG SRC="Figures/Weaver Script 2.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 3: </B><I>Weaver script writing control chunks.</I><P>
+The <CODE>writestopchunk</CODE> command writes a STOP chunk to the output stream. You specify the time in audio clock ticks.<P>
+The <CODE>writehaltchunk</CODE> command writes a HALT chunk, which is sent to a specific subscriber. This can be used to halt the streamer thread from delivering chunks to all subscribers until a reply is received from the specified subscriber. <P>
+The <CODE>writemarkertable</CODE> command ensures the Weaver writes a table of marker positions with both time and position (file offset). <P>
+<B>Note: </B>When dealing with software compressed video, note that it's important to place markers at key frames. Examine the stream file to find out where key frames are located.<P>
+<H3>For more information</H3>
+The <CODE>writegotochunk</CODE> command is discussed in the next section. <P>
+<A NAME="XREF27011"><H2>Jumping to a new location</A></H2>
+To move to a different location in the application (branching), use the function <CODE>DSGoMarker()</CODE>. While starting or stopping a stream under certain conditions at certain points can happen under a variety of circumstances, branching is usually triggered by user input. <P>
+<H3>Placing markers</H3>
+Before your application can branch, you have to place markers in the stream file to branch to. You have to include <CODE>writegotochunk</CODE> commands into the Weaver script; the the markers are then placed in the stream file when the Weaver tool generates it. You specify the stream time at which the branching should happen and the place to which the stream should branch. The command in the figure above, for example, places a marker at stream time 3000 that jumps back to stream time 0. <P>
+<H3>Using different options to DSGoMarker()</H3>
+Different options to <CODE>DSGoMarker()</CODE> allow you to move in your stream in different ways: <P>
+<UL>
+<LI>GOMARKER_ABSOLUTE goes to a specific marker number. 
+<p>
+<LI>GOMARKER_FORWARD and GOMARKER_BACKWARD moves forward or backward by the specified number of markers. 
+<p>
+<LI>GOMARKER_FORW_TIME, and GOMARKER_BACK_TIME, and GOMARKER_ABS_TIME move forward or backward by a specified number of clock ticks or to a specified time. 
+</UL>
+<H3>Updating all threads participating in a streaming process</H3>
+When a positioning operation-for example, with <CODE>DSGoMarker()</CODE>-has completed, the time associated with the marker position is transmitted to all other threads by a call to <CODE>DSClockSync()</CODE>. This function informs all subscriber threads that a change in the stream's temporal position has occurred and gives them the opportunity to take appropriate actions, such as flushing any "stale" data.<P>
+<A NAME="XREF29177"><H3>Flushing</A></H3>
+Flushing should only occur when a positioning operation completes, not when a marker is simply played through. This distinction is made by storing the last "go marker" destination in the stream control block. The control subscriber calls <CODE>DSIsMarker()</CODE> to test whether a time-stamped flush control chunk matches the last branch destination. If so, <CODE>DSIsMarker()</CODE> returns <CODE>TRUE</CODE> and clears the branch destination logic to prevent further matches; otherwise, it returns <CODE>FALSE</CODE>. This permits conditional flushing based on whether or not a marker position is played through or is the destination of a branch. The receipt of the flush control chunk indicates that a positioning operation is complete.<P>

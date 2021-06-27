@@ -1,0 +1,35 @@
+<Title>LoadSampleHere</Title>
+<A NAME="XREF41997"><H1>LoadSampleHere </A></H1>
+<A NAME="XREF14708"></A> Loads an AIFC sample from file into RAM allocated and freed  by a custom function.<P>
+<H3>Synopsis</H3>
+<CODE>Item LoadSampleHere( char *Name, void*(*CustomAllocMem)(),void (*CustomFreeMem)() )</CODE><P>
+<H3>Description</H3>
+This function, like <CODE>LoadSample()</CODE>, loads and creates a sample item in RAM from a sample stored in the specified file.  The major difference is that <CODE>LoadSampleHere()</CODE>  allows a task to use its own memory allocation and deallocation calls to provide RAM for the sample. <P>
+To use this task, you must provide a custom allocation function and a custom deallocation function and then specify them in the call.  When <CODE>LoadSampleHere()</CODE>  executes, it passes these arguments to the allocation function: <P>
+<CODE>( int32 NumBytes, uint32 MemType ) </CODE><P>
+The allocation call should return a DataPtr to the allocated memory if successful or NULL if unsuccessful. <P>
+When the sample is later unloaded using <CODE>UnloadSample()</CODE>, the deallocation function receives these arguments: <P>
+<CODE>( void *DataPtr, int32 NumBytes) </CODE><P>
+The deallocation function must use these arguments to free the sample's memory. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Name
+<DD>Name of an AIFF or AIFC file to be loaded. 
+</DL>
+<DL>
+<DT><CODE>CustomAllocMem()</CODE>
+<DD>A custom memory-allocation function.
+</DL>
+<DL>
+<DT><CODE>CustomFreeMem()</CODE>
+<DD>A custom memory-freeing function. 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of the sample if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<A HREF="./01mpr007.html#XREF30972"><CODE>AttachSample</A><CODE>(), <A HREF="./01mpr033.html#XREF38686">DetachSample</A>(), <A HREF="./01mpr067.html#XREF20838">SetAudioItemInfo</A>(), <A HREF="./01mpr083.html#XREF21317">UnloadSample</A>(), <A HREF="./01mpr023.html#XREF37204">DebugSample</A>(), <A HREF="./01mpr021.html#XREF16321">CreateSample</A>(), <A HREF="./01mpr065.html#XREF29290">ScanSample</A>(), <A HREF="./01mpr043.html#XREF15941">GetAudioItemInfo</A>(), <A HREF="./01mpr053.html#XREF16726">LoadSample</A>() </CODE><P>
+</CODE>

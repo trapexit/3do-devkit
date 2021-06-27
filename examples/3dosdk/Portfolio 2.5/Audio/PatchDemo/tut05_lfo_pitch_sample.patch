@@ -1,0 +1,30 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut05_lfo_pitch_sample.patch,v 1.4 1994/10/26 21:56:15 peabody Exp $
+;*
+;*  Tutorial 5: Simple sample player patch
+;*
+;******************************************************************************
+
+    ; output
+LoadInstrument  output  directout.dsp
+
+    ; sampler
+LoadInstrument  player  samplermod.dsp
+LoadSample      sample  $samples/PitchedL/Trombone/Trombone.C3LM44k.aiff
+AttachSample    attachment player sample
+Tweak           player  ModDepth   2000
+
+    ; modulation
+LoadInstrument  lfo triangle_lfo.dsp
+Tweak           lfo Frequency  2560
+Tweak           lfo Amplitude  0
+
+    ; connections
+Connect  lfo    Output  player ModInput
+Connect  player Output  output InputLeft
+Connect  player Output  output InputRight

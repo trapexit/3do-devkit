@@ -1,0 +1,145 @@
+<TITLE>Playing Instruments</TITLE>
+<H1><LINK NAME="XREF28621">Playing Instruments</LINK></H1><HR>
+To use an instrument, you must first start it (the equivalent of plugging it in and turning it on). If it is a note playing instrument, you can then release it so it can finish its note. When you are finished with the instrument, you should stop it so that it no longer uses DSP ticks.<P>
+<H2>Starting an Instrument</H2>
+To start an instrument, use this call:<P>
+<DL>
+<DD><CODE>Err StartInstrument( Item Instrument, TagArg *TagList )</CODE><BR>
+</DL>
+The call accepts two arguments: the item number of the instrument to start, and a pointer to a list of tag arguments used to set frequency and amplitude for note playing instruments. If you do not want to supply tag arguments for the call, set <CODE>*TagList</CODE> to NULL. (You do not, for example, need to supply frequency and amplitude settings for mixers, submixers, and other instruments that do no play notes).<P>
+When <CODE>StartInstrument()</CODE> executes, it starts the specified instrument, a process that, for DSP instruments, makes it an active instrument. In other words, <CODE>StartInstrument()</CODE> runs the instrument on the DSP. Before an instrument is started, it does not run on the DSP and does not take up DSP cycles. 
+<CODE>StartInstrument()</CODE> returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+The effect of starting an instrument is different from instrument to instrument. It depends on what the instrument does once it is running. For instruments that do no play notes, such as mixers and effects instruments, starting the instrument simply runs it on the DSP so you can use it to act on other instruments (think of it as switching the instrument on). For note playing instruments such as sampled sound instruments and sound synthesis instruments, starting the instrument turns it on and starts whatever note the instrument is set up to play.<P>
+<H3>Starting a Sound-Synthesis Instrument</H3>
+Starting a sound synthesis instrument without attachments simply starts the instrument's audio signal generation, which continues until the instrument is stopped. For example, starting a sawtooth generator instrument runs the instrument on the DSP, where it generates a sawtooth wave output until stopped.<P>
+<H3>Starting Dependent Samples and Envelopes</H3>
+Starting an instrument with one or more start-dependent attachments (to items such as samples or envelopes) starts simultaneous playback of all those attachments. How the playback continues from there depends on how loops are set within the attached samples or envelopes:<P>
+<UL>
+<LI>If there is no loop, playback continues until the sample or envelope is finished.
+<p>
+<LI>If there is a sustain loop but no release loop, playback loops until the instrument is released. Playback then continues to the end of the sample or envelope.
+<p>
+<LI>If there is a release loop but no sustain loop, playback loops until the instrument is <I>stopped. </I>(Releasing has no effect on a release loop.)
+<p>
+<LI>If there is a sustain loop <I>and</I> a release loop, playback loops in the sustain loop until the instrument is released. It then plays into the release loop, where it loops until the instrument is stopped.
+</UL>
+Playback within each attached item continues independently of other items attached to the same instrument. So, for example, a sample attached to an instrument can loop continuously while an envelope attached to the same instrument plays through to its end and then stops.<P>
+If an instrument stops, all of its attachments also stop playing. The instrument then uses no more DSP cycles. When an attachment to an instrument stops playback, the instrument itself keeps going (unless, of course, the attachment was defined as a stop-linked attachment). While the instrument runs, it uses DSP cycles.<P>
+If an instrument is restarted before it has stopped, its playback starts from the beginning once again. When an instrument restarts, the Audio folio stops it very quickly and then starts it again.<P>
+<H3>Note Playing Tag Arguments</H3>
+When a note playing instrument is started by <CODE>StartInstrument()</CODE> without tag arguments, the instrument plays using whatever frequency and amplitude are initially set for the instrument. That frequency and amplitude may have been set by a tweaked knob, or, if the knobs have not been touched, the default frequency and amplitude for the instrument. Or the instrument may not have variable amplitude or variable frequency (<CODE>directout.dsp</CODE>, for example).<P>
+To start an instrument and specify that it play at a given frequency or 
+amplitude, you can tweak the instrument's frequency or amplitude knob to 
+the frequency or amplitude you want. An easier method is to use the tag 
+arguments supported by <CODE>StartInstrument()</CODE>, which tweak the 
+frequency or amplitude knob for you without a <CODE>TweakKnob()</CODE> call. 
+The three tag arguments listed in Table 1 set frequency.<P>
+<PRE>
+<B>Table 1: </B><I> tag arguments that set frequency.</I>
+---------------------------------------------------------
+Tag Name          |Descrption                            
+---------------------------------------------------------
+AF_TAG_PITCH      |A MIDI pitch value from 0 to 127 that 
+                  |specifies the appropriate frequency   
+                  |set by the instrument's tuning.       
+                  |Default tuning is 12-tone             
+                  |equal-tempered tuning with 60 set to  
+                  |middle C.                             
+---------------------------------------------------------
+AF_TAG_FREQUENCY  |A direct frequency value, measured in 
+                  |Hertz andexpressed in 16.16 format. Do
+                  |not use with sampled sounds in Opera  
+                  |Portfolio. Use AF_TAG_RATE instead.   
+---------------------------------------------------------
+AF_TAG_RATE       |A rate value, in raw units, that      
+                  |determines frequency. Raw values are  
+                  |instrument dependent, and are         
+                  |described in Preparing Instruments. in
+                  |the description of TweakRawKnob().    
+---------------------------------------------------------
+</PRE>
+<P>
+For a detailed description of how to use AF_TAG_RATE to play samples 
+recorded at various sample rates, see <A HREF="./10mpg.html#XREF28375">Playback Rate</A>.<P>
+The tag arguments shown in Table 2 set amplitude.  shows the other tag argument that can be used with <CODE>StartInstrument()</CODE>.<P>
+<PRE>
+<B>Table 2: </B><I> Tag arguments that set amplitude.</I>
+-------------------------------------------------------
+Tag Name        |Description                           
+-------------------------------------------------------
+AF_TAG_VELOCITY |A MIDI velocity value from 0 to 127   
+                |that specifies relative amplitude. 0  
+                |is no amplitude, 127 is maximum       
+                |amplitude, and 64 is "normal"         
+                |amplitudeor at least "median"         
+                |amplitude.                            
+-------------------------------------------------------
+AF_TAG_AMPLITUDE|An amplitude value ranging from 0x0   
+                |(no amplitude) to 0x7FFF (full        
+                |amplitude).                           
+-------------------------------------------------------
+</PRE>
+ <P>
+<PRE>
+<B>Table 3: </B><I> Other Instrument tag arguments.</I>
+-----------------------------------------------------
+Tag Name             |Description                    
+-----------------------------------------------------
+AF_TAG_TIME_SCALE    |Scale times for all Envelopes  
+                     |attached to this Instrument.   
+                     |Original value is derived from 
+                     |the AF_TAG_TIME_SCALE provided 
+                     |when the Envelope Attachment   
+                     |was made. This value remains in
+                     |effect until another           
+                     |AF_TAG_TIME_SCALE is passed to 
+                     |StartInstrument() or           
+                     |ReleaseInstrument().           
+-----------------------------------------------------
+</PRE>
+<P>
+Whenever you use these tag arguments in <CODE>StartInstrument()</CODE>, they have the same effect as tweaking either the frequency or amplitude knob of the specified instrument. If an instrument does not have a frequency knob, then frequency tag arguments have no effect. If an instrument does not have an amplitude knob, then amplitude tag arguments have no effect. And if an instrument has a frequency or amplitude knob but has another instrument (such as <CODE>envelope.dsp</CODE>) connected to it, the knob is not available, so the tag arguments do not affect it.<P>
+<H2>Releasing an Instrument</H2>
+Whenever you start a note playing instrument that has a sustain loop set up within it, the instrument continues playing until it is either released or stopped. Releasing the instrument allows it to continue on to its release phase (either a release loop or the end); stopping the instrument simply stops playback. To release an instrument, use this call:<P>
+<DL>
+<DD><CODE>Err ReleaseInstrument( Item Instrument, TagArg *TagList )</CODE><BR>
+</DL>
+The call accepts two arguments: the item number of the instrument to be released and a pointer to a list of tag arguments. The tag arguments are not currently defined for this call. If you do not supply tag arguments, use NULL for the tag argument pointer.<P>
+When <CODE>ReleaseInstrument()</CODE> executes, it releases the specified instrument. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+Releasing an instrument that is not playing a sustain loop (either on its own or through an attachment) has no effect at all on the item. Nor, for that matter, does it have any effect on instruments that do not play notes, such as mixers.<P>
+<H2>Stopping an Instrument</H2>
+Stopping an instrument makes it inactive, which stops it from running on the DSP. The instrument no longer uses DSP cycles and no longer operates. Stopping a note playing instrument means that its note stops dead in its tracks; stopping other instruments such as mixers, effects, instruments, and the like means that they no longer accept inputs and create outputs. To stop an instrument, use this call:<P>
+<DL>
+<DD><CODE>Err StopInstrument( Item Instrument, TagArg *TagList )</CODE><BR>
+</DL>
+The call accepts the item number of the instrument to be stopped and a pointer to a list of tag arguments. The tag arguments are not currently defined for this call. When executed, <CODE>StopInstrument()</CODE> stops the specified instrument. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+Stopping an instrument stops playback of all attachments to that instrument. Stopping a note playing instrument in full voice can result in a click. It is wise to apply an amplitude envelope that tapers to nothing or to turn down the amplitude completely before stopping a note playing instrument.<P>
+<H2>Cleaning Up When Finished</H2>
+<A NAME="XREF18552"><H3>Deleting an Instrument</A></H3>
+When a task finishes an instrument, it should delete the instrument as soon as possible to free resources for other instruments. To delete an instrument, use this call:<P>
+<DL>
+<DD><CODE>Err DeleteInstrument( Item Instrument )</CODE><BR>
+</DL>
+The call accepts the item number of the instrument you wish to delete. When it executes, it deletes the instrument and frees its resources. It returns 0 if successful, or a negative number (an error code) if unsuccessful.<P>
+<B>Note: </B>If you created an instrument with the <CODE>LoadInstrument()</CODE> call, do not use <CODE>FreeInstrument()</CODE> to delete it. If you do, the instrument is deleted and its template is still there with no way to get rid of it. Use<CODE> UnloadInstrument()</CODE> instead.<P>
+<H3>Deleting an Instrument Template</H3>
+When a task no longer requires an instrument template for allocating more instruments and has freed all instruments allocated from that template, it should get rid of the template to free system resources. To do so, use this call:<P>
+<DL>
+<DD><CODE>Err UnloadInsTemplate( Item InsTemplateItem )</CODE><BR>
+</DL>
+The call accepts the item number of the instrument template to delete. When it executes, it deletes the instrument template and returns 0 if successful, or a negative number (an error code) if unsuccessful.<P>
+When you delete an instrument template, any instruments created with that palette are also deleted. Be <I>certain</I> that you do not delete an instrument template when you have associated instruments still in use.<P>
+<A NAME="XREF22040"><H3>Deleting an Instrument and Its Template</A></H3>
+If you created an instrument and loaded an instrument template using the 
+<CODE>LoadInsTemplate()</CODE> call, you should delete that instrument and its template (when finished with them) with the following call:<P>
+<DL>
+<DD><CODE>Err UnloadInstrument( Item InstrumentItem )</CODE><BR>
+</DL>
+The call accepts the item number of the instrument to delete. When it executes, it deletes the specified instrument and also the instrument template used to create it. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<B>Note: </B>Do not use this call to delete an instrument that is one of many instruments created with one instrument template. The call deletes the template when it deletes the instrument and all the other instruments associated with that template are deleted at the same time, whether you intended to delete them or not.<P>
+<H3>Close the Audio Folio</H3>
+When a task finishes using the Audio folio, it should close its connection to the Audio folio using this call:<P>
+<DL>
+<DD><CODE>Err CloseAudioFolio( void )</CODE><BR>
+</DL>
+The call accepts no arguments, returns 0 if successful, and a negative number (an error code) if unsuccessful. When <CODE>CloseAudioFolio()</CODE> executes, it disconnects the task from the Audio folio.<P>

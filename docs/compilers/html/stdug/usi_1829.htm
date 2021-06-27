@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>Using Allocators with Existing Standard Library Containers</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Using Allocators with Existing Standard Library Containers</H2>
+<P>Using allocators with existing Standard C++ Library container classes is a simple process.  Merely provide an allocator type when you instantiate a container, and provide an actual allocator object when you construct a container object:</P>
+<!--ASQ-1 The style "teletype" is not associated; its content follows: my_allocator alloc;  // Construct an allocator--><!--ASQ-1 The style "teletype" is not associated; its content follows: vector&#60;int,my_allocator> v(alloc);  // Use the allocator--><!--ASQ-1 The style "teletype" is not associated; its content follows: -->
+<P>All standard containers default the allocator template parameter type to <SAMP>allocator</SAMP> and the object to <SAMP>Allocator()</SAMP>, where <SAMP>Allocator</SAMP> is the template parameter type.  This means that the simplest use of allocators is to ignore them entirely.  When you do not specify an allocator, the default allocator will be used for all storage management.</P>
+<P>If you do provide a different allocator type as a template parameter, then the type of object that you provide must match the template type.  For example, the following code will cause an compiler error because the types in the template signature and the call to the allocator constructor don't match:</P>
+<PRE>class my_allocator;
+list &#60;int, allocator> my_list(my_allocator());   \\ Wrong!
+</PRE>
+<P>The following call to the allocator constructor does match the template signature:</P>
+<PRE>list &#60;int, my_allocator> my_list(my_allocator());
+</PRE>
+<P>Note that the container always holds a <I>copy</I> of the allocator object that is passed to the constructor.  If you need a single allocator object to manage all storage for a number of containers, you must provide an allocator that maintains a reference to some shared implementation.</P>
+<HR>
+<A HREF="ano_4722.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="bui_2068.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,21 @@
+<TITLE>Description of the Kernel</TITLE>
+<H1><LINK NAME="XREF33285">Description of the Kernel</LINK></H1><HR>
+The kernel is a folio of function calls that is the heart of the Portfolio operating system. It controls 3DO hardware and any software running on the system. It manages resources and provides communication between running tasks and hardware devices. In particular, the kernel handles these responsibilities:<P>
+<UL>
+<LI><B>Multitasking. </B>The kernel handles the execution of all programs (tasks) running on the system and provides multitasking so that many tasks can run simultaneously.
+<p>
+<LI><B>Memory management. </B>The kernel allocates memory to all running tasks and makes sure that one task doesn't indiscriminately write to the memory allocated to another task. The kernel also consolidates free memory, manages the system's own memory, and performs other memory management duties.
+<p>
+<LI><B>Folio management. </B>Folios are the mechanism used by the kernel to bundle related functionality. Portfolio is composed of many folios, which together provide the system API. The kernel manages the creation, disposal, loading, and unloading of folios.
+<p>
+<LI><B>Intertask communication. </B>The kernel enables multiple tasks running simultaneously to communicate with one another. The two primary methods of intertask communication are by sending high-performance Boolean signals, or by sending messages. 
+<p>
+<LI><B>Resource sharing. </B>The kernel provides a check-in/check-out system for critical resources that tasks share so that only one task at a time works with those resources.
+<p>
+<LI><B>Linked lists. </B>The kernel creates and manages linked lists. Each linked list is an ordered group of data structures that can grow, shrink, or change order as necessary.
+<p>
+<LI><B>Error codes and messages. </B>The kernel provides a consistent way to handle error returns throughout the system. It helps convert error codes into descriptive strings to make application development easier.
+<p>
+<LI><B>I/O. </B>The kernel provides synchronous and asynchronous communication with I/O devices, and includes device and driver definitions for those devices.<A NAME="XREF23034">
+</UL>
+</A>

@@ -1,0 +1,159 @@
+<TITLE>Music Library Calls</TITLE>
+<H1><LINK NAME="XREF20449">Music Library Calls</LINK></H1><HR>
+This chapter describes the Music library function calls.  The calls are grouped by the Music library component they relate to, as follows:<P>
+<UL>
+<LI>Juggler
+<LI>Score playing
+<LI>Sound files
+<LI>Sound player
+<LI>Sound spooler
+</UL>
+The lists below provide a quick summary of each, followed by the page number of the folio call.  For program examples using these calls, refer to the source code file <I>spoolsoundfile.c</I> in the example directory of the Portfolio release.<P>
+<H2>Juggler</H2>
+<H3>Classes</H3>
+
+<UL>
+<LI><CODE><A HREF="./02mpr001.html#XREF28830">CollectionClass</A></CODE> Multiple parallel sequences and collections.
+<LI><CODE><A HREF="./02mpr002.html#XREF25334">JuggleeClass</A></CODE> Root Juggler class. 
+<LI><CODE><A HREF="./02mpr003.html#XREF29628">SequenceClass</A></CODE> A single sequence of events.
+</UL>
+<H3>Function Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="./02mpr004.html#XREF19837">AbortObject</A></CODE> Abnormally stops a Juggler object.
+<LI><CODE><A HREF="./02mpr005.html#XREF31433">AllocObject</A></CODE> Allocates memory for an object.
+<LI><CODE><A HREF="./02mpr006.html#XREF21967">BumpJuggler</A></CODE> Bumps the Juggler data-structure index.
+<LI><CODE><A HREF="./02mpr007.html#XREF24520">CreateObject</A></CODE> Creates an object of the given class.
+<LI><CODE><A HREF="./02mpr008.html#XREF20394">DefineClass</A></CODE> Defines a class of objects.
+<LI><CODE><A HREF="./02mpr009.html#XREF42157">DestroyObject</A></CODE> Destroys an object.
+<LI><CODE><A HREF="./02mpr010.html#XREF17884">FreeObject</A></CODE> Frees memory allocated for an object.
+<LI><CODE><A HREF="./02mpr011.html#XREF36448">GetNthFromObject</A></CODE> Gets the nth element of a collection.
+<LI><CODE><A HREF="./02mpr012.html#XREF21127">GetObjectInfo</A></CODE> Gets the current settings of an object.
+<LI><CODE><A HREF="./02mpr013.html#XREF10647">InitJuggler</A></CODE> Initializes the Juggler mechanism for controlling events.
+<LI><CODE><A HREF="./02mpr014.html#XREF34902">PrintObject</A></CODE> Prints debugging information about an object.
+<LI><CODE><A HREF="./02mpr015.html#XREF30804">RemoveNthFromObject</A></CODE> Removes the nth element of a collection.
+<LI><CODE><A HREF="./02mpr016.html#XREF30718">SetObjectInfo</A></CODE> Sets values in the object based on tag arguments.
+<LI><CODE><A HREF="./02mpr017.html#XREF20324">StartObject</A></CODE> Starts an object so the Juggler will play it.
+<LI><CODE><A HREF="./02mpr018.html#XREF26053">StopObject</A></CODE> Stops an object so the Juggler won't play it.
+<LI><CODE><A HREF="./02mpr019.html#XREF25568">TermJuggler</A></CODE> Terminates the Juggler mechanism for controlling events.
+<LI><CODE><A HREF="./02mpr020.html#XREF12026">ValidateObject</A></CODE> Validates an object.
+</UL>
+<H2>Score Playing</H2>
+
+<UL>
+<LI><CODE><A HREF="./02mpr021.html#XREF34990">ChangeScoreControl</A></CODE> Changes a MIDI control value for a channel.
+<LI><CODE><A HREF="./02mpr022.html#XREF24439">ChangeScorePitchBend</A></CODE> Changes a channel's pitch bend value.
+<LI><CODE><A HREF="./02mpr023.html#XREF39934">ChangeScoreProgram</A></CODE> Changes the MIDI program for a channel.
+<LI><CODE><A HREF="./02mpr024.html#XREF30500">ConvertPitchBend</A></CODE> Converts a MIDI pitch bend value into frequency multiplier.
+<LI><CODE><A HREF="./02mpr025.html#XREF42191">CreateScoreContext</A></CODE> Allocates a score context.
+<LI><CODE><A HREF="./02mpr026.html#XREF24437">DeleteScoreContext</A></CODE> Deletes a score context.
+<LI><CODE><A HREF="./02mpr027.html#XREF41066">DisableScoreMessages</A></CODE> Enable or disable printed messages during score playback.
+<LI><CODE><A HREF="./02mpr028.html#XREF37097">FreeChannelInstruments</A></CODE> Frees all of a MIDI channel's instruments.
+<LI><CODE><A HREF="./02mpr029.html#XREF32740">GetScoreBendRange</A></CODE> Gets the current pitch bend range value for a score context.
+<LI><CODE><A HREF="./02mpr030.html#XREF26764">InitScoreDynamics</A></CODE> Sets up dynamic voice allocation.
+<LI><CODE><A HREF="./02mpr031.html#XREF21919">InitScoreMixer</A></CODE> Creates and initializes a mixer instrument for MIDI score playback.
+<LI><CODE><A HREF="./02mpr032.html#XREF11636">InterpretMIDIEvent</A></CODE> Interprets MIDI events within a MIDI object.
+<LI><CODE><A HREF="./02mpr033.html#XREF12999">InterpretMIDIMessage</A></CODE> Executes a MIDI message.
+<LI><CODE><A HREF="./02mpr034.html#XREF17989">LoadPIMap</A></CODE> Loads a program-instrument map from a text file.
+<LI><CODE><A HREF="./02mpr035.html#XREF13527">MFDefineCollection</A></CODE> Creates a Juggler collection from a MIDI file image in RAM.
+<LI><CODE><A HREF="./02mpr036.html#XREF40622">MFLoadCollection</A></CODE> Loads a set of sequences from a MIDI file.
+<LI><CODE><A HREF="./02mpr037.html#XREF17171">MFLoadSequence</A></CODE> Loads a sequence from a MIDI file.
+<LI><CODE><A HREF="./02mpr038.html#XREF15596">MFUnloadCollection</A></CODE> Unloads a MIDI collection.
+<LI><CODE><A HREF="./02mpr039.html#XREF31757">NoteOffIns</A></CODE> Turns off a note played by an instrument.
+<LI><CODE><A HREF="./02mpr040.html#XREF34628">NoteOnIns</A></CODE> Turns on a note for an instrument.
+<LI><CODE><A HREF="./02mpr041.html#XREF21283">PurgeScoreInstrument</A></CODE> Purges an unused instrument from a ScoreContext.
+<LI><CODE><A HREF="./02mpr042.html#XREF14731">ReleaseScoreNote</A></CODE> Releases a MIDI note, uses voice allocation.
+<LI><CODE><A HREF="./02mpr043.html#XREF24061">SelectSamplePlayer</A></CODE> Gets the name of the instrument to play the sample.
+<LI><CODE><A HREF="./02mpr044.html#XREF35488">SetPIMapEntry</A></CODE> Specifies the instrument to use when a MIDI program change occurs.
+<LI><CODE><A HREF="./02mpr045.html#XREF21010">SetScoreBendRange</A></CODE> Sets the current pitch bend range value for a score context.
+<LI><CODE><A HREF="./02mpr046.html#XREF33263">StartScoreNote</A></CODE> Starts a MIDI note, uses voice allocation.
+<LI><CODE><A HREF="./02mpr047.html#XREF12834">StopScoreNote</A></CODE> Stop a MIDI note w/o releasing it, uses voice allocation.
+<LI><CODE><A HREF="./02mpr048.html#XREF31982">TermScoreMixer</A></CODE> Dispose of mixer created by InitScoreMixer(). 
+<LI><CODE><A HREF="./02mpr049.html#XREF11195">UnloadPIMap</A></CODE> Unloads instrument templates loaded previously with PIMapfile.
+</UL>
+<H2>Sound Files</H2>
+
+<UL>
+<LI><CODE><A HREF="./02mpr050.html#XREF25761">CloseSoundFile</A></CODE> Closes a SoundFilePlayer data structure and unloads a sound file.
+<LI><CODE><A HREF="./02mpr051.html#XREF42166">CreateSoundFilePlayer</A></CODE> Creates a SoundFilePlayer data structure to play sound files.
+<LI><CODE><A HREF="./02mpr052.html#XREF37655">DeleteSoundFilePlayer</A></CODE> Deletes a SoundFilePlayer data structure.
+<LI><CODE><A HREF="./02mpr053.html#XREF30905">LoadSoundFile</A></CODE> Preloads the first part of a sound file.
+<LI><CODE><A HREF="./02mpr054.html#XREF26861">OpenSoundFile</A></CODE> Creates a SoundFilePlayer data structure and loads a sound file.
+<LI><CODE><A HREF="./02mpr055.html#XREF26293">ReadSoundFile</A></CODE> Reads a sound file.
+<LI><CODE><A HREF="./02mpr056.html#XREF37577">RewindSoundFile</A></CODE> Rewinds a sound file player.
+<LI><CODE><A HREF="./02mpr057.html#XREF11879">ServiceSoundFile</A></CODE> Spools a sound file from disk to a sound buffer.
+<LI><CODE><A HREF="./02mpr058.html#XREF32478">StartSoundFile</A></CODE> Begins playing a sound file.
+<LI><CODE><A HREF="./02mpr059.html#XREF24025">StopSoundFile</A></CODE> Stops playing a sound file.
+<LI><CODE><A HREF="./02mpr060.html#XREF41161">UnloadSoundFile</A></CODE> Unloads a sound file.
+</UL>
+<H2>Sound Player</H2>
+
+<UL>
+<LI><CODE><A HREF="./02mpr061.html#XREF17185">spAddMarker</A></CODE> Add a new SPMarker to an SPSound.
+<LI><CODE><A HREF="./02mpr062.html#XREF39542">spAddSample</A></CODE> Create an SPSound for a Sample Item.
+<LI><CODE><A HREF="./02mpr063.html#XREF36046">spAddSoundFile</A></CODE> Create an SPSound for an AIFF sound file.
+<LI><CODE><A HREF="./02mpr064.html#XREF40639">spBranchAtMarker</A></CODE> Set up a static branch at a marker.
+<LI><CODE><A HREF="./02mpr065.html#XREF40544">spClearDefaultDecisionFunction</A></CODE> Clears global decision function.
+<LI><CODE><A HREF="./02mpr066.html#XREF39335">spClearMarkerDecisionFunction</A></CODE> Clears a marker decision function.
+<LI><CODE><A HREF="./02mpr067.html#XREF24196">spContinueAtMarker</A></CODE> Clear static branch at a marker.
+<LI><CODE><A HREF="./02mpr068.html#XREF24761">spCreatePlayer</A></CODE> Create an SPPlayer.
+<LI><CODE><A HREF="./02mpr069.html#XREF41344">SPDecisionFunction</A></CODE> Typedef for decision callback functions
+<LI><CODE><A HREF="./02mpr070.html#XREF29915">spDeletePlayer</A></CODE> Delete an SPPlayer.
+<LI><CODE><A HREF="./02mpr071.html#XREF16569">spDumpPlayer</A></CODE> Print debug information for sound player
+<LI><CODE><A HREF="./02mpr072.html#XREF37325">spFindMarkerName</A></CODE> Return pointer an SPMarker by looking up its name.
+<LI><CODE><A HREF="./02mpr073.html#XREF41518">spGetMarkerName</A></CODE> Get name of an SPMarker.
+<LI><CODE><A HREF="./02mpr074.html#XREF11695">spGetMarkerPosition</A></CODE> Get position of an SPMarker.
+<LI><CODE><A HREF="./02mpr075.html#XREF12284">spGetPlayerFromSound</A></CODE> Get SPPlayer that owns an SPSound.
+<LI><CODE><A HREF="./02mpr076.html#XREF26745">spGetPlayerSignalMask</A></CODE> Get set of signals player will send to client.
+<LI><CODE><A HREF="./02mpr077.html#XREF27522">spGetPlayerStatus</A></CODE> Get current status of an SPPlayer.
+<LI><CODE><A HREF="./02mpr078.html#XREF27293">spGetSoundFromMarker</A></CODE> Get SPSound that owns an SPMarker.
+<LI><CODE><A HREF="./02mpr079.html#XREF14588">spIsSoundInUse</A></CODE> Determines if SPPlayer is currently reading from a particular SPSound.
+<LI><CODE><A HREF="./02mpr080.html#XREF21427">spLinkSounds</A></CODE> Branch at end of one sound to beginning of another.
+<LI><CODE><A HREF="./02mpr081.html#XREF27508">spLoopSound</A></CODE> Branch at end of sound back to the beginning.
+<LI><CODE><A HREF="./02mpr082.html#XREF24746">spPause</A></CODE> Pause an SPPlayer.
+<LI><CODE><A HREF="./02mpr083.html#XREF25941">spRemoveMarker</A></CODE></CODE> Manually remove an SPMarker from an SPSound.
+<LI><CODE><A HREF="./02mpr084.html#XREF24744">spRemoveSound</A></CODE></CODE> Manually remove an SPSound from an SPPlayer.
+<LI><CODE><A HREF="./02mpr085.html#XREF28772">spResume</A></CODE></CODE> Resume playback of an SPPlayer after being paused.
+<LI><CODE><A HREF="./02mpr086.html#XREF41970">spService</A></CODE></CODE> Service SPPlayer
+<LI><CODE><A HREF="./02mpr087.html#XREF19779">spSetBranchAction</A></CODE></CODE> Set up an SPAction to branch to the specified marker.
+<LI><CODE><A HREF="./02mpr088.html#XREF33640">spSetDefaultDecisionFunction</A></CODE></CODE> Install a global decision function to be called for every marker.
+<LI><CODE><A HREF="./02mpr089.html#XREF13040">spSetMarkerDecisionFunction</A></CODE></CODE> Install a marker decision function.
+<LI><CODE><A HREF="./02mpr090.html#XREF22533">spSetStopAction</A></CODE></CODE> Set up an SPAction to stop reading.
+<LI><CODE><A HREF="./02mpr091.html#XREF15941">spStartPlaying</A></CODE></CODE> Begin emitting sound for an SPPlayer.
+<LI><CODE><A HREF="./02mpr092.html#XREF25186">spStartReading</A></CODE></CODE> Start SPPlayer reading from an SPSound.
+<LI><CODE><A HREF="./02mpr093.html#XREF20856">spStop</A></CODE></CODE> Stops an SPPlayer
+<LI><CODE><A HREF="./02mpr094.html#XREF41521">spStopAtMarker</A></CODE></CODE> Stop when playback reaches marker.
+</UL>
+<H2>Sound Spooler</H2>
+
+<UL>
+<LI><CODE><A HREF="./02mpr095.html#XREF25499">SoundBufferFunc</A></CODE></CODE> SoundSpooler callback function typedef.
+<LI><CODE><A HREF="./02mpr096.html#XREF40388">ssplAbort</A></CODE></CODE> Abort SoundSpooler buffers in active queue.
+<LI><CODE><A HREF="./02mpr097.html#XREF16411">ssplAttachInstrument</A></CODE></CODE> Attach new sample player instrument to SoundSpooler.
+<LI><CODE><A HREF="./02mpr098.html#XREF39302">ssplCreateSoundSpooler</A></CODE></CODE> Create a SoundSpooler.
+<LI><CODE><A HREF="./02mpr099.html#XREF13890">ssplDeleteSoundSpooler</A></CODE></CODE> Delete a SoundSpooler.
+<LI><CODE><A HREF="./02mpr100.html#XREF16255">ssplDetachInstrument</A></CODE></CODE> Delete a SoundSpooler.
+<LI><CODE><A HREF="./02mpr101.html#XREF14519">ssplDumpSoundBufferNode</A></CODE></CODE> Print debug info for SoundBufferNode.
+<LI><CODE><A HREF="./02mpr102.html#XREF14034">ssplDumpSoundSpooler</A></CODE></CODE> Print debug info for SoundSpooler.
+<LI><CODE><A HREF="./02mpr103.html#XREF27899">ssplGetSBMsgClass</A></CODE></CODE> Get class of message passed to SoundBufferFunc.
+<LI><CODE><A HREF="./02mpr104.html#XREF11072">ssplGetSequenceNum</A></CODE></CODE> Get Sequence Number of a SoundBufferNode.
+<LI><CODE><A HREF="./02mpr105.html#XREF10988">ssplGetSpoolerStatus</A></CODE></CODE> Get SoundSpooler status flags.
+<LI><CODE><A HREF="./02mpr106.html#XREF17572">ssplGetUserData</A></CODE></CODE> Get User Data from a SoundBufferNode.
+<LI><CODE><A HREF="./02mpr107.html#XREF27716">ssplIsSpoolerActive</A></CODE></CODE> Test if spooler has anything in its active queue.
+<LI><CODE><A HREF="./02mpr108.html#XREF36471">ssplPause</A></CODE></CODE> Pauses the SoundSpooler
+<LI><CODE><A HREF="./02mpr109.html#XREF11288">ssplPlayData</A></CODE></CODE> Waits for next available buffer then sends a block full of data to the spooler. (convenience routine).
+<LI><CODE><A HREF="./02mpr110.html#XREF20300">ssplProcessSignals</A></CODE></CODE> Process completion signals that have been received.
+<LI><CODE><A HREF="./02mpr111.html#XREF24497">ssplRequestBuffer</A></CODE></CODE> Asks for an available buffer.
+<LI><CODE><A HREF="./02mpr112.html#XREF41034">ssplReset</A></CODE></CODE> Reset Sound Spooler.
+<LI><CODE><A HREF="./02mpr113.html#XREF35532">ssplResume</A></CODE></CODE> Resume SoundSpooler playback.
+<LI><CODE><A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A></CODE></CODE> Send a buffer full of data.
+<LI><CODE><A HREF="./02mpr115.html#XREF33138">ssplSetBufferAddressLength</A></CODE></CODE> Attach sample data to a SoundBufferNode.
+<LI><CODE><A HREF="./02mpr116.html#XREF16970">ssplSetSoundBufferFunc</A></CODE></CODE> Install new SoundBufferFunc in SoundSpooler.
+<LI><CODE><A HREF="./02mpr117.html#XREF18890">ssplSetUserData</A></CODE></CODE> Store user data in a SoundBufferNode.
+<LI><CODE><A HREF="./02mpr118.html#XREF33759">ssplSpoolData</A></CODE></CODE> Send a block full of data. (convenience routine)
+<LI><CODE><A HREF="./02mpr119.html#XREF23431">ssplStartSpooler</A></CODE></CODE> Start SoundSpooler.
+<LI><CODE><A HREF="./02mpr120.html#XREF31519">ssplStartSpoolerTags</A></CODE></CODE> Start SoundSpooler with tags.
+<LI><CODE><A HREF="./02mpr121.html#XREF17770">ssplStopSpooler</A></CODE></CODE> Stop SoundSpooler.
+<LI><CODE><A HREF="./02mpr122.html#XREF21344">ssplUnrequestBuffer</A></CODE></CODE> Return an unused buffer to the sound spooler.
+<LI><CODE><A HREF="./02mpr123.html#XREF33469">UserBufferProcessor</A></CODE></CODE> Callback function called by ssplProcessSignals(), ssplAbort(), and ssplReset().
+</UL>

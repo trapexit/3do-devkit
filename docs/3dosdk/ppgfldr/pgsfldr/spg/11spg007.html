@@ -1,0 +1,103 @@
+<TITLE>Working With NVRAM</TITLE>
+<H1><LINK NAME="XREF15462">Working With NVRAM</LINK></H1><HR>
+The Portfolio operating system treats NVRAM-nonvolatile random access memory-as a file system volume. This maintains consistency for I/O operations; you use the same steps for accessing NVRAM as you do for all other files. Portfolio also provides an NVRAM maintenance utility called lmadm. See the <I>3DO Debugger Programmer's Guide</I>, "Terminal Window Commands," for full details. <P>
+A minimally configured 3DO system has at least 32 KB of NVRAM. Application developers can use this facility for persistent storage of small pieces of data. Practical uses include providing a game saving feature, to save user preference settings, or to store application configuration information. There is no way to query the operating system for the amount of available NVRAM memory prior to creating an NVRAM file, because NVRAM is not confined to one contiguous area. The correct procedure is to try to create and allocate the NVRAM file using the <CODE>OpenDiskFile()</CODE> call. If the call is successful, then sufficient memory was available. If the call fails for lack of memory, then it returns an error code indicating insufficient space.<P>
+The following sections explain how to access NVRAM. They include descriptions of high-level NVRAM access routines. <P>
+<H2>How Not to Manage NVRAM </H2>
+When NVRAM is full, some titles cannot manage VRAM appropriately. Some titles fail silently, discarding information the user wants to save. Other titles overwrite information saved by other titles. This can be annoying if a user reached a relatively high level in another title. <P>
+<B>Caution: </B>Developers should avoid managing NVRAM in the ways mentioned above.<P>
+<H2>How to Manage NVRAM</H2>
+A title should do the following to manage NVRAM properly: <P>
+<UL>
+<LI>Remove obsolete files. For example, files for a previous version of the same title can probably be removed.
+<p>
+<LI>If possible, save files as compressed files. 
+<p>
+<LI>Never delete information about a different title without prompting the user. 
+<p>
+<LI>Prompt the user to delete information currently in NVRAM if a title attempts to write to NVRAM but fails because it is full. This can be done using Access, discussed in <A HREF="./16spg.html#XREF28895">Access: A Simple User Interface</A>. Some guidelines are discussed in the next section.
+</UL>
+<H2>How a Title Should Save Its Status</H2>
+Every title should go through the same set of steps to save its status. This section lists the steps in sequence. Commented sample code for parts of this sequence is provided in the 3DO Toolkit 1.3.1.<P>
+<OL>
+<LI>Bring up the Save Title display. This display differs from title to title. Users can usually choose to overwrite files or add to a list of existing files.
+<p>
+<LI>If the user cancels, exit with no error.
+<p>
+<LI>Otherwise, attempt to write file. 
+<p>
+<LI>If writing file works, exit with no error.
+<p>
+<LI>Otherwise, delete the file that was just saved. (This is important in order to remove any parts of the file that might have made it to NVRAM.) Then inform the user that there is not enough room to save the game, and bring up the Delete File display.
+<p>
+<LI>If the user chooses a file to delete, remove the file and go back to step 3 above.
+<p>Otherwise, if the user cancels-return to Save Title display and go back to step 1. 
+<p><B>Note: </B> A sample program that brings up a Delete File display is included in this release. <BR>
+</OL>
+<A NAME="XREF20594"><H2>Working With NVRAM Files</A></H2>
+Portfolio supports NVRAM access through file system function calls. Your title can use I/O requests to work with an open NVRAM file as a device, as it would any other file. You can use the functions in the section <A HREF="./11spg009.html#XREF22691">Using NVRAM</A> to create (and allocate) blocks, and to read from, write to, get the block size of a file, and set the end of a file.<P>
+This section first provides information on how to choose appropriate filenames, then provides some information about how to look at NVRAM using the 3DO Debugger. <P>
+<H3>Choosing Appropriate Filenames</H3>
+The NVRAM volume is a flat file system; it cannot contain subdirectories. Choose filenames wisely to avoid conflicts with other title developers. To avoid name conflicts while still providing readable filenames to end users, 3DO recommends the following file-naming standard. Filenames in NVRAM have a limit of 31 characters. Filenames that follow this standard consist of two parts:<P>
+&lt;title name&gt; [&lt;user/level name&gt;] <P>
+<UL>
+<LI>The first part is the name of the title itself. If space allows you should use the full name of your title, with no abbreviations. 
+<p>
+<LI>The second part of the filename uniquely identifies the file to the user. This part is flexible depending on the purpose of the file. For example, if the file is a game and users are prompted for their name as part of the game, the users' name or the name of the game level could be part of the filename. 
+</UL>
+<p><B>Note: </B>When a title displays a Load Game or a Save Game display, it should only show its own files within the list. That is, when loading a saved game from Total Eclipse, for example, a player shouldn't be able to see games from Monster Manor in the file list. In addition, the entries displayed in that list should not include the title's name. <BR>
+<p>Following this standard reduces the chance of filename conflicts in NVRAM. However, it still does not completely eliminate the possibility of confusion between titles that create files with similar or identical names. Therefore, it is recommended that you store a unique identifier in the first two bytes of every file that your title creates in NVRAM. To guarantee uniqueness, this identifier should be the licensee number assigned to you by 3DO.<P>
+<H3>Working With NVRAM via the 3DO Debugger</H3>
+As with any other volume, NVRAM must be formatted properly before the file system can access it. If you're working from the debugger, type the following command, followed by the Enter key, in the debugger Terminal window:<P>
+<CODE>
+<PRE>
+format RAM 3 0 NVRAM
+</CODE>
+</PRE>
+After issuing this command, reset the target. You should see the<I> /NVRAM</I> volume mount during file system start-up. Thereafter, you can refer to this volume as 
+<I>/NVRAM</I>. You will not need to perform this format ritual again, since the contents of NVRAM are preserved across restarts and shutdowns. On a production player NVRAM is preformatted.<P>
+If you're working from a CD-ROM image, the volume is formatted automatically. <P>
+<H3>Working With NVRAM Files From the Debugger</H3>
+You can work with files in NVRAM the same way you'd work with other files. Copy them using the Copy command. To view them, type into the Terminal window: <P>
+<CODE>
+<PRE>
+$c/ls /nvram
+</CODE>
+</PRE>
+A list of all files appears in NVRAM. To see a more detailed list, type: <P>
+<CODE>
+<PRE>
+$c/lmdump RAM 3 0
+</CODE>
+</PRE>
+<H2>NVRAM Chunk Definition</H2>
+This section describes a format for files in NVRAM. The format lets you embed information about a file inside the file itself. As a result, the Storage Manager or other software can present users with information about the files in NVRAM. <P>
+This section first lists file type and chunk information, then presents a new chunk, the comment chunk, and an example. <P>
+<H3>File type and chunk information</H3>
+The files must have a special type, 3DOF, which stands for 3DO file format. This must be set for applications to know that the file is in the correct format. <P>
+A file which is in the 3DO file format consists of one or more chunks. Each chunk contains a chunk ID, chunk size, and chunk data. For more information about the 3DO file format see the<I> 3DO CD-ROM Mastering Guide</I>.<P>
+<H3>The comment chunk</H3>
+The comment chunk contains information about the file in NVRAM.<P>
+<PRE>
+<B>Table 1: </B><I> Components of comment chunk.</I>
+-----------------------------------------------------
+Name                 |Descriptions                   
+-----------------------------------------------------
+ID                   |NVRT                           
+-----------------------------------------------------
+size                 |Length of the language data + 4
+                     |bytes for the language code    
+-----------------------------------------------------
+chunk data           |Language code and the comment  
+                     |with a null at the end         
+-----------------------------------------------------
+language code        |0 for English                  
+-----------------------------------------------------
+</PRE>
+<P>
+For example, a comment chunk might look like this:<P>
+<CODE>
+<PRE>
+`NVRT',        20,        0,        "The 3DO Company"
+</CODE>
+</PRE>

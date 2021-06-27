@@ -1,0 +1,30 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF31346">Function Calls</LINK></H1><HR>
+<A NAME="XREFI/O">I/O operations use the following calls. See </A><A HREF="../spr/01spr.html#XREF17318">Kernel Folio Calls</A>,  in the <I>3DO System Programmer's Reference</I> for complete details on these calls.<P>
+<H2>Opening and Closing <A NAME="XREFdevices"></A><A NAME="XREFdevices">Devices</A></H2>
+The following calls open and close devices:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr017.html#XREF21978">CloseNamedDevice</A>() </CODE>Closes a device previously opened with <CODE>OpenNamedDevice()</CODE>.
+<LI><CODE><A HREF="../spr/01spr048.html#XREF39689">FindDevice</A>() </CODE>Returns the item number of a device.
+<LI><CODE><A HREF="../spr/01spr044.html#XREF33729">FindAndOpenDevice</A>() </CODE>Finds and opens a device item.
+<LI><CODE><A HREF="../spr/01spr105.html#XREF24352">OpenNamedDevice</A>() </CODE>Opens a named device.
+</UL>
+<H2>Creating, Deleting, and Creating Pointers for <A NAME="XREFIOReqs"></A><A NAME="XREFIOReqs"></A><A NAME="XREFIOReqs"></A><A NAME="XREFI/O process">IOReqs</A></H2>
+The following calls handle IO requests:<CODE> </CODE> <P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr021.html#XREF36930">CreateIOReq</A>() </CODE>Creates an I/O request.
+<LI><CODE><A HREF="../spr/01spr031.html#XREF13807">DeleteIOReq</A>() </CODE>Deletes an I/O request.
+<LI><CODE><A HREF="../spr/01spr099.html#XREF27851">LookupItem</A>() </CODE>Gets a pointer to an item.
+</UL>
+<H2>Controlling the I/O Process</H2>
+The following calls handle I/O processes:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr001.html#XREF20829">AbortIO</A>() </CODE>Aborts an I/O operation.
+<LI><CODE><A HREF="../spr/01spr013.html#XREF25810">CheckIO</A>() </CODE>Checks if an asynchronous I/O request has completed.
+<LI><CODE><A HREF="../spr/01spr038.html#XREF37111">DoIO</A>() </CODE>Performs synchronous I/O.
+<LI><CODE><A HREF="../spr/01spr121.html#XREF16419">SendIO</A>() </CODE>Requests asynchronous I/O.
+<LI><CODE><A HREF="../spr/01spr131.html#XREF35365">WaitIO</A>() </CODE>Waits for an asynchronous I/O request to complete.
+</UL>

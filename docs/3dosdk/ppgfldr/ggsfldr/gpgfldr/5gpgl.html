@@ -1,0 +1,262 @@
+<TITLE>Primary Data Structures</TITLE>
+<H1><LINK NAME="XREF18463">Primary Data Structures</LINK></H1><HR>
+This section describes the data structures used for programming cel projection.<P>
+<H2>The Cel Control Block (CCB)</H2>
+The CCB contains at least six 32-bit words, and can have up to 15 words.
+ The first six words are read into the cel engine when 
+ <CODE>DrawScreenCels()</CODE> or <CODE>DrawCels()</CODE> executes. 
+ If the CCB flags (located in the first word) specify further data for the 
+ cel, the CCB must contain additional words beyond the first six words. 
+ These additional words contain the data specified by the CCB flags.  
+ Table 1 describes the contents of a CCB.<P>
+<PRE>
+<B>Table 1: </B><I> The contents of a CCB.</I>
+---------------------------------------------------------------------
+Word # |Bits  |Name        |Optiona|Description                      
+       |Used  |            |l?     |                                 
+---------------------------------------------------------------------
+1      |32    |FLAGS       |No     |Assorted 1-bit flags. This is the
+       |      |            |       |first word read.                 
+---------------------------------------------------------------------
+2      |24    |NEXTPTR     |No     |Address of next CCB to process.  
+---------------------------------------------------------------------
+3      |24    |SOURCEPTR   |No     |Address of image data to be      
+       |      |            |       |rendered.                        
+---------------------------------------------------------------------
+4      |24    |PLUTPTR     |No     |Address of PLUT to be loaded.    
+---------------------------------------------------------------------
+5      |32    |XPOS        |No     |Horizontal source position of cel
+       |      |            |       |in bitmap (in 16.16 or 17.15     
+       |      |            |       |format).                         
+---------------------------------------------------------------------
+6      |32    |YPOS        |No     |Vertical source position of cel  
+       |      |            |       |in bitmap (in 16.16 or 17.15     
+       |      |            |       |format).                         
+---------------------------------------------------------------------
+7      |32    |HDX         |Yes    |Starting horizontal offset X     
+       |      |            |       |value (in 12.20 format).         
+---------------------------------------------------------------------
+8      |32    |HDY         |Yes    |Starting horizontal offset Y     
+       |      |            |       |value (in 12.20 format).         
+---------------------------------------------------------------------
+9      |32    |VDX         |Yes    |Vertical offset x value (in 16.16
+       |      |            |       |format).                         
+---------------------------------------------------------------------
+10     |32    |VDY         |Yes    |Vertical offset y value (in 16.16
+       |      |            |       |format).                         
+---------------------------------------------------------------------
+11     |32    |HDDX        |Yes    |Change in HDX offset value (in   
+       |      |            |       |12.20 format).                   
+---------------------------------------------------------------------
+12     |32    |HDDY        |Yes    |Change in HDY offset value (in   
+       |      |            |       |12.20 format).                   
+---------------------------------------------------------------------
+13     |32    |PIXC        |Yes    |Pixel processor control word.    
+---------------------------------------------------------------------
+14     |32    |PRE0        |Yes    |Possible first preamble word.    
+---------------------------------------------------------------------
+15     |32    |PRE1        |Yes    |Possible second preamble word.   
+---------------------------------------------------------------------
+</PRE>
+<P>
+<H2>The FLAGS Word of the CCB</H2>
+The <CODE>FLAGS</CODE> word, the first word of the CCB, contains flags 
+that turn the cel engine features on and off, and specify further 
+information needed for the CCB. The contents of the FLAGS word are 
+described in Table 2.<P>
+<B>Note: </B>Leaving <CODE>LDSIZE</CODE>, <CODE>LDPRS</CODE> and, 
+<CODE>LDPIXC</CODE> bits clear causes the cel engine to use a truncated 
+CCB that does not match the C structure.
+<PRE>
+<B>Table 2: </B><I> The FLAGS word of the CCB.</I>
+----------------------------------------------------------------
+Bit #  |Flag Name  |Parameter Controlled                        
+----------------------------------------------------------------
+31     |SKIP       |If set, skip (do not project) this CCB.     
+----------------------------------------------------------------
+30     |LAST       |If set, this is the last linked CCB to      
+       |           |project. Ignore the value in NEXTPTR.       
+----------------------------------------------------------------
+29     |NPABS      |Determine absolute or relative address for  
+       |           |NEXTPTR CCB word. 1=absolute; 0=relative.   
+----------------------------------------------------------------
+28     |SPABS      |Determine absolute or relative address for  
+       |           |SOURCEPTR CCB word. 1=absolute; 0=relative. 
+----------------------------------------------------------------
+27     |PPABS      |Determine absolute or relative address for  
+       |           |PLUTPTR CCB word. 1=absolute; 0=relative.   
+----------------------------------------------------------------
+26     |LDSIZE     |If set, load four CCB words of offset data: 
+       |           |HDX, HDY, VDX, and VDY. If not set, use     
+       |           |existing values.                            
+----------------------------------------------------------------
+25     |LDPRS      |If set, load two CCB words of perspective   
+       |           |offset data: HDDX and HDDY. If not set, use 
+       |           |existing values.                            
+----------------------------------------------------------------
+24     |LDPIXC     |If set, load a new pixel-processor CCB      
+       |           |control word: PIXC. If not set, use existing
+       |           |values.                                     
+----------------------------------------------------------------
+23     |LDPLUT     |If set, load a new PLUT from the location   
+       |           |specified by the PLUTPTR CCB word. If not   
+       |           |set, use existing PLUT values.              
+----------------------------------------------------------------
+22     |CCBPRE     |Determine preamble location. 1=at end of    
+       |           |CCB; 0=at start of data.                    
+----------------------------------------------------------------
+21     |YOXY       |1=write the CCB origin coordinates (XPOS and
+       |           |YPOS) to the cel engine; 0=use the current  
+       |           |cel engine origin coordinates.              
+----------------------------------------------------------------
+20     |ACSC       |Enable cel super clipping. 1=on; 0=off. This
+       |           |value is ANDed with the ASCALL clipping flag
+       |           |in the cel engine control word.             
+----------------------------------------------------------------
+19     |ALSC       |Enable line super clipping. 1=on; 0=off.    
+       |           |This value is ANDed with the ASCALL clipping
+       |           |flag in the cel engine control word.        
+----------------------------------------------------------------
+18     |ACW        |Enable clockwise pixel rendering. 1=render  
+       |           |CW pixels; 0=do not render CW pixels.       
+----------------------------------------------------------------
+17     |ACCW       |Enable counterclockwise pixel rendering.    
+       |           |1=render CCW pixels; 0=do not render CCW    
+       |           |pixels.                                     
+----------------------------------------------------------------
+16     |TWD        |1=terminate cel projection if first cel     
+       |           |pixel is a backface pixel (CCW).            
+----------------------------------------------------------------
+15     |LCE        |1=lock the two corner engines together;     
+       |           |0=allow the two corner engines to operate   
+       |           |independently.                              
+----------------------------------------------------------------
+14     |ACE        |1=allow both corner engines to function;    
+       |           |0=allow only the first corner engine to     
+       |           |function.                                   
+----------------------------------------------------------------
+13     |xxxxxxx    |Spare bit, not currently used. Must be 0.   
+----------------------------------------------------------------
+12     |MARIA      |1=disable regional fill (speed fill only);  
+       |           |0=enable regional fill.                     
+----------------------------------------------------------------
+11     |PXOR       |1=enable the pixel-processor XOR option (XOR
+       |           |the two sources in the final math stage     
+       |           |instead of addition or subtraction);        
+       |           |0=disable the XOR option.                   
+----------------------------------------------------------------
+10     |USEAV      |1=use the AV bits of the PIXC CCB word for  
+       |           |pixel-processor math functions; 0=use AV    
+       |           |bits as the secondary source value in pixel 
+       |           |processor.                                  
+----------------------------------------------------------------
+9      |PACKED     |1 specifies packed source data; 0 specifies 
+       |           |unpacked source data. This bit also         
+       |           |determines whether there are one or two     
+       |           |preamble words.                             
+----------------------------------------------------------------
+87     |POVER      |Set P-mode. 00=use P-mode specified in pixel
+       |           |coming from pixel decoder; 01=xx; 10=use    
+       |           |P-mode 0; 11=use P-mode 1.                  
+----------------------------------------------------------------
+6      |PLUTPOS    |Derives VH value from PLUT or CCB. 1=get VH 
+       |           |value from PLUT; 0=get VH value from        
+       |           |subposition specified by origin location.   
+----------------------------------------------------------------
+5      |BGND       |Decides 000 decoder value treatment. 1=pass 
+       |           |000 as RGB value into pixel processor;      
+       |           |0=skip pixel processor and treat pixel as   
+       |           |transparent. BGND and transparency detection
+       |           |are done at pixel input from source.        
+----------------------------------------------------------------
+4      |NOBLK      |0=write 000 pixel as 100; 1=write 000 pixel 
+       |           |as 00 0. BGND pixel value substitution is   
+       |           |done based on output of the pixel projector.
+----------------------------------------------------------------
+31     |PLUTA      |These three bits are used to fill in        
+       |           |high-order bits for cel pixels with less    
+       |           |than 5 bits per pixel. The result is fed    
+       |           |into the PLUT.                              
+----------------------------------------------------------------
+</PRE>
+<P>
+<H2>The PIXC Word</H2>
+The <CODE>PIXC</CODE> word of the CCB contains two halves. The upper 
+half contains settings for pixel-processor P-mode 1; the lower half 
+contains settings for pixel-processor P-mode 0.<P>
+<PRE>
+<B>Table 3: </B><I> The PIXC word of the CCB. </I>
+------------------------------------------------------------
+P0    |P1 bits |Name  |Parameter Controlled                 
+bits  |        |      |                                     
+------------------------------------------------------------
+31    |15      |1S    |Sets the primary source starting     
+      |        |      |value. 0=pixel is from the data      
+      |        |      |decoder; 1=current frame buffer      
+      |        |      |pixel.                               
+------------------------------------------------------------
+3029  |1413    |MS    |Sets the source of the PMV. 00=PMV   
+      |        |      |from CCB value; 01=PMV is AMV from   
+      |        |      |data decoder; 10=PMV and PDV from    
+      |        |      |color value out of data decoder;     
+      |        |      |11=PMV alone from the color value out
+      |        |      |of data decoder.                     
+------------------------------------------------------------
+2826  |1210    |MF    |Sets the PMV, but only if MS (above) 
+      |        |      |is set to 00. 0=1; 1=2; 2=3; 3=4;    
+      |        |      |4=5; 5=6; 6=7; 7=8.                  
+------------------------------------------------------------
+2524  |98      |DF    |Sets the PDV, but only if MS (above) 
+      |        |      |is not set to 10. 1=2; 2=4; 3=8;     
+      |        |      |0=16.                                
+------------------------------------------------------------
+2322  |76      |2S    |Sets the secondary source starting   
+      |        |      |value. 00=0; 01=CCB value; 10=current
+      |        |      |frame buffer pixel; 11=pixel coming  
+      |        |      |from the data decoder.               
+------------------------------------------------------------
+2117  |51      |AV    |Contains a 5-bit value used as the   
+      |        |      |secondary source starting value if 2S
+      |        |      |(above) is set to 01.                
+------------------------------------------------------------
+16    |0       |2D    |Sets the secondary divider value.    
+      |        |      |0=1; 1=2.                            
+------------------------------------------------------------
+</PRE>
+<P>
+<H2>The AV Value of the PIXC Word</H2>
+The <CODE>AV</CODE> value can, if specified, use its bits to control some of 
+the pixel processor's operations. The contents of the AV value are shown in
+Table 4.<P>
+<PRE>
+<B>Table 4: </B><I> The AV value of the PIXC word.</I>
+---------------------------------------------------------
+Bits  |Operation Controlled                              
+---------------------------------------------------------
+43    |Sets the SDV. 00=1; 01=2; 10=4; 11=use the two    
+      |lowest bits of the color component coming from the
+      |data decoder.                                     
+---------------------------------------------------------
+2     |1=disable the pixel processor's output wrap       
+      |preventer; 0=enable the output wrap preventer.    
+---------------------------------------------------------
+1     |1=enable the sign extension of the second source; 
+      |0=disable the sign extension                      
+---------------------------------------------------------
+0     |1=subtract instead of add the second source in the
+      |final math stage; 0=add and do not subtract the   
+      |second source in the final math stage.            
+---------------------------------------------------------
+</PRE>
+<P>
+<H2>Packed Source Data</H2>
+Packed source data is divided into rows. Each row starts with an offset followed by compressed data for the pixels in the row. The offset is an 8-bit integer for 1-,
+2-, 4-, or 6-bpp cels; it is a 10-bit integer for 8- and 16-bpp cels. The offset is stored as the first 8 or 10 bits of a 32-bit word. The remaining full bytes of the word are used for data storage. The second byte of the word is packed with 0s if its first two bits are used for a 10-bit offset.<P>
+The offset value is the distance from the beginning of the location of the current row in RAM to the beginning of the following row's location in RAM (minus 2).<P>
+The compressed data following the offset is arranged in the four types of packets as discussed .<P>
+<H2>The First Preamble Word</H2>
+All cel source data must have a first preamble word.  describes the contents of the first preamble word.<P>
+<H2>The Second Preamble Word</H2>
+All unpacked cel source data must also have a second preamble word. The contents of the second preamble word are shown in .<P>
+<H2>The Cel Engine Control Word</H2>
+The cel engine control word controls the way VH values, blue values, and super clipping are handled by the projector.  describes the contents of the control word.<P>

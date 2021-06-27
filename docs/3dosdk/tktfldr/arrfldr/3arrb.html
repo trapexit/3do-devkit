@@ -1,0 +1,28 @@
+<TITLE>Library module inclusion</TITLE>
+<H1><LINK NAME="XREF26672">Library module inclusion</LINK></H1><HR>
+An object file may contain references to external objects (functions and variables), which the linker will attempt to resolve by matching them to definitions found in other object files and libraries.<P>
+Usually, at least one library file is specified in the input list. A library is just a collection of AOF files stored in an ARM Object Library Format file. The important difference between object files and libraries is:<P>
+<UL>
+<LI>each object file in the input list appears in the output unconditionally, whether or not anything refers to it, (although unused areas will be eliminated from outputs of type AIF);
+<p>
+<LI>a module from a library is included in the output if, and only if, some object file or some already-included library module makes a <I>non-weak</I> reference to it.
+</UL>
+<p>
+<p>The linker processes its input list as follows:<P>
+<UL>
+<p>
+<LI>First, the object files are linked together, ignoring the libraries. Usually there will be a resultant set of references to as yet undefined symbols. Some of these may be <I>weak</I>: references which are allowed to remain unsatisfied, and which do not cause a library member to be loaded.
+<p>
+<LI>Then, in the order that they appear in the input file list, the libraries are processed as follows:<P>
+</UL>
+<p>
+<p>the library is searched for members containing symbol definitions which match currently unsatisfied, non-weak references;
+<p>
+<UL>
+<LI>each such member is loaded, satisfying some unsatisfied references (including possibly <I>weak</I> ones), and maybe, creating new unsatisfied references (again, maybe including <I>weak</I> ones);
+<p>
+<LI>the search is repeated until no further members are loaded.
+<p>Each library is processed in turn, so a reference from a member of a later library to a member of an earlier library cannot be satisfied. As a result, circular dependencies between libraries are forbidden. <P>
+It is an error if any <I>non-weak</I> reference remains unsatisfied at the end of a linking operation, other than one which generates partially-linked, relocatable AOF.<P>
+<P>
+</UL>

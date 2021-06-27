@@ -1,0 +1,40 @@
+<Title>SetVRAMPagesDefer </Title>
+<A NAME="XREF40027"><H1>SetVRAMPagesDefer </A></H1>
+<A NAME="XREF28384"> Sets contiguous pages of VRAM to a specified value.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err SetVRAMPagesDefer (Item ioreq,void *dest,int32 val,int32 numpages,int32 mask)</CODE><P>
+<H3>Description</H3>
+This convenience call allows one or more pages of VRAM, referred to by the dest argument, to be set to the specified value. The number of VRAM pages set is controlled by the numPages argument. Pages can be set to any value, via the immediate Flashwrite mode of the VRAM. As expected, it is very fast. <CODE>SetVRAMPagesDefer()</CODE> does not issue a <CODE>WaitIO()</CODE> on the I/O request. The calling task must issue the <CODE>WaitIO()</CODE> before the I/O request can be reused. <P>
+This call uses the SPORT device to do the transfer. It takes effect immediately; there is no implicit wait for the next VBlank to occur. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ioreq
+<DD>Item number of the I/O request. 
+</DL>
+<DL>
+<DT>dest
+<DD>Pointer to the first byte of the first page of the destination VRAM. 
+</DL>
+<DL>
+<DT>val
+<DD>32-bit value to be written to the VRAM pages. 
+</DL>
+<DL>
+<DT>numpages
+<DD>Number of destination pages to receive the copy of the source page. 
+</DL>
+<DL>
+<DT>mask
+<DD>Write mask, which controls which bits of the source get copied to the destination. 
+</DL>
+<H3>Return Value</H3>
+The call returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Notes</H3>
+The use of a mask value other than all 1s (0xFFFFFFFF) is discouraged. Future systems may not support this feature in a performance-conscious manner. <P>
+<H3>Implementation</H3>
+Convenience call implemented in graphics.lib V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr002.html#XREF11416"><CODE>CloneVRAMPages</A>(), <A HREF="./01gpr005.html#XREF23988">CopyVRAMPages</A>(), <A HREF="./01gpr068.html#XREF23837">SetVRAMPages</A>(), <A HREF="./01gpr006.html#XREF39220">CopyVRAMPagesDefer</A>(), <A HREF="./01gpr003.html#XREF15822">CloneVRAMPagesDefer</A>(), <A HREF="./01gpr036.html#XREF18489">GetVRAMIOReq</A>() </CODE><P>
+</CODE>

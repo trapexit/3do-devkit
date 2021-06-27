@@ -1,0 +1,38 @@
+<Title>Message</Title>
+<A NAME="XREF25449"><H1>Message</A></H1>
+<A NAME="XREF19165"></A>The means  of sending data from one task to another.<P>
+<H3>Description</H3>
+Messages are used to communicate amongst tasks. Messages come in three flavors: small, standard, and buffered. The flavors each carry their own type or amount of information. The small message carries exactly eight bytes of data. Standard messages contain a pointer to some data. Buffered messages contain an arbitrary amount of data within them.<P>
+Messages are closely associated with message ports. In order to send a message, a task must indicate a destination message port. Essentially, messages shuttle back and forth between message ports, and tasks can get and put messages from and to message ports.<P>
+<H3>Folio</H3>
+kernel<P>
+<H3>Item Type</H3>
+MESSAGENODE<P>
+<H3>Create</H3>
+<CODE><A HREF="./01spr024.html#XREF10430">CreateMsg</A>(), <A HREF="./01spr027.html#XREF18113">CreateSmallMsg</A>(), <A HREF="./01spr020.html#XREF20657">CreateBufferedMsg</A>(), <A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE><P>
+<H3>Delete</H3>
+<A HREF="./01spr034.html#XREF14458"><CODE>DeleteMsg</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE><P>
+<H3>Query</H3>
+<A HREF="./01spr050.html#XREF25448"><CODE>FindItem</A>(), <A HREF="./01spr054.html#XREF34211">FindNamedItem</A>(), <A HREF="./01spr061.html#XREF25874">FindVersionedItem</A>()</CODE><P>
+<H3>Use</H3>
+<A HREF="./01spr113.html#XREF31623"><CODE>ReplyMsg</A>(), <A HREF="./01spr114.html#XREF39369">ReplySmallMsg</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>(), <A HREF="./01spr124.html#XREF40209">SendSmallMsg</A>(), <A HREF="./01spr083.html#XREF31956">GetThisMsg</A>(), <A HREF="./01spr075.html#XREF37256">GetMsg</A>(), <A HREF="./01spr132.html#XREF19568">WaitPort</A>()</CODE><P>
+<H3>Tag Arguments</H3>
+<DL>
+<DT>CREATEMSG_TAG_REPLYPORT
+</DL>
+<DL>
+<DT>(Item) Create. The item number of the message port to use when replying this message. This must be a port that was created by the same task or thread that is creating the message.
+</DL>
+<DL>
+<DT>CREATEMSG_TAG_MSG_IS_SMALL
+</DL>
+<DL>
+<DT>Create. When this tag is present, it specifies that this message should be small. This means that this message should be used with <CODE>SendSmallMsg()</CODE> and <CODE>ReplySmallMsg()</CODE>, and can only pass 8 bytes of information.
+</DL>
+<DL>
+<DT>CREATEMSG_TAG_DATA_SIZE
+<DD>
+</DL>
+<DL>
+<DT>(uint32) Create. When this tag is present, it specifies that the message should be buffered. The argument of this tag specifies the size of the buffer that should be allocated.
+</DL>

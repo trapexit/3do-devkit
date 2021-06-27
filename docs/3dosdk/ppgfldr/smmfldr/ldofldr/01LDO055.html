@@ -1,0 +1,24 @@
+<Title>DeleteCel</Title>
+<A NAME="XREF42213"><H1>DeleteCel </A></H1>
+Deletes a cel created by any Library call implemented in lib3do.lib.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * DeleteCel (CCB *cel)</CODE><P>
+<H3>Description</H3>
+Deletes any type of cel created by Lib3DO library functions. A NULL pointer is valid as input, and is quietly treated as a no-op. If extra resources, such as a data buffer or PLUT, were allocated by the creating function they are also released. <P>
+This function correctly handles anti-aliased cels, cels loaded as a group from a single cel file, and other such constructs where several related cels were created and treated as if they were a single cel. If a Lib3DO function returns a single CCB* return value even when it creates several linked cels at once, then you need pass only that single CCB* to <CODE>DeleteCel()</CODE> to release all resources allocated when the group of cels was created. <P>
+This function works correctly with cels loaded from a file via <CODE>LoadCel()</CODE>, and is equivalent to <CODE>UnloadCel()</CODE>. It also works on TextCels created by the TextLib functions; <CODE>DeleteCel()</CODE> on the tc_CCB value of a TextCel is equivalent to <CODE>DeleteTextCel()</CODE>. <P>
+If you have custom functions for creating cels and those functions do not use the standard library <CODE>CreateCel()</CODE> function as their basis, you can provide <CODE>DeleteCel()</CODE> support for your custom cels. Doing so is a somewhat complex procedure which is fully documented in the Implementation Notes section of the source code file DeleteCelMagic.c in the Lib3DO source code. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to a cel created by any Lib3DO function; may be NULL. 
+</DL>
+<H3>Return Value</H3>
+NULL, always. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO056.html#XREF37384"><CODE>DeleteCelList</A> </CODE><P>
+</CODE>

@@ -1,0 +1,24 @@
+<Title>sawfilderedsaw.dsp</Title>
+<A NAME="XREF16791"><H1>sawfilteredsaw.dsp </A></H1>
+<A NAME="XREF32201"></A> Filtered sawtooth with sawtooth modulation.<P>
+<H3>Function</H3>
+This instrument passes a sawtooth wave through the state variable filter. The filter cutoff frequency is modulated with another sawtooth instrument. Try setting the Resonance to 0-10, SawAmpl = 0-40. <P>
+<H3>Knobs</H3>
+Amplitude - 0  =&gt;  $7FFF, final amplitude of voice <P>
+Frequency - 0 =&gt; $2000, default $100.  Non-linear cutoff frequency of filter. <P>
+Resonance - 1 / Q,  0 =&gt; $6000, default $1000 = filter will ring at low values. <P>
+LFORate - 0  =&gt;  $0100, default $0020, rate of sawtooth modulating filter <P>
+LFODepth - 0  =&gt;  $2000, default $0100, Amplitude of sawtooth modulating filter.  Actual cutoff is = Frequency + SawtoothOutput*LFODepth. <P>
+Sawtooth - 0 =&gt; $0400, default = $0100 = frequency of primary sawtooth. <P>
+SawAmplitude  - 0 =&gt; $7FFF, default = $7FFF = amplitude of primary sawtooth. <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resource</H3>
+Ticks = 35 <P>
+N memory = 35 words <P>

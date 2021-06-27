@@ -1,0 +1,29 @@
+<Title>LoadFile</Title>
+<A NAME="XREF27218"><H1>LoadFile </A></H1>
+ Loads a cel file from disk<P>
+<H3>Synopsis</H3>
+<CODE>void * LoadFile (char *fileName, long *fileSizePtr, uint32 memTypeBits)</CODE><P>
+<H3>Description</H3>
+Loads an entire file into a buffer in memory. This function allocates a buffer, loads the file into it, and returns a pointer to the allocated buffer. The size of the file is returned into a longword via the fileSizePtr parameter. <P>
+Note that the buffer is allocated to an even multiple of the device's blocksize (2 KB for CD-ROM and the Mac link), and thus may be slightly larger than the actual size of the file. The file size returned via fileSizePtr, however, reflects the actual size of the file without the extra padding required to achieve an integral device block size. <P>
+This function is approximately 3-4 times as fast as the old method of loading a file using <CODE>GetFileSize()</CODE>, allocating a buffer, calling <CODE>ReadFile()</CODE>. When you are finished with the file, use <CODE>UnloadFile()</CODE> to free the file buffer. <P>
+If an error returns, the function return value is NULL and the longword at the *fileSizePtr contains the error status. A return value of NULL with an error status of zero indicates that the file exists but contains no data; in this cas, no buffer was allocated. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fileName
+<DD>Pointer to the file name string. 
+</DL>
+<DL>
+<DT>fileSizePtr
+<DD>Pointer to a longword which receives the length of file (in bytes). If you don't need the length, a NULL pointer can be passed for this parameter. 
+</DL>
+<DL>
+<DT>memTypeBits
+<DD>Type of memory to use when loading the file; usually MEMTYPE_ANY or MEMTYPE_VRAM. 
+</DL>
+<H3>Return Value</H3>
+Pointer to loaded file in memory, or NULL if an error occurred. <P>
+<H3>Associated Files</H3>
+lib3do.lib, blockfile.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO203.html#XREF19907"><CODE>UnloadFile</A>, <A HREF="./01LDO116.html#XREF11782">LoadFileHere</A>, <A HREF="./01LDO002.html#XREF32442">AsyncLoadFile</A> </CODE><P>

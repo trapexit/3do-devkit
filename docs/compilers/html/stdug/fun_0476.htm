@@ -1,0 +1,167 @@
+<HTML><HEAD><TITLE>Function Objects</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Function Objects</H2>
+<P>A <I>function object</I> is an instance of a class that defines the parenthesis operator as a member function.  There are a number of situations where it is convenient to substitute function objects in place of functions.  When a function object is used as a function, the parenthesis operator is invoked whenever the function is called.</P>
+<P>To illustrate, consider the following class definition:</P>
+<PRE>class biggerThanThree 
+ {
+   public:
+   bool operator () (int val)
+   { return val > 3; }
+};
+</PRE>
+<P>If we create an instance of class <B><I>biggerThanThree</I></B>, every time we reference this object using the function call syntax, the parenthesis operator member function will be invoked.  The next step is to generalize this class, by adding a constructor and a constant data field, which is set by the constructor.</P>
+<PRE>class biggerThan {
+   public:
+      const int testValue;
+      biggerThan (int x) : testValue(x) { }
+
+      bool operator () (int val)
+      { return val > testValue; }
+};
+</PRE>
+<P>The result is a general "bigger than X" function, where the value of X is determined when we create an instance of the class.  We can do so, for example, as an argument to one of the generic functions that require a predicate.  In this manner the following will find the first value in a list that is larger than 12:</P>
+<PRE>list&#60;int>::iterator firstBig =
+   find_if (aList.begin(), aList.end(), biggerThan(12));
+</PRE>
+<P>Three of the most common reasons to use function objects in place of ordinary functions are to employ an existing function object provided by the standard library instead of a new function, to improve execution by using inline function calls, or to allow a function object to access or set state information that is held by an object.  We will give examples of each.</P>
+<P>The following table illustrates the function objects provided by the standard library.</P>
+
+<CENTER><TABLE BORDER CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<I>Name</I> <BR>
+</TD>
+
+<TD>
+ <I>Implemented operations</I><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<B>arithmetic functions</B><BR>
+</TD>
+</TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="135pt" colsep="1" rowsep="1"><COLSPEC colnum="2" colname="col2" colwidth="216pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD>
+<SAMP>plus</SAMP><BR>
+<SAMP>minus</SAMP><BR>
+<SAMP>times</SAMP><BR>
+<SAMP>divides</SAMP><BR>
+<SAMP>modulus</SAMP><BR>
+<SAMP>negate </SAMP><BR>
+</TD>
+
+<TD>
+ addition <SAMP>x + y</SAMP> <BR>
+subtraction <SAMP>x - y</SAMP><BR>
+multiplication <SAMP>x * y</SAMP><BR>
+division <SAMP>x / y</SAMP><BR>
+remainder <SAMP>x % y</SAMP><BR>
+negation <SAMP>- x</SAMP><BR>
+</TD>
+</TR>
+<TGROUP cols="1"><COLSPEC colnum="1" colname="col1" colwidth="352pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD>
+<B>comparison functions</B><BR>
+</TD>
+</TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="135pt" colsep="1" rowsep="1"><COLSPEC colnum="2" colname="col2" colwidth="216pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD>
+<SAMP>equal_to</SAMP><BR>
+<SAMP>not_equal_to</SAMP><BR>
+<SAMP>greater</SAMP><BR>
+<SAMP>less</SAMP><BR>
+<SAMP>greater_equal</SAMP><BR>
+<SAMP>less_equal</SAMP><BR>
+</TD>
+
+<TD>
+ equality test <SAMP>x == y</SAMP> <BR>
+inequality test <SAMP>x != y</SAMP><BR>
+greater comparison <SAMP>x > y</SAMP><BR>
+less-than comparison<SAMP> x &#60; y</SAMP><BR>
+greater than or equal comparison <SAMP>x >= y</SAMP><BR>
+less than or equal comparison <SAMP>x &#60;= y</SAMP><BR>
+</TD>
+</TR>
+<TGROUP cols="1"><COLSPEC colnum="1" colname="col1" colwidth="352pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD>
+<B>logical functions</B><BR>
+</TD>
+</TR>
+<TGROUP cols="2"><COLSPEC colnum="1" colname="col1" colwidth="135pt" colsep="1" rowsep="1"><COLSPEC colnum="2" colname="col2" colwidth="216pt" colsep="1" rowsep="1">
+<TR VALIGN=top>
+<TD>
+<SAMP>logical_and</SAMP><BR>
+<SAMP>logical_or</SAMP><BR>
+<SAMP>logical_not</SAMP><BR>
+</TD>
+
+<TD>
+ logical conjunction <SAMP>x &#38;&#38; y</SAMP><BR>
+logical disjunction <SAMP>x || y</SAMP><BR>
+logical negation <SAMP>! x</SAMP><BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<P>Let's look at a couple of examples that show how these might be used.  The first example uses <SAMP>plus()</SAMP> to compute the by-element addition of two lists of integer values, placing the result back into the first list.  This can be performed by the following:</P>
+<PRE>transform (listOne.begin(), listOne.end(), listTwo.begin(), 
+   listOne.begin(), plus&#60;int>() );
+</PRE>
+<P>The second example negates every element in a vector of boolean values:</P>
+<PRE>transform (aVec.begin(), aVec.end(), aVec.begin(), 
+   logical_not&#60;bool>() );
+</PRE>
+
+<A HREF="sidebar.htm#sidebar8"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Location of the Class Definitions</STRONG></A>
+
+<P>The base classes used by the standard library in the definition of the functions shown in the preceding table are available for the creation of new unary and binary function objects.  These base classes are defined as follows:</P>
+<PRE>template &#60;class Arg, class Result>
+struct unary_function {
+   typedef Arg argument_type;
+   typedef Result result_type;
+};
+
+template &#60;class Arg1, class Arg2, class Result>
+struct binary_function {
+   typedef Arg1 first_argument_type;
+   typedef Arg2 second_argument_type;
+   typedef Result result_type;
+};
+</PRE>
+<P>An example of the use of these functions is found in <a href="exa_3285.htm">Chapter 6</a>.  Here we want to take a binary function of type "Widget" and an argument of type integer, and compare the widget identification number against the integer value.  A function to do this is written in the following manner:</P>
+<PRE>struct WidgetTester : binary_function&#60;Widget, int, bool> {
+public:
+   bool operator () (const Widget &#38; wid, int testid) const
+      { return wid.id == testid; }
+};
+</PRE>
+<P>A second reason to consider using function objects instead of functions is faster code.  In many cases an invocation of a function object, such as the examples given in the calls on <SAMP>transform()</SAMP> presented earlier, can be expanded in-line, eliminating the overhead of a function call.</P>
+
+<A HREF="sidebar.htm#sidebar9"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Using Function Objects to Store References</STRONG></A>
+
+<P>The third major reason to use a function object in place of a function is when each invocation of the function must remember some state set by earlier invocations.  An example of this occurs in the creation of a generator, to be used with the generic algorithm <SAMP>generate().</SAMP>  A <I>generator</I> is simply a function that returns a different value each time it is invoked.  The most commonly used form of generator is a random number generator, but there are other uses for the concept.  A sequence generator simply returns the values of an increasing sequence of natural numbers (1, 2, 3, 4 and so on).  We can call this object <B><I>iotaGen</I></B> after the similar operation in the programming language APL, and define it as follows:</P>
+<PRE>class iotaGen {
+public:
+   iotaGen (int start = 0) : current(start) { }
+   int operator () () { return current++; }
+private:
+   int current;
+};
+</PRE>
+<P>An iota object maintains a current value, which can be set by the constructor, or defaults to zero.  Each time the function-call operator is invoked, the current value is returned, and also incremented.  Using this object, the following call on the standard library function <SAMP>generate()</SAMP> will initialize a vector of 20 elements with the values 1 through 20:</P>
+<PRE>vector&#60;int> aVec(20);
+generate (aVec.begin(), aVec.end(), iotaGen(1));
+</PRE>
+
+<HR>
+<A HREF="pre_1157.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="neg_5796.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

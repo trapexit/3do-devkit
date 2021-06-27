@@ -1,0 +1,30 @@
+<TITLE>Using Private Memory Pools</TITLE>
+<H1>Using Private Memory Pools</H1><HR>
+In addition to using private memory lists, a task can also use private memory pools. Each task gets a free memory pool when it is created. Tasks can also create additional free memory pools, which, like the pools created by the kernel, are simply lists of free memory lists. When a task creates a free memory pool containing its private memory lists, it can use a single function call to allocate or deallocate any of the types of memory in those lists. The functions for doing this are described in the following sections.<P>
+As with memory lists, tasks can only use memory pools that they own. This means that the system-wide free memory pool is off-limits to tasks, as are memory pools belonging to other tasks.<P>
+<H2>Creating a Memory Pool</H2>
+To create a memory pool, you must prepare a List structure using the <CODE>InitList()</CODE> function:<CODE></CODE><P>
+<DL>
+<DD><CODE>void InitList(List *l, const char *name)</CODE><BR>
+</DL>
+Once the List structure is initialized, you can then allocate some MemList structures using the technique described in the previous section. Every memory list you create can then be added to the memory pool by calling the <CODE>AddHead()</CODE> function:<P>
+<DL>
+<DD><CODE>void AddHead(List *l, Node *n)</CODE><BR>
+</DL>
+<H2>Allocating Memory From a Specific Memory Pool</H2>
+To allocate memory from a specific free memory pool, you use the <CODE>AllocMemFromMemLists()</CODE> function:<P>
+<DL>
+<DD><CODE>void *AllocMemFromMemLists( List *l, int32 size,  uint32 memflags )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is the free memory pool from which to allocate a memory block. As noted earlier, this pool must be owned by the calling task. The <CODE>size</CODE> argument specifies the size of the block to allocate, in bytes. <P>
+The <CODE>memflags</CODE> argument specifies the type of memory to allocate, the alignment of the block with respect to the page, and so on; these flags can include <CODE>MEMTYPE_ANY</CODE>, <CODE>MEMTYPE_VRAM</CODE>, <CODE>MEMTYPE_DRAM</CODE>, <CODE>MEMTYPE_BANKSELECT</CODE>, <CODE>MEMTYPE_BANK1</CODE>, <CODE>MEMTYPE_BANK2</CODE>, <CODE>MEMTYPE_DMA</CODE>,<CODE> MEMTYPE_CEL</CODE>, <CODE>MEMTYPE_AUDIO</CODE>, <CODE>MEMTYPE_DSP</CODE>, <CODE>MEMTYPE_FILL</CODE>, <CODE>MEMTYPE_INPAGE</CODE>, <CODE>MEMTYPE_SYSTEMPAGESIZE</CODE>, <CODE>MEMTYPE_STARTPAGE</CODE>, and <CODE>MEMTYPE_MYPOOL</CODE>. For complete descriptions of these flags, see <A HREF="./05spg002.html#XREF25963">Allocating a Memory Block</A>. The function returns a pointer to the block that was allocated, or NULL if there was not enough memory in the list to satisfy the request.<P>
+To free memory that you've allocated with <CODE>AllocMemFromMemLists(),</CODE> you 
+can only use <CODE>FreeMemToMemLists()</CODE> (described in the next section). Each 
+memory allocation function has a corresponding deallocation function; if you use another memory allocation function, you must use its corresponding deallocation function.<P>
+<H2>Freeing Memory to a Specific Memory Pool</H2>
+To free a block of memory allocated with <CODE>AllocMemFromMemLists(),</CODE> you use
+the <CODE>FreeMemToMemLists()</CODE> function:<P>
+<DL>
+<DD><CODE>void FreeMemToMemLists( List *l, void *p, int32 size )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the memory pool from which the block was allocated. The <CODE>p</CODE> argument is a pointer to the block to free. The <CODE>size</CODE> argument is the size of the block to free, in bytes.<P>

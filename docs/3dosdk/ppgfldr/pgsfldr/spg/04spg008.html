@@ -1,0 +1,7 @@
+<TITLE>Finding a Node by Name</TITLE>
+<H1>Finding a Node by Name</H1><HR>
+Because list nodes can have names, you can search for a node with a particular name with the <CODE>FindNamedNode()</CODE> function:<P>
+<DL>
+<DD><CODE>Node *FindNamedNode( const List *l, const char *name )</CODE><BR>
+</DL>
+The<CODE> l</CODE> argument is a pointer to the list to search; the <CODE>name</CODE> argument is the name of the node for which to search. The function returns a pointer to the Node structure or NULL if the named node is not found. The search is not case-sensitive; that is, the kernel does not distinguish uppercase and lowercase letters in the node names.<P>

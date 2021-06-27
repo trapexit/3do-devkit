@@ -1,0 +1,29 @@
+<Title>ReleaseInstrument</Title>
+<A NAME="XREF38726"><H1>ReleaseInstrument </A></H1>
+<A NAME="XREF31023"></A> Instruct an instrument to begin to finish (Note Off).<P>
+<H3>Synopsis</H3>
+<CODE>Err ReleaseInstrument (Item Instrument, TagArg *tagList)<BR>
+Err ReleaseInstrumentVA (Item Instrument, uint32 tag1, ...)</CODE><P>
+<H3>Description</H3>
+This tells an Instrument to progress into its "release phase" if it hasn't already done so. This is equivalent to a MIDI Note Off event. Any Samples or Envelopes that are attached are set to their release portion, which may or may not involve a release loop. The sound may continue to be produced indefinitely depending on the release characteristics of the instrument. <P>
+This has no audible effect on instruments that don't have some kind of sustain loop (e.g. sawtooth.dsp). <P>
+Affects only instruments in the AF_STARTED state: sets them to the AF_RELEASED state. By default if and when an instrument reaches the end of its release phase, it stays in the AF_RELEASED state until explicitly changed (e.g. <CODE>StartInstrument()</CODE>, <CODE>StopInstrument()</CODE>). If one of this Instrument's running Attachments has the AF_ATTF_FATLADYSINGS flag set, the Instrument is automatically stopped when that Attachment completes. In that case, the instrument goes into the AF_STOPPED state, or, if the Instrument has the AF_INSF_AUTOABANDON flag set, the AF_ABANDONED state. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>The item number for the instrument. 
+</DL>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_TIME_SCALE
+<DD>(ufrac16) Scale times for all Envelopes attached to this Instrument. Original value is derived from the AF_TAG_TIME_SCALE provided when the Envelope Attachment was made. This value remains in effect until another AF_TAG_TIME_SCALE is passed to <CODE>StartInstrument()</CODE> or <CODE>ReleaseInstrument()</CODE>. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr073.html#XREF13758"><CODE>StartInstrument</A>(), <A HREF="./01mpr075.html#XREF37581">StopInstrument</A>(), <A HREF="./01mpr059.html#XREF14745">PauseInstrument</A>(), <A HREF="./01mpr064.html#XREF15774">ResumeInstrument</A>(), <A HREF="../../pgsfldr/spr/09spr009.html#XREF16655">Instrument</A> </CODE><P>
+</CODE>

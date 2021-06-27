@@ -1,0 +1,38 @@
+<Title>TimerMsgHeartbeat</Title>
+<A NAME="XREF12235"><H1>TimerMsgHeartbeat </A></H1>
+ Sends a message periodically.<P>
+<H3>Synopsis</H3>
+<CODE>TimerHandle TimerMsgHeartbeat (Item msgport,uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2)</CODE><P>
+<H3>Description</H3>
+This function creates a timer that repeatedly notifies you by message at the specified interval. The timer continues sending notifications on a regular interval until you use <CODE>TimerSuspend()</CODE> to temporarily halt it or <CODE>TimerCancel()</CODE> to delete it. <P>
+The Heartbeat support in the TimerServices thread contains logic to prevent drift in the frequency of timer events. Messages are delivered at the specified frequency even if it takes you significant time to respond to each message event. If an entire frequency interval elapses and you still haven't replied to the prior message, you will miss one timer event but the frequency of subsequent events is not disturbed. <P>
+The TimerServices thread must be active before calling this function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>msgport
+<DD>Port to which the notification message is sent. 
+</DL>
+<DL>
+<DT>seconds
+<DD>Seconds portion of the frequency. 
+</DL>
+<DL>
+<DT>microseconds
+<DD>Microseconds portion of the frequency. This value can be larger than 1 million. 
+</DL>
+<DL>
+<DT>userdata1
+<DD>Value passed back to you in the msg_DataPtr field of the notification message. 
+</DL>
+<DL>
+<DT>userdata2
+<DD>Value passed back to you in the msg_DataSize field of the notification message. 
+</DL>
+<H3>Return Value</H3>
+A TimerHandle (a positive value) on success or a negative error code. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO183.html#XREF38730"><CODE>TimerMsgAtTime</A>, <A HREF="./01LDO181.html#XREF22205">TimerMsgAfterDelay</A>, <A HREF="./01LDO100.html#XREF33242">HZ_TO_USEC</A> </CODE><P>

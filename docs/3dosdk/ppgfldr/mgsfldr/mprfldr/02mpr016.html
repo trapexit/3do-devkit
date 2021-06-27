@@ -1,0 +1,56 @@
+<Title>SetObjectInfo</Title>
+<A NAME="XREF30718"><H1>SetObjectInfo </A></H1>
+<A NAME="XREF18140"></A> Sets values in the object based on tag arguments.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetObjectInfo( CObject *obj, TagArg *tags )</CODE><P>
+<H3>Description</H3>
+This is a method macro that is part of the Juggler object-oriented toolbox.  An object's method can be called explicitly through the class structure function pointer, or with one of the defined method macros. <P>
+This method macro sets the values in the object based on the supplied tag arguments.  Valid tag arguments are as follows:<P>
+<H3>Tags</H3>
+Tags for Jugglee SuperClass <P>
+As the jugglee is the superclass for the other Juggler classes, its methods are inherited by other Juggler classes.  The following tags are for <CODE>SetObjectInfo() </CODE>for the jugglee superclass:<P>
+JGLR_TAG_CONTEXT &lt;usercontext&gt;  User-specified context; this may be a pointer to almost anything.  It is passed to the Interpreter function.<P>
+JGLR_TAG_START_DELAY &lt;ticks&gt; The delay interval before starting this object.  This is used to stagger the execution of parallel objects within a collection for canon.<P>
+JGLR_TAG_REPEAT_DELAY &lt;ticks&gt;  The time to wait between repetitions.<P>
+JGLR_TAG_STOP_DELAY &lt;ticks&gt;  The time to wait after stopping.<P>
+JGLR_TAG_START_FUNCTION &lt;*function(object, time)&gt;  This function is called before executing the first element of the object.<P>
+JGLR_TAG_REPEAT_FUNCTION &lt;*function(object, time)&gt;
+JGLR_TAG_STOP_FUNCTION &lt;*function(object, time)&gt;
+JGLR_TAG_MUTE &lt;flag&gt;  If the flag is true, the object will be muted when played.  The Interpreter function must look at the mute flag.<P>
+Tags for Sequence<P>
+A sequence contains an array of events that are to be executed over time. An event consists of a timestamp, followed by a user-defined, fixed-size data field.  A sequence keeps track of time, advances through the events in its array, and calls a user-defined Interpreter function to "play" the event. <P>
+Sequences will typically contain arrays of MIDI messages from a MIDI file. Sequences may also contain other things; these other things each require a different Interpreter function.  The possible sequence contents and their functions are as follows:<P>
+FunctionPointers, Data    schedule arbitrary functions.<P>
+Cel, Corners    draw this cel.<P>
+Knob, Value    tweak a knob for timbral sequences.<P>
+Collections    schedule scores at a very high level. <P>
+The following are tags for a sequence:<P>
+JGLR_TAG_INTERPRETER_FUNCTION Specifies the user-defined function to be called for interpreting events in a sequence.  This function is called at the time specified in the event.  When the function is called, it is passed a pointer to one of your events.  It is also passed a pointer to your context data structure that was set using JGLR_TAG_CONTEXT and <CODE>SetObjectInfo()</CODE>.  The function prototype for interpreting events is given below:<P>
+int32 InterpretEvent( Sequence *SeqPtr, void *CurrentEvent, void *UserContext)<P>
+JGLR_TAG_MAX  Sets the maximum number of events that can be used.<P>
+JGLR_TAG_MANY  Sets the actual number of events that can be used.<P>
+JGLR_TAG_EVENTS &lt;void *Events&gt; Sets a pointer to your event array.<P>
+JGLR_TAG_EVENT_SIZE &lt;size_in_bytes&gt; Sets the size of a single event in bytes so that an index into an array can be constructed.<P>
+<H3>Other Tags </H3>
+Other tag arguments are listed below: <P>
+JGLR_TAG_SELECTOR_FUNCTION <P>
+JGLR_TAG_AUTO_DELETE <P>
+JGLR_TAG_DURATION <P>
+<H3>Arguments</H3>
+<DL>
+<DT>obj
+<DD>A pointer to the CObject data structure for the object. 
+</DL>
+<DL>
+<DT>tags
+<DD>A pointer to the TagArg list. 
+</DL>
+<H3>Return Value</H3>
+This macro returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in cobj.h V20. <P>
+<H3>Associated Files</H3>
+cobj.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr012.html#XREF21127"><CODE>GetObjectInfo</A>(),<A HREF="./02mpr017.html#XREF20324">StartObject</A>(), <A HREF="./02mpr018.html#XREF26053">StopObject</A>(), <A HREF="./02mpr005.html#XREF31433">AllocObject</A>(), <A HREF="./02mpr010.html#XREF17884">FreeObject</A>(), <A HREF="./02mpr011.html#XREF36448">GetNthFromObject</A>(), <A HREF="./02mpr015.html#XREF30804">RemoveNthFromObject</A>(), <A HREF="./02mpr014.html#XREF34902">PrintObject</A>() </CODE><BR>
+</CODE><P>

@@ -1,0 +1,152 @@
+<TITLE>Using display windows to examine the 
+source code</TITLE>
+<H1><LINK NAME="XREF17519">Using display windows to examine the source code</LINK></H1><HR>
+In this section, you learn about creating windows and about stepping 
+through the UFO program's source code, including the following: <P>
+
+<UL>
+<LI><A HREF="#XREF40548">Working with a Source window</A>
+<LI><A HREF="#XREF35562">Setting breakpoints</A>
+<LI><A HREF="#XREF36247">Examining a structure and changing variable 
+values</A>
+</UL>
+<A NAME="XREF40548"><H2>Working with a Source window</A></H2>
+To look at your program in a Source window, follow these steps:<P>
+<OL>
+<LI>Make sure the files <I>UFO</I> (executable), <I>UFO.sym</I> (symbols 
+file), and <I>UFO.spt</I> (script file) are in the <I>/remote</I> folder. 
+<p>
+<LI>Type into the Terminal window:
+    <CODE>
+<PRE>
+ debug ufo 
+</CODE>
+</PRE>
+<p>
+<p>and press Enter. 
+<p>The Debugger launches the program and stops at <CODE>main()</CODE>.
+<p>
+<LI>Press Command-K to bring up a Source window (or choose New Window, 
+then Source from the View menu). 
+<p>
+<p>When you use <CODE>debug</CODE> <I>prog_name</I> to start a program 
+(as in Step 2), the Debugger always puts a breakpoint at 
+<CODE>main()</CODE>. In the Source window shown in the figure below, the 
+program is stopped at <CODE>main()</CODE>. 
+<p>
+
+<IMG SRC="Figures/001Ch1Pics/Source1.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Source window stopped at a breakpoint at main().</I><P>
+
+<LI>Press Command-G to release the program. 
+<p>
+<p>The startup screen should appear on the TV monitor after a short time. 
+<p>
+
+<LI>In the Terminal window, watch the information about the program's 
+progress. When the text "DoOptions called" appears, press the Start button 
+on the control pad attached to the 3DO system to start the game.
+</OL>
+<A NAME="XREF35562"><H2>Setting breakpoints</A></H2>
+If you know a program's flow, you can set a breakpoint in the Source 
+window to stop execution and examine the program.<P>
+<OL>
+<LI>In the Source window, click on the cross-hatch (#) next to the line 
+<CODE>TargetAction(pcUFO)</CODE>as shown in the figure below. 
+<p>
+<p>The cross-hatch changes to a red bullet. 
+<p>
+<IMG SRC="Figures/001Ch1Pics/Source2.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Location for setting a breakpoint.</I><P>
+When the program reaches the breakpoint in the <CODE>while</CODE> loop the 
+next time, it stops. You can now examine the program by stepping through 
+it. <P>
+
+<LI>Use Command-, (comma)-Step Over-to move to 
+<CODE>UpdateDashboard()</CODE>. 
+<LI>Use Command-; (semicolon)-Step In-to move to the first line of 
+<CODE>UpdateDashboard()</CODE>. 
+<LI>Continue to examine the program for as long as you like. 
+<LI>To remove the breakpoint, click on it again and it changes back to the 
+cross-hatch.
+</OL>
+<P>
+<B>Note: </B>Step Over goes to the first executing instruction of a 
+function. Step In goes to the next executable line and makes it possible 
+to look at local variables and other function-internal information. 
+Usually, you use Step In only to look at a particular function in detail. 
+<P>
+<A NAME="XREF36247"><H2>Examining a structure and changing variable 
+values</A></H2>
+The 3DO Debugger lets you look at structures, evaluate variables, and 
+dereference pointers in the Variables window. You can also change the 
+value of a variable and see the effect of the change on your program. <P>
+<OL>
+<LI>Return to the main loop and press Command-, (Command-comma) to step 
+into the <CODE>TargetAction()</CODE> function. 
+<p>
+<LI>With the PC (program counter) inside the <CODE>TargetAction()</CODE> 
+function, select <CODE>pcTarget</CODE>, then press Command-D to bring up a 
+Variables window.
+
+<P>
+<IMG SRC="Figures/001Ch1Pics/EvalPCTarget.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>Variables window invoked from a Source window.</I>
+<P>
+
+<LI>Hold down the Command key and double-click on the structure in the 
+Variables window to expand it. 
+
+<P>
+<IMG SRC="Figures/001Ch1Pics/EvalPCTarget2.gif" ALT="Graphic cannot be 
+displayed">
+
+<P>
+<B>Figure 4: </B><I>Structure displayed in a Variables window.</I><P>
+
+<P>
+<LI>To interactively change variable values, click on the 
+<CODE>ccb_Flags</CODE> line to make it appear in the edit region. 
+
+<P>
+<IMG SRC="Figures/001Ch1Pics/EvalPCTarget3.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 5: </B><I>Variable value selected for interactive change. </I><P>
+
+<LI>Change 7F26... to FF26..., then press the Return key. 
+<p>
+<LI>To see the change take effect, look at the TV screen and watch the UFO 
+disappear as you press Command-G to release the breakpoint and continue 
+program execution. 
+<p>
+<p>If you want to change the value back, set a breakpoint elsewhere and 
+change the value, then release the breakpoint again. 
+<p>
+
+<LI>To change the position of the UFO, double-click on the 
+<CODE>ccb_XPOS</CODE> line. 
+<p>
+<LI>From the Options menu, select Frac16-16 to see the position's actual 
+value.
+
+<P>
+<IMG SRC="Figures/001Ch1Pics/EvalPCTarget4.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+
+<B>Figure 6: </B><I>Display options pull-down menu in the Variables 
+window.</I><P>
+<P>
+
+<LI>Change the value of the position in the <CODE>ccb_XPOS</CODE> line, 
+then press the Enter key. 
+<p>
+<LI>Release the breakpoint by pressing Command-G to continue. 
+</OL>

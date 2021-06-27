@@ -1,0 +1,20 @@
+<Title>CloseSoundFile</Title>
+<A NAME="XREF25761"><H1>CloseSoundFile </A></H1>
+<A NAME="XREF17848"></A> Closes a SoundFilePlayer data structure and unloads a sound file.<P>
+<H3>Synopsis</H3>
+<CODE>int32 CloseSoundFile( SoundFilePlayer *sfp )</CODE><P>
+<H3>Description</H3>
+This function is a convenience function that closes the specified SoundFilePlayer data structure and also cleans up any items associated with the player.  This function is the inverse of <CODE>OpenSoundFile()</CODE>, and is in essence a combination of <CODE>UnloadSoundFile()</CODE> and <CODE>DeleteSoundFilePlayer()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sfp
+<DD>A pointer to the SoundFilePlayer. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+soundfile.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr054.html#XREF26861"><CODE>OpenSoundFile</A>(), <A HREF="./02mpr052.html#XREF37655">DeleteSoundFilePlayer</A>() <A HREF="./02mpr053.html#XREF30905">LoadSoundFile</A>(),  <A HREF="./02mpr055.html#XREF26293">ReadSoundFile</A>(), <A HREF="./02mpr056.html#XREF37577">RewindSoundFile</A>(), <A HREF="./02mpr057.html#XREF11879">ServiceSoundFile</A>(), <A HREF="./02mpr058.html#XREF32478">StartSoundFile</A>(), <A HREF="./02mpr059.html#XREF24025">StopSoundFile</A>(), <A HREF="./02mpr060.html#XREF41161">UnloadSoundFile</A>(), <A HREF="./02mpr051.html#XREF42166">CreateSoundFilePlayer</A></CODE></CODE><P>

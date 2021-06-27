@@ -1,0 +1,260 @@
+<HTML><HEAD><TITLE>Overview</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Overview</H2>
+<P>In this section we will describe the generic algorithms in the standard library that are specific to ordered collections.  These are summarized by the following table:</P>
+<CENTER><TABLE BORDER CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+Name<BR>
+</TD>
+
+<TD>
+Purpose<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<B>Sorting Algorithms<BR>Sections <a href="sor_5132.htm"><i>Sorting Algorithms</a> and <a href="par_1934.htm">Partial Sort</a></B><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>sort</SAMP><BR>
+</TD>
+
+<TD>
+rearrange sequence, place in order<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>stable_sort</SAMP><BR>
+</TD>
+
+<TD>
+sort, retaining original order of equal elements<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>partial_sort</SAMP><BR>
+</TD>
+
+<TD>
+sort only part of sequence<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>partial_sort_copy</SAMP><BR>
+</TD>
+
+<TD>
+partial sort into copy<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<B>Find Nth largest Element<BR>Section <a href="nth_1433.htm"><i>nth Element</i></A></B><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>nth_element</SAMP><BR>
+</TD>
+
+<TD>
+locate nth largest element<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<B>Binary Search<BR>Section <a href="bin_2092.htm"><i>Binary Search</i></a></B><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>binary_search</SAMP><BR>
+</TD>
+
+<TD>
+search, returning boolean<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>lower_bound</SAMP><BR>
+</TD>
+
+<TD>
+search, returning first position<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>upper_bound</SAMP><BR>
+</TD>
+
+<TD>
+search, returning last position<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>equal_range</SAMP><BR>
+</TD>
+
+<TD>
+search, returning both positions<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<B>Merge Ordered Sequences<BR>Section <a href="mer_3553.htm"><i>Merge Ordered Sequences</i></a></B><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>merge</SAMP><BR>
+</TD>
+
+<TD>
+combine two ordered sequences<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<B>Set Operations<BR>Section <a href="set_1753.htm"><I>Set Operations</I></a></B><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>set_union</SAMP><BR>
+</TD>
+
+<TD>
+form union of two sets<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>set_intersection</SAMP><BR>
+</TD>
+
+<TD>
+ form intersection of two sets<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>set_difference</SAMP><BR>
+</TD>
+
+<TD>
+form difference of two sets<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>set_symmetric_difference</SAMP><BR>
+</TD>
+
+<TD>
+form symmetric difference of two sets<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>includes</SAMP><BR>
+</TD>
+
+<TD>
+see if one set is a subset of another<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<B>Heap operations<BR>Section <a href="hea_8081.htm"><i>Heap Operations</I></a></B><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>make_heap</SAMP><BR>
+</TD>
+
+<TD>
+turn a sequence into a heap<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>push_heap</SAMP><BR>
+</TD>
+
+<TD>
+add a new value to the heap<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>pop_heap</SAMP><BR>
+</TD>
+
+<TD>
+remove largest value from the heap<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>sort_heap</SAMP><BR>
+</TD>
+
+<TD>
+turn heap into sorted collection<BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<P>Ordered collections can be created using the standard library in a variety of ways. For example:</P>
+<P>The containers <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A>, <A HREF="../stdref/mul_0958.htm"><B><I>multiset</I></B></A>, <A HREF="../stdref/map_8018.htm"><B><I>map</I></B></A> and <A HREF="../stdref/mul_8396.htm"><B><I>multimap</I></B></A> are ordered collections by definition.</P>
+<P>A <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> can be ordered by invoking the <SAMP>sort()</SAMP> member function.</P>
+<P>A <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>, <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> or ordinary C++ array can be ordered by using one of the sorting algorithms described later in this section.</P>
+<P>Like the generic algorithms described in the previous section, the algorithms described here are not specific to any particular container class.  This means they can be used with a wide variety of  types.  Many of them do, however, require the use of random-access iterators.  For this reason they are most easily used with vectors, deques, or ordinary arrays.</P>
+<A HREF="sidebar.htm#sidebar71"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Programs</STRONG></A>
+
+<P>Almost all the algorithms described in this section have two versions.  The first version uses the<SAMP> less than</SAMP> operator (operator <SAMP>&#60;</SAMP>) for comparisons appropriate to the container element type. The second, and more general, version uses an explicit comparison function object, which we will write as <SAMP>Compare</SAMP>.  This function object must be a binary predicate (<i>see <a href="sor_5132.htm">Section 3: Sorting Algorithms</a></i>).  Since this argument is optional, we will write it within square brackets in the description of the argument types.</P>
+<P>A sequence is considered to be ordered if for every valid (that is, denotable) iterator <SAMP>i</SAMP> with a denotable successor<SAMP> j</SAMP>, it is the case that the comparison <SAMP>Compare(*j, *i)</SAMP> is false.  Note that this does not necessarily imply that <SAMP>Compare(*i, *j)</SAMP> is true.  It is assumed that the relation imposed by <SAMP>Compare</SAMP> is transitive, and induces a total ordering on the values.</P>
+<P>In the descriptions that follow, two values <SAMP>x</SAMP> and <SAMP>y</SAMP> are said to be equivalent if both <SAMP>Compare(x, y)</SAMP> and <SAMP>Compare(y, x)</SAMP> are false.  Note that this need not imply that <SAMP>x == y</SAMP>.</P>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>As with the algorithms described in <a href="gen_9895.htm">Chapters 12</a>, before you can use any of the algorithms described in this section in a program you must include the <SAMP>algorithm</SAMP> header file:</P>
+<PRE>   # include &#60;algorithm></PRE>
+
+<HR>
+<A HREF="ord_1635.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="sor_5132.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

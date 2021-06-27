@@ -1,0 +1,143 @@
+<Title>DSRequestMsg</Title>
+<A NAME="XREF37681"><H1>DSRequestMsg</A></H1>
+<A NAME="XREF38176"></A>Request message structure.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct DSRequestMsg {
+ DS_MSG_HEADER
+
+union {
+ struct {
+  DSDataType dataType;
+  Item subscriberPort;
+  } subscribe;
+
+ struct {
+  DSDataType exemptStream;
+  unsigned long nowTime;
+  } clockSync;
+
+ struct {
+  unsigned long markerValue;
+  unsigned long options;
+  } goMarker;
+
+ struct {
+  DSDataType streamType;
+  long channelNumber;
+  long* channelStatusPtr;
+  } getChannel;
+
+ struct {
+  DSDataType streamType;
+  long channelNumber;
+  long channelStatus;
+  } setChannel;
+
+ struct {
+  DSDataType streamType;
+  long userDefinedOpcode;
+  void* userDefinedArgPtr;
+  } control;
+
+ struct {
+  Item acquirePort;
+  } connect;
+
+ struct {
+  unsigned long options;
+  } start;
+
+ struct {
+  unsigned long options;
+  } stop;
+
+ } msg;
+
+} DSRequestMsg, *DSRequestMsgPtr</CODE></pre><P>
+<H3>Description</H3>
+Messages sent to the streamer by the application to control stream flow and parameters.<P>
+<H3>Fields</H3>
+<H3>subscribe</H3>
+<DL>
+<DT><CODE>dataType</CODE>
+<DD>4 byte ASCII data type identifier.
+</DL>
+<DL>
+<DT><CODE>subscriberPort</CODE>
+<DD>Message port to send data to.
+</DL>
+<H3>clockSync</H3>
+<DL>
+<DT><CODE>exemptStream</CODE>
+<DD>Stream that sync message should not be sent to.
+</DL>
+<DL>
+<DT><CODE>nowTime</CODE>
+<DD>Time value to propagate to everyone.
+</DL>
+<H3>goMarker</H3>
+<DL>
+<DT><CODE>markerValue</CODE>
+<DD>Place to "branch" to in the stream.
+</DL>
+<DL>
+<DT><CODE>options</CODE>
+<DD>Options for branching.
+</DL>
+<H3>getChannel</H3>
+<DL>
+<DT><CODE>streamType</CODE>
+<DD>Which subscriber.
+</DL>
+<DL>
+<DT><CODE>channelNumber</CODE>
+<DD>Logical data channel.
+</DL>
+<DL>
+<DT><CODE>channelStatusPtr</CODE>
+<DD>Place to return channel status.
+</DL>
+<H3>setChannel</H3>
+<DL>
+<DT><CODE>streamType</CODE>
+<DD>Which subscriber. 
+</DL>
+<DL>
+<DT><CODE>channelNumber</CODE>
+<DD>Logical data channel.
+</DL>
+<DL>
+<DT><CODE>channelStatus</CODE>
+<DD>Channel status bits to set.
+</DL>
+<H3>Control</H3>
+<DL>
+<DT><CODE>streamType</CODE>
+<DD>Subscriber to send control message to.
+</DL>
+<DL>
+<DT><CODE>userDefinedOpcode</CODE>
+<DD>Subscriber defined action code.
+</DL>
+<DL>
+<DT><CODE>userDefinedArgPtr</CODE>
+<DD>Subscriber defined argument. 
+</DL>
+<H3>connect</H3>
+<DL>
+<DT><CODE>acquirePort</CODE>
+<DD>Connect this data port to stream. 
+</DL>
+<H3>start</H3>
+<DL>
+<DT><CODE>options</CODE>
+<DD>Start options.
+</DL>
+<H3>stop</H3>
+<DL>
+<DT><CODE>options</CODE>
+<DD>Stop options.
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

@@ -1,0 +1,23 @@
+<Title>SanmMaker</Title>
+<A NAME="XREF15908"><H1>SanmMaker </A></H1>
+<A NAME="XREF33217"></A>Creates a streamed animation from a folder of 3DO cels.<P>
+<H3>Synopsis</H3>
+<CODE>sanmmaker &lt;foldername&gt;</CODE><P>
+<H3>Description</H3>
+SanmMaker takes a folder of cel files as input and generates a streamed animation (SANM) file. The alphabetical order of the cel files in the folder determines the order in which they are placed in the streamed animation file.<P>
+The tool provides a graphical interface from MPW. <P>
+To use SanmMaker, use the dialog that appears when you launch the tool:<P>
+<UL>
+<LI>Choose a location and name for your SANM file. 
+<LI>Set the playback rate (in frames per second); 30 and 15 frames per second (fps) are often good numbers. 
+</UL>
+<UL>
+<LI>If you plan on interleaving more than one SANM into a larger stream, make sure that each SANM is built with a different channel number. Channel numbers start at zero (0) and should not exceed<CODE> </CODE>SANM_MAX_CHANNELS<CODE>,</CODE> defined in<I> </I><I>SAnimSubscriber.h</I><I>.</I> SANM_MAX_CHANNELS can be increased if needed.
+</UL>
+<UL>
+<LI>To have the streamed animation loop back to its first frame, select the Loop button.
+<LI>Select save. A dialog appears to prompt you for the folder containing the cels.
+<LI>Select the folder. SanmMaker assembles the SANM file.
+</UL>
+<H3>See Also</H3>
+<A HREF="./03DSR001.html#XREF36123">AnimToSanm</A><P>

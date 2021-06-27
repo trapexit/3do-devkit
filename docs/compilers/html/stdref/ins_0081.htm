@@ -1,0 +1,107 @@
+<HTML><TITLE>insert_iterator, inserter</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>insert_iterator, inserter</H2>
+<HR><PRE>     Insert Iterator</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>An insert iterator used to insert items into a collection rather than overwrite the collection.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Constructor"><LI>Constructor</LI></A>
+<A HREF="#Operators"><LI>Operators</LI></A>
+<A HREF="#Non-member Function"><LI>Non-member Function</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;iterator></PRE>
+<PRE>
+template &#60;class Container>
+class <B>insert_iterator : </B>public output_iterator;
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Insert iterators let you <I>insert</I> new elements into a collection rather than copy a new element's value over the value of an existing element.  The class<B><I> insert_iterator</B></I> is used to insert items into a specified location of a collection.  The function <SAMP>inserter</SAMP> creates an instance of an<B><I> insert_iterator</B></I> given a particular collection type and iterator.  An <B><I>insert_iterator</B></I> can be used with <A HREF="vec_0251.htm"><B><I>vector</B></I></A>s, <A HREF="deq_4164.htm"><B><I>deque</B></I></A>s, <A HREF="lis_3222.htm"><B><I>list</B></I></A>s, <A HREF="map_8018.htm"><B><I>map</B></I></A>s and <A HREF="set_1649.htm"><B><I>set</B></I></A>s.</P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class Container>
+class insert_iterator : public output_iterator {
+
+public:
+   insert_iterator (Container&#38;, typename Container::iterator);
+   insert_iterator&#60;Container>&#38;
+    operator= (const typename Container::value_type&#38;);
+   insert_iterator&#60;Container>&#38; operator* ();
+   insert_iterator&#60;Container>&#38; operator++ ();
+   insert_iterator&#60;Container>&#38; operator++ (int);
+};
+template &#60;class Container, class Iterator>
+insert_iterator&#60;Container> inserter (Container&#38;, Iterator)
+</PRE>
+<A NAME="Constructor"><H3>Constructor</H3></A>
+<PRE><B>insert_iterator </B>(Container&#38; x, typename Container::iterator i);</PRE>
+<UL><P>Constructor.  Creates an instance of an <B><I>insert_iterator</B></I> associated with container <SAMP>x</SAMP> and iterator <SAMP>i.</SAMP></P>
+</UL>
+<A NAME="Operators"><H3>Operators</H3></A>
+<PRE>insert_iterator&#60;Container>&#38;
+<B>operator=</B> (const typename Container::value_type&#38; value);</PRE>
+<UL><P>Assignment operator. Inserts a copy of <SAMP>value</SAMP> into the container at the location specified by the <SAMP>insert_iterator</SAMP>, increments the iterator, and returns <SAMP>*this</SAMP>.</P>
+</UL>
+<PRE>insert_iterator&#60;Container>&#38;
+<B>operator*</B> ();</PRE>
+<UL><P>Returns <SAMP>*this</SAMP> (the input iterator itself).</P>
+</UL>
+<PRE>insert_iterator&#60;Container>&#38; 
+<B>operator++</B> ();
+insert_iterator&#60;Container>&#38; 
+<B>operator++</B> (int);</PRE>
+<UL><P>Increments the insert iterator and returns <SAMP>*this</SAMP>.</P>
+</UL>
+<A NAME="Non-member Function"><H3>Non-member Function</H3></A>
+<PRE>template &#60;class Container, class Iterator>
+insert_iterator&#60;Container> 
+<B>inserter</B> (Container&#38; x, Iterator i);</PRE>
+<UL><P>Returns an <B><I>insert_iterator</B></I> that will insert elements into container <SAMP>x</SAMP> at location <SAMP>i</SAMP>.  This function allows you to create insert iterators inline.</P>
+</UL>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE> #include &#60;iterator>
+ #include &#60;vector>
+ #include &#60;iostream.h></PRE>
+<PRE> int main()
+ {
+   //Initialize a vector using an array
+   int arr[4] = {3,4,7,8};
+   vector&#60;int> v(arr,arr+4);</PRE>
+<PRE>   //Output the original vector
+   cout &#60;&#60; "Start with a vector: " &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));</PRE>
+<PRE>   //Insert into the middle
+   <B>insert_iterator</B>&#60;vector&#60;int> >  ins(v, v.begin()+2);
+   *ins = 5;
+   *ins = 6;</PRE>
+<PRE>   //Output the new vector
+   cout &#60;&#60; endl &#60;&#60; endl;
+   cout &#60;&#60; "Use an insert_iterator: " &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));</PRE>
+<PRE>   return 0;
+ }
+</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you'll have to write:</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of:</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="bac_0189.htm"><B><I>back_insert_iterator</B></I></A>, <A HREF="fro_0713.htm"><B><I>front_insert_iterator</B></I></A>, <A HREF="Ins_1844.htm"><B><I>Insert Iterators</B></I></A></P>
+<HR>
+<A HREF="Ins_1844.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="ist_4337.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>
+
+
+
+
+
+
+

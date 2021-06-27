@@ -1,0 +1,21 @@
+cg_header:Name%-28ccum%%     self%%    desc%%    calls\n
+flat_header:Name%-28ctime%%\n
+help_line1:ARM Profiler %s [%s]\n\n
+help_line2:Command format: %s [options] profile_data\n\n
+help_line3:Options: (shorter forms may be used)\n
+help_line4:-Sort Cumulative  Sort the output by the cumulative time taken by each\n                  function and all its children\n
+help_line5:-Sort Self        Sort the output by the time taken by each function\n                  inside itself\n
+help_line6:-Sort Descendants Sort the output by the time taken in each functions\n                  children, ignoring the time in the functions itself\n
+help_line7:-Sort Calls       Sort the output by the number of calls to each function\n
+help_line8:-Parent           Include the parents of each function in the listing\n
+help_line9:-Noparent         Do not list the parent functions\n
+help_line10:-Child            Include the children of each function in the listing\n
+help_line11:-Nochild          Do not list the child functions\n
+help_line12:-Flat             Produce a flat profile only\n
+out_of_store:Out of memory, trying to allocate %ld bytes
+no_sort_arg:No arguments on -Sort option
+bad_sort_arg:Unrecognised argument '%s' on -Sort option
+bad_option:Unrecognised option '%s', use '%s -help' for help
+err_open:Can't find %s
+invalid_file:%s is not a valid profile data file
+no_sample_data:No sample data in %s - cannot generate profile

@@ -1,0 +1,149 @@
+<TITLE>Folder contents</TITLE>
+<H1><LINK NAME="XREF25541"></LINK><LINK NAME="XREF14382"></LINK><LINK NAME="XREF15497"></LINK><LINK NAME="XREF25939">Folder contents</LINK></H1><HR>
+The samples in this collection are divided into five main folders: <P>
+<UL>
+<LI>GMPercussion22k
+<LI>GMPercussion44k
+<LI>PitchedL
+<LI>PitchedLR
+<LI>Unpitched
+</UL>
+Most 3DO developers need only the samples in the first three folders.<P>
+<H2>Samples in GMPercussion22k and GMPercussion44k</H2>
+This collection consists of a nearly complete set of samples for a General MIDI drum kit.  The only difference between the contents of the two folders is sample rate. Note that the 22 K samples take up half the space of the 44 K samples  and in most cases sound about as good.<P>
+The General MIDI Percussion support in this 3DO release consists of AIFF files and a PIMap (+GMPercPIMap44k.txt and +GMPercPIMap22k.txt) that corresponds to the Percussion Map of the General MIDI implementation. You should edit copies of those PImaps that only reference the samples you need. General MIDI assigns percussion sounds to notes 35-81 on MIDI channel 10, as follows:<P>
+<H3>Multiple sample choices</H3>
+In this release, multiple sample choices are provided for the following:<P>
+<UL>
+<LI>Acoustic Snare (note 36)
+<LI>Open Hi-Hat (note 46)
+<LI>Crash Cymbal 1 (note 49)
+<LI>Ride Cymbal 1 (note 51)
+<LI>Chinese Cymbal (note 52)
+<LI>Splash Cymbal (note 55)
+<LI>Cowbell (note 56)
+<LI>Low Conga (note 64)
+<LI>High and Low Agogos (notes 67 &amp; 68)
+</UL>
+<H3>Empty assignment slots</H3>
+The following assignment slots, for which there are no appropriate audio samples in the 3DO Content Library, have been left blank in the PIMap score file:<P>
+<UL>
+<LI>Hi and Low Bongo (notes 60 &amp; 61)
+<LI>Short and Long Whistle (notes 71 &amp; 72)
+<LI>Low Wood Block (note 77).
+</UL>
+<H3>Tom-Tom Samples</H3>
+The tom-tom descriptions (Low Floor Tom, High Floor Tom, Low Tom, Low-Mid Tom, Hi-Mid Tom, and Hi Tom) are roughly matched to their files, but drum aficionados may want to replace one or several of the samples.<P>
+<H2>Samples in the PitchedL folder</H2>
+The samples in  the PitchedL folder  have sustain loop markers and in most cases include sufficient fade outs.  Instruments in folders marked "Lite" take up less RAM, but have more abrupt fade outs. <P>
+<B>Note: </B>All loop markers have been set on even-numbered samples because the 3DO system reads samples in 4-byte packets. By bracketing even-numbered 16-bit samples, these loop segments conform to the requirements of the 3DO system.<P>
+<H2>Samples in the PitchedLR folder</H2>
+The samples in this folder are equivalent to the ones in the PitchedL folder but have release loops. All the instrument folders in this main folder have "RL" to distinguish them from the instrument folders in "PitchedL." The 3DO system makes it possible to use release loops.<P>
+<B>Note: </B> You should only use samples from this folder if you are willing to devote the programming time and DSP bandwidth for envelopes. <P>
+Samples in this folder have the following characteristics: <P>
+<UL>
+<LI>Two pairs of loop markers, each bracketing the same sample data.
+<LI>Sounds are abruptly truncated; there is no fade out. 
+</UL>
+When you use a sample with a release loop, an envelope is needed to ramp the sound down while release loop data is playing. Consider letting the attack portion of the envelope come from the soundfile itself by setting the first segment of the envelope generator at maximum volume. The envelope would then shape the sustain and release loop sounds.<P>
+<H2>Samples in the Unpitched folder </H2>
+Most of the samples in this folder are represented in the GMPercussion sets. <P>
+<H3>Suggested MIDI note maps</H3>
+<B>Note: </B>This list includes only some of the samples in this collection; 3DO developers will undoubtedly decide on their own cross-over points, depending on the nature of their music and RAM constraints
+<PRE>
+---------------------------------------------------------------------
+Flute        |Harpsichord|Oboe         |Recorder                     
+---------------------------------------------------------------------
+C#448 -&gt;     |C230 -&gt;    |D448 -&gt; 63   |Version 1Version             
+50           |40         |             |                             
+---------------------------------------------------------------------
+F451 -&gt; 56   |C341 -&gt;    |F464 -&gt; 66   |SopranoC5 (not used)70 -&gt;    
+             |48         |             |73                           
+---------------------------------------------------------------------
+A#457 -&gt;     |E349 -&gt;    |A467 -&gt; 69   |SopranoG571 -&gt; 8474 -&gt;    
+59           |52         |             |84                           
+---------------------------------------------------------------------
+D#560 -&gt;     |G353 -&gt;    |C570 -&gt; 72   |SopranoD685 -&gt; 9085 -&gt;    
+64           |60         |             |90                           
+---------------------------------------------------------------------
+G565 -&gt; 68   |E461 -&gt;    |E573 -&gt; 76   |Version 1Version 2           
+             |66         |             |                             
+---------------------------------------------------------------------
+C669 -&gt; 90   |G467 -&gt;    |G577 -&gt; 80   |TenorC455 -&gt; 6055 -&gt; 60   
+             |68         |             |                             
+---------------------------------------------------------------------
+             |C569 -&gt;    |B581 -&gt; 85   |TenorF348 -&gt; 5448 -&gt; 54   
+             |73         |             |                             
+---------------------------------------------------------------------
+             |E574 -&gt;    |F686 -&gt; 90   |TenorG461 -&gt; 7061 -&gt; 69   
+             |81         |             |                             
+---------------------------------------------------------------------
+             |C682 -&gt;    |             |                             
+             |90         |             |                             
+---------------------------------------------------------------------
+</PRE>
+<I>
+<PRE>
+--------------------------------------------------------------------
+Solo Strings      |String Ensemble       |String Ensemble           
+                  |(PitchedL)            |(PitchedLR)               
+--------------------------------------------------------------------
+                  |These composite samples layer several samples of 
+                  |the same note on different string instruments    
+                  |(viola, violin, cello).                          
+--------------------------------------------------------------------
+CelloD230 -&gt; 39   |C230 -&gt; 39            |C230 -&gt; 39                
+--------------------------------------------------------------------
+CelloG240 -&gt; 43   |A240 -&gt; 55            |A240 -&gt; 49                
+--------------------------------------------------------------------
+CelloC344 -&gt; 52   |D456-&gt; 68             |A3 50 -&gt; 59               
+--------------------------------------------------------------------
+CelloA353 -&gt; 57   |C569 -&gt; 76            |D460-&gt; 68                 
+--------------------------------------------------------------------
+ViolaD458 -&gt; 64   |A577 -&gt; 83            |C569 -&gt; 76                
+--------------------------------------------------------------------
+ViolaG465 -&gt; 73   |D684 -&gt; 90            |A577 -&gt; 83                
+--------------------------------------------------------------------
+ViolaB474 -&gt; 74   |                      |D684 -&gt; 90                
+--------------------------------------------------------------------
+ViolinE575 -&gt;     |                      |                          
+82                |                      |                          
+--------------------------------------------------------------------
+ViolinA583 -&gt;     |                      |                          
+90                |                      |                          
+--------------------------------------------------------------------
+</PRE>
+</I><P>
+
+<PRE>
+----------------------------------
+Trumpet            |Woodwind      
+                   |Quartet       
+----------------------------------
+A348 -&gt; 58         |C230 -&gt; 37    
+----------------------------------
+D459 -&gt; 63         |E238 -&gt; 43    
+----------------------------------
+G464 -&gt; 68         |A244 -&gt; 45    
+----------------------------------
+C569 -&gt; 73         |A#246 -&gt; 48   
+----------------------------------
+F574 -&gt; 78         |E349 -&gt; 52    
+----------------------------------
+A#579 -&gt; 86        |C453 -&gt; 60    
+----------------------------------
+D#687 -&gt; 90        |C#461 -&gt; 63   
+(can use A#5 for   |              
+this if D#6 sounds |              
+strained)          |              
+----------------------------------
+                   |F464 -&gt; 66    
+----------------------------------
+                   |G#467 -&gt; 72   
+----------------------------------
+                   |D#573 -&gt; 75   
+----------------------------------
+</PRE>
+<H3>The InstrumentSamples folder</H3>
+The Instrument Samples folder contains AIFF files that 3DO developers can use to attach to MIDI notes in their interactive scores. Samples are presented in various stereo/mono 44k/22k formats.   Some have release loops in addition to sustain loops. A list is provided in a separate chapter. <P>
+<P>

@@ -1,0 +1,18 @@
+<Title>DisableScoreMessages</Title>
+<A NAME="XREF41066"><H1>DisableScoreMessages </A></H1>
+<A NAME="XREF25057"></A> Enable or disable printed messages during score playback.<P>
+<H3>Synopsis</H3>
+<CODE>int32 DisableScoreMessages( int32 Flag )</CODE><P>
+<H3>Description</H3>
+This function turns on or off the informational and error message printing during score playback. Messages default to being enabled. Also, there are a few error messages that cannot be disabled. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Flag
+<DD>Non-zero to disable messages, 0 to enable messages. Messages default to being enabled. 
+</DL>
+<H3>Return Value</H3>
+Previous enable/disable flag. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>

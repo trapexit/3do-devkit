@@ -1,0 +1,28 @@
+<TITLE>Object code libraries </TITLE>
+<H1>Object code libraries </H1><HR>
+An object code library is a library file whose members are files in ARM Object Format (see <A HREF="./ats2frst.html#XREF16187">ARM Object Format</A> for details).<P>
+An object code library contains two additional chunks: an external symbol table chunk named OFL_SYMT; and a time stamp chunk named OFL_TIME.<P>
+<H2>OFL_SYMT </H2>
+The external symbol table contains an entry for each external symbol defined by members of the library, together with the index of the chunk containing the member defining that symbol.<P>
+The OFL_SYMT chunk has exactly the same format as the LIB_DIRY chunk except that the Data section of each entry contains only a string, the name of an external symbol, and between 1 and 4 bytes of NUL padding, as follows:<P>
+<PRE>
+-----------------------------------------------------
+ChunkIndex           |                               
+-----------------------------------------------------
+EntryLength          |the size of this OFL_SYMT chunk
+                     |(an integral number of words)  
+-----------------------------------------------------
+DataLength           |the size of the External Symbol
+                     |Name and Padding(an integral   
+                     |number of words)               
+-----------------------------------------------------
+External Symbol Name |                               
+-----------------------------------------------------
+Padding              |                               
+-----------------------------------------------------
+</PRE>
+<P>
+OFL_SYMT entries do not contain time stamps.<P>
+<H2>OFL_TIME</H2>
+The OFL_TIME chunk records when the OFL_SYMT chunk was last modified and has the same format as the LIB_TIME chunk (see <A HREF="./3atsb.html#XREF15659">Time stamps</A>). <P>
+<P>

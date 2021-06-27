@@ -1,0 +1,40 @@
+<TITLE>SendMsg</TITLE>
+<A NAME="XREF17036"><H1>SendMsg </A></H1>
+<A NAME="XREF27792"></A>Sends a message.<P>
+<H3>Synopsis</H3>
+<CODE>Err SendMsg( Item mp, Item msg, const void *dataptr, int32 datasize )</CODE><P>
+<H3>Description</H3>
+This procedure sends a message to the specified message port. (To send a small message use <CODE>SendSmallMsg()</CODE>. <P>
+The message is queued on the message port's list of messages according to its priority. Messages that have the same priority are queued on first come, first served basis. <P>
+Whether a message is standard or buffered is determined by the procedure you use to create the message: <CODE>CreateMsg()</CODE> creates a standard message (one whose message data belongs to the sending task; the receiving task reads from this block), while CreateBufferedMsg creates a buffered message (one in which a buffer for the message data is included in the message). For standard messages, the dataptr and datasize arguments refer to the data block owned by the message sender. For buffered messages, the dataptr and datasize arguments specify the data to be copied into the message's internal buffer before the message is sent.<P>
+If the message is a buffered message, <CODE>SendMsg()</CODE> checks the size of the data block to see whether it will fit in the message's buffer. If it won't fit, <CODE>SendMsg()</CODE> returns an error. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>mp
+<DD>The item number of the message port to which to send the message. 
+</DL>
+<DL>
+<DT>msg
+<DD>The item number of the message to send. 
+</DL>
+<DL>
+<DT>dataptr
+<DD>A pointer to the message data, or NULL if there is no data to include in the message. For a standard message, the pointer specifies a data block owned by the sending task, which can later be read by the receiving task. For a buffered message, the pointer specifies a block of data to be copied into the message's internal data buffer. 
+</DL>
+<DL>
+<DT>datasize
+<DD>The size of the message data, in bytes, or 0 if there is no data to include in the message. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the message was sent successfully or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr075.html#XREF37256"><CODE>GetMsg</A>(), <A HREF="./01spr083.html#XREF31956">GetThisMsg</A>(), <A HREF="./01spr113.html#XREF31623">ReplyMsg</A>(), <A HREF="./01spr114.html#XREF39369">ReplySmallMsg</A>(), <A HREF="./01spr124.html#XREF40209">SendSmallMsg</A>(), <A HREF="./01spr132.html#XREF19568">WaitPort</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF17036"></LINK></H1><HR>

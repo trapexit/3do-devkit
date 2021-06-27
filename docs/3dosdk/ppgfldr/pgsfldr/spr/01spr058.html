@@ -1,0 +1,26 @@
+<TITLE>FindSemaphore</TITLE>
+<A NAME="XREF28338"><H1>FindSemaphore </A></H1>
+<A NAME="XREF19540"></A>Finds a semaphore by name.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindSemaphore( const char *name )</CODE><P>
+<H3>Description</H3>
+This macro finds a semaphore with the specified name. The search is not case-sensitive (that is, the kernel does not distinguish uppercase and lowercase letters in semaphore names). You can use this macro in place of <CODE>FindNamedItem()</CODE> to find a semaphore. <P>
+For information about semaphores, which are used to control access to shared resources, see the "Sharing System Resources" chapter in the 3DO Portfolio Programmer's Guide.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the semaphore to find. 
+</DL>
+<H3>Return Value</H3>
+The macro returns the item number of the semaphore that was found or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in semaphore.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>semaphore.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr026.html#XREF34382"><CODE>CreateSemaphore</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF28338"></LINK></H1><HR>

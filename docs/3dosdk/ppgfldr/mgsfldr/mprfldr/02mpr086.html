@@ -1,0 +1,53 @@
+<Title>spService</Title>
+<A NAME="XREF41970"><H1>spService </A></H1>
+<A NAME="XREF37874"></A> Service SPPlayer<P>
+<H3>Synopsis</H3>
+<CODE>int32 spService (SPPlayer *player, int32 signals)</CODE><P>
+<H3>Description</H3>
+This function<P>
+. processes signals received by the client's sent by the SPPlayer, and<P>
+. reads and spools more sound data, processing marker actions along the way. <P>
+This function synchronizes the SPPlayer's SoundSpooler to the state of the signals read from the last <CODE>WaitSignal()</CODE>. You must call it after waiting for SPPlayer's signals before calling any other sound player function for this SPPlayer (with the exception of <CODE>spDeletePlayer()</CODE>, which can tolerate the spooler being out of sync with the task's signals). <P>
+This function can set or clear the SP_STATUS_F_BUFFER_ACTIVE flag, depending on buffer usage. It clears SP_STATUS_F_READING when there's no more sound data to read. This function may be called under any player state including when SP_STATUS_F_PLAYING is not set without any ill effects. <P>
+This function must be called exactly once for each <CODE>WaitSignal()</CODE> on an SPPlayer's signals. It will almost certainly have dangerous results if fed incorrect signals (signals other than from the most recent <CODE>WaitSignal()</CODE>, or signals that it has already processed). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to SPPlayer to service. 
+</DL>
+<DL>
+<DT>signals
+<DD>Signals last received to process. Ignores any signals that do not belong to this SPPlayer. Does nothing if none of the SPPlayer's signals are set. 
+</DL>
+<H3>Return Value</H3>
+Non-negative player status flags (SP_STATUS_F_) on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+// error checking omitted for brevity
+{
+    const int32 playersigs = spGetPlayerSignalMask (player);
+        // service player until it's done
+    while (spGetPlayerStatus(player) &amp; SP_STATUS_F_BUFFER_ACTIVE) {
+        const int32 sigs = WaitSignal (playersigs |
+                                       othersignals1 |
+                                       othersignals2);
+            // service player before servicing other
+            // things that might affect the player
+        spService (player, playersigs);
+            // service other things
+        if (sigs &amp; othersignals1) {
+        }
+        if (sigs &amp; othersignals2) {
+        }
+    }
+}
+</CODE>
+</PRE>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr076.html#XREF26745"><CODE>spGetPlayerSignalMask</A>(), <A HREF="./02mpr077.html#XREF27522">spGetPlayerStatus</A>(), <A HREF="./02mpr092.html#XREF25186">spStartReading</A>(), <A HREF="./02mpr091.html#XREF15941">spStartPlaying</A>() </CODE><P>
+</CODE>

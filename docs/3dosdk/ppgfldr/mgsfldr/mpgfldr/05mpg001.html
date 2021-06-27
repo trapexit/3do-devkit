@@ -1,0 +1,72 @@
+<TITLE>An Overview of the Sound File Player</TITLE>
+<H1><LINK NAME="XREF37551">An Overview of the Sound File Player</LINK></H1><HR>
+The idea behind the sound file player is similar to the idea behind double buffered animation: provide separate buffers for sampled sound playback, then play back the sound buffers in continuous sequence as shown in Figure 1. While one buffer plays, the sound file player can safely write more of the sound file into buffers not being played. Because the spooler need only write to buffers at intervals (and not continuously), glitches caused by interrupted or slow disc access are unlikely. Playback continues smoothly from buffer to buffer without pause.<P>
+
+<IMG SRC="Figures/5-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Playing sounds in a continuous sequence</I><P>
+The sound file player is build on top of a general sound spooler. See <A HREF="./07mpg.html#XREF23959">Using the Sound Spooler</A> for a description.<P>
+A development note: the sound file player works better spooling a sound file from CD than it does spooling a sound file from the Macintosh in a development system because the file system on the CD uses DMA.<P>
+<H2>Sound File Player Operation</H2>
+To play a sound file through once, follow these steps:<P>
+<OL>
+<LI>Create a <CODE>SoundFilePlayer</CODE> and some sound buffers.
+<p>
+<DL>
+<DD><CODE>sfp = CreateSoundFilePlayer ( NUMBUFFS, BUFSIZE, PassBuffers );<BR>
+CHECKPTR(sfp, "CreateSoundFilePlayer");</CODE><BR>
+</DL>
+<p>
+
+<LI>Open the sound file and preload the first part of the file into the buffers.
+<p>
+<DL>
+<DD><CODE>      Result = LoadSoundFile( sfp, FileName );<BR>
+        CHECKRESULT(Result,"LoadSoundFile");</CODE><BR>
+</DL>
+<p>
+
+<LI> Start playback.
+<p>
+<DL>
+<DD><CODE>Result = StartSoundFile( sfp, MAXAMPLITUDE );<BR>
+CHECKRESULT(Result,"StartSoundFile");</CODE><BR>
+</DL>
+<p>
+
+<LI>Sit in a loop waiting for signals from sound file player and handing them off to the sound file player's service function.
+<p>
+
+<DL>
+<DD><CODE>do<BR>
+{<BR>
+ Result = ServiceSoundFile(sfp, SignalsIn, &amp;SignalsNeeded);<BR>
+   CHECKRESULT(Result,"ServiceSoundFile");<BR>
+} while ((SignalsNeeded);</CODE><BR>
+</DL>
+<p>
+
+<LI>Stop playback.
+<p>
+<DL>
+<DD><CODE>Result = StopSoundFile (sfp);<BR>
+CHECKRESULT(Result,"StopSoundFile");</CODE><BR>
+</DL>
+<p>
+
+<LI>Close sound file.
+<p>
+<DL>
+<DD><CODE>Result = UnloadSoundFile( sfp );<BR>
+CHECKRESULT(Result,"UnloadSoundFile");</CODE><BR>
+</DL>
+<p>
+
+<LI>Dispose of the <CODE>SoundFilePlayer</CODE> and associated buffers.
+<p>
+</OL>
+<DL>
+<DD><CODE>DeleteSoundFilePlayer( sfp );</CODE><BR>
+</DL>
+</OL>
+See <I>playsoundfile.c</I> in the Examples folder for a complete program listing.<P>

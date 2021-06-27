@@ -1,0 +1,38 @@
+<Title>RenderCelFillRect</Title>
+<A NAME="XREF20332"><H1>RenderCelFillRect </A></H1>
+ Renders a filled rectangle into a cel's data buffer.<P>
+<H3>Synopsis</H3>
+<CODE>void RenderCelFillRect (CCB *cel, int32 pixel,int32 x, int32 y, int32 w, int32 h)</CODE><P>
+<H3>Description</H3>
+Renders a filled rectangle into the cel's data buffer.<P>
+This function performs no clipping internally. You must be careful not to pass coordinates that would result in rendering outside the cel's data buffer. <P>
+This function supports all cel formats and bit depths except packed cels, LRForm cels, and 6-bit coded cels. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to the cel. 
+</DL>
+<DL>
+<DT>pixel
+<DD>Value to store into each pixel in the area. 
+</DL>
+<DL>
+<DT>x
+<DD>X coordinate within the cel data buffer. 
+</DL>
+<DL>
+<DT>y
+<DD>Y coordinate within the cel data buffer. 
+</DL>
+<DL>
+<DT>w
+<DD>Width of the area to fill in the cel data buffer. 
+</DL>
+<DL>
+<DT>h
+<DD>Height of the area to fill in the cel data buffer. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>

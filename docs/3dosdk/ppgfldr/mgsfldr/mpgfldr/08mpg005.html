@@ -1,0 +1,97 @@
+<TITLE>Sending Messages to Sequences and Collections</TITLE>
+<H1><LINK NAME="XREF13524">Sending Messages to Sequences and Collections</LINK></H1><HR>
+After a task creates a Juggler object, it can send messages to the object. This section describes the messages that sequences and collections accept and also describes the actions of the methods in response to the messages.<P>
+The function for a method can be different for different types of objects. Therefore, the results of identical messages sent to different objects can vary.<P>
+<H2>Calling Methods Directly</H2>
+Methods are defined within an object with a list of pointers to functions. A task can call any of these methods directly using the pointer to the method's function that is in the object data structure. For example, <CODE>*obj-&gt;Class-&gt;Add</CODE> calls an object's Add method.<P>
+<A NAME="XREF40198"><H2>Message Macros</A></H2>
+Many of the methods available to Juggler objects can be called through macros provided by the Music library. To make your code more legible, you should use macros whenever possible. For example, the macro <CODE>StopObject()</CODE> calls the method <CODE>*obj-&gt;Class-&gt;Stop</CODE>. See <A HREF="./08mpg008.html#XREF10099">Method Macros</A> for a list of macros.<P>
+<H2>Messages for Sequences</H2>
+Although a sequence accepts messages for all the common Juggler methods, not all methods have meaningful results for a sequence. For example, a sequence accepts an Add message to add an object to an object list, but the message does not do anything meaningful because the sequence has no object list. The following sections describe the methods that give meaningful results for a sequence.<P>
+<H3>Alloc</H3>
+The Alloc method allocates memory for a sequence's event list. The Alloc method is called using this macro:<P>
+<DL>
+<DD><CODE>int32 AllocObject( CObject *obj, int32 Num )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>*obj</CODE>, a pointer to the sequence for which memory should be allocated; and <CODE>Num</CODE>, an integer that specifies the number of events in the event list.<P>
+When it executes, the call uses the event size stored in the sequence to allocate an appropriate amount of RAM for the event list. It stores a pointer to the allocated RAM into the object variable <CODE>*obj-&gt;seq_Events</CODE>. <CODE>AllocObject()</CODE> returns 0 if successful or a negative value (an error code) if unsuccessful.<P>
+Aa task does not have to use this method to allocate memory for an event list. The method is provided as a convenience. A task can use its own allocation techniques.<P>
+<H3>Free</H3>
+The Free method frees memory previously allocated for a sequence's event list by the sequence's Alloc method. The Free method is called by this macro:<P>
+<DL>
+<DD><CODE>int32 FreeObject( CObject *obj )</CODE><BR>
+</DL>
+The call accepts one argument: <CODE>*obj</CODE>, a pointer to a sequence.<P>
+When it executes, the call frees any memory previously allocated for the sequence's event list. If successful, <CODE>FreeObject()</CODE> returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+If a task allocates memory for an event list  using its own techniques, the memory should be freed using its own techniques.<P>
+<A NAME="XREF15210"><H3>SetInfo</A></H3>
+The SetInfo method sets a sequence's variables with values provided by a tag argument list. The SetInfo method is called by the following macro:<P>
+<DL>
+<DD><CODE>int32 SetObjectInfo( CObject *obj, TagArg *tags )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>*obj</CODE>, a pointer to the object to which the tag argument values should be applied; and <CODE>*tags</CODE>, a pointer to the tag argument list. When executed, the call sends a SetInfo message to the specified object. The object reads the values in the tag argument list and applies them to the appropriate object variables.<P>
+<CODE>SetObjectInfo()</CODE> returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<A NAME="XREF28726"><H3>GetInfo</A></H3>
+The GetInfo method returns a sequence's variable values by writing them to a provided tag argument list. It's called by this macro:<P>
+<DL>
+<DD><CODE>int32 GetObjectInfo( CObject *obj, TagArg *tags )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>*obj</CODE>, a pointer to the object for which values should be retrieved; and <CODE>*tags</CODE>, a pointer to a tag argument list. The call sends a GetInfo message to the specified object. The object writes its current variable values into the tag argument list.<P>
+<CODE>GetObjectInfo()</CODE> returns  0 if successful, and a negative value (an error code) if unsuccessful.<P>
+<H3>Start</H3>
+The Start method makes a sequence active so that it can be played by the Juggler when the Juggler is bumped (See <A HREF="./08mpg006.html#XREF14054">Bumping the Juggler</A>). The method is called by the following macro:<P>
+<DL>
+<DD><CODE>int32 StartObject( CObject *obj, uint32 Time, int32 NumReps, CObject *Parent )</CODE><BR>
+</DL>
+The call accepts four arguments: <CODE>*obj</CODE>, a pointer to the sequence to be started; <CODE>Time</CODE>, an absolute time in ticks when the sequence should be started; <CODE>NumReps</CODE>, the number of times the sequence should be repeated in playback; and <CODE>*Parent</CODE>, a pointer to the parent of the sequence.<P>
+The <CODE>*Parent</CODE> pointer is only used when a sequence is part of a collection. A task using this call directly should set <CODE>*Parent</CODE> to NULL. The <CODE>NumReps</CODE> value only sets the number of playback repetitions for a sequence if the sequence is not part of a collection. If it is part of a collection, the number of repetitions stored in the sequence's placeholder overrides this value.<P>
+When <CODE>StartObject()</CODE> executes, the call stores the <CODE>Time</CODE> and <CODE>NumReps</CODE> values in the appropriate sequence variables. The Juggler uses the start time to determine the absolute event times (See <A HREF="./08mpg006.html#XREF23205">Absolute and Relative Event Times</A>). The Juggler uses the <CODE>NumReps</CODE> value to determine how many times to play the sequence.<P>
+<CODE>StartObject()</CODE> returns 0 if successful, and a negative value (an error code) if unsuccessful.<P>
+<H3>Stop</H3>
+The Stop method makes a sequence inactive (it is no longer be played by the Juggler). The Stop method is called by this macro:<P>
+<DL>
+<DD><CODE>int32 StopObject( CObject *obj, uint32 Time )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>*obj</CODE>, a pointer to the sequence to be stopped; and <CODE>Time</CODE>, an absolute time in ticks that reports when the object was stopped.<P>
+When executed, the call makes the sequence inactive so that none of its events are played by the Juggler. The reported stop time is passed by the stopped object to any existing parent objects. <CODE>StopObject()</CODE> returns 0 if successful, and a negative value (an error code) if unsuccessful.<P>
+<B>Note: </B>A task should be careful when stopping a sequence contained within a collection. The sequence may stop for a while, but if it is repeated by the collection or called by another placeholder, it may start again. In other words, stopping a sequence within a collection may have unpredictable results.<P>
+<H3>Print</H3>
+The Print method prints debugging information about a sequence. The Print method is called by this macro:<P>
+<DL>
+<DD><CODE>int32 PrintObject( CObject *obj )</CODE><BR>
+</DL>
+The call accepts one argument: <CODE>*obj</CODE>, a pointer to the sequence for which information should be printed.<P>
+When executed, the call prints debugging information about the specified sequence,  including a pointer to the sequence. <CODE>PrintObject()</CODE> returns 0 if successful, and a negative value (an error code) if unsuccessful.<P>
+<H2>Messages for Collections</H2>
+A collection accepts all the common jugglee class methods, but only some of them have meaningful results for a collection. The following sections describe the methods that have meaningful results for a collection.<P>
+<H3>Alloc and Free</H3>
+These methods have no meaningful results for a collection.<P>
+<H3>SetInfo and GetInfo</H3>
+These methods, called by the macros <CODE>SetObjectInfo()</CODE> and <CODE>GetObjectInfo()</CODE>, perform the same actions as they do for a sequence.<P>
+<H3>Add</H3>
+The Add method adds a Juggler object to a collection's object list. There is no macro for this method. The Add method is called directly, as follows:<P>
+<DL>
+<DD><CODE>*obj-&gt;Class-&gt;Add( Collection *Self, Jugglee *Child, int32 NumRepeats)</CODE><BR>
+</DL>
+See <A HREF="./08mpg004.html#XREF26704">Adding Objects to the Collection</A> for more information on the Add method.<P>
+<H3>GetNthFrom</H3>
+The GetNthFrom method looks at a specified position in a collections's object list and retrieves a pointer to the Juggler object. The GetNthFrom method is called by the following macro:<P>
+<DL>
+<DD><CODE>int32 GetNthFromObject( CObject *obj, int32 N, (void**) NthThing )</CODE><BR>
+</DL>
+See <A HREF="./08mpg004.html#XREF26998">Examining a Collection's Object List</A> for more information on the GetNthFrom method.<P>
+<H3>RemoveNthFrom</H3>
+The RemoveNthFrom method removes the object from a specified location within a collection object list. The RemoveNthFrom method is called by this macro:<P>
+<DL>
+<DD><CODE>int32 RemoveNthFromObject( CObject *obj, int32 N )</CODE><BR>
+</DL>
+See <A HREF="./08mpg004.html#XREF37353">Removing Objects From a Collection</A> for more information.<P>
+<H3>Start</H3>
+The Start method, called by the macro <CODE>StartObject()</CODE>, works the same for a collection as it does for a sequence, that is, it makes a collection active so that it can be played by the Juggler.<P>
+When a collection is started, all of its component objects are started with it, and play back in parallel (not in sequence, as the events within a sequence play).<P>
+A collection, like a sequence, stores <CODE>Time</CODE> and <CODE>NumReps</CODE> values in the appropriate variables so the Juggler can use those values to determine absolute event times and how many times to repeat the collection. During repeats, all of the collection's constituent objects are replayed.<P>
+<H3>Stop</H3>
+The Stop method, called by the macro <CODE>StopObject()</CODE>, works the same for a collection as it does for a sequence; that is, the collection is made inactive so that it is no longer be played by the Juggler. When a task stops a collection, the collection sends Stop messages to all of its constituent objects so that they stop as well.<P>
+<B>Note: </B>A task should not stop a collection that is a constituent of a higher collection, because the results are unpredictable. The higher collection may restart the collection that was stopped.<P>
+<H3>Print</H3>
+This method, called by the macro <CODE>PrintObject()</CODE>, prints debugging information as it does for a sequence. It also prints a list of the objects contained in the collection's object list.<P>

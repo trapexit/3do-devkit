@@ -1,0 +1,52 @@
+
+<Title>AnimToSanm</Title>
+<A NAME="XREF36123"></A><A NAME="XREF13219"><H1>AnimToSanm</A></H1>
+<A NAME="XREF30400"></A>Converts a 3DO Animator file to a streamed animation.<P>
+<H3>Synopsis</H3>
+<CODE>AnimToSanm [options] &lt;files...&gt;</CODE><P>
+<H3>Description</H3>
+The animToSanm MPW tool converts 3DO Animator files to the 3DO streamed animation format (SANM). Files should be written as type `3DO Anim' from within 3DO Animator.   <P>
+To convert a VDAN file to a 3DO Anim file within 3DO Animator you must access the 3DO palette, choose a cel format, and remap the document. Pay careful attention to the CCB settings before you remap the document. AnimToSanm can also be used to convert raw anims (a group of concatenated cels) into streamed animation format.  animToSanm produces the same format as SanmMaker.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-1 
+<DD>Assume first PDAT is displayed as cel earlier.
+</DL>
+<DL>
+<DT>-C 
+<DD>Enable custom compression.
+</DL>
+<DL>
+<DT>-q 
+<DD>Quiet mode, suppress most text output.
+</DL>
+<DL>
+<DT>-r &lt;ticks&gt; 
+<DD>Force frame rate in 44,100/184 per second.
+</DL>
+<DL>
+<DT>-s &lt;ticks&gt; 
+<DD>Force start time of 1st frame.
+</DL>
+<DL>
+<DT>-c &lt;chan&gt;
+<DD>Force channel number (Default is 0).
+</DL>
+<DL>
+<DT>-x &lt;int&gt; 
+<DD>Force xpos (integer format).
+</DL>
+<DL>
+<DT>-y &lt;int&gt;
+<DD>Force ypos (integer format).
+</DL>
+<DL>
+<DT>-o &lt;file&gt;
+<DD>Write output to file (Default is stdout).
+</DL>
+<H3>Examples</H3>
+<CODE>animToSanm -o pool.chnk0 -c 0 -r 60 -s 24 -x 40 -y 50 &lt; pool.anim</CODE><P>
+AnimToSanm creates a streamed animation file called <I>pool.chk0</I> from the input animation file <I>pool.anim</I>. This streamed animation file can be woven into a stream using the weaver and played with the playsanim example program.<P>
+<H3>See Also</H3>
+<A HREF="./03DSR012.html#XREF15908">SanmMaker</A><P>
+<P>

@@ -1,0 +1,52 @@
+<TITLE>Keyword options </TITLE>
+<H1><LINK NAME="XREF39556">Keyword options </LINK></H1><HR>
+<CODE>-help</CODE><P>
+Give a summary of the compiler's command line options.<P>
+<CODE>-pcc</CODE><P>
+Compile (BSD 4.2) portable C compiler C. This dialect is based on the original Kernighan and Ritchie (K&amp;R) definition of C, and is the one used on Unix systems. The -pcc keyword alters the language accepted by the compiler, but the built-in ANSI headers are still used. <P>
+<CODE>-fussy </CODE><I>or</I><CODE> -strict</CODE><P>
+Be extra strict about enforcing conformance to the ANSI standard or to pcc conventions (e.g. prohibit the <I>volatile</I> qualifier in -pcc mode).<P>
+<CODE><A NAME="XREF24164">-list</A></CODE><P>
+Create a listing file. This consists of lines of source interleaved with error and warning messages. Finer control over the contents of this file may be obtained using the -f flag (see<A HREF="./1augd.html#XREF15924">Controlling additional compiler features</A>).<P>
+<CODE>-littleend or -li</CODE><P>
+Compile code for an ARM operating with little-endian (least significant byte has lowest address) memory.<P>
+<CODE>-bigend or -bi</CODE><P>
+Compile code for an ARM operating with big-endian (most significant byte has lowest address) memory.<P>
+By default, the ARM C compiler compiles code with the same byte order as the host system. However, most releases of the ARM C compiler, for most hosts, allow this default to be configured when the compiler is installed, so it is not usually necessary to use either of these options <P>
+<CODE>-apcs [3]</CODE><I>qualifiers</I><P>
+Specify which variant of the ARM Procedure Call Standard is to be used by the compiler.  The default is set up when <I>armcc</I> is configured, and for ease of use can be reconfigured using the <I>reconfig</I> tool. Alternatively the default can be changed by use of this keyword option.<P>
+At least one qualifier must be present, and there must be no space between qualifiers.  The following qualifiers are permitted:<P>
+<PRE>
+--------------------------------------------------------
+Quantifier           |Description                       
+--------------------------------------------------------
+/26[bit]             |26 bit APCS variant.              
+--------------------------------------------------------
+/32[bit]             |32 bit APCS variant.              
+--------------------------------------------------------
+/reent[rant]         |Reentrant APCS variant.           
+--------------------------------------------------------
+/nonreent[rant]      |Non reentrant APCS variant.       
+--------------------------------------------------------
+/swst[ackcheck]      |Software stack checking APCS      
+                     |variant.                          
+--------------------------------------------------------
+/noswst[ackcheck]    |No software stack checking APCS   
+                     |variant.                          
+--------------------------------------------------------
+/fpe2                |Floating point emulator 2         
+                     |compatibility.                    
+--------------------------------------------------------
+/fpe3                |Floating point emulator 3         
+                     |compatibility.                    
+--------------------------------------------------------
+/fpr[egargs]         |F.P. arguments passed in FP.      
+                     |registers.                        
+--------------------------------------------------------
+/nofpr[egargs]       |F.P. arguments are not passed in  
+                     |F.P. registers                    
+--------------------------------------------------------
+</PRE>
+<P>
+For details of the various APCS variants see <A HREF="../atsfldr/ats4frst.html#XREF28151">ARM Procedure Call Standard</A>.<P>
+<P>

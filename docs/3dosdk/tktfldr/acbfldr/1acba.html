@@ -1,0 +1,38 @@
+<TITLE>Overview of key features</TITLE>
+<H1>Overview of key features</H1><HR>
+The ARM instruction set has the following key features, some of which are 
+common to many other processors, and some of which are not:<P>
+<UL>
+<LI>Load/Store architecture (only load and store instructions access 
+memory).<P>
+<LI>32 bit instructions, 32/8 bit data words/bytes.<P>
+<LI>32 bit addresses (26 bit on earlier ARMs).<P>
+<LI>15 general purpose 32 bit registers, program counter and program 
+status register - a subset of these are banked, to give rapid context 
+switching for interrupt and supervisor modes. (See the appropriate ARM 
+Data Sheet for details of particular processors).<P>
+<LI>Flexible store multiple and load multiple instructions allow any set 
+of registers from a single bank to be transferred to/from memory by a 
+single instruction.<P>
+<LI>There is no single instruction to move an immediate 32 bit value to a 
+register (in general, a literal value has to be loaded from memory).  
+However, a large set of common 32-bit values <I>can</I> be generated in a 
+single instruction.<P>
+<LI>All instructions are executed conditionally on the state of the 
+current program status register.  Only data processing operations with the 
+S bit set change the state of the current program status register.<P>
+<LI>The second argument to all data-processing and single data-transfer 
+operations can be shifted in quite a general way before the operation is 
+performed. This supports, but is not limited to, scaled addressing, 
+multiplication by a small constant, and construction of constants, within 
+a single instruction.<P>
+<LI>Co-processor instructions support a general way to extend the ARM's 
+architecture in a customer-specific manner.
+</UL>
+In addition, the ARM processor has:<P>
+<UL>
+<LI>Support for Big- or Little-Endian memory.<P>
+<LI>A powerful barrel shifter to support ARM's within-instruction shifts.
+</UL>
+The recipes in this chapter discuss some of these features in greater 
+detail.<P>

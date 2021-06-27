@@ -1,0 +1,271 @@
+<HTML><HEAD><TITLE>Building Your Own Allocators</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Building Your Own Allocators</H2>
+<P>Defining your own allocator is a relatively simple process.  The Standard C++ Library describes a particular interface, consisting of types and functions.  An allocator that conforms to the Standard must match the syntactic requirements for these member functions and types.  The Standard C++ Library also specifies a portion of the semantics for the allocator type.</P>
+<P>The Standard C++ Library allocator interface relies heavily on member templates.  As of this writing, many compilers do not yet support both member function templates and member class templates.  This makes it impossible to implement a standard allocator.  Rogue Wave's implementation of the Standard C++ Library provides an alternative allocator interface that provides most of the power of the standard interface, without requiring unavailable compiler features.  This interface differs significantly from the standard interface, and will not work with other vendors' versions of the Standard C++ Library.  </P>
+<P>We recommend that when you define an allocator and implement containers, you provide both the standard interface and the Rogue Wave interface.  This will allow you to use allocators now, and to take advantage of the standard once it becomes available on your compiler.</P>
+<P>The remainder of this section describes the requirements for the Standard C++ Library allocator, the requirements for Rogue Wave's alternative allocator, and some techniques that specify how to support both interfaces in the same code base.</P>
+<A NAME="usingthestandardallocatorinterface"><H3>Using the Standard Allocator Interface</H3></A>
+<P>An allocator that conforms to the Standard C++ Library allocator specification must have the following interface.  The example uses <SAMP>my_allocator</SAMP> as a place holder for your own allocator name:</P>
+<PRE>class my_allocator 
+{
+  typedef <I>implementation_defined</I> size_type;
+  typedef <I>implementation_defined</I> difference_type
+  template &#60;class T>
+    struct types {
+    typedef <I>implementation_defined</I> pointer;
+    typedef <I>implementation_defined</I> const_pointer;
+    typedef <I>implementation_defined</I> reference;
+    typedef <I>implementation_defined</I> const_reference;
+    typedef <I>implementation_defined</I> value_type;
+  };
+</PRE>
+<P>Each of the pointer types in this interface must have a conversion to <SAMP>void*</SAMP>.  It must be possible to use the resulting <SAMP>void*</SAMP> as a <SAMP>this</SAMP> value in a constructor or destructor and in conversions to <SAMP>::types&#60;void>::pointer </SAMP>(for appropriate <SAMP>B</SAMP>) for use by <SAMP>B::deallocate()</SAMP>.</P>
+<P>Here is a description of the member functions that a Standard C++ Library allocator must provide:</P>
+
+<PRE><B>my_allocator</B>();
+<B>my_allocator</B>(const my_allocator&#38;);
+<B>~my_allocator</B>();</PRE>
+
+<UL>
+<P>Constructors and destructor.</P>
+</UL>
+
+
+<PRE>template &#60;class T>
+<B>types&#60;T>::pointer address</B>(types&#60;T>::reference r) const;</PRE>
+
+<UL>
+<P>Returns the address of <SAMP>r</SAMP> as a <SAMP>pointer</SAMP> type.  This function and the following function are used to convert references to pointers.</P>
+</UL>
+
+
+<PRE>template &#60;class T>
+<B>types&#60;T>::const_pointer address</B>(types&#60;T>::const_reference r)
+                        const;</PRE>
+
+<UL>
+<P>Returns the address of <SAMP>r</SAMP> as a <SAMP>const_pointer</SAMP> type.</P>
+</UL>
+
+
+<PRE>template &#60;class T>
+<B>types&#60;T>::pointer allocate</B>(size_type n);</PRE>
+
+<UL>
+<P>Allocate storage for <SAMP>n</SAMP> values of<SAMP> T</SAMP>.</P>
+</UL>
+
+
+<PRE>template &#60;class T, class U>
+<B>types&#60;T>::pointer allocate</B>(size_type n, U u);</PRE>
+
+<UL>
+<P>Allocate storage for <SAMP>n</SAMP> values of <SAMP>T</SAMP>, using the value of <SAMP>u</SAMP> as an implementation-defined hint for determining the best storage placement.</P>
+</UL>
+
+
+<PRE>template &#60;class T>
+void 
+<B>deallocate</B>(types&#60;T>::pointer);</PRE>
+
+<UL>
+<P>Deallocate storage obtained by a call to <SAMP>allocate</SAMP>.</P>
+</UL>
+
+
+<PRE>size_type 
+<B>max_size</B>();</PRE>
+
+<UL>
+<P>Return the largest possible storage available through a call to <SAMP>allocate</SAMP>.</P>
+</UL>
+
+
+<PRE>template &#60;class T, class U>
+void 
+<B>construct</B>(types&#60;T>::pointer p, U u);</PRE>
+
+<UL>
+<P>Construct an object of type <SAMP>T</SAMP> at the location of <SAMP>p</SAMP>, using the value of <SAMP>u</SAMP> in the call to the constructor for <SAMP>T</SAMP>.  The effect is:</P>
+<P><PRE>   new((void*)p) T(u)</PRE>
+</P>
+</UL>
+
+
+<PRE>template &#60;class T>
+void 
+<B>destroy</B>(types&#60;T>::pointer p);</PRE>
+
+<UL>
+<P>Call the destructor on the value pointed to by <SAMP>p</SAMP>.  The effect is:</P>
+<P><PRE>   ((T*)p)->~T()</PRE>
+</P>
+</UL>
+
+
+<PRE>template &#60;class T>
+<I>my_allocator</I>::types&#60;T>::pointer 
+<B>operator new</B>(<I>my_allocator</I>::types&#60;T>::size_type, <I>my_allocator&#38;</I>);</PRE>
+
+<UL>
+<P>Allocate space for a single object of type T using <SAMP>my_allocator::allocate</SAMP>.  The effect is:</P>
+<P><PRE>   new((void*)x.template allocate&#60;T>(1)) T;</PRE>
+</P>
+</UL>
+
+
+<PRE>template &#60;class T>
+<I>my_allocator</I>::types&#60;T>::pointer 
+<B>operator new[]</B>(<I>my_allocator</I>::types&#60;T>::size_type,
+               <I>my_allocator&#38;</I>);</PRE>
+
+<UL>
+<P>Allocate space for an array of  objects of type T using <SAMP>my_allocator::allocate</SAMP>.  The effect is:</P>
+<P><PRE>   new((void*)x.template allocate&#60;T>(n)) T[n]</PRE>
+</P>
+</UL>
+
+
+<PRE>bool 
+<B>operator==</B>(const my_allocator&#38; a, const my_allocator&#38; b);</PRE>
+
+<UL>
+<P>Return <SAMP>true</SAMP> if allocators <SAMP>b</SAMP> and <SAMP>a</SAMP> can be safely interchanged.  "Safely interchanged" means that <SAMP>b</SAMP> could be used to deallocate storage obtained through <SAMP>a</SAMP> and vice versa.</P>
+</UL>
+
+<A NAME="usingroguewavesalternativeinterface"><H3>Using Rogue Wave's Alternative Interface</H3></A>
+<P>Rogue Wave provides an alternative allocator interface for those compilers that do not support both class templates and member function templates.  </P>
+<P>In this interface, the class <B><I>allocator_interface</I></B> provides all types and typed functions.  Memory is allocated as raw bytes using the class provide by the <SAMP>Allocator</SAMP> template parameter.  Functions within <B><I>allocator_interface</I></B> cast appropriately before returning pointer values.  Because multiple <B><I>allocator_interface</I></B> objects can attach to a single allocator, one allocator can allocate all storage for a container, regardless of how many types are involved.  The one real restriction is that pointers and references are hard-coded as type <SAMP>T*</SAMP> and <SAMP>T&#38;</SAMP>.  (Note that in the standard interface they are <SAMP>implementation_defined</SAMP>.).   If your compiler supports partial specialization instead of member templates you can use it to get around even this restriction by specializing <B><I>allocator_interface</I></B> on just the allocator type. </P>
+<P>To implement an allocator based on the alternative interface, supply the class labeled <SAMP>my_allocator</SAMP> below.  </P>
+<PRE>//
+// Alternative allocator uses an interface class
+// (allocator_interface)
+// to get type safety.
+//
+class  my_allocator
+{
+  public:
+    typedef implementation_defined size_type;
+    typedef implementation_defined difference_type;
+    my_allocator();
+    ~my_allocator();
+    void * allocate (size_type n, void *  = 0);
+    void deallocate (void* p);
+    size_type max_size (size_type size) const
+};
+</PRE>
+<P>We've also included a listing of the full implementation of the <B><I>allocator_interface</I></B> class, to show how a standard container will use your class.  The section entitled "Building Containers &#38; Generic Algorithms" provides a full description of how the containers use the alternative interface.</P>
+<PRE>template &#60;class Allocator,class T>
+class allocator_interface 
+{
+public:
+  typedef Allocator allocator_type;
+  typedef T*         pointer;
+  typedef const T*   const_pointer;
+  typedef T&#38;         reference;
+  typedef const T&#38;   const_reference;
+  typedef T          value_type;
+  typedef typename Allocator::size_type    size_type;
+  typedef typename Allocator::difference_type difference_type;
+protected:
+  allocator_type*         alloc_;
+public:
+  allocator_interface() : alloc_(0) { ; }
+  allocator_interface(Allocator* a) : alloc_(a) { ; }
+  void alloc(Allocator* a)
+  { 
+    alloc_ = a; 
+  }   
+  pointer address (T&#38; x) 
+  { 
+    return static_cast&#60;pointer>(&#38;x); 
+  }
+  size_type max_size ()  const
+  { 
+    return alloc_->max_size(sizeof(T));
+  }
+  pointer allocate(size_type n, pointer  = 0)
+  {
+    return static_cast&#60;pointer>(alloc_->allocate(n*sizeof(T)));
+  }
+  void deallocate(pointer p)
+  {
+    alloc_->deallocate(p);
+  }
+  void construct(pointer p, const T&#38; val)
+  {
+    new (p) T(val);
+  }
+  void destroy(T* p)
+  {
+    ((T*)p)->~T();
+  }
+};
+class allocator_interface&#60;my_allocator,void> 
+{
+  public:
+    typedef void*         pointer;
+    typedef const void*   const_pointer;      
+};
+// 
+// allocator globals
+//
+void * operator new(size_t N, my_allocator&#38; a);
+inline void * operator new[](size_t N, my_allocator&#38; a);
+inline bool operator==(const my_allocator&#38;, const my_allocator&#38;);
+</PRE>
+<A NAME="howtosupportbothinterfaces"><H3>How to Support Both Interfaces</H3></A>
+<P>Rogue Wave strongly recommends that you implement containers that support both the Standard C++ Library allocator interface, and our alternative interface.  By supporting both interfaces, you can use allocators now, and take advantage of the standard once it becomes available on your compiler.</P>
+<P>In order to implement both versions of the allocator interface, your containers must have some mechanism for determining whether the standard interface is available.  Rogue Wave provides the macro <SAMP>RWSTD_ALLOCATOR</SAMP> in <SAMP>stdcomp.h</SAMP> to define whether or not the standard allocator is available.  If <SAMP>RWSTD_ALLOCATOR</SAMP> evaluates to true, your compiler is capable of handling Standard C++ Library allocators, otherwise you must use the alternative.</P>
+<P>The first place that you use <SAMP>RWSTD_ALLOCATOR</SAMP> is when determining which typenames the container must use to reflect the interface.  To do this, place the equivalent of the following code in your container class definition:</P>
+<PRE>#ifdef RWSTD_ALLOCATOR
+    typedef typename Allocator::types&#60;T>::reference
+         reference;
+    typedef typename Allocator::types&#60;T>::const_reference
+         const_reference;
+    typedef typename Allocator::types&#60;node>::pointer
+         link_type;
+    Allocator the_allocator;
+#else
+    typedef typename
+       allocator_interface&#60;Allocator,T>::reference reference;
+    typedef typename
+       allocator_interface&#60;Allocator,T>::const_reference
+         const_reference;
+    typedef typename 
+       allocator_interface&#60;Allocator,node>::pointer  link_type;
+  Allocator alloc;
+  allocator_interface&#60;Allocator,T>  value_allocator;  
+  allocator_interface&#60;Allocator,node>  node_allocator;
+#endif
+</PRE>
+<P>Notice that the alternative allocator (<B><I>allocator_interface</I></B>) has two parts:  <SAMP>value_allocator</SAMP> and <SAMP>node_allocator</SAMP>.  You will need to assemble these inside the constructor for your container, if you use the alternative allocator.  In our example, the mechanism for initializing <B><I>allocator_interface</I></B> objects looks like this:</P>
+<PRE>#ifndef RWSTD_ALLOCATOR
+      node_allocator.alloc(alloc);
+      value_allocator.alloc(alloc);
+#endif
+</PRE>
+<P>Let's look at some examples of how we support both interfaces in calls to functions.  </P>
+<P>In this first example, the <SAMP>max_size</SAMP> member function will use the appropriate allocator object.</P>
+<PRE>size_type max_size () const
+#ifdef RWSTD_ALLOCATOR 
+    { return the_allocator.max_size(); }
+#else 
+    { return node_allocator.max_size(); }
+#endif
+</PRE>
+<P>A second example shows the use of the <SAMP>construct</SAMP> and <SAMP>address</SAMP> allocator functions to construct a new value on an existing location.  The <SAMP>tmp</SAMP> object in this example is a node that contains a data member that is an actual stored value.</P>
+<PRE>#ifdef RWSTD_ALLOCATOR
+  the_allocator.construct(
+        the_allocator.address((*tmp).data), x);
+#else
+  value_allocator.construct(
+        value_allocator.address((*tmp).data),x);
+#endif
+</PRE>
+<HR>
+<A HREF="usi_1829.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="bui_4873.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

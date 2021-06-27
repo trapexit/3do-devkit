@@ -1,0 +1,38 @@
+<TITLE>GetSysErr</TITLE>
+<A NAME="XREF41016"><H1>GetSysErr </A></H1>
+<A NAME="XREF28754"></A>Gets the error string for an error.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetSysErr( char *buff, int32 buffsize, Err err )</CODE><P>
+<H3>Description</H3>
+This procedure returns a character string that describes an error code. The resulting string is placed in a buffer. <P>
+The procedure interprets all the fields in the err argument and returns corresponding text strings for all of them. If an error-text table is not found for the specific error, the routine uses numbers for the final error code value. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>buff
+<DD>A pointer to a buffer to hold the error string. 
+</DL>
+<DL>
+<DT>buffsize
+<DD>The size of the error-text buffer, in bytes. This should be 128. 
+</DL>
+<DL>
+<DT>err
+<DD>The error code whose error string to get. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the number of bytes in the description string, or a negative error code if a bad buffer pointer is supplied. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>operror.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr108.html#XREF37909"><CODE>PrintfSysErr</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF41016"></LINK></H1><HR>

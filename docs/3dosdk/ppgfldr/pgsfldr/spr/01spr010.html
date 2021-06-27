@@ -1,0 +1,65 @@
+<Title>AvailMem</Title>
+<A NAME="XREF22823"><H1>AvailMem </A></H1>
+<A NAME="XREF17134"></A>Gets information about available memory.<P>
+<H3>Synopsis</H3>
+<CODE>void AvailMem(MemInfo *minfo, uint32 memflags);</CODE><P>
+<H3>Description</H3>
+This procedure returns information about the amount of memory that is currently available. You can get information about a particular kind of memory by setting the corresponding flags, such as MEMTYPE_VRAM or MEMTYPE_DRAM, in the flags argument. To get information about all memory that is available to the CPU, use MEMTYPE_ANY as the value of the flags argument. <P>
+The information about available memory is returned in a MemInfo structure: <P>
+<B>Example 1: </B><I>Memory Information Structure for </I><P>
+<CODE>
+<PRE>
+typedef struct MemInfo 
+{ 
+uint32 minfo_SysFree; 
+uint32 minfo_SysLargest; 
+uint32 minfo_TaskFree; 
+uint32 minfo_TaskLargest; 
+} MemInfo; 
+</CODE>
+</PRE>
+The fields contain the following information: <P>
+<DL>
+<DT>minfo_SysFree
+<DD>The amount of memory of the specified memory type in the system-wide free memory pool, in bytes. The pool contains only full pages of memory. 
+</DL>
+<DL>
+<DT>minfo_SysLargest
+<DD>The size, in bytes, of the largest series of contiguous pages of the specified memory type in the system-wide free memory pool. 
+</DL>
+<DL>
+<DT>minfo_TaskFree
+<DD>The amount of memory of the specified type in the task's free memory pool, in bytes. 
+</DL>
+<DL>
+<DT>minfo_TaskLargest 
+<DD>The size, in bytes, of the largest contiguous block of the specified memory type that can be allocated from the task's free memory pool.
+</DL>
+<H3>Arguments</H3>
+<DL>
+<DT>minfo
+<DD>A pointer to the MemInfo structure used to return the result. 
+</DL>
+<DL>
+<DT>memflags
+<DD>Flags that specify the type of memory to get information about. These flags can include MEMTYPE_ANY, MEMTYPE_VRAM, MEMTYPE_DRAM, MEMTYPE_BANKSELECT, MEMTYPE_BANK1, MEMTYPE_BANK2, MEMTYPE_DMA, MEMTYPE_CEL, MEMTYPE_AUDIO, and MEMTYPE_DSP. For information about these flags, see the description of AllocMem(). 
+</DL>
+<H3>Implementation</H3>
+Library routine implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveats</H3>
+When you call <CODE>AvailMem()</CODE>, you must request information about only one memory type. Attempting to find out about more than one memory type may produce unexpected results. <P>
+If you pass in a garbage minfo pointer, sparks may fly. <P>
+The information returned by <CODE>AvailMem()</CODE> is inherently flawed, since you are existing in a multitasking environment. Memory can be allocated or freed asynchronous to the operation of the task calling <CODE>AvailMem()</CODE>. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr004.html#XREF40501"><CODE>AllocMem</A>(), <A HREF="./01spr063.html#XREF19159">free</A>(), <A HREF="./01spr064.html#XREF31542">FreeMem</A>(), <A HREF="./01spr100.html#XREF14880">malloc</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF22823"></LINK></H1><HR>

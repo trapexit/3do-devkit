@@ -1,0 +1,34 @@
+<TITLE>WaitSignal</TITLE>
+<A NAME="XREF12306"><H1>WaitSignal </A></H1>
+<A NAME="XREF20569"></A>Waits until a signal is received.<P>
+<H3>Synopsis</H3>
+<CODE>int32 WaitSignal( uint32 sigMask )</CODE><P>
+<H3>Description</H3>
+This procedure puts the calling task into wait state until any of the signal(s) specified in the sigMask have been received. When a task is in wait state, it uses no CPU time. <P>
+When <CODE>WaitSignal()</CODE> returns, bits set in the result indicate which of the signal(s) the task was waiting for were received since the last call to <CODE>WaitSignal()</CODE>. (The SIGF_ABORTED bit is also set if that signal was received, even if it is not in the signal mask.) If the task was not waiting for certain signals, the bits for those signals remain set in the task's signal word, and all other bits in the signal word are cleared. <P>
+See <CODE>AllocSignal()</CODE> for a description of the implementation of signals. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sigMask
+<DD>A mask in which bits are set to specify the signals the task wants to wait for. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a mask that specifies which of the signal(s) a task was waiting for have been received or an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>ILLEGALSIGNAL
+<DD>One or more of the signal bits in the sigMask argument was not allocated by the task. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Notes</H3>
+Because it is possible for tasks to send signals in error, it is up to tasks to confirm that the actual event occurred when they receive a signal. <P>
+For example, if you were waiting for SIGF_IODONE and the return value from WaitSignal indicated that the signal was sent, you should still call CheckIO using the IOReq to make sure it is actually done. If it was not done you should go back to WaitSignal. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr123.html#XREF40028"><CODE>SendSignal</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF12306"></LINK></H1><HR>

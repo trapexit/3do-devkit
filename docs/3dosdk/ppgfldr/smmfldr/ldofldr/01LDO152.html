@@ -1,0 +1,28 @@
+<Title>ReturnCelPixel</Title>
+<A NAME="XREF13797"><H1>ReturnCelPixel </A></H1>
+ Returns the value of a pixel from a cel's data buffer.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ReturnCelPixel (CCB *cel, int32 x, int32 y)</CODE><P>
+<H3>Description</H3>
+This function returns the value of the specified pixel from the cel's data buffer. <P>
+This function performs no clipping internally. You must be careful not to pass coordinates that would result in reading from outside the cel's data buffer. <P>
+This function supports all cel formats and bit depths except packed cels, LRForm cels, and 6-bit coded cels. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to the cel. 
+</DL>
+<DL>
+<DT>x
+<DD>X coordinate within the cel data buffer. 
+</DL>
+<DL>
+<DT>y
+<DD>Y coordinate within the cel data buffer. 
+</DL>
+<H3>Return Value</H3>
+The value of the specified pixel. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>

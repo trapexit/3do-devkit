@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>Negators and Binders</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Negators and Binders</H2>
+<P>Negators and binders are function adaptors that are used to build new function objects out of existing function objects.  Almost always, these are applied to functions as part of the process of building an argument list prior to invoking yet another function or generic algorithm.</P>
+<P>The negators <SAMP>not1()</SAMP> and <SAMP>not2()</SAMP> take a unary and a binary predicate function object, respectively, and create a new function object that will yield the complement of the original.  For example, using the widget tester function object defined in the previous section, the function object</P>
+<PRE>   not2(WidgetTester())
+</PRE>
+<P>yields a binary predicate which takes exactly the same arguments as the widget tester, and which is true when the corresponding widget tester would be false, and false otherwise.  Negators work only with function objects defined as subclasses of the classes <SAMP>unary_function</SAMP> and <SAMP>binary_function</SAMP>, given earlier.</P>
+
+<A HREF="sidebar.htm#sidebar10"><IMG SRC="images/note.gif" BORDER=0> <STRONG>A Hot Idea</STRONG></A>
+
+<P>A binder takes a two-argument function, and binds either the first or second argument to a specific value, thereby yielding a one-argument function.  The underlying function must be a subclass of class <SAMP>binary_function</SAMP>.  The binder <SAMP>bind1st()</SAMP> binds the first argument, while the binder <SAMP>bind2nd()</SAMP> binds the second.</P>
+<P>For example, the binder <SAMP>bind2nd(greater&#60;int>(), 5)</SAMP> creates a function object that tests for being larger than 5.  This could be used in the following, which yields an iterator representing the first value in a list larger than 5:</P>
+<PRE>list&#60;int>::iterator where = find_if(aList.begin(), aList.end(),
+           bind2nd(greater&#60;int>(), 5));
+</PRE>
+<P>Combining a binder and a negator, we can create a function that is true if the argument is divisible by 3, and false otherwise.  This can be used to remove all the multiples of 3 from a list. </P>
+<PRE>list&#60;int>::iterator where = remove_if (aList.begin(), aList.end(),
+           not1(bind2nd(modulus&#60;int>(), 3)));
+</PRE>
+<P>A binder is used to tie the widget number of a call to the binary function <SAMP>WidgetTester(),</SAMP> yielding a one-argument function that takes only a widget as argument.  This is used to find the first widget that matches the given widget type:</P>
+<PRE>list&#60;Widget>::iterator wehave = 
+   find_if(on_hand.begin(), on_hand.end(), 
+      bind2nd(WidgetTester(), wid));</PRE>
+
+<HR>
+<A HREF="fun_0476.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="con_2412.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

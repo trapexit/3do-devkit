@@ -1,0 +1,34 @@
+<Title>ReadPixel </Title>
+<A NAME="XREF20708"><H1>ReadPixel </A></H1>
+<A NAME="XREF33631"> Reads a pixel from the display currently associated with </A>a GrafCon.<P>
+<H3>Synopsis</H3>
+<CODE>Color ReadPixel (Item bitmapItem,GrafCon *gc,Coord x, Coord y)</CODE><P>
+<H3>Description</H3>
+This call reads a pixel from the display of the specified GrafCon. The x and y coordinates specify the offset into the pixmap of the GrafCon bitmap. The value of the pixel there is read and returned. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>The item number of the bitmap. 
+</DL>
+<DL>
+<DT>gc
+<DD>Pointer to a GrafCon structure. 
+</DL>
+<DL>
+<DT>x
+<DD>Column of the pixel to be read. 
+</DL>
+<DL>
+<DT>y
+<DD>Row of the pixel to be read. 
+</DL>
+<H3>Return Value</H3>
+This call returns the pixel value at the specified location or an error code (a negative value) if an error occurs. <P>
+GRAFERR_COORDRANGE is returned if the specified location is outside the bounds of the specified bitmap. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr034.html#XREF16038"><CODE>GetPixelAddress</A>() </CODE><P>
+</CODE>

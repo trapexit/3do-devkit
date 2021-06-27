@@ -1,0 +1,7 @@
+AnimToSanm -ocount.chnk0  -c0 -r120  -s120 -x30 -y150  -q < count.anim
+AnimToSanm -ocount.chnk1  -c1 -r60   -s180 -x150 -y25  -q < count.anim
+AnimToSanm -ocount.chnk2  -c2 -r240  -s200 -x100 -y85  -q < count.anim
+AnimToSanm -ocount.chnk3  -c3 -r300  -s100 -x50  -y50  -q < count.anim
+
+weaver -o count.sanim < count.weave 
+dumpstream -i count.sanim -v 

@@ -1,0 +1,29 @@
+<TITLE>FreeMemList</TITLE>
+<A NAME="XREF12757"><H1>FreeMemList </A></H1>
+<A NAME="XREF16157"></A>Frees a memory list.<P>
+<H3>Synopsis</H3>
+<CODE>void FreeMemList( MemList *ml )</CODE><P>
+<H3>Description</H3>
+This procedure frees a memory list that was allocated by a call to <CODE>AllocMemList()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ml
+<DD>A pointer to the memory list to free. This value may be NULL, in which case this function just returns. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveats</H3>
+If the list is not empty, any memory it contains is lost. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr008.html#XREF23775"><CODE>AllocMemList</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF12757"></LINK></H1><HR>

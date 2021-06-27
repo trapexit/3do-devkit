@@ -1,0 +1,24 @@
+<Title>spDumpPlayer</Title>
+<A NAME="XREF16569"><H1>spDumpPlayer </A></H1>
+<A NAME="XREF37833"></A> Print debug information for sound player<P>
+<H3>Synopsis</H3>
+<CODE>void spDumpPlayer (const SPPlayer *player)</CODE><P>
+<H3>Description</H3>
+Prints out a bunch of debug information for an SPPlayer including:<P>
+. list of the SPPlayer's SPSounds<P>
+. list of each SPSound's SPMarkers<P>
+. cross reference of static branches between markers <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to SPPlayer to print. 
+</DL>
+<H3>Return Value</H3>
+None <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr068.html#XREF24761"><CODE>spCreatePlayer</A>() </CODE><P>
+</CODE>

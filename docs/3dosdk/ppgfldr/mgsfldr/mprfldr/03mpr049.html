@@ -1,0 +1,33 @@
+<Title>samplermod.dsp</Title>
+<A NAME="XREF41549"><H1>samplermod.dsp </A></H1>
+<A NAME="XREF19444"></A> Variable-rate sample player with pitch modulation.<P>
+<H3>Function</H3>
+This is a composite instrument consisting of sampler.dsp with built-in pitch modulation. samplermod.dsp uses unsigned addition and clipping to generate a frequency range of 0 to $FFFF.<P>
+The sampler frequency is computed as follows:  <P>
+SamplerFrequency = Frequency + ModInput * ModDepth <P>
+<H3>Knobs</H3>
+<DL>
+<DT>Frequency
+<DD>Units are fixed point phase increment. $8000 equals the normal sample rate, with 1 sample per frame. Thus, you can go from zero to one octave above the original. Defaults  to $8000. Range is 0..$FFFF.
+</DL>
+<DL>
+<DT>Amplitude
+<DD> 0..$7FFF. Defaults to $7FFF. 
+</DL>
+<DL>
+<DT>ModInput
+<DD>Pitch modulation signal (e.g. output of triangle_lfo.dsp) in the range of -$8000..$7fff. Defaults to 0. 
+</DL>
+<DL>
+<DT>ModDepth
+<DD>Gain of pitch modulation in the range of -$8000..$7fff. Defaults to 0. 
+</DL>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+InFIFO <P>
+<H3>Resources</H3>
+Ticks: 43 <P>
+Code: 18 <P>
+<H3>Implementation</H3>
+V20 <P>

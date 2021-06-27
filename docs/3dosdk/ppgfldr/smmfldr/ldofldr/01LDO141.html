@@ -1,0 +1,27 @@
+<Title>OffsetCelListByIDelta</Title>
+<A NAME="XREF15211"><H1>OffsetCelListByIDelta </A></H1>
+ Moves a list of cels.<P>
+<H3>Synopsis</H3>
+<CODE>void OffsetCelListByIDelta(CCB *list, IPoint *deltaXY, Boolean copyPerspective)</CODE><P>
+<H3>Description</H3>
+Adjusts the location of all the cels in a list by adding the delta values to the X/Y coordinates in cels' CCBs.<P>
+This function can optionally propagate the size and perspective values already present in the first cel to the rest of the cels in the list. This is useful if you are manipulating size and perspective values manually. If you want to just copy the size and perspective values from the first cel to the rest of the cels without changing the cel positions, use a NULL deltaXY pointer and TRUE for copyPerspective. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>list
+<DD>Pointer to the list of cels to be moved. 
+</DL>
+<DL>
+<DT>deltaXY
+<DD>Pointer to an IPoint containing the movement delta values. 
+</DL>
+<DL>
+<DT>copyPerspective
+<DD>TRUE to copy the size and perspective fields from the first cel to the rest of the list. FALSE to leave all size and perspective fields as is. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO140.html#XREF27283"><CODE>OffsetCelListByFDelta</A>, <A HREF="./01LDO136.html#XREF12201">OffsetAACelByIDelta</A>, <A HREF="./01LDO139.html#XREF41189">OffsetCelByIDelta</A> </CODE><P>

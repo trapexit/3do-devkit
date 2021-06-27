@@ -1,0 +1,6 @@
+<TITLE>Controlling Memory Allocations</TITLE>
+<H1><LINK NAME="XREF41505">Controlling Memory Allocations</LINK></H1><HR>
+When you create a compression or decompression engine, the <CODE>CreateCompressor()</CODE> and <CODE>CreateDecompressor()</CODE> functions normally allocate some memory to hold the state of the engines. The compression engine needs around 50 KB of storage, while the decompressor needs around 5 KB.<P>
+If your title has sophisticated memory management needs, you can supply a memory buffer yourself to avoid having the folio allocate any memory. To do this, call the <CODE>GetCompressorWorkBufferSize()</CODE> routine to obtain the size of the buffer needed for the compression engine, or you can call <CODE>GetDecompressorWorkBufferSize()</CODE> to get the size of the buffer needed for the decompression engine. Once you have determined the size, then you can allocate a memory buffer, and pass a pointer to the buffer using the <CODE>COMP_TAG_WORKBUFFER</CODE> tag when you create the compressor or decompressor.<P>
+When you supply the work buffer, the Compression folio allocates no, or almost no, resources when a compression or decompression engine is created. This allows your title to control where memory resources come from.<P>
+<A NAME="XREF39439"></A>

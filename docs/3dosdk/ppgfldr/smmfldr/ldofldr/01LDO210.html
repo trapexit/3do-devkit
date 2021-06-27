@@ -1,0 +1,24 @@
+<Title>WriteMacFile</Title>
+<A NAME="XREF15380"><H1>WriteMacFile </A></H1>
+ Writes from buffer to Mac file<P>
+<H3>Synopsis</H3>
+<CODE>long WriteMacFile (char *filename, char *buf, long count)</CODE><P>
+<H3>Description</H3>
+Writes count bytes from the specified buffer into the file named by filename, creating the MAC file, writing the specified number of bytes, and closing the Macintosh file. Returns the number of bytes written to the Macintosh file. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>filename
+<DD>Pointer to char string specifying the name of the file to write on the Macintosh. 
+</DL>
+<DL>
+<DT>buf
+<DD>Pointer to the data bytes to write. 
+</DL>
+<DL>
+<DT>count
+<DD>Number of bytes to write. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, utils3do.h<P>
+<H3>Return Value</H3>
+The number of bytes written to the Macintosh file. <P>

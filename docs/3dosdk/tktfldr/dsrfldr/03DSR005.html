@@ -1,0 +1,36 @@
+<Title>DumpAIFF</Title>
+<A NAME="XREF32465"><H1>DumpAIFF</A></H1>
+<A NAME="XREF20762"></A>Prints formatted summary of AIFF/AIFF-C chunk data.<P>
+<H3>Synopsis</H3>
+<CODE>dumpaiff -i &lt;filename&gt;</CODE><P>
+<H3>Description</H3>
+Prints a formatted summary report of AIFF and AIFF-C chunk data.<P>
+Based on the chunk type, the following information is included:<P>
+<UL>
+<LI>chunk type
+<LI>chunk size
+<LI>number of channels
+<LI>number of sample frames
+<LI>sample size
+<LI>sample rate
+<LI>number of markers
+<LI>base frequency
+<LI>detune
+<LI>low-frequency 
+<LI>high-frequency
+<LI>low-velocity
+<LI> high-velocity
+<LI> gain
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>-i &lt;filename&gt;
+<DD>Input file name.
+</DL>
+<H3>Examples</H3>
+Here is a typical command line:<P>
+<CODE>
+<PRE>
+dumpaiff -i bach_44K_16B_M.aiff
+</CODE>
+</PRE>

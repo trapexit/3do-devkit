@@ -1,0 +1,109 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_UTILITY_PAIR_INCLUDED
+#define TTL_UTILITY_PAIR_INCLUDED
+
+#include "utility_swap"
+
+template<typename T1,
+         typename T2>
+struct pair
+{
+  typedef T1 first_type;
+  typedef T2 second_type;
+
+  pair()
+    : first(),
+      second()
+  {
+  }
+
+  pair(const T1 &t1_,
+       const T2 &t2_)
+    : first(t1_),
+      second(t2_)
+  {
+  }
+
+  pair(const pair<T1,T2> &obj_)
+    : first(obj_.first),
+      second(obj_.second)
+  {
+  }
+
+  template<typename V1,
+           typename V2>
+  pair(const pair<typename V1,typename V2> &obj_)
+    : first(obj_.first),
+      second(obj_.second)
+  {
+  }
+
+  pair<T1,T2>&
+  operator=(const pair<T1,T2> &obj_)
+  {
+    first  = obj_.first;
+    second = obj_.second;
+
+    return *this;
+  }
+
+  void
+  swap(pair<T1,T2> &obj_)
+  {
+    swap(first,obj_.first);
+    swap(second,obj_.second);
+  }
+
+  T1 first;
+  T2 second;
+};
+
+template<typename T1,
+         typename T2>
+inline
+pair<T1,T2>
+make_pair(T1 t1_,
+          T2 t2_)
+{
+  return pair<T1,T2>(t1_,t2_);
+}
+
+template<typename T1,
+         typename T2>
+inline
+void
+swap(pair<T1,T2> &a_obj_,
+     pair<T1,T2> &b_obj_)
+{
+  a_obj_.swap(b_obj_);
+}
+
+template<typename T1,
+         typename T2>
+inline
+bool
+operator==(const pair<T1,T2> &a_obj_,
+           const pair<T1,T2> &b_obj_)
+{
+  return ((a_obj_.first  == b_obj_.first) &&
+          (a_obj_.second == b_obj_.second));
+}
+
+#endif

@@ -1,0 +1,17 @@
+<Title>KillEventUtility</Title>
+<A NAME="XREF31682"><H1>KillEventUtility </A></H1>
+<A NAME="XREF27759"></A> Disconnects a task from the event broker.<P>
+<H3>Synopsis</H3>
+<CODE>Err KillEventUtility( void );</CODE><P>
+<H3>Description</H3>
+This is a convenience function that allows a task to easily monitor events on controller pads or mice. This function disconnects a task that was connected to the event broker with the <CODE>InitEventUtility()</CODE> function. <P>
+When executed, the function disconnects the task from the event broker, closes the reply port, and frees all resources used for the connection. <P>
+<H3>Return Value</H3>
+This function returns a value greater than or equal to 0 if all went well or a negative error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in input.lib V20. <P>
+<H3>Associated Files</H3>
+event.h, input.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./04spr001.html#XREF17030"><CODE>GetControlPad</A>(), <A HREF="./04spr002.html#XREF40840">GetMouse</A>(), <A HREF="./04spr003.html#XREF13029">InitEventUtility</A>s() </CODE><P>
+</CODE>

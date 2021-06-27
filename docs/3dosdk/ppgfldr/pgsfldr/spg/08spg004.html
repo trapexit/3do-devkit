@@ -1,0 +1,60 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF20902">Function Calls</LINK></H1><HR>
+<A NAME="XREFsignals"></A><A NAME="XREFsignals"></A></A><A NAME="XREFmessages"></A><A NAME="XREFmessage ports">The following are the calls related to signals and messages.</A><P>
+<H2>Allocating Signals</H2>
+The following calls work with signal bits.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr009.html#XREF39797">AllocSignal</A>() </CODE>Allocates one or more signals for intertask communication.
+<LI><CODE><A HREF="../spr/01spr015.html#XREF29906">ClearCurrentSignals</A>() </CODE>Clears specified signals bits of the current task.
+<LI><CODE><A HREF="../spr/01spr068.html#XREF37706">FreeSignal</A>() </CODE>Frees signal bits.
+<LI><CODE><A HREF="../spr/01spr070.html#XREF22129">GetCurrentSignals</A>() </CODE>Returns the state of the current task's signal bits.
+<LI><CODE><A HREF="../spr/01spr123.html#XREF40028">SendSignal</A>() </CODE>Sends one or more signals to another task or thread.
+<LI><CODE><A HREF="../spr/01spr133.html#XREF12306">WaitSignal</A>()</CODE> Waits for one or more signals to arrive.
+</UL>
+<H2>Creating Messages and Message Ports</H2>
+The following calls create messages and ports.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr020.html#XREF20657">CreateBufferedMsg</A>() </CODE>Creates a buffered message.
+<LI><CODE><A HREF="../spr/01spr024.html#XREF10430">CreateMsg</A>() </CODE>Creates a standard message.
+<LI><CODE><A HREF="../spr/01spr025.html#XREF19499">CreateMsgPort</A>()</CODE>Creates a message port.
+<LI><CODE><A HREF="../spr/01spr027.html#XREF18113">CreateSmallMsg</A>()</CODE>Creates a small message.
+<LI><CODE><A HREF="../spr/01spr029.html#XREF20935">CreateUniqueMsgPort</A>()</CODE>Creates a message port with a guaranteed unique name.
+</UL>
+<H2>Deleting Messages and Message Ports</H2>
+The following calls <A NAME="XREFmessages"></A></A><A NAME="XREFmessage ports">delete messages and ports</A>.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr034.html#XREF14458">DeleteMsg</A>() </CODE>Deletes a message of any type.
+<LI><CODE><A HREF="../spr/01spr035.html#XREF42671">DeleteMsgPort</A>()</CODE>Deletes a message port.
+</UL>
+<H2>Finding a Message Port<A NAME="XREFmessage ports"></A></H2>
+The following call finds a message port by name.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr053.html#XREF23701">FindMsgPort</A>() </CODE>Returns the item number of the message port having the specified name.
+</UL>
+<H2>Sending Messages <A NAME="XREFmessages"></A></H2>
+The following calls send different types of messages:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr122.html#XREF17036">SendMsg</A>() </CODE>Sends a message.
+<LI><CODE><A HREF="../spr/01spr124.html#XREF40209">SendSmallMsg</A>()</CODE>Sends a small message.
+</UL>
+<H2>Receiving Messages <A NAME="XREFmessages"></A></H2>
+The following calls retrieve messages:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr075.html#XREF37256">GetMsg</A>() </CODE>Gets a message from a message port.
+<LI><CODE><A HREF="../spr/01spr083.html#XREF31956">GetThisMsg</A>() </CODE>Gets a specific message.
+<LI><CODE><A HREF="../spr/01spr132.html#XREF19568">WaitPort</A>()</CODE>Waits for a message to arrive.
+</UL>
+<H2>Replying to Messages </H2>
+The following calls reply to messages:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr113.html#XREF31623">ReplyMsg</A>() </CODE>Sends a reply to a message.
+<LI><CODE><A HREF="../spr/01spr114.html#XREF39369">ReplySmallMsg</A>() </CODE>Sends a reply to a small message.<A NAME="XREFmessages">
+</UL>
+</A>

@@ -1,0 +1,25 @@
+<Title>InitScoreDynamics</Title>
+<A NAME="XREF26764"><H1>InitScoreDynamics </A></H1>
+<A NAME="XREF27300"></A> Sets up dynamic voice allocation.<P>
+<H3>Synopsis</H3>
+<CODE>Err InitScoreDynamics( ScoreContext *scon,int32 MaxScoreVoices )</CODE><P>
+<H3>Description</H3>
+This function creates an appropriate number of note trackers to handle the maximum number of voices specified.  It's called internally by <CODE>InitScoreMixer()</CODE>.  You should use this call instead of <CODE>InitScoreMixer() if</CODE> your task is setting up MIDI score playback using non-DSP instruments. <CODE>InitScoreDynamics()</CODE> sets up voice allocation without creating a mixer instrument. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>Pointer to a ScoreContext data structure. 
+</DL>
+<DL>
+<DT>MaxNumVoices
+<DD>A value indicating the maximum number of voices for the score. 
+</DL>
+<H3>Return Value</H3>
+The function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr031.html#XREF21919"><CODE>InitScoreMixer</A>(), <A HREF="./02mpr048.html#XREF31982">TermScoreMixer</A>() </CODE><P>
+</CODE>

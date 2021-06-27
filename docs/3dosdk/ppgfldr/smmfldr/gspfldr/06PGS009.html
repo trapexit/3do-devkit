@@ -1,0 +1,9 @@
+<TITLE>Bypassing the API</TITLE>
+<H1><LINK NAME="XREF28617">Bypassing the API</LINK></H1><HR>
+<H3>What is it:</H3>
+Jumping directly to operating system functions because bypassing the dispatch mechanism saves time. <P>
+This technique only works as long as the 3DO system loads the operating system at the same location. Don't plan on this, the location of the operating system and the underlying functionality are guaranteed to change. If you'd like your application to run on future machines or under future versions of the operating system, go through the published API.<P>
+<H3>Why it's bad:</H3>
+The operating system may move without notice.<P>
+<H3>What to do</H3>
+Always use the published API.<P>

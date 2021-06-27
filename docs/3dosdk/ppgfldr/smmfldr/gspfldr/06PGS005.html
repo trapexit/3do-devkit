@@ -1,0 +1,227 @@
+<TITLE>Ignoring Variable Frame Rates</TITLE>
+<H1>Ignoring Variable Frame Rates</H1><HR>
+<H3>What is it:</H3>
+Not taking into account the fact that changes such as PAL displays, faster CPU clocks and software updates may affect your frame rates.<P>
+<H3>Why it's bad:</H3>
+The functionality of your title suffers because the frame rate varies drastically depending on processor speed, VBL rate, and other factors.<P>
+<H3>What to do</H3>
+Keep track of and regulate the time-based logic-including rendering and display rate-of your application.<P>
+<H2>Discussion and Example</H2>
+In the future, your application may run in an environment with hardware and software changes that affect the frame rate. Don't consider system speed a constant on which you can base your application's timescale. How you deal with time varies from title to title, but the basic idea is to tie the application's progress to <I>real time, </I>not to rendering speed or CPU timing.<P>
+For example, consider a simulation of Newtonian physics. On your current 3DO Station, your application can photorealistically render falling apples at 12 frames per second. Imagine the users' surprise when in 1995 your application runs twice as fast because the clock speed of the 3DO processor has tripled. By keeping track of your application's frame rate and adjusting your simulation accordingly, you could now be rendering at 24 frames per second.<P>
+These problems may sound remote, but they're not. The introduction of the PAL version of the 3DO Multiplayer will use the 50 Hz field rate instead of NTSC's 60 Hz, and any application relying on the field rate has to be adjusted.<P>
+One piece of the solution is to use the built-in real-time timer. Set up an IOReq structure to get the current time-to help figure out your frame rate-or pause a given number of microseconds-to keep the application in sync with real time. The chapter on handling I/O in the 3DO Portfolio documentation discusses this in more detail. The code below implements a set of calls to simplify keeping track of timing.<P>
+<CODE>
+<PRE>
+#include "io.h"
+#include "Time.h"
+#include "Timer.h"
+typedef struct {
+    uint32                    type_mode;    
+    Item                    devItem;
+    Item                    ioReqItem;
+    struct timeval                    deltaStart;
+} TimerHelper, *TimerHelperPtr;
+
+#define TM_TYPE_MICROSEC                                0x00000000
+#define TM_TYPE_VBL                                0x00010000
+
+// NOTE:    When we're in VBL mode, the tv_usec field of the timevalue
+//         structure contains the vbl count.
+    
+#define TM_MODE_ABSOLUTE                                0x00000000
+#define TM_MODE_DELTA                                0x00000001
+
+#define TM_RESET                    true            // Reset the counter in DELTA mode
+#define TM_NORMAL                    false            // Leave the counter alone DELTA mode        
+TimerHelperPtr InitTimer (uint32 mode);
+void FreeTimer (TimerHelperPtr theTimer);
+bool GetTime (TimerHelperPtr theTimer, 
+                                    bool reset, struct timeval *tv);
+bool WaitTime (TimerHelperPtr theTimer, struct timeval *tv);
+
+TimerHelperPtr
+InitTimer (uint32 mode)
+{
+    TimerHelperPtr                    theTimer;
+    
+    theTimer = (TimerHelperPtr) AllocMem (sizeof (Timer),
+                                                     MEMTYPE_DMA);
+    FAILNIL (theTimer, "InitTimer: AllocMem");
+    
+    theTimer-&gt;devItem = OpenNamedDevice ("timer", 0);
+    CHECKRESULT (theTimer-&gt;devItem, "InitTimer: OpenNamedDevice");
+    
+    theTimer-&gt;ioReqItem = CreateIOReq (0, 0, theTimer-&gt;devItem, 0); 
+    CHECKRESULT (theTimer-&gt;ioReqItem, "InitTimer: CreateIOReq");
+    
+    theTimer-&gt;type_mode = mode;
+    
+    if (GetTime (theTimer, true, &amp;(theTimer-&gt;deltaStart)))
+        return theTimer;
+    
+FAILED:
+
+    if (theTimer)
+        FreeMem (theTimer, sizeof (TimerHelper));
+        
+    return NULL;
+}
+
+void
+FreeTimer (TimerHelperPtr theTimer)
+{
+    DeleteIOReq (theTimer-&gt;ioReqItem);
+    CloseItem (theTimer-&gt;devItem);
+    
+    FreeMem (theTimer, sizeof (TimerHelper));
+}
+
+bool
+GetTime (TimerHelperPtr theTimer, bool reset, struct timeval *tv)
+{
+    int32            retval;
+    IOInfo            ioInfo;
+
+    memset (&amp;ioInfo, 0, sizeof (IOInfo));
+        
+    ioInfo.ioi_Command    = CMD_READ;
+    ioInfo.ioi_Unit    = (theTimer-&gt;type_mode &amp; TM_TYPE_VBL) ?
+                     TIMER_UNIT_VBLANK : TIMER_UNIT_USEC;
+    
+    ioInfo.ioi_Recv.iob_Buffer = tv;
+    ioInfo.ioi_Recv.iob_Len = sizeof (struct timeval);
+    
+    retval = DoIO (theTimer-&gt;ioReqItem, &amp;ioInfo);
+    CHECKRESULT (retval, "GetTime: DoIO");
+    
+    if (reset)  {
+        theTimer-&gt;deltaStart.tv_sec = tv-&gt;tv_sec;
+        theTimer-&gt;deltaStart.tv_usec = tv-&gt;tv_usec;
+    }
+    
+    if (theTimer-&gt;type_mode &amp; TM_MODE_DELTA) {
+        tv-&gt;tv_sec = tv-&gt;tv_sec - theTimer-&gt;deltaStart.tv_sec;
+        tv-&gt;tv_usec = tv-&gt;tv_usec - theTimer-&gt;deltaStart.tv_usec;
+    }
+    
+    return 1;
+
+FAILED:
+
+    return 0;
+}
+
+bool
+WaitTime (TimerHelperPtr theTimer, struct timeval *tv)
+{
+    int32            retval;
+    IOInfo            ioInfo;
+    
+    memset (&amp;ioInfo, 0, sizeof (ioInfo));
+        
+    ioInfo.ioi_Command    = TIMERCMD_DELAY;
+    ioInfo.ioi_Unit    = (theTimer-&gt;type_mode &amp; TM_TYPE_VBL) ? 
+                    TIMER_UNIT_VBLANK : TIMER_UNIT_USEC;
+    
+    ioInfo.ioi_Recv.iob_Buffer = tv;
+    ioInfo.ioi_Recv.iob_Len = sizeof (struct timeval);
+    
+    retval = DoIO (theTimer-&gt;ioReqItem, &amp;ioInfo);
+    CHECKRESULT (retval, "GetTime: DoIO");
+        
+    return 1;
+
+FAILED:
+
+    return 0;
+}
+</CODE>
+</PRE>
+Consider a simple example which uses these functions to time an activity, <CODE>DoSomething ()</CODE>:<P>
+<CODE>
+<PRE>
+void
+TimeSomething ()
+{
+    TimerHelperPtr    myTimer;
+    struct timeval    tv;
+    
+    myTimer = InitTimer (TM_TYPE_MICROSEC | TM_MODE_ABSOLUTE);
+    FAILNIL (myTimer, "InitTimer Failed miserably");
+    
+    GetTime (myTimer, TM_RESET, &amp;tv);
+
+    DoSomeThing ();
+    
+    GetTime (myTimer, TM_NORMAL, &amp;tv);
+    printf ("It took %d secs and %d usecs to 
+DoSomeThing()\n",tv.tv_sec,
+                                     tv-&gt;tv_usec);
+    
+    FreeTimer (myTimer);
+}
+</CODE>
+</PRE>
+Finally, consider some pseudo-code for a poorly-behaved application and its well-behaved cousin.<P>
+<CODE>
+<PRE>
+Evil_Application () {
+
+    DoSetup ();
+
+    While (playing) {
+        GetUserInput ();
+        GenerateNextScreen ();
+        WaitFixedInterval ();
+    }
+}
+
+Good_Application() {
+
+    DoSetup ();
+
+    FrameRate = EstimateFrameRate ();
+
+    while (playing) {
+        GetUserInput ();
+        Delta = CalculateFrameDeltas(FrameRate );
+        RenderTime = GenerateNextScreen (Delta);
+        FrameRate = UpdateFrameRate (RenderTime);
+        WaitTimeRemaining (FrameRate);
+    }
+}
+</CODE>
+</PRE>
+<CODE>Evil_Application()</CODE> relies on <CODE>GenerateNextScreen()</CODE> and on <CODE>WaitFixedInterval()</CODE> to provide implicit timing for its progress. Since neither of these functions checks how long the actual execution took, unpleasant problems can crop up. <P>
+Assume that on the present implementation of the Interactive Multiplayer, <CODE>Evil_Application()</CODE> maintains a pace of fifteen updates per second and <CODE>WaitFixedInterval()</CODE> is simply a <CODE>WaitVBL()</CODE> call. A faster machine that allows an update every VBL instead of every two VBLs will cause the frame rate to become jerky and uneven-this makes your application look bad.<P>
+Finally, consider a simple method of controlling your application's update rate using <CODE>WaitVBLDefer()</CODE> to stay close to the ideal. You can do this by using two values: the local update frequency-found in <CODE>GrafBase-&gt;gf_VBLFreq</CODE>-and the ideal frame rate you wish to display. Dividing the local update frequency by the ideal frame rate, gives the number of ticks required for an update on the local machine. To avoid using floating point math, consider keeping track of the integral and fractional parts separately: <P>
+<CODE>
+<PRE>
+updateFullTicks = GrafBase-&gt;gf_VBLFreq / myFrameRate;
+updatePartTicks = GrafBase-&gt;gf_VBLFreq % myFrameRate;
+</CODE>
+</PRE>
+Using <CODE>updateFullTicks</CODE> and <CODE>updatePartTicks</CODE> as your display-update ticks per frame, you can wait a variable number of vertical blanks at the end of the main loop and thereby have your title paced at roughly the same rate no matter what environment it runs in. The following code fragment illustrates this:<P>
+<CODE>
+<PRE>
+Item vblIOReq;
+
+vblIOReq = GetVBLIOReq();
+CHECKRESULT ("VBLIOReq", vblIOReq);
+
+updatePartAccum = 0;
+
+do {
+    updateWaitCount = updateFullTicks;
+    updatePartAccum += updatePartTicks ;
+    if (updatePartAccum &gt;= myFrameRate) {
+        updateWaitCount++;
+        updatePartAccum -= myFrameRate;
+    }
+    WaitVBLDefer (vblIOReq, updateWaitCount);
+    gAlive = doSomething();
+    WaitIO (vblIOReq);
+</CODE>
+</PRE>
+This trick won't work for all applications; updates may end up looking choppy. Consider it one easy-to-implement solution to a difficult problem.<P>

@@ -1,0 +1,37 @@
+<Title>DisposeThread</Title>
+<A NAME="XREF27201"><H1>DisposeThread</A></H1>
+<A NAME="XREF35749"> Deletes a thread.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 DisposeThread (Item threadItem)</CODE><P>
+<H3>Description</H3>
+Deletes the thread specified by the thread item. 
+<CODE>DisposeThread()</CODE> calls <CODE>DeleteItem()</CODE> directly to 
+delete the thread.<CODE> DeleteItem()</CODE> kills the process of the 
+thread and deallocates the stack memory assigned to it.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>threadItem</CODE>
+<DD>Item of the thread to be deleted.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT>(A <CODE>DeleteItem()</CODE> item-dependent return value)
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>DeleteItem()</CODE> failed
+<DD>
+</DL>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a 
+listing of error messages returned by <CODE>DeleteItem()</CODE>.<P>
+<H3>Associated Files</H3>
+ThreadHelper.h<P>
+<H3>See Also</H3>
+<CODE><A 
+HREF="../../ppgfldr/pgsfldr/sprfldr/001spr032.html#XREF18938">DeleteItem</A>,
+<A HREF="#XREF40995">NewTextSubscriber</A></CODE><P>

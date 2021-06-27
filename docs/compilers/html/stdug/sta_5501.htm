@@ -1,0 +1,152 @@
+<HTML><HEAD><TITLE>The Stack Data Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The Stack Data Abstraction</H2>
+<P>As a data abstraction, a stack is traditionally defined as any object that implements the following operations:</P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<SAMP>empty()</SAMP><BR>
+</TD>
+
+<TD>
+return true if the collection is empty<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>size()</SAMP><BR>
+</TD>
+
+<TD>
+return number of elements in collection<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>top()</SAMP><BR>
+</TD>
+
+<TD>
+return (but do not remove) the topmost element in the stack<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>push(newElement)</SAMP><BR>
+</TD>
+
+<TD>
+push a new element onto the stack<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>pop()</SAMP><BR>
+</TD>
+
+<TD>
+remove (but do not return) the topmost element from the stack<BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>Note that accessing the front element and removing the front element are separate operations.  Programs that use the stack data abstraction should include the file <SAMP>stack</SAMP>, as well as the include file for the container type (e.g., <SAMP>vector</SAMP>).</P>
+<PRE>   # include &#60;stack>
+   # include &#60;vector></PRE>
+
+<A HREF="sidebar.htm#sidebar36"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Right Angle Brackets</STRONG></A>
+
+<A NAME="declarationandinitializationofstack"><H3>Declaration and Initialization of stack</H3></A>
+<P>A declaration for a stack must specify two arguments; the underlying element type, and the container that will hold the elements.  For a stack, the most common container is a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> or a <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A>, however a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> can also be used.  The vector version is generally smaller, while the deque version may be slightly faster.  The following are sample declarations for a stack.</P>
+<PRE>   stack&#60; int, vector&#60;int> > stackOne;
+   stack&#60; double, deque&#60;double> > stackTwo;
+   stack&#60; Part *, list&#60;Part * > > stackThree;
+   stack&#60; Customer, list&#60;Customer> > stackFour;
+</PRE>
+<P>The last example creates a stack of a programmer-defined type named Customer.</P>
+
+<A NAME="exampleprogramarpncalculator"><H3>Example Program - A RPN Calculator</H3></A>
+<P>A classic application of a stack is in the implementation of calculator.  Input to the calculator consists of a text string that represents an expression written in reverse polish notation (RPN).  Operands, that is, integer constants, are pushed on a stack of values.  As operators are encountered, the appropriate number of operands are popped off the stack, the operation is performed, and the result is pushed back on the stack.</P>
+<A HREF="sidebar.htm#sidebar37"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>We can divide the development of our stack simulation into two parts, a calculator engine and a calculator program.  A calculator engine is concerned with the actual work involved in the simulation, but does not perform any input or output operations.  The name is intended to suggest an analogy to a car engine, or a computer processor - the mechanism performs the actual work, but the user of the mechanism does not normally directly interact with it.  Wrapped around this is the calculator program, which interacts with the user, and passes appropriate instructions to the calculator engine.</P>
+<P>We can use the following class definition for our calculator engine.  Inside the class declaration we define an enumerated list of values to represent each of the possible operators that the calculator is prepared to accept.  We have made two simplifying assumptions: all operands will be integer values, and we will handle only binary operators.</P>
+<PRE>class calculatorEngine {
+public:
+   enum binaryOperator {plus, minus, times, divide};
+   
+   int currentMemory ()           // return current top of stack
+      { return data.top(); }
+      
+   void pushOperand (int value)   // push operand value on to stack
+      { data.push (value); }
+      
+   void doOperator (binaryOperator);   // pop stack and perform
+                                       // operator
+   
+protected:
+   stack&#60; int, vector&#60;int> > data;
+};
+</PRE>
+
+<A HREF="sidebar.htm#sidebar38"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Defensive Programming</STRONG></A>
+
+<P>The member function <SAMP>doOperator()</SAMP> performs the actual work.  It pops values from the stack,  performs the operation, then pushes the result back onto the stack.</P>
+<PRE>void calculatorEngine::doOperator (binaryOperator theOp)
+{
+   int right = data.top();   // read top element
+   data.pop();   // pop it from stack
+   int left = data.top();   // read next top element
+   data.pop();   // pop it from stack
+   switch (theOp) {
+      case plus: data.push(left + right); break;
+      case minus: data.push(left - right); break;
+      case times: data.push(left * right); break;
+      case divide: data.push(left / right); break;
+      }
+}
+</PRE>
+<P>The main program reads values in reverse polish notation, invoking the calculator engine to do the actual work:</P>
+<PRE>void main() {
+   int intval;
+   calculatorEngine calc;
+   char c;
+   
+   while (cin >> c)
+      switch (c) {
+         case '0': case '1': case '2': case '3': case '4':
+         case '5': case '6': case '7': case '8': case '9':
+            cin.putback(c);
+            cin >> intval;
+            calc.pushOperand(intval);
+            break;
+         
+         case '+':  calc.doOperator(calculatorEngine::plus);
+            break;
+   
+         case '-':  calc.doOperator(calculatorEngine::minus);
+            break;
+   
+         case '*':  calc.doOperator(calculatorEngine::times);
+            break;
+   
+         case '/':  calc.doOperator(calculatorEngine::divide);
+            break;
+
+         case 'p':  cout &#60;&#60; calc.currentMemory() &#60;&#60; endl;
+            break;
+   
+         case 'q':  return; // quit program
+      }
+}
+</PRE>
+
+<HR>
+<A HREF="ove_6374.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="que_3605.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

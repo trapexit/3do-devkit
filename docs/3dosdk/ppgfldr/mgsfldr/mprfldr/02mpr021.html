@@ -1,0 +1,34 @@
+<Title>ChangeScoreControl</Title>
+<A NAME="XREF34990"><H1>ChangeScoreControl </A></H1>
+<A NAME="XREF11218"></A> Changes a MIDI control value for a channel.<P>
+<H3>Synopsis</H3>
+<CODE>Err ChangeScoreControl( ScoreContext *ScoreCon, int32Channel, int32 Index, int32 Value )</CODE><P>
+<H3>Description</H3>
+This function changes a specified MIDI control value for notes played on the specified channel.  It's the equivalent of a MIDI control message, currently limited to control values of 7 (channel volume control) and 10 (channel pan control). <P>
+The function determines the control to change through the value passed in the index argument.  It then assigns the value passed in the value argument to the control.  For channel volume, the value can range from 0 to 127, with 0 as silence and 127 as maximum volume.  For channel panning, the value can range from 0 to 127, with 0 playing all the notes in the left of a stereo output and 127 playing all the notes in the right of a stereo output. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ScoreCon
+<DD>Pointer to a ScoreContext data structure controlling playback. 
+</DL>
+<DL>
+<DT>Channel
+<DD>The number of the MIDI channel for which to change the control. 
+</DL>
+<DL>
+<DT>Index
+<DD>The number of the control to be changed (currently only 7 and 10 are recognized). 
+</DL>
+<DL>
+<DT>Value
+<DD>A value from 0 to 127 used as the new control setting. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><CODE>ChangeProgramControl(), <A HREF="./02mpr022.html#XREF24439">ChangeScorePitchBend</A>(), <A HREF="./02mpr033.html#XREF12999">InterpretMIDIMessage</A>(), <A HREF="./02mpr046.html#XREF33263">StartScoreNote</A>(), <A HREF="./02mpr047.html#XREF12834">StopScoreNote</A>() </CODE><P>
+</CODE>

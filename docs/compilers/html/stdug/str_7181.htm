@@ -1,0 +1,33 @@
+<HTML><HEAD><TITLE>Stream Iterators</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Stream Iterators</H2>
+<P>Stream iterators are used to access an existing input or output stream using iterator operations.</P>
+<A NAME="inputstreamiterators"><H3>Input Stream Iterators</H3></A>
+<A HREF="sidebar.htm#sidebar7"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Stream Iterators</STRONG></A>
+
+<P>As we noted in the discussion of input iterators, the standard library provides a mechanism to turn an input stream into an input iterator.  This ability is provided by the class <SAMP>istream_iterator</SAMP>.  When declared, the two template arguments are the element type, and a type that measures the distance between elements.  Almost always the latter is the standard type <SAMP>ptrdiff_t</SAMP>.  The single argument provided to the constructor for an <SAMP>istream_iterator</SAMP> is the stream to be accessed.  Each time the <SAMP>++</SAMP> operator is invoked on an input stream iterator a new value from the stream is read (using the <SAMP>>></SAMP> operator) and stored.  This value is then available through the use of the dereference operator (operator <SAMP>*</SAMP>).  The value constructed by <SAMP>istream_iterator</SAMP> when no arguments are provided to the constructor can be used as an ending iterator value. The following, for example, finds the first value 7 in a file of integer values.</P>
+<PRE>istream_iterator&#60;int, ptrdiff_t> intstream(cin), eof;
+istream_iterator&#60;int, ptrdiff_t>::iterator where = 
+         find(intstream, eof, 7);
+</PRE>
+<P>The element denoted by an iterator for an input stream is valid only until the next element in the stream is requested.  Also, since an input stream iterator is an input iterator, elements can only be accessed, they cannot be modified by assignment.  Finally, elements can be accessed only once, and only in a forward moving direction.  If you want to read the contents of a stream more than one time, you must create a separate iterator for each pass.</P>
+
+<A NAME="outputstreamiterators"><H3>Output Stream Iterators</H3></A>
+<P>The output stream iterator mechanism is analogous to the input stream iterator.  Each time a value is assigned to the iterator, it will be written on the associated output stream, using the <SAMP>>></SAMP> operator.  To create an output stream iterator you must specify, as an argument with the constructor, the associated output stream.  Values written to the output stream must recognize the stream <SAMP>>></SAMP> operation.  An optional second argument to the constructor is a string that will be used as a separator between each pair of values.  The following, for example, copies all the values from a vector into the standard output, and separates each value by a space:</P>
+<PRE>copy (newdata.begin(), newdata.end(), 
+      ostream_iterator&#60;int> (cout, " "));
+</PRE>
+<P>Simple file transformation algorithms can be created by combining input and output stream iterators and the various algorithms provided by the standard library.  The following short program reads a file of integers from the standard input, removes all occurrences of the value 7, and copies the remainder to the standard output, separating each value by a new line:</P>
+<PRE>void main() 
+{
+   istream_iterator&#60;int, ptrdiff_t> input (cin), eof;
+   ostream_iterator&#60;int> output (cout, "\n");
+
+   remove_copy (input, eof, output, 7);
+}</PRE>
+
+<HR>
+<A HREF="var_0565.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="ins_0332.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

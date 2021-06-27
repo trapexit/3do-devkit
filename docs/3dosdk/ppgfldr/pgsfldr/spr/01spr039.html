@@ -1,0 +1,28 @@
+<Title>DumpMemDebug</Title>
+<A NAME="XREF34554"><H1>DumpMemDebug </A></H1>
+<A NAME="XREF41319"></A>Dumps memory allocation debugging information.<P>
+<H3>Synopsis</H3>
+<CODE>Err DumpMemDebug(const TagArg *args);</CODE><P>
+<H3>Description</H3>
+This function outputs a table showing all memory currently allocated through the memory debugging code. This table shows the allocation size, address, as well as the source file and the source line where the allocation took place. <P>
+This function also outputs statistics about general memory allocation patterns. This includes the number of memory allocation calls that have been performed, the maximum number of bytes allocated at any one time, current amount of allocated memory, etc. All this information is displayed on a per-thread basis, as well as globally for all threads. <P>
+To use this function, the memory debugging code must have been previously initialized using the <CODE>CreateMemDebug()</CODE> function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>args
+<DD>A pointer to an array of tag arguments containing extra data for this function. This must currently always be NULL. 
+</DL>
+<H3>Return Value</H3>
+Returns &gt; = 0 if successful, or a negative error code if not. Current Possible error code is:<P>
+<DL>
+<DT>MEMDEBUG_ERR_BADTAG
+<DD>An undefined tag was supplied. Currently the arg's parameter to this function should always be NULL. 
+</DL>
+<H3>Implementation</H3>
+Library routine implemented in memdebug.lib V24. <P>
+<H3>Associated Files</H3>
+mem.h, memdebug.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr023.html#XREF16511"><CODE>CreateMemDebug</A>(), <A HREF="./01spr033.html#XREF10232">DeleteMemDebug</A>(), <A HREF="./01spr117.html#XREF22887">SanityCheckMemDebug</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF34554"></LINK></H1><HR>

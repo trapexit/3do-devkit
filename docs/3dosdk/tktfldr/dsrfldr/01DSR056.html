@@ -1,0 +1,17 @@
+<Title>PrintfDSError</Title>
+<A NAME="XREF33322"><H1>PrintfDSError</A></H1>
+<A NAME="XREF16484"></A>Prints a DataStreamer error message<P>
+<H3>Synopsis</H3>
+<CODE>void PrintfDSError (int32 dsResult)</CODE><P>
+<H3>Description</H3>
+Prints various DataStreamer error messages to the Terminal window. The specific error message printed by <CODE>PrintfDSError()</CODE> depends on the type of DataStreamer error specified by <CODE>dsResult</CODE>.<P>
+<CODE>PrintfDSError()</CODE> prints error messages only if the DataStreamer is compiled with debugging enabled (if the <CODE>DEBUG</CODE> symbol is specified for the preprocessor to the compiler).<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>dsResult</CODE>
+<DD>Number of the specified error code
+</DL>
+<H3>Associated Files</H3>
+DataStreamDebug.h<P>
+<H3>Return Value</H3>
+None<P>

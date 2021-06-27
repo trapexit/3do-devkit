@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>Example Program - Sieve of Eratosthenes</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Example Program - Sieve of Eratosthenes</H2>
+<A HREF="sidebar.htm#sidebar17"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Source</STRONG></A>
+
+<P>An example program that illustrates the use of vectors is the classic algorithm, called the <I>sieve of Eratosthenes</I>, used to discover prime numbers.  A list of all the numbers up to some bound is represented by an integer vector.  The basic idea is to strike out (set to zero) all those values that cannot be primes; thus all the remaining values will be the prime numbers.  To do this, a loop examines each value in turn, and for those that are set to one (and thus have not yet been excluded from the set of candidate primes) strikes out all multiples of the number.  When the outermost loop is finished, all remaining prime values have been discovered.  The program is as follows:</P>
+<PRE>void main() {
+      // create a sieve of integers, initially set
+   const int sievesize = 100;
+   vector&#60;int> sieve(sievesize, 1);
+
+      // now search for 1 bit positions
+   for (int i = 2; i * i &#60; sievesize; i++)
+      if (sieve[i])
+         for (int j = i + i; j &#60; sievesize; j += i)
+            sieve[j] = 0;
+
+      // finally, output the values that are set
+   for (int j = 2; j &#60; sievesize; j++)
+      if (sieve[j])
+         cout &#60;&#60; j &#60;&#60; " ";
+   cout &#60;&#60; endl;
+}
+</PRE>
+
+<HR>
+<A HREF="boo_1544.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="lis_3222.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

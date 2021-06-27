@@ -1,0 +1,102 @@
+<TITLE>Managing Memory</TITLE>
+<H1><LINK NAME="XREF36250">Managing Memory</LINK></H1><HR>
+A multitasking system must manage memory carefully so that one task won't write to another's memory. To do so, the kernel allocates exclusive memory to each task and restricts each task to writing to its own memory unless given specific permission to do otherwise.<P>
+<H2>Types of Memory</H2>
+When allocating memory, the kernel must consider the two main types of memory 
+available in a 3DO: DRAM (Dynamic Random Access Memory) and VRAM (Video Random 
+Access Memory). DRAM is memory with a standard data bus for read/write 
+operations. VRAM has the standard data bus, but also provides an 
+additional bus named SPORT (short for Serial PORT), which can take 
+streams of bits from the VRAM arrays and generate video signals.<P>
+VRAM is premium memory because it can be used for everything, 
+including special video operations. Because the SPORT bus allows for
+ very quick block memory transfers, VRAM is useful for manipulating graphics
+  and other complex data. VRAM can also be used for any other standard 
+  memory operations. DRAM isn't as versatile as VRAM because it can't be 
+  used for all video operations, but works fine for standard operations. 
+  DRAM can keep data for the cel engine 
+  (described in the <A HREF="../../ggsfldr/00ggs.html#XREF38776">
+  <i>Programming 3DO Graphics</A></I>), 
+  which projects graphic images into VRAM.<P>
+<H2>Memory Size</H2>
+A minimum 3DO system includes 2 MB of DRAM and 1 MB of VRAM for a total of 3 MB of RAM. Optional memory configurations can, for this version of the hardware, go up to a maximum of 16 MB of RAM: 1 MB of VRAM and 15 MB of DRAM, or 2 MB of VRAM and 14 MB of DRAM. <P>
+<B>Note: </B>Although the current hardware implementation doesn't address more than 16 MB total, future implementations will go beyond that limit, so you must use full 32-bit addressing to ensure future compatibility.<P>
+When the kernel allocates memory to tasks, it keeps track of each page of 
+memory it allocates. The size of a memory page is determined by the total 
+amount of DRAM in the system divided by 64, the constant number of DRAM pages 
+available, regardless of the amount of memory in the system. In a standard 3 
+MB system, each page of DRAM is 32 KB large (2 MB of DRAM divided by 64). 
+In a system with 16 MB of DRAM, the page size is 256 KB.<P>
+VRAM page size is similar to DRAM page size. If available VRAM is 1 MB, 
+VRAM page size is 16 KB. If available VRAM is 2 MB, VRAM page size is 32 KB.<P>
+<B>Note: </B>The size of memory pages and the number of memory pages is 
+subject to change at any time, based on the current hardware design. 
+Do not rely on these numbers within your titles.<P>
+To find out the page size of either type of memory, a task executes 
+<CODE>GetPageSize()</CODE>.<P>
+<B>Warning: </B>VRAM is also divided into banks. Each bank of VRAM is 1 MB large. The SPORT bus can't transfer blocks of memory from one VRAM bank to another, so allocating VRAM within a single bank is important for anything involving SPORT transfers. When bank location is important, a task should always specify a bank, even though in a system with only 1 MB of VRAM, only one bank is available. The task can never be sure that it's not running in a 2 MB VRAM system with two banks of VRAM.<P>
+To find out in which bank of VRAM an address is located, a task executes 
+the <CODE>GetBankBits()</CODE> call.<P>
+<H2>Allocating Memory</H2>
+Whenever a task starts from a file, the file includes the task's memory requirements: how much code space and how much data space the task requires to run. Those memory requirements are determined when the task's source code is compiled-set by the size of arrays dimensioned and other factors. The kernel automatically allocates that much memory to the task before the task loads and runs. If the task requires extra memory once it's running, it must use the kernel memory-allocation function calls <CODE>AllocMem()</CODE>,<CODE> AllocMemFromMemLists()</CODE>,<CODE> AllocMemBlocks()</CODE>, or <CODE>malloc()</CODE> to request that memory.<P>
+In a memory request, the task specifies the type of RAM it requires:<P>
+<UL>
+<LI>Any kind of RAM
+<LI>VRAM only
+<LI>Cel RAM (any RAM accessible to the cel engine)
+<LI>Memory that doesn't cross a page boundary
+<LI>Memory that starts on a page boundary
+</UL>
+The task also specifies the amount, in bytes, of the memory it wants.<P>
+The kernel dedicates memory to a task a page at a time, and then 
+allocates memory to the task from within those dedicated pages. 
+Consider an example: a 3 MB 3DO system has a 32- KB page size; a 
+task starts that requires 8 KB of memory. The kernel dedicates a single 
+32- KB page to the task by putting a fence (discussed later in this chapter) 
+around it. The kernel allocates the first 8 KB of the page to the task. 
+The task then requests another 20 KB of memory; the kernel allocates the 
+next 20 KB of the page to the task. 4 KB of free RAM remain in the page for 
+future allocation, as shown in Figure 1.<P>
+
+<IMG SRC="Artwork/1-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Kernel page allocation.</I><P>
+When a task requests a block of memory that is larger than any contiguous stretch of free RAM left in a task's RAM pages, the kernel dedicates a new page (or pages) of RAM to the task. It joins the new pages with the memory already in the task's free list. It then allocates RAM from the new page(s). The kernel will dedicate as many pages of RAM to the task as necessary to supply contiguous RAM; if it can't find that much contiguous free RAM, it notifies the task that it failed to allocate the memory.<P>
+To see how that works, consider the last example where a task started 
+with one page of dedicated RAM, used 8 KB of the page for startup, 
+and then requested and received 20 KB more. The task now requests 
+6 KB more RAM, but there are only 4 KB free in its dedicated pages. 
+The kernel dedicates another page of RAM to the task, a page that can't be 
+guaranteed contiguous, to the first page of RAM. In this example, consider 
+the new page not to be contiguous. The kernel then allocates the first 6 KB 
+of the new page to the task. If it had tried to allocate the last 4 KB free 
+in the first page along with the first 2 KB of the next page, the block of 
+memory would have been noncontiguous when it crossed the page boundary, 
+so the kernel allocates all of the memory block from the second page as 
+shown in Figure 2.<P>
+
+<IMG SRC="Artwork/1-2.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 2: </B><I>Continuous allocation of memory block.</I><P>
+<H2>Memory Fences</H2>
+When the kernel dedicates full pages of memory to a task, it sets up a <I>memory fence</I> around the dedicated memory. The task can write to any address within its own memory, but normally it can't write outside of its dedicated memory. The only exception is when one user task writes to the memory of another user task with the second user task's permission. The first task can write there <I>only</I> with permission from the second task; if it doesn't have permission, it can't write there. A user task can never write directly to system memory (memory allocated to system tasks) because system tasks never grant write permission to user tasks.<P>
+When a task writes (or tries to write) to RAM addresses beyond its allocated memory, it can have one of two effects: <P>
+<UL>
+<LI>If the task tries to write outside its fence, the kernel aborts the task. 
+<p>
+<LI>If the task writes inside its fence, the task isn't aborted, but it can write over its own data, causing unforeseen problems.
+</UL>
+Although fences restrict tasks from writing outside of their allocated memory, they don't restrict tasks from reading memory elsewhere in the system. A user task can read memory allocated to other user tasks as well as to system tasks.<P>
+<H2>Returning Memory</H2>
+The kernel keeps track of free RAM in two ways: it keeps a list of all RAM pages allocated to tasks (and so it knows which pages are free) and it lists free blocks of RAM within the dedicated pages. Whenever a task is finished with a block of allocated RAM, it can free the block for further allocation by using a function call that specifies the beginning address and size of the block. (The Kernel folio includes a number of memory-freeing calls, such as <CODE>FreeMem()</CODE> and <CODE>free()</CODE>.) If all the allocated blocks within a dedicated page of RAM are freed, the kernel knows that the page is free but keeps the page dedicated to the task for future allocation calls.<P>
+When a task wishes to release free RAM pages back to the kernel so the kernel can dedicate them to other tasks, the task issues a <CODE>ScavengeMem()</CODE> call. This call causes the kernel to reclaim free pages and to list them once again in the system free page pool.<P>
+Whenever a task quits or dies, all of its memory returns to the free RAM pool-<I>unless</I> it's a thread. When a thread dies, its memory remains the property of the parent task, because a thread shares the memory of its parent task.<P>
+<H2>Sharing Memory</H2>
+The kernel gives every page of memory dedicated to a task a status that tells which task owns the page and whether other tasks can write to that page or not. The status is set so that only the owning task can write to the page. If the owning task wants to share write privileges with another task (or with several other tasks), it can change the status with the call <CODE>ControlMem()</CODE>, which can take three actions:<P>
+ <UL>
+<LI>Specify another task and give it write privileges to the page.
+<LI>Specify another task and retract its write privileges to the page.
+<LI> Specify another task and give it ownership of the page.
+</UL>
+As long as a task owns a page, it can change the page status to any state it specifies-it can turn write privileges on and off for other tasks or even for itself. However, once a task transfers ownership of a page to another task, the original task can no longer set that page's status, which is under the sole control of the new owner task. If the original task tries to write to the page, it will abort. Any I/O operation using that page as a write buffer will also abort.<P>

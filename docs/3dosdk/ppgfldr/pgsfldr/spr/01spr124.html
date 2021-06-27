@@ -1,0 +1,37 @@
+<TITLE>SendSmallMsg</TITLE>
+<A NAME="XREF40209"><H1>SendSmallMsg </A></H1>
+<A NAME="XREF41980"></A>Sends a small message.<P>
+<H3>Synopsis</H3>
+<CODE>Err SendSmallMsg( Item mp, Item msg, uint32 val1, uint32 val2 )</CODE><P>
+<H3>Description</H3>
+This procedure sends a small message (a message that contains no more than eight bytes of data) to the specified message port. (To send a standard or buffered message, use <CODE>SendMsg()</CODE>.) This routine is identical to <CODE>SendMsg()</CODE>. It is provided only to avoid having to cast uint32 to the types needed by <CODE>SendMsg()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>mp
+<DD>The item number of the message port to which to send the message 
+</DL>
+<DL>
+<DT>msg
+<DD>The item number of the message to send. 
+</DL>
+<DL>
+<DT>val1
+<DD>The first four bytes of message data. This data is put into the msg_DataPtr field of the message structure. 
+</DL>
+<DL>
+<DT>val2
+<DD>The last four bytes of message data. This data is put into the msg_DataSize field of the message structure. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the message is sent successfully or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr075.html#XREF37256"><CODE>GetMsg</A>(), <A HREF="./01spr083.html#XREF31956">GetThisMsg</A>(), <A HREF="./01spr113.html#XREF31623">ReplyMsg</A>(), <A HREF="./01spr114.html#XREF39369">ReplySmallMsg</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>(), <A HREF="./01spr132.html#XREF19568">WaitPort</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF40209"></LINK></H1><HR>

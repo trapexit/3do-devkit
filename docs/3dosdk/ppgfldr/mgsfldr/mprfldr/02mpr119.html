@@ -1,0 +1,27 @@
+<Title>ssplStartSpooler</Title>
+<A NAME="XREF23431"><H1>ssplStartSpooler </A></H1>
+<A NAME="XREF10466"></A> Start SoundSpooler.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplStartSpooler ( SoundSpooler *sspl, int32 Amplitude )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplStartSpooler()</CODE>  starts the sound spooler's sample player instrument. It starts playback at the beginning of the first buffer in the active queue (submitted by <CODE>ssplSendBuffer()</CODE>). If there are no buffers in the active queue, playback will not begin until a buffer is submitted with a call to <CODE>ssplSendBuffer()</CODE>. <P>
+If there is a SoundBufferFunc installed and there is a buffer in the active queue, sends a SSPL_SBMSG_INITIAL_START message with a pointer to the first active buffer. If SoundBufferFunc returns an error code, <CODE>ssplStartSpooler()</CODE>  terminates and returns that error code. <P>
+This function sets SSPL_STATUS_F_STARTED and clears SSPL_STATUS_F_PAUSED. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<DL>
+<DT>Amplitude
+<DD>A value of 0 to 0x7FFF that controls the loudness. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr120.html#XREF31519"><CODE>ssplStartSpoolerTags</A>(), <A HREF="./02mpr121.html#XREF17770">ssplStopSpooler</A>(), <A HREF="./02mpr108.html#XREF36471">ssplPause</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>(), <A HREF="./02mpr095.html#XREF25499">SoundBufferFunc</A>(), <A HREF="./01mpr073.html#XREF13758">StartInstrument</A>(), <A HREF="./02mpr105.html#XREF10988">ssplGetSpoolerStatus</A>() </CODE><P>
+</CODE>

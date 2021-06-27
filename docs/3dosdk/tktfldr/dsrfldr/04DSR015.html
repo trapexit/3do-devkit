@@ -1,0 +1,20 @@
+<Title>writehaltchunk</Title>
+<A NAME="XREF31024"><H1>writehaltchunk</A></H1>
+<A NAME="XREF25504"></A> Writes a HALT control chunk.<P>
+<H3>Synopsis</H3>
+<CODE>writehaltchunk &lt;stream_time&gt; &lt;subscriber_id&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>Writehaltchunk</CODE> writes a HALT control chunk to the output stream. The result is a halt chunk keyed to a specified subscriber for a given stream time. <P>
+The chunk sent to the subscriber at halt time has the subtype HALT. It prevents the streamer thread from delivering data to any subscriber until a reply is received from the specified subscriber. <P>
+This essentially provides the specified subscriber with time to process its data while no other data are arriving from the streamer thread. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>stream_time
+<DD>0 to 7FFFFFFF (hex)
+</DL>
+<DL>
+<DT>subscriber_id
+<DD>4-byte characters describing the subscriber type (e.g. FILM, CTRL, SNDS)
+</DL>
+<H3>Caveats</H3>
+None.<P>

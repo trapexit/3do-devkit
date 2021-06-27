@@ -1,0 +1,258 @@
+<HTML><HEAD><TITLE>Example Program - Radix Sort</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Example Program - Radix Sort</H2>
+<P>The radix sort algorithm is a good illustration of how lists and deques can be combined with other containers.  In the case of radix sort, a vector of deques is manipulated, much like a hash table.</P>
+<A HREF="sidebar.htm#sidebar22"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>Radix sorting is a technique for ordering a list of positive integer values.  The values are successively ordered on digit positions, from right to left.  This is accomplished by copying the values into "buckets," where the index for the bucket is given by the position of the digit being sorted.  Once all digit positions have been examined, the list must be sorted. </P>
+<P>The following table shows the sequences of values found in each bucket during the four steps involved in sorting the list  624  852  426  987  269  146  415  301  730  78  593.  During pass 1 the ones place digits are ordered.  During pass 2 the tens place digits are ordered, retaining the relative positions of values set by the earlier pass.  On pass 3 the hundreds place digits are ordered, again retaining the previous relative ordering.  After three passes the result is an ordered list.</P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+bucket <BR>
+</TD>
+
+<TD>
+ pass 1 <BR>
+</TD>
+
+<TD>
+ pass 2 <BR>
+</TD>
+
+<TD>
+ pass 3 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+0 <BR>
+</TD>
+
+<TD>
+ 730 <BR>
+</TD>
+
+<TD>
+ 301 <BR>
+</TD>
+
+<TD>
+   78 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+1 <BR>
+</TD>
+
+<TD>
+ 301 <BR>
+</TD>
+
+<TD>
+ 415 <BR>
+</TD>
+
+<TD>
+ 146 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+2 <BR>
+</TD>
+
+<TD>
+ 852 <BR>
+</TD>
+
+<TD>
+ 624, 426 <BR>
+</TD>
+
+<TD>
+ 269 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+3 <BR>
+</TD>
+
+<TD>
+ 593 <BR>
+</TD>
+
+<TD>
+ 730 <BR>
+</TD>
+
+<TD>
+ 301 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+4 <BR>
+</TD>
+
+<TD>
+ 624 <BR>
+</TD>
+
+<TD>
+ 146 <BR>
+</TD>
+
+<TD>
+ 415, 426 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+5 <BR>
+</TD>
+
+<TD>
+ 415 <BR>
+</TD>
+
+<TD>
+ 852 <BR>
+</TD>
+
+<TD>
+ 593 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+6 <BR>
+</TD>
+
+<TD>
+ 426, 146 <BR>
+</TD>
+
+<TD>
+ 269 <BR>
+</TD>
+
+<TD>
+ 624 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+7 <BR>
+</TD>
+
+<TD>
+ 987 <BR>
+</TD>
+
+<TD>
+   78 <BR>
+</TD>
+
+<TD>
+ 730 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+8 <BR>
+</TD>
+
+<TD>
+   78 <BR>
+</TD>
+
+<TD>
+ 987 <BR>
+</TD>
+
+<TD>
+ 852 <BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+9 <BR>
+</TD>
+
+<TD>
+ 269 <BR>
+</TD>
+
+<TD>
+ 593 <BR>
+</TD>
+
+<TD>
+ 987 <BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<P>The radix sorting algorithm is simple.  A <SAMP>while</SAMP> loop is used to cycle through the various passes.  The value of the variable <SAMP>divisor</SAMP> indicates which digit is currently being examined.  A boolean flag is used to determine when execution should halt.  Each time the while loop is executed a vector of deques is declared.  By placing the declaration of this structure inside the while loop, it is reinitialized to empty each step. Each time the loop is executed, the values in the list are copied into the appropriate bucket by executing the function <SAMP>copyIntoBuckets()</SAMP> on each value.  Once distributed into the buckets, the values are gathered back into the list by means of an accumulation.</P>
+<PRE>void radixSort(list&#60;unsigned int> &#38; values)
+{
+   bool flag = true;
+   int divisor = 1;
+   
+   while (flag) {
+      vector&#60; deque&#60;unsigned int> > buckets(10);
+      flag = false;
+      for_each(values.begin(), values.end(), 
+            copyIntoBuckets(...));
+      accumulate(buckets.begin(), buckets.end(), 
+            values.begin(), listCopy);
+      divisor *= 10;
+      }
+}
+</PRE>
+<P>The use of the function <SAMP>accumulate()</SAMP> here is slightly unusual.  The "scalar" value being constructed is the list itself.  The initial value for the accumulation is the iterator denoting the beginning of the list.  Each bucket is processed by the following binary function:</P>
+<PRE>list&#60;unsigned int>::iterator 
+      listCopy(list&#60;unsigned int>::iterator c, 
+         deque&#60;unsigned int> &#38; lst)
+{
+   // copy list back into original list, returning end
+   return copy(lst.begin(), lst.end(), c);
+}
+</PRE>
+<P>The only difficulty remaining is defining the function <SAMP>copyIntoBuckets().</SAMP>  The problem here is that the function must take as its argument only the element being inserted, but it must also have access to the three values <SAMP>buckets,</SAMP> <SAMP>divisor</SAMP> and <SAMP>flag</SAMP>.  In languages that permit functions to be defined within other functions the solution would be to define<SAMP> copyIntoBuckets()</SAMP> as a local function within the <SAMP>while</SAMP> loop.  But C++ has no such facilities.  Instead, we must create a class definition, which can be initialized with references to the appropriate values.  The parenthesis operator for this class is then used as the function for the <SAMP>for_each()</SAMP> invocation in the radix sort program.</P>
+<PRE>class copyIntoBuckets {
+public:
+   copyIntoBuckets
+      (int d, vector&#60; deque&#60;unsigned int> > &#38; b, bool &#38; f) 
+         : divisor(d), buckets(b), flag(f) {}
+
+   int divisor;
+   vector&#60;deque&#60;unsigned int> > &#38; buckets;
+   bool &#38; flag;
+
+   void operator () (unsigned int v)
+   {   int index = (v / divisor) % 10;
+       // flag is set to true if any bucket 
+       // other than zeroth is used
+       if (index) flag = true; 
+       buckets[index].push_back(v);
+   }
+};</PRE>
+
+<HR>
+<A HREF="deq_2889.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="set_3455.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

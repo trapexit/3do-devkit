@@ -1,0 +1,24 @@
+<Title>ISizeFromCRect</Title>
+<A NAME="XREF38962"><H1>ISizeFromCRect </A></H1>
+ Calculates the size of a CRect.<P>
+<H3>Synopsis</H3>
+<CODE>IPoint * ISizeFromCRect (IPoint *dst, CRect *src)</CODE><P>
+<H3>Description</H3>
+Calculates the width and height of the area described by the source rectangle src and stores the results at *dst. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to the IPoint where the results are to be stored. 
+</DL>
+<DL>
+<DT>src
+<DD>Pointer to a CRECT. 
+</DL>
+<H3>Return Value</H3>
+The input parameter dst. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO212.html#XREF34286"><CODE>XSIZEFROMCRECT</A>, <A HREF="./01LDO214.html#XREF23264">YSIZEFROMCRECT</A>, <A HREF="./01LDO101.html#XREF11198">ICornerFromSRect</A> </CODE><P>

@@ -1,0 +1,142 @@
+<HTML><TITLE>bind1st, bind2nd, binder1st, binder2nd</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>bind1st, bind2nd, binder1st, binder2nd</H2>
+<HR><PRE>     Function Object</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Templatized utilities to bind values to function objects</P>
+<PRE></PRE>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;functional></PRE>
+<PRE>
+template &#60;class Operation>
+class binder1st : public unary_function&#60;typename  
+                   Operation::second_argument_type,
+                   typename Operation::result_type> ;
+template &#60;class Operation, class T>
+binder1st&#60;Operation> bind1st (const Operation&#38;, const T&#38;);
+template &#60;class Operation>
+class binder2nd : public unary_function&#60;typename            
+                   Operation::first_argument_type,
+                   typename Operation::result_type> ;
+template &#60;class Operation, class T>
+binder2nd&#60;Operation> bind2nd (const Operation&#38;, const T&#38;);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Because so many functions provided by the standard library take other functions as arguments, the library includes classes that let you build new function objects out of old ones. Both <SAMP>bind1st()</SAMP> and <SAMP>bind2nd()</SAMP> are functions that take as arguments a binary function object <SAMP>f</SAMP>  and a value <SAMP>x,</SAMP> and return, respectively, classes <B><I>binder1st</B></I> and <B><I>binder2nd</B></I>.  The underlying function object must be a subclass of <A HREF="bin_7851.htm"><B><I>binary_function</B></I></A>.</P>
+<P>Class <B><I>binder1st</B></I> binds the value to the first argument of the binary function, and <B><I>binder2nd</B></I> does the same thing for the second argument of the function. The resulting classes can be used in place of a unary predicate in other function calls.</P>
+<P>For example, you could use the <A HREF="cou_3676.htm"><B><I>count_if</B></I></A> algorithm to count all elements in a vector that are less than or equal to 7,  using the following:</P>
+<PRE>count_if (v.begin, v.end, bind1st(greater&#60;int> (),7), littleNums)</PRE>
+<PRE></PRE><P>This function adds one to <SAMP>littleNums</SAMP> each time the predicate is <SAMP>true</SAMP>, i.e., each time 7 is greater than the element.</P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>// Class binder1st </PRE>
+<PRE> template &#60;class Operation>
+ class binder1st
+   : public unary_function&#60;typename 
+                           Operation::second_argument_type,
+                           typename Operation::result_type>
+{
+public:
+   typedef typename unary_function&#60;typename             
+    Operation::second_argument_type, typename   
+    Operation::result_type>::argument_type argument_type;
+   typedef typename unary_function&#60;typename 
+    Operation::second_argument_type, typename    
+    Operation::result_type>::result_type result_type;
+   
+   binder1st(const Operation&#38;,
+             const typename Operation::first_argument_type&#38;);
+   result_type operator() (const argument_type&#38;) const;
+};
+// Class binder2nd 
+ template &#60;class Operation>
+ class binder2nd
+   : public unary_function&#60;typename 
+                           Operation::first_argument_type, 
+                           typename Operation::result_type> 
+{
+public:
+   typedef typename unary_function&#60;typename 
+    Operation::first_argument_type, typename  
+    Operation::result_type>::argument_type argument_type;
+   typedef typename unary_function&#60;typename 
+    Operation::first_argument_type, typename 
+    Operation::result_type>::result_type result_type; 
+  
+   binder2nd(const Operation&#38;,
+             const typename Operation::second_argument_type&#38;);
+   result_type operator() (const argument_type&#38;) const;
+};
+// Creator bind1st
+   template &#60;class Operation, class T>
+   binder1st&#60;Operation> bind1st (const Operation&#38;, const T&#38;);
+// Creator bind2nd 
+ 
+   template&#60;class Operation, class T>
+   binder2nd &#60;Operation> bind2nd(const Operation&#38;, const T&#38;);
+</PRE>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// binders.cpp
+//
+ #include &#60;functional>
+ #include &#60;algorithm>
+ #include &#60;vector>
+ #include &#60;iostream.h>
+ int main()
+ {
+   typedef vector&#60;int>::iterator iterator;
+   int d1[4] = {1,2,3,4};
+   //
+   // Set up a vector
+   //
+   vector&#60;int> v1(d1,d1 + 4);
+   //
+   // Create an 'equal to 3' unary predicate by binding 3 to
+   // the equal_to binary predicate.
+   //
+   binder1st&#60;equal_to&#60;int> > equal_to_3 = 
+      bind1st(equal_to&#60;int>(),3);
+   //
+   // Now use this new predicate in a call to find_if
+   //
+   iterator it1 = find_if(v1.begin(),v1.end(),equal_to_3);
+   //
+   // Even better, construct the new predicate on the fly
+   //
+   iterator it2 = 
+      find_if(v1.begin(),v1.end(),bind1st(equal_to&#60;int>(),3)); 
+   //
+   // And now the same thing using bind2nd
+   // Same result since == is commutative
+   //
+   iterator it3 = 
+      find_if(v1.begin(),v1.end(),bind2nd(equal_to&#60;int>(),3)); 
+   //
+   // it3 = v1.begin() + 2
+   //
+   // Output results
+   //
+   cout &#60;&#60; *it1 &#60;&#60; " " &#60;&#60; *it2 &#60;&#60; " " &#60;&#60; *it3 &#60;&#60; endl;
+   return 0;
+ }
+Output : 3 3 3</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance you'll have to write:</P>
+<PRE>vector&#60;int,allocator></PRE>
+<P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A></P>
+<HR>
+<A HREF="bin_2217.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="bit_0857.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

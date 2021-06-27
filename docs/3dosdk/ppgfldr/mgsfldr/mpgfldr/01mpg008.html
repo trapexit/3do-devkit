@@ -1,0 +1,14 @@
+<TITLE>How Do I Make a Sound Fade Out Smoothly without Popping?</TITLE>
+<H1><LINK NAME="XREF11127">How Do I Make a Sound Fade Out Smoothly without Popping?</LINK></H1><HR>
+Pops are caused by a sudden change in amplitude. A  pop can occur if you call <CODE>StopInstrument()</CODE> when an instrument is still sounding, or if you set an amplitude or gain knob abruptly to 0.<P>
+To avoid pops, you need to smoothly change the amplitude from full amplitude to 0 over at least 10 msec to eliminate the pop. This can be done in two ways:<P>
+<UL>
+<LI>You can call <CODE>TweakKnob()</CODE> rapidly in a loop. This ties up the main CPU but does not require any special DSP resources. 
+<p>
+<LI>You can use an instrument that generates a slowly changing value such as  <CODE>envelope.dsp</CODE>. 
+</UL>
+<H3>For More Information</H3>
+See <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>, in the </CODE><I>3DO Music and Audio Programmer's Reference</I> for descriptions of the calls.<P>
+See  <A HREF="../mprfldr/03mpr.html#XREF41103">Instrument Templates</A>, in the <I>3DO Music and Audio Programmer's Reference</I> for descriptions of the instrument templates.<P>
+See the example file <I>ta_nopop.c</I>. This example program can be obtained from the 3DO InfoServer.<P>
+<P>

@@ -1,0 +1,82 @@
+<HTML><TITLE>upper_bound</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>upper_bound</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Determines the last valid position for a value in a sorted container.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>template &#60;class ForwardIterator, class T> 
+   ForwardIterator
+   <B>upper_bound</B>(ForwardIterator first, ForwardIterator last,
+                const T&#38; value);
+ template &#60;class ForwardIterator, class T, class Compare>
+    ForwardIterator
+    <B>upper_bound</B>(ForwardIterator first, ForwardIterator last,
+                const T&#38; value, Compare comp);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>upper_bound</B></I> algorithm is part of a set of binary search algorithms.  All of these algorithms perform binary searches on ordered containers.  Each algorithm has two versions.  The first version uses the less than operator (<SAMP>operator&#60;</SAMP>) to perform the comparison, and assumes that the sequence has been sorted using that operator.  The second version allows you to include a function object of type <SAMP>Compare</SAMP>, and assumes that <SAMP>Compare</SAMP> is the function used to sort the sequence.  The function object must be a binary predicate. </P>
+<P>The <B><I>upper_bound</B></I> algorithm finds the <I>last</I> position in a container that  <SAMP>value</SAMP> can occupy without violating the container's ordering.  <B><I>upper_bound's</B></I> return value is the iterator for the first element in the container that is <I>greater than</I> <SAMP>value</SAMP>, or, when the comparison operator is used, the first element that does <I>not</I> satisfy the comparison function. Because the algorithm is restricted to using the less than operator or the user-defined function to perform the search, <B><I>upper_bound</B></I> returns an iterator <SAMP>i</SAMP> in the range <SAMP>[first, last)</SAMP> such that for any iterator <SAMP>j</SAMP> in the range <SAMP>[first, i)</SAMP> the appropriate version of the following conditions holds:</P>
+<PRE>!(value &#60; *j)</PRE>
+<PRE></PRE><P>or </P>
+<PRE> comp(value, *j) == false</PRE>
+<PRE></PRE>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P><B><I>upper_bound</B></I> performs at most <SAMP>log(last - first) + 1</SAMP> comparisons.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// ul_bound.cpp
+//
+ #include &#60;vector>
+ #include &#60;algorithm>
+ #include &#60;iostream.h>
+ int main()
+ {
+   typedef vector&#60;int>::iterator iterator;
+   int d1[11] = {0,1,2,2,3,4,2,2,2,6,7};
+   // Set up a vector
+   vector&#60;int> v1(d1,d1 + 11);
+   // Try lower_bound variants
+   iterator it1 = lower_bound(v1.begin(),v1.end(),3);
+   // it1 = v1.begin() + 4     
+   iterator it2 = 
+       lower_bound(v1.begin(),v1.end(),2,less&#60;int>());
+   // it2 = v1.begin() + 4     
+ <B>  </B>// Try upper_bound variants
+   iterator it3 = <B>upper_bound</B>(v1.begin(),v1.end(),3);
+   // it3 = vector + 5     
+   iterator it4 = 
+      <B>upper_bound</B>(v1.begin(),v1.end(),2,less&#60;int>());
+   // it4<B> = </B>v1.begin() + 5 
+   cout &#60;&#60; endl &#60;&#60; endl
+        &#60;&#60; "The upper and lower bounds of 3: ( "
+        &#60;&#60; *it1 &#60;&#60; " , " &#60;&#60; *it3 &#60;&#60; " ]" &#60;&#60; endl;
+   cout &#60;&#60; endl &#60;&#60; endl
+        &#60;&#60; "The upper and lower bounds of 2: ( "
+        &#60;&#60; *it2 &#60;&#60; " , " &#60;&#60; *it4 &#60;&#60; " ]" &#60;&#60; endl;
+   return 0;
+ }
+Output :
+The upper and lower bounds of 3: ( 3 , 4 ]
+The upper and lower bounds of 2: ( 2 , 3 ]</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="low_4395.htm"><B><I>lower_bound</B></I></A>, <A HREF="equ_3232.htm"><B><I>equal_range</B></I></A></P>
+<HR>
+<A HREF="uni_8586.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="val_9388.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

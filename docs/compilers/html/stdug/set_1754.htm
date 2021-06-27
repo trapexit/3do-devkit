@@ -1,0 +1,328 @@
+<HTML><HEAD><TITLE>set and multiset Operations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>set and multiset Operations</H2>
+<A HREF="sidebar.htm#sidebar24"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Sets and Bags</STRONG></A>
+
+<P>The member functions provided by the set and multiset data types will shortly be described in more detail.  Note that while member functions provide basic operations, the utility of these data structures is greatly extended through the use of the generic algorithms described in Chapters <a href="gen_9895.htm">13</a> and <a href="ord_1635.htm">14</a>.</P>
+<A NAME="declarationandinitializationofset"><H3>Declaration and Initialization of Set</H3></A>
+<P>A <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> is a template data structure, specialized by the type of the elements it contains, and the operator used to compare keys. The latter argument is optional, and, if it is not provided, the less than operator for the key type will be assumed.  The element type can be a primitive language type (such as integer or double), a pointer type, or a user-defined type.  The element type must recognize both the equality testing operator (operator <SAMP>==</SAMP>) and the less than comparison operator (operator <SAMP>&#60;</SAMP>).</P>
+<A HREF="sidebar.htm#sidebar25"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Initializing Sets with Iterators</STRONG></A>
+
+<P>Sets can be declared with no initial elements, or they can be initialized from another container by providing a pair of iterators.  An optional argument in both cases is an alternative comparison function; this value overrides the value provided by the template parameter.  This mechanism is useful if a program contains two or more sets with the same values but different orderings, as it prevents more than one copy of the set member function from being instantiated.  The copy constructor can be used to form a new set that is a clone, or copy, of an existing set.</P>
+<PRE>   set &#60;int> set_one;
+
+   set &#60;int, greater&#60;int> > set_two;
+   set &#60;int> set_three(greater&#60;int>());
+
+   set &#60;gadget, less&#60;gadget> > gset;
+   set &#60;gadget> gset(less&#60;gadget>());
+
+   set &#60;int> set_four (aList.begin(), aList.end());
+   set &#60;int> set_five 
+      (aList.begin(), aList.end(), greater&#60;int>());
+
+   set &#60;int> set_six (set_four);                // copy constructor
+</PRE>
+<P>A set can be assigned to another set, and two sets can exchange their values using the <SAMP>swap()</SAMP> operation (in a manner analogous to other standard library containers).</P>
+<PRE>   set_one = set_five;
+   set_six.swap(set_two);
+</PRE>
+
+<A NAME="typedefinitions"><H3>Type Definitions</H3></A>
+<P>The classes <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> and <A HREF="../stdref/mul_0958.htm"><B><I>multiset</I></B></A> include a number of type definitions.  The most common use for these is in a declaration statement.  For example, an iterator for a set of integers can be declared in the following fashion:</P>
+<PRE>   set&#60;int>::iterator location;
+</PRE>
+<P>In addition to <SAMP>iterator</SAMP>, the following types are defined:</P>
+
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<SAMP>value_type</SAMP><BR>
+</TD>
+
+<TD>
+The type associated with the elements the set maintains.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>const_iterator</SAMP><BR>
+</TD>
+
+<TD>
+An iterator that does not allow modification of the underlying sequence.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>reverse_iterator</SAMP><BR>
+</TD>
+
+<TD>
+An iterator that moves in a backward direction.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>const_reverse_iterator</SAMP><BR>
+</TD>
+
+<TD>
+A combination constant and reverse iterator.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>reference</SAMP><BR>
+</TD>
+
+<TD>
+A reference to an underlying element.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>const_reference</SAMP><BR>
+</TD>
+
+<TD>
+A reference to an underlying element that will not permit modification.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>size_type</SAMP><BR>
+</TD>
+
+<TD>
+An unsigned integer type, used to refer to the size of containers.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>value_compare</SAMP><BR>
+</TD>
+
+<TD>
+A function that can be used to compare two elements.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>difference_type</SAMP><BR>
+</TD>
+
+<TD>
+A signed integer type, used to describe the distance between iterators.<BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<A NAME="insertion"><H3>Insertion</H3></A>
+<A HREF="sidebar.htm#sidebar26"><IMG SRC="images/note.gif" BORDER=0> <STRONG>The Pair Data Type</STRONG></A>
+
+<P>Unlike a list or vector, there is only one way to add a new element to a <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A>.  A value can be inserted into a set or a multiset using the <SAMP>insert()</SAMP> member function.  With a multiset, the function returns an iterator that denotes the value just inserted.  Insert operations into a <B><I>set</I></B> return a <A HREF="../stdref/pai_5818.htm"><B><I>pair</I></B></A> of values, in which the first field contains an iterator, and the second field contains a boolean value that is true if the element was inserted, and false otherwise.  Recall that in a set, an element will not be inserted if it matches an element already contained in the collection.</P>
+<PRE>   set_one.insert (18);
+
+   if (set_one.insert(18).second)
+      cout &#60;&#60; "element was inserted" &#60;&#60; endl;
+   else
+      cout &#60;&#60; "element was not inserted " &#60;&#60; endl;
+</PRE>
+<P>Insertions of several elements from another container can also be performed using an iterator pair:</P>
+<PRE>   set_one.insert (set_three.begin(), set_three.end());
+</PRE>
+<P>The <A HREF="../stdref/pai_5818.htm"><B><I>pair</I></B></A> data structure is a tuple of values.  The first value is accessed through the field name <SAMP>first</SAMP>, while the second is, naturally, named <SAMP>second</SAMP>.  A function named <SAMP>make_pair()</SAMP> simplifies the task of producing an instance of class <B><I>pair</I></B>.</P>
+<PRE>template &#60;class T1, class T2>
+struct pair {
+   T1 first;
+   T2 second;
+   pair (const T1 &#38; x, const T2 &#38; y) : first(x), second(y) { }
+};
+
+template &#60;class T1, class T2>
+inline pair&#60;T1, T2> make_pair(const T1&#38; x, const T2&#38; y)
+   { return pair&#60;T1, T2>(x, y); }
+</PRE>
+<P>In determining the equivalence of keys, for example, to determine if the key portion of a new element matches any existing key, the comparison function for keys is used, and not the equivalence (<SAMP>==</SAMP>) operator.  Two keys are deemed equivalent if the comparison function used to order key values yields false in both directions.  That is, if <SAMP>Compare(key1, key2)</SAMP> is false, and if <SAMP>Compare(key2, key1)</SAMP> is false, then <SAMP>key1</SAMP> and <SAMP>key2</SAMP> are considered equivalent.</P>
+
+<A NAME="removalofelementsfromaset"><H3>Removal of Elements from a Set</H3></A>
+<P>Values are removed from a set using the member function <SAMP>erase().</SAMP>  The argument can be either a specific value, an iterator that denotes a single value, or a pair of iterators that denote a range of values.  When the first form is used on a multiset, all arguments matching the argument value are removed, and the return value indicates the number of elements that have been erased.</P>
+<PRE>   // erase element equal to 4
+   set_three.erase(4);
+
+   // erase element five   
+   set&#60;int>::iterator five = set_three.find(5);
+   set_three.erase(five);
+   
+   // erase all values between seven and eleven
+   set&#60;int>::iterator seven = set_three.find(7);
+   set&#60;int>::iterator eleven = set_three.find(11);
+   set_three.erase (seven, eleven);
+   </PRE>
+<P>If the underlying element type provides a destructor, then the destructor will be invoked prior to removing the element from the collection.</P>
+
+<A NAME="searchingandcounting"><H3>Searching and Counting</H3></A>
+<P>The member function <SAMP>size()</SAMP> will yield the number of elements held by a container.  The member function <SAMP>empty()</SAMP> will return a boolean true value if the container is empty, and is generally faster than testing the size against zero.</P>
+<P>The member function <SAMP>find()</SAMP> takes an element value, and returns an iterator denoting the location of the value in the set if it is present, or a value matching the end-of-set (the value yielded by the function <SAMP>end()</SAMP>) if it is not.  If a multiset contains more than one matching element, the value returned can be any appropriate value.</P>
+<PRE>   set&#60;int>::iterator five = set_three.find(5);
+   if (five != set_three.end())
+       cout &#60;&#60; "set contains a five" &#60;&#60; endl;
+</PRE>
+<P>The member functions<SAMP> lower_bound()</SAMP> and <SAMP>upper_bound()</SAMP> are most useful with multisets, as with sets they simply mimic the function <SAMP>find().</SAMP>  The member function<SAMP> lower_bound()</SAMP> yields the first entry that matches the argument key, while the member function <SAMP>upper_bound()</SAMP> returns the first value past the last entry matching the argument.  Finally, the member function <SAMP>equal_range()</SAMP> returns a <A HREF="../stdref/pai_5818.htm"><B><I>pair</I></B></A> of iterators, holding the lower and upper bounds.</P>
+<P>The member function<SAMP> count()</SAMP> returns the number of elements that match the argument.  For a set this value is either zero or one, whereas for a multiset it can be any nonnegative value.  Since a non-zero integer value is treated as true, the <SAMP>count()</SAMP> function can be used to test for inclusion of an element, if all that is desired is to determine whether or not the element is present in the set.  The alternative, using <SAMP>find(),</SAMP> requires testing the result returned by <SAMP>find()</SAMP> against the end-of-collection iterator.</P>
+<PRE>   if (set_three.count(5))
+      cout &#60;&#60; "set contains a five" &#60;&#60; endl;
+</PRE>
+
+<A NAME="iterators"><H3>Iterators</H3></A>
+<A HREF="sidebar.htm#sidebar27"><IMG SRC="images/note.gif" BORDER=0> <STRONG>No Iterator Invalidation</STRONG></A>
+
+<P>The member functions <SAMP>begin()</SAMP> and <SAMP>end()</SAMP> produce iterators for both sets and multisets.  The iterators produced by these functions are constant to ensure that the ordering relation for the set is not inadvertently or intentionally destroyed by assigning a new value to a set element.  Elements are generated by the iterators in sequence, ordered by the comparison operator provided when the set was declared.  The member functions <SAMP>rbegin()</SAMP> and <SAMP>rend()</SAMP> produce iterators that yield the elements in reverse order.  </P>
+<A NAME="setoperations"><H3>Set Operations</H3></A>
+<P>The traditional set operations of subset <SAMP>test</SAMP>, set <SAMP>union</SAMP>, set <SAMP>intersection</SAMP>, and set <SAMP>difference</SAMP> are not provided as member functions, but are instead implemented as generic algorithms that will work with any ordered structure.  These functions are described in more detail in <a href="set_1753.htm">Chapter 14 (<i>Set Operations</i>)</a>.  The following summary describes how these functions can be used with the set and multiset container classes.</P>
+<H4>Subset test</H4>
+
+<P>The function <SAMP>includes()</SAMP> can be used to determine if one set is a subset of another; that is, if all elements from the first are contained in the second.  In the case of multisets the number of matching elements in the second set must exceed the number of elements in the first.  The four arguments are a pair of iterators representing the (presumably) smaller set, and a pair of iterators representing the (potentially) larger set.</P>
+<PRE>   if (includes(set_one.begin(), set_one.end(),
+      set_two.begin(), set_two.end()))
+         cout &#60;&#60; "set_one is a subset of set_two" &#60;&#60; endl;
+</PRE>
+<P>The less than operator (operator <SAMP>&#60;</SAMP>) will be used for the comparison of elements, regardless of the operator used in the declaration of the set.  Where this is inappropriate, an alternative version of the <SAMP>includes()</SAMP> function is provided.  This form takes a fifth argument, which is the comparison function used to order the elements in the two sets.</P>
+
+<H4>Set Union or Intersection</H4>
+
+<P>The function <SAMP>set_union()</SAMP> can be used to construct a union of two sets.  The two sets are specified by iterator pairs, and the union is copied into an output iterator that is supplied as a fifth argument.  To form the result as a set, an <I>insert iterator</I> must be used to form the output iterator.  (<i>See <a href="ins_0332.htm">Chapter 2: <i>Insert Iterators</i></a> for a discussion of insert iterators</i>.)  If the desired outcome is a union of one set with another, then a temporary set can be constructed, and the results swapped with the argument set prior to deletion of the temporary set.</P>
+<PRE>   // union two sets, copying result into a vector
+   vector&#60;int> v_one (set_one.size() + set_two.size());
+
+   set_union(set_one.begin(), set_one.end(), 
+      set_two.begin(), set_two.end(), v_one.begin());
+
+   // form union in place
+   set&#60;int> temp_set;
+   set_union(set_one.begin(), set_one.end(), 
+      set_two.begin(), set_two.end(), 
+      inserter(temp_set, temp_set.begin()));
+   set_one.swap(temp_set);  // temp_set will be deleted
+</PRE>
+<P>The function <SAMP>set_intersection()</SAMP> is similar, and forms the intersection of the two sets.</P>
+<P>As with the <SAMP>includes()</SAMP> function, the less than operator (operator <SAMP>&#60;</SAMP>) is used to compare elements in the two argument sets, regardless of the operator provided in the declaration of the sets.  Should this be inappropriate, alternative versions of both the <SAMP>set_union()</SAMP> or <SAMP>set_intersection()</SAMP> functions permit the comparison operator used to form the set to be given as a sixth argument.</P>
+<P>The operation of taking the union of two multisets should be distinguished from the operation of merging two sets.  Imagine that one argument set contains three instances of the element 7, and the second set contains two instances of the same value.  The union will contain only three such values, while the merge will contain five.  To form the merge, the function <SAMP>merge()</SAMP> can be used (<i>see <a href="mer_3553.htm">Chapter 14: Merge Ordered Sequences</a></i>).  The arguments to this function exactly match those of the <SAMP>set_union()</SAMP> function.</P>
+
+<H4>Set Difference</H4>
+
+<P>There are two forms of set difference.  A simple set difference represents the elements in the first set that are not contained in the second.  A symmetric set difference is the union of the elements in the first set that are not contained in the second, with the elements in the second that are not contained in the first.  These two values are constructed by the functions <SAMP>set_difference()</SAMP> and <SAMP>set_symmetric_difference(),</SAMP> respectively.  The use of these functions is similar to the use of the <SAMP>set_union()</SAMP> function described earlier.</P>
+<A NAME="othergenericalgorithms"><H3>Other Generic Algorithms</H3></A>
+<P>Because sets are ordered and have constant iterators, a number of the generic functions described in Chapters <a href="gen_9895.htm">13</a> and <a href="ord_1635.htm">14</a> either are not applicable to sets or are not particularly useful.  However, the following table gives a few of the functions that can be used in conjunction with the <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> data type.</P>
+<CENTER><TABLE BORDER CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<B><I>Purpose</I></B><BR>
+</TD>
+
+<TD>
+<B><I>Name</I></B><BR>
+</TD>
+
+<TD>
+<B><I>Chapter / Section</I></B><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+Copy one sequence into another <BR>
+</TD>
+
+<TD>
+<SAMP>copy</SAMP><BR>
+</TD>
+
+<TD>
+<a href="ini_5794.htm#copyonesequenceintoanothersequence">13 (<i>Copy One Sequence into Another Sequence</i>)</a><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+Find an element that matches a condition <BR>
+</TD>
+
+<TD>
+<SAMP>find_if</SAMP><BR>
+</TD>
+
+<TD>
+<a href="sea_9743.htm#findanelementsatisfyingacondition">13 (<i>Find an Element Satisfying a Condition</i>)</a><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+Find a subsequence within a set <BR>
+</TD>
+
+<TD>
+<SAMP>search</SAMP><BR>
+</TD>
+
+<TD>
+<a href="sea_9743.htm#findasubsequencewithinasequence">13 (<i>Find a Subsequence within a Sequence</i>)</a><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+Count number of elements that satisfy condition <BR>
+</TD>
+
+<TD>
+<SAMP>count_if</SAMP><BR>
+</TD>
+
+<TD>
+<a href="sca_1926.htm#countthenumberofelementsthatsatisfyacondition">13 (<i>Count the Number of Elements...</i>)</a><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+Reduce set to a single value <BR>
+</TD>
+
+<TD>
+<SAMP>accumulate</SAMP><BR>
+</TD>
+
+<TD>
+<a href="sca_1926.htm#reducesequencetoasinglevalue">13 (<i>Reduce Sequence to a Single Value</i>)</a><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+Execute function on each element <BR>
+</TD>
+
+<TD>
+<SAMP>for_each</SAMP><BR>
+</TD>
+
+<TD>
+<a href="mis_2456.htm#applyafunctiontoallelementsinacollection">13 (<i>Apply a Function to All Elements in a Collection</i>)</a><BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<HR>
+<A HREF="set_4687.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="exa_2257.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

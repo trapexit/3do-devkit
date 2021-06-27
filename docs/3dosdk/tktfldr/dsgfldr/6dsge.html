@@ -1,0 +1,13 @@
+<TITLE>Queued data and positioning operations</TITLE>
+<H1><LINK NAME="XREF37436">Queued data and positioning operations</LINK></H1><HR>
+How queued data are handled depends on the subscriber. For example, the Protosubscriber does not support queued data, the CelSubscriber does. This section looks at how video and audio data would be handled differently in a simple fly-through application. <P>
+<H2>Video data</H2>
+Consider an interactive fly-through type of stream, where a button press causes a turn down a different path in the fly-through world. There are two options: <P>
+<UL>
+<LI>Graphics from a path that was just departed from should no longer be displayed, so flushing queued data would be appropriate. 
+<p>
+<LI>When looping through a section of a stream, it might be desirable to use, and not flush, queued data. For example, the loop might be repeated a couple of times, followed by continuing through the stream. In this case, having the data already in memory would be useful.
+</UL>
+<H2>Audio data</H2>
+Now consider what to do with audio data in the fly-though example. It is undesirable to cease playing the active sound to avoid an audio gap. One way to prevent a gap is to segment the sampled audio or MIDI data in the stream file. As a result, positioning from an appropriate departure point to a new section will result in a seamless transition to the audio stored in the stream at the destination of the positioning operation. Another way to solve this problem is to use the positioning event to trigger a cross fade from the queued audio data to the new audio data obtained after the positioning operation.<P>
+<P>

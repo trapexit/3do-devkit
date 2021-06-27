@@ -1,0 +1,28 @@
+<Title>LoadCel</Title>
+<A NAME="XREF15438"><H1>LoadCel </A></H1>
+ Loads one or more cels from a file.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * LoadCel (char *filename, uint32 memTypeBits)</CODE><P>
+<H3>Description</H3>
+Loads a cel or related group of cels from a file. Memory for the file is allocated according to memTypeBits, then the entire file is loaded into the buffer using fast block I/O. After the file is loaded, the cel(s) in the buffer are parsed by the <CODE>ParseCel()</CODE> function. <P>
+If the file contains more than one cel, the CCBs are strung together via their ccb_NextPtr fields in the same order as they are encountered in the buffer. This allows you to store a group of related cels in one file, and treat them as a single logical entity using the other CelUtils library functions that work with lists of cels. <P>
+This function also contains special handling for anti-aliased cels. AACels are two cels stored together in the same file, but the CCBs are stored in reverse order of the way they must be drawn. AACels are recognized by a characteristic signature (exactly two cels, one is 4-bit coded the other 16-bit uncoded, same size and coordinates, etc.), and when detected the CCB links are automatically reversed so the return value is a list of two cels linked in the proper order for drawing. One drawback to the signature-detection logic is that it prevents the storage of multiple related anti-aliased cels in the same file. <P>
+Use <CODE>DeleteCel()</CODE> or <CODE>UnloadCel()</CODE> to release the resources acquired when the cel file is loaded. When the file contains several cels, or an anti-aliased cel, use <CODE>DeleteCel()</CODE> or <CODE>UnloadCel()</CODE> only on the first cel in the file. That is, pass the pointer returned by this function. <CODE>DeleteCel()</CODE> will delete all the cels at once. <P>
+ <CODE>DeleteCelList()</CODE> contains special logic to treat a group of cels loaded from the same file as if they were one cel. If more cels were linked in the list following a group loaded from the same file, <CODE>DeleteCelList()</CODE> calls <CODE>DeleteCel()</CODE> for the first cel in the group, then skips to the end of the group and resumes walking the ccb_NextPtr links as normal for the rest of the cels. This implies that you cannot load a group of cels from a file and then break apart the links built by <CODE>LoadCel()</CODE> and relink the cels into different lists. Doing so would confuse the logic in <CODE>DeleteCelList()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>filename
+<DD>Name of file to load. 
+</DL>
+<DL>
+<DT>memTypeBits
+<DD>Memory to be allocated.
+</DL>
+<H3>Return Value</H3>
+Pointer to the cel or list of cels loaded from the file. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO144.html#XREF18211"><CODE>ParseCel</A>, <A HREF="./01LDO055.html#XREF42213">DeleteCel</A>, <A HREF="./01LDO056.html#XREF37384">DeleteCelList</A>, <A HREF="./01LDO202.html#XREF31145">UnloadCel</A> </CODE><P>

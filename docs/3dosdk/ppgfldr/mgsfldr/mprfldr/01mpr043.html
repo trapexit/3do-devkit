@@ -1,0 +1,31 @@
+<Title>GetAudioItemInfo</Title>
+<A NAME="XREF15941"><H1>GetAudioItemInfo </A></H1>
+<A NAME="XREF17974"></a> Gets information about an audio item.<P>
+<H3>Synopsis</H3>
+<CODE>Err GetAudioItemInfo (Item audioItem, TagArg *tagList)</CODE><P>
+<H3>Description</H3>
+This function queries settings of several kinds of audio items. It takes a tag list with the ta_Tag fields set to parameters to query and fills in the ta_Arg field of each TagArg with the parameter requested by that TagArg. <P>
+<CODE>SetAudioItemInfo()</CODE>  can be used to set audio item parameters. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>audioItem
+<DD>Item number of an audio item to query. 
+</DL>
+<DL>
+<DT>tagList
+<DD>Pointer to tag list containing AF_TAG_ tags to query. The ta_Arg fields of each matched tag is filled in with the corresponding setting from the audio item. See each audio Item pages for list of tags that are supported by each item type. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+Returns AF_ERR_BADTAG if this function is passed any tag that is not listed above. <P>
+<H3>Additional Results </H3>
+Fills in the ta_Arg field of each matched TagArg in tagList with the corresponding setting from the audio item. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Caveats</H3>
+Not all audio Item types support being queried in this way. Those that don't support it, return AF_ERR_UNIMPLEMENTED. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr067.html#XREF20838"><CODE>SetAudioItemInfo</A>(), <A HREF="../../pgsfldr/spr/09spr001.html#XREF27996">Attachment</A>, <A HREF="../../pgsfldr/spr/09spr003.html#XREF27124">Cue</A>, <A HREF="../../pgsfldr/spr/09spr004.html#XREF24551">Envelope</A>, <A HREF="../../pgsfldr/spr/09spr009.html#XREF16655">Instrument</A>, <A HREF="../../pgsfldr/spr/09spr011.html#XREF23454">Knob</A>, <A HREF="../../pgsfldr/spr/09spr015.html#XREF40705">Probe</A>, <A HREF="../../pgsfldr/spr/09spr016.html#XREF10901">Sample</A>, <A HREF="../../pgsfldr/spr/09spr020.html#XREF24399">Template</A>, <A HREF="../../pgsfldr/spr/09spr021.html#XREF38127">Tuning</A> </CODE><P>
+</CODE>

@@ -1,0 +1,36 @@
+<Title>SUBS_CHUNK_COMMON</Title>
+<A NAME="XREF18996"><H1>SUBS_CHUNK_COMMON</A></H1>
+<A NAME="XREF40328"></A>Common stream header preamble.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>#define SUBS_CHUNK_COMMON
+   long chunkType;
+   long chunkSize;
+   long time;
+   long channel;
+   long subChunkType;</CODE></pre><P>
+<H3>Description</H3>
+Common stream header preamble. <P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>chunkType</CODE>
+<DD>Chunk type.
+</DL>
+<DL>
+<DT><CODE>chunkSize</CODE>
+<DD>Chunk size including header.
+</DL>
+<DL>
+<DT><CODE>time</CODE>
+<DD>Position in stream time.
+</DL>
+<DL>
+<DT><CODE>channel</CODE>
+<DD>Logical channel number.
+</DL>
+<DL>
+<DT><CODE>subChunkType</CODE>
+<DD>Data sub-type.
+</DL>
+<H3>Associated Files</H3>
+DSStreamHeader.h<P>

@@ -1,0 +1,25 @@
+<Title>FindAndOpenFolio</Title>
+<A NAME="XREF17023"><H1>FindAndOpenFolio </A></H1>
+<A NAME="XREF29097"></A>Finds a folio by name and opens it.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindAndOpenFolio( const char *name )</CODE><P>
+<H3>Description</H3>
+This macro finds a folio whose name matches the name argument. The search is not case-sensitive (that is, the kernel does not distinguish uppercase and lowercase letters in folio names). You can use this macro in place of <CODE>FindAndOpenNamedItem()</CODE> to find a folio and open it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the folio to find. 
+</DL>
+<H3>Return Value</H3>
+The macro returns the item number of the folio or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in folio.h V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>folio.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr011.html#XREF18576"><CODE>CallFolio</A>(), <A HREF="./01spr012.html#XREF20564">CallFolioRet</A>(), <A HREF="./01spr047.html#XREF36773">FindAndOpenNamedItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF17023"></LINK></H1><HR>

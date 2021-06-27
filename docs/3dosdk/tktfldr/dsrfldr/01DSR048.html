@@ -1,0 +1,69 @@
+<Title>NewDataAcq</Title>
+<A NAME="XREF21532"><H1>NewDataAcq</A></H1>
+<A NAME="XREF37811"> Creates a new acquisition thread.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 NewDataAcq (AcqContextPtr *pCtx, char* fileName, long 
+deltaPriority)</CODE><P>
+<H3>Description</H3>
+Creates a new acquisition thread for the specified stream file. <P>
+The task priority of the acquisition thread is calculated in relation to 
+the priority of its parent task. If <CODE>deltaPriority</CODE> is set to 
+zero, the thread has the same priority as its parent task.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>pCtx</CODE>
+<DD>Pointer to where the acquisition context is returned.
+</DL>
+<DL>
+<DT><CODE>fileName</CODE>
+<DD>Name of the data stream file.
+</DL>
+<DL>
+<DT><CODE>deltaPriority</CODE>
+<DD>Change in task priority of the acquisition thread.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT>(Value of <CODE>creatorStatus</CODE> field in context block of new 
+acquisition thread)
+<DD>
+</DL>
+<DL>
+<DT>0
+<DD>Could not allocate stack memory for new acquisition thread
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoMemErr</CODE> 
+<DD>Could not allocate memory for the acquisition context
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoSignalErr</CODE> 
+<DD>Could not allocate signal for thread initialization
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSSignalErr</CODE> 
+<DD>Received incorrect initialization signal
+<DD>
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>CreateItem()</CODE> failed to create an item for the new 
+acquisition thread
+<DD>
+</DL>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a 
+listing of error messages returned by <CODE>CreateItem()</CODE>.<P>
+<H3>Associated Files</H3>
+DataAcq.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="../../ppgfldr/pgsfldr/sprfldr/001spr022.html#XREF15505">CreateItem</A>, 
+<A HREF="./01DSR015.html#XREF33336">DisposeSCelSubscriber</A>, 
+<A HREF="./01DSR044.html#XREF19399">InitDataAcq</A></CODE><P>

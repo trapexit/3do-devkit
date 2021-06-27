@@ -1,0 +1,70 @@
+<Title>ControlMem</Title>
+<A NAME="XREF21673"><H1>ControlMem </A></H1>
+<A NAME="XREF13998"></A>Controls memory permissions and ownership.<P>
+<H3>Synopsis</H3>
+<CODE>Err ControlMem( void *p, int32 size, int32 cmd, Item task )</CODE><P>
+<H3>Description</H3>
+When a task allocates memory, it becomes the owner of that memory. Other tasks cannot write to the memory unless they are given permission by its owner. A task can give another task permission to write to one or more of its memory pages, revoke write permission that was previously granted, or transfer ownership of memory to another task or the system by calling <CODE>ControlMem()</CODE>. <P>
+Each page of memory has a control status that specifies which task owns the memory and which tasks can write to it. Calls to <CODE>ControlMem()</CODE> change the control status for entire pages. If the p and size arguments (which specify the memory to change) specify any part of a page, the changes apply to the entire page. <P>
+A task can grant write permission for a page that it owns (or for some number of contiguous pages) to any number of tasks. To accomplish this, the task must make a separate call to <CODE>ControlMem()</CODE> for each task that is to be granted write permission. <P>
+A task that calls <CODE>ControlMem()</CODE> must own the memory whose control status it is changing, with one exception: A task that has write access to memory it doesn't own can relinquish its write access (by using MEMC_NOWRITE as the value of the cmd argument). If a task transfers ownership of memory it still retains write access. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>p
+<DD>A pointer to the memory whose control status to change. 
+</DL>
+<DL>
+<DT>size
+<DD>The amount of memory for which to change the control status, in bytes. If the size and p arguments specify any part of a page, the control status is changed for the entire page. 
+</DL>
+<DL>
+<DT>cmd
+<DD>A constant that specifies the change to be made to the control status; possible values are listed below. 
+</DL>
+<DL>
+<DT>task
+<DD>The item-number task for which to change the control status or zero for global changes (see "Notes"). 
+</DL>
+The possible values of "cmd" are: <P>
+<DL>
+<DT>MEMC_OKWRITE
+<DD>Grants permission to write to this memory to the task specified by the task argument. 
+</DL>
+<DL>
+<DT>MEMC_NOWRITE
+<DD>Revokes permission to write to this memory from the task specified by the task argument. If task is 0 revokes write permission for all tasks. 
+</DL>
+<DL>
+<DT>MEMC_GIVE
+<DD>If the calling task is the owner of the memory, this transfers ownership of the memory to the task specified by the task argument. If the specified task is 0, it gives the memory back to the system free memory pool. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the change was successful or an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>BADITEM
+<DD>The task argument does not specify a current task. 
+</DL>
+<DL>
+<DT>ER_Kr_BadMemCmd
+<DD>The cmd argument is not one of the valid values. 
+</DL>
+<DL>
+<DT>ER_BadPtr
+<DD>The p argument is not a valid pointer to memory. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Notes</H3>
+A task can use <CODE>ControlMem()</CODE> to prevent itself from writing to memory it owns. <P>
+A task must own the memory for its I/O buffers. <P>
+A task can use <CODE>ControlMem()</CODE> to return ownership of memory pages to the system, thereby returning them to the system-wide free memory pool. You can do this by using 0 as the value of the task argument. <P>
+A task can use <CODE>ControlMem()</CODE> to unshare or write protect memory from all other tasks. Specify 0 for the task for this to happen. <P>
+We would like to support making a piece of memory writable by all other tasks by using task==0 and MEMC_OKWRITE, but this is not implemented yet. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr120.html#XREF32080"><CODE>ScavengeMem</A>(), <A HREF="./01spr005.html#XREF36147">AllocMemBlocks</A>() </CODE><BR>
+</CODE><P>

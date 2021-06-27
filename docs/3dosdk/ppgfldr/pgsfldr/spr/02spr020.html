@@ -1,0 +1,29 @@
+<Title>ReadDiskStream</Title>
+<A NAME="XREF35267"><H1>ReadDiskStream </A></H1>
+<A NAME="XREF27420"></A> Reads from a disk stream.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ReadDiskStream( Stream *theStream, char *buffer,int32 nBytes )</CODE><P>
+<H3>Description</H3>
+This routine transfers the specified number of bytes (or, as many as are left before the end-of-file) from the stream (beginning at the stream's current position) to the specified buffer. It advances the stream position past the bytes that have been transferred, and returns the actual number of bytes transferred. It will initiate an asynchronous read to read additional data into the stream's internal buffer, if possible and appropriate. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>theStream
+<DD>A pointer to the stream structure from which to read. 
+</DL>
+<DL>
+<DT>buffer
+<DD>A pointer to the buffer into which to read the data. 
+</DL>
+<DL>
+<DT>nBytes
+<DD>The number of bytes to read. 
+</DL>
+<H3>Return Value</H3>
+The function returns the actual number of bytes read or a negative error code if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filestreamfunctions.h, filesystem.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr004.html#XREF24518"><CODE>CloseDiskStream</A>(), <A HREF="./02spr018.html#XREF14517">OpenDiskStream</A>(), <A HREF="./02spr021.html#XREF35241">SeekDiskStream</A>() </CODE><P>
+</CODE>

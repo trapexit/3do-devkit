@@ -1,0 +1,23 @@
+<Title>AddF32</Title>
+<A NAME="XREF39375"><H1>AddF32 </A></H1>
+<A NAME="XREF32805"></A> Adds two 32.32-format fixed-point fractions together.<P>
+<H3>Synopsis</H3>
+<CODE>void AddF32( frac32 *r, frac32 *a1, frac32 *a2 )</CODE><P>
+<H3>Description</H3>
+This function adds two 32.32- format fixed-point fractions together and deposits the result in the location pointed to by the r argument. This function is actually the same function as <CODE>Add64()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>r
+<DD>A pointer to a 32.32-fraction structure to store the result. 
+</DL>
+<DL>
+<DT>a1, a2 
+<DD>Pointers to 32.32-format fixed-point fraction addends. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr004.html#XREF40537"><CODE>Add64</A>(), <A HREF="./03spr009.html#XREF19032">AddF60</A>() </CODE><P>
+</CODE>

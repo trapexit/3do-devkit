@@ -1,0 +1,32 @@
+<TITLE>Examine Field Expression Syntax</TITLE>
+<H1><LINK NAME="XREF20176">Examine Field Expression Syntax</LINK></H1><HR>
+The syntax described in this appendix can be used in the Examine fields of display windows and in Register windows and Data windows, but not in the Variables window.<P>
+<H3>Operators</H3>
+
+<CODE>
+<PRE>
+Unary            - ~                    (for minus NOT)
+arithmetic            + - * /
+bitwise            | &amp; ~ ^ &lt;&lt; &gt;&gt;                     (for OR AND NOT XOR bit shifts)
+grouping            (  )
+</CODE>
+</PRE>
+<H3>Constants</H3>
+
+<CODE>
+<PRE>
+constants are hexadecimal by default
+constants prefixed by
+            $ or 0x are hexadecimal
+            # are decimal
+            % are binary
+symbols are allowed
+</CODE>
+</PRE>
+<H3>Registers</H3>
+A register name can be used anywhere in place of a symbol:<P>
+<CODE>
+<PRE>
+R0-R15 SP LK PC
+</CODE>
+</PRE>

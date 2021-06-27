@@ -1,0 +1,4 @@
+PALImages24/gradientpal.imag
+PALImages24/gradientpal_1vdl.imag
+PALImages24/gradientpal_xvdl.imag
+PALImages24/gradientpal_z24.imag

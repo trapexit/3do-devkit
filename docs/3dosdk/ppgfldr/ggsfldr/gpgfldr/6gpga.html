@@ -1,0 +1,27 @@
+<TITLE>Bitmaps and Screens</TITLE>
+<H1><LINK NAME="XREF16250">Bitmaps and Screens</LINK></H1><HR>
+<A NAME="XREF20738"><H2>Creating Off-Screen Bitmaps</A></H2>
+<B>Q:</B> I want to create off-screen bitmaps and render cels into them using <CODE>DrawCels()</CODE>. I want bitmaps ranging in size from a few pixels to about 200 x 100 pixels. <P>
+<B>A:</B> Use <CODE>CreateBitMap()</CODE> and specify the <CODE>TagArg</CODE> elements that deal with bitmap height and width. <P>
+<A NAME="XREF27863"><H2> Using Multiple Screens</A></H2>
+<B>Q:</B>  I am trying to create a screen with four bitmaps using <CODE>CreateScreenGroup()</CODE>. I set the <CODE>CSG_TAG_BITMAPCOUNT</CODE> to 4 but I always get an error on the <CODE>CreateScreenGroup()</CODE> call. <P>
+<B>A:</B> You probably want multiple screens. A screen is a logical unit that fills the display. A screen is either active or not, and you can only display one screen on the TV at a time. <P>
+A bitmap is a block of VRAM that is part of a screen. A screen can have multiple bitmaps, but usually has just one 320-x-240 bitmap. Each bitmap can have its own width and height. You don't need to specify width (it defaults to the width of the display, 320), but if you ask for a screen with more than one bitmap, you must specify the height of each one. It does <I>not</I> just default to <CODE>DisplayHeight</CODE>/<CODE>NumBitmaps</CODE>.<P>
+When you use a <CODE>CSG_TAG_BITMAPCOUNT</CODE> for anything other than 1, you must also supply a <CODE>CSG_TAG_BITMAPHEIGHT_ARRAY</CODE> value, which is a pointer to an array of <CODE>int32</CODE> numbers, each one the height of one of the bitmaps.<P>
+When you use double buffering, you have two screens of one bitmap each. It sounds as if that's basically what you're doing, so set <CODE>CSG_TAG_SCREENCOUNT</CODE> to 4 to get four buffers.<P>
+<A NAME="XREF17912"><H2> Bitmap Item Value</A></H2>
+<B>Q:</B> How can I get the value of a bitmap item? <P>
+<B>A:</B> To get the value of a bitmap item, use:<P>
+<CODE>
+<PRE>
+screen = (Screen *)LookupItem( ScreenItem );
+BitmapItem = screen-&gt;scr_TempBitmap-&gt;bm.n_Item;
+</CODE>
+</PRE>
+ Note that <CODE>ScreenItem</CODE> is returned by <CODE>CreateScreenGroup()</CODE><B>.</B><P>
+<A NAME="XREF18208"><H2>Color Cycling</A></H2>
+<B>Q:</B> Can I use color cycling in 256-color, 8-bit mode on an entire background image of 320-x-240 pixels? I need to cycle at 60 Hz for my special effects to work best. I also don't want to draw the background over and over.<P>
+<B>A:</B> It has never been possible to do color cycling in 8-bit, 256-colors with our hardware the way other systems do it. It is possible to achieve color cycling effects with <CODE>SubmitVDL()</CODE> and <CODE>DisplayScreen()</CODE> calls. However, the 3DO hardware color tables are unusual: there are three separate color tables (CLUTs), one for each gun, not just one color table, as you find when working with computer displays.<P>
+It is possible to achieve effects similar to other systems palette effects by rerendering graphics on the screen and modifying the PLUTs (pixel lookup tables) associated with them.<P>
+As long as the cel is no bigger than 320 x 240, is drawn at 1:1, and is opaque-no translucency and no holes-redrawing the background works well. It will draw fast: 60Hz or better. <P>
+<P>

@@ -1,0 +1,25 @@
+<Title>MapCelToIPoint</Title>
+<A NAME="XREF20713"><H1>MapCelToIPoint </A></H1>
+ Sets a cel's location to a point.<P>
+<H3>Synopsis</H3>
+<CODE>void MapCelToIPoint (CCB *cel, IPoint *newPosition)</CODE><P>
+<H3>Description</H3>
+Sets a single cel to the specified coordinates. Converts the coordinates 
+to frac16 and stores them in the CCB X/Y position fields. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to the cel to be mapped. 
+</DL>
+<DL>
+<DT>newPosition
+<DD>Pointer to the IPoint to which the cel is to be mapped. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO131.html#XREF23102"><CODE>MapCelToFPoint</A>, <A 
+HREF="./01LDO122.html#XREF41880">MapAACelToIPoint</A>, <A 
+HREF="./01LDO127.html#XREF18504">MapCelListToIPoint</A> </CODE><P>

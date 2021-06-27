@@ -1,0 +1,28 @@
+<TITLE>ARM object format</TITLE>
+<H1><LINK NAME="XREF41738">ARM object format</LINK></H1><HR>
+An object file written in ARM Object Format (AOF) consists of any number of named, attributed <I>areas</I>. Attributes include: read-only; reentrant; code; data; position independent; etc. (for details see <A HREF="../atsfldr/2atsc.html#XREF41510">Attributes + Alignment</A> of the Technical Specifications). Typically, a compiled AOF file contains a read-only code area, and a read-write data area, (a 0-initialised data area is also common, and reentrant code uses a separate based area for address constants).<P>
+Associated with each area is a (possibly empty) list of relocation directives which describe locations that the linker will have to update when:<P>
+<UL>
+<LI>a non-zero base address is assigned to the area;
+<LI>a symbolic reference is resolved.
+</UL>
+Each relocation directive may be given relative to the (not yet assigned) base address of an area in the same AOF file, or relative to a symbol in the symbol table. Each symbol may:<P>
+<UL>
+<LI>have a definition within its containing object file which is local to the object file;
+<p>
+<LI>have a definition within the object file which is visible globally (to all object files in the link step);
+<p>
+<LI>be a reference to a symbol defined in some other object file.
+</UL>
+When AOF is used as an output format, the linker does the following with its input object files:<P>
+<UL>
+<LI>merges similarly named and attributed areas;
+<p>
+<LI>performs PC-relative relocations between merged areas;
+<p>
+<LI>re-writes symbol-relative relocation directives between merged areas, as area-based relocation directives belonging to the merged area;
+<p>
+<LI>minimises the symbol table.
+</UL>
+Unresolved references remain unresolved, and the output AOF file may be used as the input to a further link step.<P>
+<P>

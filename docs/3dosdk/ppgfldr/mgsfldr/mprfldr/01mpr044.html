@@ -1,0 +1,29 @@
+<Title>GetAudioRate</Title>
+<A NAME="XREF20819"><H1>GetAudioRate </A></H1>
+<A NAME="XREF25631"></A> Asks for current audio clock rate.<P>
+<H3>Synopsis</H3>
+<CODE>frac16 GetAudioRate (void)</CODE><P>
+<H3>Description</H3>
+This function returns the current clock rate in 16.16 fractional Hz, using fractions so that you can do more accurate timing calculations. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>None.
+<DD> 
+</DL>
+<H3>Return Value</H3>
+The function returns the current audio rate as a frac16 value in Hz. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+    // To convert the result of this function to ticks per second,
+    // use ConvertF16_32().
+TicksPerSecond = ConvertF16_32 (GetAudioRate());
+</CODE>
+</PRE>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr069.html#XREF10773"><CODE>SignalAtTime</A>(), <A HREF="./01mpr040.html#XREF42227">GetAudioDuration</A>(), <A HREF="./01mpr068.html#XREF24398">SetAudioRate</A>() </CODE><P>
+</CODE>

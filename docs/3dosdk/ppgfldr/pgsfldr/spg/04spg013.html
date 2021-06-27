@@ -1,0 +1,106 @@
+<TITLE>Primary Data Structures</TITLE>
+<H1>Primary Data Structures</H1><HR>
+The following sections describe the most important data structures that use linked lists. With the exception of the <CODE>n_Name</CODE> field in a Node structure (which you use to name a node), tasks perform all normal operations involving lists by using the function calls described in this chapter.<P>
+<H2>The Node Structure</H2>
+The Node data structure is the standard structure for any named node in a linked list. The n_<CODE>Name</CODE> field lets you easily locate any node in a linked list.<P>
+<B>Example 1: </B><I>The Node data structure.</I><P>
+<CODE>
+<PRE>
+typedef struct Node
+{
+    struct Node          *n_Next;        /* pointer to next node in list */
+    struct Node          *n_Prev;        /* pointer to previous node in list */
+    uint8                 n_SubsysType;  /* what folio manages this node */
+    uint8                 n_Type;        /* what type of node for the folio */
+    uint8                 n_Priority;    /* queueing priority */
+    uint8                 n_Flags;       /* flags used by the system */
+    int32                 n_Size;        /* total size of node including hdr */
+    char                 *n_Name;        /* ptr to null terminated string or 
+NULL */
+} Node, *NodeP;
+/* n_Flag bits */
+/* bits 4-7 are reserved for the system */
+/* bits 0-3 are available for node specific use by the system */
+#define NODE_RSRV1       0x40
+#define NODE_SIZELOCKED  0x20           /* The size of this item has been         
+
+                                        /* locked down */
+#define NODE_ITEMVALID  0x10            /* This is an ItemNode */
+#define NODE_NAMEVALID  0x80            /* This node's namefield is valid */
+</CODE>
+</PRE>
+<H2>MinNode and NamelessNode Structures</H2>
+In addition to the regular Node structure, Portfolio also defines the MinNode and NamelessNode structures. These structures can be used in place of the full Node structure when defining your own lists. These structures have much less overhead than the Node structure, so your lists use less memory.<P>
+The NamelessNode structure is identical to the Node structure, except that it doesn't have the <CODE>n_Name field</CODE>. You can use the NamelessNode structure in place of a Node structure for all the functions and macros explained in this chapter, except for the <CODE>FindNamedNode()</CODE> and <CODE>DumpNode()</CODE> functions. Since these functions use the <CODE>n_Name</CODE> field, they cannot handle the NamelessNode.<P>
+<B>Example 2: </B><I>The NamelessNode structure.</I><P>
+<CODE>
+<PRE>
+/* Node structure used when the Name is not needed */
+typedef struct NamelessNode
+{
+    struct NamelessNode *n_Next;
+    struct NamelessNode *n_Prev;
+    uint8 n_SubsysType;
+    uint8 n_Type;
+    uint8 n_Priority;
+    uint8 n_Flags;
+    int32 n_Size;
+} NamelessNode, *NamelessNodeP;
+</CODE>
+</PRE>
+The MinNode structure is very small, and provides just enough information to link within lists. It can be used with most functions and macros explained in this chapter, except for <CODE>SetNodePri()</CODE>, <CODE>InsertNodeFromTail()</CODE>, <CODE>InsertNodeFromHead()</CODE>, <CODE>FindNamedNode()</CODE>, and <CODE>DumpNode()</CODE>. These functions use the extra fields found in the Node structure, and cannot work with the simple MinNode structure.<P>
+<B>Example 3: </B><I>The MinNode structure.</I><P>
+<CODE>
+<PRE>
+/* Node structure used for linking only */
+typedef struct MinNode
+{
+    struct MinNode *n_Next;
+    struct MinNode *n_Prev;
+} MinNode;
+</CODE>
+</PRE>
+<H2>The List Data Structure</H2>
+The List data structure is the means by which nodes are linked together.<P>
+<B>Example 4: </B><I>The List data structure.</I><P>
+<CODE>
+<PRE>
+typedef struct List
+{
+    Node l;                   /* A list is a node itself */
+    ListAnchor ListAnchor;    /* Anchor point for list of nodes */
+} List, *ListP;
+</CODE>
+</PRE>
+<H2>The ListAnchor Union</H2>
+The ListAnchor union contains the forward and backward pointers for the first and last node of any linked list.<P>
+<B>Example 5: </B><I>The ListAnchor union.</I><P>
+<CODE>
+<PRE>
+typedef union ListAnchor
+{
+    struct              /* ptr to first node */
+    {                  /* anchor for lastnode */
+    Link links;
+    Link *filler;        
+    } head;
+    struct
+    {
+    Link *filler;
+    Link links;        /* ptr to lastnode */
+    } tail;            /* anchore for firstnode */
+} ListAnchor;
+</CODE>
+</PRE>
+<H2>The Link Data Structure</H2>
+The Link data structure contains the forward and backward pointers for a linked list. <P>
+<B>Example 6: </B><I>The Link data structure.</I><P>
+<CODE>
+<PRE>
+typedef struct Link
+{
+    struct Link *flink;    /* forward (next) link  */
+    struct Link *blink;    /* backward (prev) link */
+} Link;
+</CODE>
+</PRE>

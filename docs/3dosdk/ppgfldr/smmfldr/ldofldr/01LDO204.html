@@ -1,0 +1,18 @@
+<Title>UnloadFont</Title>
+<A NAME="XREF40483"><H1>UnloadFont </A></H1>
+ Releases font resources.<P>
+<H3>Synopsis</H3>
+<CODE>void UnloadFont(FontDescriptor * fDesc)</CODE><P>
+<H3>Description</H3>
+Releases resources acquired during <CODE>LoadFont()</CODE> or <CODE>ParseFont()</CODE> processing. If the font was loaded via <CODE>LoadFont()</CODE>, releases the FontDescriptor and unloads the file image, releasing the memory it occupied. If you loaded the font file image yourself and called <CODE>ParseFont()</CODE>,<CODE> UnloadFont()</CODE> releases the FontDescriptor. In that case, you must unload/release the font file image yourself. <P>
+Because TextCel structures contain a reference to a FontDescriptor, you must delete all TextCels that reference a FontDescriptor before you call <CODE>UnloadFont() </CODE>for that descriptor. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>FontDescriptor
+<DD>Pointer to a FontDescriptor structure. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, fontlib.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO117.html#XREF37217"><CODE>LoadFont</A>, <A HREF="./01LDO145.html#XREF30852">ParseFont</A> </CODE><P>
+</CODE>

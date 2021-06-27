@@ -1,0 +1,30 @@
+<TITLE>UnlockSemaphore</TITLE>
+<A NAME="XREF20743"><H1>UnlockSemaphore </A></H1>
+<A NAME="XREF33419"></A>Unlocks a semaphore.<P>
+<H3>Synopsis</H3>
+<CODE>Err UnlockSemaphore( Item s )</CODE><P>
+<H3>Description</H3>
+This is an alternate entry point for <CODE>UnlockItem()</CODE>. This procedure unlocks the specified semaphore. For information about semaphores, which are used to control access to shared resources, see the "Sharing System Resource's" chapter in the 3DO Portfolio Programmer's Guide.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>s
+<DD>The item number of the semaphore to unlock. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if successful or an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>NOTOWNER
+<DD>The semaphore specified by the s argument is not owned by the task. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+This is the same SWI as <CODE>UnlockItem()</CODE>. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>semaphore.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr098.html#XREF18240"><CODE>LockSemaphore</A>(), <A HREF="./01spr097.html#XREF32838">LockItem</A>(), <A HREF="./01spr129.html#XREF25491">UnlockItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF20743"></LINK></H1><HR>

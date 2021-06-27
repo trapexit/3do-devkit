@@ -1,0 +1,27 @@
+<Title>drumbox</Title>
+<A NAME="XREF28041"></A><A NAME="XREF17004"><H1>drumbox </A></H1>
+<A NAME="XREF16451"> </A>Simple single-pattern drum machine.<P>
+<H3>Synopsis</H3>
+drumbox &lt;PIMap&gt;<P>
+<H3>Description</H3>
+Loads and plays up to eight rhythm sounds in a repeating measure of 
+sixteen beats. Use the D-pad and the A button to place or remove a sound 
+from a specific point in the rhythm. <P>
+To use this program, it is necessary to copy the AIFF Samples folder into 
+the 
+/remote folder so that this program can use them. You can then define the 
+location of the AIFF samples to the debugger by setting an alias in the 
+debugger: <P>
+ alias samples &lt;samples path&gt;<P>
+where &lt;samples path&gt; is the location of the AIFF samples within the 
+/remote folder. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>PIMap
+<DD>Name of a PIMap file to use. A standard drumbox.pimap is provided, so 
+try using drumbox.pimap as the argument to drumbox. 
+</DL>
+<H3>Associated Files</H3>
+drumbox.c, drumbox.pimap, $samples<P>
+<H3>Location</H3>
+examples/Audio/Drumbox <P>

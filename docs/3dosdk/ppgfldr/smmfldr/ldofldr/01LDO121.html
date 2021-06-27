@@ -1,0 +1,23 @@
+<Title>MapAACelToFPoint</Title>
+<A NAME="XREF36015"><H1>MapAACelToFPoint </A></H1>
+ Sets an anti-aliased cel's location to a point.<P>
+<H3>Synopsis</H3>
+<CODE>void MapAACelToFPoint (CCB *aacel, FPoint *newPosition)</CODE><P>
+<H3>Description</H3>
+Sets an anti-aliased cel's location to the given coordinates. Stores the coordinates into both the data and alpha-channel CCBs. It also works correctly if aacel points to a single standalone cel. Only the ccb_XPos and ccb_YPos values in the CCB are modified; other CCB fields are not touched. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>aacel
+<DD>Pointer to the cel to be mapped. 
+</DL>
+<DL>
+<DT>newPosition
+<DD>Pointer to the FPoint to which the cel is to be mapped. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO122.html#XREF41880"><CODE>MapAACelToIPoint</A>, <A HREF="./01LDO131.html#XREF23102">MapCelToFPoint</A>, <A HREF="./01LDO126.html#XREF26326">MapCelListToFPoint</A></CODE><P>
+</CODE>

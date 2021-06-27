@@ -1,0 +1,68 @@
+<TITLE>Adding Reverberation</TITLE>
+<H1><LINK NAME="XREF42228">Adding Reverberation</LINK></H1><HR>
+Reverberation is an effect that adds reality to a sound and gives a listener acoustic cues about the size and reverberant qualities of the sound's surroundings. To add reverberation to an audio signal, the Audio folio offers two reverberation tools that must be used together: a <I>delay line,</I> which stores an audio signal; and a <I>delay instrument,</I> which writes an audio signal into a delay line. These are combined with other instruments to create simple delay effects such as a single echo or complex delay effects such as rich reverberation.<P>
+<H2>A Delay Line Overview</H2>
+A delay line is, in essence, a special sample that has its sample data stored in system memory (unlike a standard sample, which has its sample data in stored in task memory). A delay line exists to accept samples written to it by a delay instrument.<P>
+A delay instrument (such as <CODE>delaymono.dsp</CODE>) accepts an audio signal input from another source such as a sampled sound instrument or a sound synthesis instrument. The delay instrument writes that audio signal into the delay line, starting at the beginning of the delay line. It writes samples through to the end of the delay line, then starts over at the beginning, overwriting previously written samples. This looping recording of audio signal samples provides a stored record of the audio signal. Its duration depends on the size of the delay line. For example, a 44,100 sample delay line can store one second's worth of audio signal.<P>
+To create a delayed playback of the audio signal stored in the delay line, 
+a sampled sound instrument is attached to the delay line. The instrument 
+reads the delay line sample as it would a normal sample, with two differences: 
+the instrument reads the sample and loops back to read it again and again; and 
+the attachment from the delay line to the instrument is set to start sample 
+playback at a point later than the starting point. (To do this, use the 
+attachment's AF_TAG_START_AT tag argument.)  The result is that the sampled 
+sound instrument's playback trails the delay instrument's sample writing as 
+shown in Figure 1.<P>
+
+<IMG SRC="Figures/2-3.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Sample of a delayed audio signal.</I><P>
+The number of samples between the delay instrument's writing and the sampled sound instrument's reading sets the amount of time the audio signal is delayed. For example, the delay instrument writes to the delay line at 44,100 samples per second. The sampled sound instrument reads at the same rate (you should never use a 22,050 Hz sampled-sound instrument to read the delay line), but is 11,025 samples behind. The total delay is 1/4 second (11,025 divided by 44,100).<P>
+<H2>Creating a Delay Line</H2>
+To create a delay line, use this call:<P>
+<DL>
+<DD><CODE>Item CreateDelayLine( int32 NumBytes, int32 NumChannels, int32  IfLoop )</CODE><BR>
+</DL>
+The call accepts three arguments: <CODE>NumBytes</CODE>, the size of the delay line's sample buffer in bytes; <CODE>NumChannels</CODE>, the number of channels stored in each sample frame; and <CODE>IfLoop</CODE>, a setting that determines whether the delay line is written to repeatedly or only once.<P>
+The first value, <CODE>NumBytes</CODE>, should be determined by the length of the audio signal you want stored, by the size of each sample, and by the number of channels in each frame. For example, if you want to store two seconds of a 16-bit stereo signal, you should set <CODE>NumBytes</CODE> to 352,800 bytes (2 seconds times 44,100 Hz times 2 bytes times 2 channels).<P>
+The second value, <CODE>NumChannels</CODE>, is usually 1 for a mono sample and 2 for a stereo sample. Note that the Audio folio does not handle more than two channels in a sample.<P>
+The third value, <CODE>IfLoop</CODE>, is either TRUE (1) to set the delay line so that the delay instrument writes to it continuously, looping sample data; or FALSE (0) to set the delay line so that the delay instrument writes to the delay line only once and then stops.<P>
+When it executes, <CODE>CreateDelayLine()</CODE> allocates a sample data buffer in system memory, creates a delay line item, and returns the item number of the delay line if successful. If unsuccessful, it returns a negative value (an error code).<P>
+Note that the task cannot write directly to the sample data buffer, because it is located in system memory. If the task attempts to write to system memory, it will crash. The task must use the delay instrument to write into the delay line's sample data buffer.<P>
+<H2>Deleting a Delay Line</H2>
+When a task finishes using a delay line, it should delete it to free system resources. To do so, use this call:<P>
+<DL>
+<DD><CODE>Err DeleteDelayLine( Item DelayLine )</CODE><BR>
+</DL>
+The call accepts the item number of the delay line to be deleted. When executed, it deletes the delay line item. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<H2>Connecting a Delay Line to Create Reverberation</H2>
+Once you create a delay line, you must connect it to a suitable configuration of instruments to create reverb effects. Figure 4 shows a typical and fairly simple set of connected instruments and attached items. See the example file <I>ta_customdelay.c</I> for a program example. The principle elements are:<P>
+<UL>
+<LI>A source-audio signal, typically from a sampled sound instrument, sound synthesis instrument, or a submixer. (Figure 4 shows a sampled sound instrument.)
+<p>
+<LI>A submixer to feed the source audio signal to the reverb loop, and to mix the resultant reverb signal with the source signal and back into the reverb loop for more complex reverb.
+<p>
+<LI>A delay instrument to read the source audio signal and write it into the delay line. Using the <CODE>delay1tap.dsp</CODE> instrument is the best way to create simple delays.
+<p>
+<LI>A sampled sound instrument to read the delay line (starting behind the delay instrument, of course) and to feed the result back to the submixer.
+<p>
+<IMG SRC="Figures/2-4.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>A typical reverberation setup using a delay line and a delay instrument.</I><P>
+</UL>
+You can also use the <CODE>delay1tap.dsp</CODE> template to create a simple delay. See the example file <I>ta_delay.c</I>.<P>
+<H3>Setting the Attachment Starting Point</H3>
+One very important setting in the reverb configuration shown in Figure 4 is the starting point of attachment 3, which attaches the delay line to the sampler that reads it. You must use the attachment's AF_TAG_START_AT tag argument to specify a point in the delay line to start playback. The amount of delay is determined by the distance of the starting point from the end of the delay line. If sample playback starts at the last sample in the delay line, then it is only one sample behind the writing, a delay of only 1/44,100 of a second. If sample playback starts 11,025 samples from the end of the delay line, then the delay is 
+1/4 of a second.<P>
+As a practical matter, the sample playback should never be within 32 samples of the writing point, because the DSP writes to the delay line in bursts of samples. If the reading and writing instruments are too close in the delay line, you can get some inconsistencies in the delayed audio signal. To get maximum delay time, sample playback should start at the twentieth sample of the delay line, which gives as much delay as the length of the delay line will allow and still provide for a 32-sample read/write separation.<P>
+Another consideration when planning the distance of the playback point from the writing point is that when you start the two instruments with two <CODE>StartInstrument()</CODE> calls, a task of higher priority may briefly steal cycles between the two calls and throw off the timing. You should first start the instrument that is a greater circular distance behind the other instrument, then start the second instrument. This makes it less likely that the two instruments will be so close together that no delay results.<P>
+In the future, it will be possible to combine the playback and writing instruments into one with ARIA. You can then be guaranteed that you start both instruments simultaneously.<P>
+<H3>Setting the Submixer Levels</H3>
+Figure 4 shows the source signal entering input 1 of a 4 x 2 submixer and the reverb signal entering input 4. It also shows two outputs: Output 1 of the submixer goes off either to a mixer, where it is sent to the DAC for playback or to another instrument for further processing. Output 2 feeds back to the reverb loop. The balance of the mixer determines how the reverb will sound.<P>
+For a simple echo, output 1 is set to put out the source signal mixed with a diminished reverb signal. Output 2 is set to put out only the source signal. Because the reverb loop receives only the source signal, it creates a single echo (a delayed playback) of the source.<P>
+For many receding echoes, output 1 is set, as before, to put out the source signal mixed with a diminished reverb signal. Output 2 is also set to put out the source signal mixed with a diminished reverb signal. Because the reverb signal feeds back into the reverb loop, you create a series of receding echoes that you can adjust with the mix of the reverb to source signal and with the length of the delay set by the attachment starting point.<P>
+<H3>Adding Extra Delay Line Readers</H3>
+For truly complex reverberation, where the echoes are not regularly spaced, you can attach several sampled sound instruments to the delay line and feed their inputs to the submixer. Each sample sound instrument plays back the delay line starting at a different point and their outputs are mixed back into the reverb loop. To avoid an audible periodicity in the echoes, you should make sure that the starting points of the different sampled-sound instruments are irregularly spaced in the delay line.<P>
+<H2>Using a Delay Line for Oscilloscope Data</H2>
+A delay line is a useful tool for more than adding reverb to an instrument. You can also use it to capture a snippet of an audio signal and then use it for oscilloscope display. To do so, simply create the delay line so that it does not loop. Feed an audio signal into it using a delay instrument, and when the delay line is full, read it for display.<P>
+<P>

@@ -1,0 +1,59 @@
+<TITLE>Convenience Functions</TITLE>
+<H1><LINK NAME="XREF35961">Convenience Functions</LINK></H1><HR>
+The sound spooler contains two convenience functions: ssplSpoolData() and ssplPlayData().<P>
+<H2>ssplSpoolData</H2>
+ssplSpoolData() spools data by requesting a free buffer and then uses it if it is available. The function is listed below; see <A HREF="../mprfldr/02mpr.html#XREF20449">Music Library Calls</A> in the <I>3DO Music and Audio Programmer's Reference</I> for complete details.<P>
+<CODE>
+<PRE>
+int32 ssplSpoolData( SoundSpooler *sspl, char *Data, int32 NumBytes,      
+    void *UserData )
+{
+    SoundBufferNode *sbn;
+    
+/* Request another buffer! */
+    sbn = ssplRequestBuffer( sspl );
+    if( sbn == NULL ) return 0;
+        
+/* Set address amd length of buffer. */
+    ssplSetBufferAddressLength( sspl, sbn, Data, NumBytes );
+    
+/* Set User Data. */
+    ssplSetUserData( sspl, sbn, UserData );
+    
+/* Send that buffer off to be played. */
+    return ssplSendBuffer( sspl, sbn );
+}
+</CODE>
+</PRE>
+<H2>ssplPlayData</H2>
+ssplPlayData() spools data by requesting a free buffer. If no buffers are available, it waits for one and then uses it. The function is listed below; see <A HREF="../mprfldr/02mpr.html#XREF20449">Music Library Calls</A> in the <I>3DO Music and Audio Programmer's Reference</I> for complete details.<P>
+<CODE>
+<PRE>
+int32 ssplPlayData( SoundSpooler *sspl, char *Data, int32 NumBytes )
+{
+    SoundBufferNode *sbn;
+    int32 Result, CurSignals;
+    
+    Result = 0;
+    
+/* Request another buffer! */
+    while( (sbn = ssplRequestBuffer( sspl )) == NULL);
+    {
+        CurSignals = WaitSignal( sspl-&gt;sspl_SignalMask );
+    
+/* Tell sound spooler that the buffer has completed. */
+        Result = ssplProcessSignals( sspl, CurSignals, NULL );
+        CHECKRESULT(Result,"ssplProcessSignals");
+    }
+    
+/* Set length of buffer. */
+    ssplSetBufferAddressLength( sspl, sbn, Data, NumBytes );
+    
+/* Send that buffer off to be played. */
+    return ssplSendBuffer( sspl, sbn );
+    
+cleanup:
+    return Result;
+}
+</CODE>
+</PRE>

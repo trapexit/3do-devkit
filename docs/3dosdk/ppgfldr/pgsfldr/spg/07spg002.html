@@ -1,0 +1,10 @@
+<TITLE>Creating a Semaphore</TITLE>
+<H1><LINK NAME="XREF26514">Creating a Semaphore</LINK></H1><HR>
+To create a semaphore, use <CODE>CreateSemaphore()</CODE>:<P>
+<DL>
+<DD><CODE>Item CreateSemaphore( const char *name, uint8 pri )</CODE><BR>
+</DL>
+The <CODE>name</CODE> argument is the name to give to the new semaphore. You can use<B> </B>the <CODE>FindSemaphore()</CODE> macro described later in this chapter to find the semaphore by name. To ensure that <CODE>FindSemaphore()</CODE> finds the correct semaphore, you must provide a unique name for each semaphore you create. <P>
+The <CODE>pri</CODE> argument determines where this semaphore will be placed within the list of all semaphores in the system. A higher priority puts it closer to the start of the list. <CODE>CreateSemaphore()</CODE> returns the item number of the new semaphore or an error code (a negative value) if an error occurred.<P>
+To delete a semaphore created with <CODE>CreateSemaphore(),</CODE> use the <CODE>DeleteSemaphore()</CODE> function described in <A HREF="./07spg006.html#XREF15508">Deleting a Semaphore</A>. <P>
+<A NAME="XREF32533"></A>

@@ -1,0 +1,9 @@
+<TITLE>Images</TITLE>
+<H1>Images</H1><HR>
+<A NAME="XREF11566"><H2> Partial Images</A></H2>
+<B>Q:</B> How can I save partial images? For example, I want to use SPORT to put a horizontal band of art on the screen that doesn't necessarily start at the top. <P>
+<B>A:</B> Use <CODE>GetPixelAddress()</CODE> to get the address of bitmap data in any position on the screen. Vertically adjacent pairs of lines on the screen are shared in the same memory locations. <CODE>GetPixelAddress()</CODE> returns a non-word-aligned value for pixels on odd-numbered lines in a bitmap. Bitmap memory is directly accessible to the application program. Once you have the addresses for sections of the screen, you can use any ordinary mechanism (such as <CODE>memcpy</CODE> or <CODE>CopyVRAMPages()</CODE>) to save and restore the memory.<P>
+<A NAME="XREF42372"><H2> Image Compression Format</A></H2>
+<B>Q:</B> I'm working on an application that uses many still pictures. Will 3DO offer any still picture compression subroutine?<P>
+<B>A:</B> The 3DO image tools support the compression that is implicit in any use of 3DO cel imagery. In addition, 3DO has licensed the Cinepak (TM)  compression technology. Cinepak is a lossy compression that is typically used for moving images. It can also be used on static images, but requires compressing more than one image at a time.<P>
+<P>

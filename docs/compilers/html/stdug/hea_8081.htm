@@ -1,0 +1,51 @@
+<HTML><HEAD><TITLE>Heap Operations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Heap Operations</H2>
+<P>A <I>heap</I> is a binary tree in which every node is larger than the values associated with either child.  A heap (and, for that matter, a binary tree) can be very efficiently stored in a vector, by placing the children of node<SAMP> i</SAMP> in positions <SAMP>2 * i + 1</SAMP> and <SAMP>2 * i + 2</SAMP>.</P>
+<P>Using this encoding, the largest value in the heap will always be located in the initial position, and can therefore be very efficiently retrieved.  In addition, efficient (logarithmic) algorithms exist that both permit a new element to be added to a heap and the largest element removed from a heap.  For these reasons, a heap is a natural representation for the <A HREF="../stdref/pri_2327.htm"><B><I>priority_queue</I></B></A>  data type, described in <a href="pri_2327.htm">Chapter 11</a>.</P>
+<P>The default operator is the less-than operator (operator <SAMP>&#60;</SAMP>) appropriate to the element type.  If desired, an alternative operator can be specified.  For example, by using the greater-than operator (operator <SAMP>></SAMP>), one can construct a heap that will locate the smallest element in the first location, instead of the largest.</P>
+<A HREF="sidebar.htm#sidebar73"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Heaps and Ordered Collections</STRONG></A>
+
+<P>The algorithm <SAMP>make_heap()</SAMP> takes a range, specified by random access iterators, and converts it into a heap.  The number of steps required is a linear function of the number of elements in the range.</P>
+<PRE>void make_heap (RandomAccessIterator first, 
+      RandomAccessIterator last [, Compare ]);
+</PRE>
+<P>A new element is added to a heap by inserting it at the end of a range (using the <SAMP>push_back()</SAMP> member function of a vector or deque, for example), followed by an invocation of the algorithm <SAMP>push_heap().</SAMP>  The <SAMP>push_heap()</SAMP> algorithm restores the heap property, performing at most a logarithmic number of operations.</P>
+<PRE>void push_heap (RandomAccessIterator first, 
+      RandomAccessIterator last [, Compare ]);
+</PRE>
+<P>The algorithm <SAMP>pop_heap()</SAMP> swaps the first and final elements in a range, then restores to a heap the collection without the final element. The largest value of the original collection is therefore still available as the last element in the range (accessible, for example, using the <SAMP>back()</SAMP> member function in a vector, and removable using the <SAMP>pop_back()</SAMP> member function), while the remainder of the collection continues to have the heap property.  The <SAMP>pop_heap()</SAMP> algorithm performs at most a logarithmic number of operations.</P>
+<PRE>void pop_heap (RandomAccessIterator first, 
+      RandomAccessIterator last [, Compare ]);
+</PRE>
+<P>Finally, the algorithm <SAMP>sort_heap()</SAMP> converts a heap into a ordered (sorted) collection.  Note that a sorted collection is still a heap, although the reverse is not the case.  The sort is performed using approximately <SAMP>n log n</SAMP> operations, where <SAMP>n</SAMP> represents the number of elements in the range.  The <SAMP>sort_heap()</SAMP> algorithm is not stable.</P>
+<PRE>void sort_heap (RandomAccessIterator first, 
+      RandomAccessIterator last [, Compare ]);
+</PRE>
+<P>Here is an example program that illustrates the use of these functions.</P>
+<PRE>void heap_example ()
+   // illustrate the use of the heap algorithms
+{
+      // make a heap of 15 random integers
+   vector&#60;int> aVec(15);
+   generate (aVec.begin(), aVec.end(), randomValue);
+   make_heap (aVec.begin(), aVec.end());
+   cout &#60;&#60; "Largest value " &#60;&#60; aVec.front() &#60;&#60; endl;
+
+      // remove largest and reheap
+   pop_heap (aVec.begin(), aVec.end());
+   aVec.pop_back();
+
+      // add a 97 to the heap
+   aVec.push_back (97);
+   push_heap (aVec.begin(), aVec.end());
+
+      // finally, make into a sorted collection
+   sort_heap (aVec.begin(), aVec.end());
+}</PRE>
+
+<HR>
+<A HREF="set_1753.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="usi_0776.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

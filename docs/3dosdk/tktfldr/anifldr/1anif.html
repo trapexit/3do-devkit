@@ -1,0 +1,249 @@
+<TITLE>Working with special effects</TITLE>
+<H1><LINK NAME="XREF36217">Working with special effects</LINK></H1><HR>
+This section starts with some introductory information and then steps you 
+through creating cels with special effects. You learn about:<P>
+
+<UL>
+<LI><A HREF="#XREF28809">How PIXC and P-Mode works</A>.
+<LI><A HREF="#XREF36765">How to make an entire cel translucent</A>.
+<LI><A HREF="#XREF24078">How to enhance luminance</A>.
+<LI><A HREF="#XREF19488">How to define a translucent area in an opaque 
+cel</A>.
+</UL>
+<A NAME="XREF28809"><H2>How PIXC and P-Mode works</A></H2>
+Each cel has a PIXC; which determines some of the cels attributes. By 
+default, cels are rendered as opaque, but you can change the PIXC to 
+enhance luminance for the whole cel, create a ghost effect by mixing the 
+entire cel with the background (making it translucent), or create a 
+shadow.<P>
+Each cel actually allows for two PIXC settings, allowing you, in effect, 
+to make some pixels in the cel translucent (one PIXC settings group) while 
+all others remain opaque.<P>
+<UL>
+<LI>For 8-bit coded cels-you can create special effects on a 
+color-by-color basis. For example, you can enhance the luminance of all 
+shades of red for the lights of a police car.<P> 
+<LI>For 6-bit coded and 16-bit uncoded cels-you can create special effects 
+on a pixel-by-pixel basis. First you create a mask, then mix the cel 
+pixels in the region of the mask with background pixels to create the 
+desired special effect.
+</UL>
+The two possible PICX settings a cel can choose from are often referred to 
+as 
+P-Modes. <P>
+<H3>For more information</H3>
+PIXC and P-Mode is explained in greater detail in
+<A HREF="../ginfldr/0ginfrst.html">Introduction to 3DO Graphics.</A>  <P>
+<H3>About this section</H3>
+This section steps you through the following examples of using special 
+effects:<P>
+
+<UL>
+<LI><A HREF="#XREF36765">How to make an entire cel translucent</A>.
+<LI><A HREF="#XREF24078">How to enhance luminance</A>.
+<LI><A HREF="#XREF19488">How to define a translucent area in an opaque 
+cel</A>.
+</UL>
+<A NAME="XREF36765"><H2>How to make an entire cel translucent</A></H2>
+This section steps you through mixing background image pixels and cel 
+pixels to create a ghostlike translucent effect.<P>
+To create a translucent cel, follow these steps:<P>
+<OL>
+<LI>Convert the source art to a 3DO cel of your choice. <P>
+
+<LI>If you wish, assign a background color to create an irregularly shaped 
+cel. <P>
+<LI>In the Set 3DO Object Type dialog select the P-Mode box in the CCB 
+Settings column. 
+<P>The P-Mode pop-up menu appears. 
+<P>
+<LI>Select Make it 1 from the pop-up menu.
+<P>This instructs the 3DO hardware to use the PIXC settings specified by 
+P-Mode 1 for the whole cel.
+<P><B>Note: </B>P-Mode 1 and P-Mode 0 are just names that were chosen and 
+do not imply that P-Mode is on or off. <BR><P>
+
+
+<LI>From the 3DO Options menu, select Set CCB. 
+<P>The Load CCB Settings dialog appears.<P>
+
+
+<LI>Click the Translucency Options button. 
+<P>The Translucency Options dialog appears (see Figure 1).<P>
+
+
+<IMG SRC="Figures/ANICh1/TranslucencyOpt1.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Translucency Options settings for 25 percent 
+translucency.</I><P>
+
+<LI>Set up the Translucency Options dialog as follows (see Figure 1 above):
+
+</OL>
+<DL>
+<DD>
+<UL>
+<LI>Click the P-Mode One button 
+<LI>From the P-Mode presets pop-up menu select Opacity 25%. 
+<LI>For the first source, click the Cel Data button. 
+<LI>For the second source, click the Frame Buffer button. 
+<LI>Leave the other options at their default settings. 
+<LI>Click OK to verify the settings.
+</UL><BR>
+</DL>
+All pixels in the cel that you want to be translucent-a ghost perhaps-will 
+use the P-Mode One setting. The translucent effect is attained by 
+appropriately mixing the image (frame buffer) pixels with the cel (cel 
+data) pixels. Because of this, the second source must be defined as the 
+frame buffer, not zero.<P>
+For more information on how the 3DO system hardware can manipulate image 
+and cel data to create special effects, see 
+<A HREF="../.././ppgfldr/ggsfldr/00ggs.html#XREF38776">  Programming 3DO 
+Graphics</A><P>
+<A NAME="XREF24078"><H2>How to enhance luminance</A></H2>
+This section explains how you can use per-color P-Mode for an enhanced 
+luminance special effect. <P>
+<H3>Basics of per-color P-Mode</H3>
+With an 8-bit coded cel, you can set the P-Mode on a per-color basis. As a 
+result, you can affect pixels of a selected color (or colors) in the cel. 
+You can mix those pixels with the background image for translucency 
+(stained glass effect), or use a multiplier differently to enhance 
+luminance (lights) or reduce luminance (shadow). If you alternate a cel 
+with enhanced luminance with one of regular luminance, you can create a 
+flashing-light effect when the animation is displayed.<P>
+<H3> How to enhance luminance of selected colors</H3>
+To enhance the luminance of selected colors in a cel, follow these 
+steps:<P>
+<OL>
+<LI>Convert source art to an 8-bit coded cel. <P>
+
+<LI>If you wish, assign a background color to create an irregularly shaped 
+cel. <P>
+<LI>In the 3DO palette grid, shift-select the colors for which you want to 
+enhance luminance. <P>
+<LI>Click the P-Mode box in the bottom left region of the Set 3DO Object 
+Type dialog, then select Make it 1 from the pop-up menu to the right of 
+the function buttons. <P>
+<LI>From the 3DO Options menu, select Set CCB. 
+<P>The Load CCB Settings dialog appears.
+<P>
+
+<LI>Click the Translucency Options button. 
+<P>The Translucency Options dialog appears.
+<P>
+
+<IMG SRC="Figures/ANICh1/TranclucentOpt2.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Translucency Options settings for enhancing 
+luminance.</I><P>
+
+<LI>Set up the Translucency Options dialog as follows (see Figure 2): 
+
+
+<UL>
+<LI>Click P-Mode One.
+<LI>For the first source, click Cel Data.
+<LI>For the second source, click Frame Buffer.
+<LI>In the Multiply by field, make sure CCB is selected, then choose 1 
+from the pop-up.
+<LI>In the Divide by field, make sure CCB value is selected, then choose 4 
+from the pop-up.
+</UL><BR>
+
+
+<LI>Click OK to apply the setting.
+</OL>
+Here's the effect of your settings: By default, the first source is 
+multiplied by 8, then divided by 8. If you divide by 4 instead (and still 
+multiply by 8), you in effect enhance the luminance. To further enhance 
+luminance you can divide by 2. To darken the color for a shadow effect, 
+divide by 16 for this option.<P>
+<A NAME="XREF19488"><H2>How to define a translucent area in an opaque 
+cel</A></H2>
+If you are working with a 6-bit coded cel or a 16-bit uncoded cel, you 
+have the option of using a per-pixel P-Mode. You can create a mask to mark 
+the regions of the cel that you want to be translucent, then select P-Mode 
+settings that will make all areas of the cel one P-Mode (for example, 
+opaque) and all areas defined in the mask a different P-Mode (for example, 
+translucent). <P>
+This makes it possible, for example, to mask a window to become 
+translucent green, or to mask the eye of a creature for which you want to 
+enhance luminance.<P>
+<H3>Creating a translucent area</H3>
+Creating a translucent area inside an opaque cel consists of two basic 
+steps: <P>
+<UL>
+<LI>Defining the mask 
+<LI>Choosing the CCB settings 
+</UL>
+To create the mask, follow these steps:<P>
+<OL>
+<LI>Convert your source art to a 6-bit coded cel or a 16-bit uncoded cel.
+<P>The cel type you choose depends on the number of colors in the source 
+art and the memory you expect to have available: A 16-bit uncoded cel 
+allows for thousands of colors but needs over twice the memory of a 6-bit 
+coded cel.
+<P>
+<LI>From the Windows menu, choose Show Mask Panel.<P> 
+<LI>Click the Keep Mask button on the dialog that appears. 
+<P>This provides the same mask on all the frames. Since you will define 
+the translucent area using a mask, this setting must be in place.
+<P>
+
+<IMG SRC="Figures/ANICh1/MaskPanel.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 3: </B><I>Mask panel.</I><P>
+
+<LI>From the 3DO Options menu, select Show P-Mode Control Panel. 
+<P>A draft page appears underneath the source art for P-Mode. When you 
+first open the control panel, the is source art is on top, the P-Mode 
+draft page underneath.
+<P>
+
+<IMG SRC="Figures/ANICh1/PmodePanel.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 4: </B><I>P-Mode control panel.</I><P>
+
+<LI>Define the area of the cel that you want to be translucent. For 
+example, you could select an area for a translucent window. <P>
+<LI>From the Goodies menu, select Mask, then choose Mask Selection Only 
+from the submenu.<P>
+<LI>In the P-Mode control panel, click the Copy Mask in PMode button, then 
+click the PMode on Top button.
+<P>You should see the area you selected pasted in as a black mask. To 
+verify you have masked the correct area, you can make the draft page 
+transparent by clicking the Transparency button. </UL>
+<P>
+To specify how to paint the selected area, change CCB settings as follows: 
+<P>
+<OL>
+<LI>From the 3DO Options menu, choose Set CCB. 
+<P>The Load CCB Settings dialog is displayed. 
+<P>
+
+<LI>In the Load CCB Settings dialog, click the Translucency Options 
+button. 
+<P>The Translucency Options dialog appears.
+<P>
+
+<IMG SRC="Figures/ANICh1/TranslucentOpt3.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 5: </B><I>Translucency Options settings for 12.5 percent 
+opacity.</I><P>
+<A NAME="XREF26872">
+<LI>Set up the Translucency Options dialog as follows (see Figure 5
+above):
+</OL>
+<DL>
+<DD>
+<UL>
+<LI>Click the P-Mode One button.
+<LI>From the P-Mode presets menu, select 12.5% opacity. 
+<LI>For the First Source, select Cel Data.
+<LI>For the Second Source, select Frame Buffer.
+<LI>Click OK.
+</UL><BR>
+</DL>

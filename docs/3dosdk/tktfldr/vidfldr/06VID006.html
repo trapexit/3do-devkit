@@ -1,0 +1,162 @@
+<TITLE>Command line arguments</TITLE>
+<H1>Command line arguments</H1><HR>
+The EZ Squeeze compressor MovieToEZQ is an MPW tool with UNIX-style command line arguments, listed in the following table:<P>
+<B>Note: </B>Clicking the mouse button while MovieToEZQ is running will abort the compression<A NAME="XREF35260">
+<PRE>
+<B>Table 1: </B><I> EZ Squeeze command line arguments.</I>
+--------------------------------------------------------------------
+<b>Argument /</b>             |<b>Function</b>                                 
+<b>Default</b>                |                                         
+--------------------------------------------------------------------
+- a                    |Uses alpha channel as transparency mask. 
+                       |Requires an image with an alpha channel  
+                       |(depth = 32 or depth = 16).  If a value  
+                       |in the alpha channel is zero, then the   
+                       |corresponding pixel will be forced to be 
+                       |transparent (0,0,0).  Otherwise,         
+                       |transparent pixels (0,0,0) will be forced
+                       |to be opaque (0,0,1).                    
+--------------------------------------------------------------------
+-b&lt;NUMBER&gt; 65536       |Sets the block size for the output       
+                       |stream. Compressed frames will not be    
+                       |broken over a block boundary, so it is   
+                       |optimal to have this value close to a    
+                       |multiple of the average compressed frame 
+                       |size.  The value must be a multiple of   
+                       |2048 in order for the Weaver to work     
+                       |correctly.                               
+--------------------------------------------------------------------
+-c&lt;NUMBER&gt;0            |Sets the output channel number for the   
+                       |compressed movie.  This option sets the  
+                       |value stored in the film and/or frame    
+                       |headers.                                 
+--------------------------------------------------------------------
+-d&lt;STRING&gt;nil          |Sets the directory for the output stream.
+                       |If none is specified, the output is      
+                       |written to the current working directory.
+--------------------------------------------------------------------
+-e&lt;mm:ss.ms&gt;           |Sets the elapsed time of the output      
+                       |video. Indicates  minutes (mm), seconds  
+                       |(ss) and milliseconds (ms). The          
+                       |milliseconds argument is optional, but if
+                       |omitted, the  preceding decimal point    
+                       |should also be omitted.  If the elapsed  
+                       |time value is not specified, the duration
+                       |of the input movie is assumed. (See also,
+                       |-k and -t.)                              
+--------------------------------------------------------------------
+-f&lt;NUMBER&gt;             |Sets the frames per second for the output
+                       |stream. Normally, the frame rate of the  
+                       |output stream is set to be the same as   
+                       |that used by the first video track in the
+                       |QuickTime movie.  &lt;NUMBER&gt;               
+                       |specifies the output frame rate in frames
+                       |per second. If  -k is also specified, the
+                       |frame rate is achieved by skipping or    
+                       |doubling frames in the QuickTime movie at
+                       |appropriate times. Otherwise, there is a 
+                       |1:1 correspondence between frames in the 
+                       |input and output streams, and the        
+                       |timestamp of each frame is adjusted to   
+                       |achieve the desired frame rate.          
+--------------------------------------------------------------------
+-kOff                  |Sets the Kill Frames flag. Allows the    
+                       |duplication or omission of frames in     
+                       |order to achieve a desired frame rate or 
+                       |movie duration (see also, -e, -f, and -t 
+                       |options).                                
+--------------------------------------------------------------------
+-l                     |Not used.                                
+--------------------------------------------------------------------
+-m&lt;NUMBER&gt;             |Not used.                                
+                       |                                         
+--------------------------------------------------------------------
+-n                     |Normalizes RGB color plane values. Inputs
+                       |three decimal numbers that will be used  
+                       |as multipliers for each pixel in the     
+                       |three (R, G, B) color planes             
+                       |respectively.  This provides rudimentary 
+                       |color processing capability, which is    
+                       |useful in certain images with            
+                       |particularly strange characteristics;    
+                       |e.g., saturated NTSC colors.             
+--------------------------------------------------------------------
+-p&lt;NUMBER&gt;0            |Sets pixel threshold; i.e., the maximum  
+                       |error that will be tolerated when        
+                       |calculating runs for compression. The    
+                       |error value corresponds to the absolute  
+                       |value of the sum of the signed           
+                       |differences of the separate R, G and B   
+                       |values of the two pixels. Practical      
+                       |ranges for this argument seem to be from 
+                       |0 through 3. Setting it to -1 will       
+                       |inhibit run-length encoding.             
+--------------------------------------------------------------------
+-q &lt;filename&g t;      |Not used.                                
+                       |                                         
+--------------------------------------------------------------------
+-r&lt;NUMBER&gt;252          |Defines the "run-literal threshold." Runs
+                       |longer than this value, in terms of      
+                       |pixels, will always be set to the        
+                       |original pixel value of the first pixel  
+                       |in the run. This number can be modified  
+                       |to eliminate subtle horizontal streaks   
+                       |that sometimes result from run-length    
+                       |coding. In general, set this number as   
+                       |high as possible (maximum 252) without   
+                       |producing adverse results. MovieToEZQ    
+                       |only allows this to be set to multiples  
+                       |of 4 pixels, but never set it to just 4,
+                       |as this will increase the size of your   
+                       |image instead of compressing it.         
+--------------------------------------------------------------------
+-s&lt;Decimal#&gt;0.0        |Sets the start time for the output       
+                       |stream, specifying the value in seconds  
+                       |and fractions of seconds. When this value
+                       |is specified, the first frame copied to  
+                       |the output will be the one set at this   
+                       |time in the input QuickTime movie. This  
+                       |lets you skip over frames at the front of
+                       |a movie and tweak parameter settings on  
+                       |difficult frames.                        
+--------------------------------------------------------------------
+-t&lt;Decimal#&gt;           |Sets the duration of the output movie and
+                       |specifies the value in seconds and       
+                       |fractions of seconds. Identical in       
+                       |function to  -e, except that it lets you 
+                       |set the duration. (See also -k.)         
+--------------------------------------------------------------------
+-uOn                   |Sets flag to turn off tables for each    
+                       |frame.  Lets you turn off the feature    
+                       |that calculates a new table to be sent   
+                       |with each frame.                         
+--------------------------------------------------------------------
+-vOff                  |Sets the verbose flag, which cause such  
+                       |information as the compressed size of    
+                       |each individual frame to be printed      
+                       |during compression.                      
+--------------------------------------------------------------------
+-w / Off               |Displays image as it is being compressed.
+--------------------------------------------------------------------
+-x&lt;NUMBER&gt;             |Specifies the maximum number of frames to
+                       |process. This value is set to the entire 
+                       |input movie by default. If -t or  -e  is 
+                       |specified, the frame rate is adjusted so 
+                       |that the output movie is exactly the     
+                       |duration specified by -t and contains    
+                       |exactly the number of frames specified by
+                       |-x.                                      
+--------------------------------------------------------------------
+-z&lt;NUMBER&g            |Specifies the maximum uncorrected error  
+t; / 3,3,3             |for RGB during compression and sets the  
+                       |values of the R, G, and B planes         
+                       |respectively. This value may have a      
+                       |significant effect on the quality of the 
+                       |compressed image and will have a smaller,
+                       |but noticeable, effect on the compressed 
+                       |image size as well. Smaller values yield 
+                       |better quality and worse compression.    
+                       |Useful values lie between 1 and 8.       
+--------------------------------------------------------------------
+</PRE>
+</A><P>

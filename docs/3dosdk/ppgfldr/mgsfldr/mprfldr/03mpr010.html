@@ -1,0 +1,28 @@
+<Title>dcsqxdvarmono.dsp</Title>
+<A NAME="XREF42370"><H1>dcsqxdvarmono.dsp </A></H1>
+<A NAME="XREF39638"></A> Play a variable-rate  square/xact/delta/mono compressed sample.<P>
+<H3>Function</H3>
+This instrument plays a square/xact/delta/mono compressed sample at a variable rate.  This is a 2:1 compression.  The compression is done by SquashSnd or SoundHack. <P>
+<H3>Knobs</H3>
+<DL>
+<DT>Frequency
+<DD>Frequency in fixed point phase increment in the range of 0..$8000.  $8000 equals the normal sample rate, with 1 sample per frame.<CODE> </CODE>Defaults to $2000 which is 1/4 normal rate.
+</DL>
+<DL>
+<DT>Amplitude
+<DD>0..$7FFF. Defaults to $7FFF. 
+</DL>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+InFIFO <P>
+<H3>Resources</H3>
+Ticks: 59 <P>
+Code: 56 words <P>
+<H3>Implementation</H3>
+V24 <P>
+<H3>Notes</H3>
+Unlike other variable rate sample player instruments this one doesn't  support playing the sample above the system sample rate. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./03mpr008.html#XREF40558"><CODE>dcsqxdmono.dsp</A>, <A HREF="./03mpr004.html#XREF37417">adpcmvarmono.dsp</A>, <A HREF="./03mpr047.html#XREF15193">sampler.dsp</A>  </CODE><P>
+</CODE>

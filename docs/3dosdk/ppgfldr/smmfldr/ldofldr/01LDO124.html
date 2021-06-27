@@ -1,0 +1,28 @@
+<Title>MapCelListToCQuad</Title>
+<A NAME="XREF20390"><H1>MapCelListToCQuad </A></H1>
+ Maps a list of cels to a quad.<P>
+<H3>Synopsis</H3>
+<CODE>void MapCelListToCQuad (CCB *list, CQuad *quad)</CODE><P>
+<H3>Description</H3>
+This function maps a list of cels to the specified quad. It is much 
+faster than a standard <CODE>MapCel()</CODE> call because it only has to 
+calculate a simple rectangular projection. It performs a 
+<CODE>MapCelToCQuad()</CODE> on the first cel in the list. It then adjusts 
+the X/Y coordinates of the rest of the cels in the list such that all the 
+cels maintain the same relative X/Y relationships to each other. It also 
+copies the size and perspective fields from the first cel into all the 
+rest of the cels in the list. The net effect is that the list of cels 
+moves and scales as if it were a single unit. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>list
+<DD>Pointer to a list of one or more cels to be mapped. 
+</DL>
+<DL>
+<DT>quad
+<DD>Pointer to the CQuad to which the cels are to be mapped. 
+</DL>
+</DL>
+<H3>See Also</H3>
+<A HREF="./01LDO119.html#XREF32579">MapAACelToCQuad</A>, <A 
+HREF="./01LDO129.html#XREF24272">MapCelToCQuad</A><P>

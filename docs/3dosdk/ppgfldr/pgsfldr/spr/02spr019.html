@@ -1,0 +1,53 @@
+<Title>ReadDirectory</Title>
+<A NAME="XREF41423"><H1>ReadDirectory </A></H1>
+<A NAME="XREF32138"></A> Reads the next entry from a directory.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ReadDirectory( Directory *dir, DirectoryEntry *de )</CODE><P>
+<H3>Description</H3>
+This routine reads the next entry from the specified directory. It stores the information from the directory entry into the supplied DirectoryEntry structure. You can then examine the DirectoryEntry structure for information about the entry. <P>
+The most interesting fields in the DirectoryEntry structure are: <P>
+<DL>
+<DT>de_FileName
+<DD>The name of the entry.
+<DD>
+<DD>
+</DL>
+<DL>
+<DT>de_Flags 
+<DD>This contains a series of bit flags that describe characteristics of the entry. Flags of interest are FILE_IS_DIRECTORY, which indicates the entry is a nested directory and FILE_IS_READONLY, which tells you the file cannot be written to. 
+</DL>
+<DL>
+<DT>de_Type 
+<DD>This is currently one of FILE_TYPE_DIRECTORY, FILE_TYPE_LABEL, or FILE_TYPE_CATAPULT. 
+</DL>
+<DL>
+<DT>de_BlockSize 
+<DD>This is the size in bytes of the blocks when reading this entry. 
+</DL>
+<DL>
+<DT>de_ByteCount 
+<DD>The logical count of the number of useful bytes within the blocks allocated for this file. 
+</DL>
+<DL>
+<DT>de_BlockCount 
+<DD>The number of blocks allocated for this file. 
+</DL>
+You can use <CODE>OpenDirectoryPath()</CODE> and <CODE>ReadDirectory()</CODE> to scan the list of mounted file systems. This is done by supplying a path of "/" to <CODE>OpenDirectoryPath()</CODE>. The entries that <CODE>ReadDirectory()</CODE> returns will correspond to all of the mounted file systems. You can then look at the de_Flags field to determine if a file system is readable or not. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dir
+<DD>A pointer to the directory structure for the directory. 
+</DL>
+<DL>
+<DT>de
+<DD>A pointer to a DirectoryEntry structure in which to receive the information about the next directory entry. 
+</DL>
+<H3>Return Value</H3>
+This function returns zero if successful or a negative error code if an error (such as end-of-directory) occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+directoryfunctions.h, filesystem.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr014.html#XREF16957"><CODE>OpenDirectoryItem</A>(), <A HREF="./02spr015.html#XREF15336">OpenDirectoryPath</A>() </CODE><P>
+</CODE>

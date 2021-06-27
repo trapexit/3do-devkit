@@ -1,0 +1,49 @@
+<TITLE>Analyzing data and making trade-offs</TITLE>
+<H1><LINK NAME="XREF34476">Analyzing data and making trade-offs</LINK></H1><HR>
+A 3DO application has to work within the limitations of available memory and maximum data rate. Therefore, it is important to analyze data and to set clear goals early to have smooth playback later on. For example, for background music during an introduction, you'll want to use CD-quality stereo, while sound files that consist only of people talking can be highly compressed and lower quality. Data preparation can proceed once those decisions are made. <P>
+<B>Note: </B>Be sure to analyze your data carefully and set your priorities. Some developers have processed all data twice because they made a wrong decision about optimal delivery early in their development cycle.   <P>
+This section first looks at the limitations of the hardware, then at some trade-offs you have to make when designing your application. <P>
+<H2>System resource limitations</H2>
+Consider the availability of system resources when preparing a stream file. <P>
+<UL>
+<LI><B>I/O bandwidth-</B>What percentage of available I/O bandwidth does your stream consume? In the case of the 3DO double-speed CD-ROM drive, a stream can never exceed an average data rate of 300 kilobytes per second. 
+<p>
+<LI><B>Other resources</B>-Availability of DSP (digital signal processing) resources for sound and CPU cycles for image and video decompression can constrain playback.
+</UL>
+An application using streaming must live by the following rule: The sum of the data rates of each of the elements of the stream cannot exceed the data rate of the input device. <P>
+As you approach the limits for bandwidth and other system resources of the device from which data is being acquired, creating a working stream becomes a balancing act. <P>
+For example, in a typical audio/video playback application, video playback might run at 220 KB/s. Audio playback might run at 44 KB/s. Therefore, the total bandwidth required is at least 264 KB/s. Consequently, processing and overhead cannot exceed 36 KB/s (300-264 KB/s). All the filler and chunk information, plus disc seek times, must be processed within this 36 KB/s window.<P>
+<H3>For more information</H3>
+See <A HREF="./dsg5frst.html#XREF33525">Debugging and Optimization</A>.<P>
+<A NAME="XREF21651"></A><A NAME="XREF41460"></A><A NAME="XREF19287"></A><A NAME="XREF30686"><H2>Trade-offs</A></H2>
+This section discusses issues you need to consider when preparing video and audio for your 3DO application.<P>
+<H3>Audio </H3>
+<UL>
+<LI>Audio compression-To stream CD-quality audio, you need 176 KB/ s. Using mono instead of stereo halves the data you need to stream, 2:1 compression halves again. See "<A HREF="./2dsgc.html#XREF38695">Compressing data</A>" for more information. 
+</UL>
+<H3>Video</H3>
+<UL>
+<LI><B>Size of video-</B>It's not possible to deliver full-screen software-compressed video with CD-quality audio at full frame rate. You can use a lower frame rate or a smaller frame size. Note that the video may still look full-screen on many monitors if you reduce it. Reduce frame size to 288 x 216 to still be title safe, that is, have video that does not show borders on any NTSC monitor. 
+<p>
+<LI><B>Compression and delivery</B>- To get high-quality software-compressed video, you have to devote as much processing power as possible to the video, since it has to be read and decompressed. 
+<p>
+<p>If the size of your video elements is small and/or their visual quality is a priority, use streamed cels. If streamed cels seem a good choice but the size is not small enough, you can still achieve high visual quality at the cost of a lower frame rate.
+<p>
+<p>Starting with Toolkit 1.5, more than one software compression algorithm will be available. Hardware compression is also expected in the near future. See the <I>3DO Release Notes</I> for more information. 
+<p>
+<LI><B>Branching</B>- If you allow user interaction:
+<p>
+<UL>
+<LI>Make sure you have key frames at branching points. To find out where key frames are located, look by at the output of the <CODE>dumpstream</CODE> utility.
+<p>
+<LI> If you need to branch frequently, use smaller buffers, at the cost of a lower rate of throughput. Buffer size should be between 32 KB and 128 KB and must be a multiple of 2 KB. Larger buffers result in a lower amount of filler.
+<p>
+</UL>
+<p>
+<LI><B>Buffer allocation</B>-You can't read new data until each chunk in a stream block has been used. If you have data you need to use over a long period, this can cause problems. For example, you may have cels that change rarely on top of a video that changes frequently. If you interleave the video with the cel, you can't reuse the video until the cel is no longer in use. The way around this is using the Join subscriber to pull data out of the stream buffer or to assign a large number of buffers. <B></B>
+<p>
+<LI><B>Data rate issues</B>-To achieve smooth streaming, look at the data rate for each chunk before weaving. If you add up the rates and they don't exceed 
+300 KB/s, weave the stream and look at the data rate again. To look at the stream file, use <CODE>dumpstream</CODE> or the ChunkMatcher tool in the <I>Attic</I> folder.
+<p>
+<p>Note that it may be acceptable to have a rate slightly above 300 KB/s for brief periods of time. The DataStreamer can usually compensate for such a data rate spike. Having a data rate that's consistently higher than 300 KB/s will, however, cause problems.
+</UL>

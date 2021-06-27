@@ -1,0 +1,30 @@
+<Title>AddScreenGroup </Title>
+<A NAME="XREF27310"><H1>AddScreenGroup </A></H1>
+<A NAME="XREF26281"> Adds a screen group to the display.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err AddScreenGroup (Item screenGroup,TagArg *targs)<BR>
+Err AddScreenGroupVA (Item screenGroup,uint32 targs,...)</CODE><P>
+<H3>Description</H3>
+This call adds the specified screenGroup to the Graphics folio's display mechanism. After this call, the screens of the group can be made visible with a call to <CODE><A HREF="./01gpr019.html#XREF19909">DisplayScreen</A>()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screenGroup
+<DD>Item number of the screenGroup to be added. 
+</DL>
+<DL>
+<DT>targs
+<DD>Pointer to an array of tag arguments. These values control the initial display configuration of the group. The last element of the array must be the value TAG_END. For a list of tag arguments for screen group items, see <A HREF="../../pgsfldr/spr/09spr.html#XREF15850">Portfolio Items</A> in the System Programmer's Reference."
+</DL>
+<H3>Return Value</H3>
+This call returns 0 if the group was added to the display, or an error code (a negative value) if an error occurs. <P>
+<DL>
+<DT>GRAFFERR_SGINUSE
+<DD> is returned if <CODE>AddScreenGroup() </CODE>is called for a screenGroup that has already been added with the <CODE>AddScreenGroup()</CODE> call. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr019.html#XREF19909"><CODE>DisplayScreen</A>(), <A HREF="./01gpr052.html#XREF35655">RemoveScreenGroup</A>() </CODE><P>
+</CODE>

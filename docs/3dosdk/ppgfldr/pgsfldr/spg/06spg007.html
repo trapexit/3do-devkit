@@ -1,0 +1,60 @@
+<TITLE>Function Calls</TITLE>
+<H1>Function Calls</H1><HR>
+The following kernel function calls control items. See 
+<A HREF="../spr/01spr.html#XREF17318">Kernel Folio Calls</A>, in the <I>3DO System Programmer's Reference</I> for a complete description of these calls.<P>
+<H2>Creating Items</H2>
+The following calls create items:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr020.html#XREF20657">CreateBufferedMsg</A>() </CODE>Creates a buffered message.
+<LI><CODE><A HREF="../spr/01spr021.html#XREF36930">CreateIOReq</A>() </CODE>Creates an I/O request.
+<LI><CODE><A HREF="../spr/01spr022.html#XREF15505">CreateItem</A>() </CODE>Creates an item.
+<LI><CODE><A HREF="../spr/01spr024.html#XREF10430">CreateMsg</A>() </CODE>Creates a standard message.
+<LI><CODE><A HREF="../spr/01spr025.html#XREF19499">CreateMsgPort</A>() </CODE>Creates a message port.
+<LI><CODE><A HREF="../spr/01spr026.html#XREF34382">CreateSemaphore</A>() </CODE>Creates a semaphore.
+<LI><CODE><A HREF="../spr/01spr027.html#XREF18113">CreateSmallMsg</A>) </CODE>Creates a small message.
+<LI><CODE><A HREF="../spr/01spr028.html#XREF27054">CreateThread</A>() </CODE>Creates a thread.
+<LI><CODE><A HREF="../spr/01spr029.html#XREF20935">CreateUniqueMsgPort</A>() </CODE>Creates a message port with a guaranteed unique name.
+<LI><CODE><A HREF="../spr/01spr030.html#XREF27218">CreateUniqueSemaphore</A>() </CODE>Creates a semaphore with a guaranteed unique name.
+</UL>
+<H2>Opening Items</H2>
+The following calls open items:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr044.html#XREF33729">FindAndOpenDevice</A>() </CODE>Finds and opens a device item.
+<LI><CODE><A HREF="../spr/01spr045.html#XREF17023">FindAndOpenFolio</A>() </CODE>Finds and opens a folio item.
+<LI><CODE><A HREF="../spr/01spr046.html#XREF40895">FindAndOpenItem</A>() </CODE>Finds and opens an item.
+<LI><CODE><A HREF="../spr/01spr047.html#XREF36773">FindAndOpenNamedItem</A>() </CODE>Finds an item by name and opens it.
+<LI><CODE><A HREF="../spr/01spr104.html#XREF35423">OpenItem</A>() </CODE>Opens a system item.
+<LI><CODE><A HREF="../spr/01spr105.html#XREF24352">OpenNamedDevice</A>() </CODE>Opens the named device.
+</UL>
+<H2>Managing Items</H2>
+The following calls manage items:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr014.html#XREF21994">CheckItem</A>() </CODE>Checks to see if an item exists.
+<LI><CODE><A HREF="../spr/01spr048.html#XREF39689">FindDevice</A>() </CODE>Finds a device item by name.
+<LI><CODE><A HREF="../spr/01spr049.html#XREF42557">FindFolio</A>() </CODE>Finds a folio item by name.
+<LI><CODE><A HREF="../spr/01spr050.html#XREF25448">FindItem</A>() </CODE>Finds an item by type and tag arguments.
+<LI><CODE><A HREF="../spr/01spr053.html#XREF23701">FindMsgPort</A>() </CODE>Finds a message port item by name.
+<LI><CODE><A HREF="../spr/01spr054.html#XREF34211">FindNamedItem</A>()</CODE>Finds an item by name.
+<LI><CODE><A HREF="../spr/01spr058.html#XREF28338">FindSemaphore</A>() </CODE>Finds a semaphore item by name.
+<LI><CODE><A HREF="../spr/01spr060.html#XREF22836">FindTask</A>()</CODE>Finds a task item by name.
+<LI><CODE><A HREF="../spr/01spr061.html#XREF25874">FindVersionedItem</A>()</CODE>Finds an item by name and version number.
+<LI><CODE><A HREF="../spr/01spr099.html#XREF27851">LookupItem</A>()</CODE>Gets a pointer to an item.
+<LI><CODE><A HREF="../spr/01spr125.html#XREF39158">SetItemOwner</A>()</CODE>Changes the owner of an item.
+<LI><CODE><A HREF="../spr/01spr126.html#XREF17657">SetItemPri</A>()</CODE>Changes the priority of an item.
+</UL>
+<H2>Closing and Deleting Items</H2>
+The following calls close and delete items:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr016.html#XREF39128">CloseItem</A>() </CODE>Closes a system item.
+<LI><CODE><A HREF="../spr/01spr017.html#XREF21978">CloseNamedDevice</A>() </CODE>Closes a device item.
+<LI><CODE><A HREF="../spr/01spr031.html#XREF13807">DeleteIOReq</A>() </CODE>Deletes an IOReq item.
+<LI><CODE><A HREF="../spr/01spr032.html#XREF18938">DeleteItem</A>() </CODE>Deletes an item.
+<LI><CODE><A HREF="../spr/01spr034.html#XREF14458">DeleteMsg</A>()</CODE>Deletes a message item.
+<LI><CODE><A HREF="../spr/01spr035.html#XREF42671">DeleteMsgPort</A>()</CODE>Deletes a message port item.
+<LI><CODE><A HREF="../spr/01spr036.html#XREF16912">DeleteSemaphore</A>() </CODE>Deletes a semaphore item.
+<LI><CODE><A HREF="../spr/01spr037.html#XREF28597">DeleteThread</A>()</CODE>Deletes a thread.
+</UL>

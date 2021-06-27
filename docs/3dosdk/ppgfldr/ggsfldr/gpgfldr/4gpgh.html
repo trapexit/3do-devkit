@@ -1,0 +1,52 @@
+<TITLE>Refreshing Backgrounds with SPORT Transfers</TITLE>
+<H1>Refreshing Backgrounds with SPORT Transfers</H1><HR>
+SPORT transfers take advantage of the high-speed SPORT bus to copy one or more pages of VRAM to other pages of VRAM. Because a SPORT transfer always takes place during the vertical blank, it's a perfect method for refreshing a frame buffer background between cel projections. To set up background refreshment with SPORT, you must first know the item numbers of the set of VRAM pages used to store the bitmap (or bitmaps) you wish to refresh. You must then create and store a background image in a bitmap that won't be written into (it doesn't have to be part of a screen). Finally, you must make sure that all these bitmaps reside within the same VRAM bank so that SPORT can work among them. The tag arguments of the <CODE>CreateScreenGroup()</CODE> call can help you make sure that the bitmaps are all allocated within the same bank.<P>
+Consider an example: a double-buffered screen group has two screens; each screen has a single bitmap. The two screen bitmaps are stored in the same bank of VRAM; each starts on a page boundary and takes nine and a half pages of VRAM. A third nonscreen bitmap is created in nine and a half pages of VRAM. All the bitmaps reside in the same VRAM bank.<P>
+Now if you want to project moving cels on a static background-say, for example, crawling centipedes on a background of mushrooms-you store the mushroom background in the third bitmap. You then use a SPORT transfer to copy the mushroom background to the nondisplayed screen in the screen group, which presents a clean background. You then project the centipede cels where they should be for that particular frame. When the screens are swapped for the next frame, you use SPORT to copy the clean background into the second screen, which is no longer displayed, and then project the centipede cels in a new position for the next frame. Each SPORT transfer removes projected cel images from the background so they won't linger in a later frame.<P>
+Because the SPORT bus is a device, all SPORT calls require an IOReq to 
+communicate to the SPORT device. The graphics folio provides a convenience call 
+to create a special IOReq for that purpose, which you can use in SPORT calls. 
+(For more information about IOReqs, read <A HREF="../../pgsfldr/spg/09spg.html#XREF37505">The Portfolio I/O Model</A> in the <I>3DO System Programmer's Guide</I>.)<P>
+<H2>Creating an IOReq for the SPORT Device</H2>
+To create an IOReq to use with the SPORT device, use this call:<P>
+<CODE><DL>
+<DD><CODE>Item GetVRAMIOReq( void )</CODE><BR>
+</DL>
+</CODE>This call requires no argument and, when executed, creates an IOReq item for use with the SPORT bus. It returns the item number for that IOReq, which you should store for other SPORT calls. If unsuccessful, it returns a negative value (an error code).<P>
+<H2>Copying VRAM Pages</H2>
+If your bitmaps are set up to fit within a known set of VRAM pages, you can use this call to copy the range of pages containing one bitmap into a second range of pages containing another bitmap:<P>
+<CODE><DL>
+<DD><CODE>Err CopyVRAMPages( Item ioreq, void *dest, void *src, uint32 numPages, uint32 mask )</CODE><BR>
+</DL>
+</CODE>The call accepts the item number of the SPORT IOReq, a pointer to the beginning address of the destination bitmap, a pointer to the beginning address of the source bitmap, and the number of VRAM pages you wish to copy from the source to the destination. It also accepts a 32-bit mask.<P>
+When <CODE>CopyVRAMPages()</CODE> executes, it waits until the next vertical blank to read the specified number of VRAM pages starting at the source address, and then copies those pages into the same number of VRAM pages starting at the destination address. The 32-bit mask determines which pixels within the source are copied; it provides a pattern of 32 1s and 0s that is repeated and applied consecutively to rows of pixels in the source pages. Only pixels coinciding with a one in the mask are copied to the destination pages. Pixels coinciding with a 0 in the mask aren't copied.<P>
+The source and destination pointers you use will probably fall within a VRAM page and not directly on a page border. If so, <CODE>CopyVRAMPages()</CODE> automatically finds the starting page addresses of the pages you point to, and uses those addresses for copying VRAM pages.<P>
+<H2>Cloning a Single VRAM Page</H2>
+It is useful sometimes to be able to clone a single VRAM page to many different destination pages. For example, if a background bitmap contains a repeated pattern, there's no need to use many pages to store it-a single page can store the pattern, and it can be duplicated as many times as necessary to fill a full bitmap. To clone a single page, use this call:<P>
+<CODE><DL>
+<DD><CODE>Err CloneVRAMPages(  Item ioreq, void *dest, void *src, uint32 numPages, uint32 mask )</CODE><BR>
+</DL>
+</CODE>Like <CODE>CopyVRAMPages()</CODE>, it accepts an IOReq item number and pointers to source and destination VRAM addresses (usually the beginning address of bitmaps). It also accepts the number of destination pages to which the single source page is cloned, and a 32-bit mask.<P>
+When <CODE>CloneVRAMPages()</CODE> executes, it waits for the next vertical blank to read the specified source VRAM page, apply the 32-bit mask to it, and then copy the results as many times as necessary to fill all the specified destination VRAM pages.<P>
+<H2>Setting VRAM Pages to a Single Color or Pattern</H2>
+If a bitmap background is all one color, you can save quite a bit of VRAM by setting a single color value instead of creating a full backup bitmap or VRAM page. You then use FlashWrite to copy that value into full pages of VRAM with this call:<P>
+<CODE><DL>
+<DD><CODE>Err SetVRAMPages( Item ioreq, void *dest, int32 value, int32 numpages, int32 mask )</CODE><BR>
+</DL>
+</CODE>The call accepts an IOReq item number. It also accepts a pointer to a VRAM destination and the number of pages, starting at that destination, to which it will copy the color value. It accepts a 32-bit color value that is the 15-bit 3DO RGB color value with a sixteenth high-order bit of 0 added and then duplicated to fill 32 bits. It also accepts a 32-bit mask that works here just as it does in the SPORT calls. Unlike <CODE>CopyVRAMPages()</CODE>, <CODE>SetVRAMPAGES()</CODE> executes immediately.<P>
+To create the color value used with <CODE>SetVRAMPages()</CODE>, use this call:<P>
+<CODE><DL>
+<DD><CODE>int32 MakeRGB15Pair( red, green, blue )</CODE><BR>
+</DL>
+</CODE>It accepts a red, green, and blue value, combines the low 5 bits of each value, to create a single 15-bit RGB value, then duplicates it to create a 32-bit color value accepted by <CODE>SetVRAMPages()</CODE>. It returns the 32-bit color value.<P>
+<H2>Deferred SPORT Calls</H2>
+Two of the last SPORT calls-<CODE>CopyVRAMPages()</CODE> and <CODE>CloneVRAMPages()</CODE>-all put the calling task in wait state while they execute, and only return the task to active state once the SPORT device has processed the IOReq and completed the operation. If you'd like to perform the same operations without waiting for the operation to complete (for asynchronous SPORT I/O), you can use "deferred" versions of the same calls:<P>
+<CODE><DL>
+<DD><CODE>Err CopyVRAMPagesDefer( Item ioreq, void *dest, void *src, uint32 numPages, uint32 mask )<BR>
+</CODE><CODE>Err CloneVRAMPagesDefer(  Item ioreq, void *dest, void *src, uint32 numPages, uint32 mask )<BR>
+</CODE><CODE>Err SetVRAMPagesDefer( Item ioreq, void *dest, int32 value, int32 numpages, int32 mask )</CODE><BR>
+</DL>
+</CODE>These calls accept the same arguments as their nondeferred counterparts, but don't put the calling task in wait state while they execute, so the task is free to continue execution while the SPORT device reads the IOReq and performs the requested operation.<P>
+(Note that <CODE>SetVRAMPages()</CODE> doesn't put its calling task in wait state, so it executes exactly the same as <CODE>SetVRAMPagesDefer()</CODE>, which is included only to make a complete set of deferred SPORT calls.<P>
+IOReqs used by the deferred routines must be cleared with <CODE>WaitIO()</CODE> before they are reused.<P>
+<P>

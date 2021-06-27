@@ -1,0 +1,37 @@
+<TITLE>LockSemaphore</TITLE>
+<A NAME="XREF18240"><H1>LockSemaphore </A></H1>
+<A NAME="XREF24840"></A>Locks a semaphore.<P>
+<H3>Synopsis</H3>
+<CODE>int32 LockSemaphore( Item s, uint32 flags )</CODE><P>
+<H3>Description</H3>
+This procedure locks a semaphore. For information about semaphores, which are used to control access to shared resources, see the "Sharing System Resources" chapter in the 3DO System Programmer's Guide.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>s
+<DD>The number of the semaphore to be locked. 
+</DL>
+<DL>
+<DT>flags
+<DD>Semaphore flags. 
+</DL>
+Only one flag is currently defined: <P>
+<DL>
+<DT>SEM_WAIT
+<DD>If the item to be locked is already locked, put the calling task into wait state until the item is available. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 1 if the semaphore was successfully locked. If the semaphore is already locked and the SEM_WAIT flag is not set (which indicates that the calling task does not want to wait until the semaphore is available), the procedure returns 0. If an error occurs, the procedure returns an error code. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+This is the same SWI as <CODE>LockItem()</CODE>. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>semaphore.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Caveats</H3>
+There are currently no asynchronous locks or shared read locks. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr058.html#XREF28338"><CODE>FindSemaphore</A>(), <A HREF="./01spr130.html#XREF20743">UnlockSemaphore</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF18240"></LINK></H1><HR>

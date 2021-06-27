@@ -1,0 +1,4 @@
+which armcc > /dev/null
+if [ $? -ne 0 ]; then
+    PATH="$PATH":"$PWD/bin/compiler/linux":"$PWD/bin/tools/linux"
+fi

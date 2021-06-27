@@ -1,0 +1,14 @@
+<HTML><HEAD><TITLE>Overview</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Overview</H2>
+<P>Most people have a good intuitive understanding of the <A HREF="../stdref/sta_9602.htm"><B><I>stack</I></B></A> and <A HREF="../stdref/que_0953.htm"><B><I>queue</I></B></A> data abstractions, based on experience with everyday objects.  An excellent example of a stack is a pile of papers on a desk, or a stack of dishes in a cupboard.  In both cases the important characteristic is that it is the item on the top that is most easily accessed.  The easiest way to add a new item to the collection is to place it above all the current items in the stack.  In this manner, an item removed from a stack is the item that has been most recently inserted into the stack; for example, the top piece of paper in the pile, or the top dish in the stack.</P>
+<A HREF="sidebar.htm#sidebar35"><IMG SRC="images/note.gif" BORDER=0> <STRONG>LIFO and FIFO</STRONG></A>
+
+<P>An everyday example of a queue, on the other hand, is a bank teller line, or a line of people waiting to enter a theater.  Here new additions are made to the back of the queue, as new people enter the line, while items are removed from the front of the structure, as patrons enter the theater.  The removal order for a queue is the opposite of that for a stack.  In a queue, the item that is removed is the element that has been present in the queue for the longest period of time.</P>
+<P>In the standard library, both stacks and queues are <I>adaptors</I>, built on top of  other containers which are used to actually hold the values.  A <A HREF="../stdref/sta_9602.htm"><B><I>stack</I></B></A> can be built out of either a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> or a <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A>, while a <A HREF="../stdref/que_0953.htm"><B><I>queue</I></B></A> can be built on top of either a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> or a <B><I>deque</I></B>.  Elements held by either a stack or queue must recognize both the operators <SAMP>&#60;</SAMP> and<SAMP> ==</SAMP>.</P>
+<P>Because neither <B><I>stacks</I></B> nor <B><I>queues</I></B> define iterators, it is not possible to examine the elements of the collection except by removing the values one by one.  The fact that these structures do not implement iterators also implies that most of the generic algorithms described in Sections 12 and 13 cannot be used with either data structure.</P>
+<HR>
+<A HREF="sta_2474.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="sta_5501.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,47 @@
+<Title>ForEachFreePoolMember</Title>
+<A NAME="XREF32393"><H1>ForEachFreePoolMember</A></H1>
+<A NAME="XREF36334"></A>Initializes free memory-pool entries.<P>
+<H3>Synopsis</H3>
+<CODE>Boolean ForEachFreePoolMember (MemPoolPtr memPool, 
+ForEachFreePoolMemberFuncPtr forEachFunc, void* argValue)</CODE><P>
+<H3>Description</H3>
+Performs an initialization function on each free entry in a memory pool. 
+<CODE>FillPoolWithMsgItems()</CODE> calls 
+<CODE>ForEachFreePoolMember()</CODE> to assign a message item to each 
+entry in a memory pool.<P>
+The function may be any function, but <CODE>forEachFunc</CODE> is normally 
+defined as an initialization function. The function is called with a 
+pointer to the data field of the entry.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>memPool</CODE>
+<DD>Memory pool upon whose entries the function is performed.
+</DL>
+<DL>
+<DT><CODE>forEachFunc</CODE>
+<DD>Function performed on each entry.
+</DL>
+<DL>
+<DT><CODE>argValue </CODE>
+<DD>Argument string passed to the function.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT><CODE>TRUE</CODE>
+<DD>Initialization function returns <CODE>TRUE</CODE> for each entry
+<DD>
+</DL>
+<DL>
+<DT><CODE>FALSE</CODE>
+<DD>Initialization function returns <CODE>FALSE</CODE> for any entry
+<DD>
+</DL>
+<H3>Associated Files</H3>
+MemPool.h<P>
+<H3>See Also</H3>
+<A HREF="./02DSR016.html#XREF32433">MemPool</A><P>

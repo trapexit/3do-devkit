@@ -1,0 +1,8 @@
+<TITLE>Opening the Audio Folio</TITLE>
+<H1><LINK NAME="XREF31842">Opening the Audio Folio</LINK></H1><HR>
+The Audio folio is started at bootup. To make Audio folio calls, a task must first open the Audio folio with this call:<P>
+<DL>
+<DD><CODE>Err OpenAudioFolio( void )</CODE><BR>
+</DL>
+The call accepts no arguments and returns 0 if successful. If unsuccessful, it returns a negative number (an error code). On  execution,<CODE> OpenAudioFolio() </CODE>connects the task to the Audio folio and sets up a pointer table for each of the audio calls.<P>
+If you do not open the Audio folio before you use audio calls, your task will abort and an error message will be displayed. Keep this in mind if your program dies the first time it encounters an audio call and you are <I>sure</I> that you have used the call correctly.<A NAME="XREF29975"></A><P>

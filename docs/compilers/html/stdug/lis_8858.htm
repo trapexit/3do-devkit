@@ -1,0 +1,296 @@
+<HEAD><TITLE>List Operations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>List Operations</H2>
+<P>The member functions provided by the list data type are described in more detail below.  Note that while member functions provide basic operations, the utility of the data structure is greatly extended through the use of the generic algorithms described in Chapters <a href="gen_9895.htm">13</a> and <a href="ord_1635.htm">14</a>.</P>
+<A NAME="declarationandinitializationoflists"><H3>Declaration and Initialization of Lists</H3></A>
+<A HREF="sidebar.htm#sidebar18"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Memory Management</STRONG></A>
+
+<P>There are a variety of ways to declare a list.  In the simplest form, a list is declared by simply stating the type of element the collection will maintain.  This can be a primitive language type (such as <SAMP>integer</SAMP> or <SAMP>double</SAMP>), a pointer type, or a user-defined type.  In the latter case, the user-defined type <I>must</I> implement a default constructor (a constructor with no arguments), as this constructor is in some cases used to initialize newly created elements.  A collection declared in this fashion will initially not contain any elements.</P>
+<PRE>   list &#60;int> list_one;
+   list &#60;Widget *> list_two;
+   list &#60;Widget> list_three;
+</PRE>
+<P>An alternative form of declaration creates a collection that initially contains some number of equal elements.  The constructor for this form is declared as <SAMP>explicit</SAMP>, meaning it cannot be used as a conversion operator.  This prevents integers from inadvertently being converted into lists.  The constructor for this form takes two arguments, a size and an initial value.  The second argument is optional.  If only the number of initial elements to be created is given, these values will be initialized with the default constructor; otherwise the elements will be initialized with the value of the second argument:</P>
+<PRE>   list &#60;int> list_four (5);  // five elements, initialized to zero
+   list &#60;double> list_five (4, 3.14);   // 4 values, initially 3.14
+   list &#60;Widget> wlist_six (4);  // default constructor, 4 elements
+   list &#60;Widget> list_six (3, Widget(7));  // 3 copies of Widget(7)
+</PRE>
+<P>Lists can also be initialized using elements from another collection, using a beginning and ending iterator pair.  The arguments can be any form of iterator, thus collections can be initialized with values drawn from any of the container classes in the standard library that support iterators.  Because this requires the ability to specialize a member function using a template, some compilers may not yet support this feature.  In these cases an alternative technique using the <SAMP>copy()</SAMP> generic algorithm can be employed.
+  When a list is initialized using <SAMP>copy(),</SAMP> an <I>insert iterator</I> must be constructed to convert the output operations performed by the copy operation into list insertions.  (<i><a href="ins_0332.htm">See Chapter 2: Insert Iterators</a></i>.)  The inserter requires two arguments; the list into which the value is to be inserted, and an iterator indicating the location at which values will be placed.  Insert iterators can also be used to copy elements into an arbitrary location in an existing list.</P>
+<PRE>   list &#60;double> list_seven (aVector.begin(), aVector.end());
+
+                  // the following is equivalent to the above
+   list &#60;double> list_eight;
+   copy (aVector.begin(), aVector.end(), 
+          inserter(list_eight, list_eight.begin()));
+</PRE>
+<P>The <SAMP>insert()</SAMP> operation, to be described in <a href="lis_8858.htm#placingelementsintoalist"><i>Placing Elements into a List</i></a>, can also be used to place values denoted by an iterator into a list.  Insert iterators can be used to initialize a list with a sequence of values produced by a <I>generator</I> (<i>see <a href="ini_5794.htm#initializeasequencewithgeneratedvalues">Chapter 13: Initialize a Sequence with Generated Values</a></i>).  This is illustrated by the following:</P>
+<PRE>   list &#60;int> list_nine;          
+                                   // initialize list 1 2 3 ... 7
+   generate_n (inserter(list_nine, list_nine.begin()), 
+       7, iotaGen(1));
+</PRE>
+<P>A <I>copy constructor</I> can be used to initialize a list with values drawn from another list.  The assignment operator performs the same actions.  In both cases the assignment operator for the element type is used to copy each new value.</P>
+<PRE>   list &#60;int> list_ten (list_nine);          // copy constructor
+   list &#60;Widget> list_eleven;
+   list_eleven = list_six;        // values copied by assignment
+</PRE>
+<P>The <SAMP>assign()</SAMP> member function is similar to the assignment operator, but is more versatile and, in some cases, requires more arguments.  Like an assignment, the existing values in the container are deleted, and replaced with the values specified by the arguments.  If a destructor is provided for the container element type, it will be invoked for the elements being removed.  There are two forms of <SAMP>assign().</SAMP>  The first takes two iterator arguments that specify a subsequence of an existing container.  The values from this subsequence then become the new elements in the receiver.  The second version of assign takes a count and an optional value of the container element type.  After the call the container will hold the number of elements specified by the count, which will be equal to either the default value for the container type or the initial value specified.</P>
+<PRE>   list_six.assign(list_ten.begin(), list_ten.end());
+   list_four.assign(3, 7);          // three copies of value seven
+   list_five.assign(12);            // twelve copies of value zero
+</PRE>
+<P>Finally, two lists can exchange their entire contents by means of the operation <SAMP>swap().</SAMP>  The argument container will take on the values of the receiver, while the receiver will assume those of the argument.  A swap is very efficient, and should be used, where appropriate, in preference to an explicit element-by-element transfer.</P>
+<PRE>   list_ten.swap(list_nine);        // exchange lists nine and ten
+</PRE>
+
+<A NAME="typedefinitions"><H3>Type Definitions</H3></A>
+<P>The class <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> includes a number of type definitions.  The most common use for these is in declaration statements.  For example, an iterator for a list of integers can be declared as follows:</P>
+<PRE>list&#60;int>::iterator location;
+</PRE>
+<P>In addition to <SAMP>iterator</SAMP>, the following types are defined:</P>
+
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<SAMP>value_type</SAMP><BR>
+</TD>
+
+<TD>
+The type associated with the elements the list maintains.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>const_iterator</SAMP><BR>
+</TD>
+
+<TD>
+An iterator that does not allow modification of the underlying sequence.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>reverse_iterator</SAMP><BR>
+</TD>
+
+<TD>
+An iterator that moves in a backward direction.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>const_reverse_iterator</SAMP><BR>
+</TD>
+
+<TD>
+A combination constant and reverse iterator.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>reference</SAMP><BR>
+</TD>
+
+<TD>
+A reference to an underlying element.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>const_reference</SAMP><BR>
+</TD>
+
+<TD>
+A reference to an underlying element that will not permit the element to be modified.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>size_type</SAMP><BR>
+</TD>
+
+<TD>
+An unsigned integer type, used to refer to the size of containers.<BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>
+<SAMP>difference_type</SAMP><BR>
+</TD>
+
+<TD>
+A signed integer type, used to describe distances between iterators.<BR>
+</TD>
+</TR>
+</TABLE></CENTER>
+<A NAME="placingelementsintoalist"><H3>Placing Elements into a List</H3></A>
+<P>Values can be inserted into a list in a variety of ways.  Elements are most commonly added to the front or back of a list.  These tasks are provided by the <SAMP>push_front()</SAMP> and <SAMP>push_back()</SAMP> operations, respectively.  These operations are efficient (constant time) for both types of containers.</P>
+<PRE>   list_seven.push_front(1.2);
+   list_eleven.push_back (Widget(6));
+</PRE>
+<P>In a previous discussion (<i><a href="#declarationandinitializationoflists">Declaration and Initialization of Lists</a></i>) we noted how, with the aid of an insert iterator and the <SAMP>copy()</SAMP> or <SAMP>generate()</SAMP> generic algorithm, values can be placed into a list at a location denoted by an iterator.  There is also a member function, named <SAMP>insert(),</SAMP> that avoids the need to construct the inserter.  As we will describe shortly, the values returned by the iterator generating functions <SAMP>begin()</SAMP> and <SAMP>end()</SAMP> denote the beginning and end of a list, respectively.  An insert using one of these is equivalent to <SAMP>push_front()</SAMP> or <SAMP>push_back(),</SAMP> respectively.  If we specify only one iterator, the default element value is inserted.</P>
+<PRE>// insert default type at beginning of list
+list_eleven.insert(list_eleven.begin()); 
+// insert widget 8 at end of list
+list_eleven.insert(list_eleven.end(), Widget(8));
+</PRE>
+
+<A HREF="sidebar.htm#sidebar19"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Iteration Invalidation</STRONG></A>
+
+<P>An iterator can denote a location in the middle of a list.  There are several ways to produce this iterator.  For example, we can use the result of any of the searching operations described in <a href="sea_9743.htm">Chapter 13 (<i>Searching Opertations</i>)</a>, such as an invocation of the <SAMP>find()</SAMP> generic algorithm.  The new value is inserted immediately <I>prior </I>to the location denoted by the iterator.  The <SAMP>insert()</SAMP> operation itself returns an iterator denoting the location of the inserted value.  This result value was ignored in the invocations shown above.</P>
+<PRE>   //  find the location of the first occurrence of the 
+   //     value 5 in list
+   list&#60;int>::iterator location = 
+        find(list_nine.begin(), list_nine.end(), 5);
+   // and insert an 11 immediate before it
+   location = list_nine.insert(location, 11);
+</PRE>
+<P>It is also possible to insert a fixed number of copies of an argument value.  This form of <SAMP>insert()</SAMP> does not yield the location of the values.</P>
+<PRE>   line_nine.insert (location, 5, 12);       // insert five twelves
+</PRE>
+<P>Finally, an entire sequence denoted by an iterator pair can be inserted into a list.  Again, no useful value is returned as a result of the <SAMP>insert().</SAMP></P>
+<PRE>     // insert entire contents of list_ten into list_nine
+     list_nine.insert (location, list_ten.begin(), list_ten.end());
+</PRE>
+<P>There are a variety of ways to <I>splice</I> one list into another.  A splice differs from an insertion in that the item is simultaneously added to the receiver list and removed from the argument list.  For this reason, a splice can be performed very efficiently, and should be used whenever appropriate.  As with an insertion, the member function <SAMP>splice()</SAMP> uses an iterator to indicate the location in the receiver list where the splice should be made.  The argument is either an entire list, a single element in a list (denoted by an iterator), or a subsequence of a list (denoted by a pair of iterators).</P>
+<PRE>   // splice the last element of list ten
+   list_nine.splice (location, list_ten, list_ten.end()); 
+   // splice all of list ten
+   list_nine.splice (location,  list_ten);
+   // splice list 9 back into list 10
+   list_ten.splice (list_ten.begin(), list_nine, 
+      list_nine.begin(), location);
+</PRE>
+<P>Two ordered lists can be combined into one using the <SAMP>merge()</SAMP> operation.  Values from the argument list are merged into the ordered list, leaving the argument list empty.  The merge is stable; that is, elements retain their relative ordering from the original lists.  As with the generic algorithm of the same name (<i><a href="mer_3553.htm">Chapter 14: Merge Ordered Sequences</a></i>), two forms are supported.  The second form uses the binary function supplied as argument to order values.  Not all compilers support the second form.  If the second form is desired and not supported, the more general generic algorithm can be used, although this is slightly less efficient.</P>
+<PRE>   // merge with explicit compare function
+   list_eleven.merge(list_six, widgetCompare);
+
+   //the following is similar to the above
+   list&#60;Widget> list_twelve;
+   merge (list_eleven.begin(), list_eleven.end(), 
+      list_six.begin(), list_six.end(), 
+      inserter(list_twelve, list_twelve.begin()), widgetCompare);
+   list_eleven.swap(list_twelve);
+</PRE>
+
+<A NAME="removingelements"><H3>Removing Elements</H3></A>
+<P>Just as there are a number of different ways to insert an element into a list, there are a variety of ways to remove values from a list.  The most common operations used to remove a value are <SAMP>pop_front()</SAMP> or <SAMP>pop_back(),</SAMP> which delete the single element from the front or the back of the list, respectively.  These member functions simply remove the given element, and do not themselves yield any useful result.  If a destructor is defined for the element type it will be invoked as the element is removed.  To look at the values before deletion, use the member functions<SAMP> front()</SAMP> or <SAMP>back().</SAMP></P>
+<P>The <SAMP>erase()</SAMP> operation can be used to remove a value denoted by an iterator.  For a list, the argument iterator, and any other iterators that denote the same location, become invalid after the removal, but iterators denoting other locations are unaffected.  We can also use <SAMP>erase()</SAMP> to remove an entire subsequence, denoted by a pair of iterators.  The values beginning at the initial iterator and up to, but not including, the final iterator are removed from the list.  Erasing elements from the middle of a list is an efficient operation, unlike erasing elements from the middle of a vector or a deque.</P>
+<PRE>   list_nine.erase (location);
+
+   // erase values between the first occurrence of 5 
+   // and the following occurrence of 7
+list&#60;int>::iterator
+   location = find(list_nine.begin(), list_nine.end(), 5);
+   list&#60;int>::iterator location2 = 
+       find(location, list_nine.end(), 7);
+   list_nine.erase (location, location2);
+</PRE>
+<P>The <SAMP>remove()</SAMP> member function  removes all occurrences of a given value from a list.  A variation, <SAMP>remove_if(),</SAMP> removes all values that satisfy a given predicate.  An alternative to the use of either of these is to use the <SAMP>remove()</SAMP> or <SAMP>remove_if()</SAMP> generic algorithms (<i><a href="rem_8388.htm#removeunwantedelements">Chapter 13: Remove Unwanted Elements</a></i>).  The generic algorithms do not reduce the size of the list, instead they move the elements to be retained to the front of the list, leave the remainder of the list unchanged, and return an iterator denoting the location of the first unmodified element.  This value can be used in conjunction with the <SAMP>erase()</SAMP> member function to remove the remaining values.</P>
+<PRE>   list_nine.remove(4);                         // remove all fours
+   list_nine.remove_if(divisibleByThree);     //remove any div by 3
+
+   // the following is equivalent to the above
+   list&#60;int>::iterator location3 = 
+    remove_if(list_nine.begin(), list_nine.end(), 
+              divisibleByThree);
+   list_nine.erase(location3, list_nine.end());
+</PRE>
+<P>The operation <SAMP>unique()</SAMP> will erase all but the first element from every consecutive group of equal elements in a list.  The list need not be ordered.  An alternative version takes a binary function, and compares adjacent elements using the function, removing the second value in those situations were the function yields a true value.  As with <SAMP>remove_if(),</SAMP> not all compilers support the second form of <SAMP>unique().</SAMP>  In this case the more general <SAMP>unique()</SAMP> generic algorithm can be used (<i>see <a href="rem_8388.htm#removerunsofsimilarvalues">Chapter 13: Remove Overruns of Similar Values</a></i>).  In the following example the binary function is the greater-than operator, which will remove all elements smaller than a preceding element.</P>
+<PRE>   // remove first from consecutive equal elements
+   list_nine.unique();
+
+   // explicitly give comparison function
+   list_nine.unique(greater&#60;int>());
+
+   // the following is equivalent to the above
+   location3 = 
+        unique(list_nine.begin(), list_nine.end(), greater&#60;int>());
+   list_nine.erase(location3, list_nine.end());
+</PRE>
+
+<A NAME="extentandsizechangingoperations"><H3>Extent and Size-Changing Operations</H3></A>
+<P>The member function <SAMP>size()</SAMP> will return the number of elements being held by a container.  The function <SAMP>empty()</SAMP> will return <SAMP>true</SAMP> if the container is empty, and is more efficient than comparing the size against the value <SAMP>zero</SAMP>.</P>
+<PRE>   cout &#60;&#60; "Number of elements: " &#60;&#60; list_nine.size () &#60;&#60; endl;
+   if ( list_nine.empty () )
+      cout &#60;&#60; "list is empty " &#60;&#60; endl;
+   else
+      cout &#60;&#60; "list is not empty " &#60;&#60; endl;
+</PRE>
+<P>The member function <SAMP>resize()</SAMP> changes the size of the list to the value specified by the argument.  Values are either added or erased from the end of the collection as necessary.  An optional second argument can be used to provide the initial value for any new elements added to the collection.</P>
+<PRE>   // become size 12, adding values of 17 if necessary
+   list_nine.resize (12, 17); </PRE>
+
+<A NAME="accessanditeration"><H3>Access and Iteration</H3></A>
+<P>The member functions <SAMP>front()</SAMP> and<SAMP> back()</SAMP> return, but do not remove, the first and last items in the container, respectively.  For a list, access to other elements is possible only by removing elements (until the desired element becomes the front or back) or through the use of iterators.</P>
+<P>There are three types of iterators that can be constructed for lists.  The functions <SAMP>begin()</SAMP> and <SAMP>end()</SAMP> construct iterators that traverse the list in forward order.  For the <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> data type <SAMP>begin()</SAMP> and <SAMP>end()</SAMP> create bidirectional iterators.  The alternative functions <SAMP>rbegin()</SAMP> and <SAMP>rend()</SAMP> construct iterators that traverse in reverse order, moving from the end of the list to the front.</P>
+<A NAME="testforinclusion"><H3>Test for Inclusion</H3></A>
+<P>The list data types do not directly provide any method that can be used to determine if a specific value is contained in the collection.  However, either the generic algorithms <SAMP>find()</SAMP> or <SAMP>count()</SAMP> (<i>Chapter 13: <a href="sea_9743.htm#findanelementsatisfyingacondition">Find an Element Satisfying a Condition</a> and <a href="sca_1926.htm#countthenumberofelementsthatsatisfyacondition">Count the Number of Elements that Satisfy a Condition</a></i>) can be used for this purpose.  The following statements, for example, test to see whether an integer list contains the element 17.</P>
+<PRE>int num = 0;
+count(list_five.begin(), list_five.end(), 17, num);
+if (num > 0)
+   cout &#60;&#60; "contains a 17" &#60;&#60; endl;
+else
+   cout &#60;&#60; "does not contain a 17" &#60;&#60; endl;
+
+if (find(list_five.begin(), list_five.end(), 17) != list_five.end())
+   cout &#60;&#60; "contains a 17" &#60;&#60; endl;
+else
+   cout &#60;&#60; "does not contain a 17" &#60;&#60; endl;
+</PRE>
+
+<A NAME="sortingandsortedlistoperations"><H3>Sorting and Sorted List Operations</H3></A>
+<P>The member function <SAMP>sort()</SAMP> places elements into ascending order.  If a comparison operator other than <SAMP>&#60;</SAMP> is desired, it can be  supplied as an argument.</P>
+<PRE>list_ten.sort ( );                  // place elements into sequence
+list_twelve.sort (widgetCompare);       // sort with widget compare
+                                        // function
+</PRE>
+<P>Once a list has been sorted, a number of the generic algorithms for ordered collections can be used with lists.  These are described in detail in <a href="ord_1635.htm">Chapter 14</a>.</P>
+
+<A NAME="searchingoperations"><H3>Searching Operations</H3></A>
+<P>The various forms of searching functions described in <a href="gen_9895.htm">Chapter 13</a>, namely <SAMP>find(),</SAMP> <SAMP>find_if(),</SAMP> <SAMP>adjacent find(),</SAMP> <SAMP>mismatch(),</SAMP> <SAMP>max_element()</SAMP>, <SAMP>min_element()</SAMP> or <SAMP>search()</SAMP> can be applied to list.  In all cases the result is an iterator, which can be dereferenced to discover the denoted element, or used as an argument in a subsequent operation.</P>
+<A HREF="sidebar.htm#sidebar20"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Verify Search Results</STRONG></A>
+
+<A NAME="inplacetransformations"><H3>In Place Transformations</H3></A>
+<P>A number of operations can be applied to lists in order to transform them in place. Some of these are provided as member functions.  Others make use of some of the generic functions described in <a href="gen_9895.htm">Chapter 13</a>.</P>
+<P>For a list, the member function <SAMP>reverse()</SAMP> reverses the order of elements in the list.</P>
+<PRE>   list_ten.reverse();                 // elements are now reversed
+</PRE>
+<P>The generic algorithm <SAMP>transform()</SAMP> (<i><a href="seq_4302.htm#transformoneortwosequences">Chapter 13: Transform One or Two Sequences</a></i>) can be used to modify every value in a container, by simply using the same container as both input and as result for the operation.  The following, for example, increments each element of a list by one.  To construct the necessary unary function, the first argument of the binary integer addition function is bound to the value one.  The version of <SAMP>transform()</SAMP> that manipulates two parallel sequences can be used in a similar fashion.</P>
+<PRE>   transform(list_ten.begin(), list_ten.end(), 
+      list_ten.begin(), bind1st(plus&#60;int>(), 1));
+</PRE>
+<P>Similarly, the functions <SAMP>replace()</SAMP> and <SAMP>replace_if()</SAMP> (Section 12.4.2) can be used to replace elements of a list with specific values.  Rotations (<i> <a href="inp_4704.htm#rotateelementsaroundamidpoint">Chapter 13: Rotate Elements Around a Midpoint</a></i>) and partitions (<i><a href="inp_4704.htm#partitionasequenceintotwogroups">Chapter 13: Partition a Sequence...</a></i>), can also be performed with lists.</P>
+<PRE>   // find the location of the value 5, and rotate around it
+   location = find(list_ten.begin(), list_ten.end(), 5);
+   rotate(list_ten.begin(), location, list_ten.end());
+   // now partition using values greater than 7
+   partition(list_ten.begin(), list_ten.end(), 
+         bind2nd(greater&#60;int>(), 7));
+</PRE>
+<P>The functions <SAMP>next_permutation()</SAMP> and <SAMP>prev_permutation()</SAMP> (<i><a href="inp_4704.htm#generatepermutationsinsequence">Chapter 13: Generate Permutations in Sequence</a></i>) can be used to generate the next permutation (or previous permutation) of a collection of values.</P>
+<PRE>   next_permutation (list_ten.begin(), list_ten.end());
+</PRE>
+
+<A NAME="otheroperations"><H3>Other Operations</H3></A>
+<P>The algorithm <SAMP>for_each()</SAMP> (<i><a href="mis_2456.htm#applyafunctiontoallelementsinacollection">Section 13: Apply a Function to All Elements...</a></i>) will apply a function to every element of a collection.  An illustration of this use will be given in the radix sort example program in the section on the deque data structure.</P>
+<P>The <SAMP>accumulate()</SAMP> generic algorithm reduces a collection to a scalar value (<i>see <a href="sca_1926.htm#reducesequencetoasinglevalue">Chapter 13: Reduce Sequence to a Single Value</a></i>).  This can be used, for example, to compute the sum of a list of numbers.  A more unusual use of <SAMP>accumulate()</SAMP> will be illustrated in the radix sort example.</P>
+<PRE>   cout &#60;&#60; "Sum of list is: " &#60;&#60; 
+         accumulate(list_ten.begin(), list_ten.end(), 0) &#60;&#60; endl;
+</PRE>
+<P>Two lists can be compared against each other.  They are equal if they are the same size and all corresponding elements are equal.  A list is less than another list if it is lexicographically smaller (<i>see <a href="sca_1926.htm#generalizedinnerproduct">Chapter 13: Generalized Inner Product</a></i>).</P>
+
+<HR>
+<A HREF="lis_0449.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="exa_3285.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

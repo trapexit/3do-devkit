@@ -1,0 +1,118 @@
+<TITLE>Working With Animations</TITLE>
+<H1><LINK NAME="XREF25119">Working With Animations</LINK></H1><HR>
+This section looks at some of the example code in jsanimation.c, explaining the following: <P>
+
+<UL>
+<LI><A HREF="#XREF20900">Loading an Animation</A>
+<LI><A HREF="#XREF24818">Playing the Animation</A>
+</UL>
+<A NAME="XREF20900"><H2>Loading an Animation</A></H2>
+The Lib3DO functions <CODE>LoadAnim()</CODE> loads an animation, as shown in the code fragment in the example below, which is part of the <CODE>Initialize()</CODE> function. <P>
+<B>Example 1: </B><I>Loading an animation.</I><P>
+<CODE>
+<PRE>
+if ( ( gExplosionAnim = LoadAnim("jsdata/art/boom.anim", 
+    MEMTYPE_CEL )) == 0)
+    {
+    PRT(("Can't load the explosion animation\n"));
+    goto DONE;
+    }
+UnifyAnimation(gExplosionAnim);
+gExplosionCCB = GetAnimCel(gExplosionAnim, 0);
+LAST_CEL(gExplosionCCB);
+</CODE>
+</PRE>
+<CODE>LoadAnim()</CODE> expects the name of an animation file in 3DO file format, a buffer, and a pointer to an <CODE>ANIM</CODE> structure that is filled by <CODE>LoadAnim()</CODE>. The <CODE>ANIM </CODE>structure has as one of its fields a pointer to an array of <CODE>AnimFrame</CODE> structures. Together, the two structures contain all the information you need to manipulate the animation. <P>
+<B>Example 2: </B><I>The AnimFrame and ANIM structures. </I><P>
+<CODE>
+<PRE>
+typedef struct tag_AnimFrame
+    {
+    CCB *af_CCB;                        /*Pointer to CCB for this frame*/
+    char *af_PLUT;                        /*Pointer to PLUT for this frame*/
+    char *af_pix;                        /*Pointer to pixels for this frame*/
+    int32        reserved;
+    } AnimFrame;
+
+typedef struct tag_ANIM
+    {
+    long num_Frames;                    /*max number of PDATs or CCBs in file*/
+    frac16 cur_Frame;                    /*allow fract values for smooth speed*/    
+    long num_Alloced_Frames;
+    AnimFrame *pentries;
+    } ANIM;
+</CODE>
+</PRE>
+<A NAME="XREF24818"><H2>Playing the Animation</A></H2>
+In the simplest case, you can loop through calls to <CODE>GetAnimCel()</CODE> to play the animation. <CODE>GetAnimCel()</CODE> takes an <CODE>ANIM</CODE> structure created by <CODE>LoadAnim()</CODE> and a frame increment as arguments. It returns a pointer to the CCB of the next cel in an animation sequence and adds frameIncrement to the current frame counter within the ANIM. It does not draw the cel. <P>
+The example below shows a code fragment from the <CODE>TargetAction()</CODE> function in <I>jsanimation.c </I>which retrieves and draws the animation. The FRAME_INCREMENT macro is defined at the beginning of the program. <P>
+<B>Example 3: </B><I>Retrieving and drawing an animation. </I><P>
+<CODE>
+<PRE>
+/*
+    Animate the UFO: If it's still exploding, play the explosion's next frame,
+    otherwise display the UFO (after a nominal post-explosion delay).
+*/
+{
+    if (gBoomCount)
+    {
+        gBoomCount--;
+        if (gBoomCount)
+        {
+            GetAnimCel(gExplosionAnim, FRAME_INCREMENT);
+            DrawCels(gScreenContext-&gt;sc_BitmapItems
+                            [gScreenContext-&gt;sc_curScreen], gExplosionCCB);
+        }
+        else
+        {
+            gExplosionAnim-&gt;cur_Frame = 0;                                    /* Reset animation to first frame */
+            gPostBoomDelay = gExplosionAnim-&gt;num_Frames * 5;    
+                                            /* Wait awhile before showing the target */
+        }
+    }
+    else
+    {
+        if (gPostBoomDelay)
+            gPostBoomDelay--;
+        if (!gPostBoomDelay)
+            DrawCels(gScreenContext-&gt;sc_BitmapItems
+                                            [gScreenContext-&gt;sc_curScreen], aTarget);
+    }
+}
+</CODE>
+</PRE>
+The actual switching of buffers is done by the <CODE>main()</CODE> function, which also displays the image, handles control pad input-discussed in "<A HREF="./04PGSTOC.html#XREF12151">Getting User Input</A>"-and handles the drawing of the UFO and explosion. <P>
+<B>Example 4: </B><I>Buffer switching and screen display. </I><P>
+<CODE>
+<PRE>
+while ( HandleControlPad() &gt;= 0 )
+    {
+        /* Draw the background image */
+        DrawImage(gScreenContext-&gt;sc_Screens [gScreenContext-&gt;
+                    sc_curScreen], gBackgroundImage, gScreenContext);
+
+        /* Handle the drawing of the UFO cel and the explosion */
+        TargetAction(gUFO_CCB);
+
+        /*
+            Display the current screen.
+
+            DisplayScreen waits for the next vertical blank, then
+            tells the display hardware to use the specified screen 
+            as the display buffer. The hardware continues showing
+            this buffer on the TV every frame until another call
+            to DisplayScreen specifies a different buffer.
+        */
+        DisplayScreen(gScreenContext-&gt;sc_Screens[gScreenContext-&gt;
+                    sc_curScreen], 0);
+
+        /* Toggle the current screen */
+        gScreenContext-&gt;sc_curScreen = 1 - gScreenContext-&gt;
+                    sc_curScreen;
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+    }
+</CODE>
+</PRE>

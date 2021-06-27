@@ -1,0 +1,31 @@
+<Title>MulVec3Mat33DivZ_F16</Title>
+<A NAME="XREF13356"><H1>MulVec3Mat33DivZ_F16 </A></H1>
+<A NAME="XREF38632"></A>Computes the product of a 3x3 matrix and a vector, then multiplies the x, y elements of the result by the ratio n/z.<P>
+<H3>Synopsis</H3>
+<CODE>void MulVec3Mat33DivZ_F16( vec3f16 dest, vec3f16 vec,mat33f16 mat, frac16 n )</CODE><P>
+<H3>Description</H3>
+This function multiplies a 3x3 matrix of 16.16 fractions by a 3-coordinate vector of 16.16 values, then multiplies the x and y elements of the result vector {x, y, z} by the ratio n/z, and deposits the result vector {x*n/z, y*n/z, z} in the product vector dest. This function can be used to perform the final projection transformation on points just before rendering. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dest
+<DD>The destination vector to store the results. 
+</DL>
+<DL>
+<DT>vec
+<DD>The vector to multiply. 
+</DL>
+<DL>
+<DT>mat
+<DD>The matrix to multiply. 
+</DL>
+<DL>
+<DT>n
+<DD>The scale factor to be multiplied by x and y projected results. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr067.html#XREF19174"><CODE>MulVec3Mat33_F16</A>(), <A HREF="./03spr049.html#XREF37499">MulManyVec3Mat33DivZ_F16</A>() </CODE><P>
+</CODE>

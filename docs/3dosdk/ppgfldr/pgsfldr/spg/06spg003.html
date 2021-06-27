@@ -1,0 +1,44 @@
+<TITLE>Using an Item</TITLE>
+<H1><LINK NAME="XREF28194">Using an Item</LINK></H1><HR>
+Once an item is created or opened, you can manage it with the kernel item calls, which are described here.<P>
+<H2>Finding an Item</H2>
+To find an item by specifying its item type and a set of tag arguments or a name, use these calls.<P>
+<DL>
+<DD><CODE>Item FindItem( int32 cType, const TagArg *tp )<BR>
+Item FindItemVA( int32 cType, uint32 tags, ...)<BR>
+Item FindNamedItem( int32 cType, const char *name )<BR>
+Item FindVersionedItem( int32 cType, const char *name, uint8 vers,  uint8 rev )</CODE><BR>
+</DL>
+<CODE>FindItem()</CODE> accepts an item type value, which is created by <CODE>MkNodeID()</CODE> as it 
+is for the <CODE>CreateItem()</CODE> call. This value specifies the type of the item for which 
+the call should search. The second argument, <CODE>tp</CODE>, is a pointer to an array of tag arguments the call should try to match. When the call is executed, it looks through the list of items and, if it finds an item of the specified item type whose tag arguments match those set in the tag argument array, it returns the item number of that item.<P>
+<CODE>FindNamedItem()</CODE> calls <CODE>FindItem()</CODE> after creating a <CODE>TagArg</CODE> for the name. When it searches through the item list, it checks names of all items of the specified type. If it finds a match, it returns the item number of that item.<P>
+<CODE>FindVersionedItem()</CODE> accepts <CODE>cType</CODE> as its first argument, which is the same 
+type of value as <CODE>itemType</CODE> in the other find calls. It also accepts a name, a version number, and a revision number. It searches to find the item that matches these specifications, then returns the item number of that item.<P>
+All of the item finding calls return a negative number if an error occurred in the search.<P>
+<H2>Getting a Pointer to an Item</H2>
+To find the absolute address of an item, use this call:<P>
+<DL>
+<DD><CODE>void *LookupItem( Item i )</CODE><BR>
+</DL>
+<CODE>LookupItem()</CODE> takes the item number of the item to locate as its only argument. If it finds the item, it returns a pointer to the item's ItemNode structure; if it doesn't find the item, it returns NULL. Once you have a pointer to the item, you can use it to read the values in the fields of the data structure. The ItemNode structure is protected by the system, so a user task can't write to it.<P>
+<H2>Checking If an Item Exists</H2>
+To see if an item exists, use this call:<P>
+<DL>
+<DD><CODE>void *CheckItem( Item i, uint8 ftype, uint8 ntype )</CODE><BR>
+</DL>
+<CODE>CheckItem()</CODE> accepts the item number of the item you want to check, followed by the folio type and the node type of the item. (<CODE>ftype</CODE> and <CODE>ntype</CODE> are the same as the arguments accepted by <CODE>MkNodeID()</CODE>, and are supplied with constants defined in appropriate header files.) When executed, the call returns a NULL if it can't find an item with the specified item number, or if it found an item but it didn't have the specified folio and node types. If the call finds an item that matches in all respects, it returns a pointer to that item.<P>
+<H2>Changing Item Ownership</H2>
+To change the ownership of an item from one task to another, use this call:<P>
+<DL>
+<DD><CODE>Err SetItemOwner( Item i, Item newOwner )</CODE><BR>
+</DL>
+The first argument of <CODE>SetItemOwner()</CODE> is the item number of the item for which to change ownership; its second argument is the item number of the task that is to be the new owner. The task that makes this call must be the owner of the item. If ownership transfer fails, the call returns a negative number (an error code).<P>
+When ownership of an item changes, the item is removed from the former owner's resource table and placed in the new owner's resource table. This allows an item to remain in the system after the original owner dies; all items owned by a task are removed from the system when the task dies.<P>
+<H2>Changing an Item's Priority</H2>
+To change the priority of an item, a task should call:<P>
+<DL>
+<DD><CODE>int32 SetItemPri( Item i, uint8 newpri )</CODE><BR>
+</DL>
+Item priority determines how frequently system resources are allocated to an item. The higher its priority, the more often an item has access to the resources. The task must be the owner of the item to change its priority.<P>
+<CODE>SetItemPri()</CODE> accepts the item number of the item whose priority you want to change, followed by an unsigned 8-bit integer which specifies the new priority for the item. Priority values range from 0-255. The call returns the former priority value of the item if successful, otherwise it returns a negative number.<P>

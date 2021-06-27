@@ -1,0 +1,513 @@
+<TITLE>Writing efficient C for the ARM</TITLE>
+<H1><LINK NAME="XREF40955">Writing efficient C for the ARM</LINK></H1><HR>
+<H2>About this recipe</H2>
+The ARM C compiler can generate very good machine code for if you present 
+it with the right sort of input. From this note, you will learn:<P>
+<UL>
+<LI>what the C compiler compiles well and why;<P>
+<LI>how to help the C compiler to generate excellent machine code.
+</UL>
+Some of the rules of thumb presented are quite general; some are quite 
+specific to the ARM or the ARM C compiler. It should be quite clear from 
+context which rules are portable.<P>
+The first subsection below is concerned with how to design collections of 
+C functions to maximise low-level efficiency. The following subsection is 
+concerned with the efficiency of larger and more complicated functions.<P>
+<H2>Function design considerations</H2>
+Unlike on many earlier CISC processor architectures, function call 
+overhead on the ARM is small and often in proportion to the work done by 
+the called function. Several feaures contribute to this:<P>
+<UL>
+<LI>the minimal ARM call-return sequence is BL... MOV pc, lr, which is 
+extremely economical;<P>
+<LI>STM and LDM reduce the cost of entry to and exit from functions which 
+must create a stack frame and/or save registers;<P>
+<LI>the ARM Procedure Call Standard has been carefully designed to allow 
+two very important types of function call to be optimised so that the 
+entry and exit overheads are minimal.
+</UL>
+Good general advice is to keep functions small, because function calling 
+overheads are low. In the remainder of this subsection you will learn 
+precisely when function call overhead is very low. In following 
+subsections you will learn how small functions help the ARM C compiler; 
+you will also learn how to assist the C compiler when functions cannot be 
+kept small.<P>
+<H3>Leaf functions</H3>
+In 'typical' programs, about half of all function calls made are to leaf 
+functions (a leaf function is one which makes no calls from within its 
+body).<P>
+Often, a leaf function is rather simple. On the ARM, if it is simple 
+enough to compile using just 5 registers (a1-a4 and ip), it will carry no 
+function entry or exit overhead. A surprising proportion of useful leaf 
+functions can be compiled within this constraint.<P>
+Once registers have to be saved, it is efficient to save them using STM. 
+In fact the more you can save at one go, the better. In a leaf function, 
+all and only the registers which need to be saved will be saved by a 
+single STMFD sp!,{regs,lr} on entry and a matching LDMFD sp!,{regs,pc} on 
+exit.<P>
+In general, the cost of pushing some registers on entry and popping them 
+on exit is very small compared to the cost of the useful work done by a 
+leaf function which is complicated enough to need more than 5 registers.<P>
+Overall, you should expect a leaf function to carry virtually no function 
+entry and exit overhead; and at worst, a small overhead, most likely in 
+proportion to the useful work done by it.<P>
+<H3>Veneer functions (Simple fail continued functions)</H3>
+Historically, abstraction veneers have been relatively expensive. The kind 
+of veneer function which merely changes the types of its arguments, or 
+which calls a low-level implementation with an extra argument (say), has 
+often cost much more in entry and exit overhead than it was worth in 
+useful work.<P>
+On the ARM, if a function ends with a call to another function, that call 
+can be converted to a <B>tail continuation</B>. In functions which need to 
+save no registers, the effect can be dramatic. Consider, for example:<P>
+<CODE>
+<PRE>
+extern void *__sys_alloc(unsigned type, unsigned n_words);
+#define  NOTGCable   0x80000000
+#define  NOTMovable  0x40000000
+
+void *malloc(unsigned n_bytes)
+{   
+    return __sys_alloc(NOTGCable+NOTMovable, n_bytes/4);
+}
+</CODE>
+</PRE>
+Here, <B>armcc</B> generates:<P>
+<CODE>
+<PRE>
+malloc
+    MOV     a2,a1,LSR #2
+    MOV     a1,#&amp;c0000000
+    B       |__sys_alloc|
+</CODE>
+</PRE>
+There is no function entry or exit overhead-just useful work massaging 
+arguments-and the function return has disappeared entirely - return is 
+direct from __sys_alloc to malloc's caller. In this case, the basic 
+call-return cost for the function pair has been reduced from:<P>
+<CODE>
+<PRE>
+BL + BL + MOV pc,lr + MOV pc,lr
+</CODE>
+</PRE>
+to:<P>
+<CODE>
+<PRE>
+BL + B  +             MOV pc,lr
+</CODE>
+</PRE>
+a saving of 25%.<P>
+More complicated functions in which the only function calls are 
+immediately before a return, collapse equally well. An artificial example 
+is:<P>
+<CODE>
+<PRE>
+extern int f1(int), int f2(int, int);
+</CODE>
+</PRE>
+
+<CODE>
+<PRE>
+int f(int a, int b)
+{   
+    if (b == 0)
+        return a;
+    else if (b &lt; 0)
+        return f2(a, -b);
+    else
+        return f2(b, a);                              /* argument order 
+swapped */
+}
+</CODE>
+</PRE>
+<B>armcc</B> generates the following, wonderfully efficient code:<P>
+<CODE>
+<PRE>
+f    CMP     a2,#0
+    MOVEQS  pc,lr
+    RSBLT   a2,a2,#0
+    BLT     f2
+    MOV     a3,a1
+    MOV     a1,a2
+    MOV     a2,a3
+    B       f2
+</CODE>
+</PRE>
+<H3>Fast paths and slow paths - A useful transformation</H3>
+Inevitably, not all functions can be leaves or small abstraction 
+functions. And, inevitably, non-leaf functions must carry the cost of 
+establishing a call frame on entry and removing it on exit, perhaps also 
+the cost of saving and restoring some registers. How does this hurt 
+performance? Consider the following example:<P>
+<CODE>
+<PRE>
+int f(Buffer *b)
+{    if (b-&gt;n &gt; 0)
+     {   /* The usual path through the function... */
+         /*     95% of all calls.*/
+         /* Simple calculation involving b-&gt;buf, b-&gt;n, etc.*/
+         return ...;
+     }
+     /* Exceptional path through the function... */
+     /*     5% of all calls.  */
+     /* Complicated calculation involving calls
+     /*     to other functions.*/
+     return ...;
+}
+</CODE>
+</PRE>
+In this case, the entry and register-save overhead caused by the 
+infrequent heavyweight path through the function applies to the much more 
+frequent lightweight path through it. To fix this, turn the heavyweight 
+path into a tail call. Yes, introducing another layer of function call 
+yields much more efficient code!<P>
+<CODE>
+<PRE>
+int f2(Buffer *b)
+{     /* Exceptional path through the function... */
+      /*     5% of all calls.  */
+      /* Complicated calculation involving calls */
+      /*     to other functions.*/
+      return ...;
+}
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+int f(Buffer *b)
+{    if (b-&gt;n &gt; 0)
+         {     /* The usual path through the function... */
+               /*     95% of all calls.*/
+               /* Simple calculation involving b-&gt;buf, b-&gt;n, etc.*/
+               return ...;]
+        }
+    return f2(b);
+}
+</CODE>
+</PRE>
+If you are lucky, f() will now compile using only a1-a4 and ip and so 
+incur no entry overhead whatsoever. 95% of the time, the overhead on the 
+original f() will be reduced to zero.<P>
+This is quite a general source transformation technique and you should 
+look for opportunities to use it and analogous transformations. It works 
+for any processor to some extent; it works particulary well for the ARM 
+because of the careful optimisation of tail continuation in lightweight 
+functions.<P>
+Repeated application of this technique to the chain of six or so functions 
+called for every character processed by the preprocessing phase of the ARM 
+C compiler, improved the performance of the preprocessor (running on the 
+ARM) by about 30%.<P>
+<H3>Function arguments and argument passing</H3>
+The final aspect of function design which influences low-level efficiency 
+is argument passing.<P>
+Under the ARM Procedure Call Standard, up to four argument words can be 
+passed to a function in registers. Functions of up to four integral (not 
+floating point) arguments are particularly efficient and incur very little 
+overhead beyond that required to compute the argument expressions 
+themselves (there may be a little register juggling in the called 
+function, depending on its complexity).<P>
+If more arguments are needed, then the 5th, 6th, etc., words will be 
+passed on the stack. This incurs the cost of an STR in the calling 
+function and an LDR in the called function for each argument word beyond 
+four.<P>
+How can argument passing overhead be minimised?<P>
+<UL>
+<LI>Try to ensure that small functions take four or fewer arguments. These 
+will compile particualrly well.<P>
+<LI>If a function needs many arguments, try to ensure that it does a 
+significant amount of work on every call, so that the cost of passing 
+arguments is amortised.<P>
+<LI>Factor out read-mostly global control state and make this static. If 
+it has to be passed as an argument (e.g. to support multiple clients) then 
+wrap it up in a struct and pass a pointer to it. The characteristics of 
+such control state are:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>it's logically global to the compilation unit or program<P>
+<LI>it's read-mostly, often read-only except in response to user input, 
+and for almost all functions cannot be changed by them or any function 
+called from them;<P>
+<LI>references to it are ubiquitous, but in any function, references are 
+relatively rare (frequent references should be replaced by references to a 
+local, non-static copy).
+</UL><BR>
+</DL>
+<UL>
+<LI>Don't confuse such control state with compuational arguments, the 
+values of which differ on every call.
+</UL>
+<UL>
+<LI>Collect related data into structs. Decide whether to pass pointers or 
+struct values based on the use of each struct in the called function:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>If few fields are read or written then passing a pointer is best.<P>
+<LI>The cost of passing a struct via the stack is typically a share in an 
+LDM-STM pair for each word of the struct. This can be better than passing 
+a pointer if (i) on average, each field is used at least once and (ii) the 
+register pressure in the function is high enough to force a pointer to be 
+repeatedly re-loaded. 
+</UL><BR>
+</DL>
+<UL>
+<LI>As a rule of thumb, you can't lose much efficiency if you pass 
+pointers to structs rather than struct values. To gain efficiency by 
+passing struct values rather than pointers usually requires careful study 
+of a function's machine code.
+</UL>
+<H2>Register allocation and how to help it</H2>
+It is well known that register allocation is critical to the efficiency of 
+code compiled for RISC processors. It is particularly critical for the 
+ARM, which has only 16 registers rather than the 'traditional' 32.<P>
+The ARM C compiler has a highly efficient register allocator which 
+operates on complete functions and which tries to allocate the most 
+frequently used variables to registers (taking loop nesting into account). 
+It produces very good results unless the demand for registers seriously 
+outstrips supply. And it has one shortcoming, namely that it allocates 
+whole variables to registers, not separate live ranges.<P>
+As code generation proceeds for a function, new variables are created for 
+expression temporaries. These are never reused in later expressions and 
+cannot be spilled to memory. Usually, this causes no problems. However, a 
+particularly pathological expression could, in principle, occupy most of 
+the allocatable registers, forcing almost all program variables to be 
+spilled to memory. Because the number of registers required to evaluate an 
+expression is a logarithmic function of the number terms in it, it takes 
+an expression of more than 32 terms to threaten the use of any variable 
+register.<P>
+As a rule of thumb, avoid very large expressions (more than 30 terms).<P>
+The more serious problem is with long scope program variables. Our 
+allocator either allocates a variable to a chosen register everywhere the 
+variable is live, or it leaves the variable in memory. To help visualise 
+the problem - and to see how to help the allocator - consider the 
+following two program schemata:<P>
+<CODE>
+<PRE>
+int f()                            int f()
+{   int i, j, ...;                 {   int j, ...;
+                                     { int i;
+    for (i = 0;  i &lt; lim;  ++i)        for (i = 0;  i &lt; lim;  ++i)
+    {                                  {
+        ...                               ...
+    }                                  }
+                                     }
+                                     { int i;
+    for (i = 0;  i &lt; lim;  ++i)        for (i = 0;  i &lt; lim;  ++i)
+    {  /* register pressure in this    {
+       loop forces 'i' to memory */
+    }                                  }
+                                     }
+                                     { int i;
+    for (i = 0;  i &lt; lim;  ++i)        for (i = 0;  i &lt; lim;  ++i)
+    {                                  {
+        ...                                ...
+    }                                  }
+                                     }
+}                                  }
+</CODE>
+</PRE>
+In the left hand case, because the scope of 'i' is the whole function, if 
+'i' cannot be allocated to a register everywhere then all three loops will 
+suffer their loop index being in memory. On the other hand, in the right 
+hand case there are three separate variables called 'i', each of which 
+will be allocated separately by the register allocator.<P>
+As a rule of thumb, keep variable declarations local, especially in large 
+functions. Use additional block structure as illustrated here (right hand 
+example), if necessary.<P>
+On the other hand, if this transformation is carried to excess, there may 
+be bad results. When a local variable is spilled to memory, there is a 
+stack adjustment on each entry to and exit from its containing scope. The 
+ARM C compiler does this to minimise the space used by local variables. 
+Suppose, for example, that in the right hand case above, each block 
+declared a 1KB buffer as well as 'i'. Then adjusting the stack at every 
+scope leads to stack usage of just over 1KB whereas adjusting it only at 
+function entry leads to usage of more than 3KB.<P>
+In principle, the compiler could be more intelligent about adjusting the 
+stack locally for large variables and only at function entry for small 
+variables. For the moment, the programmer must be aware of these issues.<P>
+So, a modified rule of thumb is to cluster variable declarations into 
+reasonable sub-scopes within large functions and to avoid doing so within 
+the most deeply nested loops. This will most likely help the allocator 
+without introducing unwanted costs associated with local stack 
+adjustment.<P>
+<H2>Static and extern variables - minimising access costs</H2>
+A variable in a register costs nothing to access: it is just there, 
+waiting to be used. A local (auto) variable is addressed via the sp 
+register, which is always available for the purpose.<P>
+A static variable, on the other hand, can only be accessed after the 
+static base for the compilation unit has been loaded. So, the first such 
+use in a function always costs 2 LDRs or an LDR and an STR. However, if 
+there are many uses of static variables within a function then there is a 
+good chance that the static base will become a global common subexpression 
+(CSE) and that, overall, access to static variables will be no more 
+expensive than to auto variables on the stack.<P>
+Extern variables are fundamentally more expensive: each has its own base 
+pointer. Thus each access to an extern is likely to cost 2 LDRs or an LDR 
+and an STR. It is much less likely that a pointer to an extern will become 
+a global CSE - and almost certain that there cannot be several such CSEs - 
+so if a function accesses lots of extern variables, it is bound to incur 
+significant access costs.<P>
+A further cost occurs when a function is called: the compiler has to 
+assume - in the absence of inter-procedural data flow analysis - that 
+<B>any</B> non- const static or extern variable <B>could</B> be 
+side-effected by the call. This severly limits the scope across which the 
+value of a static or extern variable can be held in a register.<P>
+Sometimes a programmer can do better than a compiler could do, even a 
+compiler that did interprocedural data flow analysis. An example in C is 
+given by the standard streams: stdin, stdout and stderr. These are not 
+pointers to const objects (the underlying FILE structs are modified by I/O 
+operations), nor are they necessarily const pointers (they may be 
+assignable in some implementations). Nonetheless, a function can almost 
+always safely slave a reference to a stream in a local FILE * variable.<P>
+It is a common programming paradigm to mimic the standard streams in 
+applications. Consider, for example, the shape of a typical non-leaf 
+printing function:<P>
+<CODE>
+<PRE>
+extern FILE *out;                  extern FILE *out;
+/* the output stream */            /* the output stream */
+
+void print_it(Thing *t)            void print_it(Thing *t)
+{                                  {   FILE *f = out;
+    fprintf(out, ...);                 fprintf(f, ...);
+    print_1(t-&gt;first);                 print_1(t-&gt;first);
+    fprintf(out, ...);                 fprintf(f, ...);
+    print_2(t-&gt;second);                print_2(t-&gt;second);
+    fprintf(out, ...);                 fprintf(f, ...);
+    ...                                ...
+}                                  }
+</CODE>
+</PRE>
+In the left hand case, out has be be re-computed or re-loaded after each 
+call to print_... (and after each fprintf...). In the right hand case, 'f' 
+can be held in a register throughout the function (and probably will 
+be).<P>
+Uniform application of this transformation to the disassembly module of 
+the ARM C compiler saved more than 5% of its code space.<P>
+In general, it is difficult and potentially dangerous to assert that no 
+function you call (or any functions they in turn call) can affect the 
+value of any static or extern variables of which you currently have local 
+copies. However, the rewards can be considerable so it is usually 
+worthwhile to work out at the program design stage which global variables 
+are slavable locally and which are not. Trying to retrofit this 
+improvement to exisiting code is usually hazardous, except in very simple 
+cases like the above.<P>
+<H2>The switch() statement</H2>
+The switch() statement can be used to transfer control to one of several 
+destinations - conceptually an indexed transfer of control - or to 
+generate a value related to the controlling expression (in effect 
+computing an in-line function of the controlling expression).<P>
+In the first role, switch() is hard to improve upon: the ARM C compiler 
+does a good job of deciding when to compile jump tables and when to 
+compile trees of if-then-elses. It is rare for a programmer to be able to 
+improve upon this by writing if-then-else trees explicitly in the 
+source.<P>
+In the second role, however, use of switch() is often mistaken. You can 
+probably do better by being more aware of what is being computed and 
+how.<P>
+In the example below, which is abstracted from an early version of the 
+disassembly module of the ARM C Compiler, you will learn:<P>
+<UL>
+<LI>the cost of implementing an in-line function using switch();
+<LI>how to implement the same function more economically.
+</UL>
+The function below used for illustrative purposes maps a 4-bit field of an 
+ARM instruction to a 2-character condition code mnemonic. The real case 
+was more complicated, decoding two 4-bit fields to a 3-char mnemonic, but 
+for illustration the simple example serves just as well. The real case was 
+also embedded in a larger function, but this is irrelevant to the 
+discussion.<P>
+<CODE>
+<PRE>
+char *cond_of_instr(unsigned instr)
+{   
+    char *s;`
+        switch (instr &amp; 0xf0000000)
+        {
+case 0x00000000:  s = "EQ";  break;
+case 0x10000000:  s = "NE";  break;
+     ...          ...        ...
+case 0xF0000000:  s = "NV";  break;
+        }
+        return s;
+}
+</CODE>
+</PRE>
+The compiler handles this code fragment well, generating 276 bytes of code 
+and string literals. But we could do better. If performance were not 
+critical (as it never is in disassembly) then we could look up the code in 
+a table of codes, in something like:<P>
+<CODE>
+<PRE>
+char *cond_of_instr(unsigned instr)
+{
+    static struct {char name[3];  unsigned code;}
+        conds[] = {
+            "EQ", 0x00000000,
+            "NE", 0x10000000,
+             ....
+             "NV", 0xf0000000,
+        };
+    int j;
+    for (j = 0;  j &lt; sizeof(conds)/sizeof(conds[0]);  ++j)
+        if ((instr &amp; 0xf0000000) == conds[j].code)
+            return conds[j].name;
+    return "";
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+}
+</CODE>
+</PRE>
+This fragment compiles to 68 bytes of code and 128 bytes of table data. 
+Already this is a 30% improvement on the switch() case, but this schema 
+has other advantages: it copes well with a random code to string mapping 
+and if the mapping is not random admits further optimisation. For example, 
+if the code is stored in a byte (char) instead of an unsigned and the 
+comparison is with (instr &gt;&gt; 28) rather than (instr &amp; 
+0xF0000000) then only 60 bytes of code and 64 bytes of data are generated 
+for a total of 124 bytes.<P>
+Another advantage we have heard of for table lookup is that is is possible 
+to share the same table between a disassembler and an assembler - the 
+assembler looks up the mnemonic to obtain the code value, rather than the 
+code value to obtain the mnemonic. Where performance is not critical, the 
+symmetric property of lookup tables can sometimes be exploited to yield 
+significant space savings.<P>
+Finally, by exploiting the denseness of the indexing and the uniformity of 
+the returned value it is possible to do better again, both in size and 
+performance, by direct indexing:<P>
+<CODE>
+<PRE>
+char *cond_of_instr(unsigned instr)
+{
+    return "\
+EQ\0\0NE\0\0CC\0\0CS\0\0MI\0\0PL\0\0VS\0\0VC\0\0\
+HI\0\0LS\0\0GE\0\0LT\0\0GT\0\0LE\0\0AL\0\0NV" + (instr &gt;&gt; 28)*4;
+}
+</CODE>
+</PRE>
+This expression of the problem causes a miserly 16 bytes of code and 64 
+bytes of string literal to be generated and is probably close to what an 
+experienced assembly language programmer would naturally write if asked to 
+code this function. It is the solution finally adopted in the ARM C 
+compiler's disassembler module.<P>
+The uniform application of this transformation to the disassembler module 
+of the ARM C compiler saved between 5% and 10% of its code space.<P>
+The moral of this tale is to think before using switch() to compute an 
+in-line function, especially if code size is an important consideration. 
+Switch() compiles to high performance code but often table lookup will be 
+smaller; where the function's domain is dense, or piecewise dense, direct 
+indexing into a table will often be both faster and smaller.<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./2acbk.html#XREF12134">ARM assembly programming performance 
+issues</A>.
+<LI><A HREF="./3acba.html#XREF36909">Register usage under the ARM 
+procedure call standard</A>.
+<LI><A HREF="./3acbb.html#XREF32701">Passing and returning structs</A>.
+</UL>

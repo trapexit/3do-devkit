@@ -1,0 +1,96 @@
+<TITLE>Troubleshooting</TITLE>
+<H1><LINK NAME="XREF32057">Troubleshooting</LINK></H1><HR>
+<A NAME="XREF24972"><H2>Problem with Gaps Between Cels</A></H2>
+<B>Q:</B>  When I display two cels at a slant (two corners join at one 
+point), there are some gaps between the cels through which the background 
+is visible. <P>
+<B>A:</B> When rendering two adjacent cels that theoretically share a 
+common border, developers have noticed "stitching" effects-gaps and 
+overlaps between the cels. The way that cel images are mapped to display 
+memory causes this problem.<P>
+The region fill algorithm that maps single pixels from cel source imagery 
+to regions of pixels in the display buffer never leaves uncovered pixels 
+between adjacent regions. The problem between adjacent cels only arises 
+when at least one of the following is true: <P>
+<UL>
+<LI>The common border between the cels is covered by a different number of 
+regions from the two cels; or 
+<p>
+<LI>The shared corner points of regions that are supposed to be adjacent 
+do not have identical positions-which is really what is implied by cels 
+having a different number of pixels on their shared border
+</UL>
+To guarantee that the edges between two cels close, make sure that both 
+cels have the same number of pixels along their common border, and that 
+the common corners have identical positions-a 1/65536-pixel difference in 
+the fractional part of the position of a corner that is supposed to be 
+common can cause undesired gaps or overlaps. <P>
+Because of the way fractional values accumulate during the rendering 
+process, not all combinations of corner positions and cel widths and 
+heights are possible. If a cel has width <I>w</I>, height <I>h</I>, and 
+origin (o_x, o_y), then its corners (counting clockwise around the source) 
+must be constrained in the following way: <P>
+<UL>
+<LI>The differences between the x and y positions of the first destination 
+corner and the origin point must be equal to 0 mod w (in units of 1/65536 
+pixel position). 
+<p>
+<LI>The differences between the x and y positions of the second 
+destination corner and the origin point must be equal to 0 mod (w*h) (in 
+units of 1/65536-pixel position). 
+<p>
+<LI>The differences between the x and y positions of the second 
+destination corner and the origin point must be equal to 0 mod h (in units 
+of 1/65536-pixel position).
+</UL>
+If the width and height of a cel are both a power of 2 and their product 
+does not exceed 65536, then any arrangement of the four corners where the 
+fractional portions of the x positions and the fractional portions of the 
+y positions are all equal is achievable. This is probably the easiest rule 
+to follow, because it's easy to divide by powers of 2 when creating the 
+deltas for the cel control blocks.<P>
+The numbers don't necessarily have to be a power of 2, and the cels can 
+have different heights and widths as long as cels are arranged so that 
+common borders share the same number of pixels. For example, if all the 
+cels a program uses are 37 x 53, any arrangement of the four corners where 
+the positions are equal to each other mod 1961 (in units of 1/65536 pixel) 
+is achievable.<P>
+Unfortunately, the current <CODE>MapCel()</CODE> function takes a 
+structure as input that describes the destination corners in units of 
+whole pixels. <CODE>MapCel()</CODE> also performs explicit divisions in 
+its calculations and does not take advantage of the performance 
+improvements afforded by cel dimensions that are powers of 2. You can use 
+the <CODE>MapP2Cel()</CODE> function in Lib3DO to quickly render cels 
+whose width and height are integral powers of 2, or write your own 
+function. <P>
+<A NAME="XREF22819"><H2>Huge Cels Draw Slowly</A></H2>
+<B>Q:</B> I have a 16-bit, 320-x-440 cel. I'd like to spin it, zoom it, 
+and scroll it over the screen, but when I <CODE>use</CODE><CODE> 
+DrawCel()</CODE> to display it, the screen update rate seems to be only 5 
+to 10 frames per second. If a cel is less than one third the size of the 
+screen, updates seem to occur at 30 frames a second. Do you think I'm 
+doing something wrong?<P>
+<B>A:</B> Nothing's really wrong; you're just trying to render a boatload 
+of data. 320 * 400 * 16 bits/pixel == 256000 bytes that the cel engine 
+must crunch through.<P>
+You're writing to the whole screen (153 KB) and reading the whole cel 
+(~256 KB). This takes many bus cycles.<P>
+Here are some tips for improving rendering speed:<P>
+<UL>
+<LI>Always save your cels as packed. In some cases, this results in larger 
+cels-make sure it doesn't. Cels with long horizontal runs of identical 
+pixels pack well. You get the added benefit of declared transparency.
+<p>
+<LI>Consider a lower bit depth for cels. 16-bit uncoded cels are 
+<I>very</I> wasteful and should only be used when all other options are 
+unacceptable. 8-bit coded cels and 6-bit coded cels can yield striking 
+results with a little care.
+<p>
+<LI>Use both corner engines. To enable the second corner engine, turn on 
+the <CODE>CCB_ACE</CODE> bit in the<CODE> FLAGS </CODE>field. 
+</UL>
+The idea is to reduce the number of memory fetches the system must do to 
+render the cel. The fewer fetches, the more bus cycles saved for write 
+cycles. The cel engine is pretty clever about using as many cycles as it 
+can.<P>
+See also<I>:</I> <A HREF="6gpgb.html#XREF17928">Cel Rendering Speed</A>.<P>

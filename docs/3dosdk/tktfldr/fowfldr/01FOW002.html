@@ -1,0 +1,53 @@
+<TITLE>Creating a new anti-aliased font</TITLE>
+<H1><LINK NAME="XREF10966">Creating a new anti-aliased font</LINK></H1><HR>
+This section describes font creation and discusses the two most frequently used 3DO FontWriter windows.  All FontWriter windows and menus are described in detail in Chapter 2. <P>
+<B>Note: </B>Don't use  fonts in your 3DO title that you are not licensed to use. Starting with Release 1.4 of the Toolkit, a number of public domain fonts are provided on the 3DO Toolkit CD-ROM. <P>
+<H2>How to create a new font</H2>
+To create an anti-aliased font from a font in your Macintosh <I>System</I> folder with 3DO FontWriter: <P>
+<OL>
+<LI>Open the 3DO FontWriter. 
+<p>
+<LI>From the File menu, choose New. 
+<p>
+The 3DO FontWriter dialog, shown in Figure 1, appears. 
+<p>
+
+<IMG SRC="PICTS/FWdialog.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>3DO FontWriter dialog.</I><P>
+
+<LI>Select a font from the topmost pop-up menu, which lists  all fonts in the <I>Fonts</I> folder of your <I>System</I> folder. The Sample Text area is for previewing the selected font and changes made to it. 
+<p>
+<LI>Make other choices as needed, for example: 
+
+The Style Info box  lets you select styles (bold, italic, outline, and so on) for the 3DO FontWriter to apply to your font. 
+<p>
+Change the Min ASCII or Max ASCII value in the Font Info box if you need only part of the sequence of ASCII characters. 
+<p>
+Make sure the View Area's Max Width and Max Height define ample space for any character at the specified font size, or you can lose information with some styles. You can remove unused space bordering the characters later, as explained in Step 7 below.
+<p>
+Select two images per character if you intend to create a shadow or outline effect using a contrasting color. 
+
+<p>
+<LI>Choose OK, and the 3DO FontWriter builds the font, displaying a progress dialog during the process.
+<p>
+If you chose a font without outlines or shadows, the tool creates a mask with eight levels of gray that effectively produces an anti-aliased font. 
+<p>
+If you chose a font with outlines or shadows, the tool creates two images with eight levels of gray each. 
+<p>
+<IMG SRC="PICTS/FWProgress.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Progress dialog.</I><P>
+
+<LI>Edit the individual characters in the font using the different windows discussed in the next chapter.
+<p>
+<LI>From the Edit menu, choose Minimize Font Region to resize the font to the minimum required size. 
+<p>
+<LI>Save two versions of the new font when you're satisfied: 
+
+<P>
+Save a font that the 3DO FontWriter can load for further editing by using Save (or Save As). 
+<P>
+Save a font that your program can display on the 3DO Station using the Font Library utilities by using Save 3DO Font. The name for this file has the extension .3do.
+
+</OL>

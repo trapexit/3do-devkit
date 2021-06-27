@@ -1,0 +1,58 @@
+<TITLE>Debugging Memory Usage</TITLE>
+<H1><LINK NAME="XREF26354">Debugging Memory Usage</LINK></H1><HR>
+Problems can occur when your application allocates or manages memory if the memory is misused or isn't freed up after use. A memory debugging module is provided to help spot memory management problems. The module replaces the memory allocation routines in your program with a superset that checks that the memory system is used correctly. These calls are activated when you do the following: <P>
+<OL>
+<LI>Add <CODE>CreateMemDebug()</CODE> as the first instruction in the <CODE>main()</CODE> routine of your program:
+<p>
+<DL>
+<DD><CODE>Err CreateMemDebug(uint32 controlFlags, const TagArg *args);</CODE><BR>
+</DL>
+
+<p><CODE>controlFlags</CODE> is a set of bit flags that control various options of the memory debugging code; <CODE>args</CODE> is a pointer to an array of tag arguments containing extra data for this function. See the <A HREF="../spr/01spr.html#XREF17318">Kernel Folio Calls</A> in the <I>3DO System Programmer's Reference</I> for a description of each flag. Currently, <CODE>args</CODE> must always be NULL.
+<p>
+
+<LI>Add <CODE>DumpMemDebug()</CODE> and <CODE>DeleteMemDebug()</CODE> as the last instructions in the <CODE>main()</CODE> routine of your program.
+<p>
+<DL>
+<DD><CODE>Err DumpMemDebug(const TagArg *args);<BR>
+Err DeleteMemDebug(void);</CODE><BR>
+</DL>
+
+<p><CODE>args</CODE> is a pointer to an array of tag arguments containing extra data for this function. Currently <CODE>args</CODE> must always be NULL.
+<p>
+
+
+<LI>Recompile your entire application with <CODE>MEMDEBUG</CODE> defined on the ARM compiler's command line. For the ARM compiler, this is done by adding 
+<p>
+<DL>
+<DD><CODE>-DMEMDEBUG</CODE><BR>
+</DL>
+
+<p>to the compile line.
+<p>
+
+<LI>Link your code with <I>memdebug.lib
+
+<p>A link order is important when using </I><I>memdebug.lib</I>. The memdebug library should come before <I>clib.lib</I>, but after everything else. That is, the link order should be:
+<p>
+<DL>
+<DD><CODE>[many .lib files] memdebug.lib clib.lib</CODE><BR>
+</DL>
+</OL>
+Other than <CODE>CreateMemDebug()</CODE>, <CODE>DumpMemDebug()</CODE>, and <CODE>DeleteMemDebug()</CODE>, there is no difference in the way your code works. When your program allocates memory, each memory allocation is tracked and managed. In addition, the memory debugging module makes sure that illegal or dangerous memory use is detected and flagged. When your program exits, any memory left allocated is displayed, along with the line number and source file from where memory was allocated.<P>
+When all the control flags are turned on, the debugging code checks and reports the following problems:<P>
+<UL>
+<LI>Memory allocations of 0.
+<p>
+<LI>Memory freed with a NULL or bogus memory pointer.
+<p>
+<LI>Memory freed of a size that does not match the size of memory that was allocated.
+<p>
+<LI>NULL memory lists passed to <CODE>AllocMemFromMemLists()</CODE> or <CODE>FreeMemToMemLists().</CODE>
+<p>
+<LI>Cookies on either side of all memory allocations are checked so they are not altered from the time a memory allocation is made to the time the memory is released. A change in the cookies indicates that your program is writing beyond the bounds of allocated memory.
+</UL>
+When <CODE>MEMDEBUG</CODE> is defined during compilation, all standard memory allocation calls are automatically vectored through the debugging code. This includes memory allocation calls made in previously compiled .lib files with which you might be linking. However, you can get better debugging information if you recompile everything in your project, including .lib files, with <CODE>MEMDEBUG</CODE> defined.<P>
+If you call <CODE>DumpMemDebug()</CODE> at any time within your application, you can get a detailed listing of all memory currently allocated, showing the source line and source file from which the allocation occurred. This function also outputs statistics about general memory allocation patterns including: the number of memory allocation calls that have been performed, the maximum number of bytes allocated at any one time, current amount of allocated memory, and so on. All of this information is displayed on a per-thread basis, as well as globally for all threads. When using link libraries that haven't been recompiled with <CODE>MEMDEBUG</CODE> defined, the memory debugging subsystem will still can track the allocations, but will not report the source file or line number where the error occurred. It reports &lt;unknown source file&gt; instead.<P>
+An additional call, <CODE>SanityCheckMemDebug()</CODE>, can find problems with memory. This call checks outstanding memory allocations and checks all cookies to see if they have been corrupted. For example, if you want to find the location of a chunk of memory is being corrupted, you could place <CODE>SanityCheckMemDebug()</CODE> calls throughout the program. Look at the return data of each call until you locate the place in the program where the cookies are corrupted.<P>
+After you finish using any of these calls, turn off memory debugging before you create the final version of your program. Enabling memory debugging incurs an overhead of 32 bytes per allocation made. If you use the <CODE>MEMDEBUGF_PAD_COOKIES</CODE> option, this overhead grows to 64 bytes per allocation.<P>

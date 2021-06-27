@@ -1,0 +1,73 @@
+<Title>Bitmap </Title>
+<A NAME="XREF14255"><H1>Bitmap </A></H1>
+<A NAME="XREF10236"> Frame buffer into which rendering may be performed.</A><P>
+<H3>Description</H3>
+A Bitmap is the logical destination for all graphics rendering operations.  Bitmap items describe the dimensions of the frame buffer, its starting address in RAM, optional clipping area, and other characteristics. <P>
+<H3>Folio</H3>
+graphics <P>
+<H3>Item Type</H3>
+BITMAPNODE <P>
+<H3>Create</H3>
+<CODE><CODE>CreateBitmap()</CODE> <BR>
+<CODE>CreateBitmapVA()</CODE> <BR>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE> </CODE><P>
+<H3>Delete</H3>
+<CODE><CODE>DeleteBitmap()</CODE> <BR>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE> </CODE><P>
+<H3>Query</H3>
+None <P>
+<H3>Modify</H3>
+None <P>
+<H3>Use</H3>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr008.html#XREF29335">CreateScreenGroup</A>()</CODE> <P>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr018.html#XREF23720">DisplayOverlay</A>()</CODE> <P>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr020.html#XREF25632"><CODE>DrawCels</A>()</CODE> <BR>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr034.html#XREF16038">GetPixelAddress</A>()</CODE> <BR>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr057.html#XREF34682">SetCEControl</A>()</CODE> <BR>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr058.html#XREF32099">SetCEWatchDog</A>()</CODE> <BR>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr059.html#XREF10063">SetClipHeight</A>t()</CODE> <BR>
+ <CODE><A HREF="../../ggsfldr/gprfldr/01gpr060.html#XREF42733">SetClipOrigin</A>()</CODE> <BR>
+ <CODE><A HREF="../../ggsfldr/gprfldr/01gpr061.html#XREF41634">SetClipWidth</A>()</CODE> <BR>
+<CODE> <A HREF="../../ggsfldr/gprfldr/01gpr064.html#XREF16176">SetReadAddress</A>()</CODE> <BR>
+ <CODE><A HREF="../../ggsfldr/gprfldr/01gpr051.html#XREF20708">ReadPixel</A>()</CODE> <BR>
+ <CODE><A HREF="../../ggsfldr/gprfldr/01gpr054.html#XREF28789">ResetReadAddress</A>()</CODE> <BR>
+ <CODE><A HREF="../../ggsfldr/gprfldr/01gpr073.html#XREF26683">WritePixel</A>()</CODE> </CODE><P>
+<H3>Tags</H3>
+The following tags must be present: 
+<DL>
+<DT>CBM_TAG_WIDTH(int32)
+<DD>Sets the bitmap width, in pixels.
+</DL>
+<DL>
+<DT>CBM_TAG_HEIGHT(int32)
+<DD>Specifies the bitmap height, in pixels.
+</DL>
+<DL>
+<DT>CBM_TAG_BUFFER(void *)
+<DD>Specifies the starting address of the bitmap buffer.
+</DL>
+The following tags are optional: 
+<DL>
+<DT>CBM_TAG_CLIPWIDTH(int32)
+<DD> Specifies the width of the clipping region, in pixels.  (default:  the value of CBM_TAG_WIDTH) 
+</DL>
+<DL>
+<DT>CBM_TAG_CLIPHEIGHT(int32)
+<DD>Specifies the height of the clipping region, in pixels.  (default: the value of CBM_TAG_HEIGHT) 
+</DL>
+<DL>
+<DT>CBM_TAG_CLIPX(int32)
+<DD>Specifies the left edge of the clipping region, in pixels.  (default: 0) 
+</DL>
+<DL>
+<DT>CBM_TAG_CLIPY(int32)
+</DD> Specifies the top edge of the clipping region, in pixels.  (default: 0) 
+</DL>
+<DL>
+<DT>CBM_TAG_WATCHDOGCTR(int32)
+<DD>Specifies the cel engine timeout value, in msec.  (default: 1000000) 
+</DL>
+<DL>
+<DT>CBM_TAG_CECONTROL(uint32)
+<DD>Specifies the CEControl register value to be used when this bitmap is being rendered to by the cel engine.  (default: (B15POS_PDC | B0POS_PPMP | CFBDSUB | CFBDLSB_CFBD0 | PDCLSB_PDC0) ) 
+</DL>

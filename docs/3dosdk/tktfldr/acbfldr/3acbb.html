@@ -1,0 +1,280 @@
+<TITLE>Passing and returning structs</TITLE>
+<H1><LINK NAME="XREF32701">Passing and returning structs</LINK></H1><HR>
+<H2>About this recipe</H2>
+In this recipe you will learn about:<P>
+<UL>
+<LI>the way structs are normally passed to and from functions;
+<LI>cases when this is automatically optimised;
+<LI>how to tell the compiler to return a struct value using several 
+registers.
+</UL>
+<H2>The default way to pass and return a struct</H2>
+Unless special conditions apply (detailed in following sections), C 
+structures are:<P>
+<UL>
+<LI>passed in registers which if necessary overflow onto the stack;
+<LI>returned via a pointer to the memory location of the result.
+</UL>
+For struct-valued functions a pointer to the location where the struct 
+result is to be placed is passed in a1, (the first argument register).  
+The first argument is then passed in a2, the second in a3 etc.<P>
+It is as if:<P>
+<CODE>
+<PRE>
+struct s f(int x)
+</CODE>
+</PRE>
+were compiled as:<P>
+<CODE>
+<PRE>
+void f(struct s *result, int x)
+</CODE>
+</PRE>
+As a demonstration of the default way in which structures are passed and 
+returned consider the following code:<P>
+<CODE>
+<PRE>
+typedef struct two_ch_struct
+{ char ch1;
+  char ch2;
+} two_ch;
+
+two_ch max( two_ch a, two_ch b )
+{ return (a.ch1&gt;b.ch1) ? a : b;
+}
+</CODE>
+</PRE>
+This code is available in the <B>examples</B> directory as 
+<B>two_ch.c</B>.  It can be compiled to produce Assembly Language source 
+by using the following command:<P>
+<CODE>
+<PRE>
+armcc -S two_ch.c -li -apcs 3/32bit
+</CODE>
+</PRE>
+Where -li and -apcs 3/32bit can be omitted if <B>armcc</B> has been 
+configured appropriately already.<P>
+Here is the code which <B>armcc</B> produces:<P>
+<CODE>
+<PRE>
+max
+    MOV    ip,sp
+    STMDB  sp!,{a1-a3,fp,ip,lr,pc}
+    SUB    fp,ip,#4
+    LDRB   a3,[fp,#-&amp;14]
+    LDRB   a2,[fp,#-&amp;10]
+    CMP    a3,a2
+    SUBLE  a2,fp,#&amp;10
+    SUBGT  a2,fp,#&amp;14
+    LDR    a2,[a2,#0]
+    STR    a2,[a1,#0]
+    LDMDB  fp,{fp,sp,pc}
+</CODE>
+</PRE>
+The STMDB instruction saves the arguments onto the stack, together with 
+the frame pointer, stack pointer, link register and current pc value (this 
+sequence of values is the stack backtrace data structure).<P>
+a2 and a3 are then used as temporary registers to hold the the required 
+part of the strucures passed, and a1 as a pointer to an area in memory in 
+which the resulting struct is placed - all as expected.<P>
+For a basic explanation of register naming and usage under the APCS, see 
+<A HREF="./3acba.html#XREF36909">Register usage under the ARM procedure 
+call standard</A>.  Detailed information can be found in <A 
+HREF="../atsfldr/4atsc.html#XREF36070">C language calling 
+conventions</A>.<P>
+<H2>The optimisation of integer-like structures</H2>
+The ARM Procedure Call Standard specifies different rules for returning 
+<B>integer-like</B> structs.  An integer-like struct is one which has the 
+following properties:<P>
+<UL>
+<LI>The size of the struct is no larger than one word;
+<LI>The byte offset of each addressable sub-field is 0 (bit-fields are not 
+addressable).
+</UL>
+Thus the following structs are integer-like:<P>
+<CODE>
+<PRE>
+struct
+{ unsigned a:8, b:8, c:8, d:8;
+}
+
+union polymorphic_ptr
+{ struct A *a;
+  struct B *b;
+  int      *i;
+}
+</CODE>
+</PRE>
+Whereas the structure used in the previous example is not integer-like:<P>
+<CODE>
+<PRE>
+struct { char ch1, ch2; }
+</CODE>
+</PRE>
+Integer-like structs are returned by returning the struct's contents in a1 
+rather than a pointer to the struct's contents.  Thus a1 is not needed to 
+pass a pointer to a result struct in memory, and is instead be used to 
+pass the first argument.<P>
+For example, consider the following code:<P>
+<CODE>
+<PRE>
+typedef struct half_words_struct
+{ unsigned field1:16;
+  unsigned field2:16;
+} half_words;
+
+half_words max( half_words a, half_words b )
+{ half_words x;
+  x= (a.field1&gt;b.field1) ? a : b;
+  return x;
+}
+</CODE>
+</PRE>
+We would expect arguments a and b to be passed in registers a1 and a2, and 
+since half_word_struct is integer-like we expect the result structure to 
+be passed back directly in a1, (rather than a1 being used to return a 
+pointer to the result half_words_struct).<P>
+The above code is available in the <B>examples</B> directory as 
+<B>half_str.c</B>.  It can be compiled to produce Assembly Language source 
+by using the following command:<P>
+<CODE>
+<PRE>
+armcc -S half_str.c -li -apcs 3/32bit
+</CODE>
+</PRE>
+Where -li and -apcs 3/32bit can be omitted if <B>armcc</B> has been 
+configured appropriately already.<P>
+Here is the code which <B>armcc</B> produces:<P>
+<CODE>
+<PRE>
+max
+    MOV    a3,a1,LSL #16
+    MOV    a3,a3,LSR #16
+    MOV    a4,a2,LSL #16
+    MOV    a4,a4,LSR #16
+    CMP    a3,a4
+    MOVLE  a1,a2
+    MOV    pc,lr
+</CODE>
+</PRE>
+Clearly the contents of the <B>half_words</B> structure is returned 
+directly in a1 as expected.<P>
+<H2>Returning non integer-like structs in registers</H2>
+There are occasions when a function needs to return more than one value.  
+The normal way to achieve this is to define a structure which holds all 
+the values to be returned, and return this.<P>
+As we have seen, this will result in a pointer to the structure being 
+passed in a1, which will then be dereferenced to store the values 
+returned.<P>
+For some applications in which such a function is time critical, the 
+overhead involved in "wrapping" and then "unwrapping" this structure can 
+be significant.  However, there is a way to tell the compiler that a 
+structure should be returned in the argument registers a1 - a4.  Clearly 
+this is only useful for returning structures which are no larger than 4 
+words.<P>
+The way to tell the compiler to return a structure in the argument 
+registers is to use the keyword "__value_in_regs".<P>
+<A NAME="XREF41890"><H3>Multiplication - Returning a 64-bit result</A></H3>
+To illustrate how to use __value_in_regs, let us consider writing a 
+function which multiplies two 32-bit integers together and returns the 
+64-bit result.<P>
+The way this function must work is to split the two 32-bit numbers (a, b) 
+into high and low 16-bit parts,(a_hi, a_lo, b_hi, b_lo).  The four 
+multiplications a_lo * b_lo, a_hi * b_lo, a_lo * b_hi, a_hi * b_lo must be 
+performed, and the results added together, taking care to deal with carry 
+correctly.<P>
+Since the problem involves dealing with carry correctly, coding this 
+function in C will not produce optimal code (see <A 
+HREF="./3acba.html#XREF31663">64 Bit integer addition</A> for more 
+details).  Therefore we will want to code the function in ARM Assembly 
+Language.  The following code performs the algorithm just described:<P>
+<CODE>
+<PRE>
+; On entry a1 and a2 contain the 32-bit integers to be multiplied (a, b)
+; On exit a1 and a2 contain the result (a1 bits 0-31, a2 bits 32-63) mul64
+</CODE>
+</PRE>
+    <CODE>
+<PRE>
+    MOV    ip, a1, LSR #16                      ; ip = a_hi
+    MOV    a4, a2, LSR #16                      ; a4 = b_hi
+    BIC    a1, a1, ip, LSL #16                  ; a1 = a_lo
+    BIC    a2, a2, a4, LSL #16                  ; a2 = b_lo
+    MUL    a3, a1, a2                           ; a3 = a_lo * b_lo    (m_lo)
+    MUL    a2, ip, a2                           ; a2 = a_hi * b_lo    (m_mid1)
+    MUL    a1, a4, a1                           ; a1 = a_lo * b_hi    (m_mid2)
+    MUL    a4, ip, a4                           ; a4 = a_hi * b_hi    (m_hi)
+    ADDS   ip, a2, a1                           ; ip = m_mid1 + m_mid2 (m_mid)
+    ADDCS  a4, a4, #&amp;10000                      ; a4 = m_hi + carry       (m_hi')
+    ADDS   a1, a3, ip, LSL #16                  ; a1 = m_lo + (m_mid&lt;&lt;16)
+    ADC    a2, a4, ip, LSR #16                  ; a2 = m_hi' + (m_mid&gt;&gt;16) + carry
+    MOV    pc, lr
+</CODE>
+</PRE>
+Clearly this code is fine for use with Assembly language modules, but in 
+order to use it from C we need to be able tell the compiler that this 
+routine returns its 64-bit result in registers.  This can be done by 
+making the following declarations in a header file:<P>
+<CODE>
+<PRE>
+typedef struct int64_struct
+{ unsigned int lo;
+  unsigned int hi;
+} int64;
+
+__value_in_regs extern int64 mul64(unsigned a, unsigned b);
+</CODE>
+</PRE>
+The Assembly Language code above, and the declarations above together with 
+a test program are all in the <B>examples</B> directory, as the files: 
+<B>mul64.s</B>, <B>mul64.h</B>, <B>int64.h</B> and <B>multest.c</B>.  To 
+compile, assemble and link these to produce an executable image suitable 
+for <B>armsd</B> first set your current directory to <B>examples</B>, and 
+then execute the following commands:<P>
+<CODE>
+<PRE>
+armasm mul64.s -o mul64.o -li
+armcc -c multest.c -li -apcs 3/32bit
+armlink mul64.o multest.o 
+</CODE>
+</PRE>
+Where <B>somewhere</B> is the directory in which the semi-hosted C 
+libraries reside (eg. the <B>lib</B> directory of the ARM Software Tools 
+Release).  Note also that <B>-li</B> and <B>-apcs 3/32bit</B> can be 
+omitted if <B>armcc</B> and <B>armasm</B> (and <B>armsd</B> below) have 
+been configured appropriately.<P>
+<B>multest</B> can then be run under <B>armsd</B> as follows:<P>
+<CODE>
+<PRE>
+&gt; <B>armsd -li multest</B>
+A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
+endian.
+Object program file multest
+armsd: <B>go</B>
+Enter two unsigned 32-bit numbers in hex eg.(100 FF43D)
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+<B>12345678 10000001</B>
+Least significant word of result is 92345678
+Most  significant word of result is  1234567
+Program terminated normally at PC = 0x00008418
+      0x00008418: 0xef000011 .... : &gt;  swi     0x11
+armsd: <B>quit</B>
+Quitting
+&gt;
+</CODE>
+</PRE>
+To convince yourself that __value_in_regs is being used try removing it 
+from <B>mul64.h</B>, recompile <B>multest.c</B>, relink <B>multest</B>, 
+and rerun <B>armsd</B>.  This time the answers returned will be incorrect, 
+as the result is no longer expected to be returned in registers, but 
+instead in a block of memory (ie. the code now has a bug).<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./2acbe.html#XREF40554">ARM6 multiplier performance 
+issues</A>.
+</UL>

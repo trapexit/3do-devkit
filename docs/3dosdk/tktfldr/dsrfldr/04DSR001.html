@@ -1,0 +1,18 @@
+<Title>audioclockchan</Title>
+<A NAME="XREF20482"><H1>audioclockchan</A></H1>
+<A NAME="XREF18599"> Specifies channel for designated clock source.</A><P>
+<H3>Synopsis</H3>
+<CODE>audioclockchan &lt;audio_clock_channel&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>L</CODE>ets you specify which audio channel is designated as clock source.This information is included in the stream header of the file if writestreamheader is also included in the script.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>audio_clock_channel
+<DD>A mask that lets you specify the channel that uses the clock. Give this mask in hex, for example, to specify channel 2, specify 04. There is a total of 31 maskable channels.
+</DL>
+<H3>Examples</H3>
+<CODE>audioclockchan 04</CODE><P>
+<H3>Caveats</H3>
+None.<P>
+<H3>See Also</H3>
+<A HREF="./04DSR018.html#XREF15454"><CODE>writestreamheader</A></CODE><P>

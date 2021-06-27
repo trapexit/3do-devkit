@@ -1,0 +1,23 @@
+<Title>SetTextCelTabStops</Title>
+<A NAME="XREF27111"><H1>SetTextCelTabStops </A></H1>
+ Specifies tab stops for a text cel.<P>
+<H3>Synopsis</H3>
+<CODE>void SetTextCelTabStops(TextCel *tCel, uint16 tabStops[16],...)</CODE><P>
+<H3>Description</H3>
+Sets the tab stops table for the text cel. The tabStops parameter is a pointer to an array of up to 16 uint16 values, or it is NULL to indicate that up to 15 tab stops are available as a comma-delimited list in the  ... args. In either case, the list of tab stops must be in ascending numeric order. Entering a zero value terminates the list. If more than 15 tab stops are read without encountering a terminating zero, a zero is forced into the 16th array element in the text cel's internal tabs table.<P>
+Tab stops are specified in terms of pixels from the left edge of the cel. The tab stops are relative to zero, not to the left margin. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>tabStops
+<DD>Pointer to an array of uint16 that contains the new tab stops table. NULL means read tab stops from ... args. 
+</DL>
+<DL>
+<DT>...  
+<DD> List of tab stops, terminated with a zero. Used if tabStops parameter is NULL. (Optional.) 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

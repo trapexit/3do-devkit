@@ -1,0 +1,23 @@
+<Title>minimum.dsp</Title>
+<A NAME="XREF31011"><H1>minimum.dsp </A></H1>
+<A NAME="XREF29968"></A> Pick the minimum of two input signals.<P>
+<H3>Function</H3>
+Outputs the smaller of InputA and InputB. This can be used for clipping. <P>
+By connecting Output to InputB, you can measure a historical minimum. In this configuration, <CODE>StartInstrument()</CODE> can be used to reset the historical maximum. <P>
+Input values are signed as usual. <P>
+<H3>Knobs</H3>
+InputA <P>
+InputB <P>
+<H3>Outputs</H3>
+<DL>
+<DT>Output
+<DD>MIN(InputA,InputB) 
+</DL>
+<H3>Resources</H3>
+Ticks: 12 <P>
+Code: 11 words <P>
+<H3>Implementation</H3>
+V24 <P>
+<H3>See Also</H3>
+<CODE><A HREF="./03mpr032.html#XREF31709"><CODE>maximum.dsp</A>, <A HREF="./03mpr001.html#XREF14512">add.dsp</A> </CODE><P>
+</CODE>

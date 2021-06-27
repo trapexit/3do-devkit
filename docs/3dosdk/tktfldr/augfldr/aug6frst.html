@@ -1,0 +1,31 @@
+<TITLE>An Introduction to the Run-Time Libraries </TITLE>
+<H1>An Introduction to the Run-Time Libraries </H1><HR>
+There are two run-time libraries provided to support cross-compiled C:<P>
+<UL>
+<LI>the minimal stand alone run time library;
+<LI>the ANSI C library.
+</UL>
+Both libraries are supplied in source form and will need to be re-targeted to your ARM-based hardware. However, both have been designed to make re-targeting straightforward. Both libraries are also provided in binary form targeted at the <I>ARMulator</I>, ARM's user-extensible, CPU emulator, so you can run and debug programs running on an emulated ARM immediately. For details see chapter "armsd Command Language," in this book, and examples in the Cookbook.<P>
+<B>Note: </B>This documentation is not available in the 3DO Edition. <P>
+The minimal stand-alone run time library provides only those functions required by code compiled by the ARM C compiler:<P>
+<UL>
+<LI>division and remainder functions;
+<LI>stack-limit checking functions;
+<LI>lowest-level memory management (stack + heap);
+<LI>program startup (calling <CODE>main()</CODE>); 
+<LI>program termination <CODE>(_exit()</CODE>);
+</UL>
+This library is a single module written in ARM assembly language. It is a few pages of code, a high proportion of which is comment. Little needs to be re-written for each new environment: only a few small functions. Thus re-targeting typically takes an hour or two, and is right first time.<P>
+Once the stand alone library is operational, code compiled from C may be run, beginning with the supplied test programs. Refer to the Cookbook for details.<P>
+The full ANSI C library contains the following:<P>
+<UL>
+<LI>target-independent modules written in ANSI C (e.g.<I> </I><CODE>printf()</CODE>); 
+<LI>target-independent modules written in ARM assembly language (e.g. <CODE>divide()</CODE>, <CODE>memcpy()</CODE>, etc.); 
+<LI>target-dependent modules written in ANSI C (e.g. default signal handlers, <CODE>clock()</CODE>, etc.);
+<LI>target-dependent modules written in ARM assembly language.
+</UL>
+The target-independent portions of the library can be built immediately. The target dependent parts require some effort to implement. An example implementation for a commercially available ARM-based personal computer is provided in the tools release, and this can be modified as required.<P>
+Re-targeting the ANSI C library will require some knowledge of ARM assembly language, and some understanding of the ARM processor and hardware being used. It will be necessary to refer to the relevant ARM data sheet and to <A HREF="./aug7frst.html#XREF15616">ARM Assembly Language</A>.<P>
+Because of its modular structure, not all of the library needs to be re-targeted at once: re-target only what will be used.<P>
+Re-targeting the C library is described in the chapter "ARM C Library Porting Guide," in the Reference Manual.<P>
+<B>Note: </B>This chapter is not included in the 3DO edition of the manual. <P>

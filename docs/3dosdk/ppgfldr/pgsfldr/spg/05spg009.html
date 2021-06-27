@@ -1,0 +1,15 @@
+<TITLE>Getting Memory From the System-Wide Free Memory Pool</TITLE>
+<H1><LINK NAME="XREF11482">Getting Memory From the System-Wide Free Memory Pool</LINK></H1><HR>
+When there is insufficient memory in a task's free memory pool to allocate a block of memory, the kernel automatically provides additional memory pages from the system-wide free memory pool. Tasks can also get pages directly from the 
+system-wide free memory pool by calling the <CODE>AllocMemBlocks()</CODE> function:<P>
+<DL>
+<DD><CODE>void *AllocMemBlocks( int32 size, uint32 typebits )</CODE><BR>
+</DL>
+The <CODE>size</CODE> argument specifies the amount of memory to transfer, in bytes. If the specified size is not a multiple of the page size for the type of memory requested, the kernel transfers enough full pages to satisfy the request.<P>
+The first 4 bytes of the allocated block contain the actual number of bytes allocated. This isn't true when <CODE>MEMTYPE_FILL</CODE> is supplied.<P>
+The <CODE>typebits</CODE> argument specifies the type of memory to transfer. This argument can contain any of the following memory allocation flags: <CODE>MEMTYPE_ANY</CODE>, <CODE>MEMTYPE_VRAM</CODE>, <CODE>MEMTYPE_DRAM</CODE>, <CODE>MEMTYPE_BANKSELECT</CODE>, <CODE>MEMTYPE_BANK1</CODE>, <CODE>MEMTYPE_BANK2</CODE>, <CODE>MEMTYPE_DMA</CODE>, <CODE>MEMTYPE_CEL</CODE>, <CODE>MEMTYPE_AUDIO</CODE>, and <CODE>MEMTYPE_DSP</CODE>. For descriptions of these flags, see . You must always set the <CODE>MEMTYPE_TASKMEM</CODE> flag when using this function.<P>
+<CODE>AllocMemBlocks()</CODE> returns a pointer to the memory that was transferred. When you get the memory, you must call a function to free it, such as <CODE>
+FreeMemToMemList()</CODE> to move it to a specific memory list or
+<CODE>FreeMemToMemLists()</CODE> to move it to a specific memory pool. For either
+function, use the pointer returned by <CODE>AllocMemBlocks()</CODE> as the value 
+of the <CODE>p</CODE> argument. Use the size value that is stored in the first 4 bytes in the memory returned by the <CODE>AllocMemBlocks()</CODE> for the size argument.<P>

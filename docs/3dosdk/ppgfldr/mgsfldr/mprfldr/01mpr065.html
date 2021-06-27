@@ -1,0 +1,27 @@
+<Title>ScanSample</Title>
+<A NAME="XREF29290"><H1>ScanSample </A></H1>
+<A NAME="XREF30561"></A> Loads a truncated sample file.<P>
+<H3>Synopsis</H3>
+<CODE>Item ScanSample( char *Name, int32 BufferSize )</CODE><P>
+<H3>Description</H3>
+This function is similar to <CODE>LoadSample()</CODE>, but allocates only as much memory as specified by BufferSize.  It then loads as much of the sample data as will fit.  This is handy for loading the first part of a very large sound file that won't fit in memory. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Name
+<DD>Name of an AIFF or AIFC file. 
+</DL>
+<DL>
+<DT>BufferSize
+<DD>Amount of memory to allocate (in bytes). 
+</DL>
+<H3>Return Value</H3>
+The function returns a Sample Item number if successful or an error code ( a negative value) if an error occurs. <P>
+<H3>Caveats</H3>
+Any loop points in an AIFF or AIFC file beyond the BufferSize cause  this function to return an error. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr007.html#XREF30972"><CODE>AttachSample</A>(), <A HREF="./01mpr033.html#XREF38686">DetachSample</A>(), <A HREF="./01mpr067.html#XREF20838">SetAudioItemInfo</A>(), <A HREF="./01mpr053.html#XREF16726">LoadSample</A>(), <A HREF="./01mpr083.html#XREF21317">UnloadSample</A>(), <A HREF="./01mpr023.html#XREF37204">DebugSample</A>(), <A HREF="./01mpr021.html#XREF16321">CreateSample</A>(), <A HREF="./01mpr043.html#XREF15941">GetAudioItemInfo</A>() </CODE><P>
+</CODE>

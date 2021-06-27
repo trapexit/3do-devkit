@@ -1,0 +1,142 @@
+<TITLE>The Locale Data Structure</TITLE>
+<H1><LINK NAME="XREF31384">The Locale Data Structure</LINK></H1><HR>
+The Locale data structure is like a little data base the system provides. Once you get a pointer to the Locale structure, it has, among other things, the current language being used, the country code, and the format of dates for the user's cultural environment.<P>
+The system creates a Locale structure when an application calls <CODE>intlOpenLocale()</CODE>. <CODE>intlOpenLocale()</CODE> returns an <CODE>Item</CODE>, which must be disposed of using the <CODE>intlCloseLocale()</CODE> macro.<P>
+To examine the contents of the Locale structure, an application calls <CODE>intlLookupLocale(),</CODE> which returns a pointer to the Locale structure for the specified <CODE>Item</CODE>. The definition of the Locale structure is shown below.<P>
+<CODE>
+<PRE>
+typedef struct Locale
+{
+    ItemNode          loc_Item;              /* system linkage */
+
+    /* prefered language to use */
+    LanguageCodes     loc_Language;
+
+    /* An array of dialects for the current language, listed in order
+     * of preference, and terminated with INTL_DIALECTS_ARRAY_END
+     */
+    DialectCodes     *loc_Dialects;
+
+    /* ISO-3166 numeric-3 code for the user's country */
+    CountryCodes      loc_Country;
+
+    /* general description of the user's environment */
+     int32             loc_GMTOffset;     /* minutes from GMT */
+    MeasuringSystems  loc_MeasuringSystem; /* measuring system to use */
+    CalendarTypes     loc_CalendarType;   /* calendar type to use */
+    DrivingTypes      loc_DrivingType;    /* side of the street */
+
+    /* number formatting */
+    NumericSpec       loc_Numbers;
+    NumericSpec       loc_Currency;
+    NumericSpec       loc_SmallCurrency;
+
+    /* date formatting */
+    DateSpec          loc_Date;
+    DateSpec          loc_ShortDate;
+    DateSpec          loc_Time;
+    DateSpec          loc_ShortTime;
+} Locale;
+</CODE>
+</PRE>
+The fields in the <CODE>Locale</CODE> structure are as follows:<P>
+<UL>
+<LI><CODE>loc_Item</CODE> provides system linkage for Locale structures which are allocated in system space so that they can be shared among multiple applications.
+<p>
+<LI><CODE>loc_Language</CODE> defines the language to use within an application. Each supported language has a code, which is taken from the ISO 639 Standard.
+<p>
+<LI><CODE>loc_Dialects</CODE> is a pointer to an array of dialects. Regional variations within a given language are accommodated through dialect tables, which are an array of dialect codes, terminated by <CODE>INTL_DIALECT_ARRAY_END</CODE>.
+<p>
+<LI>The dialects appear in the array in decreasing order of user preference. For example, if the language is <CODE>INTL_LANG_ENGLISH</CODE>, then the dialect array could hold <CODE>INTL_ED_AMERICAN</CODE>, <CODE>INTL_ED_AUSTRALIAN</CODE>, <CODE>INTL_ED_BRITISH</CODE>, and so on.
+<p>
+<LI><CODE>loc_Country</CODE> contains the standard international country code for the current country. These codes are taken from the ISO 3166 Standard.
+<p>
+<LI><CODE>loc_GMTOffset</CODE> contains the offset in minutes of the current location relative to the standard GMT reference point.
+<p>
+<LI><CODE>loc_MeasuringSystem</CODE> indicates the measuring system to use. This can be <CODE>INTL_MS_METRIC</CODE>, <CODE>INTL_MS_AMERICAN</CODE>, or <CODE>INTL_MS_IMPERIAL</CODE>.
+<p>
+<LI><CODE>loc_CalendarType</CODE> indicates what type of calendar to use. This can be the traditional Gregorian calendar, with either Monday or Sunday as the first day of the week, or it can be the Arabic, Jewish, or Persian calendar.
+<p>
+<LI><CODE>loc_DrivingType</CODE> indicates on which side of the street cars usually travel in the current country.
+<p>
+<LI><CODE>loc_Numbers</CODE>, <CODE>loc_Currency</CODE>, <CODE>loc_SmallCurrency</CODE> specifies how to format numbers and currency. The <CODE>NumericSpec</CODE> structure contains the necessary information to properly localize number output and input. These three <CODE>NumericSpec</CODE> structures can be passed directly to the <CODE>intlFormatNumber()</CODE> function to apply localized formatting.
+<p>
+<LI><CODE>loc_Date</CODE>, <CODE>loc_ShortDate</CODE>, <CODE>loc_Time</CODE>, <CODE>loc_ShortTime</CODE> specifies how to format dates and time. The DateSpec array contains the necessary information needed to properly localize date and time output and input. These four <CODE>DateSpec</CODE> arrays can be passed directly to the <CODE>intlFormatDate()</CODE> function to apply localized formatting.
+</UL>
+<H2>NumericSpec Structure</H2>
+Each culture has its own way of writing numbers and currency. The Locale structure contains three NumericSpec structures that contain number and currency formatting specifications and are used to produce correctly localized output for the target cultures.<P>
+The NumericSpec structure defines how numbers should be formatted. It is sufficiently flexible to cover plain numbers and currency values. The structure is shown below.<P>
+<CODE>
+<PRE>
+typedef struct NumericSpec
+{
+  /* how to generate a positive number */
+  GroupingDesc  ns_PosGroups;  /* grouping description */
+  unichar      *ns_PosGroupSep;  /* separates the groups */
+  unichar      *ns_PosRadix;    /* decimal mark         */
+  GroupingDesc  ns_PosFractionalGroups; /* grouping description */
+  unichar      *ns_PosFractionalGroupSep; /* separates the groups */
+  unichar      *ns_PosFormat;           /* for post-processing  */
+  uint32               ns_PosMinFractionalDigits; /* min # of frac digits */
+  uint32       ns_PosMaxFractionalDigits; /* max # of frac digits */
+
+  /* how to generate a negative number */
+  GroupingDesc  ns_NegGroups;   /* grouping description */
+  unichar      *ns_NegGroupSep; /* separates the groups */
+  unichar      *ns_NegRadix;   /* decimal mark        */
+  GroupingDesc  ns_NegFractionalGroups;   /* grouping description */
+  unichar      *ns_NegFractionalGroupSep;  /* separates the groups */
+  unichar      *ns_NegFormat;              /* for post-processing  */
+  uint32       ns_NegMinFractionalDigits; /* min # of frac digits */
+  uint32       ns_NegMaxFractionalDigits; /* max # of frac digits */
+
+  /* when the number is zero, this string is used 'as-is' */
+  unichar          *ns_Zero;
+} NumericSpec;
+</CODE>
+</PRE>
+Using the fields in the NumericSpec structure, the <CODE>intlFormatNumber()</CODE> function can correctly format numbers and currency according to local rules and customs. The fields of the NumericSpec structure are as follows:<P>
+<UL>
+<LI><CODE>ns_PosGroups</CODE> defines how digits are grouped left of the decimal mark. An <CODE>EgroupingDesc</CODE> is a 32-bit bitfield in which every ON bit in the bitfield indicates a separator sequence should be inserted after the associated digit. If bit 0 is ON, the grouping separator is inserted after digit 0 of the formatted number.
+<p>
+<LI><CODE>ns_PosGroupSep</CODE> is a string that separates groups of digits to the left of the decimal mark.
+<p>
+<LI><CODE>ns_PosRadix</CODE> is a string used as a decimal character.
+<p>
+<LI><CODE>ns_PosFractionalGroups</CODE> is a <CODE>GroupingDesc</CODE> array that defines how digits are grouped to the right of the decimal character.
+<p>
+<LI><CODE>ns_PosFractionalGroupSep</CODE> is a string used to separate groups of digits to the right of the decimal mark.
+<p>
+<LI><CODE>ns_PosFormat</CODE> is used for post-processing on a formatted number. Typically it is used to add currency notation around a numeric value. The string in this field is used as a format string in <CODE>sprintf()</CODE>, and the formatted numeric value is also a parameter to <CODE>sprintf()</CODE>.
+</UL>
+
+For example, if <CODE>ns_PosFormat</CODE> is defined as $%s, and the formatted numeric value is 0.02. The result of the post-processing will be $0.02. When this field is NULL, no post-processing occurs.
+
+<UL>
+<LI><CODE>ns_PosMinFractionalDigits</CODE> specifies the minimum number of characters to the right of the decimal mark. If there are fewer characters than the minimum, the number is padded with 0s.
+<p>
+<LI><CODE>ns_PosMaxFractionalDigits</CODE> specifies the maximum number of characters to the right of the decimal mark. If there are more characters than the maximum, the string is truncated.
+<p>
+<LI><CODE>ns_NegGroups</CODE> is similar to <CODE>ns_PosGroups</CODE>, except it specifies negative numbers<CODE>.</CODE>
+<p>
+<LI><CODE>ns_NegGroupSep</CODE> is <CODE>similar to </CODE><CODE>ns_PosGroupSep</CODE><CODE> but for negative numbers.</CODE>
+<p>
+<LI><CODE>ns_NegRadix</CODE><CODE> is similar to </CODE><CODE>ns_PosRadix</CODE><CODE> except it specifies negative numbers.</CODE>
+<p>
+<LI><CODE>ns_NegFractionalGroups</CODE><CODE> is similar to </CODE><CODE>ns_PosFractionalGroups</CODE><CODE>, except it specifies negative numbers.</CODE>
+<p>
+<LI><CODE>ns_NegFractionalGroupSep</CODE> is similar to <CODE>ns_PosFractionalGroupSep,</CODE>except it specifies negative numbers.
+<p>
+<LI><CODE>ns_NegFormat</CODE><CODE> similar to </CODE><CODE>ns_PosFormat</CODE><CODE>, except it specifies negative numbers.</CODE>
+<p>
+<LI><CODE>ns_NegMinFractionalDigits</CODE> is similar to <CODE>ns_PosMinFractionalDigits</CODE>, <CODE>except it specifies</CODE> negative numbers.
+<p>
+<LI><CODE>ns_NegMaxFractionalDigits</CODE> is similar to <CODE>ns_PosMaxFractionalDigits</CODE>, <CODE>except it specifies</CODE> negative numbers.
+<p>
+<LI><CODE>ns_Zer </CODE>If the number being processed is 0, then this string pointer is used as is and is copied directly into the resulting buffer. If this field is NULL, then the number is formatted as if it were a positive number.
+</UL>
+Typically, an application doesn't have to deal with the interpretation of a NumericSpec structure. The Locale structure contains three NumericSpec structures initialized with the correct information for the target culture, which can be passed to <CODE>intlFormatNumber()</CODE> to convert numbers into string form.<P>
+<H2>DateSpec Arrays</H2>
+Dates also vary in format across different cultures. The Locale structure contains four <CODE>DateSpec</CODE> arrays which define the local formats for date and time representation.<P>
+The <CODE>DateSpec</CODE> arrays contain format commands similar to <CODE>printf()</CODE> format strings. The% commands are inserted in the formatting string to produce custom date output. An application can provide the <CODE>DateSpec</CODE> structure from the Locale structure to the <CODE>intlFormatDate()</CODE> function or it can create its own DateSpec structures for custom formatting.<P>
+<P>

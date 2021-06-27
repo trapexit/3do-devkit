@@ -1,0 +1,25 @@
+<Title>ssplDetachInstrument</Title>
+<A NAME="XREF16255"><H1>ssplDetachInstrument </A></H1>
+ Detach the current sample player instrument from the SoundSpooler.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplDetachInstrument ( SoundSpooler *sspl )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplDetachInstrument()</CODE> removes the current sample player instrument from the SoundSpooler.  Any buffers in the active queue are aborted (calls <CODE>ssplAbort()</CODE>).  Spooler playback cannot be started until a new instrument is attached with <CODE>ssplAttachInstrument()</CODE>.  Incidentally, <CODE>ssplAttachInstrument()</CODE>  calls this function prior to attaching a new instrument, so it's pretty unlikely that you actually need to call this function directly. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Class</H3>
+Low level <P>
+<H3>Note</H3>
+Any buffers in the active queue are aborted by calling <CODE>ssplAbort()</CODE>.  Note that there is no provision to supply a UserBufferProcessor function to <CODE>ssplAttachInstrument()</CODE>.  An installed SoundBufferFunc works correctly, however. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr097.html#XREF16411"><CODE>ssplAttachInstrument</A>(), <A HREF="./02mpr096.html#XREF40388">ssplAbort</A>() </CODE><P>
+</CODE>

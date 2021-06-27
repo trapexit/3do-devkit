@@ -1,0 +1,183 @@
+<HTML><TITLE>allocator</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>allocator</H2>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>The default allocator object for storage management in Standard Library containers.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#The Alternate Allocator"><LI>The Alternate Allocator</LI></A>
+<A HREF="#Standard Interface"><LI>Standard Interface</LI></A>
+<A HREF="#Types"><LI>Types</LI></A>
+<A HREF="#Operations"><LI>Operations</LI></A>
+<A HREF="#Alternate Interface "><LI>Alternate Interface </LI></A>
+<A HREF="#Alternate Allocator Description"><LI>Alternate Allocator Description</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;memory></PRE>
+<PRE>class allocator;</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Containers in the Standard Library allow you control of storage management through the use of allocator objects. Each container has an allocator template parameter specifying the type of allocator to be used. Every constructor, except the copy constructor, provides an allocator parameter, allowing you to pass in a specific allocator. A container uses that allocator for all storage management. </P>
+<P>The library provides a default allocator, called <SAMP>allocator</SAMP>. This allocator uses the global <SAMP>new</SAMP> and <SAMP>delete</SAMP> operators. By default, all containers use this allocator. You can also design your own allocator, but if you do so it must provide an appropriate interface. The standard interface and an alternate interface are specified below. The alternate interface will work on all supported compilers.</P>
+<A NAME="The Alternate Allocator"><H3>The Alternate Allocator</H3></A>
+<P>As of this writing, very few compilers support the full range features needed by the standard allocator.  If your compiler does not support member templates (both classes and functions) then you must use the alternate allocator interface we provide. This alternate interface requires no special features of a compiler and offers most of the functionality of the standard allocator interface. The only thing missing is the ability to use special pointer and reference types. The alternate allocator fixes these as <SAMP>T* </SAMP>and <SAMP>T&#38;</SAMP>. If your compiler supports partial specialization then even this restriction is removed.</P>
+<P>From outside a container, use of the alternate allocator is transparent. Simply pass the allocator as a template or function parameter exactly as you would the standard allocator.</P>
+<P>Within a container, the alternate allocator interface is more compilicated to use because it requires two separate classes, rather than one class with another class nested inside. If you plan to write your own containers and need to use the alternate allocator interface, we recommend that you support the default interface as well, since that is the only way to ensure long-term portability. See the User's Guide section on building containers for an explanation of how to support both the standard and the alternate allocator interfaces.</P>
+<P>A generic allocator must be able to allocate space for objects of arbitrary type, and it must be able to construct those objects on that space. For this reason the allocator must be type aware; but it must be aware on any arbitrary number of different types, since there is no way to predict the storage needs of any given container.</P>
+<P>Consider an ordinary template. Although you may be able to instantiate on any fixed number of types, the resulting object is aware of only those types and any other types that can be built up from them (<SAMP>T*</SAMP>, for instance), as well as any types you specify up front. This won't work for an allocator, because you can't make any assumptions about the types a container will need to construct. It may well need to construct <SAMP>T</SAMP>s (or it may not), but it may also need to allocate node objects and other data structures necessary to manage the contents of the container. Clearly there is no way to predict what an arbitrary container might need to construct. As with everything else within the Standard Library, it is absolutely essential to be fully generic.</P>
+<P>The Standard Allocator interface solves the problem with member templates. The precise type that you are going to construct is not specified when you create an allocator but when you actually go to allocate space or construct an object on existing space. This clever solution is well ahead of nearly all existing compiler implementations. </P>
+<P>Rogue Wave's alternative allocator interface uses a different technique. The alternate interface breaks the allocator into two pieces: an interface and an implementation. The implementation is a simple class providing raw un-typed storage. Anything can be constructed on it. The interface is a template class containing a pointer to an implementation. The interface template types the raw memory provided by the implementation based on the template parameter. Only the implementation object is passed into a container. The container constructs interface objects as necessary, using the provided implementation) to manage the storage of data.</P>
+<P>Since all interface objects use the one copy of the implementation object to allocate space, that one implementation object manages all storage aquisition for the container. The container makes calls to the <B><I>allocator_interface</B></I> objects in the same way it would make calls to a standard allocator object.</P>
+<P>For example, if your container needs to allocate <SAMP>T</SAMP> objects and node objects, you need to have two <B><I>allocator_interface</B></I> objects in your container:</P>
+<PRE>allocator_interface&#60;Allocator,T> value_allocator; allocator_interface&#60;Allocator,node> node_allocator;</PRE>
+<P>You then use the <SAMP>value_allocator</SAMP> for all allocation, construction, etc. of values (<SAMP>T</SAMP>s), and use the <SAMP>node_allocator</SAMP> object to allocate and deallocate nodes.</P>
+<P>The only significant drawback is the inability to provide special pointer types and alter the behavior of the <SAMP>construct</SAMP> and <SAMP>destroy</SAMP> functions provided by an allocator, since these must reside in the interface class. If your compiler provides partial specialization then this restriction goes away, since you can provide specialized interface's along with your implementation.</P>
+<A NAME="Standard Interface"><H3>Standard Interface</H3></A>
+<PRE>class allocator; {</PRE>
+<PRE>  typedef size_t            size_type;
+  typedef ptrdiff_t         difference_type;
+  template &#60;class T> struct types 
+  {
+    typedef T*                pointer;
+    typedef const T*          const_pointer;
+    typedef T&#38;                reference;
+    typedef const T&#38;          const_reference;
+    typedef T                 value_type;
+  };
+  allocator ();
+  ~allocator ();
+  template &#60;class T> typename types&#60;T>::pointer
+  address (typename types&#60;T>::reference) const;
+  template&#60;class T> typename types&#60;T>::const_pointer
+  address (typename types&#60;T>::const_reference) const;
+  template&#60;class T, class U> typename types&#60;T>::pointer
+  allocate (size_type,typename types&#60;U>::const_pointer = 0);
+  template&#60;class T> void deallocate( typename types&#60;T>::pointer); 
+  template&#60;class T> size_type max_size () const;
+  template &#60;class T1, class T2>
+  void construct (T1*, const T2&#38;);
+  template &#60;class T>
+  void destroy (T*)
+};
+// specialization
+class allocator::types &#60;void> 
+{ 
+  typedef void*            pointer;
+  typedef const void*      const_pointer;
+  typedef void             value_type;
+};
+// globals
+inline void * operator new (size_t, allocator&#38;)
+inline bool operator== (const allocator&#38;, const allocator&#38;)</PRE>
+<A NAME="Types"><H3>Types</H3></A>
+<PRE>size_type</PRE>
+<UL><P>Type used to hold the size of an allocated block of storage.</P>
+</UL>
+<PRE>difference_type </PRE>
+<UL><P>Type used to hold values representing distances between storage addresses.</P>
+</UL>
+<PRE>types&#60;T>::pointer </PRE>
+<UL><P>Type of pointer returned by allocator.</P>
+</UL>
+<PRE>types&#60;T>::const_pointer </PRE>
+<UL><P><SAMP>Const</SAMP> version of <SAMP>pointer</SAMP>.</P>
+</UL>
+<PRE>types&#60;T>::reference </PRE>
+<UL><P>Type of reference to allocated objects.</P>
+</UL>
+<PRE>const_reference</PRE>
+<UL><P><SAMP>Const</SAMP> version of <SAMP>reference</SAMP>.</P>
+</UL>
+<PRE>value_type </PRE>
+<UL><P>Type of allocated object.</P>
+</UL>
+<A NAME="Operations"><H3>Operations</H3></A>
+<PRE>allocator ()</PRE>
+<UL><P>Default constructor.</P>
+</UL>
+<PRE>allocator ()</PRE>
+<UL><P>Destructor.</P>
+</UL>
+<PRE>template &#60;class T> typename types&#60;T>::pointer
+<B>address</B> (typename types&#60;T>::reference x) const</PRE>
+<UL><P>Return the address of the reference <SAMP>x</SAMP> as a pointer.</P>
+</UL>
+<PRE>template&#60;class T> typename types&#60;T>::const_pointer
+<B>address</B> (typename types&#60;T>::const_reference x) const;</PRE>
+<UL><P>Return the address of the reference <SAMP>x</SAMP> as a <SAMP>const_pointer</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T, class U> typename types&#60;T>::pointer
+<B>allocate</B> (size_type n, typename types&#60;U>::const_pointer p = 0)</PRE>
+<UL><P>Allocate storage. Returns a pointer to the first element in a block of storage <SAMP>n*sizeof(T)</SAMP> bytes in size. The block will be aligned appropriately for objects of type <SAMP>T</SAMP>. Throws the exception <SAMP>bad_alloc </SAMP>if the storage is unavailable. This function uses operator <SAMP>new(size_t)</SAMP>. The second parameter <SAMP>p</SAMP> can be used by an allocator to localize memory allocation, but the default allocator does not use it.</P>
+</UL>
+<PRE>template&#60;class T> 
+<B>void</B> deallocate( typename types&#60;T>::pointer p)</PRE>
+<UL><P>Deallocate the storage indicated by <SAMP>p</SAMP>. The storage must have been obtained by a call to <SAMP>allocate</SAMP>.</P>
+</UL>
+<PRE>template&#60;class T> 
+<B>size_type</B> max_size () const;</PRE>
+<UL><P>Returns the largest size for which a call to <SAMP>allocate</SAMP> might succeed.</P>
+</UL>
+<PRE>template &#60;class T1, class T2>
+<B>void</B> construct (T1* p, const T2&#38; val);</PRE>
+<UL><P>Construct an object of type <SAMP>T2</SAMP> with the inital value of <SAMP>val</SAMP> at the location specified by <SAMP>p</SAMP>. This function calls the <SAMP>placement new</SAMP> operator.</P>
+</UL>
+<PRE>template &#60;class T>
+<B>void</B> destroy (T* p)</PRE>
+<UL><P>Call the destructor on the object pointed to by <SAMP>p</SAMP>, but do not delete.</P>
+</UL>
+<A NAME="Alternate Interface "><H3>Alternate Interface </H3></A>
+<PRE>class allocator
+{ 
+public: 
+typedef size_t               size_type ; 
+typedef ptrdiff_t            difference_type ;
+ allocator (); 
+  ~allocator (); .
+void * allocate (size_type, void * = 0); 
+void deallocate (void*); 
+};
+template &#60;class Allocator,class T> 
+class allocator_interface  .
+{ 
+   public: 
+   typedef Allocator        allocator_type ; 
+   typedef T*               pointer ; .
+   typedef const T*         const_pointer ;    
+   typedef T&#38;               reference ; .
+   typedef const T&#38;         const_reference ; 
+   typedef T                value_type ; .
+   typedef typename Allocator::size_type    size_type ; 
+   typedef typename Allocator::size_type    difference_type ; 
+protected:
+   allocator_type*     alloc_;
+public: 
+   allocator_interface (); 
+   allocator_interface (Allocator*);
+   void alloc (Allocator*);
+   pointer address (T&#38; x); 
+   size_type max_size () const; 
+   pointer allocate (size_type, pointer = 0); 
+   void deallocate (pointer); 
+   void construct (pointer, const T&#38;); 
+   void destroy (T*);
+};
+//
+// Specialization 
+//
+class allocator_interface &#60;allocator,void>  
+ { 
+ typedef void*                 pointer ; 
+ typedef const void*           const_pointer ;
+ };</PRE>
+<A NAME="Alternate Allocator Description"><H3>Alternate Allocator Description</H3></A>
+<P>The description for the operations of <B><I>allocator_interface&#60;T></B></I> are the same as for corresponding operations of the standard allocator, except that <B><I>allocator_interface</B></I> members <SAMP>allocate</SAMP> and <SAMP>deallocate</SAMP> call respective functions in <B><I>allocator</B></I> , which are in turn implemented as are the standard allocator functions.</P>
+<P>See the <A HREF="Con_2487.htm"><B><I>Containers</B></I></A> section of the Class Reference for a further description of how to use the alternate allocator within a user-defined container.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Con_2487.htm"><B><I>Containers</B></I></A></P>
+<HR>
+<A HREF="Alg_5157.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Ass_0034.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

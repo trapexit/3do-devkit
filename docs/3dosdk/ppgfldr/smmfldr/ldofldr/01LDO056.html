@@ -1,0 +1,22 @@
+<Title>DeleteCelList</Title>
+<A NAME="XREF37384"><H1>DeleteCelList </A></H1>
+ Deletes a list of cels created by any Library call implemented in lib3do.lib.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * DeleteCelList (CCB *celList)</CODE><P>
+<H3>Description</H3>
+Deletes a list of one or more cels. Walks the ccb_NextPtr links of a list of cels, calling <CODE>DeleteCel()</CODE> on each cel. All the cels in the list must have been created by DeleteCel-compatible functions. A NULL pointer is valid as input, and is quietly treated as a no-op. <P>
+The function contains special logic for handling cels where the library function creates a related group of cels and returns a single CCB* value to you. In this sense, it is not exactly equivalent to walking the ccb_NextPtr links. When a group of related cels is linked into a larger list, you need to call <CODE>DeleteCel()</CODE> only for the first cel in the group of related cels. <P>
+The function contains logic to call <CODE>DeleteCel()</CODE> only on the first cel in such a related group, then skip over the related cels that get deleted all at once, and continue processing with any other cels linked after the related group. It is therefore best to use <CODE>DeleteCelList()</CODE> if you have acquired cels from various Library call implemented in lib3do.lib.s and linked them together into a larger list. If you attempt to walk the list yourself calling <CODE>DeleteCel()</CODE> on each cel, you have to keep track of whether any of the cels need to be skipped as you go. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>celList
+<DD>Pointer to a list of one or more cels created by Library call implemented in lib3do.lib.s; may be NULL. 
+</DL>
+<H3>Return Value</H3>
+NULL, always. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO055.html#XREF42213"><CODE>DeleteCel</A></CODE><P>

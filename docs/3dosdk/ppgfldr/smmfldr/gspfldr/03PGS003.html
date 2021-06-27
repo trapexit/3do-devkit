@@ -1,0 +1,34 @@
+<TITLE>Tips, Tricks, and Troubleshooting</TITLE>
+<H1><LINK NAME="XREF37176">Tips, Tricks, and Troubleshooting</LINK></H1><HR>
+This section provides some additional advice on working with animations:<P>
+
+<UL>
+<LI><A HREF="#XREF35713">Using an Animation Unified for Efficiency</A>
+<LI><A HREF="#XREF23882">Creating an Anti-Aliased Animation</A>
+</UL>
+<A NAME="XREF35713"><H2>Using an Animation Unified for Efficiency </A></H2>
+<CODE>UnifyAnimation()</CODE> goes through the <CODE>ANIM</CODE> structure and sets it so that each frame uses the same CCB but has its own cel data and PLUT (Pixel Lookup Table).<P>
+<B>Example 1: </B><I>The UnifyAnimation function. </I><P>
+<CODE>
+<PRE>
+void UnifyAnimation(ANIM* pAnim)
+    {
+    int i;
+    CCB* theCCB;
+    
+    theCCB = pAnim-&gt;pentries[0].af_CCB;
+    for (i = 0; i &lt; pAnim-&gt;num_Frames; i++)
+        {
+        pAnim-&gt;pentries[i].af_CCB = theCCB;
+        }
+    }
+</CODE>
+</PRE>
+<CODE>GetAnimCel()</CODE> sets the cel data pointer and the PLUT pointer in a single CCB to point to the next frame. As a result, the animation can change its cel data and its PLUT, but not its size or other data. Although this is not as flexible as it was before, it is useful for many situations. When you change the location or the scale factor of one frame of the unified animation, that change is maintained in all the frames. Furthermore, you can insert the animation's one CCB into a cel list; this isn't done in UFO, but it's a useful technique. <P>
+<A NAME="XREF23882"><H2>Creating an Anti-Aliased Animation</A></H2>
+Title developers often find that animations show bad aliasing when displayed against a background. This can be remedied by going through the following steps: <P>
+<UL>
+<LI>First the artist prepares the components of the ANIM file using the Anti-Alias CelWriter plug-in. This is most efficiently done using a batch process from DeBabelizer. The Anti-Alias CelWriter creates for each frame a 3DO cel and a mask that provides 16 levels of translucency. 
+<p>
+<LI>The program then has to display the cel and the mask for each frame. An example, aaPlayer, is on the Portfolio 2.5 CD-ROM in <I>Examples:Graphics</I>.
+</UL>

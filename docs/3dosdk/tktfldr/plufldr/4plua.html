@@ -1,0 +1,33 @@
+<TITLE>The 3DO Image Writer dialog</TITLE>
+<H1><LINK NAME="XREF37166">The 3DO Image Writer dialog</LINK></H1><HR>
+When you select Export &gt; 3DO ImageWriter, the Image Writer dialog 
+appears.<P>
+
+<IMG SRC="Figures/PLU4.figs/ImageWriter.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>3DO Image Writer dialog.</I><P>
+The following options are available for  determining how an image is 
+created:<P>
+<H3>VDL Type</H3>
+A video display list (VDL) consists of a color table and some additional 
+information. Use this box to choose between a standard color table or a 
+custom (image-specific) color table. For more information, see the 
+chapter, "Understanding the Display Generator," of the <I>3DO Portfolio 
+Programmer's Guide</I>. <P>
+<H3>Standard VDL</H3>
+Selects a standard (system-supplied) 5-5-5 VDL or a standard 5-5-4-0 VDL. 
+The 5-5-4-0 color table clears the lowest blue bit for cornerweighting 
+information.<P>
+<H3>Custom VDL</H3>
+Selects a custom color table. This is useful if the image shows "banding" 
+after reduction to 15-bit color for the frame buffer.<P>
+<UL>
+<LI>If you choose Dynamic, the Image Writer creates a different color 
+table for each scanline. 
+<LI>If you choose Fixed, the Image Writer uses the system color table for 
+the image. 
+</UL>
+The Color Reduction pop-up menu provides various choices for color 
+reduction. Use the default. <P>
+<A NAME="XREF26999"></A>

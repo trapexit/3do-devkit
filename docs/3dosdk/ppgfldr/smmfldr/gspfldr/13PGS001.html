@@ -1,0 +1,60 @@
+<A NAME="XREF25274"><H1>DoControlPad </A></H1>
+<A NAME="XREF11232"> </A>Queries the specified control pad and de-bounces 
+specified key presses.<P>
+<H3>Synopsis</H3>
+<CODE>int32 DoControlPad (int32 whichPad, uint32 *pButton,int32 
+continuousBits)</CODE><P>
+<H3>Description</H3>
+Queries the state of the specified control pad, and de-bounces the keys, 
+based upon which keys the user is interested in receiving continuous data 
+on button presses, or discrete data. <P>
+This function fills pButton with the current state of the control pad. 
+That is, it returns values defined in event.h: <P>
+ControlUp 
+ControlDown
+ControlLeft 
+ControlRight
+ControlA 
+ControlB 
+ControlC 
+ControlStart 
+ControlX 
+ControlLeftShift 
+ControlRightShift <P>
+<H3>Arguments</H3>
+<DL>
+<DT>whichPad
+<DD>Index of the control pad to query 
+</DL>
+<DL>
+<DT>pButton
+<DD>Pointer to a uint32, in which the state of the requested control pad 
+is returned. 
+</DL>
+<DL>
+<DT>continuousBits
+<DD>Events from event.h for which the user would like to get a continuous 
+stream of event states. 
+</DL>
+<H3>Return Value</H3>
+Returns 0 if successful or a negative error code if an error occurs. <P>
+<H3>Caveats</H3>
+This function is neither multi-thread or multi-task capable or safe. You 
+should call this from the task or thread which has already called 
+<CODE>InitControlPad()</CODE>. This is because of system restrictions on 
+item ownership and using items. <CODE>InitControlPad()</CODE> and 
+<CODE>InitEventUtility()</CODE> create message ports and message items, 
+which only the task which has created them can use. Hence, 
+<CODE>DoControlPad()</CODE> can only be called by that same task. Other 
+tasks or threads which attempt this, will get errors due to not owning the 
+appropriate message ports and messages. <P>
+To make this multi-thread capable, you would need to spawn off a thread 
+that communicates directly with the event broker, and with all the other 
+tasks that will consume event information. <P>
+<H3>Associated Files</H3>
+controlpad.c, controlpad.h<P>
+<H3>Location</H3>
+examples/ExamplesLib <P>
+<H3>See Also</H3>
+<A HREF="./13PGS002.html#XREF22018"><CODE>InitControlPad</A>, <A 
+HREF="./13PGS003.html#XREF23856">KillControlPad</A> </CODE><P>

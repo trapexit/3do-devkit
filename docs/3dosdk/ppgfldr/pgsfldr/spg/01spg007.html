@@ -1,0 +1,36 @@
+<TITLE>Intertask Communication</TITLE>
+<H1><LINK NAME="XREF24020">Intertask Communication</LINK></H1><HR>
+When one task needs to communicate with another task, it can be a simple matter of notification ("Hey! I'm finished doing what you asked me to do") or a more involved passing of detailed information ("Here's the table of values you asked me to calculate"). Portfolio provides mechanisms to handle both: <I>signals</I> for simple notification and <I>messages </I>for passing detailed information.<P>
+<H2>Signals</H2>
+A signal is a kernel mechanism that allows one task to send a flag to another task. The kernel dedicates one 32-bit word in a task's TCB (task control block) for receiving signals. The kernel writes to that word each time it carries a signal to the task.<P>
+The 31 least-significant bits of the 32-bit signal word each specify a different signal; the most-significant bit is used for errors. Eight of the signal bits (0 to 7) are reserved by the kernel for system signals; the other 23 bits (8 to 30) are left for custom user-task signals.<P>
+<H3>Allocating Signals</H3>
+A task can't receive signals from another user task unless it has allocated a signal bit on which to receive. To do so, it uses the <CODE>AllocSignal()</CODE> call<CODE>,</CODE> which returns a 32-bit value containing the next unused user signal bit (the 32-bit value is called a <I>signal mask</I>). The task can send its signal mask to other tasks; they can then send a signal back to the task, using the user signal bit set in its signal mask.<P>
+All tasks can receive system signals at any time. The lower-8 signal bits are reserved for this purpose. For example, the system sends a task a signal (<CODE>SIGF_DEADTASK</CODE>) whenever one of its child threads or task dies.<P>
+<H3>Sending a Signal</H3>
+To send a signal to another task, a task prepares a 32-bit signal mask. It sets the appropriate bit (or bits, if it's sending more than one signal) in the mask to 1 and sets the rest of the bits to 0. For example, if the task wants to send a signal using bit 14, it creates the signal mask "00000000 00000000 01000000 00000000" (in binary). The task then uses the <CODE>SendSignal()</CODE> call to specify the item number of the task it wants to signal and passes along the signal mask. The kernel logically ORs the signal mask into the receiving task's TCB. Bits set in the <CODE>t_SigBits</CODE> field of the TCB indicate signals that the task has received, but not yet acknowledged.<P>
+<H3>Receiving a Signal</H3>
+A task waits for one or more signals by using the <CODE>WaitSignal()</CODE> call. The kernel checks to see if any of the bits in the task's signal mask match the bit mask passed <CODE>WaitSignal()</CODE>, indicating that a signal has been received on that bit. If so, <CODE>WaitSignal()</CODE> clears the bits that match and immediately returns, letting the task act on any signals it has received. If there are no received signals in the signal mask, the task is put in the wait queue until it receives a signal it wants.<P>
+<H3>Freeing Signal Bits</H3>
+To free up signal bits that a task has allocated, the task uses the <CODE>FreeSignal()</CODE> call to pass along a <I>free signal mask. </I>The free signal mask should have a 1 in each bit where the signal bit is to be freed (that is, set to 0 in the signal mask) and a 0 where the signal bit remains as it is.<P>
+<H2>Messages</H2>
+A message is an item that combines three elements: a variable number of bytes of message data, 4 bytes available for an optional reply to the message, and a specified place (a reply port, explained later) where a reply to the message can be sent.<P>
+A message won't work without two <I>message ports:</I> one created by the task receiving the message and another created by the task sending the message. The message port is an item that sets a user signal bit for incoming message notification. It includes a message queue that receives and stores incoming messages.<P>
+<H3>Creating a Message</H3>
+To create a message, a task can use a number of calls including <CODE>CreateMsg()</CODE>, <CODE>CreateSmallMsg()</CODE>, and <CODE>CreateBufferedMsg()</CODE>. These functions accept a string of text as the message's name, a priority for the message, and the item number of the reply port for replies to the message. It returns the item number of the newly created message for working with the message later. <P>
+<H3>Creating a Message Port</H3>
+To create a message port, a task uses the <CODE>CreateMsgPort()</CODE> <CODE>call,</CODE> which it provides with a string of text as a message port name. The kernel creates a message queue in system RAM for the message port, automatically assigns a user-task signal bit for the message port, and gives the message port an item number. The task is now ready to receive messages at the port.<P>
+<H3>Sending a Message</H3>
+If a task wants to send a message to another task, it must first know the item number of a message port of the receiving task. (If it knows the name of the message port, it can use the <CODE>FindMsgPort()</CODE> call to find the item number.) The sending task then uses either <CODE>SendMsg()</CODE> or <CODE>SendSmallMsg()</CODE> to fill out a message, providing a destination message port item number and some message data to pass. The kernel inserts the message, according to priority, into the destination port message queue, then signals the receiving task that a message has arrived at its message port.<P>
+<H3>Receiving a Message</H3>
+To receive a message, a task has two options:<P>
+<UL>
+<LI>It can use the <CODE>GetMsg()</CODE> call <CODE></CODE>to check the message port and retrieve the top message in the list if there are any messages. If there are no messages, the task resumes execution.
+<p>
+<LI>It can use the <CODE>WaitPort()</CODE> call to wait for a message. This puts the task into wait state until it receives a message at its message port. The task 
+then retrieves the message and resumes execution.
+</UL>
+<H3>Replying to a Message</H3>
+A task that sends a message usually needs a reply from the task that receives the message, so the sending task must specify a message port of its own as the <I>reply port. </I>(If the sending task doesn't have its own message port, it must create one before creating a message.) When the receiving task receives the message, it uses either <CODE>ReplyMsg()</CODE> or <CODE>ReplySmallMsg()</CODE> to return the same message to the reply port with a 4-byte reply written into the message (stored in the 4-byte <CODE>msg_Result</CODE> field of the <CODE>Message</CODE> structure). The sending task receives the reply and reads the 4-byte reply.<P>
+<H3>Interpreting a Message</H3>
+When one task sends a message to another task, the meaning of the message data is completely arbitrary and is determined by the two tasks sharing the message. In many cases, the message data is composed of a pointer to a data structure created in the sending task's memory along with the data structure's size. The receiving task then uses the pointer and size to read the data at that address.<P>

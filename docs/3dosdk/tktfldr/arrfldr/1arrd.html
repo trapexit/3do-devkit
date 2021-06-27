@@ -1,0 +1,355 @@
+<TITLE>Implementation details </TITLE>
+<H1><LINK NAME="XREF23606"></LINK>Implementation details </H1><HR>
+This section gives details of those aspects of the compiler and C library which the ANSI standard for C identifies as implementation-defined, together with some other points of interest to programmers. The material is collected here by subject.<P>
+The section lists the points which a conforming implementation must document, as set out in appendix A.6.3 of the ANSI C standard. The material of this section is organised to follow directly the structure of appendix A.6.3.<P>
+Note that there is significant overlap between this section and the following one.<P>
+<H2>Character sets and identifiers </H2>
+An identifier can be of any length. The compiler truncates an identifier after 256 characters, all of which are significant (the standard requires a minimum of 31 significant characters).<P>
+The source character set expected by the compiler is 7-bit ASCII, except that within comments, string literals, and character constants, the full ISO 8859-1 (Latin 1) 8-bit character set is recognised.<P>
+In its generic configuration, as delivered, the C library processes the full ISO 8859-1 (Latin-1) 8-bit character set, save that the default locale is the C locale (see <A HREF="./1arre.html#XREF27918">Standard implementation definition</A>). The <I>ctype</I> functions therefore all return 0 when applied to codes in the range 160 to 255. By calling <I>setlocale(LC_CTYPE, "ISO8859-1")</I> you can cause the <I>isupper</I> and <I>islower</I> functions to behave as expected over the full 8-bit Latin-1 alphabet, rather than just over the 7-bit ASCII subset.<P>
+Upper and lower case characters are distinct in all identifiers, both internal and external.<P>
+In pcc mode (-pcc option) and "limited pcc" or "system programming" mode (-fc option) an identifier may also contain a dollar character.<P>
+<A NAME="XREF36789"><H2>Data Elements </A></H2>
+The sizes of data elements are as follows:<P>
+<PRE>
+---------------------------------------------------------
+Type         |Size in bits                               
+---------------------------------------------------------
+char         |8                                          
+---------------------------------------------------------
+short        |16                                         
+---------------------------------------------------------
+int          |32                                         
+---------------------------------------------------------
+long         |32                                         
+---------------------------------------------------------
+float        |32                                         
+---------------------------------------------------------
+double       |64                                         
+---------------------------------------------------------
+long double  |64 (subject to future change)              
+---------------------------------------------------------
+all pointers |32                                         
+---------------------------------------------------------
+</PRE>
+<P>
+Integers are represented in two's complement form.<P>
+Data items of type char are unsigned by default, though in ANSI mode they may be explicitly declared as signed char or unsigned char<P>
+In the compiler's -pcc mode there is no <I>signed</I> keyword, so chars are signed by default and may be declared unsigned if required.<P>
+Floating point quantities are stored in the IEEE format. In double and long double quantities, the word containing the sign, the exponent and the most significant part of the mantissa is stored at the lower machine address.<P>
+<H2>Arithmetic limits (limits.h and float.h)</H2>
+The ANSI C standard defines two header files, limits.h and float.h, which contain constants describing the ranges of values which can be represented by the arithmetic types. The standard also defines minimum values for many of these constants.<P>
+This subsection sets out the values in these two headers for the ARM, and gives a brief description of their significance.<P>
+Number of bits in the smallest object that is not a bit field (i.e. a byte):<P>
+<CODE>
+<PRE>
+CHAR_BIT 8
+</CODE>
+</PRE>
+Maximum number of bytes in a multibyte character, for any supported locale:<P>
+<CODE>
+<PRE>
+MB_LEN_MAX 1
+</CODE>
+</PRE>
+For the following integer ranges, the middle column gives the numerical value of the range's endpoint, while the right hand column gives the bit pattern (in hexadecimal) that would be interpreted as this value in ARM C. When entering constants you must be careful about the size and signed-ness of the quantity. Furthermore, constants are interpreted differently in decimal and hexadecimal/octal. See the ANSI C standard or any of the recommended textbooks on the C programming language for more details.<P>
+<PRE>
+---------------------------------------------------------
+Range         |End-point         |Hex Representation     
+---------------------------------------------------------
+CHAR_MAX      |255               |0xff                   
+---------------------------------------------------------
+CHAR_MIN      |0                 |0x00                   
+---------------------------------------------------------
+              |                  |                       
+---------------------------------------------------------
+SCHAR_MAX     |127               |0x7f                   
+---------------------------------------------------------
+SCHAR_MIN     |-128              |0x80                   
+---------------------------------------------------------
+              |                  |                       
+---------------------------------------------------------
+UCHAR_MAX     |255               |0xff                   
+---------------------------------------------------------
+              |                  |                       
+---------------------------------------------------------
+SHRT_MAX      |32767             |0x7fff                 
+---------------------------------------------------------
+SHRT_MIN      |-32768            |0x8000                 
+---------------------------------------------------------
+              |                  |                       
+---------------------------------------------------------
+USHRT_MAX     |65535             |0xffff                 
+---------------------------------------------------------
+INT_MAX       |2147483647        |0x7fffffff             
+---------------------------------------------------------
+INT_MIN       |-2147483648       |0x80000000             
+---------------------------------------------------------
+              |                  |                       
+---------------------------------------------------------
+LONG_MAX      |2147483647        |0x7fffffff             
+---------------------------------------------------------
+LONG_MIN      |-2147483648       |0x80000000             
+---------------------------------------------------------
+              |                  |                       
+---------------------------------------------------------
+ULONG_MAX     |  4294967295      |0xffffffff             
+---------------------------------------------------------
+</PRE>
+<P>
+Characteristics of floating point:<P>
+<PRE>
+-----------------------------------------------------
+FLT_RADIX            |2                              
+-----------------------------------------------------
+FLT_ROUNDS           |1                              
+-----------------------------------------------------
+</PRE>
+<P>
+The base (radix) of the ARM floating-point number representation is 2, and floating-point addition rounds to nearest.<P>
+Ranges of floating types:<P>
+<PRE>
+-----------------------------------------------------
+FLT_MAX              |3.40282347e+38F                
+-----------------------------------------------------
+FLT_MIN              |1.17549435e-38F                
+-----------------------------------------------------
+                     |                               
+-----------------------------------------------------
+DBL_MAX              |1.79769313486231571e+308       
+-----------------------------------------------------
+DBL_MIN              |2.22507385850720138e-308       
+-----------------------------------------------------
+                     |                               
+-----------------------------------------------------
+LDBL_MAX             |1.79769313486231571e+308       
+-----------------------------------------------------
+LDBL_MIN             |2.22507385850720138e-308       
+-----------------------------------------------------
+</PRE>
+<P>
+Ranges of base two exponents:<P>
+<PRE>
+-----------------------------------------------------
+FLT_MAX_EXP          |28                             
+-----------------------------------------------------
+FLT_MIN_EXP          |-125)                          
+-----------------------------------------------------
+                     |                               
+-----------------------------------------------------
+DBL_MAX_EXP          |1024                           
+-----------------------------------------------------
+DBL_MIN_EXP          |(-1021)                        
+-----------------------------------------------------
+                     |                               
+-----------------------------------------------------
+LDBL_MAX_EXP         |024                            
+-----------------------------------------------------
+LDBL_MIN_EXP         |(-1021)                        
+-----------------------------------------------------
+</PRE>
+<P>
+Ranges of base ten exponents:<P>
+<PRE>
+-----------------------------------------------------
+FLT_MAX_10_EXP       |8                              
+-----------------------------------------------------
+FLT_MIN_10_EXP       |(-37)                          
+-----------------------------------------------------
+                     |                               
+-----------------------------------------------------
+DBL_MAX_10_EXP       |308                            
+-----------------------------------------------------
+DBL_MIN_10_EXP       |(-307)                         
+-----------------------------------------------------
+                     |                               
+-----------------------------------------------------
+LDBL_MAX_10_EXP      |308                            
+-----------------------------------------------------
+LDBL_MIN_10_EXP      |(-307)                         
+-----------------------------------------------------
+</PRE>
+<P>
+Decimal digits of precision:<P>
+<PRE>
+-----------------------------------------------------
+FLT_DIG              |6                              
+-----------------------------------------------------
+DBL_DIG              |5                              
+-----------------------------------------------------
+LDBL_DIG             |5                              
+-----------------------------------------------------
+</PRE>
+<P>
+Digits (base two) in mantissa (binary digits of precision):<P>
+<PRE>
+-----------------------------------------------------
+FLT_MANT_DIG         |24                             
+-----------------------------------------------------
+DBL_MANT_DIG         |53                             
+-----------------------------------------------------
+LDBL_MANT_DIG        |53                             
+-----------------------------------------------------
+</PRE>
+<P>
+Smallest positive values such that (1.0 + x != 1.0):<P>
+<PRE>
+-----------------------------------------------------
+FLT_EPSILON          |.19209290e-7F                  
+-----------------------------------------------------
+DBL_EPSILON          |.2204460492503131e-16          
+-----------------------------------------------------
+LDBL_EPSILON         |.2204460492503131e-16L         
+-----------------------------------------------------
+</PRE>
+<P>
+<H2>Structured data types </H2>
+The ANSI C standard leaves details of the layout of the components of a structured data type to each implementation. The following points apply to the ARM C compiler:<P>
+<UL>
+<LI>Structures are aligned on word boundaries.
+<p>
+<LI>Structures are arranged with the first-named component at the lowest address.
+<p>
+<LI>A component with a char type is packed into the next available byte.
+<p>
+<LI>A component with a short type is aligned to the next even-addressed byte.
+<p>
+<LI>All other arithmetic-type components are word-aligned, as are pointers and integers containing bitfields.
+<p>
+<LI>The only valid types for bitfields are (signed) int and unsigned int. (In -pcc mode, char, unsigned char, short, unsigned short, long and unsigned long are also accepted).
+<p>
+<LI>A bitfield of type int is treated as unsigned by default (signed by default in -pcc mode).
+<p>
+<LI>A bitfield must be wholly contained within the 32 bits of an int.
+<p>
+<LI>Bitfields are allocated within words so that the first field specified occupies the lowest-addressed bits of the word (when configured "little-endian", lowest addressed means least significant; when configured "big-endian", lowest addressed means most significant).
+</UL>
+<H2>Pointers</H2>
+The following remarks apply to pointer types:<P>
+<UL>
+<LI>Adjacent bytes have addresses which differ by one.
+<p>
+<LI>The macro NULL expands to the value 0.
+<p>
+<LI>Casting between integers and pointers results in no change of representation.
+<p>
+<LI>The compiler warns of casts between pointers to functions and pointers to data (but not in -pcc mode).
+</UL>
+<H2>Pointer subtraction</H2>
+When two pointers are subtracted, the difference is obtained as if by the expression:<P>
+<CODE>
+<PRE>
+((int)a - (int)b) / (int)sizeof(type pointed to)
+</CODE>
+</PRE>
+If the pointers point to objects whose size is no greater than four bytes, the alignment of data ensures that the division will be exact in all cases. For longer types, such as doubles and structures, the division may not be exact unless both pointers are to elements of the same array. Moreover the quotient may be rounded up or down at different times, leading to potential inconsistencies.<P>
+<H2>Arithmetic operations</H2>
+The compiler performs the usual arithmetic conversions set out in the ANSI C standard. The following points apply to operations on the integral types:<P>
+<UL>
+<LI>All signed integer arithmetic uses a two's complement representation.
+<p>
+<LI>Bitwise operations on signed integral types follow the rules which arise naturally from two's complement representation.
+<p>
+<LI>Right shifts on signed quantities are arithmetic.
+<p>
+<LI>Any quantity which specifies the amount of a shift is treated as an unsigned 8-bit value.
+<p>
+<LI>Any value to be shifted is treated as a 32-bit value.
+<p>
+<LI>Left shifts of more than 31 give a result of zero.
+<p>
+<LI>Right shifts of more than 31 give a result of zero from a shift of an unsigned or positive signed value; they yield -1 from a shift of a negative signed value.
+<p>
+<LI>The remainder on integer division has the same sign as the divisor.
+<p>
+<LI>If a value of integral type is truncated to a shorter signed integral type, the result is obtained as if by masking the original value to the length of the destination, and then sign extending.
+<p>
+<LI>A conversion between integral types never causes an exception to be raised.
+<p>
+<LI>Integer overflow does not cause an exception to be raised.
+<p>
+<LI>Integer division by zero does cause an exception to be raised.
+</UL>
+The following points apply to operations on floating point types:<P>
+<UL>
+<LI>When a double or long double is converted to a float, rounding is to the nearest representable value.
+<p>
+<LI>A conversion from a floating type to an integral type causes an exception to be raised only if the value cannot be represented in a long int, (or unsigned long int in the case of conversion to an unsigned int).
+<p>
+<LI>Floating point underflow is not detected; any operation which underflows returns zero.
+<p>
+<LI>Floating point overflow causes an exception to be raised.
+<p>
+<LI>Floating point divide by zero causes an exception to be raised.
+</UL>
+<H2>Expression evaluation </H2>
+The compiler performs the usual arithmetic conversions (<I>promotions</I>) set out in the ANSI C standard before evaluating an expression. The following should be noted:<P>
+<UL>
+<LI>The compiler may re-order expressions involving only associative and commutative operators of equal precedence, even in the presence of parentheses (e.g. a + (b - c) may be evaluated as (a + b) - c).
+<p>
+<LI>Between sequence points, the compiler may evaluate expressions in any order, regardless of parentheses. Thus the side effects of expressions between sequence points may occur in any order.
+<p>
+<LI>Similarly, the compiler may evaluate function arguments in any order.
+</UL>
+Any detail of order of evaluation not prescribed by the ANSI C standard may vary between releases of the ARM C compiler.<P>
+<H2>Implementation limits </H2>
+The ANSI C standard sets out certain minimum limits which a conforming compiler must accept; a user should be aware of these when porting applications between compilers. A summary is given here. The <I>mem</I> limit indicates that no limit is imposed by the ARM C compiler other than that imposed by the availability of memory.<P>
+<PRE>
+-------------------------------------------------------
+Description                       |Required |ARM C     
+-------------------------------------------------------
+Nesting levels of compound        |15       |  mem     
+statements and iteration /        |         |          
+selection control structures      |         |          
+-------------------------------------------------------
+Nesting levels of conditional     |8        |  mem     
+compilation                       |         |          
+-------------------------------------------------------
+Declarators modifying a basic type|31       |  mem     
+-------------------------------------------------------
+Expressions nested by parentheses |32       |  mem     
+-------------------------------------------------------
+Significant characters            |         |          
+-------------------------------------------------------
+in internal identifiers and macro |31       |  256     
+names                             |         |          
+-------------------------------------------------------
+in external identifiers           |6        |  256     
+-------------------------------------------------------
+External identifiers in one source|511      |  mem     
+file                              |         |          
+-------------------------------------------------------
+Identifiers with block scope in   |127      |  mem     
+one block                         |         |          
+-------------------------------------------------------
+Macro identifiers in one source   |1024     |  mem     
+file                              |         |          
+-------------------------------------------------------
+Parameters in one function        |31       |  mem     
+definition / call                 |         |          
+-------------------------------------------------------
+Parameters in one macro definition|31       |  mem     
+/ invocation                      |         |          
+-------------------------------------------------------
+Characters in one logical source  |509      |no limit  
+line                              |         |          
+-------------------------------------------------------
+Characters in a string literal    |509      |  mem     
+-------------------------------------------------------
+Bytes in a single object          |32767    |  mem/[*] 
+-------------------------------------------------------
+Nesting levels for #included files|8        |  mem     
+-------------------------------------------------------
+Case labels in a switch statement |257      |  mem     
+-------------------------------------------------------
+Members in a single struct or     |127      |  mem     
+union, enumeration constants in a |         |          
+single enum                       |         |          
+-------------------------------------------------------
+Nesting of struct / union in a    |15       |  mem     
+single declaration                |         |          
+-------------------------------------------------------
+</PRE>
+<P>
+[*] When running on 16-bit hosts, the ARM C compiler may impose a limit on the size of an object. Generally, this limit will be 65535 bytes in a single <I>object file</I> rather than 32767 bytes in a single C-language object. 32-bit hosted versions do not have this limit.<P>
+<P>

@@ -1,0 +1,20 @@
+<Title>pulse.dsp</Title>
+<A NAME="XREF27360"><H1>pulse.dsp </A></H1>
+<A NAME="XREF20822"></A> Pulse waveform generator.<P>
+<H3>Function</H3>
+This instrument is a simple pulse generator. <P>
+<H3>Knobs</H3>
+Frequency  - 0 =&gt; $7FFF, default = $300 = raw frequency.  If you call <CODE>TweakRawKnob()</CODE> the units are phase increments, If you call <CODE>TweakKnob()</CODE> the units are 16.16 fractional Hertz. <P>
+Amplitude - 0  =&gt;  $7FFF <P>
+PulseWidth -  $-8000 =&gt;  $7FFF, default = 0 = level for comparator used to generate pulse wave.  0 gives a 50% duty cycle pulse wave.  Values above or below 0 give narrower pulses. <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 13 <P>
+N memory = 14 words <P>

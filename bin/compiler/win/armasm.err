@@ -1,0 +1,458 @@
+mac_errors_mainline_nocol:File \"%s\" ; Line %ld\n# %s%s\n
+mac_errors_mainline_col:File \"%s\" ; Line \306%u!%i:/\260/\n# %s%s\n
+mac_errors_macroline:#\tat line %lu in macro %.*s\n
+mac_errors_getlines:#\tincluded by GET/INCLUDE directive at line %lu in file \"%s\"\n
+mac_errors_infoline:#\t%s%s\n
+mac_errors_showinputline:
+mac_errors_telleandw:### Assembly terminated:\n###\t
+arm_errors_mainline_nocol:\"%s\", line %u: %s%s\n
+arm_errors_mainline_col:\"%s\", line %u (column %u): %s%s\n
+arm_errors_macroline:    at line %lu in macro %.*s\n
+arm_errors_getlines:    included by GET/INCLUDE directive from \"%s\", line %lu\n
+arm_errors_infoline:%s%s\n
+arm_errors_showinputline:%5lu %.8lx %.*s
+arm_errors_telleandw:Assembly terminated:\n
+errors_telleandw_warn0:0 Warnings
+errors_telleandw_warn1:1 Warning
+errors_telleandw_warns:%ld Warnings
+errors_telleandw_error0:0 Errors, 
+errors_telleandw_error1:1 Error, 
+errors_telleandw_errors:%ld Errors, 
+errors_telleandw_suppressed: suppressed by -NOWarn
+aasm_main_banner:%s%s vsn %s%s [%s]\n
+aasm_argv0:argv[0] = %s
+apply_apply_expr_stack_err:Expression stack error
+apply_index_pc_rel::INDEX: cannot be used on a PC Relative Expression
+applysub_finfosub_fnotf:File '%s' not found
+applysub_finfosub_direct:'%s' is a directory
+asm_dopredefines_bad:bad predefine: %s
+asm_asm_noinput:No input file
+asm_asm_incompatible_styles:Incompatible input and output styles
+asm_loadfile_error_stdin:Error on stdin: exiting
+asm_loadfile_open_fail:File \"%s\" could not be opened
+asm_loadfile_not_all_loaded:File \"%s\" could not all be loaded
+cli_usage_part1a:\n\
+Usage:      aasm [keyword arguments] sourcefile binaryfile\n\
+            aasm [keyword arguments] -o binaryfile sourcefile\n
+cli_usage_part1b:\n\
+Usage:      %s [keyword arguments] sourcefile objectfile\n\
+            %s [keyword arguments] -o objectfile sourcefile\n
+cli_usage_part2a:\n\
+Keywords    (Upper case shows allowable abbreviation)\n\
+-list       listingfile   Write a listing file (see manual for options)\n
+cli_usage_part2b:\
+-Depend     dependfile    Save 'make' source file dependencies\n\
+-Errors     errorsfile    Put stderr diagnostics to errorsfile\n\
+-I          dir[,dir]     Add dirs to source file search path\n\
+-PreDefine  directive     Pre-execute a SET{L,A,S} directive\n\
+-NOCache                  Source caching off    (default on)\n\
+-MaxCache   <n>           Maximum cache size    (default 8MB)\n
+cli_usage_part3:\
+-NOEsc                    Ignore C-style (\\c) escape sequences\n
+cli_usage_part4:\
+-NOWarn                   Turn off Warning messages\n
+cli_usage_part5:\
+-g                        Output debugging tables\n
+cli_usage_part6:\
+-APCS       <pcs>/<quals> Make pre-definitions to match the\n\
+                          chosen proc-call standard\n
+cli_usage_part7:\
+-Stamp                    Stamp output with time\n
+cli_usage_part8:\
+-Module                   Mark objectfile as a RISC OS module\n
+cli_usage_part9:\
+-DeskTop                  Strip desktop prefix from filenames\n\
+-ThrowBack:               Support DDE error processing\n
+cli_usage_part10:\
+-CheckReglist             Warn about out of order LDM/STM register lists\n\
+-Help                     Print this information\n\
+-LIttleend                Little-endian ARM\n\
+-BIgend                   Big-endian ARM\n\
+-VIA        <file>        Read further arguments from <file>\n\
+-ARCH       <target-arch> Set target architecture version\n\
+            one of:       
+cli_usage_part10a:\
+-CPU        <target-cpu>  Set the target ARM core type\n\
+            one of:       
+cli_usage_fp:\
+-FPu        <target-arch> Set target FP architecture version\n\
+            one of:       NONE, FPA\n
+cli_usage_piccolo:\
+-DSParch    <target-arch> Set target DSP architecture version\n\
+            one of:       1\n
+cli_usage_part11:\
+-16                       Assemble 16 bit Thumb instructions\n\
+-32                       Assemble 32 bit ARM instructions\n
+cli_bad_calling_standard:Unrecognised APCS '%s' use '3' or 'None'
+cli_set_calling_standard_unrec:Unrecognised APCS qualifier '/%.*s'
+cli_warn_non_32bit_pc_obsolescent:APCS qualifier /26bit is obsolete
+cli_warn_dwarf_obsolete:-dwarf is obsolete. Use -dwarf2 (recommended) or -dwarf1 instead
+cli_getinterface_viafile_missing:Via file missing
+cli_getinterface_viafile_openfail:Via file would not open
+cli_getinterface_missing:Missing argument to '%s'
+cli_getinterface_arch_bad:Bad architecture specified
+cli_getinterface_arch_config:Bad architecture configured
+cli_getinterface_arch_conflict:Configured processor and architecture conflict
+cli_getinterface_depend_already:Dependency file already specified
+cli_getinterface_depend_open_fail:-Depend file '%s': cannot open
+cli_getinterface_depend_missing:-Depend file missing
+cli_getinterface_errors_already:Errors file already specified
+cli_getinterface_errors_missing:Errors file missing
+cli_getinterface_errors_openfail:Errors file would not open
+cli_getinterface_bad_cpu:Target cpu not recognised
+cli_getinterface_cpu_missing:Target cpu missing
+cli_getinterface_input_already:Input file already specified
+cli_getinterface_input_missing:Input file missing
+cli_getinterface_debug_not_supported:Debug option -g%c not supported
+cli_getinterface_debug_not_recog:Debug option -g%c not recognised
+cli_getinterface_include_missing:Include path missing
+cli_getinterface_len_range:Length out of range, ignored
+cli_getinterface_len_missing:Length specifier missing
+cli_getinterface_maxcache_bad:Bad value for maxCache
+cli_getinterface_maxcache_neg:MaxCache negative, ignored
+cli_getinterface_output_already:Output file already specified
+cli_getinterface_output_missing:Output file missing
+cli_getinterface_predef_missing:Predefine missing
+cli_getinterface_list_already:Listing file already specified
+cli_getinterface_list_open_fail:Can't open listing file '%s'
+cli_listfile_is_src_or_obj:The specified listing file '%s' must not be a .s or .o file
+cli_output_is_source:The specified output file '%s' must not be a source file
+cli_depend_is_source:The specified depend file '%s' must not be a source file
+cli_errors_is_source:The specified errors file '%s' must not be a source file
+cli_listing_is_source:The specified listing file '%s' must not be a source file
+cli_getinterface_wid_range:Width out of range, ignored
+cli_getinterface_wid_missing:Width specifier missing
+cli_getinterface_unrecog_param:Unrecognised parameter '%s'
+cli_getinterface_bad_param:Bad command line parameter '%s'
+cli_getinterface_fname_missing:Input or output filename missing under desktop option
+cli_getinterface_no_input_spec:Duh? InputFile called with no input file specified
+cli_error_open_stats:Error opening stats file %s
+cli_error_splitldms:Error: -splitldms expects argument q or v
+code_relocinit_badbufsize:Bad relocation buffer size
+code_warnifbanked_error:Use of banked R8-R14 after forced user-mode LDM
+code_warnifbanked_warn:Use of banked R8-R14 after in-line mode change
+code_areanumber_error:Area number out of range
+code_fakefirstareadecl:Faking declaration of area AREA |$$$$$$$|
+code_dumpstringtable_f1:%s%s vsn %s%s%c
+code_dumpheader_chunkentry_size:Unexpected ChunkEntry size
+code_dumpheader_aofheader_size:Unexpected aof_header size
+code_dumpheader_unused:Unused  
+code_dumpheader_aofheader_size2:Incorrect aof header size
+code_dumpareadecs_badsize:Bad area declaration size
+condasm_stack_overflow:Structure stack overflow
+condasm_stack_underflow:Structure stack underflow
+errors_diagnose_fatal:Fatal error: 
+errors_errorreport_error:Error: 
+errors_errorreport_info:
+errors_errorreport_too_many_error:Too many Errors
+errors_warning_warning:Warning: 
+errors_ADirMissing:Area directive missing
+errors_CommaMissing:Missing comma
+errors_BadSymType:Bad symbol type
+errors_MulDefSym:Multiply or incompatibly defined symbol
+errors_BadExprType:Bad expression type
+errors_ExpectedConstExpr:Expected constant expression
+errors_ExpectedConstOrAddrExpr:Expected constant or address expression
+errors_ExpectedAddrExpr:Expected address expression
+errors_ExpectedStringExpr:Expected string expression
+errors_ExpectedRegRelExpr:Expected register relative expression
+errors_ExpectedStringOrConstExpr:Expected string or constant expression
+errors_TooLateOrg:Too late to set origin now
+errors_RegSymExists:Register symbol already defined
+errors_NoMacro:No current macro expansion
+errors_BadMEND:MEND not allowed within conditionals
+errors_BadGlob:Bad global name
+errors_GlobExists:Global name already exists
+errors_LocNotAllowed:Locals not allowed outside macros
+errors_BadLoc:Bad local name
+errors_LocExists:Local name already exists
+errors_WrongSy:Unknown or wrong type of global/local symbol
+errors_BadAlign:Bad alignment boundary
+errors_BadImport:Bad imported name
+errors_ImportExists:Imported name already exists
+errors_BadExport:Bad exported name
+errors_BadExportType:Bad exported symbol type
+errors_NoAreaName:Area name missing
+errors_BadAttr:Bad area attribute or alignment
+errors_EntryExists:Entry address already set
+errors_BadEOL:Unexpected characters at end of line
+errors_StringShort:String too short for operation
+errors_StringOver:String overflow
+errors_BadOpType:Bad operand type
+errors_RelOnlyAdd:Relocated expressions may only be added or subtracted
+errors_AOFNoSubRel:AOF does not support subtractive relocations
+errors_AoutNotImplemented:Internal Error : a.out format not fully supported
+errors_UnDefExp:Undefined exported symbol
+errors_CantOpenCode:Unable to open output file
+errors_CantCloseCode:Unable to close output file
+errors_BadShift:Bad shift name
+errors_UnkShift:Unknown shift name
+errors_ShiftOpt:Shift option out of range
+errors_BadSym:Bad symbol
+errors_BadReg:Bad register name symbol
+errors_UnExpOp:Unexpected operator
+errors_UnDefSym:Undefined symbol
+errors_UnExpOpnd:Unexpected operand
+errors_UnExpUnOp:Unexpected unary operator
+errors_BraMiss:Missing open bracket
+errors_SynAfterDir:Syntax error following directive
+errors_IllLineStart:Illegal line start should be blank
+errors_LabMiss:Label missing from line start
+errors_BadLocNum:Bad local label number
+errors_SynAfterLocLab:Syntax error following local label definition
+errors_WrongRout:Incorrect routine name
+errors_UnkOpc:Unknown opcode
+errors_UnsuppOpc:Opcode not supported on selected processor
+errors_TooManyParms:Too many actual parameters
+errors_BadOpcSym:Bad opcode symbol
+errors_SynAfterLab:Syntax error following label
+errors_InvLineStart:Invalid line start 
+errors_BadTrans:Translate not allowed in pre-indexed form
+errors_MissSqKet:Missing close square bracket
+errors_ImmValRange:Immediate 0x%08X out of range for this operation
+errors_ImmValNeg:Immediate -0x%08X out of range for this operation
+errors_KetMiss:Missing close bracket
+errors_BadBrOp:Invalid operand to branch instruction
+errors_BadRot:Bad rotator
+errors_no_external_adrs:ADR/L cannot be used on external symbols
+errors_DatOff:Data transfer offset out of range
+errors_BadRegRange:Bad register range
+errors_BrOff:Branch offset out of range
+errors_DecOver:Decimal overflow
+errors_HexOver:Hexadecimal overflow
+errors_BadHex:Bad hexadecimal number
+errors_MissQuote:Missing close quote
+errors_BadOp:Bad operator
+errors_BadBaseNum:Bad based number
+errors_NumOver:Numeric overflow
+errors_ExtAreaSym:External area relocatable symbol used
+errors_ExtNotVal:Externals not valid in expressions
+errors_NoSym:Symbol missing
+errors_CodeInDataArea:Code generated in data area
+errors_BadMacroParms:Error in macro parameters
+errors_RegRange:Register value out of range
+errors_HashMissing:Missing '#'
+errors_UnexpectedChar:Unexpected '%c'
+errors_FPRegRange:Floating point register number out of range
+errors_CPRegRange:Coprocessor register number out of range
+errors_CPNameRange:Coprocessor number out of range
+errors_FPOver:Floating point overflow
+errors_FPNoNum:Floating point number not found
+errors_FPTooLate:Too late to ban floating point
+warnings_FPFIXPrecision:Precision specifier ignored for 'FIX'
+errors_UnkOp:Unknown operand
+errors_CPOpRange:Coprocessor operation out of range
+errors_BadMul:Multiply destination equals first source
+errors_StructErr:Structure mismatch
+errors_SubstLong:Substituted line too long
+errors_SubstNoPreDec:No pre-declaration of substituted symbol
+errors_IllLabParm:Illegal label parameter start in macro prototype
+errors_BadMacParmDef:Bad macro parameter default value
+errors_BadRegInBD:Register occurs multiply in list
+errors_BadRegListOrder:Registers should be listed in increasing register number order
+errors_BadIMAttr:Bad or unknown attribute
+errors_BadFPCon:Bad floating point constant
+errors_BadADRL:ADRL can't be used with PC
+errors_BadNoInit:Non-zero data within uninitialised area
+errors_MissBra:Missing open square bracket
+errors_DivZero:Division by zero
+errors_TooLateStyle:Too late to change output format
+errors_BadWeak:Weak symbols not permitted in a.out
+errors_BadOrg:Origin illegal for a.out
+errors_BadStrong:STRONG directive not suported by a.out
+errors_bad_area_attr_combination:Attribute %s cannot be used with attribute %s
+errors_TooManyData:Too many data areas for a.out
+errors_TooManyCode:Too many code areas for a.out
+errors_TooMany0Init:Too many bss areas for a.out
+errors_TooLateRegList:Too late to define symbol as register list
+errors_BadRegList:Bad register list symbol
+errors_BadEscape:Bad string escape sequence
+errors_CodeError:Error on code file
+errors_AoutNoSupport:a.out doe not support this facility
+errors_BadAoutAdr:a.out can't handle external adresses except for branches
+errors_BaseInUse:Register already in use as an AREA base
+errors_BadCPSRorSPSR:Bad CPSR or SPSR designator
+errors_MRSnoCtlorFlg:CPSR/SPSR_<fields> are illegal in MRS
+errors_unknown_pc_offset:{PCSTOREOFFSET} not defined - no processor selected
+errors_blxcond:BLX <address> must be unconditional
+errors_source_ne_dest:Source and destination registers must be identical for this instruction
+errors_bad_reg_combo:Invalid register or register combination for this operation
+errors_imm_alignment:Immediate value must be word aligned for this operation
+errors_shift_size:Shift count out of range
+errors_bad_immediate:Immediate value cannot be used with this operation
+errors_need_immediate:Must have immediate value with this operation
+errors_non_word_off:Offset must be word aligned with this operation
+errors_non_halfword_off:Offset must be halfword aligned with this operation
+errors_ShriekMissing:Missing '!'
+errors_b_arm:B or BL from 16 bit code to 32 bit code
+errors_b_thumb:B or BL from 32 bit code to 16 bit code
+errors_blx_arm:BLX from 32 bit code to 32 bit code, use BL
+errors_blx_thumb:BLX from 16 bit code to 16 bit code, use BL
+errors_negative_off:Can't have negative offsets with datatransfer instructions
+errors_no_post_index:Post indexed addressing mode not available
+errors_no_pre_index:Pre indexed addressing mode not available for this instruction, use [Rn, Rm]
+errors_bad_adcon:BASED areas must be accessed using LDA, not LDR
+errors_bad_LDA:LDA can only load addresses from BASED AREAs
+errors_branch_reloc:Only BL can be used to branch to external symbols or other AREAs
+HWord_Lit_NS:Halfword literal values not supported
+LDRB_Lit_OOR:Operand to LDRB does not fit in 8 bits
+errors_noncode_data:DATA directive can only be used in CODE areas
+expr_fp_used_nofp:Register name fp used in -apcs 3/nofp mode
+expr_psr_deprecated:Deprecated form of PSR field specifier used (use _cxsf)
+expr_psr_badfield:Invalid PSR field specifier
+expr_psr_dupfield:PSR field \'%c\' specified more than once
+expr_mrs_does_not_select_fields:MRS cannot select fields, use %.*s directly
+exprstor_alloc_failed:Expression storage allocator failed
+formatio_writech_header:\n\n\nARM Macro Assembler    Page %lu 
+fpio_read_scanf_failed_fp:Scanf failed to read floating point number
+getdir_getdir_struct_mismatch:Structure mismatch
+getdir_getdir_unreopenable:File \"%s\" could not be reopened
+getdir_getdir_bad_get_or_inc:Bad GET or INCLUDE
+getdir_checkstack_unmatched:Unmatched conditional or macro
+getdir_mexitdir_missing_if:missing IF element on structure stack
+getdir_mexitdir_missing_while:missing WHILE element on structure stack
+getdir_mexitdir_extra_get:unexpected GET on structure stack
+getdir_openbinfile_not_found:File \"%s\" not found
+getline_getline_too_long:Line too long
+getline_getline_eof:End of input file
+getline_no_string_splitting:\'\\\' should not be used to split strings
+getline_comment_continuation:\'\\\' at end of comment
+hostdep_pollescape_esc:Escape
+hostdep_throwback_sf_unable:Unable to send throwback message, error 0x%x '%s'
+hostdep_throwback_start_unable:Unable to start throwback session, error 0x%x '%s'
+hostdep_throwback_se_unable:Unable to send throwback message, error 0x%x '%s'
+hostdep_throwback_end_unable:Unable to end throwback session, error 0x%x '%s'
+initdir_initareaentry_bad:Area attribute index out of range
+initdir_initdirectives_err:\
+Internal error: opcode table not in ascending order\n\
+                Entry %li = %s, Entry %li = %s
+listing_listbool_true:TRUE 
+listing_listbool_false:FALSE
+literals_thumb_literalpool_too_far:Literal pool too distant (>1KB), use LTORG to dump it within range
+literals_literalpool_too_far:Literal pool too distant (use LTORG to dump it within 4KB)
+macrotyp_definemacro_bad:Bad macro name
+macrotyp_definemacro_already:Macro already exists
+macrotyp_definemacro_bad_param_s:Illegal parameter start in macro prototype
+macrotyp_definemacro_bad_param:Illegal parameter in macro prototype
+macrotyp_definemacro_bad_sep:Invalid parameter separator in macro prototype
+macrotyp_definemacro_too_big:Macro definition too big
+macrotyp_definemacro_no_nest:Macro definitions cannot be nested
+macrotyp_insert_no_current:No current macro for insert
+occur_printocc_line1:      %s %i in 
+occur_printocc_Atline:At line
+occur_printocc_atline:at line
+occur_printocc_file:file 
+occur_printocc_macro:macro 
+occur_printocc_none:      None\n
+occur_printres_symbol:\nSymbol: 
+occur_printres_definitions:Definitions
+occur_printres_usages:Uses
+occur_printres_warning:Warning: 
+occur_printres_undef: undefined
+occur_printres_muldef: multiply defined
+occur_printres_comment:Comment: 
+occur_printres_unused: unused
+occur_printres_usedonce: used once
+opcode_initcond_internal_err:internal error: conditional clash at %s
+opcode_initop_internal_err:\
+Internal error: opcode table not in ascending order\n\
+                Entry %li = %s, Entry %li = %s
+p1dir_xattr_not_recog:AOF symbol attribute not recognised
+p1dir_p1dir_unexpected:Unexpected as directive not handled
+p1dir_p1dir_ORG_forced:ORG base forced to word boundary
+p1dir_p1dir_macro_within:macro definition attempted within expansion
+p1dir_p1dir_assert_failed:Assertion failed
+p1dir_p1dir_area_ignored:ObjAsm AREA directive ignored
+p1line_p1line_missing_END:Missing END directive at end of file
+p1line_p1line_res_instr:Reserved instruction (using NV condition)
+p1line_p1line_bad_MRS:MRS/MSR invalid in 26-bit PC configurations
+p1line_p1line_msr_regshift_undefined:Shifted register operand to MSR is undefined in architecture 4 and later
+p1line_p1line_8bit_warn:Writing an 8-bit immediate value to the whole C/SPSR is not guaranteed on future processors
+p1line_p1line_TSTP_warn:TSTP/TEQP/CMNP/CMPP inadvisable in 32-bit PC configurations
+p1line_p1line_res_pc_rs:Reserved instruction (using PC as Rs)
+p1line_p1line_regshift_pc_undef:Undefined effect (using PC as Rn or Rm in register specified shift)
+p1line_p1line_undef_off_pc:Undefined effect (using PC as offset register)
+p1line_p1line_UnalignedPCDataXfer:Unaligned transfer of PC
+p1line_p1line_res_rm_rn:Reserved instruction (Rm = Rn with post-indexing)
+p1line_p1line_undef_pc_wb:Undefined effect (PC + writeback)
+p1line_p1line_undef_dest_wb:Undefined effect (destination same as written-back base)
+p1line_p1line_pc_not_word:Undefined effect (PC used in a non-word context)
+p1line_p1line_ldm_base_in_list:Non portable instruction (LDM with writeback and base in reg. list)
+p1line_p1line_stm_base_in_list:Non portable instruction (STM with writeback and base not first in reg. list)
+p1line_p1line_xfer_warn:Unsafe instruction (forced user mode xfer with write-back to base)
+p1line_p1line_psr1_warn:Unsafe instruction (PSR bits may pollute PC value)
+p1line_p1line_pc_src_warn:Unsafe instruction (PC as source or destination)
+p1line_p1line_undef_swp:Undefined effect (PC-relative SWP)
+p1line_p1line_splitldms:Inserting NOP between two LDM instructions
+p1line_p1line_psr2_warn:Undefined effect (use of PC/PSR)
+p1line_p1line_useless_instr:Useless instruction (PC can't be written back)
+p1line_p1line_undef_rd_rm:Undefined effect (Rd = Rm in MUL/MLA instruction)
+p1line_p1line_useless_2:Useless instruction (PC is destination)
+p1line_p1line_dubious:Dubious instruction (PC used as an operand)
+p1line_longmul_undef_rdlo_rdhi_rm:Undefined if any of RdLo, RdHi, Rm are the same register
+p1line_longmul_r15_operand:Long multiply instructions do not take R15 as an operand
+p2line_p2line_B_unalign:Branch to unaligned destination
+p2arm_out_of_area_adr:%s of symbol in another AREA will cause link-time failure if symbol is not close enough to this instruction
+p2arm_external_adr:%s of external symbol will cause link-time failure if symbol is not close enough to this instruction
+store_mymalloc_failed:host error: out of memory
+symdump_xref_table_no_syms:No symbols in table
+symdump_xref_table_alpha:Alphabetic symbol ordering
+symdump_xref_table_reloc:Relocatable symbols
+symdump_xref_table_abs:Absolute symbols
+symdump_xref_table_reg_rel:Register relative symbols
+symdump_xref_table_extern:External symbols
+symdump_xref_table_symbol:1 symbol
+symdump_xref_table_symbols:%lu symbols
+symdump_xref_table_symtab:1 symbol in table
+symdump_xref_table_symtabs:%lu symbols in table
+p1line_label_in_no_area:A Label was found which was in no AREA
+errors_incompatibleinstrs:Instruction not supported on targeted CPU
+errors_pic_repeatstackdepth:More than four nested REPEAT loops
+errors_pic_repeatofzero:REPEAT loop index cannot be zero
+errors_pic_remapwhileactive:REPEAT loop with remapping inside another loop with remapping
+errors_pic_32bitwhileremap:Use of 32-bit register while 16-bit remapping active
+errors_pic_highwithwrap:XX.h not supported inside 'w2' remapping
+errors_pic_badrenameparams:Bad parameters for remap
+errors_pic_RemapInLoop:(Implicit) remapping move inside a REPEAT loop
+errors_pic_nextoutsideloop:NEXT with no corresponding REPEAT
+errors_pic_nextmatch:Label on NEXT does not match corresponding REPEAT
+errors_pic_missingnext:Expected NEXT before end of AREA
+errors_pic_RepeatTooLarge:Too many instructions (%ld) for a REPEAT loop
+errors_pic_RepeatOfZero:REPEAT of zero instructions
+warning_pic_RepeatRemapWrap:'n2w2' causes redundant RMOV - consider 'n2' instead
+errors_pic_dest32:Destination must be a full register
+errors_pic_destlow:Destination must be the low-half of a register
+errors_pic_SourceSize:Source must be a %d-bit register
+errors_pic_DestWrite:Operation must have a register destination
+errors_pic_BadBank:Bad bank name symbol
+errors_pic_BadBankForRename:Cannot use accumulator bank in rename
+errors_pic_BadBankForLDPU:LDPU16 cannot target accumulator bank
+errors_pic_DuplicatedBankParams:Bank occurs multiply in parameters
+errors_pic_DuplicatedBankList:Bank occurs multiply in list
+errors_pic_BadRename:Bad rename parameters
+errors_pic_BadBankForXfer:16-bit register transfer must be based at <bank>0.l
+errors_pic_BadXfer16:Transfer to 16-bit register should be an LPM16
+errors_pic_BadReglistRepeat:Register list repetition inconsistent
+errors_pic_BadBaseForXfer:Register transfer with bytecount must be based at <bank>0
+errors_pic_BadWrapForXfer:Register list with bytecount must be 1, 2 or 4 registers
+errors_pic_BadXferSizeForWrap:Bytecount must be greater than register list size
+errors_pic_BadXferSize:Bytecount for register transfer must be a whole number of words
+errors_pic_XferTooLarge:Transfer would cause deadlock
+errors_pic_BankListWithA:PALIGN cannot specify the accumulator bank
+errors_pic_ReadOnlySpecialRegister:Special register is read-only
+errors_pic_TargetOfLDPU:LDPU destination must be <bank>0
+errors_pic_TrappedInPiccolo:Cannot switch to another instruction set
+errors_pic_NotAccumulator:Non-accumulator register in accumulator position
+errors_pic_BadAccumulator:Accumulator must match destination register
+errors_pic_BadImmForMulD:Cannot have an immediate with SMLDA/SMLDS
+errors_pic_BadRegForMoveA:Source operand of MOVA instruction must be a full accumulator
+errors_pic_DuplicateRefill:Instructions refills the same register twice
+errors_pic_RefillDest:Instruction marks destination for refill
+errors_pic_TruncatedResult:Immediate truncated to 0x%04X
+dw2_missing_filename:Filename \"%s\" missing from filename list
+SelfTest_Fail:Test: value=%08lx expected=%08lx/%08lx
+SelfTest_SBO:Test: value=%08lx expected %08lx SBO
+SelfTest_SBZ:Test: value=%08lx expected %08lx SBZ
+SelfTest_Report:Tests: %ld test(s), %ld failure(s)
+pdir_mnoteLine:%s
+blankline:\n

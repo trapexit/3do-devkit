@@ -1,0 +1,20 @@
+<Title>envelope.dsp</Title>
+<A NAME="XREF22664"><H1>envelope.dsp </A></H1>
+<A NAME="XREF12937"></A> Interpolate a segment of an envelope.<P>
+<H3>Function</H3>
+This instrument is used by the Audio folio to produce multi-segmented envelopes.  The main CPU passes each segment to this DSP instrument, which interpolates the values between the envelope points.  This can be used to produce contours to smoothly control amplitude or other parameters.  See the Audio folio function <CODE>CreateEnvelope()</CODE> and the example program ta_envelope.c.  The knobs are controlled internally by the Audio folio to produce the desired effect. <P>
+You can also use this instrument by itself to generate ramp functions. <P>
+<H3>Knobs</H3>
+Env.request - -$8000  =&gt;  $7FFF = target value <P>
+Env.incr - 0 =&gt; $7FFF, default = $0010. = how fast to get there. <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 22 <P>
+N memory = 27 words <P>

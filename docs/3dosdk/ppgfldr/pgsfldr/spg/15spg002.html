@@ -1,0 +1,252 @@
+<TITLE>List of Math Calls</TITLE>
+<H1><LINK NAME="XREF23862">List of Math Calls</LINK></H1><HR>
+<A NAME="XREF28555"><H1>Addition Calls</A></H1>
+These calls add two values of the same data type together and return the result in the same data type.<P>
+<H2>Integers</H2>
+
+<UL>
+<LI><A HREF="../spr/03spr003.html#XREF39495">Add32</A>() </CODE>Adds 32-bit integers.
+<LI><CODE><A HREF="../spr/03spr004.html#XREF40537">Add64</A>()</CODE> Adds 64-bit integers.
+</UL>
+<H2>Fractions</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr005.html#XREF11242">AddF14</A>() </CODE>Adds 2.14 format fixed-point fractions.
+<LI><CODE><A HREF="../spr/03spr006.html#XREF35148">AddF16</A>() </CODE>Adds 16.16 format fixed-point fractions.
+<LI><CODE><A HREF="../spr/03spr007.html#XREF30355">AddF30</A>() </CODE>Adds 2.30 format fixed-point fractions.
+<LI><CODE><A HREF="../spr/03spr008.html#XREF39375">AddF32</A>() </CODE>Adds 32.32 format fixed-point fractions.
+<LI><CODE><A HREF="../spr/03spr009.html#XREF19032">AddF60</A>() </CODE>Adds 4.60 format fixed-point fractions.
+</UL>
+<H1>Subtraction Calls</H1>
+These calls subtract one value from another and return the result. Both the values and the result are the same data type.<P>
+<H2>Integers</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr098.html#XREF27949">Sub32</A>() </CODE>Subtracts two 32-bit integers.
+<LI><CODE><A HREF="../spr/03spr099.html#XREF41505">Sub64</A>() </CODE>Subtracts two 64-bit integers.
+</UL>
+<H2>Fractions</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr100.html#XREF11888">SubF14</A>() </CODE>Subtracts two 2.14 fractions.
+<LI><CODE><A HREF="../spr/03spr101.html#XREF18268">SubF16</A>() </CODE>Subtracts two 16.16 fractions.
+<LI><CODE><A HREF="../spr/03spr102.html#XREF38003">SubF30</A>() </CODE>Subtracts two 2.30 fractions.
+<LI><CODE><A HREF="../spr/03spr103.html#XREF26045">SubF32</A>() </CODE>Subtracts two 32.32 fractions.
+<LI><CODE><A HREF="../spr/03spr104.html#XREF41131">SubF60</A>() </CODE>Subtracts two 4.60 fractions.
+</UL>
+<H1>Division Calls</H1>
+These calls take two values of the same data type and divide the first by the second to return a quotient and/or a remainder of the same data type.<P>
+<H2>Integers</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr034.html#XREF29500">DivRemS32</A>() </CODE>32-bit quotient, remainder of a 32-bit division.
+<LI><CODE><A HREF="../spr/03spr038.html#XREF40748">DivS64</A>() </CODE>64-bit quotient, remainder of a 64-bit division.
+<LI><CODE><A HREF="../spr/03spr036.html#XREF23483">DivRemU32</A>() </CODE>32-bit quotient, remainder of a 32-bit division.
+<LI><CODE><A HREF="../spr/03spr040.html#XREF32762">DivU64</A>() </CODE>64-bit quotient, remainder of a 64-bit division.
+</UL>
+<H2>Fractions</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr039.html#XREF27188">DivSF16</A>() </CODE>16.16 quotient of a 16.16 division.
+<LI><CODE><A HREF="../spr/03spr035.html#XREF40125">DivRemSF16</A>() </CODE>16.16 quotient, remainder of a 16.16 division.
+<LI><CODE><A HREF="../spr/03spr041.html#XREF19153">DivUF16</A>() </CODE>16.16 quotient of a 16.16 division.
+<LI><CODE><A HREF="../spr/03spr037.html#XREF21065">DivRemUF16</A>() </CODE>16.16 quotient, remainder of a 16.16 division.
+</UL>
+<H1>Same-Product Multiplication Calls</H1>
+These calls multiply two values that can be numbers, vectors, or matrices. They return 
+products of the same type as the multipliers.<P>
+<H2>Cross-Product Multiplication</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr033.html#XREF35663">Cross3_F16</A>() </CODE>16.16 cross-product of 2 vectors of 16.16 values.
+</UL>
+<H2>Integer Multiplication</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr044.html#XREF39505">Mul32</A>() </CODE>Multiplies two 32-bit integers; 32-bit integer result.
+<LI><CODE><A HREF="../spr/03spr045.html#XREF20258">Mul64</A>() </CODE>Multiplies two 64-bit integers; 64-bit integer result.
+</UL>
+<H2>Fraction Multiplication</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr046.html#XREF12566">MulF14</A>() </CODE>Multiplies two 2.14 fractions; 2.14 fraction result.
+<LI><CODE><A HREF="../spr/03spr059.html#XREF13868">MulSF16</A>() </CODE>Multiplies two signed 16.16 fractions; 16.16 result.
+<LI><CODE><A HREF="../spr/03spr064.html#XREF12226">MulUF16</A>() </CODE>Multiplies two unsigned 16.16 fractions; 16.16 result.
+</UL>
+<H2>Scalar Multiplication</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr058.html#XREF24414">MulScalarF16</A>() </CODE>Multiplies 16.16 scalar by an array of 16.16 values; 16.16 array result.
+</UL>
+<H2>Vector by Vector Multiplication</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr047.html#XREF27656">MulManyF16</A>() </CODE>Multiplies an array of 16.16 values by another array of 16.16 values.
+</UL>
+<H2>Matrix by Matrix Multiplication</H2>
+These calls multiply a matrix within an object structure by an external matrix.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr051.html#XREF31530">MulMat33Mat33_F16</A>() </CODE>Multiplies two 3x3 matrices of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr052.html#XREF27574">MulMat44Mat44_F16</A>()</CODE>Multiplies two 4x4 matrices of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr053.html#XREF30462">MulObjectMat33_F16</A>()</CODE>Multiplies matrix within an object structure by an external 3x3 matrix of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr054.html#XREF40677">MulObjectMat44_F16</A>()</CODE>Multiplies matrix within an object structure by an external 4x4 matrix of 16.16 values.
+</UL>
+<H2>Vector by Matrix Multiplication</H2>
+These calls multiply many vectors within an object structure by an external matrix.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr048.html#XREF25424">MulManyVec3Mat33_F16</A>() </CODE>Multiplies 16.16 vector(s) by a 3x3 matrix of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr050.html#XREF24932">MulManyVec4Mat44_F16</A>() </CODE>Multiplies 16.16 vector(s) by a 4x4 matrix of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr067.html#XREF19174">MulVec3Mat33_F16</A>() </CODE>Multiplies a 16.16 vector and a 3x3 matrix.
+<LI><CODE><A HREF="../spr/03spr069.html#XREF17410">MulVec4Mat44_F16</A>() </CODE>Multiplies a 16.16 vector and a 4x4 matrix.
+<LI><CODE><A HREF="../spr/03spr055.html#XREF32559">MulObjectVec3Mat33_F16</A>() </CODE>Multiplies many 16.16 vectors within an object structure by a 3x3 matrix of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr056.html#XREF11958">MulObjectVec4Mat44_F16</A>() </CODE>Multiplies many 16.16 vectors within an object structure by a 4x4 matrix of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr068.html#XREF13356">MulVec3Mat33DivZ_F16</A>() </CODE>Multiplies a 3x3 matrix of 16.16 fractions by a 3-coordinate vector of 16.16 values, then multiply the x and y elements of the results vector by the ratio n/z.
+<LI><CODE><A HREF="../spr/03spr049.html#XREF37499">MulManyVec3Mat33DivZ_F16</A>() </CODE>Multiplies a 3x3 matrix of 16.16 fractions by one or more 3-coordinate vectors of 16.16 values, then multiply the x and y elements of the result vector by the ration n/z.
+</UL>
+<H1>Different-Product Multiplication Calls</H1>
+These calls multiply two values and return a product of a different type than the arguments.<P>
+<H2>Standard Multiplication</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr057.html#XREF24913">MulS32_64</A>() </CODE>Multiplies two 32-bit integers; 64-bit result.
+<LI><CODE><A HREF="../spr/03spr060.html#XREF13628">MulSF16_F32</A>() </CODE>Multiplies two signed 16.16 numbers; 32.32 result.
+<LI><CODE><A HREF="../spr/03spr062.html#XREF11097">MulSF30_F60</A>() </CODE>Multiplies two signed 2.30 numbers; a 4.60 result.
+<LI><CODE><A HREF="../spr/03spr063.html#XREF12651">MulU32_64</A>() </CODE>Multiplies two unsigned 32-bit integers; 64-bit result.
+<LI><CODE><A HREF="../spr/03spr065.html#XREF39874">MulUF16_F32</A>() </CODE>Multiplies two unsigned 16.16 numbers; 32.32 result.
+<LI><CODE><A HREF="../spr/03spr066.html#XREF41768">MulUF30_F60</A>() </CODE>Multiplies two unsigned 2.30 numbers; 4.60 result.
+</UL>
+<H2>Dot Product Multiplication</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr042.html#XREF31527">Dot3_F16</A>() </CODE>Dot product of 2 three-coordinate vectors of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr043.html#XREF24424">Dot4_F16</A>() </CODE>Dot product of 2 four-coordinate vectors of 16.16 values.
+</UL>
+<H1>Matrix Transposition Calls</H1>
+These calls transpose matrices.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr105.html#XREF36799">Transpose33_F16</A>() </CODE>Transposes a 3x3 matrix of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr106.html#XREF23258">Transpose44_F16</A>() </CODE>Transposes a 4x4 matrix of 16.16 values.
+</UL>
+<H1>Geometry Calls</H1>
+These calls compute geometric functions: sines, cosines, and so on.<P>
+<H2>Arctangent</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr010.html#XREF25116">Atan2F16</A>() </CODE>Arctangent of a ratio.
+</UL>
+<H2>Cosines</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr030.html#XREF19432">CosF16</A>() </CODE>16.16 cosine of a 16.16 fraction angle.
+<LI><CODE><A HREF="../spr/03spr031.html#XREF25590">CosF30</A>() </CODE>2.30 cosine of a 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr032.html#XREF38518">CosF32</A>() </CODE>32.32 cosine of a 16.16 fraction.
+</UL>
+<H2>Sines</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr087.html#XREF24854">SinF16</A>() </CODE>16.16 sine of a 16.16 fraction angle.
+<LI><CODE><A HREF="../spr/03spr088.html#XREF18247">SinF30</A>() </CODE>2.30 sine of a 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr089.html#XREF36061">SinF32</A>() </CODE>32.32 sine of a 16.16 fraction.
+</UL>
+<H1>Conversion Calls</H1>
+These calls convert a value in one data type to the corresponding value in another data type. <P>
+<H2>Integers to Fractions</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr018.html#XREF10836">Convert32_F16</A>() </CODE>Converts 32-bit integer to 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr019.html#XREF42145">Convert32_F32</A>() </CODE>Converts 32-bit integer to 32.32 fraction.
+</UL>
+<H2>Integers to Integers</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr026.html#XREF38205">ConvertS32_64</A>() </CODE>Converts 32-bit integer to 64-bit integer.
+<LI><CODE><A HREF="../spr/03spr028.html#XREF35474">ConvertU32_64</A>() </CODE>Converts unsigned 32-bit integer to unsigned 64-bit 
+integer.
+</UL>
+<H2>Fractions to Fractions</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr020.html#XREF20470">ConvertF14_F16</A>() </CODE>Converts 2.14 fraction to 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr022.html#XREF38073">ConvertF16_F14</A>() </CODE>Converts 16.16 fraction to 2.14 fraction.
+<LI><CODE><A HREF="../spr/03spr023.html#XREF41341">ConvertF16_F30</A>() </CODE>Converts 16.16 fraction to 2.30 fraction.
+<LI><CODE><A HREF="../spr/03spr024.html#XREF20475">ConvertF30_F16</A>() </CODE>Converts 2.30 fraction to 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr025.html#XREF10484">ConvertF32_F16</A>() </CODE>Converts 32.32 fraction to 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr027.html#XREF22707">ConvertSF16_F32</A>() </CODE>Converts 16.16 fraction to 32.32 fraction.
+<LI><CODE><A HREF="../spr/03spr029.html#XREF33475">ConvertUF16_F32</A>() </CODE>Converts unsigned 16.16 fraction to unsigned 32.32 fraction.
+</UL>
+<H2>Fraction to Integers</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr021.html#XREF38935">ConvertF16_32</A>() </CODE>Converts 16.16 fraction to 32-bit integer.
+</UL>
+<H1>Comparative Calls</H1>
+These calls compare two values of the same data type and return a result that is a positive value if the first value is greater than the second, a 0 if the two values are equal, and a negative number if the second value is greater than the first.<P>
+<H3>Integers</H3>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr012.html#XREF27069">CompareS64</A>() </CODE>Compares signed 64-bit integers.
+<LI><CODE><A HREF="../spr/03spr015.html#XREF35891">CompareU64</A>() </CODE>Compares unsigned 64-bit integers.
+</UL>
+<H3>Fractions</H3>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr013.html#XREF37222">CompareSF32</A>() </CODE>Compares signed 32.32 format fractions.
+<LI><CODE><A HREF="../spr/03spr014.html#XREF36592">CompareSF60</A>() </CODE>Compares signed 4.60 format fractions.
+<LI><CODE><A HREF="../spr/03spr016.html#XREF33265">CompareUF32</A>() </CODE>Compares unsigned 32.32 format fractions.
+<LI><CODE><A HREF="../spr/03spr017.html#XREF26027">CompareUF60</A>() </CODE>Compares unsigned 4.60 format fractions.
+</UL>
+<H1>One's and Two's Complement Calls</H1>
+These calls return one's and two's complements of a value.<P>
+<H2>Two's Complements</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr070.html#XREF13869">Neg32</A>() </CODE>Two's complement of a 32-bit integer.
+<LI><CODE><A HREF="../spr/03spr072.html#XREF37472">NegF14</A>() </CODE>Two's complement of a 2.14 fraction.
+<LI><CODE><A HREF="../spr/03spr073.html#XREF15989">NegF16</A>() </CODE>Two's complement of a 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr074.html#XREF30653">NegF30</A>() </CODE>Two's complement of a 2.30 fraction.
+<LI><CODE><A HREF="../spr/03spr071.html#XREF21948">Neg64</A>() </CODE>Two's complement of a 64-bit integer.
+<LI><CODE><A HREF="../spr/03spr075.html#XREF37772">NegF32</A>() </CODE>Two's complement of a 32.32 number.
+</UL>
+<H2>One's Complements</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr077.html#XREF12100">Not32</A>() </CODE>One's complement of a 32-bit integer.
+<LI><CODE><A HREF="../spr/03spr079.html#XREF18340">NotF14</A>() </CODE>One's complement of a 2.14 fraction.
+<LI><CODE><A HREF="../spr/03spr080.html#XREF35453">NotF16</A>() </CODE>One's complement of a 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr081.html#XREF35468">NotF30</A>() </CODE>One's complement of a 2.30 fraction.
+<LI><CODE><A HREF="../spr/03spr078.html#XREF22949">Not64</A>() </CODE>One's complement of a 64-bit integer.
+<LI><CODE><A HREF="../spr/03spr082.html#XREF27350">NotF32</A>() </CODE>One's complement of a 32.32 number.
+</UL>
+<H1>Reciprocal Calls</H1>
+These calls return the reciprocal of a number.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr085.html#XREF17144">RecipSF16</A>() </CODE>Reciprocal of a signed 16.16 number.
+<LI><CODE><A HREF="../spr/03spr086.html#XREF20970">RecipUF16</A>() </CODE>Reciprocal of an unsigned 16.16 number.
+</UL>
+<A NAME="XREF28489"><H1>Squaring and Square Root Calls</A></H1>
+These calls return the square or the square root of a number.<P>
+<H2>Squares</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr095.html#XREF16276">Square64</A>() </CODE>Square a 64-bit integer.
+<LI><CODE><A HREF="../spr/03spr096.html#XREF28120">SquareSF16</A>() </CODE>Square a signed 16.16 fraction.
+<LI><CODE><A HREF="../spr/03spr097.html#XREF24889">SquareUF16</A>() </CODE>Square an unsigned 16.16 fraction.
+</UL>
+<H2>Square Roots</H2>
+
+<UL>
+<LI><CODE><A HREF="../spr/03spr090.html#XREF11780">Sqrt32</A>() </CODE>Unsigned 32-bit square root of an unsigned 32-bit number.
+<LI><CODE><A HREF="../spr/03spr092.html#XREF37368">SqrtF16</A>() </CODE>16.16 fraction square root of an unsigned 16.16 number.
+<LI><CODE><A HREF="../spr/03spr091.html#XREF19555">Sqrt64_32</A>() </CODE>32-bit square root of an unsigned 64-bit integer.
+<LI><CODE><A HREF="../spr/03spr093.html#XREF33688">SqrtF32_F16</A>() </CODE>16.16 square root of a32.32 fraction.
+</UL>
+<H1>Absolue Value</H1>
+The following calls compute the absolute value of a vector call.
+<UL>
+<LI><CODE><A HREF="../spr/03spr001.html#XREF11434">AbsVec3_F16</A> </CODE>Computes the absolute value of a vector of 16.16 values.
+<LI><CODE><A HREF="../spr/03spr002.html#XREF20251">AbsVec4_F16</A> </CODE>Computes the absolute value of a vector of 16.16 values.
+</UL>

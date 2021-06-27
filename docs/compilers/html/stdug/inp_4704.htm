@@ -1,0 +1,237 @@
+<HTML><HEAD><TITLE>In-Place Transformations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>In-Place Transformations</H2>
+<A HREF="sidebar.htm#sidebar61"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Source</STRONG></A>
+
+<P>The next category of algorithms in the standard library that we examine are those used to modify and transform sequences without moving them from their original storage locations.  A few of these routines, such as <SAMP>replace(),</SAMP> include a <I>copy</I> version as well as the original in-place transformation algorithms.  For the others, should it be necessary to preserve the original, a copy of the sequence should be created before the transformations are applied.  For example, the following illustrates how one can place the reversal of one vector into another newly allocated vector.</P>
+<PRE>   vector&#60;int> newVec(aVec.size());
+   copy (aVec.begin(), aVec.end(), newVec.begin()); // first copy
+   reverse (newVec.begin(), newVec.end());     // then reverse
+</PRE>
+<P>Many of the algorithms described as sequence generating operations, such as<SAMP> transform()</SAMP> (<i><a href="seq_4302.htm#transformoneortwosequences">Transform One or Two Sequences</i></a>), or <SAMP>partial_sum()</SAMP>, can also be used to modify a value in place by simply using the same iterator as both input and output specification.</P>
+
+<A NAME="reverseelementsinasequence"><H3>Reverse Elements in a Sequence</H3></A>
+<P>The algorithm <SAMP>reverse()</SAMP> reverses the elements in a sequence, so that the last element becomes the new first, and the first element the new last.  The arguments are assumed to be bidirectional iterators, and no value is returned.</P>
+<PRE>   void reverse (BidirectionalIterator first,
+      BidirectionalIterator last);
+</PRE>
+<P>The example program illustrates two uses of this algorithm.  In the first,  an array of characters values is reversed.  The algorithm <SAMP>reverse()</SAMP> can also be used with list values, as shown in the second example.  In this example, a list is initialized with the values 2 to 11 in increasing order.  (This is accomplished using the <B><I>iotaGen</I></B> function object introduced in <i><a href="fun_0476.htm">Chapter 3: Functions Objects</a></i>).  The list is then reversed, which results in the list holding the values 11 to 2 in decreasing order.  Note, however, that the list data structure also provides its own <SAMP>reverse()</SAMP> member function.</P>
+<PRE>void reverse_example ()
+   // illustrate the use of the reverse algorithm
+{
+   // example 1, reversing a string
+char * text = "Rats live on no evil star";
+reverse (text, text + strlen(text));
+cout &#60;&#60; text &#60;&#60; endl;
+
+
+   // example 2, reversing a list
+list&#60;int> iList;
+generate_n (inserter(iList, iList.begin()), 10, iotaGen(2));
+reverse (iList.begin(), iList.end());
+}
+</PRE>
+
+<A NAME="replacecertainelementswithfixedvalue"><H3>Replace Certain Elements With Fixed Value</H3></A>
+<P>The algorithms <SAMP>replace()</SAMP> and <SAMP>replace_if()</SAMP> are used to replace occurrences of certain elements with a new value.  In both cases the new value is the same, no matter how many replacements are performed.  Using the algorithm <SAMP>replace(),</SAMP> all occurrences of a particular test value are replaced with the new value.  In the case of <SAMP>replace_if(),</SAMP> all elements that satisfy a predicate function are replaced by a new value.  The iterator arguments must  be forward iterators.</P>
+<P>The algorithms <SAMP>replace_copy()</SAMP> and <SAMP>replace_copy_if()</SAMP> are similar to <SAMP>replace()</SAMP> and <SAMP>replace_if()</SAMP>, however they leave the original sequence intact and place the revised values into a new sequence, which may be a different type.</P>
+<PRE>void replace (ForwardIterator first, ForwardIterator last, 
+         const T&#38;, const T&#38;);</PRE>
+<!--ASQ-1 The style "teletype gap" is not associated; its content follows: --><PRE>void replace_if (ForwardIterator first, ForwardIterator last, 
+         Predicate, const T&#38;);</PRE><!--ASQ-1 The style "teletype gap" is not associated; its content follows: --><PRE>OutputIterator replace_copy (InputIterator, InputIterator, 
+         OutputIterator, const T&#38;, const T&#38;);</PRE><!--ASQ-1 The style "teletype gap" is not associated; its content follows: --><PRE>OutputIterator replace_copy (InputIterator, InputIterator, 
+         OutputIterator, Predicate, const T&#38;);
+</PRE><P>In the example program, a vector is initially assigned the values 0 1 2 3 4 5 4 3 2 1 0.  A call on <SAMP>replace()</SAMP> replaces the value 3 with the value 7, resulting in the vector 0 1 2 7 4 5 4 7 2 1 0.  The invocation of <SAMP>replace_if()</SAMP> replaces all even numbers with the value 9, resulting in the vector 9 1 9 7 9 5 9 7 9 1 9.</P>
+<PRE>void replace_example ()
+       // illustrate the use of the replace algorithm
+{
+      // make vector 0 1 2 3 4 5 4 3 2 1 0
+   vector&#60;int> numbers(11);
+   for (int i = 0; i &#60; 11; i++)
+      numbers[i] = i &#60; 5 ? i : 10 - i;
+
+      // replace 3 by 7
+   replace (numbers.begin(), numbers.end(), 3, 7);
+
+      // replace even numbers by 9
+   replace_if (numbers.begin(), numbers.end(), isEven, 9);
+
+      // illustrate copy versions of replace
+   int aList[] = {2, 1, 4, 3, 2, 5};
+   int bList[6], cList[6], j;
+   replace_copy (aList, aList+6, &#38;bList[0], 2, 7);
+   replace_copy_if (bList, bList+6, &#38;cList[0],
+         bind2nd(greater&#60;int>(), 3), 8);
+}
+</PRE>
+<P>The example program also illustrates the use of the <SAMP>replace_copy</SAMP> algorithms. First, an array containing the values 2 1 4 3 2 5 is created.   This is modified by replacing the 2 values with 7, resulting in the array 7 1 4 3 7 5.  Next, all values larger than 3 are replaced with the value 8, resulting in the array values 8 1 8 3 8 8.  In the latter case the <SAMP>bind2nd()</SAMP> adaptor is used, to modify the binary greater-than function by binding the 2nd argument to the constant value 3, thereby creating the unary function<SAMP> x > 3</SAMP>.</P>
+
+<A NAME="rotateelementsaroundamidpoint"><H3>Rotate Elements Around a Midpoint</H3></A>
+<P>A rotation of a sequence divides the sequence into two sections, then swaps the order of the sections, maintaining the relative ordering of the elements within the two sections.  Suppose, for example, that we have the values 1 to 10 in sequence.</P>
+<P>1 2 3 4 5 6 7 8 9 10</P>
+<P>If we were to rotate around the element 7, the values 7 to 10 would be moved to the beginning, while the elements 1 to 6 would be moved to the end.  This would result in the following sequence.</P>
+<P>7 8 9 10 1 2 3 4 5 6 </P>
+<P>When you invoke the algorithm <SAMP>rotate()</SAMP>, the starting point, midpoint, and past-the-end location are all denoted by forward iterators:</P>
+<PRE>void rotate (ForwardIterator first, ForwardIterator middle, 
+   ForwardIterator last);
+</PRE>
+<P>The prefix portion, the set of elements following the start and not including the midpoint, is swapped with the suffix, the set of elements between the midpoint and the past-the-end location.  Note, as in the illustration presented earlier, that these two segments need not be the same length.</P>
+<PRE>void rotate_example() 
+       // illustrate the use of the rotate algorithm
+{
+       // create the list 1 2 3 ... 10
+   list&#60;int> iList;
+   generate_n(inserter(iList, iList.begin()), 10, iotaGen(1));
+
+      // find the location of the seven
+   list&#60;int>::iterator &#38; middle = 
+         find(iList.begin(), iList.end(), 7);
+
+      // now rotate around that location
+   rotate (iList.begin(), middle, iList.end());
+
+      // rotate again around the same location
+   list&#60;int> cList;
+   rotate_copy (iList.begin(), middle, iList.end(),
+      inserter(cList, cList.begin()));
+}
+</PRE>
+<P>The example program first creates a list of the integers in order from 1 to 10.  Next, the <SAMP>find()</SAMP> algorithm (<i><a href="sea_9743.htm#findanelementsatisfyingacondition">Find an Element Satisfying a Condition</a></i>) is used to find the location of the element 7.  This is used as the midpoint for the rotation.</P>
+<P>A second form of <SAMP>rotate()</SAMP> copies the elements into a new sequence, rather than rotating the values in place.  This is also shown in the example program, which once again rotates around the middle position (now containing a 3).  The resulting list is 3 4 5 6 7 8 9 10 1 2.  The values held in <SAMP>iList</SAMP> remain unchanged.</P>
+
+<A NAME="partitionasequenceintotwogroups"><H3>Partition a Sequence into Two Groups</H3></A>
+<P>A <I>partition </I>is formed by moving all the elements that satisfy a predicate to one end of a sequence, and all the elements that fail to satisfy the predicate to the other end.  Partitioning elements is a fundamental step in certain sorting algorithms, such as "quicksort."</P>
+<PRE>BidirectionalIterator partition 
+   (BidirectionalIterator, BidirectionalIterator, Predicate);
+
+BidirectionalIterator stable_partition 
+   (BidirectionalIterator, BidirectionalIterator, Predicate);
+</PRE>
+<P>There are two forms of partition supported in the standard library.  The first, provided by the algorithm <SAMP>partition(),</SAMP> guarantees only that the elements will be divided into two groups.  The result value is an iterator that describes the final midpoint between the two groups; it is one past the end of the first group.  </P>
+
+<A HREF="sidebar.htm#sidebar62"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Partitions</STRONG></A>
+
+<P>In the example program the initial vector contains the values 1 to 10 in order.  The partition moves the even elements to the front, and the odd elements to the end.  This results in the vector holding the values 10 2 8 4 6 5 7 3 9 1, and the midpoint iterator pointing to the element 5.</P>
+<PRE>void partition_example ()
+       // illustrate the use of the partition algorithm
+{
+       // first make the vector 1 2 3 ... 10
+   vector&#60;int> numbers(10);
+   generate(numbers.begin(), numbers.end(), iotaGen(1));
+
+      // now put the even values low, odd high
+   vector&#60;int>::iterator result = 
+      partition(numbers.begin(), numbers.end(), isEven);
+   cout &#60;&#60; "middle location " &#60;&#60; result - numbers.begin() &#60;&#60; endl;
+
+      // now do a stable partition
+   generate (numbers.begin(), numbers.end(), iotaGen(1));
+   stable_partition (numbers.begin(), numbers.end(), isEven);
+}
+</PRE>
+<P>The relative order of the elements within a partition in the resulting vector may not be the same as the values in the original vector.  For example, the value 4 preceded the element 8 in the original, yet in the result it may follow the element 8.  A second version of partition, named <SAMP>stable_partition(),</SAMP> guarantees the ordering of the resulting values.  For the sample input shown in the example, the stable partition would result in the sequence 2 4 6 8 10 1 3 5 7 9.  The <SAMP>stable_partition()</SAMP> algorithm is slightly slower and uses more memory than the <SAMP>partition()</SAMP> algorithm, so when the order of elements is not important you should use <SAMP>partition().</SAMP></P>
+
+<A NAME="generatepermutationsinsequence"><H3>Generate Permutations in Sequence</H3></A>
+<A HREF="sidebar.htm#sidebar63"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Ordering Permutations</STRONG></A>
+
+<P>A permutation is a rearrangement of values.  If values can be compared against each other (such as integers, characters, or words) then it is possible to systematically construct all permutations of a sequence.  There are 2 permutations of two values, for example, and six permutations of three values, and 24 permutations of four values.  </P>
+<P>The permutation generating algorithms have the following definition:</P>
+<PRE>bool next_permutation (BidirectionalIterator first, 
+      BidirectionalIterator last, [ Compare ] );
+
+bool prev_permutation (BidirectionalIterator first, 
+      BidirectionalIterator last, [ Compare ] );
+</PRE>
+<P>The second example in the sample program illustrates the same idea, only using pointers to character arrays instead of integers.  In this case a different comparison function must be supplied, since the default operator would simply compare pointer addresses.  </P>
+<PRE>bool nameCompare (char * a, char * b) { return strcmp(a, b) &#60;= 0; }
+
+void permutation_example ()
+   // illustrate the use of the next_permutation algorithm
+{
+      // example 1, permute the values 1 2 3
+   int start [] = { 1, 2, 3};
+   do
+      copy (start, start + 3, 
+            ostream_iterator&#60;int> (cout, " ")), cout &#60;&#60; endl;
+   while (next_permutation(start, start + 3));
+
+      // example 2, permute words
+   char * words = {"Alpha", "Beta", "Gamma"};
+   do
+      copy (words, words + 3, 
+         ostream_iterator&#60;char *> (cout, " ")), cout &#60;&#60; endl;
+   while (next_permutation(words, words + 3, nameCompare));
+
+      // example 3, permute characters backwards
+   char * word = "bela";
+   do
+      cout &#60;&#60; word &#60;&#60; ' ';
+   while (prev_permutation (word, &#38;word[4]));
+   cout &#60;&#60; endl;
+}
+</PRE>
+<P>Example 3 in the sample program illustrates the use of the reverse permutation algorithm, which generates values in reverse sequence.  This example also begins in the middle of a sequence, rather than at the beginning.  The remaining permutations of the word "bela," are <SAMP>beal, bale, bael, aleb, albe, aelb, aebl, able</SAMP>,  and finally,<SAMP> abel.</SAMP></P>
+
+<A NAME="mergetwoadjacentsequencesintoone"><H3>Merge Two Adjacent Sequences into One</H3></A>
+<P>A <I>merge</I> takes two ordered sequences and combines them into a single ordered sequence, interleaving elements from each collection as necessary to generate the new list.  The <SAMP>inplace_merge()</SAMP> algorithm assumes a sequence is divided into two adjacent sections, each of which is ordered.  The merge combines the two sections into one, moving elements as necessary.  (The alternative <SAMP>merge()</SAMP> algorithm, described elsewhere, can be used to merge two separate sequences into one.)  The arguments to <SAMP>inplace_merge()</SAMP> must be bidirectional iterators.</P>
+<PRE>void inplace_merge (BidirectionalIterator first, 
+   BidirectionalIterator middle,
+   BidirectionalIterator last [, BinaryFunction ] );
+</PRE>
+<P>The example program illustrates the use of the <SAMP>inplace_merge()</SAMP> algorithm with a vector and with a list.  The sequence 0 2 4 6 8 1 3 5 7 9 is placed into a vector.  A <SAMP>find()</SAMP> call (<i><a href="sea_9743.htm#findanelementsatisfyingacondition">Find an Element Satisfying a Condition</a></i>) is used to locate the beginning of the odd number sequence.  The two calls on <SAMP>inplace_merge()</SAMP> then combine the two sequences into one.</P>
+<PRE>void inplace_merge_example ()
+      // illustrate the use of the inplace_merge algorithm
+{
+      // first generate the sequence 0 2 4 6 8 1 3 5 7 9
+   vector&#60;int> numbers(10);
+   for (int i = 0; i &#60; 10; i++)
+      numbers[i] = i &#60; 5 ? 2 * i : 2 * (i - 5) + 1;
+
+      // then find the middle location
+   vector&#60;int>::iterator midvec = 
+      find(numbers.begin(), numbers.end(), 1);
+
+      // copy them into a list
+   list&#60;int> numList;
+   copy (numbers.begin(), numbers.end(),
+         inserter (numList, numList.begin()));
+   list&#60;int>::iterator midList = 
+         find(numList.begin(), numList.end, 1);
+
+      // now merge the lists into one
+   inplace_merge (numbers.begin(), midvec, numbers.end());
+   inplace_merge (numList.begin(), midList, numList.end());
+}
+</PRE>
+
+<A NAME="randomlyrearrangeelementsinasequence"><H3>Randomly Rearrange Elements in a Sequence</H3></A>
+<P>The algorithm <SAMP>random_shuffle()</SAMP> randomly rearranges the elements in a sequence.  Exactly <I>n</I> swaps are performed, where <I>n</I> represents the number of elements in the sequence.  The results are, of course, unpredictable.  Because the arguments must be random access iterators, this algorithm can only be used with vectors, deques, or ordinary pointers.  It cannot be used with lists, sets, or maps.</P>
+<PRE>void random_shuffle (RandomAccessIterator first, 
+   RandomAccessIterator last [, Generator ] );
+</PRE>
+<P>An alternative version of the algorithm uses the optional third argument.  This value must be a random number generator. This generator must take as an argument a positive value <SAMP>m</SAMP> and return a value between <SAMP>0</SAMP> and <SAMP>m-1</SAMP>.  As with the <SAMP>generate()</SAMP> algorithm, this random number function can be any type of object that will respond to the function invocation operator.</P>
+<PRE>void random_shuffle_example ()
+   // illustrate the use of the random_shuffle algorithm
+{
+   // first make the vector containing 1 2 3 ... 10
+   vector&#60;int> numbers;
+   generate(numbers.begin(), numbers.end(), iotaGen(1));
+
+   // then randomly shuffle the elements
+   random_shuffle (numbers.begin(), numbers.end());
+
+   // do it again, with explicit random number generator
+   struct RandomInteger {
+   {
+      operator() (int m) { return rand() % m; }
+   } random;
+
+   random_shuffle (numbers.begin(), numbers.end(), random);
+}
+</PRE>
+
+<HR>
+<A HREF="sea_9743.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="rem_8388.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

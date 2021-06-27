@@ -1,0 +1,187 @@
+<TITLE>Using Signals</TITLE>
+<H1><LINK NAME="XREF17661">Using Signals</LINK></H1><HR>
+The procedure for using a signal involves several steps:<P>
+<UL>
+<LI>Task A uses <CODE>AllocSignal()</CODE> to allocate a signal bit (1 bit within a 32-bit word) for a signal.
+<p>
+<LI>Task A communicates the allocated signal bit to Task B so that it knows which signal to send (using the allocated signal bit) back to Task A.
+<p>
+<LI>Task A uses <CODE>WaitSignal()</CODE> to enter a wait state until it receives a signal on the bit it allocated.
+<p>
+<LI>Task B uses <CODE>SendSignal()</CODE> to send a signal to Task A. Task B must provide <CODE>SendSignal()</CODE> with the item of that task to signal, and the signals to send the task.
+<p>
+<LI>Task A receives the signal and returns from the wait state.
+<p>
+<LI>Task A uses <CODE>FreeSignal()</CODE> to free the signal bit when it's no longer needed.
+</UL>
+<H2>Allocating a Signal Bit</H2>
+To allocate a signal bit for a task, use this call:<P>
+<DL>
+<DD><CODE>int32 AllocSignal( uint32 sigMask )</CODE><BR>
+</DL>
+<CODE>AllocSignal()</CODE> accepts as its sole argument a 32-bit word (<CODE>sigMask</CODE>) which specifies which signal bits to allocate. There are 31 signal bits for each task. The lower-8 bits (bits 0-7) are reserved for system use and cannot be allocated. Bits 8-30 can be allocated for task use. To specify a particular signal bit to allocate, just set the corresponding bit in the <CODE>sigMask</CODE> parameter. For example, to allocate bit 21, you set <CODE>sigMask</CODE> to 0x00200000. If you don't care which signal bit you get, you can use <CODE>AllocSignal(0)</CODE>, in which case the kernel chooses a free bit and allocates it for you. It is most common to simply use <CODE>AllocSignal(0)</CODE> instead of requesting specific signal bits.<P>
+<CODE>AllocSignal()</CODE> returns a signal mask with bits set to 1 where signals were successfully allocated. If no bits were available for allocation, the call returns 0. If there was an error in allocation, the call returns an error code (a negative number).<P>
+The code fragment in example 8-1 demonstrates using <CODE>AllocSignal()</CODE> to allocate a signal bit. In this program, a parent task creates two threads, and it uses the signal mechanisms for the threads to communicate with the parent task. Here, the parent task allocates two of its signal bits, one for each thread. First, it declares two global variables, <CODE>threadSig1</CODE> and <CODE>threadSig2</CODE>, to use as signal mask variables for each of the threads:<P>
+<B>Example 1: </B><I>Allocating a signal bit.</I><P>
+<CODE>
+<PRE>
+/* Global variables shared by all threads. */
+static int32  thread1Sig;
+static int32  thread2Sig;
+...
+...
+
+/* allocate one signal bit for each thread */
+thread1Sig = AllocSignal(0);
+thread2Sig = AllocSignal(0);
+
+if ((thread1Sig == 0) || (thread2Sig == 0))
+{
+    /* could not allocate the needed signal bits */
+}
+</CODE>
+</PRE>
+The two calls to <CODE>AllocSignal()</CODE> allocate 2 available signal bits. If successful, the variables <CODE>threadSig1</CODE> and <CODE>threadSig2</CODE> each contain a signal mask with a specially allocated bit for each thread to use. <P>
+<H2>Receiving a Signal</H2>
+To receive a signal, a task enters wait state using this call:<P>
+<DL>
+<DD><CODE>int32 WaitSignal( uint32 sigMask )</CODE><BR>
+</DL>
+<CODE>WaitSignal()</CODE> accepts a signal mask that specifies which of the task's allocated signal bits to wait for. It can specify more than one bit to wait for, but it can't specify any bits that haven't already been allocated. If unallocated bits are specified, the call returns a negative value (an error code) when it executes. Before returning, <CODE>WaitSignal()</CODE> clears the signal bits.<P>
+When the allocated bits are specified and the call executes, the task enters the wait state until a signal is sent to one of the signal bits it specified in <CODE>WaitSignal()</CODE>. The task then exits the wait state and returns to the ready queue. The call returns a signal mask with 1 set in each bit where a signal was received.<P>
+A task can receive signals before it enters a wait state, in which case they're kept as pending signals in a pending signals mask maintained in the task's control block (TCB). There is no signal queue-that is, no more than one signal can be kept pending for each allocated signal bit. When a task calls <CODE>WaitSignal()</CODE>, any pending signals that match the signal mask given to <CODE>WaitSignal()</CODE> cause the call to return immediately, and the task never enters the wait state. The signal bits that the task was waiting for are cleared before returning.<P>
+<H2>Sampling and Changing the Current Signal Bits</H2>
+It is sometimes necessary for a task to look at the current state of the signal bits to determine whether a given signal was received. To do this, use <CODE>GetCurrentSignals</CODE>():<P>
+<DL>
+<DD><CODE>int32 GetCurrentSignals(void);</CODE><BR>
+</DL>
+The macro returns a signal mask with bits on for every signal bit that has been received. This provides a sample or the current signal bits without entering the wait state.<P>
+You can forcibly set the signal bits of your task by using <CODE>SendSignal()</CODE> with 0 for the task item. This is sometimes useful to set the initial state of the task's signals.<P>
+You can also forcibly clear signal bits of a task by using the <CODE>ClearCurrentSignals()</CODE> macro.<P>
+<DL>
+<DD><CODE>Err ClearCurrentSignals(int32 signalMask);</CODE><BR>
+</DL>
+This macro takes a signal mask that describes the signal bits to clear. The macro returns a negative value if reserved signal bits (bits 0-7) are specified.<P>
+<H2>Sending a Signal</H2>
+A task sends one or more signals to another task with this call:<P>
+<DL>
+<DD><CODE>Err SendSignal( Item task, uint32 sigMask )</CODE><BR>
+</DL>
+The call accepts the item number of the task to which the signal or signals should be sent, and a signal mask with a 1 in each bit to which a signal is sent. When it executes, the kernel checks that each specified signal bit in <CODE>SendSignal()</CODE> is allocated by the receiving task. If it's not, then the call returns a negative number (an error code).<P>
+If all specified bits are allocated by the receiving task, then the kernel performs a logical OR between the <CODE>SendSignal()</CODE> signal mask and the pending signals mask maintained in the receiving task's TCB. This is how the pending signals mask maintains a record of pending signals. When the receiving task uses <CODE>WaitSignal(),</CODE> the kernel checks the pending signals mask, and if any bits are set to 1, the task immediately returns to execution.<P>
+<H2>Freeing Signal Bits</H2>
+When a task no longer needs an allocated signal bit, it uses this call:<P>
+<DL>
+<DD><CODE>Err FreeSignal( uint32 sigMask )</CODE><BR>
+</DL>
+The call accepts a signal mask with a 1 set in each bit that is to be freed, and a 0 set in each bit where allocation status should be unchanged. For example, if bits 8 and 9 are currently allocated and you wish to free only bit 8, then you need to create a signal mask with the binary value 1&lt;&lt;8 (which equals a 256 decimal value).<P>
+<CODE>FreeSignal()</CODE>, frees the specified bits when executed. It returns 0 if it was successful, and a negative number (an error code) if unsuccessful.<P>
+<H2>Sample Code for Signals</H2>
+Example 2 is a full code sample on which the previous code sample is based. The variables declared at the beginning of the example are global to the main routine (the parent task) and the two threads. These global variables pass signal masks between the threads and the task. The main routine, which appears at the end of the example, allocates signals for the two threads it will create. <P>
+The <CODE>main()</CODE> routine uses <CODE>WaitSignal()</CODE> to wait for signals from the two threads. The threads use <CODE>SendSignal()</CODE> to send their signals to the parent task.<P>
+<B>Example 2: </B><I>Complete code sample for signals.</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "task.h"
+#include "kernel.h"
+#include "stdio.h"
+#include "operror.h"
+
+
+/*****************************************************************************/
+
+
+/* Global variables shared by all threads. */
+static int32  thread1Sig;
+static int32  thread2Sig;
+static Item   parentItem;
+static uint32 thread1Cnt;
+static uint32 thread2Cnt;
+
+
+/*****************************************************************************/
+
+
+/* This routine shared by both threads */
+static void DoThread(int32 signal, uint32 amount, uint32 *counter)
+{
+uint32 i;
+
+    while (TRUE)
+    {
+        for (i = 0; i &lt; amount; i++)
+        {
+            (*counter)++;
+            SendSignal(parentItem,signal);
+        }
+    }
+}
+
+
+/*****************************************************************************/
+
+
+static void Thread1Func(void)
+{
+    DoThread(thread1Sig, 100000, &amp;thread1Cnt);
+}
+
+
+/*****************************************************************************/
+
+
+static void Thread2Func(void)
+{
+    DoThread(thread2Sig, 200000,&amp;thread2Cnt);
+}
+
+
+/*****************************************************************************/
+
+
+int main(int32 argc, char **argv)
+{
+uint8  parentPri;
+Item   thread1Item;
+Item   thread2Item;
+uint32 count;
+int32  sigs;
+
+    /* get the priority of the parent task */
+    parentPri  = CURRENTTASK-&gt;t.n_Priority;
+
+    /* get the item number of the parent task */
+    parentItem = CURRENTTASK-&gt;t.n_Item;
+
+    /* allocate one signal bits for each thread */
+    thread1Sig = AllocSignal(0);
+    thread2Sig = AllocSignal(0);
+
+    /* spawn two threads that will run in parallel */
+    thread1Item = CreateThread("Thread1", parentPri, Thread1Func, 2048);
+    thread2Item = CreateThread("Thread2", parentPri, Thread2Func, 2048);
+
+    /* enter a loop until we receive 10 signals */
+    count = 0;
+    while (count &lt; 10)
+    {
+        sigs = WaitSignal(thread1Sig | thread2Sig);
+
+        printf("Thread 1 at %d, thread 2 at %d\n",thread1Cnt,thread2Cnt);
+
+        if (sigs &amp; thread1Sig)
+            printf("Signal from thread 1\n");
+
+        if (sigs &amp; thread2Sig)
+            printf("Signal from thread 2\n");
+
+        count++;
+    }
+
+    /* nuke both threads */
+    DeleteThread(thread1Item);
+    DeleteThread(thread2Item);
+}
+</CODE>
+</PRE>

@@ -1,0 +1,104 @@
+<TITLE>Creating an Item</TITLE>
+<H1><LINK NAME="XREF31214">Creating an Item</LINK></H1><HR>
+To create an item, use the <CODE>CreateItem()</CODE> function call:<P>
+<DL>
+<DD><CODE>Item CreateItem( int32 ct, const TagArg *p )</CODE><BR>
+</DL>
+<CODE>CreateItem()</CODE> takes two arguments. The first, <CODE>ct</CODE>, specifies the type of folio in which the item is used and, the type of item within that folio. This value must always be present-it defines the item type. To generate this value, use the <CODE>MkNodeID()</CODE> macro (described later), which accepts the folio type and folio item 
+values, and then returns the proper value for <CODE>CreateItem()</CODE>.<P>
+The second argument, <CODE>p</CODE>, is a pointer to additional arguments that define the characteristics of the item. These arguments, known as tag arguments, are specific to each item type, and are discussed later in the chapter.<P>
+<CODE>CreateItem()</CODE> returns the item number of the newly created item or an error code (a negative value) if an error occurs.<P>
+<H2>Specifying the Item Type</H2>
+To come up with the item type value for <CODE>CreateItem(),</CODE> use <CODE>MkNodeID()</CODE>:<P>
+<DL>
+<DD><CODE>int32 MkNodeID( Int32 folioNum, Int32 itemTypeNum )</CODE><BR>
+</DL>
+The macro accepts two values: <CODE>folioNum</CODE>, which specifies the number of the folio responsible for the item, and <CODE>itemTypeNum, </CODE>which specifies the item type for the item being created. This item type number is folio-specific. Both values are set by constants defined within the header file for the appropriate folio. For example, audio.h defines <CODE>AUDIONODE</CODE> as the constant that specifies the Audio folio, and lists audio folio item constants such as <CODE>AUDIO_TEMPLATE_NODE</CODE>. <A HREF="./09spg.html#XREF37505">The Portfolio I/O Model</A> lists the constants for all the folio types and folio items used for each folio. To use those constants, you must be sure to include the .h file of the proper folio. The constants for kernel items, such as message ports or tasks, are in the <I>kernelnodes.h</I> file.<P>
+User tasks can't create the following items: drivers, devices, firqs, and timers. These items can only be created by privileged tasks.<P>
+<H2>Tag Arguments</H2>
+The values of the tag arguments determine the values of the fields in an item's ItemNode structure. <CODE>CreateItem()</CODE> creates an ItemNode structure for a new item. The call reads the values of the tag arguments, interprets them, and writes the corresponding values in the ItemNode fields.<P>
+All item types use a standard set of tag arguments defined in <I>item.h</I>. Many items also use additional tag arguments to specify properties that are unique to those item types.<P>
+To define values for an item's associated tag arguments, you must first declare an array of type <CODE>TagArg</CODE>, which is defined in <I>types.h</I> as follows:<P>
+<B>Example 1: </B><I>Defining values for an item's associated tag argument.</I><P>
+<CODE>
+<PRE>
+typedef struct TagArg
+{
+    uint32  ta_Tag;
+    TagData ta_Arg;
+} TagArg, *TagArgP;
+</CODE>
+</PRE>
+The first field, <CODE>ta_Tag</CODE>, is a value that specifies the type of tag argument. The second field, <CODE>ta_Arg</CODE>, is a 32-bit value that contains the actual argument.<P>
+The standard tag argument types for all items are defined in <I>item.h</I>. 
+They include: <P>
+<UL>
+<LI><B>TAG_ITEM_PRI,</B> sets the priority of an item.
+<LI><B>TAG_ITEM_NAME</B>, sets the name of an item.
+<LI><B>TAG_ITEM_VERSION</B>, sets the version number of an item.
+<LI><B>TAG_ITEM_REVISION</B>, sets the revision number of an item.
+<LI><B>TAG_ITEM_UNIQUE_NAME</B>, specifies the item must be uniquely named within its type.
+<LI><B>TAG_ITEM_END or TAG_END</B>, ends a list of tag arguments.
+</UL>
+The value for each of these arguments is precisely the same as the value for corresponding fields in ItemNode. When an item is created, these values are simply written into the appropriate ItemNode fields.<P>
+You'll find custom tag arguments used for each item type in <A HREF="../spr/09spr.html#XREF15850">Portfolio Items</A>, in the <I>3DO System Programmer's Reference</I>.<P>
+When you provide tag arguments for an item, some of the arguments for that item, are required and some are optional. You must provide values for required tag arguments. You must also provide specific values for optional 
+tag arguments, because any values that you do not provide are filled in with default values by the operating system when it creates the item. Defaults aren't guaranteed to be 0, so you must provide the value of 0 if that's what you want set for a tag argument.<P>
+If an entire array of tag arguments is optional and you want to use the system default values for all the arguments, then you do not need to declare the TagArg array in your application. Instead, pass NULL as the pointer to the tag arguments argument. When you create a tag arguments array, its general format is:<P>
+<B>Example 2: </B><I>Tag arguments array.</I><P>
+<CODE>
+<PRE>
+TagArg            TagArrayName[] =
+{
+    command tag,    value assigned,
+    ...    ...
+    TAG_END,    0
+};
+</CODE>
+</PRE>
+<CODE>TagArrayName</CODE> is the name of the array for the tag argument values; <CODE>command tag</CODE> is the name of the tag argument, and <CODE>value assigned</CODE> is the value assigned to that tag argument. The last tag argument in an array is always called <CODE>TAG_END</CODE>, and must be set to 0. This signals the end of the tag argument list.<P>
+<H2>VarArgs Tag Arguments</H2>
+Most functions in Portfolio that accept tag arguments have a split personality. The standard version of a function has a parameter of type <CODE>const TagArg *</CODE>. A varargs version of a function, which is denoted with the VA suffix, <CODE>CreateItemVA() </CODE>for example. The varargs functions offer a much more convenient way to provide the system with tag arguments.<P>
+When you use the varargs versions of a function, you do not need to create arrays of TagArg structures to pass to the function. Instead, you can construct a tag list on the stack directly within the function call. Example 3 shows a standard call with TagArg structures:<P>
+<B>Example 3: </B><I>A standard function call with TagArg structures.</I><P>
+<CODE>
+<PRE>
+{
+TagArg tags[3];
+
+    tags[0].ta_Tag = CREATEMSG_TAG_REPLYPORT;
+    tags[0].ta_Arg = (void *)replyPort;
+    tags[1].ta_Tag = CREATEMSG_TAG_MSG_IS_SMALL;
+    tags[1].ta_Arg = 0;
+    tags[2].ta_Tag = TAG_END;
+
+    item = CreateItem(MKNODEID(KERNELNODE,MESSAGENODE),tags);
+}
+</CODE>
+</PRE>
+Instead of this cumbersome and error prone array, you can build the tag list on the stack using the <CODE>CreateItemVA()</CODE> function as shown in Example 4:<P>
+<B>Example 4: </B><I>Using VarArgs to provide tag arguments.</I><P>
+<CODE>
+<PRE>
+{
+  item = CreateItemVA(MKNODEID(KERNELNODE,MESSAGENODE),
+                        CREATEMSG_TAG_REPLYPORT,   replyPort,
+                        CREATEMSG_TAG_MSG_IS_SMALL, 0,
+                        TAG_END);
+}
+</CODE>
+</PRE>
+As you can see, this method of providing tag arguments is much easier to read and maintain. There is no casting needed, no array to maintain, and so on.<P>
+<H2>The Item Number </H2>
+Once an item is created, the call that creates it returns a positive 32-bit number, which is the unique item number for the new item. A task uses this number whenever it needs to refer to the item in later calls-this item number is important, and should be stashed away in a handy variable. If an error occurs, a negative number is returned.<P>
+<H2>The Easy Way Out</H2>
+Now that you've seen the details of creating items using <CODE>CreateItem(),</CODE> you should know that most folios provide higher-level convenience calls that do the same thing for commonly used items in a folio, which makes programming much easier. The convenience calls usually take arguments that define the characteristics of the item, translate arguments into the appropriate tag arguments, and then call a lower-level item creation call to create the item. Some of those calls include:<P>
+<UL>
+<LI><CODE>CreateIOReq()</CODE> creates an IOReq.
+<LI><CODE>CreateScreenGroup()</CODE> creates a screen group.
+<LI><CODE>CreateMsgPort()</CODE> creates a message port.
+<LI><CODE>CreateMsg()</CODE> creates a message.
+<LI><CODE>CreateSemaphore()</CODE> creates a semaphore.
+<LI><CODE>CreateThread()</CODE> creates a thread.
+</UL>
+Generally, use a convenience call whenever one is available for the type of item you want to create. You'll find details about these calls in the <I>3DO System Programmer's Reference</I> and in the chapters of this volume that discuss specific folios.<P>

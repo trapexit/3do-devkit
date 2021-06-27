@@ -1,0 +1,37 @@
+<Title>lrex</Title>
+<A NAME="XREF22247"><H1>lrex </A></H1>
+<A NAME="XREF37943"></A>Demonstrates subcel extraction from an image.<P>
+<H3>Synopsis</H3>
+<CODE>lrex &lt;imagefile&gt;</CODE><P>
+<H3>Description</H3>
+Demonstrates how to extract a cel from a frame buffer or bitmap image, 
+that can then be redrawn into the frame buffer. Can be used for things 
+like breaking up a static or dynamic image (like the video in Mystery 
+Matinee in Twisted) and reorganizing it. <P>
+Subcel extraction from a frame buffer (bitmap) is slightly different from 
+extraction from another cel. This program handles extraction from bitmaps 
+only. <P>
+The extraction can easily be done with the appropriate call to the Lib3DO 
+functions (CreateLRFormCel), but this example shows how to do it long 
+hand. <P>
+When extracting from bitmaps, pay attention to the order in which the 
+pixels are represented. <P>
+The program is based on animsample and aaplayer. The user can manipulate 
+the extracted cel. <P>
+<H3>Caveats</H3>
+In performing the cel manipulation, the source for the cel may end up 
+pointing to garbage. This is especially likely if the program is 
+distorting the cel near the edge of the extracting bitmap. <P>
+You can only extract a cel from even lines of the bitmap. This restriction 
+arises out of the way bitmaps are laid out and lrfrom cels are drawn. You 
+can extract from odd lines, but the cel will not be pixel accurate in 
+relation to the source you are extracting from. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>imagefile
+<DD>Name of 3DO image file.
+</DL>
+<H3>Associated Files</H3>
+lrex.c, lrexerror.h, lrex.h<P>
+<H3>Location</H3>
+examples/Graphics/lrex <P>

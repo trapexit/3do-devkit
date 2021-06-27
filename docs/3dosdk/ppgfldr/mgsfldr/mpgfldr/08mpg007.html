@@ -1,0 +1,174 @@
+<TITLE>An Example Program</TITLE>
+<H1><LINK NAME="XREF31022">An Example Program</LINK></H1><HR>
+Example 1 shows how a task uses the Juggler to handle events in a collection with two constituent sequences. To keep the program simple, the events are not audio events, the interpreter procedure for each sequence is a print function that gives information about the time of execution and the data contained in the event. To further simplify the program, the task does not consult the audio timer for the current time, but simply generates the current time itself, first using an initialized value, then using the previous next event time as the current time.<P>
+<B>Example 1: </B><I>An example program.</I><P>
+<CODE>
+<PRE>
+/****************************************************************
+**
+** Test Juggler using dumb non-musical events and software "timing"
+** Construct a hierarchy of a Parallel Collection and two Sequences
+**
+** By:  Phil Burk
+**
+** Copyright (c) 1993, 3DO Company.
+** This program is proprietary and confidential.
+**
+****************************************************************/
+
+#include "types.h"
+#include "debug.h"
+#include "nodes.h"
+#include "list.h"
+#include "stdarg.h"
+#include "strings.h"
+#include "operror.h"
+#include "strings.h"
+#include "stdio.h"
+#include "audio.h"
+#include "music.h"
+
+#define    PRT(x)    { printf x; }
+#define    ERR(x)    PRT(x)
+#define    DBUG(x) /*     PRT(x) */
+
+/* Macro to simplify error checking. */
+#define CHECKPTR(ptr,name) \
+    if (ptr == NULL) \
+    { \
+        ERR(("Failure in %s\n", name)); \
+        goto cleanup; \
+    }
+
+
+/****************************************************************************/
+/* Define our basic event type. Each sequence could be different. */
+typedef struct
+{
+    Time   te_TimeStamp;
+    uint32 te_Data;
+} TestEvent;
+
+/* This function is called when the Sequence repeats. */
+int32 UserRepeatFunc ( Jugglee *Self, Time RepeatTime )
+{
+    PRT(("==========Repeat function for 0x%x at Time %d\n", Self, RepeatTime));
+    return 0;
+}
+
+/* This function is called by the Sequence to interpret the current event. */
+int32 UserInterpFunc ( Jugglee *Self, TestEvent *te )
+{
+    PRT(("TestEvent: Self = 0x%x, Time = %d, Data = %d\n",
+         Self, te-&gt;te_TimeStamp, te-&gt;te_Data));
+    return 0;
+}
+
+TestEvent TestData[] =
+{
+    {  5, 567 },
+    {  7, 910 },
+    { 12, 400 }
+};
+
+#define STARTTIME (2000)
+int main()
+{
+    Sequence *seq1 = NULL;
+    Sequence *seq2 = NULL;
+    Collection *col = NULL;
+    TagArg Tags[8];
+    int32 Result;
+    Time CurTime, NextTime;
+    int32 NextSignals;
+    
+/* Initialize audio, return if error. */
+/* This is required in early versions of the Juggler.
+   It should not be required later. */
+    if (OpenAudioFolio())
+    {
+        ERR(("Audio Folio could not be opened!\n"));
+        return(-1);
+    }
+    
+    PRT(("Test Objects\n"));
+    InitJuggler();
+    
+/* Instantiate objects from class. */
+    seq1 = (Sequence *) CreateObject( &amp;SequenceClass );
+    CHECKPTR(seq1,"CreateObject" );
+    
+    seq2 = (Sequence *) CreateObject( &amp;SequenceClass );
+    CHECKPTR(seq2,"CreateObject" );
+
+    col = (Collection *) CreateObject( &amp;CollectionClass );
+    CHECKPTR(col,"CreateObject" );
+    
+/* define TagList */
+    Tags[0].ta_Tag = JGLR_TAG_REPEAT_FUNCTION;
+    Tags[0].ta_Arg = (void *) UserRepeatFunc;
+    Tags[1].ta_Tag = JGLR_TAG_INTERPRETER_FUNCTION;
+    Tags[1].ta_Arg = (void *) UserInterpFunc;
+    Tags[2].ta_Tag = JGLR_TAG_MAX;
+    Tags[2].ta_Arg = (void *) 3;
+    Tags[3].ta_Tag = JGLR_TAG_MANY;
+    Tags[3].ta_Arg = (void *) 3;
+    Tags[4].ta_Tag = JGLR_TAG_EVENTS;
+    Tags[4].ta_Arg = (void *) &amp;TestData[0];
+    Tags[5].ta_Tag = JGLR_TAG_EVENT_SIZE;
+    Tags[5].ta_Arg = (void *) sizeof(TestEvent);
+    Tags[6].ta_Tag = JGLR_TAG_START_DELAY;
+    Tags[6].ta_Arg = (void *) 2;
+    Tags[7].ta_Tag =  TAG_END;
+    
+/* Set various parameters in object by using TagList */
+    SetObjectInfo(seq1, Tags);
+    Tags[6].ta_Tag = JGLR_TAG_START_DELAY;
+    Tags[6].ta_Arg = (void *) 6;
+    SetObjectInfo(seq2, Tags);
+    
+    PrintObject( seq1 );
+    PrintObject( seq2 );
+    
+/* Add Sequences to Collection for parallel play */
+    Result = col-&gt;Class-&gt;Add(col, seq1, 3);
+    if (Result)
+    {
+        PRT(("Add returned 0x%x\n", Result));
+    }
+    Result = col-&gt;Class-&gt;Add(col, seq2, 4);
+    if (Result)
+    {
+        PRT(("Add returned 0x%x\n", Result));
+    }
+    
+/* Start Collection which starts both Sequences. */
+    Result = StartObject(col, STARTTIME, 3, NULL);
+    if (Result)
+    {
+        PRT(("Start returned 0x%x\n", Result));
+    }
+    
+/* Drive Juggler using fake time. */
+    NextTime = STARTTIME - 2;
+    do
+    {
+        CurTime = NextTime;
+        PRT(("CurTime = %d\n", CurTime ));
+        Result = BumpJuggler( CurTime, &amp;NextTime, 0, &amp;NextSignals );
+        
+    } while ( Result == 0);
+    
+    
+    StopObject(seq1, NULL);
+    StopObject(seq2, NULL);
+    
+cleanup:
+    DestroyObject( (COBObject *) seq1 );
+    DestroyObject( (COBObject *) seq2 );
+    DestroyObject( (COBObject *) col );
+    
+    TermJuggler();
+}
+</CODE>
+</PRE>

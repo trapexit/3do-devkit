@@ -1,0 +1,67 @@
+<TITLE>The Pixel Processor</TITLE>
+<H1><LINK NAME="XREF22185">The Pixel Processor</LINK></H1><HR>
+The pixel processor is, in essence, a color processor that processes each incoming cel pixel (unless the pixel has been designated transparent). In most cases, the pixel processor processes the pixel's specified color, but because it can accept color from many sources, it can process a completely different color such as that of a frame buffer pixel. Regardless of the color source, the resultant color is handed off to the projector, which writes it into the projection location in the frame buffer.<P>
+The pixel processor, like the CLUT sets, works separately with the red, 
+green, and blue components of a color, processing them in parallel as shown in 
+Figure 1. When it is done, the pixel processor combines the results into a single 15-bit color value.<P>
+
+<IMG SRC="figures/G.3-7.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 1: </B><I>Pixel Processor.</I><P>
+As shown in Figure 1, the pixel processor can accept color input from two simultaneous sources: the <I>primary source</I> and the <I>secondary source. </I>After scaling each source, the pixel processor merges the two sources and sends the result to the projector. In the simplest case, the pixel processor merely passes the primary source color through without modification. To do so, the secondary source is set to 0 (so there is effectively no secondary source) and the primary scalar does not scale the primary source at all (multiplying by 8 and dividing by 8, for example).<P>
+The CCB controls the pixel processor, choosing the input for both the primary and secondary sources. It also sets the different processing options for the colors as they pass through the pixel processor. These control parameters, called P-mode<I>,</I> are stored in the CCB, which contains space for two different P-modes. The CCB can be set to use either P-mode. The CCB can also be set so that each incoming pixel selects either of the P-modes with the P-mode bit read in the pixel decoder.<P>
+<H2>Primary Source</H2>
+The primary-source color value can come from either one of two sources, as specified by the P-mode:<P>
+<UL>
+<LI>The current cel pixel from the pixel decoder
+<LI>The current frame buffer pixel
+</UL>
+The first option allows the pixel processor to work with the cel's own color values. The second option, the current frame buffer data (CFBD), allows the pixel processor to work on the color values in the frame pixels beneath the cel's projected pixels. This is a useful option if you want to process a part of the frame buffer in the shape of the cel without actually projecting the cel's own pixels. It allows you to create a shadow or spotlight that moves across the frame buffer, lightening or darkening the frame image wherever the cel is projected. You can, in fact, use the same source data for two different cels: one cel projects the shadow of a the image in the frame buffer, and the other cel projects the image itself above the shadow.<P>
+Whenever the pixel processor uses the current frame buffer pixel as a source, the buffer from which it reads pixels is called the <I>read buffer. </I>The buffer to which the projector writes cel pixels is called the <I>write buffer. </I>In most cases, the read and write buffers are the same; the cel engine reads pixels from the read buffer, processes them, and then projects pixels back into the same buffer in the same location. That's the case in the shadow example above.<P>
+In special cases, the cel engine can be set to use separate read and write buffers so that it reads frame buffer pixels from one buffer and then projects them into a completely separate buffer. This allows the pixel processor to use a cel's projected shape to pick up pixels from one buffer and then project it into another buffer.<P>
+<H2>The Primary Scalar</H2>
+The primary scalar takes the color value from the primary source and scales it up or down, depending on the values it uses for scaling. It scales in two stages (as shown in Figure 7): it first multiplies the color value by the primary multiplier value (PMV) and then divides by the primary divider value (PDV).<P>
+The PMV can be any integer from 1 to 8 and the PDV can be 2, 4, 8, or 16. By setting the PMV to a maximum value of 8 and the PDV to a minimum value of 2, the resultant scalar turns out to be 8/2 (which is 4), the maximum color-value increase available in the primary scalar. By setting the PMV to a minimum value of 1 and the PDV to a maximum value of 16, the resultant scalar turns out to be 
+1/16 (which is 0.0625), the maximum decrease available in the primary scalar.<P>
+The full set of scaling values you can get with all the different combinations of multiplier and divider values is 0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, and 4. If the secondary source is set to 0 and the final math stage uses its optional division by two, then a new set of scaling values results: 0.03125, 0.0625, 0.09375, 0.125, 0.15625, 0.1875, 0.21875, 0.25, 0.3125, 0.375, 0.4375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, and 2.<P>
+Note that setting the scaling value to 1 turns off the effect of the primary scalar, because scaling by 1 leaves the incoming color value at its original value. The module still processes each incoming pixel, however, so scaling by 1 does not change rendering speed.<P>
+The PMV can come from any one of three sources set by the P-mode:<P>
+<UL>
+<LI>A constant stored in the CCB
+<P>
+<LI>The top three bits of the R, G, and B values sent from the pixel decoder
+<P>
+<LI>The 3-bit alternate multiplier value (AMV) extracted from the pixel value of a coded 8- or 16-bit cel
+</UL>
+The CCB constant multiplies each input color value by the same amount.<P>
+The pixel decoder multiplies the input color value according to the cel pixel's color magnitude, the larger the color value, the higher the multiplier. For example, if you use the frame buffer as the primary source and the high-bit RGB values for the PMV, the frame buffer color values are scaled higher wherever the cel-pixel color values are higher and scaled not as high wherever the cel pixel color values are lower.<P>
+The AMV allows each pixel to set its own PMV. If the cel is a coded 16-bit cel, then each pixel can carry a separate AMV for red, green, and blue. If the cel is a coded 8-bit cel, then each pixel carries a single 3-bit AMV that is duplicated for red, green, and blue. If you use different AMVs for red, green, and blue, you can tint resultant color values accordingly.<P>
+The primary PDV can come from either of two sources:<P>
+<UL>
+<LI>A constant stored in the CCB
+<LI>The bottom two bits of the color value from the pixel decoder
+</UL>
+These sources work for the same benefits available to the multiplier, but they decrease the scale of the input color value instead of increase it.<P>
+Note that the effect of scaling color values depends entirely on the current palette in the display generator's CLUT sets. If it is a normal linear ascending palette such as the one stored in the fixed CLUT set, then increasing color values will brighten the colors and decreasing color values darkens colors. If a linear descending palette is used, then increasing values darkens colors and decreasing values lightens them. If the palette is not linear, anticipating the effects of cel engine math on an image can be difficult.<P>
+<H2>The Secondary Source Value</H2>
+The secondary-source value can come from any one of three sources:<P>
+<UL>
+<LI>A constant stored in the CCB
+<P>
+<LI>The current frame buffer pixel value (from the read buffer pixel lying beneath the current cel pixel's projection)
+<P>
+<LI> The current FPV (frame pixel value) from the pixel decoder
+<P>
+<LI>The color value is a constant of 0
+</UL>
+If the secondary source is set as a constant of 0, then it is effectively turned off and will not has no effect when merged with the primary source.<P>
+<H2>The Secondary Divider</H2>
+The secondary divider takes the color value from the secondary source and, if desired, scales it down. It has a single stage: it divides the color value by the secondary divider value (SDV). That value can be 1, 2, or 4. Setting it to 1 effectively turns it off.<P>
+The SDV comes from the 5 bits of the PIXC control word (the AV bits). The AV bits are also the secondary source for the cel engine math if the CCB is selected to be the secondary source. Note that when the SDV is taken from the CCB, the CCB cannot supply the secondary source. In that case, the secondary source would be a constant and there would be no need to scale it by a constant.<P>
+<H2>The Final Math Stage</H2>
+The final math stage merges the primary- and secondary-source color values by adding them together or by subtracting the secondary source from the primary source. Or, instead of adding or subtracting, it can XOR the two sources. It can then optionally divide the result (created by adding, subtracting, or XORing) by two. These settings are controlled by the P-mode.<P>
+One common merging effect is averaging, which adds color values from two different images-the cel image and the frame buffer image, for example-and then divides by two. This averages the color between the two images, which can create some interesting effects, such as tinting the background image with the colors of the foreground image. Other merging effects use the shape of a pixel to scale frame buffer pixels up or down, creating shadows or spotlights.<P>
+<H2>Passing On Color Values</H2>
+Once the pixel processor finishes manipulating the red, green, and blue color values, it checks to see if any of the resultant color values are too high, and then truncates them to the highest allowable values. The pixel processor then brings the three red, green, and blue values together again to create a 15-bit color value and passes that value on to the projector.<P>
+<A NAME="XREF10996"></A>

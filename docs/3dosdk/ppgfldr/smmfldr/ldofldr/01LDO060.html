@@ -1,0 +1,29 @@
+<Title>DispatchMSEvents</Title>
+<A NAME="XREF38141"><H1>DispatchMSEvents </A></H1>
+ Dispatches message and signal events to their handler routines.<P>
+<H3>Synopsis</H3>
+<CODE>int32 DispatchMSEvents(MSEventHandle mseHandle, void *userContext,int32 reserved)</CODE><P>
+<H3>Description</H3>
+Waits for events and dispatches processing to the event's handlers. Loops internally, waiting for messages and signals, dispatching the handlers when they are received, then looping back to wait again after the handlers return. As long as the handlers keep returning zero status, this function loops internally. As soon as a handler returns a non-zero value, this function returns that value to the caller. <P>
+By convention, a negative return value is an error. This may be an error returned by a handler function, or an error detected in waiting for and decoding an event. The latter should be very rare; the process of waiting for a message or signal, looking up the message, and so on, is relatively foolproof. If <CODE>DeleteItem()</CODE> is called on the message or port item, the function is likely to fail.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>mseHandle
+<DD>MSEventHandle returned by <CODE>SetupMSEvents()</CODE>. 
+</DL>
+<DL>
+<DT>userContext
+<DD>Any value you want; it is passed to the handler functions as they are dispatched. 
+</DL>
+<DL>
+<DT>reserved
+<DD>Reserved for future expansion; pass zero. 
+</DL>
+<H3>Return Value</H3>
+Returns negative on error, or any non-zero status returned by your event handler routines. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, msgutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO166.html#XREF24816"><CODE>SetupMSEvents</A> </CODE><P>

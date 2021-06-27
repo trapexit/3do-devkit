@@ -1,0 +1,159 @@
+<TITLE>The Cel Engine</TITLE>
+<H1><LINK NAME="XREF23353">The Cel Engine</LINK></H1><HR>
+The cel engine processes cel pixels moving from cel source data to the frame buffer. Its components process the pixels in the same order as the following list. <P>
+<UL>
+<LI><B>Data unpacker (DUP)</B>, which unpacks cel source data if it has been compressed.
+<p>
+<LI><B>Pixel decoder (PDC)</B>, which decodes cel pixels if they have been coded, extracting a 15-bit color value, a 2-bit VH value, and a 9-bit alternate multiplier value.
+<p>
+<LI><B>Pixel processor</B>, which optionally modifies pixel color by scaling it (for lighting and shading effects) and merging it with pixel colors from another source (for translucence and other effects).
+<p>
+<LI><B>Projector</B>, which writes the cel's processed color values (along with its VH values) into a quadrilateral area in the frame buffer.
+</UL>
+The input to the cel engine is the cel source data with a preamble (which might, in special cases, be included with the cel control block (CCB) instead). After the source data passes through the cel engine, the cel is projected into the frame buffer. The CCB controls the cel engine, determining how it processes the cel, and how the cel is projected into the frame buffer. Figure 1 shows the cel engine components and the data that flows through them. The sections that follow describe each component.<P>
+<IMG SRC="figures/G.3-1.gif" ALT="Graphic cannot be displayed"><p>
+<B>Figure 1: </B><I>Cel engine components.</I><P>
+Although the cel engine is more complex than the display generator, there are parallels between them. For example:<P>
+<UL>
+<LI>Part of the pixel decoder's job is to turn a 5-bit color value stored in a cel pixel into a 15-bit color value, much as the CLUT sets in the display generator turn a 15-bit color value into a 24-bit color value.
+<p>
+<LI>Each cel pixel can carry a P-mode bit, much as each frame pixel can carry a display mode bit. The P-mode bit controls the way the pixel processor processes the pixel, much as the display mode bit controls the way the display generator interprets a pixel.
+<p>
+<LI>The CCB controls the overall operation of the cel engine, much as the VDL controls the overall operation of the display generator. 
+</UL>
+These parallels can make understanding the cel engine a little easier.<P>
+<H2>Cel Source Data</H2>
+Every cel starts with the cel source data stored in RAM. The source data is a bitmapped image. The pixel format of the bitmapped image can be either coded or uncoded. There are six types of coded data and two types of uncoded data for a total of eight pixel formats. The source data can also be packed or unpacked for data compression, which means there are 16 different ways that source data can be interpreted. The preamble (usually included at the beginning of the source data) specifies how the source data is to be read.<P>
+<H3>Coded and Uncoded Cels</H3>
+You can choose between coded or uncoded cel source data depending on how much color you want in the cel and on how many bits you want to devote to each pixel. You can also consider the other kinds of data you to include in each cel pixel. For example, some formats offer AMVs (alternate multiplier values) that shade each pixel or a P-mode bit that controls the pixel processor on a pixel-by-pixel basis.<P>
+There are two types of uncoded cels: 16 bits per pixel or 8 bits per pixel. 
+Coded cels can have 16, 8, 6, 4, 2, or 1 bit per pixel. Table 1 shows the different types of coded and uncoded cels and what each offers in its pixels before the pixels enter the pixel lookup table (PLUT).<P>
+<PRE>
+<B>Table 1: </B><I> Types of coded and uncoded cels. </I>
+---------------------------------------------------------------
+Pixel Contents                                                 
+---------------------------------------------------------------
+           |Bits/Pixel |Possible |AMV bits |Possible |Possible 
+           |           |Colors   |         |P-mode   |VH bits  
+           |           |         |         |bit?     |         
+---------------------------------------------------------------
+Uncoded    |16         |32,768   |0        |Yes      |2        
+---------------------------------------------------------------
+           |8          |256      |0        |No       |1        
+---------------------------------------------------------------
+Coded      |16         |32/32,768|9        |Yes      |2        
+           |           |*        |         |         |         
+---------------------------------------------------------------
+           |8          |32/256*  |3        |No       |1        
+---------------------------------------------------------------
+           |6          |32/64*   |0        |Yes      |2        
+---------------------------------------------------------------
+           |4          |16       |0        |No       |1        
+---------------------------------------------------------------
+           |2          |4        |0        |No       |1        
+---------------------------------------------------------------
+           |1          |2        |0        |No       |1        
+---------------------------------------------------------------
+</PRE>
+
+If you want lots of color in a cel using simple pixel values, use an uncoded cel. In its 8-bit form an uncoded cel provides 256 different color values; in its full 16-bit form, it offers 32,768 colors. If you are not concerned with lots of colors, you should use a coded cel, which provides 2, 4, 8, 16, or 32 different colors.<P>
+To include an AMV with each pixel, you should use either 8- or 16-bit coded cels. The AMV scales color values in the pixel processor, so by specifying an AMV for each pixel, you can change color shading pixel by pixel. This added scaling information increases the 32 indexed color values available to give 256 possible colors for the 8-bit coded cel and 16,385 possible colors for the 16-bit coded cel. The extra AMV colors are most often used for shading (darkening or lightening existing colors), so you will probably find uncoded cels best for a wide and distinct choice of colors.<P>
+To switch between two sets of pixel-processor operating parameters on a pixel-by-pixel basis using the P-mode bit, you need a 16-bit uncoded cel, 16-bit coded cel, or 6-bit coded cel. The 16-bit uncoded and coded cels provide full 2-bit VH value per pixel for cornerweight positioning. If you use the 6-bit coded cel, the second bit of the VH value comes from the pixel decoder.<P>
+Table 2 shows how the bits of each pixel in each type of cel carry information. The color values carried in a coded cel are pointers to 32 different registers in the pixel decoder that contain 16-bit values-the same 16-bit format that goes into frame buffer pixels. You can think of the cel color values as 5-bit color values (even if they only have 1, 2, or 4 bits) because they are always padded out to 5 bits in the decoder before being used as indexes. Those 5-bit color values point to a 15-bit color value plus whatever VH value or P-mode value you want the register to contain-16 bits in all.<P>
+<PRE>
+<B>Table 2: </B><I> Information in coded and uncoded cels.</I>
+----------------------------------------------------------------
+      |Coded                                      |Uncoded      
+----------------------------------------------------------------
+Bit # |1-bit |2-bit |4-bit |6-bit |8-bit   |16-bit|8-bit |16-bit
+----------------------------------------------------------------
+15    |      |      |      |      |        |p/w   |      |p/w   
+----------------------------------------------------------------
+14    |      |      |      |      |        |x     |      |r     
+----------------------------------------------------------------
+13    |      |      |      |      |        |mr    |      |r     
+----------------------------------------------------------------
+12    |      |      |      |      |        |mr    |      |r     
+----------------------------------------------------------------
+11    |      |      |      |      |        |mr    |      |r     
+----------------------------------------------------------------
+10    |      |      |      |      |        |mg    |      |r     
+----------------------------------------------------------------
+9     |      |      |      |      |        |mg    |      |g     
+----------------------------------------------------------------
+8     |      |      |      |      |        |mg    |      |g     
+----------------------------------------------------------------
+7     |      |      |      |      |m       |mb    |r     |g     
+----------------------------------------------------------------
+6     |      |      |      |      |m       |mb    |r     |g     
+----------------------------------------------------------------
+5     |      |      |      |p/w   |m/p/w   |mb    |r     |g     
+----------------------------------------------------------------
+4     |      |      |      |c     |c       |c     |g     |b     
+----------------------------------------------------------------
+3     |      |      |c     |c     |c       |c     |g     |b     
+----------------------------------------------------------------
+2     |      |      |c     |c     |c       |c     |g     |b     
+----------------------------------------------------------------
+1     |      |c     |c     |c     |c       |c     |b     |b     
+----------------------------------------------------------------
+0     |c     |c     |c     |c     |c       |c     |b     |b/w   
+----------------------------------------------------------------
+</PRE>
+<P>
+The 9-bit AMV available in a 16-bit coded cel specifies a 3-bit red AMV, a 3-bit green AMV, and a 3-bit blue AMV. The 3-bit AMV available in an 8-bit coded cel is replicated to provide the same AMV for red, green, and blue.<P>
+Note that the most straightforward type of cel is the uncoded 16-bit cel. Each of 
+its pixels uses the same type of value that is projected into the frame buffer. Use 
+this pixel format if you use a part of the frame buffer as cel source data. For more 
+information about cel pixel contents and how they're interpreted, see 
+<A HREF="3gpgc.html#XREF41291">
+The Pixel Decoder (PDC)</A>; this section includes diagrams that show how each pixel type is decoded on a bit-by-bit basis.<P>
+<H3>Packed and Unpacked Data</H3>
+All cel types, coded and uncoded alike, can be packed to save RAM. Runs of identical pixels are reduced to a description of a few bytes. If some pixels are meant to be transparent (that is, the frame buffer value beneath their projected position is not changed), one of the packing schemes is particularly concise in saving those pixels; it saves a lot of RAM for cels containing numerous transparent pixels, and when decoded, greatly improves rendering efficiency because the cel engine knows not to process transparent cels.<P>
+Each horizontal line of pixel data in packed source data has two parts: a word offset to the next line, and its own data. The line data is run-length encoded into packets. There are four types of packets: <P>
+<UL>
+<LI>A string of unpacked pixels
+<LI>A single pixel with a repeat count
+<LI>A transparency indicator with a repeat count
+<LI>An end-of-line indicator
+</UL>
+Packets are bit-packed together; that is, they do not have to be 
+boundary-aligned to fit words. The line data is padded with zeros 
+as needed to fill up the last word of the line. An end-of-line packet 
+at the end of the data is optional. Table 3 shows the four types of packets and how the data is arranged in each packet.<P>
+<PRE>
+<B>Table 3: </B><I> Types of Packed Data Packets.</I>
+---------------------------------------------------------------
+2 Bits of Data Type |6 Bits of Output Pixel|N Bits of Pixel    
+                    |Count                 |Data               
+---------------------------------------------------------------
+PACK_LITERAL        |OutputCOUNT (+1)      |One or more literal
+                    |literal pixels        |pixels             
+---------------------------------------------------------------
+PACK_REPEAT         |OutputCOUNT (+1)      |One pixel          
+                    |copies of the         |                   
+                    |following pixel       |                   
+---------------------------------------------------------------
+PACK_TRANSPARENT    |OutputCount (+1)      |-no pixel data-    
+                    |transparent pixels    |                   
+---------------------------------------------------------------
+PAC_EOL             |-no output no count   |-no pixel data-    
+                    |bits-                 |                   
+---------------------------------------------------------------
+</PRE>
+<P>
+Unpacked data is sent directly to the pixel decoder without running through the data unpacker; each pixel is represented by an equal number of bits. Because the pointer-to-cel source data in the CCB can make use of existing pixels in RAM-such as the frame buffer or another cel's source data-several values stored in the preamble specify a rectangular subsection of the full image to use as source data. The width of the rectangle in pixels is set by TLHPCNT (totally literal horizontal pixel count); the height in pixels is set by VCNT (vertical count). WOFFSET is a word offset from the end of one line of data to the beginning of a second line of data. The graphics programming chapters that follow provide more information on these values.<P>
+<H3>Sequential Cel Animation</H3>
+The CCB points to the beginning of the source data in RAM. Because that pointer can change each time the cel data is processed, you can animate a cel by creating sequential images and storing them in different source data locations. The CCB can point to each location in succession for processing by the cel engine, so the cel image is sequentially animated.<P>
+If you have a series of constantly changing images such as character animation or live images coming in from SlipStream, you can set up two different source data locations, write each incoming frame to an alternate location, and have the CCB flip back and forth through them for double-buffered cel animation.<P>
+If you'd like to scroll through parts of a larger image, you can use the unpacked source data values described above to look at different areas of pixels in a larger image without changing the pointer. You define the rectangle size once and then change the word offset to point to the top-left corner of the rectangle.<P>
+<H2>The Preamble</H2>
+The preamble, located at the beginning of the cel source data or at the end of the CCB as a header word, specifies the type and line count of the source data. The data unpacker and pixel decoder read the preamble to see if the data must be unpacked and to see if and how the data should be decoded.<P>
+Because some cels use source data from an existing source such as the frame buffer, which typically does not have a preamble, you can include the preamble in the CCB as long as you point to the same source data type each time you feed source data to the cel engine.<P>
+<H2>The Cel Control Block (CCB)</H2>
+The CCB controls the operation of the cel engine and also sets many of the cel specifications. Those specifications include the cel's projection position in the frame buffer, default P-mode or VH values for cel types that do not include that information, default color bits to fill in bits for cels with less than 5-bit color values, data for pixel processing-parameters, values for the 32 registers in the pixel lookup table (PLUT) contained in the pixel decoder, and much more. These values are described in later programming chapters.<P>
+Two 32-bit position values set the X and Y coordinates of the cel's origin corner when the cel is projected into the frame buffer. (The origin corner is the corner from which the other corner positions are reckoned.) These values can position the cel in 320-by-240 resolution or 640-by-480 resolution. The low 16 bits are used for 640-by-480 positions; they are set to 0 if positions are reckoned only in 320-by-240 resolution. (You'll find specifics in later graphics programming chapters.)<P>
+The other three corners of the cel's projection quadrilateral are specified with values that create X and Y offsets from the origin corner. You can use the offsets to reduce or enlarge the cel's area, to stretch it into odd shapes, to flip it horizontally and vertically, or to bowtie the cel as shown in Figure 2. The origin corner coordinate values (for point A) and the offset corner values (for points B, C, and D) set the shape and size of the cel's projection quadrilateral.<P>
+<IMG SRC="figures/G.3-2.gif" ALT="Graphic cannot be displayed"><p>
+
+<B>Figure 2: </B><I>Using offsets to change a cel's area.</I><P>

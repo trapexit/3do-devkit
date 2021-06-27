@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>The Deque Data Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The Deque Data Abstraction</H2>
+<P>The name "deque" is short for "double-ended queue," and is pronounced like "deck."  Traditionally, the term is used to describe any data structure that permits both insertions and removals from either the front or the back of a collection.  The <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> container class permits this, as well as much more.  In fact, the capabilities of the <B><I>deque</I></B> data structure are almost a union of those provided by the <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> and <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> classes.</P>
+<P>Like a vector, the deque is an indexed collection.  Values can be accessed by subscript, using the position within the collection as a key.  (A capability not provided by the list class).</P>
+<P>Like a list, values can be efficiently added either to the front or to the back of a deque.  (A capability provided only in part by the vector class).</P>
+<P>As with both the list and vector classes, insertions can be made into the middle of the sequence held by a deque.  Such insertion operations are not as efficient as with a list, but slightly more efficient that they are in a vector.</P>
+<P>In short, a deque can often be used both in situations that require a vector and in those that call for a list.  Often, the use of a deque in place of either a vector or a list will result in faster programs.  To determine which data structure should be used, you can refer to the set of questions described in <a href="sel_2116.htm">Chapter 4 (<i>Selecting a Container</i>)</a>.</P>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>The <SAMP>deque</SAMP> header file must appear in all programs that use the <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> data type.</P>
+<PRE># include &#60;deque>
+</PRE>
+
+<HR>
+<A HREF="deq_4164.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="deq_2889.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

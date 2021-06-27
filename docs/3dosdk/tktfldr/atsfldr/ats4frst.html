@@ -1,0 +1,43 @@
+<TITLE>ARM Procedure Call Standard</TITLE>
+<H1><LINK NAME="XREF28151">ARM Procedure Call Standard</LINK></H1><HR>
+The <I>ARM Procedure Call Standard</I> (<I>APCS</I>) is a set of rules which regulate and facilitate calls between separately compiled or assembled program fragments. The APCS defines:<P>
+<UL>
+<LI>constraints on the use of registers;
+<p>
+<LI>stack conventions;
+<p>
+<LI>the format of a stack-based data structure, used by stack tracing programs to reconstruct a sequence of outstanding calls;
+<p>
+<LI>the passing of machine-level arguments, and the return of machine-level results at externally visible function/procedure calls;
+<p>
+<LI>support for the ARM shared library mechanism; a standard way for shared (reentrant) code to address the static data of its clients, (See <A HREF="../arrfldr/arr3frst.html#XREF25184">The ARM Linker</A> for details).
+</UL>
+<H2>Chapter overview</H2>
+Click on one of the topics below to select it:<P>
+
+<UL>
+<LI><A HREF="./4atsa.html#XREF17932">The ARM procedure call standard</A>
+<LI><A HREF="./4atsb.html#XREF35590">APCS variants</A>
+<LI><A HREF="./4atsc.html#XREF36070">C language calling conventions</A>
+<LI><A HREF="./4atsd.html#XREF14949">Some examples</A>
+<LI><A HREF="./4atse.html#XREF36256">The APCS in non-user ARM modes</A>
+</UL>
+Since the ARM CPU is used in a wide variety of systems, the APCS is not a single standard, but a consistent family of standards. See <A HREF="./4atsb.html#XREF35590">APCS variants</A>  for details of the variants in the family.  Implementors of run-time systems, operating systems, embedded control monitors, etc., must choose the variant(s) most appropriate to their requirements.<P>
+Naturally, there can be no binary compatibility between program fragments which conform to different members of the APCS family. Those concerned with long-term binary compatibility must choose their options carefully.<P>
+<I>function</I> is used to mean function, procedure or subroutine.<P>
+<H2>Design criteria</H2>
+Throughout its history, the APCS has compromised between fastest, smallest and easiest to use.<P>
+The criteria we have considered to be important are:<P>
+<UL>
+<LI>Function call should be fast and it should be easy for compilers to optimise function entry sequences.
+<p>
+<LI>The function call sequence should be as compact as possible.
+<p>
+<LI>Extensible stacks and multiple stacks should be accommodated.
+<p>
+<LI>The standard should encourage the production of reentrant code, with writable data separated from code.
+<p>
+<LI>The standard should be simple enough to be used by assembly language     programmers, and should support simple approaches to link editing, debugging and run-time error diagnosis.
+</UL>
+Overall, we have tended to rank compact code and a clear definition most highly, with simplicity and ease of use ahead of performance in matters of fine detail where the impact on performance is small.<P>
+<P>

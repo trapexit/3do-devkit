@@ -1,0 +1,36 @@
+# Weaver script for a typical EZSqueeze file. Writes a stream header
+# that is compatible with PlayEZQStream.c
+
+	WriteStreamHeader
+#	WriteMarkerTable
+	StreamBlockSize		65536
+
+	StreamBuffers		6
+	NumSubsMessages		512
+
+#	Standard delta priorities for the streamer thread and data acquisition
+
+	streamerdeltapri	6
+	dataacqdeltapri		8
+
+#	Standard subscribers & delta priorities
+
+	subscriber 			EZQF			7
+	subscriber 			SNDS			10
+	subscriber 			CTRL			11
+
+#	16 bit mono, 22KHz, 2:1 compressed, audio in channel zero,
+
+	preloadinstrument	SA_22K_16B_M_SDX2
+#	preloadinstrument	SA_22K_16B_S_SDX2
+#	preloadinstrument	SA_44K_16B_M_SDX2
+#	preloadinstrument	SA_44K_16B_S_SDX2
+	audioclockchan		0
+	enableaudiomask		0x1
+
+
+#	Input files go here...
+
+	file film_22khz.saudio 1 0
+	file copter.dm.ezqf 10 0
+

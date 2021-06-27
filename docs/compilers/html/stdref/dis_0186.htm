@@ -1,0 +1,77 @@
+<HTML><TITLE>distance</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>distance</H2>
+<HR><PRE>     Iterator Operation</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Computes the distance between two iterators</P>
+<PRE></PRE>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;iterator></PRE>
+<PRE>
+template &#60;class InputIterator, class Distance>
+ void distance (InputIterator first,
+                InputIterator last,
+                Distance&#38; n);</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>distance</B></I> template function computes the distance between two iterators and stores that value in <SAMP>n</SAMP>.  The last iterator must be reachable from the first iterator.</P>
+<P><B><I>distance</B></I> increments <SAMP>n</SAMP> by the number of times it takes to get from <SAMP>first</SAMP> to <SAMP>last</SAMP>. <B><I>distance</B></I> must be a three argument function that stores the result into a reference instead of returning the result, because the distance type cannot be deduced from built-in iterator types such as<SAMP> int*</SAMP>.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// distance.cpp
+//
+ #include &#60;iterator>
+ #include &#60;vector>
+ #include &#60;iostream.h> 
+
+int main()
+ {
+   //
+   //Initialize a vector using an array
+   //
+   int arr[6] = {3,4,5,6,7,8};
+   vector&#60;int> v(arr,arr+6);
+   //
+   //Declare a list iterator, s.b. a ForwardIterator
+   //
+   vector&#60;int>::iterator itr = v.begin()+3;
+   //
+   //Output the original vector
+   //
+   cout &#60;&#60; "For the vector: ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;
+   cout &#60;&#60; "When the iterator is initialized to point to "
+        &#60;&#60; *itr &#60;&#60; endl;
+   //
+   // Use of distance
+   //
+   vector&#60;int>::difference_type dist = 0;
+   distance(v.begin(), itr, dist);
+   cout &#60;&#60; "The distance between the beginning and itr is " 
+        &#60;&#60; dist &#60;&#60; endl;
+   return 0;
+ }
+Output : 
+For the vector: 3 4 5 6 7 8
+When the iterator is initialized to point to 6
+The distance between the beginning and itr is 3
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument. For instance you'll have to write:</P>
+<PRE>vector &#60;int, allocator></PRE>
+<P>instead of:</P>
+<PRE>vector &#60;int></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Seq_6405.htm"><B><I>Sequences</B></I></A>, <A HREF="Ran_7047.htm"><B><I>Random Access Iterators</B></I></A></P>
+<HR>
+<A HREF="deq_4164.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="dis_6675.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,35 @@
+<TITLE>lmdf</TITLE>
+<A NAME="XREF16753"><H1>lmdf</A></H1><HR><P>
+<A NAME="XREF24183"></A>Reports free space for Linked Memory Filesystem.<P>
+<H3> Synopsis</H3>
+<CODE>lmdf [-k]</CODE><P>
+<H3>Description</H3>
+lmdf displays the amount of disk space occupied on nvram, the amount of 
+used and available space, and how much of the filesystem's total capacity 
+has been used and fragmented. lmdf produces an output similar to the 
+following: <P>
+<CODE>
+<PRE>
+Device Bytes used avail capacity fragment Mounted on ram.3.0 32768 
+16408 16040       50%       27%  /nvram
+</CODE>
+</PRE>
+Note: used+avail is less than the amount of space in the filesystem 
+(Bytes|Kbytes); this is due to filesystem overhead. Furthermore, the 
+amount of space available in the filesystem cannot be allocated all to a 
+single file due to fragmentation.   <P>
+If the filesystem is fragmented, use lmadm to defragment the filesystem. 
+However, if there is no fragmentation (fragment reports 0%), then the 
+available space in its entirety can be allocated to a single file.<P>
+If nvram is not mounted, no data are reported. <P>
+<H3>Options </H3>
+<DL>
+<DT>-k
+<DD>All output data is rounded to 1024 bytes. 
+</DL>
+<H3>Implementation</H3>
+Command implemented in V21.<P>
+<H3>Associated Files </H3>
+$c/lmdf    <P>
+<H3>See Also</H3>
+<A HREF="Cdbge.html#XREF40448"><CODE>lmadm</A></CODE><P>

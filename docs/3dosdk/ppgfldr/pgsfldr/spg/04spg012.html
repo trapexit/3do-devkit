@@ -1,0 +1,17 @@
+<TITLE>Example</TITLE>
+<H1>Example</H1><HR>
+Example 4 illustrates how to traverse a list.<P>
+<B>Example 1: </B><I>List traversal.</I><P>
+<CODE>
+<PRE>
+void DumpList ( const List *theList )
+{
+    Node *n;
+
+    ScanList(theList,n,Node)
+    {
+        printf("Node = 0x%lx\n", n);
+    }
+}
+</CODE>
+</PRE>

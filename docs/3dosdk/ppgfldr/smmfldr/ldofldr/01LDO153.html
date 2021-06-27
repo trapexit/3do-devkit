@@ -1,0 +1,34 @@
+<Title>SaveFile</Title>
+<A NAME="XREF27076"><H1>SaveFile </A></H1>
+ Saves a file to NVRAM.<P>
+<H3>Synopsis</H3>
+<CODE>Err SaveFile (char *filename, void *buffer, int32 bufsize, int32 extrabytes)</CODE><P>
+<H3>Description</H3>
+Stores the contents of a buffer to the named file. Currently the file has to be in NVRAM-that is, the filename must start with /NRVRAM/-but if other writable filesystems become available this function will work with them too. <P>
+If the file doesn't already exist, it is created. If it does exist, its contents is completely replaced by the contents of the specified buffer. When the file is created it is pre-sized to bufsize+extrabytes. If the file exists but needs to be expanded to hold the output, it is expanded to the size needed+extrabytes. <P>
+By specifying a non-zero extrabytes parameter you can ensure that the file will grow enough to handle a few more slightly-growing outputs before an expansion has to be done again. This is useful because expanding a file is relatively expensive. If the nature of the data you're saving is that it never grows, use an extrabytes value of zero. Remember that NVRAM is a very limited resource; don't needlessly use large extrabytes values. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>filename
+<DD>Name of the file to save. 
+</DL>
+<DL>
+<DT>buffer
+<DD>Pointer to a buffer full of data to be saved. 
+</DL>
+<DL>
+<DT>bufsize
+<DD>Size of the data in the buffer. 
+</DL>
+<DL>
+<DT>extrabytes
+<DD>Amount of extra space to allocate if and when the file is expanded. 
+</DL>
+<H3>Return Value</H3>
+Returns zero on success or a negative error code. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, blockfile.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO115.html#XREF27218"><CODE>LoadFile</A></CODE><P>

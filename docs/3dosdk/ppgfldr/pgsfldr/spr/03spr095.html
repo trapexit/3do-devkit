@@ -1,0 +1,25 @@
+<Title>Square64</Title>
+<A NAME="XREF16276"><H1>Square64 </A></H1>
+<A NAME="XREF38565"></A> Squares a 64-bit integer.<P>
+<H3>Synopsis</H3>
+<CODE>void Square64( uint64 *p, int64 *m )</CODE><P>
+<H3>Description</H3>
+This function computes the square of a 64-bit integer in the location pointed to by m. The result is deposited in the location pointed to by p. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>p
+<DD>A pointer to the result of the square operation. 
+</DL>
+<DL>
+<DT>m
+<DD>A pointer to the location of the 64-bit integer to be squared. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>Caveats</H3>
+The function does not detect overflows. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr096.html#XREF28120"><CODE>SquareSF16</A>(), <A HREF="./03spr097.html#XREF24889">SquareUF16</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,17 @@
+3dlib example5 documentation : (modified Dec. 8, 1993)
+
+The example5 of the 3dlib was created to demonstrate the
+use of new 3dlib calls in release 1.1. A single world with two cubes 
+is created.
+
+The closest cube is fixed, but is defined as an interpolated meshed-object
+so you can move your eyepoint extremely close. The object will switch over 
+to the mesh at a distance of 2. A 4x4 grid is used, so each parent face turns
+into 16 sub-faces.
+
+The second cube behind and to the right is yet another one of the 
+tumbling cubes, but with a twist. Two faces are now animated using
+the new ScrollCel() routine. The astronaut picture will scroll around and
+zoom in and out.
+
+

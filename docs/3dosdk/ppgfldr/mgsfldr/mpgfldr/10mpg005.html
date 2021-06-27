@@ -1,0 +1,45 @@
+<TITLE>Playing Scores</TITLE>
+<H1><LINK NAME="XREF25854">Playing Scores</LINK></H1><HR>
+<H2>Streaming Audio versus Score Playback</H2>
+<B>Q: </B>  How are most artists implementing sound: using streamed CD music or by using MIDI?<P>
+<B>A:  </B> The artists looks at the advantages of MIDI versus streamed music for their specific application. The advantages of MIDI are that it:<P>
+<UL>
+<LI>More interactive. You can tweak the sequence, mute tracks, and so on
+<LI>Leaves the disc free for other accesses
+<LI>Can incorporate algorithmic elements for infinite variety
+<LI>Takes less disc space than streaming
+</UL>
+On the other hand streamed audio can:<P>
+<UL>
+<LI>Play any music with vocals, animal sounds, whatever
+<LI>Leave DSP pretty much free for sound effects
+<LI>Require less RAM than MIDI
+</UL>
+<H2>Score Files</H2>
+<B>Q: </B> How can I create a 3DO-compatible score file?<P>
+<B>A:</B>  The Music library score playing code reads standard MIDI files as input. You can create MIDI files with almost any commercial sequencer or music notation program. You then need to create a PIMap file that associates MIDI program numbers with 3DO instruments or samples. These are text files that can be created with the MPW editor. They consist of lines with program numbers followed by sample or instrument filenames. (See <A HREF="../mprfldr/02mpr.html#XREF20449">Music Library Calls</A>, for more details.)  <P>
+You can create samples using AudioMedia. Since AIFF is a standard format, there are many sources for sample files. The 3DO content library is a good source. We are also contracting for the development of 3DO instrument libraries. <P>
+The ARIA tool helps you edit PIMaps and play scores.<P>
+<B>Q:  </B> How can I play my score on the 3DO Interactive Multiplayer?<P>
+<B>A: </B> Use the <I>playmf.arm</I> example program, which accepts a MIDI filename and a PIMap filename as input. You can adapt the source code included in the release to your application. <P>
+<B>Note: </B>This code is subject to ongoing development. Check the 3DO InfoServer (BBS) for the latest news.<P>
+<B>Q:  </B> Can I control scores once they're playing?<P>
+<B>A: </B>  Yes. The score should be as tightly coupled to application state as possible. You can make Juggler calls to mute various tracks as they play and to select alternative melodies based on application state. It is also possible to edit sequences while they are playing and to write custom score interpretation functions that are used by the Juggler for special purposes.<P>
+<B>Q:  </B> What about simultaneous score play?<P>
+<B>A:</B>  Simultaneous score play should be transparent under multi-tasking. Just be careful of the limits of the DAC amplitude, which is a maximum of 0x7FFF per left or right channel.<P>
+<B>Q:  </B> How do scores interact with sound effects?<P>
+<B>A:  </B> Scores are just sequences of arbitrary events which could be notes, sound effects, changes to sound effects currently running, graphics, or whatever. You can call <CODE>StartScoreNote()</CODE> to trigger sound effects within the score context. Then sound effects and notes from the score are dynamically allocated from the same pool. You also have full access to the Audio folio when playing scores. <P>
+<H2>MIDI</H2>
+<B>Q:</B>  Can I use MIDI?<P>
+<B>A:  </B>You can play MIDI on the 3DO Station from inside your program. The ARIA tool also makes real-time playback of MIDI files possible. Make the output of your favorite MIDI sequencer the input to ARIA, then play your MIDI files and hear them directly on the 3DO Station. There is no MIDI hardware port on 3DO.<P>
+<B>Q:</B>  Is it possible to modify the characteristics of a MIDI PIMaps instrument. In particular I would like to set up a PIMap entry and somehow connect other instruments to that entry and tweak the knobs. <P>
+<B>A:  </B>The problem is that the contents of the PIMap are Templates, not Instruments. The score player allocates instruments on the fly as required to play the score. It would be hard to intercept those and connect other instruments to them.<P>
+<B>Q: </B> Can MIDI File tracks be polyphonic?<P>
+<B>A:  </B>Yes. Each individual MIDI File track can contain notes on up to 16 MIDI channels. On any given channel, the maximum number of voices is determined by which program sound is playing on that channel. The maximum number of voices for a program is set using the -m option in the PIMap file, or as a parameter to:<P>
+<DL>
+<DD><CODE>SetPIMapEntry(scon,ProgramNum,InsTemplate,MaxVoices,Priority).</CODE><BR>
+</DL>
+In a PIMap, for example:<P>
+<DL>
+<DD><CODE>7 flute.aiff  -m 4    ; allows up to 4 part polyphony on the flute<A NAME="XREF42401"></A></CODE><BR>
+</DL>

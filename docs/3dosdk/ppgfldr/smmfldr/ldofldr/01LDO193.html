@@ -1,0 +1,15 @@
+<Title>TimerServicesVerify</Title>
+<A NAME="XREF31418"><H1>TimerServicesVerify </A></H1>
+ Verifies timer owners.<P>
+<H3>Synopsis</H3>
+<CODE>Err TimerServicesVerify (void)</CODE><P>
+<H3>Description</H3>
+This function causes the TimerServices thread to check all outstanding timers to make sure the tasks and threads that created them are still running. If any tasks or threads have died without releasing their timers, this function releases them. <P>
+This function is intended to be called by the task that started the service thread. If a main task starts the service thread and then spawns other tasks that may use the services, it can call this function after each child task has completed. This function forces a cleanup of any timers a child task left outstanding, which can help prevent the leaking away of resources from the main task's memory/item pools. The cleanup will not affect any timers belonging to child tasks or threads which are still running. <P>
+When the library is compiled with DEBUG=1 in effect, this function reports in the debugger terminal window any cleanup actions it has to take. This can help you identify tasks or threads which are leaving timers outstanding when they terminate. <P>
+<H3>Return Value</H3>
+Zero on success or a negative error code. If some timers had to be released because their owners died, that is NOT considered to be an error. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>

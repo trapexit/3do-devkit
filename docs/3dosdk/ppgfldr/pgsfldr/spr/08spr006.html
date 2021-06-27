@@ -1,0 +1,33 @@
+<Title>DeleteDecompressor</Title>
+<A NAME="XREF23324"><H1>DeleteDecompressor </A></H1>
+<A NAME="XREF15367"></A>Deletes a decompression engine.<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteDecompressor(Decompressor *decomp);</CODE><P>
+<H3>Description</H3>
+Deletes a decompression engine previously created by <CODE>CreateDecompressor()</CODE>. This flushes any data left to be output by the decompressor and generally cleans things up. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>decomp
+<DD>An active decompression handle, as obtained from CreateDecompressor(). Once this call is made, the decompression handle becomes invalid and can no longer be used. 
+</DL>
+<H3>Return Value</H3>
+Returns &gt;= 0 for success, or a negative error code if it fails. Possible error codes include: <P>
+<DL>
+<DT>COMP_ERR_BADPTR
+<DD>An invalid decompression handle was supplied. 
+</DL>
+<DL>
+<DT>COMP_ERR_DATAREMAINS
+<DD>The decompressor thinks it is finished, but there remains extra data in its buffers. This happens when the compressed data is somehow corrupt. 
+</DL>
+<DL>
+<DT>COMP_ERR_DATAMISSING
+<DD>The decompressor thinks that not all of the compressed data was given to be decompressed. This happens when the compressed data is somehow corrupt. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in compression folio V24. <P>
+<H3>Associated Files</H3>
+compression.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./08spr002.html#XREF38875"><CODE>CreateCompressor</A>() </CODE><P>
+</CODE>

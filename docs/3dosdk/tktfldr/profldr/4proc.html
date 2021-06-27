@@ -1,0 +1,82 @@
+<TITLE>Using AppleScript for batch conversion</TITLE>
+<H1>Using AppleScript for batch conversion</H1><HR>
+3DO PostPro supports AppleScript as a batch conversion process utility. 
+This allows you to convert many cels from one format to another quickly 
+and easily. <P>
+<B>Note: </B>AppleScript is a separate program and must be installed on 
+your system. You can purchase it copy from an Apple retail 
+establishment.<P>
+This section first covers how to use a simple script to convert Photoshop 
+files to a specified cel type. Later, it covers how to use a script saved 
+as an application, or <B>droplet</B>, dragging and dropping files onto it 
+for immediate conversion.<P>
+Make sure that you have a copy of Script Editor installed on your system. 
+You can place it in a convenient location. It does not have to be placed 
+in either of the System or extensions folders. Look for the icon shown in 
+Figure 1.<P>
+
+<IMG SRC="Figures/Chap4.art/ScriptEditor.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Script Editor icon.</I><P>
+<H2>What to expect</H2>
+This is not a tutorial on how to write AppleScript scripts, only how to 
+apply the scripting language for use with 3DO PostPro for conversion 
+purposes.<P>
+For information on the AppleScript language itself, see the Apple 
+"AppleScript Guide" manual.<P>
+<H2>How to use a simple AppleScript</H2>
+A basic script for conversion prompts 3DO PostPro to open a file and 
+defines the file type to convert it to, giving specifications such as:<P>
+<UL>
+<LI>bit depth
+<LI>coded or uncoded
+<LI>packed or unpacked
+</UL>
+Figure 2 shows a script that opens a single specified file (name and type) 
+and converts it to a 3DO cel, 16-bit uncoded, and packed. It then 
+instructs to save the converted file in a specific location (folder) under 
+a specific name. Lastly, it instructs to close the original file leaving 
+it in its original condition.<P>
+
+<IMG SRC="Figures/Chap4.art/Script.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Simple AppleScript conversion script.</I><P>
+A slightly more complicated type of script can open many files and convert 
+each to its own cel (or image) type, with different characteristics, if 
+desired. The following illustration is an example of a script that opens 
+several PICT files and converts each to a different 3DO cel type with its 
+own specifications and name. Figure 3 shows an example of this type of 
+script.<P>
+
+<IMG SRC="Figures/Chap4.art/convertCels.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>AppleScript for converting multiple files.</I><P>
+<H2>How to use an AppleScript droplet</H2>
+The more complex and powerful script is one saved as an application, 
+called a droplet. By adding drag and drop capabilities to this 
+application, it gives you the ability to drag and drop files onto the 
+droplet icon for immediate conversion. You can drag and drop files one at 
+a time, or in groups. Figure 4 is an example of an icon for an AppleScript 
+application droplet.<P>
+
+<IMG SRC="Figures/Chap4.art/Droplet.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 4: </B><I>AppleScript droplet icon. </I><P>
+When you drag a group of file icons onto a droplet (application) icon, a 
+message is sent to the application containing a list of the files. 
+AppleScript intercepts the message and runs the script, converting the 
+files.<P>
+Double-clicking on the icon opens a window that gives a brief description 
+of what the application accomplishes. Figure 5 shows the droplet window 
+for the icon in Figure 4.<P>
+
+<IMG SRC="Figures/Chap4.art/ConvertU16.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 5: </B><I>Droplet application window.</I><P>
+This particular droplet application converts Photoshop RGB images to a 
+specified cel type. The script can also be activated (run) by dragging and 
+dropping an alias on to it.<P>
+<P>

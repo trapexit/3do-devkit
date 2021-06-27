@@ -1,0 +1,85 @@
+<Title>Attachment</Title>
+<A NAME="XREF27996"><H1>Attachment</A></H1>
+<A NAME="XREF37774">The binding of a sample or an envelope to an instrument.</A><P>
+<H3>Description</H3>
+ An attachment is the item to binds a sample or an envelope to a particular
+    instrument.<P>
+
+    An Attachment is associated with precisely one Envelope and one Instrument,
+    or one Sample and one Instrument. An Attachment is said to be an Envelope
+    Attachment if it is attached to an Envelope, or a Sample Attachment if
+    attached to a Sample.<P>
+
+    Sample attachments actually come in two flavors: one for input FIFOs and
+    another for output FIFOs, defined by the Hook to which the Sample is
+    attached. Both kinds are considered Sample Attachments and no distinction
+    is made between them.<P>
+
+    A single Instrument can have one Envelope Attachment per Envelope hook and
+    one Sample Attachment per Output FIFO. A single Instrument can have
+    multiple Sample Attachments per Input FIFO, but only one will be selected
+    to be played when the instrument is started. This is useful for creating
+    multi-sample instruments, where the sample selected to be played depends on
+    the pitch to be played.<P>
+
+    A single Sample or Envelope can have multiple Attachments made to it.<P>
+<H3>Folio</H3>
+audio<P>
+<H3>Item Type</H3>
+ AUDIO_ATTACHMENT_NODE<P>
+<H3>Create</H3>
+<A HREF="../../mgsfldr/mprfldr/01mpr007.html#XREF30972"><CODE>AttachSample</A>(), <A HREF="../../mgsfldr/mprfldr/01mpr006.html#XREF15951">AttachEnvelope</A>(), <A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE><P>
+<H3>Delete</H3>
+<A HREF="../../mgsfldr/mprfldr/01mpr033.html#XREF38686"><CODE>DetachSample</A>(), <A HREF="../../mgsfldr/mprfldr/01mpr032.html#XREF27420">DetachEnvelope</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE><P>
+<H3>Modify</H3>
+SetAudioItemInfo()<P>
+<H3>Use</H3>
+<A HREF="../../mgsfldr/mprfldr/01mpr050.html#XREF32325"><CODE>LinkAttachments</A>(), <A HREF="../../mgsfldr/mprfldr/01mpr056.html#XREF24049">MonitorAttachment</A>(), <A HREF="../../mgsfldr/mprfldr/01mpr061.html#XREF21219">ReleaseAttachment</A>(), <A HREF="../../mgsfldr/mprfldr/01mpr072.html#XREF15765">StartAttachment</A>(), <A HREF="../../mgsfldr/mprfldr/01mpr074.html#XREF33554">StopAttachment</A>(), <A HREF="../../mgsfldr/mprfldr/01mpr084.html#XREF16016">WhereAttachment</A>()</CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_CLEAR_FLAGS
+<DD>(uint32) Modify. Set of AF_ATTF_ flags to clear. Clears every flag for which a 1 is set in ta_Arg. See also AF_TAG_SET_FLAGS. The final state of any flag is determined by the last occurrence of that flag in a AF_TAG_SET_FLAGS or AF_TAG_CLEAR_FLAGS. 
+</DL>
+<DL>
+<DT>AF_TAG_ENVELOPE
+<DD>(Item) Create. Envelope Item to attach to Instrument. Exactly one of AF_TAG_ENVELOPE or AF_TAG_SAMPLE must be specified. 
+</DL>
+<DL>
+<DT>AF_TAG_HOOKNAME
+<DD>(const char *) Create. The name of the sample or envelope hook in the instrument to attach to. For sample hooks, defaults to the first one listed for each instrument. For envelopes, defaults to "Env". 
+</DL>
+<DL>
+<DT>AF_TAG_INSTRUMENT
+<DD>(Item) Create. Instrument or Template item to attach envelope or sample to. Must be specified when creating an Attachment. 
+</DL>
+<DL>
+<DT>AF_TAG_SAMPLE
+<DD>(Item) Create. Sample Item to attach to instrument. Exactly one of AF_TAG_ENVELOPE or AF_TAG_SAMPLE must be specified. 
+</DL>
+<DL>
+<DT>AF_TAG_SET_FLAGS
+<DD>(uint32) Create, Modify. Set of AF_ATTF_ flags to set. Sets every flag for which a 1 is set in ta_Arg. See also AF_TAG_CLEAR_FLAGS. The final state of any flag is determined by the last occurrence of that flag in a AF_TAG_SET_FLAGS or AF_TAG_CLEAR_FLAGS. 
+</DL>
+<DL>
+<DT>AF_TAG_START_AT
+<DD>(int32) Create, Modify. Specifies the point at which to start when the attachment is started (with <CODE>StartAttachment()</CODE> or <CODE>StartInstrument()</CODE><CODE>) </CODE>. 
+</DL>
+<DL>
+<DT>For sample attachments, specifies a sample frame number in the sample at which to begin playback. 
+</DL>
+<DL>
+<DT>For envelopes, attachments specifies the segment index at which to start. 
+</DL>
+<DL>
+<DT>AF_TAG_TIME_SCALE
+<DD>(ufrac16) Create. Scales all of the times in the attached envelopes by the supplied ufrac16. Defaults to 1.0. Only applies to envelope attachments. 
+</DL>
+<H3>Flags</H3>
+<DL>
+<DT>AF_ATTF_FATLADYSINGS
+<DD>If set, causes the instrument to stop when the attachment finishes playing. This bit can be used to mark the one or more envelope(s) or sample(s) that are considered to be the determiners of when the instrument is completely done. For envelopes, the default setting for this flag comes from the AF_ENVF_FATLADYSINGS flag. Defaults to cleared for samples. 
+</DL>
+<DL>
+<DT>AF_ATTF_NOAUTOSTART
+<DD>When set, causes <CODE>StartInstrument()</CODE> to not automatically start this attachment. This allows later starting of the attachment by using <CODE>StartAttachment()</CODE>. Defaults to cleared (attachment defaults to starting when instrument is started). 
+</DL>

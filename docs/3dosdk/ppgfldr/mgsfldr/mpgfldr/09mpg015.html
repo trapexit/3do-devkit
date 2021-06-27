@@ -1,0 +1,39 @@
+<TITLE>Function Calls</TITLE>
+<H1>Function Calls</H1><HR>
+These Music library function calls import and play back MIDI score files.<P>
+<H2>MIDI Environment Calls</H2>
+The following calls control setup of the MIDI environment:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/02mpr025.html#XREF42191">CreateScoreContext</A>() </CODE>Allocates a score context.
+<LI><CODE><A HREF="../mprfldr/02mpr026.html#XREF24437">DeleteScoreContext</A>() </CODE>Deletes a score context.
+<LI><CODE><A HREF="../mprfldr/02mpr030.html#XREF26764">InitScoreDynamics</A>() </CODE>Sets up dynamic voice allocation.
+<LI><CODE><A HREF="../mprfldr/02mpr031.html#XREF21919">InitScoreMixer</A>() </CODE>Creates and initializes a mixer instrument for MIDI score playback.
+<LI><CODE><A HREF="../mprfldr/02mpr034.html#XREF17989">LoadPIMap</A>() </CODE>Loads a program-instrument map from a text file.
+<LI><CODE><A HREF="../mprfldr/02mpr044.html#XREF35488">SetPIMapEntry</A>() </CODE>Specifies the instrument to use when a MIDI program change occurs.
+<LI><CODE><A HREF="../mprfldr/02mpr048.html#XREF31982">TermScoreMixer</A>() </CODE>Dispose of mixer created by <CODE> InitScoreMixer().</CODE>
+<LI><CODE><A HREF="../mprfldr/02mpr049.html#XREF11195">UnloadPIMap</A>() </CODE>Unloads instrument templates loaded previously with PIMap file.
+</UL>
+<H2>MIDI Score Calls</H2>
+The following calls are used to handle MIDI scores:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/02mpr032.html#XREF11636">InterpretMIDIEvent</A>() </CODE>Interprets MIDI events within a MIDI object.
+<LI><CODE><A HREF="../mprfldr/02mpr035.html#XREF13527">MFDefineCollection</A>() </CODE>Creates a Juggler collection from a MIDI file image in RAM.
+<LI><CODE><A HREF="../mprfldr/02mpr036.html#XREF40622">MFLoadCollection</A>() </CODE>Loads a set of sequences from a MIDI file.
+<LI><CODE><A HREF="../mprfldr/02mpr037.html#XREF17171">MFLoadSequence</A>() </CODE>Loads a sequence from a MIDI file.
+<LI><CODE><A HREF="../mprfldr/02mpr038.html#XREF15596">MFUnloadCollection</A>() </CODE>Unloads a MIDI collection.
+</UL>
+<H2>MIDI Playback Calls</H2>
+The following calls handle playback of MIDI:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/02mpr021.html#XREF34990">ChangeScoreControl</A>() </CODE>Changes a MIDI control value for a channel.
+<LI><CODE><A HREF="../mprfldr/02mpr023.html#XREF39934">ChangeScoreProgram</A>() </CODE>Changes the MIDI program for a channel.
+<LI><CODE><A HREF="../mprfldr/02mpr033.html#XREF12999">InterpretMIDIMessage</A>() </CODE>Executes a MIDI message.
+<LI><CODE><A HREF="../mprfldr/02mpr039.html#XREF31757">NoteOffIns</A>() </CODE>Turns off a note played by an instrument.
+<LI><CODE><A HREF="../mprfldr/02mpr040.html#XREF34628">NoteOnIns</A>() </CODE>Turns on a note for an instrument.
+<LI><CODE><A HREF="../mprfldr/02mpr042.html#XREF14731">ReleaseScoreNote</A>() </CODE>Releases a MIDI note, uses voice allocation.
+<LI><CODE><A HREF="../mprfldr/02mpr046.html#XREF33263">StartScoreNote</A>() </CODE>Starts a MIDI note, uses voice allocation.
+<LI><CODE><A HREF="../mprfldr/02mpr047.html#XREF12834">StopScoreNote</A>()</CODE> Stop a MIDI note without releasing it. Uses voice allocation.
+</UL>

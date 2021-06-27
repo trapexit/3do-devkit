@@ -1,0 +1,73 @@
+<TITLE>Source organisation</TITLE>
+<H1><LINK NAME="XREF16954">Source organisation</LINK></H1><HR>
+The supplied source structure holds the following directories:<P>
+<PRE>
+--------------------------------------------------------
+Directory     |Description                              
+--------------------------------------------------------
+stdh          |Contains the ANSI header files (which    
+              |should require no change in              
+              |retargetting). These files are also built
+              |into armcc.                              
+--------------------------------------------------------
+util          |Contains the source of the makemake      
+              |utility written in classic C.            
+--------------------------------------------------------
+semi          |Contains targetting code for the         
+              |semi-hosted C Library which targets the  
+              |debug monitor supported by:the           
+              |ARMulator;ARM  Platform Independent      
+              |Evaluation (PIE) card for the ARM60;     
+              |together with SunOS-hosted make          
+              |definitions and library build            
+              |options.(The library is called           
+              |semi-hosted because many functions such  
+              |as file I/O are implemented on the host  
+              |computer via the host's C library).In    
+              |principle, a targetting of the library   
+              |requires both a target directory and a   
+              |host directory; however, where there is  
+              |only one hosting, it is convenient to    
+              |amalgamate the two directories.          
+--------------------------------------------------------
+riscos        |Contains targetting code for Acorn's RISC
+              |OS operating system for its ARM-based    
+              |Archimedes computers, together with      
+              |SunOS-hosted make information.           
+--------------------------------------------------------
+fpe340        |Contains object code of the Floating     
+              |Point Emulator (for which source code is 
+              |not provided).and at the top level:      
+--------------------------------------------------------
+*.c, *.h, *.s |Contain target-independent source code.  
+--------------------------------------------------------
+</PRE>
+<P>
+The target-independent code is mostly grouped into one file per section of the ANSI library (though with exceptions: <I>stdlib</I> is implemented partly in alloc.c and partly in stdlib.c), with use of conditional compilation or assembly to enable construction of a fine-grain library (approximately one object file per function). The ARMulator-targetted code is grouped similarly.<P>
+The first stage in constructing a makefile for a targetting of the library uses the utility program <I>makemake</I>. This allows description of library variants in a host-independent manner and permits building the library on a host which severely limits the number of files in a directory.<P>
+The <I>makemake</I> utility takes as input the files <I>makedefs</I> from the host directory and <I>sources</I> and <I>options</I> from the target directory (see below for a description of their content), and produces as output a makefile called <I>Makefile </I>in the host directory (often, the host directory and the target directory will be the same).<P>
+The arguments to <I>makemake</I> are the name of the host directory and, if distinct, the name of the target directory.<P>
+In order to retarget the library, at least the following files must be provided:<P>
+<CODE>makedefs</CODE> (in the host directory)<P>
+Host-dependent definitions of tools, paths, options etc. to include in the constructed Makefile for the library. Use the file <I>makedefs</I> from the<I> </I><I>semi</I> directory as a template.<P>
+<CODE>options</CODE> (in the target directory)<P>
+Library variant selection (a number of lines, each of the form option_name = value). See <A HREF="./2arrc.html#XREF24503">Variant selection</A>. Use the file <I>options</I> from the <I>semi</I> directory as a template.<P>
+<CODE>sources</CODE> (in the target directory)<P>
+List of objects to include in the target library, and sources from which they are to be constructed. Each line (other than those controlling variant selection) has one of the forms:<P>
+<UL>
+<LI>object_name source_name
+<LI>object_name source_name [compiler_options]
+</UL>
+Where object_name lacks the .o extension.  Variant selection involves lines of the form:<P>
+<UL>
+<LI>#if <I>expression</I>
+<LI>#elif <I>expression</I>
+<LI>#else
+<LI>#end
+</UL>
+with the obvious significance. Expression primaries are option_name = value and option_name != value, and expression operators are &amp;&amp; and || (of equal precedence, note). Use the file <I>sources</I> from the <I>semi</I> subdirectory as a template, modifying it as needed.<P>
+<CODE>hostsys.h</CODE> (in the target directory)<P>
+Defines the functions which must be supplied for a full re-targetting of the library, and also defines certain target-dependent values required by target-independent code. Use the file <I>hostsys.h</I> from the <I>semi</I> subdirectory as a template, changing the values in it appropriately (see <A HREF="./2arrc.html#XREF19991">Retargetting the library</A> and<I> </I><A HREF="./2arrd.html#XREF35200">Details of target-dependent code</A>).<P>
+<CODE>config.h</CODE> (in the target directory)<P>
+Contains the hardware description. The version of this file in the <I>semi</I> directory will suffice for a little-endian ARM with mixed-endian doubles; a big-endian ARM needs BYTESEX_ODD defined (and BYTESEX_EVEN not). Truly little-endian floating-point values are not supported by the floating-point emulator.<P>
+Of course, the files containing the target-specific implementation code are also provided in the target directory.<P>

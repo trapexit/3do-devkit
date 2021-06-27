@@ -1,0 +1,273 @@
+<TITLE>Playing a stream</TITLE>
+<H1><LINK NAME="XREF14349">Playing a stream</LINK></H1><HR>
+To play a stream file on the 3DO system, an application has to perform the following actions: <P>
+
+<UL>
+<LI><A HREF="#XREF30551">Creating a message port and a message</A>
+<LI><A HREF="#XREF29508">Allocating data buffers</A>
+<LI><A HREF="#XREF25577">Launching the required threads</A> 
+<LI>Starting the streaming process
+</UL>
+The following sections look at each of these activities in some detail, using examples from the sample code provided on the Toolkit 1.5 CD-ROM. <P>
+<A NAME="XREF30551"><H1>Creating a message port and a message</A></H1>
+The different threads that are part of a data streaming application communicate using messages. The application therefore has to create a message port and a message.This section first looks at sample code for creating a message port and a message, then discusses using messages in some more detail.<P>
+<H3>About messages</H3>
+In a multitasking system, the different tasks must communicate to each other when they are processing data to make sure two threads don't attempt to work with the same data simultaneously. The 3DO DataStreamer uses messages for this kind of locking because they offer queueing in addition to locking. <P>
+Using messages is discussed in some detail in the <I>3DO Portfolio System Programmer's Guide</I>. <P>
+<H2>Example for setting up a message port</H2>
+Example 1 below  is taken from <I>PlayCPakStream.c</I>, which is part of the <I>NuPlayer</I> application that plays back a Cinepak stream. Note how both setup and cleanup have to be handled. <P>
+<B>Example 1: </B><I>Creating and removing a message port and a message.</I><P>
+<CODE>
+<PRE>
+/* InitCPakPlayerFromStreamHeader() creates a message port and one 
+    * message item to communicate with the data streamer.
+        */
+    ctx-&gt;messagePort = NewMsgPort( NULL);
+    if ( ctx-&gt;messagePort &lt; 0 )
+        goto CLEANUP;
+
+
+    ctx-&gt;messageItem = CreateMsgItem( ctx-&gt;messagePort );
+    if ( ctx-&gt;messageItem &lt; 0 )
+        goto CLEANUP;
+
+
+    ctx-&gt;endOfStreamMessageItem = 
+            CreateMsgItem( ctx-&gt;messagePort );
+    if ( ctx-&gt;endOfStreamMessageItem &lt; 0 )
+        goto CLEANUP;
+
+/*Here's the code from DismantlePlayer(), 
+    * which is called by CLEANUP, 
+    * that removes the items created above. 
+    */
+    if ( ctx-&gt;messageItem )                RemoveMsgItem( ctx-&gt;messageItem );
+    if ( ctx-&gt;endOfStreamMessageItem )
+        RemoveMsgItem( ctx-&gt;endOfStreamMessageItem );
+    if ( ctx-&gt;messagePort )                RemoveMsgPort( ctx-&gt;messagePort );
+</CODE>
+</PRE>
+<H2>The message-sending mechanism</H2>
+The streamer thread uses messages to communicate with the data acquisition thread and subscriber thread. A common message header is used as a preamble to all messages sent by or sent to the streamer thread. The values of the message header communicate the status of the thread that sends it to the thread that receives it. The message header is defined in <I>DataStream.h</I> as follows:<P>
+<B>Example 2: </B><I>Message header.</I><P>
+<CODE>
+<PRE>
+/* The following preamble is used for all types of messages sent
+ * by the streamer.   
+ */
+#define     DS_MSG_HEADER            \
+    long     whatToDo;                    /* opcode determining msg contents */         
+    Item     msgItem;                    /* msg item for sending this buffer */    
+    void *    privatePtr;                    /* ptr to sender's private data */                    
+    void *    link;                    /* user-defined, for linking into lists*/
+</CODE>
+</PRE>
+The following table shows the fields in the common message header.<P>
+<PRE>
+<B>Table 1: </B><I> Message header fields.</I>
+--------------------------------------------------------
+Field       |Description                                
+--------------------------------------------------------
+whatToDo    |Specifies the type of request being made by
+            |the message sender. Its value typically    
+            |appears in a switch() statement and is used
+            |to access various union fields in the      
+            |remainder of the message structure.        
+--------------------------------------------------------
+msgItem     |System item number that sends message data 
+            |to a receiver. It is also used by message  
+            |receiver when calling ReplyMsg() to signal 
+            |that the requested operation is complete.  
+--------------------------------------------------------
+privatePtr  |Stores a pointer to a private data         
+            |structure that performs post-processing    
+            |after the receiver calls ReplyMsg().       
+--------------------------------------------------------
+link        |General-purpose linking field to form      
+            |queues of messages received from the       
+            |streamer thread. Other threads can use it  
+            |to queue messages.                         
+--------------------------------------------------------
+</PRE>
+<P>
+<H3>Using ReplyMsg()</H3>
+When a data acquisition thread or subscriber thread completes a process, it must inform the library using the system routine <CODE>ReplyMsg()</CODE>. This is necessary because such completions can trigger other actions. For example, when the data acquisition thread replies to a request to fill a buffer, the reply adds the filled buffer to a list of filled buffers that will subsequently be parsed and their data distributed to the appropriate subscriber thread. <P>
+When a subscriber thread replies to a message that announces the availability of a new data chunk, the reply signals that the subscriber has finished using that data. Once all subscribers using data in a buffer have signaled that they are finished with their portions of the buffer, the buffer can be reused.<P>
+<A NAME="XREF29508"><H1>Allocating data buffers</A></H1>
+This section looks at sample code that creates data buffers used by an application using the DataStreamer. It also briefly looks at some heuristics for deciding on buffer size. <P>
+<H2>Example for creating a buffer list </H2>
+Example 3 below from <I>PrepareStream.c</I> which is part of the NuPlayer application creates a buffer list. A program that wants to use NuPlayer can specify the number of stream buffers and the streamblock size directly, or extract it from the stream header of the stream file. The stream header was written based on information in the Weaver script. This is illustrated in the following example.<P>
+<B>Example 3: </B><I>Creating a buffer list.</I><P>
+<CODE>
+<PRE>
+/***********************************************************************************
+ * Routine to allocate and initialize a buffer list for use with the streamer
+***********************************************************************************/
+DSDataBufPtr     CreateBufferList( long numBuffers, long bufferSize )
+    {
+#    define            ROUND_TO_LONG(x)    ((x + 3) &amp; ~3)
+    DSDataBufPtr     bp;
+    DSDataBufPtr     firstBp;
+    long            totalBufferSpace;
+    long            actualEntrySize;
+    long            bufferNum;
+    
+    actualEntrySize = sizeof(DSDataBuf) + ROUND_TO_LONG( bufferSize );
+    totalBufferSpace = numBuffers * actualEntrySize;
+
+    /* Try to allocate the needed memory */
+    firstBp = (DSDataBufPtr) NewPtr( totalBufferSpace, MEMTYPE_ANY );
+    if ( firstBp == NULL )
+        return NULL;
+
+    /* Loop to take the big buffer and split it into "N" buffers
+     * of size "bufferSize", linked together.
+     */
+    for ( bp = firstBp, bufferNum = 0; bufferNum &lt; (numBuffers - 1); bufferNum++ )
+        {
+        bp-&gt;next            = (DSDataBufPtr) ( ((char *) bp) + actualEntrySize );
+        bp-&gt;permanentNext     = bp-&gt;next;
+
+        /* Advance to point to the next entry */
+        bp = bp-&gt;next;
+        }
+
+    /* Make last entry's forward link point to nil */
+    bp-&gt;next = NULL;
+    bp-&gt;permanentNext = NULL;
+
+    /* Return a pointer to the first buffer in the list 
+     */
+    return firstBp;
+    }
+</CODE>
+</PRE>
+<B>Example 4: </B><I>Using stream header information with CreateBufferList().</I><P>
+<CODE>
+<PRE>
+/* Allocate the stream buffers and build the linked list of
+     * buffers that are input to the streamer.
+     */
+    ctx-&gt;bufferList = 
+        CreateBufferList( ctx-&gt;hdr.streamBuffers, ctx-&gt;hdr.streamBlockSize );
+    if ( ctx-&gt;bufferList == NULL )
+        return kPSMemFullErr;
+</CODE>
+</PRE>
+<H2>Deciding on buffer size</H2>
+Each buffer you allocate must be large enough to hold one streamblock. How large the buffer should be depends on what your application does:<P>
+<UL>
+<LI>If you have a simple playback and need a high data rate, use large blocks and buffers. 
+<LI>If you expect lots of branching, use small buffers. This slows down playback somewhat since the stream file contains more filler. It is, however, easier for the program to jump to a different point, for example, when the end-user makes a selection in a title. 
+</UL>
+<H3>For more information</H3>
+See <A HREF="./dsg5frst.html#XREF33525">Debugging and Optimization</A><P>
+<A NAME="XREF25577"><H1>Launching the required threads</A></H1>
+Before a program can use the DataStreamer, it has to initialize the data acquisition, streamer, and subscriber threads, discussed in detail in <A HREF="./3dsga.html#XREF32484">DataStreamer threads and data flow</A>. This section looks at some sample code for initializing the threads.<P>
+<H2>Initializing and connecting data acquisition and streamer threads</H2>
+Initialization of the data acquisition and streamer threads consists of three steps: <P>
+<OL>
+<LI>Call <CODE>InitDataAcq()</CODE> and <CODE>InitDataStreaming()</CODE> to initialize the memory pools for the threads.
+<p>
+<LI>Call <CODE>NewDataAcq()</CODE> and <CODE>NewDataStream()</CODE> to create the specific thread. The prototype illustrates which information you have to specify: 
+<p>
+<DL>
+<DD><CODE>int32 NewDataStream (DSStreamCBPtr *pCtx, void* bufferListPtr, long bufferSize, long deltaPriority, long numSubsMsgs)<BR>
+int32 NewDataAcq (AcqContextPtr *pCtx, char* fileName, long deltaPriority)</CODE><BR>
+</DL>
+<p>
+<p>When the threads are created, information about them, such as buffer size or streamblock size can either be supplied directly or be extracted from the stream header, as in the example below. 
+<p>
+
+<LI>Finally, call <CODE>DSConnect()</CODE> to connect the streamer and the data acquisition thread. 
+</OL>
+<B>Example 5: </B><I>Initializing data acquisition and streamer threads.</I><P>
+<CODE>
+<PRE>
+/* Initialize data acquisition for use with 1 file */
+    status = InitDataAcq( 1 );
+    if ( status != 0 )
+        goto CLEANUP;
+
+/* Initialize data acquisition for the specified file */
+    status = NewDataAcq( &amp;ctx-&gt;acqContext, streamFileName,
+                                 ctx-&gt;hdr.dataAcqDeltaPri );
+    if ( status != 0 )
+        goto CLEANUP;
+
+    /* Initialize for 1 streamer thread */
+    status = InitDataStreaming( 1 );
+    if ( status != 0 )
+        goto CLEANUP;
+
+status = NewDataStream( &amp;ctx-&gt;streamCBPtr,         /* output: stream control block ptr */
+                    ctx-&gt;bufferList,                                 /* pointer to buffer list */
+                    ctx-&gt;hdr.streamBlockSize,                                 /* size of each buffer */
+                    ctx-&gt;hdr.streamerDeltaPri,                                /* streamer thread rel. priority */
+                    ctx-&gt;hdr.numSubsMsgs );                                /* number of subscriber messages */
+    if ( status != 0 )
+        goto CLEANUP;
+
+/* Connect the stream to its data supplier */
+    status = DSConnect( ctx-&gt;messageItem, NULL, ctx-&gt;streamCBPtr, 
+                            ctx-&gt;acqContext-&gt;requestPort );
+    CHECK_DS_RESULT( "DSConnect()", status );
+    if ( status != 0 )
+        goto CLEANUP;
+
+</CODE>
+</PRE>
+<H2>Initializing and connecting subscriber threads</H2>
+Example 6 shows how to initialize and set up subscriber threads. The program that wants to use the DataStreamer has to loop through all subscriber in the subscriber list found in the header of the stream file. That list is generated by the Weaver based on the subscribers used in the Weaver script. For each subscriber, the program:<P>
+<UL>
+<LI>Initializes the subscriber and creates the thread.
+<LI>Calls <CODE>DSSubscribe()</CODE> to connect the subscriber thread and the streamer thread. 
+<LI>Performs other subscriber-specific setup as needed. 
+</UL>
+Example 6 provides an example from the NuPlayer application for launching a Cinepack subscriber. <P>
+<B>Example 6: </B><I>Preparing subscriber threads.</I><P>
+<CODE>
+<PRE>
+/* Loop through the subscriber descriptor table and initialize all subscribers      */
+
+    for ( subscriberIndex = 0; 
+        ctx-&gt;hdr.subscriberList[ subscriberIndex ].subscriberType != 0;
+        subscriberIndex++ )
+        {
+        subsPtr = ctx-&gt;hdr.subscriberList + subscriberIndex;
+        
+        switch ( subsPtr-&gt;subscriberType )
+            {
+            case FILM_CHUNK_TYPE:
+                status = InitCPakSubscriber();
+                CHECK_DS_RESULT( "InitCPakSubscriber", status );
+                if ( status != 0 )
+                    goto CLEANUP;
+
+                status = NewCPakSubscriber( &amp;ctx-&gt;cpakContextPtr, 1, 
+                            subsPtr-&gt;deltaPriority );
+                CHECK_DS_RESULT( "NewCPakSubscriber", status );
+                if ( status != 0 )
+                    goto CLEANUP;
+
+                status = DSSubscribe( ctx-&gt;messageItem,                                                    // control msg item
+                            NULL,                                        // synchronous call
+                            ctx-&gt;streamCBPtr,                                     // stream context block
+                            (DSDataType) FILM_CHUNK_TYPE,                                     // subscriber data type
+                            ctx-&gt;cpakContextPtr-&gt;requestPort );    
+                                                                            // subscriber message port
+                CHECK_DS_RESULT( "DSSubscribe for cinepak", status );
+                if ( status != 0 )
+                    goto CLEANUP;
+
+                status = InitCPakCel( ctx-&gt;streamCBPtr,        // Needed for DSGetClock in sub
+                            ctx-&gt;cpakContextPtr,                                // The subscriber's context
+                            &amp;ctx-&gt;cpakChannelPtr,                                // The channel's context
+                            0,                                // The channel number
+                            true );                                // true = flush on DS synch msg 
+                CHECK_DS_RESULT( "InitCPakCel", status );
+                if ( status != 0 )
+                    goto CLEANUP;
+                break;
+</CODE>
+</PRE>

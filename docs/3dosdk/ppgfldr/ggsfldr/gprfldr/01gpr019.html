@@ -1,0 +1,29 @@
+<Title>DisplayScreen </Title>
+<A NAME="XREF19909"><H1>DisplayScreen </A></H1>
+<A NAME="XREF40525"> Displays the bitmap(s) of the specified screen (or screens).</A><P>
+<H3>Synopsis</H3>
+<CODE>Err DisplayScreen (Item screenItem0,Item screenItem1)</CODE><P>
+<H3>Description</H3>
+This call displays the bitmap(s) of the specified screen (or screens). The screenItem0 argument specifies the screen to be added to the display. For a stereoscopic or interlaced display, the screenItem1 argument can specify a second screen structure to be displayed in the odd field of the video frame. <P>
+The second argument can be NULL, or the same as the first, to specify a simple single-screen display. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screenItem0
+<DD>Item number of the screen that is to be added to the display. 
+</DL>
+<DL>
+<DT>screenItem1
+<DD>Optional item number of the screen that is to be added to the second (the odd) field of the display frame. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+GRAFERR_NOTOWNER is returned if the screen item(s) specified are not owned by the current task and have not been opened with <CODE>OpenItem()</CODE> calls. <P>
+GRAFERR_SGNOTINUSE is returned if <CODE>AddScreenGroup()</CODE> has not been called for the screenGroup containing the specified screen(s). <P>
+GRAFERR_MIXEDSCREENS is returned if the specified screen items belong to different screenGroups. <P>
+<H3>Implementation</H3>
+Folio call implemented in the Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr001.html#XREF27310"><CODE>AddScreenGroup</A>(), <A HREF="./01gpr046.html#XREF39861">ModifyVDL</A>(), <A HREF="./01gpr067.html#XREF20050">SetVDL</A>(), <A HREF="./01gpr070.html#XREF12966">SubmitVDL</A>() </CODE><P>
+</CODE>

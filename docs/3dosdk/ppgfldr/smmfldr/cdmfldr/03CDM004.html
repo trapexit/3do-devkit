@@ -1,0 +1,233 @@
+<TITLE>Preparing an Optimized CD-ROM Image</TITLE>
+<H1><LINK NAME="XREF19716">Preparing an Optimized CD-ROM 
+Image</LINK></H1><HR>
+Preparing an optimized CD-ROM image starts with creating a basic image, 
+described in <A HREF="./03CDM003.html#XREF29116">Preparing Simple 
+cdrom.image Files</A>. The following sections discuss the additional steps 
+needed to produce an optimized image, which include:<P>
+
+<UL>
+<LI><A HREF="#XREF11392">Creating the Base Image for Information 
+Collection</A>
+<LI><A HREF="#XREF19344">Preparing the Debugger for Information 
+Collection</A>
+<LI><A HREF="#XREF12385">Running Your Title to Collect Access 
+Information</A>
+<LI><A HREF="#XREF34748">Running the Layout Tool to Create an Optimized 
+Image</A> 
+</UL>
+<A NAME="XREF11392"><H2>Creating the Base Image for Information 
+Collection</A></H2>
+The base image for information collection is identical to the simple image 
+discussed above with the exception of the label field, which should be set 
+to remote. To create the base image, follow these steps: <P>
+<OL>
+<LI>Edit the cdrom.tcl file using the settings in <A 
+HREF="./03CDM003.html#XREF29116">Preparing Simple cdrom.image Files</A>, 
+but use remote instead of cdrom for the label. 
+
+<LI>Run the layout tool again, as described in <A 
+HREF="./03CDM003.html#XREF13372">Creating the Simple Image</A>.
+</OL>
+<A NAME="XREF19344"><H2>Preparing the Debugger for Information 
+Collection</A></H2>
+The optimizing layout tool requires information about when and how often 
+the different files your title consists of are accessed when someone uses 
+the title. <P>
+To set up the Debugger to collect file access information, follow these 
+steps: <P>
+<OL>
+<LI>Put the Debugger Preferences file into the trash. 
+<p>
+<LI>Launch the 3DO Debugger. 
+<p>
+<LI>When prompted for a script to execute, click Cancel. 
+<p>
+<LI>From the Edit menu, choose Preferences and do the following: 
+<p>
+<UL>
+<LI>Make sure that RAM is set to Standard
+<LI>Check the Set Initial Breakpoints 
+<LI>Check Set CD Emulation
+<LI>Uncheck Auto-Launch Script
+<LI>Uncheck Serial Port Enable
+</UL><p>
+
+<LI>Make sure that there is no CD-ROM disc in the 3DO Station drive and 
+that there is only one <I>cdrom.image</I> file on your Macintosh.
+<p>
+<LI>From the File menu, choose Directories and then choose Setup, and set 
+your current data directory to the location of the <I>cdrom.image</I> 
+file. 
+<p>
+<LI>With the Debugger running, choose Launch from the Target menu and then 
+select the boot script.
+<p>
+<p>Since you have turned on Set Initial Breakpoints, the application 
+should stop at the first instruction.
+<p>
+
+<LI>From the File menu, choose Start CD Access Log and save the 
+<I>CD_Access.Log</I> file into your <I>/cdrommaster/_version_</I> folder, 
+where <I>_version_</I> is the most recent version of the operating system.
+<p>
+<LI>From the Execution menu, choose Go to run the boot script.
+<p>
+<p>The file system mounts the <I>cdrom.image</I> file under the name 
+<I>/remote</I>. You are informed that because this file system was 
+mounted, the Macintosh <I>remote</I> folder is not mounted. All of the 
+system folios are launched from the <I>cdrom.image</I> file. The shell 
+automatically starts up your LaunchMe application.
+<p>
+</OL>
+<A NAME="XREF12385"><H2>Running Your Title to Collect Access 
+Information</A></H2>
+You are now set up for collecting the file access information required by 
+the optimized layout tool. This section steps through running your title 
+from the CD-ROM image file to collect the information.<P>
+<B>Note: </B>The person collecting file access information should be 
+thoroughly familiar with the title. <P>
+With the 3DO Debugger running, follow these steps: <P>
+<OL>
+<LI>From the File menu, choose Special Mode. 
+<p>
+<p>This puts the Debugger into special mode to make CD-ROM emulation as 
+fast as possible. 
+<p>
+<p>
+<LI>With all settings for the Debugger in place, go through your title as 
+follows: 
+<UL>
+<p>
+<LI>Go through the title's startup sequence. 
+<p>
+<LI>At each major user-interaction point, for example, each time a menu 
+lets the user select a game level, pause for a second or so before making 
+a selection.
+<p>
+<LI>Enter each major branch of the title only once if possible, so that 
+file access information for that branch can be recorded. 
+</UL><BR>
+<p>
+<UL>
+<LI>The goal is to "exercise" the set of files used by each level, so that 
+the optimizer can observe which files are used together.
+</UL>
+<p>
+<LI>After "touching" each level or branch in the title, press the Stop 
+button on the control pad to exit the program. 
+<p>
+<LI>Click the Macintosh mouse to terminate Debugger special mode.
+<p>
+<LI>From the File menu, select Stop CD Access Log.
+<p>
+<LI>Quit the Debugger.
+</OL>
+<A NAME="XREF34748"><H2>Running the Layout Tool to Create an Optimized 
+Image</A></H2>
+To create an optimized CD-ROM image file, you have to make the CD access 
+log available to the <I>cdrom.tcl</I> script file that you run to create a 
+CD-ROM image. <P>
+This section shows how to set up all required files and how to run the 
+layout tool again to create the optimized image.<P>
+<A NAME="XREF12580"><H3>Editing the cdrom.tcl File for the Optimized 
+Image</A></H3>
+To edit the <I>cdrom.tcl</I> file for the optimized image, use the 
+settings in the table below, which differ from the settings for the 
+nonoptimized image you used earlier:<P>
+<PRE>
+<B>Table 1: </B><I> Variable settings for optimized image creation.</I>
+--------------------------------------------------------
+Variable  |Setting                                      
+--------------------------------------------------------
+label     |cd-rom (the default). Make sure the label is 
+          |NOT set to remote at this stage or you won't 
+          |be able to debug the optimized image.        
+--------------------------------------------------------
+megabytes |Number of megabytes of CD-ROM space your     
+          |software will occupy. Larger is better; the  
+          |more storage space you allocate (in excess of
+          |the amount actually needed for one copy of   
+          |each file), the more room the optimizer and  
+          |Catapult have to make multiple avatars of    
+          |your title's files, and the more effective   
+          |the optimization and clustering will be.     
+--------------------------------------------------------
+catapultme|Set catapultmegabytes to the number of       
+gabytes   |megabytes of CD-ROM space that you wish to   
+          |make available for the Catapult file. If your
+          |application already uses most of the space on
+          |the CD-ROM, you can make this a fairly small 
+          |number (Catapult files as small as 4 or 5 MB 
+          |can make a big difference in startup speed). 
+          |If your application has lots of room to      
+          |spare, request a larger Catapult file (20 to 
+          |30 MB or more).
+          |
+          |Since the actual benefit of Catapult varies 
+          |greatly depending  on the title, consider 
+          |making several images, one of them with 
+          |catapultmegabytes commented out.                                      
+--------------------------------------------------------
+</PRE>
+<P>
+If you used Catapult, you can exclude certain files or entire directories, from being included 
+in the Catapult file (see <A 
+HREF="./03CDM001.html#XREF41440">Catapult</A>). This can make sense for 
+Cinepak or other full-motion-video files: they take up a lot of space in 
+the Catapult file and usually don't benefit much from being catapulted. To 
+do this, include a statement using one of the following formats in your 
+<I>cdrom.tcl</I> file: <P>
+<CODE>
+<PRE>
+excludecatapult "foo/bar/baz.cinepak" 
+excludecatapult "foo/bar/"
+</CODE>
+</PRE>
+The <CODE>excludecatapult</CODE> command accepts a single parameter, the 
+Portfolio pathname to a file or directory. In either case, the path is 
+relative to the root directory of the file system being created. The first 
+format identifies a specific file which is to be excluded from the 
+Catapult file. The second format (with a trailing "/") identifies a 
+directory, and specifies that all files found in that directory are to be 
+excluded from the Catapult file. <P>
+<H3>Dealing with Large Files</H3>
+If you have a large Cinepak file, or any other large file which is 
+"streamed" into memory at high speed, you should do one of two things: <P>
+<UL>
+<LI><I>Either</I> exclude the file from the Catapult file using the 
+<CODE>excludecatapult</CODE> command
+<LI><I>or</I> make sure that the entire file is included in the Catapult 
+file. 
+</UL>
+You need to make sure you don't have half of a file in the Catapult file 
+and half of it excluded. This can occur if during your test-and-exercise 
+run you play halfway through the file and then use the control pad to skip 
+the rest of the introductory sequence. In this case, there may be an extra 
+seek when the catapulted CD-ROM image accesses the file. It reads the 
+first portion of the data from the Catapult file, but is forced to find an 
+avatar of the file itself to get the remainder. <P>
+<H3>Starting the Image Creation Process</H3>
+After you've run the title with CD Access Log on, you should find a 
+<I>filemap.out</I> file and a <I>CD_Access.log</I> file in the 
+<I>/cdrommaster/_version</I> folder. <P>
+<OL>
+<LI>Rename the <I>filemap.out</I> file to <I>filemap.in</I>.
+<p>
+<LI>Make sure the <I>CD_Access.log</I> file resides in the 
+<I>/cdrommaster/_version </I>folder.
+<p>
+<LI>Delete (or rename and move) the old copy of the <I>cdrom.image</I> 
+file in the 
+<I>/cdrommaster/_version</I> folder.
+<p>
+<LI>Run the layout tool program again, using the newly edited script. The 
+<I>CD.Access.log</I> and <I>filemap.in</I> files are automatically used as 
+input. 
+<p>
+<p>The tool goes through several stages of file access analysis: 
+clustering, file organization, cluster placement, and avatar assignment. 
+It then writes a new <I>cdrom.image</I> file, which is optimized for the 
+access performed while testing the first <I>cdrom.image </I>file. 
+<p>
+</OL>

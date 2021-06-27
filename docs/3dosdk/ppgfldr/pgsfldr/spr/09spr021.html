@@ -1,0 +1,39 @@
+<Title>Tuning </Title>
+<A NAME="XREF38127"></A><A NAME="XREF17795"><H1>Tuning </A></H1>
+<A NAME="XREF33859"></A> An item that contains information for tuning an instrument.<P>
+<H3>Description</H3>
+A tuning item contains information for converting MIDI pitch numbers to frequency for an instrument or template. The information includes an array of frequencies, and 32-bit integer values indicating the number of pitches, notes in an octave, and the lowest pitch for the tuning frequency. See the <A HREF="../../mgsfldr/mprfldr/01mpr022.html#XREF16056">CreateTuning</A><CODE>()</CODE> call in the "Audio folio Calls" chapter in this manual for more information. <P>
+<H3>Folio</H3>
+audio <P>
+<H3>Item Type</H3>
+AUDIO_TUNING_NODE <P>
+<H3>Create</H3>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr022.html#XREF16056">CreateTuning</A>()  </CODE><P>
+<H3>Delete</H3>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr031.html#XREF33299">DeleteTuning</A>()  </CODE><P>
+<H3>Query</H3>
+None <P>
+<H3>Modify</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr067.html#XREF20838">SetAudioItemInfo</A>()  </CODE><P>
+<H3>Use</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr077.html#XREF36934">TuneInsTemplate</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr078.html#XREF33775">TuneInstrument</A>()  </CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_ADDRESS
+<DD>(const ufrac16 *) Create, Modify. Array of frequencies in 16.16 Hz to be used as a lookup table. 
+</DL>
+<DL>
+<DT>AF_TAG_BASENOTE
+<DD>(uint32) Create, Modify. MIDI note number that should be given the first frequency in the frequency array in the range of 0..127. 
+</DL>
+<DL>
+<DT>AF_TAG_FRAMES
+<DD>(uint32) Create, Modify. Number of frequencies in array pointed to by AF_TAG_ADDRESS. This value must be &gt;= NotesPerOctave. 
+</DL>
+<DL>
+<DT>AF_TAG_NOTESPEROCTAVE
+<DD>(uint32) Create, Modify. Number of notes per octave. This is used to determine where in the frequency array to look for notes that fall outside the range of BaseNote..BaseNote+Frames-1. This value must be &lt;= Frames. 
+</DL>

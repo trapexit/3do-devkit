@@ -1,0 +1,68 @@
+<TITLE>Creating coded cels with the 3DO 
+CelWriter</TITLE>
+<H1><LINK NAME="XREF10727">Creating coded cels with the 3DO CelWriter</LINK></H1><HR>
+There are two tools for saving source art as a coded cel: <P>
+<UL>
+<LI>Use the CelWriter to save source art as a 6-bit, 4-bit, 2-bit, or 
+1-bit coded cel (described below). 
+<LI>Use the Coded-8 CelWriter to save source art as an 8-bit coded cel 
+(described in "<A HREF="./2plud.html#XREF42159">Creating cels with the 3DO 
+Coded-8 CelWriter</A>").
+</UL>
+<H2>How to create a coded cel</H2>
+Creating a coded cel usually involves two steps, discussed in this 
+section:<P>
+
+<UL>
+<LI><A HREF="#XREF22730">Indexing the color in Photoshop</A>-only 
+necessary if the source art has more colors than the cel will have.
+<LI><A HREF="#XREF38379">Saving the cel</A>.
+</UL>
+<A NAME="XREF22730"><H3>Indexing the color in Photoshop</A></H3>
+To index the color in Photoshop, follow these steps:<P>
+<OL>
+<LI>From the Mode menu in Photoshop, choose Indexed Color. 
+<p>
+<LI>Select the bits per pixel you want to save:
+<p>
+<UL>
+<LI>For 16 or 6 bits per pixel, choose 5 bits per pixel. 
+<LI>For 4 bits per pixel, choose 4 bits per pixel.
+<LI>For 2 bits per pixel, type 4 into the Other field of the dialog. 
+<LI>For 1-bit coded cels, type 2 into the Other field. 
+</UL>
+<p>
+<LI>Select a custom palette and a diffusion dither. When you click OK, a 
+Color Table dialog appears. 
+<p>
+<LI>Click the Load button and use the file selection dialog to specify a 
+3DO-supplied color table. Note the table you use: You'll have to adjust 
+control settings accordingly later. 
+<p>
+<LI>From the Mode menu, choose RGB color. 
+</OL>
+<A NAME="XREF38379"><H3>Saving the cel</A></H3>
+To save the cel, follow these steps:<P>
+<OL>
+<LI>From the File menu, select Export &gt; 3DO CelWriter.
+<p>
+<LI>In the dialog that appears, select the Coded type, then the Bits Per 
+Pixel you decided to use. 
+<p>
+<p><B>Note: </B>Don't choose 8 bits per pixel, the Coded-8 CelWriter 
+discussed in the next section should be used for that purpose. <BR>
+<p>
+
+<LI>Click the Set Cel Flags button and make sure the cel corresponds to 
+the color table if you created one:
+<UL>
+<LI>If you select 3-3-2 Color Table (REP8 clear), make sure the box 
+"Replicate LSB's in RGB 8 bit Cel" box in the Control Settings dialog is 
+unchecked. 
+<p>
+<LI>If you select 3-3-2 Color Table (REP8 set), make sure the box is 
+checked.
+</UL><BR>
+
+<LI>Choose Save and you're finished.
+</OL>

@@ -1,0 +1,12 @@
+<TITLE>Managing Sound Effects</TITLE>
+<H1><LINK NAME="XREF11010">Managing Sound Effects</LINK></H1><HR>
+<H2>Loading an Instrument</H2>
+<B>Q:</B>  The title I am working on is an adventure game in which the player moves between "rooms" and all the sound effects needed for that room are loaded when you enter. I was having a problem when playing a stream (CinePak video &amp; 16-bit 22 KHz audio) where it would crash in certain rooms, claiming not enough DSP space. I traced it to an Streaming Audio initialization procedure that calls <CODE>AllocInstrument()</CODE>. I was stumped, but then I removed the sound effects from the room loader and the streamer did not crash anymore. I guess taking out the sound effects left more DSP space. Now, my question is, am I doomed to loading a sound effect, playing it, and then freeing it? Or can I still load them into memory when the player enters the room?<P>
+<B>A:</B>  In general, you ought to always free an instrument when it is not going to be used for a long time. But it sounds like you had allocated too many DSP instruments to fit in the DSP's N memory. Here are some ideas:<P>
+<OL>
+<LI>Attach several samples to the same instrument and start only the sample that you want to use at the current moment. This is good when you have sounds that do not overlap each other in time. To start samples independently, use the ATTF_NO_AUTOSTART flag in <CODE>SetAudioItemInfo()</CODE>. Then use <CODE>StartAttachment()</CODE> to start a specific sample.
+<p>
+<LI>Use smaller DSP instruments. In general, the <CODE>fixedxxxx.dsp</CODE> type instruments require less DSP brain to use than the <CODE>varxxx.dsp</CODE> type instruments.
+<p>
+<LI>Try figuring out whether lack of DSP resources are really the cause of the problem; you have 520ticks and 442 words of N memory to do whatever you want. This number of ticks is generally enough to load a lot of instruments. Try manually counting up the ticks and words from all your instruments; if the number is low, something else untoward may be going on.
+</OL>

@@ -1,0 +1,53 @@
+<HTML><TITLE>plus</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>plus</H2>
+<HR><PRE>     Function Object</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>A binary function object that returns the result of adding its first and second arguments.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;functional>
+
+   template&#60;class T>
+   struct <B>plus : </B>public binary_function&#60;T, T, T><B> ;</B>
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P><B><I>plus</B></I> is a binary function object.  Its <SAMP>operator()</SAMP> returns the result of adding <SAMP>x</SAMP> and <SAMP>y</SAMP>.  You can pass a <B><I>plus</B></I> object to any algorithm that uses a binary function.  For example, the <A HREF="tra_4787.htm"><B><I>transform</B></I></A> algorithm applies a binary operation to corresponding values in two collections and stores the result.  <B><I>plus</B></I> would be used in that algorithm in the following manner:</P>
+<PRE>vector&#60;int> vec1;
+vector&#60;int> vec2;
+vector&#60;int> vecResult;
+.
+.
+.
+transform(vec1.begin(), vec1.end(),          vec2.begin(),
+          vecResult.begin(), <B>plus&#60;int>()</B>);</PRE>
+<PRE></PRE><P>After this call to <A HREF="tra_4787.htm"><B><I>transform</B></I></A>, <SAMP>vecResult(n)</SAMP> will contain <SAMP>vec1(n)</SAMP> plus <SAMP>vec2(n)</SAMP>.</P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template&#60;class T>
+struct <B>plus</B> : binary_function&#60;T, T, T> {
+  typedef typename binary_function&#60;T, T, T>::second_argument_type 
+                                             second_argument_type;
+  typedef typename binary_function&#60;T, T, T>::first_argument_type 
+                                             first_argument_type;
+  typedef typename binary_function&#60;T, T, T>::result_type result_type;
+  T operator() (const T&#38;, const T&#38;) const;
+};
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you will  need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="bin_7851.htm"><B><I>binary_function</B></I></A>, <A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A></P>
+<HR>
+<A HREF="per_9476.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="poi_3537.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

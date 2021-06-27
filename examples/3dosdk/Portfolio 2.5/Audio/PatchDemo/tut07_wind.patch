@@ -1,0 +1,38 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut07_wind.patch,v 1.2 1994/10/26 21:36:42 peabody Exp $
+;*
+;*  Tutorial 7: Wind Sound
+;*
+;*  Randomly modulate a filter with noise input
+;*  The whistling is from the low resonance value on the filter.
+;*
+;******************************************************************************
+
+LoadInstrument svf svfilter.dsp
+LoadInstrument lfo1 rednoise.dsp
+LoadInstrument lfo2 rednoise.dsp
+LoadInstrument noise noise.dsp
+LoadInstrument mod1 timesplus.dsp
+LoadInstrument mod2 timesplus.dsp
+LoadInstrument out directout.dsp
+
+Connect noise Output svf Input
+Connect lfo1 Output   mod1 InputA
+Connect mod1 Output   svf Frequency   ; modulation destination
+Connect lfo2 Output   mod2 InputA
+Connect mod2 Output   svf Resonance   ; modulation destination
+Connect svf Output   out InputLeft
+Connect svf Output   out InputRight
+
+Tweak Noise Amplitude 10000      ; try not to overdrive filter
+Tweak lfo1 Frequency 1           ; modulation rate
+Tweak lfo2 Frequency 2           ; modulation rate
+Tweak mod1 InputB 1400           ; modulation amount
+Tweak mod1 InputC 2800           ; modulation bias
+Tweak mod2 InputB 2800           ; modulation amount
+Tweak mod2 InputC 3000           ; modulation bias

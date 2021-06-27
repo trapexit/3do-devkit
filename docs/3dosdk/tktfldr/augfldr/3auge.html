@@ -1,0 +1,61 @@
+<TITLE>Special options</TITLE>
+<H1><LINK NAME="XREF16784">Special options</LINK></H1><HR>
+The options -Base, -Entry, -DATA and -Workspace are each followed by a numerical argument. You can use a 0x or &amp; prefix to indicate a hexadecimal value, and the suffixes K and M to indicate multiplication by 1024 and 1024 x 1024, respectively.<P>
+The default base address for an AIF image is &amp;8000 (=32K, =0x20K). The default base address for a binary image (-BIN, -BIN -AIF, and -IHF) is 0.<P>
+<CODE><A NAME="XREF38330">-RO-base &lt;base-address&gt;</A>
+-Base &lt;base-address&gt;</CODE><P>
+Set the base address for the output to <I>base-address</I>. This is the address at which an image may be loaded and executed without further relocation. If there are separate read-only and read-write sections then this is the base of the read-only section.<P>
+<CODE><A NAME="XREF30726">-RW</A>-base</CODE>  &lt;<CODE>data-base-address</CODE>&gt;
+ <CODE>-DATA </CODE> &lt;<CODE>data-base-address</CODE>&gt;<P>
+Set the base for the data (read-write) segment of the output to data-base-address rather than to <I>base-address</I> + <I>code-size.</I> Currently, this option is only meaningful if the output type is -BIN -AIF, -BIN -SPLIT or -IHF -SPLIT.<P>
+<CODE>-Entry &lt;entry-address&gt;
+-Entry &lt;offset+object(area)&gt;</CODE><P>
+The objects included in an image must have a unique designated entry point. Usually, this is given by one of the input areas having been assembled from a source containing an ENTRY directive. Otherwise, the entry point must be given on the linker's command line. The entry point is the target of the entry branch from the image's AIF header.<P>
+The entry point may be given as an absolute address or as an offset within an area within a particular object. For example:<P>
+<CODE>
+<PRE>
+-Entry 8+startup(C$$code)
+</CODE>
+</PRE>
+(Note that there must be no spaces within the argument to -Entry and that letter case is ignored when matching both object and area names).<P>
+This latter form is often more convenient and is mandatory when specifying an entry point for unused area elimination (see <A HREF="#XREF22154">-NOUNUSEDareas</A>).<P>
+<CODE>-Case</CODE><P>
+Make the matching of symbol names case insensitive.<P>
+<CODE>-MATCH &lt;flags&gt;</CODE><P>
+Set the last-gasp symbol matching options and the <I>pc-relative</I>  implies <I>code relocation</I> default. Each option is controlled by a single bit in flags, as follows:<P>
+<PRE>
+--------------------------------------------------------
+Flag  |Description                                      
+--------------------------------------------------------
+0x01: |match an undefined symbol of the form _sym to a  
+      |symbol definition of the form sym;               
+--------------------------------------------------------
+0x02: |match an undefined symbol of the form sym to a   
+      |symbol definition of the form_sym;               
+--------------------------------------------------------
+0x04: |match an undefined symbol of the form            
+      |Module_Symbol to a definition of the form        
+      |Module.Symbol;                                   
+--------------------------------------------------------
+0x08: |match an undefined symbol of the form            
+      |symbol__type to a definition of the form  symbol;
+--------------------------------------------------------
+0x10: |treat all pc-relative relocation directives as   
+      |relocating instructions.                         
+--------------------------------------------------------
+</PRE>
+<P>
+These options are usually set by configuring the <I>armlink</I> image when it is installed. The default value is 0x10 (treat pc-relative relocations as relocating code but do no default symbol matching). Care must be taken when using -MATCH from the command line not to override options accidentally.<P>
+<CODE>-FIRST &lt;object(area)&gt;
+-LAST &lt;object(area)&gt;</CODE><P>
+Place the area named <I>area</I> from the object named <I>object</I> first or last, respectively, in the output. These options are useful for forcing an area mapping low addresses (typically the reset and interrupt vector addresses) to be placed first, or an area containing a checksum to be placed last.<P>
+<CODE><A NAME="XREF22154">-NOUNUSEDareas</A></CODE><P>
+Do not remove unused areas from the output (output of type AIF only). An area is used if:<P>
+<UL>
+<LI>it is the area containing the entry point;
+<LI>it is referred to from a used area.
+</UL>
+(An area X refers to an area Y if any value in X is relocated relative to the base of Y or relative to any symbol defined in Y. That is, if there is any symbolic reference from X to Y).<P>
+<CODE>-Unresolved &lt;symbol&gt;</CODE><P>
+Match each reference to an undefined symbol to the global definition of symbol. Note that <I>symbol</I> must be both defined and global, otherwise it too will appear in the list of undefined symbols, and the link step will fail. This option is particularly useful during top-down development, when it may be possible to test a partially implemented system from which the lower levels of code are missing, by connecting each reference to a missing function to a dummy function which does nothing.<P>
+<P>

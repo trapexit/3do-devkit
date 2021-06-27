@@ -1,0 +1,22 @@
+<Title>NewSCelSubscriber</Title>
+<A NAME="XREF18965"><H1>NewSCelSubscriber</A></H1>
+<A NAME="XREF40760">Creates SCel subscriber thread.</A><P>
+<H3>Synopsis</H3>
+<CODE>long NewSCelSubscriber(SCelContextPtr *pContext, DSStreamCBPtr streamCBPtr, long deltaPriority)</CODE><P>
+<H3>Description</H3>
+Creates and initializes an SCel subscriber thread for the calling task. Returns a pointer to a context structure, which the client application uses when making calls to the SCel subscriber.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>pContext</CODE>
+<DD>Address where pointer to SCel context structure is returned.
+</DL>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Pointer to control block for data stream deltaPriority relative execution priority of new SCel subscriber thread.
+</DL>
+<H3>Return Value</H3>
+Returns an error code or zero if there was no error.<P>
+<H3>Caveat</H3>
+This function is part of the <I>Subscriber.lib</I> library file that can currently (Toolkit1.5) be found in <I>Attic:Streaming:2p1:DataStream:Subscribers:Subscriber.lib</I>. It will later be integrated into the main Streaming tree. <P>
+<H3>See Also</H3>
+<A HREF="./01DSR015.html#XREF33336"><CODE>DisposeSCelSubscriber</A></CODE><P>

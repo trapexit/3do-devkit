@@ -1,0 +1,15 @@
+<TITLE>Preparing for Cinepak compression</TITLE>
+<H1>Preparing for Cinepak compression</H1><HR>
+Cinepak processes QuickTime movies for display at a specified target playback rate of frames per second. Cinepak does not achieve the playback rate by discarding display information (dropping frames); instead, it dithers frames so that they can be displayed within the playback data rate. Sequences with large differences between frames (pans, zooms, and so on) are likely to be dithered by Cinepak. <P>
+<H2>Compressing animations</H2>
+Compression of animation sequences is similar to QuickTime movie compression, with the same pluses and minuses: <P>
+<UL>
+<LI>Constant backgrounds and colors compress well in Cinepak with QuickTime 1.6.2 or later.
+<LI>Slow color gradients don't compress well and sharp transitions might not compress cleanly.
+</UL>
+When creating art for compression, render at 640 x 480 and resize to 320 x 240, using the recommended DeBabelizer resizer script (or other tool) to reduce aliasing of edges.<P>
+Note that you can use 3DO Animator or the 3DO Custom Code module for DeBabelizer to convert an animation as a sequence of cels or as a QuickTime movie. <P>
+<H2>Eliminating noise</H2>
+Regions of black and white pixels might contain variations in color below a normally detectable limit. Although these regions are static in the display, the unseen pixel noise increases the differences between frames. Some video processing tools, such as CoSA After Effects, allow you to convert all relatively "black" and relatively "white" pixels into pure black and pure white. Normalizing pixel regions (for example, converting an area of near black pixels to a uniform shade of black) within QuickTime movies improves the efficiency of Cinepak compression by reducing the pixel change rate between display frames.<P>
+<H2>Setting the data rate</H2>
+The Apple conversion tools allow you to specify an optimum data rate on which they base their compression. The playback target data rate is the <I>maximum</I> rate at which the compressed video data can be read from the CD-ROM drive. Although the CD-ROM drive in the 3DO Interactive Multiplayer has a theoretical maximum data rate of 300 kilobytes per second, 200 - 250 kilobytes per second is the maximum range for video.<I> </I>Audio data requires between 40 and 100 kilobytes per second of the CD-ROM data stream. <P>

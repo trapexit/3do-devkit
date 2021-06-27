@@ -1,0 +1,38 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut11_rocket.patch,v 1.2 1994/10/26 21:36:42 peabody Exp $
+;*
+;*  Tutorial 11: Rocket Sound
+;*
+;*  Rednoise modulating rednoise frequency and amplitude
+;*
+;******************************************************************************
+
+LoadInstrument red1 rednoise.dsp
+LoadInstrument red2 rednoise.dsp
+LoadInstrument red3 rednoise.dsp
+
+LoadInstrument mod1 timesplus.dsp
+LoadInstrument mod2 timesplus.dsp
+LoadInstrument out directout.dsp
+
+Connect red1 Output   mod1 InputA
+Connect mod1 Output   red3 Frequency   ; modulation destination
+
+Connect red2 Output   mod2 InputA
+Connect mod2 Output   red3 Amplitude   ; amp modulation destination
+
+Connect red3 Output   out InputLeft    ; output
+Connect red3 Output   out InputRight
+
+Tweak red1 Frequency 800           ; freq modulation rate
+Tweak mod1 InputB   1000           ; freq modulation depth
+Tweak mod1 InputC   1200           ; freq modulation bias
+
+Tweak red2 Frequency 300           ; amp modulation rate
+Tweak mod2 InputB  12000           ; amp modulation depth
+Tweak mod2 InputC  19000           ; amp modulation bias

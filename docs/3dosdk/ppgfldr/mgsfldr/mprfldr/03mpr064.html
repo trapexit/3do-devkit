@@ -1,0 +1,22 @@
+<Title>timesplus.dsp</Title>
+<A NAME="XREF13580"><H1>timesplus.dsp </A></H1>
+<A NAME="XREF25474"></A> Mix control signals.<P>
+<H3>Function</H3>
+This instrument is the A*B+C modulator, which is useful for mixing control signals. The result is clipped to -$8000 and +$7FFF, the range of signed values.  This limits its usefulness with sample players that use unsigned frequency between 0 and $FFFF.<P>
+<H3>Notes</H3>
+Multiplying 0x8000 by 0x8000 causes an overflow yielding a result of 0x8000.  This means that (-1) x (-1) = (-1).  Thus, if you multiply a signal by 0x8000, it will pop if the signal also contains 0x8000.<P>
+<H3>Knobs</H3>
+InputA <P>
+InputB <P>
+InputC <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 10 <P>
+N memory = 7 words <P>

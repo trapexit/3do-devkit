@@ -1,0 +1,24 @@
+	writestreamheader
+
+	streamblocksize 	0x8000
+	streambuffers 		6
+	NumSubsMessages		200
+
+	streamerdeltapri	6
+	dataacqdeltapri		8
+
+	Subscriber		SANM	7
+	Subscriber 		SNDS	10
+	Subscriber		CTRL	11
+
+	AudioClockChan		1
+	EnableAudioMask		0x3
+
+	markertime 0
+	
+	writemarkertable
+
+	# writegotochunk 1104 0
+	
+	file pool.chnk0 1 0
+	file pool.chnk1 1 0

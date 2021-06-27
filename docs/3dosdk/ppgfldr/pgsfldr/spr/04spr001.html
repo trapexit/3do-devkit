@@ -1,0 +1,31 @@
+<Title>GetControlPad</Title>
+<A NAME="XREF17030"><H1>GetControlPad </A></H1>
+<A NAME="XREF27617"></A> Gets control pad events.<P>
+<H3>Synopsis</H3>
+<CODE>Err GetControlPad( int32 padNumber, int32 wait,ControlPadEventData *data )</CODE><P>
+<H3>Description</H3>
+This is a convenience call that allows a task to easily monitor events on controller pads. This function specifies a controller pad to monitor, specifies whether the routine should return immediately or wait until something happens on the controller pad, and provides a data structure for data from the controller pad. <P>
+When the function executes, it either returns immediately with event information or waits until there is a change in the controller pad before returning. If an event has occurred, the task must check the ControlPadEventData data structure for details about the event. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>padNumber
+<DD>Sets the number of the generic controller pad on the control port (i.e., the first, second, third, and so on pad in the control port daisy chain, counting out from the 3DO unit) that the task wants to monitor. The first pad is 1, the second is 2, and so on. 
+</DL>
+<DL>
+<DT>wait
+<DD>A boolean value that specifies the event brokersresponse.IfitisTRUE(a nonzero value), the event broker waits along with the task until an event occurs on the specified pad and only returns with data when there is a change in the pad. If it is FALSE
+<DD>(zero), the event broker immediately returns with the status of the pad. 
+</DL>
+<DL>
+<DT>data
+<DD>A pointer to a ControlPadEventData data structure for the returned control pad data to be stored. 
+</DL>
+<H3>Return Value</H3>
+This function returns 1 if an event has occurred on the pad, 0 if no event has occurred on the pad, or a negative number (an error code) if a problem occurred while retrieving an event. <P>
+<H3>Implementation</H3>
+Convenience call implemented in input.lib V20. <P>
+<H3>Associated Files</H3>
+event.h, input.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./04spr003.html#XREF13029"><CODE>InitEventUtility</A>(), <A HREF="./04spr002.html#XREF40840">GetMouse</A>(), <A HREF="./04spr004.html#XREF31682">KillEventUtility</A>() </CODE><P>
+</CODE>

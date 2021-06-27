@@ -1,0 +1,55 @@
+<Title>Chunkify</Title>
+<A NAME="XREF19437"><H1>Chunkify</A></H1>
+<A NAME="XREF27123"></A>Breaks a file into equal-size chunks for use with Join 
+subscriber.<P>
+<H3>Synopsis</H3>
+<CODE>chunkify [options] -i &lt;infile&gt; -o &lt;outfile&gt;</CODE><P>
+<H3>Description</H3>
+Takes any file as input and breaks it into equal-size chunks for use with 
+the Join subscriber. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>-chan &lt;channel&gt;
+<DD>Channel number to be used for this data type.
+</DL>
+<DL>
+<DT>-comp &lt;num&gt;
+<DD>Compression type. Currently not implemented.
+</DL>
+<DL>
+<DT>-cs &lt;size&gt;
+<DD>Size of a data chunk in bytes.
+</DL>
+<DL>
+<DT>-i &lt;infile&gt;
+<DD>Name of input file containing data to be chunkified.
+</DL>
+<DL>
+<DT>-memtype &lt;type&gt;
+<DD>Default memory type (<CODE>MEMTYPE_ANY,</CODE> 
+<CODE>MEMTYPE_DRAM,</CODE> or <CODE>MEMTYPE_VRAM</CODE> defined in mem.h)
+</DL>
+<DL>
+<DT>-o &lt;outfile&gt;
+<DD>Output file containing chunkified data.
+</DL>
+<DL>
+<DT>-ti &lt;time&gt;
+<DD>Time increment. Each chunk's timestamp is incremented by this 
+amount.
+</DL>
+<DL>
+<DT>-type &lt;type&gt;
+<DD> Data type being joined. This is a 4-byte ASCII character that 
+uniquely identifies a join element (FILM, SNDS, SANM).
+</DL>
+<H3>Examples</H3>
+A typical command line for Chunkify is:<P>
+<CODE>
+<PRE>
+chunkify -i Foo.anim -o test.join -type TEST -cs 32768 -chan 4 -ti 0
+</CODE>
+</PRE>
+Chunkify takes the data from input file <I>Foo.anim</I><I>,</I> chunkifies 
+the data into chunks of 32,768 bytes with timestamp of 0, and outputs the 
+chunkified data in test.join. The channel assigned to the chunks is 4.<P>

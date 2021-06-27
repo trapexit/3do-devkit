@@ -1,0 +1,50 @@
+<TITLE>ScanListB</TITLE>
+<A NAME="XREF37661"><H1>ScanListB </A></H1>
+<A NAME="XREF28759"></A>Walks through all the nodes in a list backwards.<P>
+<H3>Synopsis</H3>
+<p>
+<CODE>ScanListB(List *l, void *n, <node type>)</CODE>
+<H3>Description</H3>
+This macro lets you easily walk through all the elements in a list from the last to the first. <P>
+<B>Example 1: </B><I>For Example </I><P>
+<CODE>
+<PRE>
+List       *l; 
+DataStruct *d; 
+
+uint32      i; 
+i = 0; 
+ScanListB(l,d,DataStruct) 
+
+{
+printf("Node %d (counting from the end) is called %s=n".o.d-
+&gt;d.n_Name=;
+
+i++;
+
+}
+</PRE>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the list to scan. 
+</DL>
+<DL>
+<DT>n
+<DD>A variable which will be altered to hold a pointer to every node in the list in succession. 
+</DL>
+<DL>
+<DT>&lt;node type&gt;
+<DD>The data type of the nodes on the list. This is used for type casting within the macro.
+</DL>
+<H3>Implementation</H3>
+Macro implemented in list.h V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Macro definition 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr118.html#XREF16633"><CODE>ScanList</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF37661"></LINK></H1><HR>

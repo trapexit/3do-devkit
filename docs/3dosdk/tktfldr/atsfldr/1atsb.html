@@ -1,0 +1,119 @@
+<TITLE>The layout of AIF </TITLE>
+<H1><LINK NAME="XREF12900">The layout of AIF</LINK> </H1><HR>
+The layout of a compressed AIF image is as follows:<P>
+<CODE>
+<PRE>
+Header
+Compressed image
+Decompression data                        This data is position-independent
+Decompression code                        This code is position-independent
+</CODE>
+</PRE>
+The header is small, fixed in size, and described below. In a compressed AIF image, the header is <I>not</I> compressed.<P>
+An uncompressed image has the following layout:<P>
+<CODE>
+<PRE>
+Header
+Read-Only area
+Read-Write area
+Debugging data                     (optional)
+Self-relocation code                    (position independent)
+Relocation list                     List of words to relocate, terminated by -1
+</CODE>
+</PRE>
+Debugging data is absent unless the image has been linked using the linker's -d option and, in the case of source-level debugging, unless the components of the image have been compiled using the compiler's -g option.<P>
+The relocation list is a list of byte offsets from the beginning of the AIF header, of words to be relocated, followed by a word containing -1. The relocation of non-word values is not supported.<P>
+After the execution of the self-relocation code - or if the image is not self-relocating - the image has the following layout:<P>
+<CODE>
+<PRE>
+Header
+Read-Only area
+Read-Write area
+Debugging data                    (optional)
+</CODE>
+</PRE>
+At this stage a debugger is expected to copy any debugging data to somewhere safe, otherwise it will be overwritten by the zero-initialised data and/or the heap/stack data of the program. A debugger can seize control at the appropriate moment by copying, then modifying, the third word of the AIF header (see <A HREF="#XREF33429">AIF Header Layout</A>).<P>
+<A NAME="XREF33429"><H2>AIF Header Layout</A></H2>
+
+<PRE>
+----------------------------------------------------------
+00:  |BL DecompressCode  |NOP if the image is not         
+     |                   |compressed.                     
+----------------------------------------------------------
+04:  |BL SelfRelocCode   |NOP if the image is not         
+     |                   |self-relocating.                
+----------------------------------------------------------
+08:  |BL DBGInit/ZeroInit|NOP if the image has none.      
+----------------------------------------------------------
+0C:  |BL ImageEntryPoint |BL to make the header           
+     |     orEntryPoint  |addressable via r14 ...but the  
+     |offset             |application shall not return... 
+     |                   |Non-executable AIF uses an      
+     |                   |offset, not BL                  
+----------------------------------------------------------
+10:  |Program Exit Instr |...last ditch in case of return.
+----------------------------------------------------------
+14:  |Image ReadOnly size|Includes header size if         
+     |                   |executable AIF; excludes header 
+     |                   |size if non-executable AIF.     
+----------------------------------------------------------
+18:  |Image ReadWrite    |Exact size - a multiple of 4    
+     |size               |bytes                           
+----------------------------------------------------------
+1C:  |Image Debug size   |Exact size - a multiple of 4    
+     |                   |bytes                           
+----------------------------------------------------------
+20:  |Image zero-init    |Exact size - a multiple of 4    
+     |size               |bytes                           
+----------------------------------------------------------
+24:  |Image debug type   |0, 1, 2, or 3 (see note below). 
+----------------------------------------------------------
+28:  |Image base         |Address the image (code) was    
+     |                   |linked at.                      
+----------------------------------------------------------
+2C:  |Work Space         |Min work space - in bytes - to  
+     |                   |be reserved by a self-moving    
+     |                   |relocatable image.              
+----------------------------------------------------------
+30:  |Address mode:26/32+|LS byte contains 26 or 32;bit 8 
+     |3 flag bytes       |set when using a separate data  
+     |                   |base.                           
+----------------------------------------------------------
+34:  |Data base          |Address the image data was      
+     |                   |linked at.                      
+----------------------------------------------------------
+38:  |Two reserved words |                                
+     |...initially 0...  |                                
+----------------------------------------------------------
+40:  |Debug Init Instr   |NOP if unused.                  
+----------------------------------------------------------
+44:  |Zero-init code(14  |Header is 32 words long.        
+     |words as below)    |                                
+----------------------------------------------------------
+</PRE>
+<H3>Notes</H3>
+<CODE>NOP</CODE> is encoded as <CODE>MOV r0, r0</CODE>.<P>
+<CODE>BL</CODE> is used to make the header addressable via r14 in a position-independent manner, and to ensure that the header will be position-independent. Care is taken to ensure that the instruction sequences which compute addresses from these r14 values work in both 26-bit and 32-bit ARM modes.<P>
+The <I>Program Exit Instruction</I><I> </I>will usually be a SWI causing program termination. On systems which lack this, a branch-to-self is recommended. Applications are expected to exit directly and <I>not</I> to return to the AIF header, so this instruction should never be executed. The ARM linker sets this field to SWI 0x11 by default, but it may be set to any desired value by providing a template for the AIF header in an area called AIF_HDR in the <I>first</I> object file in the input list to <I>armlink</I>.<P>
+The <I>Image ReadOnly Size</I> includes the size of the AIF header only if the AIF type is executable (that is, if the header itself is part of the image).<P>
+An AIF image is re-startable if, and only if, the program it contains is re-startable (n.b. an AIF image is <I>not</I> reentrant). If an AIF image is to be re-started then, following its decompression, the first word of the header must be set to NOP. Similarly, following self-relocation, the second word of the header must be reset to NOP. This causes no additional problems with the read-only nature of the code segment: both decompression and relocation code must write to it. On systems with memory protection, both the decompression code and the self-relocation code must be bracketed by system calls to change the access status of the read-only section (first to writable, then back to read-only).<P>
+The <I>image debug type</I> has the following meaning:<P>
+<CODE>
+<PRE>
+0: No debugging data are present.
+1: Low-level debugging data are present.
+2: Source level (ASD) debugging data are present.
+3: 1 and 2 are present together.
+</CODE>
+</PRE>
+All other values of image debug type are reserved to ARM Ltd.<P>
+The <I>Debug Initialisation Instruction</I> (if used) is expected to be a SWI instruction which alerts a resident debugger that a debuggable image is commencing execution. Of course, there are other possibilities within the AIF framework. The ARM cross-linker sets this field to NOP by default, but it can be customised by providing your own template for the AIF header in an area called AIF_HDR in the <I>first</I> object file in the input list to <I>armlink</I>.<P>
+The <I>Address mode</I> word (at offset 0x30) is 0, or contains in its least significant byte (using the byte order appropriate to the target):<P>
+<UL>
+<LI>the value 26, indicating the image was linked for a 26-bit ARM mode, and may not execute correctly in a 32-bit mode;
+<p>
+<LI>the value 32, indicating the image was linked for a 32-bit ARM mode, and may not execute correctly in a 26-bit mode.
+</UL>
+A value of 0 indicates an old-style 26-bit AIF header.<P>
+If the<I> </I><I>Address mode</I> word has bit 8 set ((address_mode &amp; 0x100) != 0), then the image was linked with separate code and data bases (usually the data is placed immediately after the code). In this case, the word at offset 0x34 contains the base address of the image's data.<P>
+<P>

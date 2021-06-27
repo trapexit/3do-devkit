@@ -1,0 +1,19 @@
+<Title>rednoise.dsp</Title>
+<A NAME="XREF20212"><H1>rednoise.dsp </A></H1>
+<A NAME="XREF37763"></A> Red  noise generator.<P>
+<H3>Function</H3>
+This instrument interpolates straight line segments between pseudo-random numbers  to produce "red" noise.  It is a grittier alternative to the filterednoise.dsp. It is also useful as a slowly changing random control generator for natural sounds.<P>
+<H3>Knobs</H3>
+Frequency - 0 -=&gt; $FFFF, default $0300.  Controls how often new random numbers are selected. Units are fixed point phase increment.  $8000 implies that a new random number will be chosen every other sample  frame. <P>
+Amplitude - 0  =&gt; $7FFF <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 23 <P>
+N memory = 21 words <P>

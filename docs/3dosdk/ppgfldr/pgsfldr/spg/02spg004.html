@@ -1,0 +1,65 @@
+<TITLE>Starting and Ending Threads</TITLE>
+<H1><LINK NAME="XREF29823">Starting and Ending Threads</LINK></H1><HR>
+Threads, as you recall, differ from child tasks in that they are more tightly bound to their parent task. They share the parent task's memory and can't transfer their ownership. However, they still need to be started and ended just as tasks do. This section describes the calls used to start and end threads.<P>
+<H2>Creating a Thread</H2>
+The <CODE>CreateThread()</CODE> function creates a thread:<P>
+<DL>
+<DD><CODE>Item CreateThread ( cconst char *name, uint8 pri, void (*code) (), int32 stacksize )</CODE><BR>
+</DL>
+The first argument, <CODE>name</CODE>, is the name of the thread to create. The second argument, <CODE>pri</CODE>, is the priority that the thread will have. The third argument, <CODE>code</CODE>, is a pointer to the code that the thread will execute. The last argument, <CODE>stacksize</CODE>, specifies the size in bytes of the thread's stack. If successful, the call returns the item number of the thread. If unsuccessful, it returns an error code.<P>
+Before calling <CODE>CreateThread(),</CODE> you must determine what stack size to use for the thread. There is no default size for the <CODE>stacksize</CODE> argument; however, it's important to make the size large enough so that stack overflow errors do not occur. Stack overflow errors are characterized by random crashes that defy logical analysis, so it's a good approach to start with a large stack size and reduce it until a crash occurs, then double the stack size. In the sample code later in this chapter, the stack size is set to 10000. A good size to start with is 2048.<P>
+Example 1 shows the process of creating a thread:<P>
+<B>Example 1: </B><I>Starting a task.</I><P>
+<CODE>
+<PRE>
+#define STACKSIZE (10000)
+...
+int main(int argc, char *argv[])
+{
+uint8  Priority;
+Item  T1;
+...
+Priority = CURRENTTASK-&gt;t.n_Priority;
+T1 = CreateThread("Thread1", Priority, Thread1Proc, STACKSIZE);
+...
+}
+int Thread1Proc()
+{
+/* This is the code for Thread1Proc */
+}
+</CODE>
+</PRE>
+<H3>Communication</H3>
+Because threads share memory with the parent task, global variables can pass information among threads and tasks. In the sample code later in this chapter a number of global variables are declared at the start of the program, prior to the code for the threads and the parent task code. As global variables, they are accessible to the main routine and to the threads-an example of threads sharing the same memory as the parent task. <P>
+The code example given at the end of this chapter is a good illustration of using <CODE>CreateThread()</CODE> to start two threads. It shows the use of global variables that are shared by all threads, which signal among threads and the parent task. Signals for both threads are first allocated with <CODE>AllocSignal(). </CODE>The parent task then uses <CODE>WaitSignal()</CODE> to wait for an event from either of the threads. <P>
+<H3>Opening Folios</H3>
+Whenever you make folio calls from a thread, be sure to open the appropriate folios first. It's tempting to think that because a folio has been opened by the parent task, the thread can make calls from the same folio without opening it. Not true-and potentially fatal to the thread. Each thread must open all folios it intends to use.<P>
+<H2>Ending a Thread</H2>
+Use <CODE>DeleteThread()</CODE> to end a thread when a parent task finishes with it:<P>
+<DL>
+<DD><CODE>Err DeleteThread( Item thread )</CODE><BR>
+</DL>
+This function takes the item number of the thread to delete as its only argument, and returns a negative error code if an error occurs. Although all threads terminate automatically when the parent task ceases, it's good programming practice to kill a thread as soon as the parent task finishes using it. Note that when you terminate a thread, the thread's memory (which is shared with the parent task) is <I>not</I> freed, and remains the property of the parent task. A thread can also terminate itself by calling <CODE>exit()</CODE> or just returning.<P>
+<H2>Advanced Thread Usage</H2>
+The <CODE>CreateThread()</CODE> and <CODE>DeleteThread()</CODE> functions are convenience routines, which make it easy to create and delete threads for the most common uses. It is sometimes necessary to have better control over thread creation. This requires allocating resources yourself and creating the thread item using <CODE>CreateItem()</CODE> or <CODE>CreateItemVA()</CODE>. <P>
+Creating a thread involves allocating memory for the stack that the thread will use, and constructing a tag argument list that describes how the thread should be created. The tags you supply are:<P>
+<UL>
+<LI><B>TAG_ITEM_NAME</B>, Provides a pointer to the name of the thread.
+<p>
+<LI><B>TAG_ITEM_PRI</B>, Provides a priority for the thread in the range 10 to 199. If this tag is not given, the thread inherits the priority of the current context.
+<p>
+<LI><B>CREATETASK_TAG_PC</B>, Provides a pointer to the code to be executed as a thread.
+<p>
+<LI><B>CREATETASK_TAG_SP</B>, Provides a pointer to the memory buffer to use as stack for the thread.
+<p>
+<LI><B>CREATETASK_TAG_STACKSIZE</B>, Specifies the size, in bytes, of the memory buffer reserved for the thread's stack.
+<p>
+<LI><B>CREATETASK_TAG_ARGC</B>, A 32-bit value that is passed as a first argument to the thread being created. If this value is omitted, the first argument is 0.
+<p>
+<LI><B>CREATETASK_TAG_ARGP</B>, A 32-bit value that is passed as a second argument to the thread being created. If this is omitted, the second argument is 0.
+<p>
+<LI><B>CREATETASK_TAG_MSGFROMCHILD</B>, Provides the item number of a message port. The kernel sends a status message to this port whenever the thread or task being created exits. The message is sent by the kernel after the task has been deleted. The <CODE>msg_Result</CODE> field of the message contains the exit status of the task. This is the value the task provided to <CODE>exit()</CODE>, or the value returned by the task's primary function. The <CODE>msg_DataPtr</CODE> field of the message contains the item number of the task that just terminated. If a task exited on its own, this is the item number of the task itself. It is the responsibility of the task that receives the status message to delete it when the message is no longer needed by using <CODE>DeleteMsg().</CODE>
+<p>
+<LI><B>CREATETASK_TAG_ALLOCDTHREADSP</B>, Tells the kernel that if this thread dies by itself, by either returning to the kernel or by calling <CODE>exit()</CODE>; the memory used for its stack must be freed automatically. When this tag is not provided, you are responsible for freeing the stack whenever the thread terminates. 
+</UL>
+<A NAME="XREF16033"></A>

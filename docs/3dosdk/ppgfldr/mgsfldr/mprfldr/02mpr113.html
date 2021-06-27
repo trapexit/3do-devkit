@@ -1,0 +1,23 @@
+<Title>ssplResume</Title>
+<A NAME="XREF35532"><H1>ssplResume </A></H1>
+<A NAME="XREF27347"></A> Resume SoundSpooler playback.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplResume ( SoundSpooler *sspl )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplResume()</CODE> resumes sound playback after being paused with <CODE>ssplPause()</CODE>. Playback is resumed from the sample data position in the spooled sound at which it was paused. <P>
+This function has no effect if <CODE>ssplStartSpooler()</CODE> or <CODE>ssplStopSpooler()</CODE> are called between <CODE>ssplPause()</CODE> and <CODE>ssplResume()</CODE>. Multiple calls to <CODE>ssplResume()</CODE> have no effect; pause does not nest. <P>
+Clears SSPL_STATUS_F_PAUSED. <P>
+<H3>Argument</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr108.html#XREF36471"><CODE>ssplPause</A>(), <A HREF="./01mpr062.html#XREF38726">ReleaseInstrument</A>(), <A HREF="./02mpr105.html#XREF10988">ssplGetSpoolerStatus</A>() </CODE><P>
+</CODE>

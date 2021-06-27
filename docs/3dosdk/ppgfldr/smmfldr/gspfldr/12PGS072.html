@@ -1,0 +1,37 @@
+<Title>tsp_spoolsoundfile</Title>
+<A NAME="XREF11133"><H1>tsp_spoolsoundfile</A></H1>
+<A NAME="XREF37515"></A>Plays an AIFF sound file from a thread using the 
+advanced sound player.<P>
+<H3>Synopsis</H3>
+<CODE>tsp_spoolsoundfile &lt;sound file&gt; [&lt;num repeats&gt;]</CODE><P>
+<H3>Description</H3>
+Plays an AIFF sound file using a thread to manage playback. <P>
+This is a variation on the original SpoolSoundfile program that used the 
+original sound file player-see <CODE>CreateSoundFilePlayer()</CODE>. This 
+version uses the Advanced Sound Player (see 
+<CODE>spCreatePlayer())</CODE>, which supports looping sound file 
+playback. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound file
+<DD>Name of an AIFF file to play.
+</DL>
+<DL>
+<DT>num repeats
+<DD>Optional number of times to repeat the sound file. Defaults to 1.
+</DL>
+<H3>Caveats</H3>
+Calls <CODE>ScanSample()</CODE> to get information used to pick a sample 
+player which prevents playing AIFF files with sustain or release loops 
+(see <CODE>ScanSample()</CODE> Caveats). <P>
+<H3>Associated Files</H3>
+tsp_spoolsoundfile.c<P>
+<H3>Location</H3>
+examples/Audio/Advanced_Sound_Player<P>
+<H3>See Also</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/02mpr068.html#XREF24761">spCreatePlayer</A>, 
+<A HREF="./12PGS052.html#XREF32076">spoolsoundfile</A>, 
+<A HREF="./12PGS070.html#XREF12219">tsp_algorithmic</A>, 
+<A HREF="./12PGS071.html#XREF30384">tsp_rooms</A>
+<P>
+</CODE>

@@ -1,0 +1,28 @@
+<TITLE>PrintSysErr</TITLE>
+<A NAME="XREF37909"><H1>PrintfSysErr </A></H1>
+<A NAME="XREF17339"></A>Prints the error string for an error.<P>
+<H3>Synopsis</H3>
+<CODE>void PrintfSysErr( Err err )</CODE><P>
+<H3>Description</H3>
+This procedure prints the error string for an error to the debugging terminal for a 3DO development system. This has the same effect as using <CODE>Printf()</CODE> to print the string constructed by <CODE>GetSysErr()</CODE>. The string is not displayed on production machines. <P>
+To copy an error string into a buffer instead of sending it the console, use <CODE>GetSysErr()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>err
+<DD>An error code. 
+</DL>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>operror.h
+<DD>ANSI C Prototype
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr080.html#XREF41016"><CODE>GetSysErr</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF37909"></LINK></H1><HR>

@@ -1,0 +1,25 @@
+<Title>DeleteMsg</Title>
+<A NAME="XREF14458"><H1>DeleteMsg </A></H1>
+<A NAME="XREF23398"></A>Deletes a message.<P>
+<H3>Synopsis</H3>
+<CODE>Err DeleteMsg( Item it )</CODE><P>
+<H3>Description</H3>
+This macro deletes the specified message and any resources (including the internal data buffer for a buffered message) that were allocated for it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>it
+<DD>The item number of the message to be deleted. 
+</DL>
+<H3>Return Value</H3>
+The macro returns a value greater than or equal to 0 if successful or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in msgport.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr024.html#XREF10430"><CODE>CreateMsg</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF14458"></LINK></H1><HR>

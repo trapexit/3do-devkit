@@ -1,0 +1,8 @@
+<TITLE>Closing an Item</TITLE>
+<H1><LINK NAME="XREF13211">Closing an Item</LINK></H1><HR>
+When a task finishes using an open item, it should close it so the kernel knows the item is no longer required by that task. When no tasks require an opened item, the kernel can remove the item from memory, freeing system resources.<P>
+To close an item, use this call:<P>
+<DL>
+<DD><CODE>Err CloseItem( Item i )</CODE><BR>
+</DL>
+<CODE>CloseItem()</CODE> accepts the item number of the item to close. It returns 0 if successful or an error code (a negative value) if an error occurs.<P>

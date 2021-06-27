@@ -1,0 +1,33 @@
+<Title>CloseItem</Title>
+<A NAME="XREF39128"><H1>CloseItem </A></H1>
+<A NAME="XREF35052"></A>Closes a system item.<P>
+<H3>Synopsis</H3>
+<CODE>Err CloseItem( Item i )</CODE><P>
+<H3>Description</H3>
+System items are items that are created automatically by the operating system, such as folios and device drivers, and thus do not need to be created by tasks. To use a system item, a task first opens it by calling <CODE>OpenItem()</CODE>. When a task is done using a system item, it calls <CODE>CloseItem()</CODE> to inform the operating system that it is no longer using the item. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>i
+<DD>Number of the item to close. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the item was closed successfully or an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>BADITEM
+<DD>The i argument is not an item. 
+</DL>
+<DL>
+<DT>ER_Kr_ItemNotOpen
+<DD>The i argument is not an opened item. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr104.html#XREF35423"><CODE>OpenItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF39128"></LINK></H1><HR>

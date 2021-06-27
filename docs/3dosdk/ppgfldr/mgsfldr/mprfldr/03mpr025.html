@@ -1,0 +1,21 @@
+<Title>fixedstereosample.dsp</Title>
+<A NAME="XREF35528"><H1>fixedstereosample.dsp </A></H1>
+<A NAME="XREF11924"></A> Play a stereophonic sample at 44,100 hertz.<P>
+<H3>Function</H3>
+This instrument plays a stereophonic sample at a 44,100 hertz. <P>
+<H3>Knobs</H3>
+Amplitude - 0  =&gt;  $7FFF <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+LeftOutput <P>
+RightOutput <P>
+<H3>Input FIFOs</H3>
+InFIFO <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 18 <P>
+N memory = 16 words<P>
+<H3>Notes</H3>
+The left/right channels are likely to be reversed from what you expect due to an unexpected hardware/software interaction.  Please test the stereo output carefully, if this matters, and reconnect the outputs of this instrument appropriately.  Only 16-bit stereo players are effected by this. <P>

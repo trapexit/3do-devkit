@@ -1,0 +1,31 @@
+<Title>OpenSoundFile</Title>
+<A NAME="XREF26861"><H1>OpenSoundFile </A></H1>
+<A NAME="XREF35669"></A> Creates a SoundFilePlayer data structure and loads a sound file.<P>
+<H3>Synopsis</H3>
+<CODE>SoundFilePlayer *OpenSoundFile( char *FileName,int32 NumBuffers, int32 BufSize )</CODE><P>
+<H3>Description</H3>
+This is a convenience function that creates a SoundFilePlayer data structure and loads the sound file.  It calls <CODE>CreateSoundFilePlayer()</CODE> and <CODE>LoadSoundFile()</CODE> for you. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>FileName
+<DD>A pointer to the name of the sound file. 
+</DL>
+<DL>
+<DT>NumBuffers
+<DD>A value indicating the number of audio data buffers in the SoundFilePlayer. 
+</DL>
+<DL>
+<DT>BufSize
+<DD>A value indicating the size of the audio data buffers. 
+</DL>
+<H3>Return Value</H3>
+This function returns a pointer to the SoundFilePlayer data structure if successful or NULL if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in music.lib V20. <P>
+<H3>Caveats</H3>
+Buffer size must be a multiple of the file's block size (see <CODE>LoadSoundFile()</CODE> for complete reason). <P>
+<H3>Associated Files</H3>
+soundfile.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><CODE> <A HREF="./02mpr050.html#XREF25761">CloseSoundFile</A>(), <A HREF="./02mpr052.html#XREF37655">DeleteSoundFilePlayer</A>(), <A HREF="./02mpr053.html#XREF30905">LoadSoundFile</A>(), <A HREF="./02mpr055.html#XREF26293">ReadSoundFile</A>(), <A HREF="./02mpr056.html#XREF37577">RewindSoundFile</A>(), <A HREF="./02mpr057.html#XREF11879">ServiceSoundFile</A>(), <A HREF="./02mpr058.html#XREF32478">StartSoundFile</A>(), <A HREF="./02mpr059.html#XREF24025">StopSoundFile</A>(), <A HREF="./02mpr060.html#XREF41161">UnloadSoundFile</A>() <A HREF="./02mpr051.html#XREF42166">CreateSoundFilePlayer</A>() </CODE><P>
+</CODE>

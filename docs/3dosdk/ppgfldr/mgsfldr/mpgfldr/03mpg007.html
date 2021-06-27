@@ -1,0 +1,19 @@
+<TITLE>Reading and Changing Audio Item Attributes</TITLE>
+<H1><LINK NAME="XREF14236">Reading and Changing Audio Item Attributes</LINK></H1><HR>
+Many Audio folio items have attributes that must be changed after the item has been created. For example, a sample created for use with a multisample instrument can be changed so that its pitch or velocity range can be limited. Because items are system resources, a task cannot alter them directly. To provide a task with the ability to change audio items, the Audio folio provides one call that reads an item's current settings and a second call that changes an item's current settings. These calls work with sample, envelope, attachment, knob, and tuning items.<P>
+<A NAME="XREF35697"><H2>Reading Audio Item Characteristics</A></H2>
+To read the current tag argument values for a sample, envelope, attachment, tuning, or knob item, use this call:<P>
+<DL>
+<DD><CODE>Err GetAudioItemInfo( Item AnyItem, TagArg *tp )</CODE><BR>
+</DL>
+The call accepts the item number of the item for which you want information, and a pointer to a list of tag arguments. You must set up the tag argument list before you use the call. You should include any of the item's tag arguments in which you are interested, anywhere from only one tag argument to all of the appropriate tag arguments. (The tag arguments are listed in the  description of <CODE>SetAudioItemInfo()</CODE> in <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>, of the <I>3DO Music and Audio Programmer's Reference</I>.  They are also described in <A HREF="./03mpg009.html#XREF14700">Setting an Attachment's Attributes</A>.)<P>
+When <CODE>GetAudioItemInfo()</CODE> executes, it finds the current value for each of the tag arguments in the list and writes that value to the tag argument. The call returns 0 if successful, or a negative number (an error code) if unsuccessful.<P>
+To get the information you asked for, read the values written into your tag argument list. (To make sure that each value is written, it is wise to initially set the tag argument values to NULL. <CODE>GetAudioItemInfo()</CODE> writes over the original values.)<P>
+<A NAME="XREF26867"><H2>Setting Audio Item Characteristics</A></H2>
+To change the characteristics of a sample, envelope, attachment, or tuning item, (but not a knob item), use this call:<P>
+<DL>
+<DD><CODE>Err SetAudioItemInfo( Item AnyItem, TagArg *TagList )</CODE><BR>
+</DL>
+The call accepts the item number of the item you want to change. It also accepts a pointer to a list of tag arguments that you must set up before you use the call. The tag argument values you supply in the list determine the characteristics of the item. (The tag arguments are described in <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>,  of the <I>3DO Music and Audio Programmer's Reference</I> under the description of <CODE>SetAudioItemInfo()</CODE>.)  You can also use <CODE>SetAudioItemInfoVA()</CODE>. See <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A> of the <I>3DO Music and Audio Programmer's Reference</I> for more information.<P>
+When <CODE>SetAudioItemInfo()</CODE> executes, it reads the tag argument values in the tag argument list and applies them to the specified item. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+Note that this call does <I>not</I> work with any audio items other than sample, envelope, attachment, or tuning items.<A NAME="XREF35501"></A><P>

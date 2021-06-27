@@ -1,0 +1,22 @@
+; $Id: rsh.patch,v 1.1 1994/03/19 00:26:44 peabody Exp $
+; sample/hold frequency modulation
+
+    ; oscillator
+LoadInstrument osc sawtooth.dsp
+Tweak osc Amplitude 5000
+
+    ; LFO
+LoadInstrument lfo randomhold.dsp
+Tweak lfo Frequency 16           ; modulation rate
+
+    ; modulation routing
+LoadInstrument mod timesplus.dsp
+Connect     lfo Output      mod InputA
+Tweak mod InputB 50           ; modulation amount
+Tweak mod InputC 200           ; modulation bias
+Connect     mod Output      osc Frequency   ; modulation destination
+
+    ; output
+LoadInstrument out directout.dsp
+Connect osc Output out InputLeft
+Connect osc Output out InputRight

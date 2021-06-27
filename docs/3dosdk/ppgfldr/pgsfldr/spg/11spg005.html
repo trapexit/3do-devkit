@@ -1,0 +1,17 @@
+<TITLE>The Current Directory</TITLE>
+<H1><LINK NAME="XREF18249">The Current Directory</LINK></H1><HR>
+Each task in the Portfolio environment has a current directory associated with it. The current directory is the starting location for relative pathnames that are used with various File folio calls which take a pathname as an argument.<P>
+When an application is loaded from a file, it automatically gets its current directory set to where the program file is located. This makes it easier for the new task to find any files it needs.<P>
+The File folio provides two calls, <CODE>GetDirectory()</CODE> and <CODE>ChangeDirectory(),</CODE> to determine and change the location of the current directory of the current task.<P>
+<H2>Finding the Current Directory</H2>
+<CODE>GetDirectory()</CODE> returns the item number of the current directory of the calling task. <P>
+<DL>
+<DD><CODE>Item GetDirectory( char *pathBuf, int32 pathBufLen )</CODE><BR>
+</DL>
+If <CODE>pathBuf</CODE> is non-NULL, it points to a buffer of writable memory whose length is given in <CODE>pathBufLen</CODE>; the absolute pathname of the current working directory is stored into this buffer.<P>
+<H2>Changing the Current Directory</H2>
+<CODE>ChangeDirectory()</CODE> changes the current directory of the current task to the absolute or relative location specified by the path.<P>
+<DL>
+<DD><CODE>Item ChangeDirectory( char *path )</CODE><BR>
+</DL>
+The function returns the item number of the new directory, or a negative error code if an error occurs.<P>

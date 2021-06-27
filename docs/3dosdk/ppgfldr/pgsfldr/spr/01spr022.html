@@ -1,0 +1,33 @@
+<Title>CreateItem</Title>
+<A NAME="XREF15505"><H1>CreateItem </A></H1>
+<A NAME="XREF37823"></A>Creates an item.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateItem( int32 ct, TagArg *p )<BR>
+Item CreateItemVA( int32 ct, uint32 tags, ... );</CODE><P>
+<H3>Description</H3>
+This macro creates an item. <P>
+<B>Note: </B> There are convenience procedures for creating most types of items (such as <CODE>CreateMsg()</CODE> to create a message and <CODE>CreateIOReq()</CODE> to create an I/O request). You should use <CODE>CreateItem()</CODE> only when no convenience procedure is available or when you need to supply additional arguments for the creation of the item beyond what the convenience routine provides. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ct
+<DD>Specifies the type of item to create. Use MkNodeID() to generate this value. 
+</DL>
+<DL>
+<DT>p
+<DD>A pointer to an array of tag arguments. The tag arguments can be in any order. The last element of the array must be the value TAG_END. If there are no tag arguments, this argument must be NULL. For a list of tag arguments for each item type, see the Portfolio Item's chapter.
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the new item or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in item.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Macro
+</DL>
+<H3>Notes</H3>
+When you no longer need an item created with <CODE>CreateItem()</CODE>, use <CODE>DeleteItem()</CODE> to delete it. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr014.html#XREF21994"><CODE>CheckItem</A>(), <A HREF="./01spr021.html#XREF36930">CreateIOReq</A>(), <A HREF="./01spr024.html#XREF10430">CreateMsg</A>(), <A HREF="./01spr025.html#XREF19499">CreateMsgPort</A>(), <A HREF="./01spr026.html#XREF34382">CreateSemaphore</A>(), <A HREF="./01spr027.html#XREF18113">CreateSmallMsg</A>(), <A HREF="./01spr028.html#XREF27054">CreateThread</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF15505"></LINK></H1><HR>

@@ -1,0 +1,37 @@
+<A NAME="XREF28249"><H1>ReturnPreviousControlPad</A></H1>
+<A NAME="XREF21163"></A>Returns the state of the control pad as it is 
+remembered.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ReturnPreviousControlPad (int32 whichPad)</CODE><P>
+<H3>Description</H3>
+Returns the state of the specified control pad as it is remembered from 
+the last time <CODE>DoControlPad()</CODE> was called and a new state for 
+the control pad existed. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>whichPad
+<DD>Index of the control pad to query. 
+</DL>
+<H3>Return Value</H3>
+Returns 0 if successful or a negative error code if an error occurs. <P>
+<H3>Caveats</H3>
+This function is neither multi-thread or multi-task capable or safe. <P>
+Because of system restrictions on item ownership and using items, 
+<CODE></CODE>you should call this function from the task or thread which 
+called <CODE>InitControlPad()</CODE>. <P>
+<CODE>InitControlPad()</CODE> and <CODE>InitEventUtility()</CODE> create 
+message ports and message items which only the task which has created them 
+can use. Hence, <CODE>DoControlPad()</CODE> can only be called by that 
+same task. If other tasks or threads attempt this errors result because 
+those tasks or threads do not own the appropriate message ports and 
+messages.<P>
+To make this function multi-thread capable, you would need to spawn a 
+thread that communicates directly with the event broker, and with all the 
+other tasks that will consume event information. <P>
+<H3>Associated Files</H3>
+controlpad.c, controlpad.h<P>
+<H3>Location</H3>
+examples/Exampleslib <P>
+<H3>See Also</H3>
+<A HREF="./13PGS002.html#XREF22018"><CODE>InitControlPad</A>, <A 
+HREF="./13PGS003.html#XREF23856">KillControlPad</A></CODE><P>

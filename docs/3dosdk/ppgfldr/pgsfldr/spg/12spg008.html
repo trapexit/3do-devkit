@@ -1,0 +1,220 @@
+<TITLE>Other Event Broker Activities</TITLE>
+<H1><LINK NAME="XREF24371">Other Event Broker Activities</LINK></H1><HR>
+Although the event broker's primary activity is monitoring pod table events for listeners, it performs other activities such as checking on connected listeners and pods, finding out where the focus lies, and controlling individual pods, such as stereoscopic glasses and audio controllers.<P>
+<H2>Getting Lists of Listeners and Connected Pods</H2>
+There are many times when a task needs a list of pods connected to the control port or listeners connected to the event broker. There are two flavors of messages that retrieve this kind of information: <CODE>EB_DescribePods</CODE> asks for a list of connected pods; <CODE>EB_GetListeners</CODE> asks for a list of connected listeners.<P>
+<H3>Asking for a List of Connected Pods</H3>
+When a task uses an <CODE>EB_DescribePods</CODE> message to ask the event broker for a list of connected pods, the message data block contains only the EventBrokerHeader data structure specifying the flavor <CODE>EB_DescribePods</CODE>. The message sent to the event broker should be a buffered message, created with <CODE>CreateBufferedMsg()</CODE>, which contains sufficient room to hold the complete list of connected pods.<P>
+<H3>Reading a Returned List of Connected Pods</H3>
+When the event broker replies to an <CODE>EB_DescribePods </CODE>message, it turns the message into an <CODE>EB_DescribePodsReply</CODE> message. The message's data buffer contains a list of pods currently attached to the control port. Those pods are described in the data structure PodDescriptionList, which is defined as follows:<P>
+<CODE>
+<PRE>
+typedef struct               PodDescriptionList
+{
+  EventBrokerHeader           pdl_Header;
+  int32                       pdl_PodCount;
+  PodDescription              pdl_Pod[1];
+} PodDescriptionList;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>pdl_Header</CODE> is an EventBrokerHeader data structure set to the message flavor <CODE>EB_DescribePodsReply</CODE>.
+<p>
+<LI><CODE>pdl_PodCount</CODE> contains the number of pods described in the next field.
+<p>
+<LI><CODE>pdl_Pod[]</CODE> is an array of pod descriptions, with one element for each pod currently attached to the control port. Each pod description is contained in the data structure PodDescription, defined as follows:
+</UL>
+<CODE>
+<PRE>
+typedef struct PodDescription
+{
+  uint8            pod_Number;
+  uint8            pod_Position;
+  uint8            rfu[2];
+  uint32           pod_Type;
+  uint32           pod_BitsIn;
+  uint32           pod_BitsOut;
+  uint32           pod_Flags;
+  uint8            pod_GenericNumber[16];
+  Item             pod_LockHolder;
+} PodDescription;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>pod_Number </CODE>gives the unique and unchanging pod number of the pod.
+<p>
+<LI><CODE>pod_Position</CODE> gives the position of the pod in the control port daisy chain. It is an integer from 1 to the total number of pods on the control port.
+<p>
+<LI><CODE>pod_Type</CODE> lists the native pod type of the pod, that is, the specific type of device attached to the daisy chain (not the generic type).
+<p>
+<LI><CODE>pod_BitsIn</CODE> and <CODE>pod_BitsOut</CODE> give the number of bits shifted into the pod during the control port data stream for each video field, and the number of bits shifted out of the pod during each data stream.
+<p>
+<LI><CODE>pod_Flags</CODE>, contains flags that show the generic device type (or types) that the pod contains. These flags, shown in Table 4, occupy the left-most bits of the <CODE>pod_Flags</CODE> word.
+<PRE>
+<B>Table 1: </B><I> Flag constants used for the pod_Flags field. </I>
+-----------------------------------------------
+Flag Constant      |Hex Value     |Count From  
+                   |              |Left-Most   
+                   |              |Bit         
+-----------------------------------------------
+POD_IsControlPad   |0x80000000    |0           
+-----------------------------------------------
+POD_IsMouse        |0x40000000    |1           
+-----------------------------------------------
+POD_IsGun          |0x20000000    |2           
+-----------------------------------------------
+POD_IsGlassesCtlr  |0x10000000    |3           
+-----------------------------------------------
+POD_IsAudioCtlr    |0x08000000    |4           
+-----------------------------------------------
+POD_IsKeyboard     |0x04000000    |5           
+-----------------------------------------------
+POD_IsLightGun     |0x02000000    |6           
+-----------------------------------------------
+POD_IsStick        |0x01000000    |7           
+-----------------------------------------------
+POD_IsIRController |0x00800000    |8           
+-----------------------------------------------
+</PRE>
+
+<LI><CODE>pod_GenericNumber</CODE> is an array of 16 unsigned 8-bit values. These values correspond to the bits of the <CODE>pod_Flags</CODE> field: <CODE>pod_GenericNumber[0</CODE>] corresponds to flag bit 0, <CODE>POD_IsControlPad</CODE>; <CODE>pod_GenericNumber[1] </CODE>corresponds to the first flag bit, <CODE>POD_IsMouse</CODE>; and so on. The value in each element of the array stores the rank of this pod in the order of all other identical generic devices connected to the serial port. For example, if <CODE>pod_GenericNumber[2]</CODE> contains a 4, then the pod contains a generic gun that is the fourth generic gun connected to the serial port.
+<p>
+<LI><CODE>pod_LockHolder</CODE> gives the item number of the task that has this pod locked for its exclusive use. If this field is set to 0, then the pod is unlocked. Pod locking is not currently implemented, so this field should not be used.
+</UL>
+<H3>Asking for a List of Connected Listeners</H3>
+When a task asks for a list of connected listeners, it uses an <CODE>EB_GetListeners</CODE> message, whose data block contains only the EventBrokerHeader data structure specifying the flavor <CODE>EB_GetListeners</CODE>. Messages used for this purpose must be created with<CODE> CreateBufferedMsg()</CODE> in the same way as messages used with the <CODE>EB_DescribePods</CODE> command. <CODE>CreateBufferedMsg()</CODE> is described in <A HREF="./12spg004.html#XREF13286">Creating a Configuration Message</A>.<P>
+<H3>Reading a Returned List of Connected Listeners</H3>
+When the event broker replies to an <CODE>EB_GetListeners</CODE> message, it turns the message into an E<CODE>B_GetListenersReply</CODE> message. The message buffer contains a list of listeners currently connected to the event broker. The list is contained in the data structure ListenerList, defined as follows:<P>
+<CODE>
+<PRE>
+typedef struct ListenerList
+{
+  EventBrokerHeader                        ll_Header; /* { EB_GetListenersReply } */
+  int32                        ll_Count;
+  struct {
+    Item                        li_PortItem;
+    enum ListenerCategory                        li_Category;
+  } ll_Listener[1];
+} ListenerList;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>ll_Header</CODE> is an <CODE>EventBrokerHeader</CODE> structure set to the message flavor <CODE>EB_GetListenersReply</CODE>.
+<p>
+<LI><CODE>ll_Count</CODE> contains the number of listeners described in the next field.
+<p>
+<LI><CODE>ll_Listener</CODE> is an array of listener descriptions with one element for each listener currently connected to the event broker. Each listener element contains these fields:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI><CODE>li_PortItem</CODE> contains the item number of the listener's reply port
+<p>
+<LI><CODE>li_Category</CODE> gives the listener's focus-interest category
+</UL><BR>
+</DL>
+<A NAME="XREF15481"><H2>Working With Input Focus</A></H2>
+It is often important for a listener to know which task currently has the input focus or to be able to change the input focus from one task to another without user intervention. The event broker can handle both of these requests.<P>
+<H3>Finding the Current Focus Holder</H3>
+To find the current focus holder, a listener can inquire with an <CODE>EB_GetFocus</CODE> message. Its data block is an <CODE>EventBrokerHeader</CODE> data structure set to the message flavor <CODE>EB_GetFocus</CODE>.<P>
+When the event broker receives an <CODE>EB_GetFocus</CODE> message, it gets the item number of the task currently holding the focus, writes that value in the error field of the message, and returns the message to the task. The task receiving the message reads the current focus holder's item number from the error field. The error field will contain a negative number (an error code) if the operation failed.<P>
+<H3>Setting the Current Focus Holder</H3>
+<B>Warning: </B>Although the event broker currently allows any user task to set the current focus holder, in the future this request may restricted to only privileged tasks.<P>
+To move the focus from one task to another without input from the user, a listener can use an <CODE>EB_SetFocus</CODE> message. The data block for this message uses the SetFocus data structure, defined as follows:<P>
+<CODE>
+<PRE>
+typedef struct SetFocus
+{
+  EventBrokerHeader sf_Header; /* { EB_SetFocus } */
+  Item            sf_DesiredFocusListener;
+} SetFocus;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>sf_Header</CODE> is an EventBrokerHeader data structure set to the message flavor <CODE>EB_SetFocus</CODE>.
+<p>
+<LI><CODE>sf_DesiredFocusListener</CODE> is the item number of the task to which the event broker should give the focus.
+</UL>
+When the event broker receives the message, it changes the input focus to the requested task and writes that task's item number into the error field of the message. It returns the message to the sending task. That task can now read the error field to get the item number of the focus-holding task (if successful) or an error code (if unsuccessful).<P>
+<H2>Commanding a Pod</H2>
+Sometimes a task may want to control a pod through the event broker. For example, a task may wish to alternate lens opaqueness in a pair of stereoscopic glasses, or mute the sound coming through an audio controller. To issue commands to a pod, the task uses a message of the flavor<CODE> EB_IssuePodCmd</CODE>. It accompanies the message with a data block that uses the PodData data structure, defined as follows:<P>
+<CODE>
+<PRE>
+typedef struct PodData
+{
+  EventBrokerHeader                        pd_Header;
+  int32             pd_PodNumber;
+  int32             pd_WaitFlag;
+  int32             pd_DataByteCount;
+  uint8             pd_Data[4];
+} PodData;
+</CODE>
+</PRE>
+<UL>
+<LI><CODE>pd_Header</CODE> is an EventBrokerHeader data structure set to the message flavor <CODE>EB_IssuePodCmd</CODE>.
+<p>
+<LI><CODE>pd_PodNumber</CODE> gives the pod number of the pod to which the command is sent.
+<p>
+<LI><CODE>pd_WaitFlag</CODE> can be set to either 1 or 0. If set to 1, it asks the event broker to send the command to the pod and reply immediately. If set to 0, it asks the event broker to send the command to the pod, wait for the command to finish execution, and then reply to command message.
+<p>
+<LI><CODE>pd_DataByteCount</CODE> gives the size in bytes of the <CODE>pd_Data</CODE> field that follows.
+<p>
+<LI><CODE>pd_Data</CODE> is an array of bytes that contains the command sent to the pod. The first element of the array (element 0) contains the generic device class of the pod to which the command is sent; the second element (element 1) contains the command subcode, which is specific to the generic class in the first element. If the command defined by these two bytes requires extra data, that data goes into the elements of the array listed below.
+</UL>
+<H3>Generic Device Class</H3>
+The include file <I>event.h</I> currently defines the following constants to specify generic device classes:<P>
+<UL>
+<LI><CODE>GENERIC_ControlPad</CODE><B> </B>- a controller pad.
+<LI><CODE>GENERIC_Mouse</CODE><B> </B>- a mouse.
+<LI><CODE>GENERIC_Gun</CODE> - a photo-optic gun.
+<LI><CODE>GENERIC_GlassesCtlr</CODE><B> </B>- a stereoscopic glasses controller.
+<LI><CODE>GENERIC_AudioCtlr</CODE><B> </B>- an audio controller.
+<LI><CODE>GENERIC_Keyboard</CODE><B> </B>- a keyboard.
+<LI><CODE>GENERIC_LightGun</CODE> - a light gun.
+<LI><CODE>GENERIC_Stick</CODE> - a joystick.
+<LI><CODE>GENERIC_IRController</CODE> - a infrared controller pad (wireless).
+</UL>
+The array element <CODE>pd_Data[0]</CODE> should hold the constant appropriate to the commanded pod.<P>
+<H3>Audio Controller Subcodes</H3>
+The audio controller accepts commands defined by audio controller subcodes. At present, Portfolio offers one audio subcode, specified by the following constant:<P>
+<UL>
+<LI><CODE>GENERIC_AUDIO_SetChannels</CODE> controls the output of the two stereo audio channels.
+</UL>
+This subcode goes in the array element <CODE>pd_Data[1]</CODE>. It requires one byte of data following it in <CODE>pd_Data[2]</CODE>. This data specifies how the stereo channels are controlled. The four options, defined by the following constants, are:<P>
+<UL>
+<LI><CODE>AUDIO_Channels_Mute</CODE> - turns off the audio output in both channels.
+<p>
+<LI><CODE>AUDIO_Channels_RightToBoth</CODE> - feeds the right audio signal to both left and right channels.
+<p>
+<LI><CODE>AUDIO_Channels_LeftToBoth</CODE> - feeds the left audio signal to both the left and right channels.
+<p>
+<LI><CODE>AUDIO_Channels_Stereo</CODE> - feeds the left audio signal to the left channel and right audio signal to the right channel.
+</UL>
+<H3>Glasses Controller Subcodes</H3>
+The stereoscopic glasses controller accepts commands defined by glasses controller subcodes. At present, Portfolio offers one glasses subcode, specified by the following constant:<P>
+<UL>
+<LI><CODE>GENERIC_GLASSES_SetView</CODE> - controls the opacity of each lens in a pair of stereoscopic glasses.
+</UL>
+This subcode goes into the array element <CODE>pd_Data[1]</CODE>. It requires two bytes of data following it in <CODE>pd_Data[2]</CODE> and <CODE>pd_Data[3]</CODE>. The first of the two data bytes controls the left lens of the glasses, the second byte controls the right lens. The four possible values for each lens, defined by the following constants, are:<P>
+<UL>
+<LI><CODE>GLASSES_AlwaysOn</CODE> - keeps the lens clear during both odd and even video fields.
+<p>
+<LI><CODE>GLASSES_OnOddField</CODE> - turns the lens clear every odd video field, and turns it opaque every even field.
+<p>
+<LI><CODE>GLASSES_OnEvenField</CODE> - turns the lens clear every even video field, and turns it opaque every odd field.
+<p>
+<LI><CODE>GLASSES_Opaque</CODE> - turns the lens opaque during both odd and even video fields.
+</UL>
+<H3>Lightgun Controller Subcode</H3>
+Currently, Portfolio offers one light gun controller subcode, which is specified by the following constant:<P>
+<UL>
+<LI><CODE>GENERIC_LIGHTGUN_SetLEDs</CODE> controls the setting of LEDs on the light gun. The setting of up to eight LEDs is supported, although the stock light gun has only two.
+</UL>
+The possible options, defined by the following constants, are:<P>
+<UL>
+<LI><CODE>LIGHTGUN_LED1</CODE> - controls the setting of the first LED on the light gun.
+<p>
+<LI><CODE>LIGHTGUN_LED2</CODE> - controls the setting of the second LED on the light gun.
+</UL>
+<H3>The Event Broker's Reply to a Command</H3>
+After the event broker processes a pod command message, it returns the message to the sending task to report on the command execution. The returned message is of the flavor <CODE>EB_IssuePodCmdReply</CODE>, and contains a reply portion that is a negative number if there was an error executing the command, or is 0 or a positive number if the command execution was successful.<P>

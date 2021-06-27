@@ -1,0 +1,22 @@
+<Title>OffsetCelByFDelta</Title>
+<A NAME="XREF15707"><H1>OffsetCelByFDelta </A></H1>
+ Moves a cel.<P>
+<H3>Synopsis</H3>
+<CODE>void OffsetCelByFDelta (CCB *cel, FPoint *deltaXY)</CODE><P>
+<H3>Description</H3>
+Adjusts a single cel's location by the specified delta. Adds the delta values to the X/Y coordinates in the CCB. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to the cel to be moved. 
+</DL>
+<DL>
+<DT>deltaXY
+<DD>Pointer to an FPoint containing the movement delta values. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO139.html#XREF41189"><CODE>OffsetCelByIDelta</A>, <A HREF="./01LDO135.html#XREF20014">OffsetAACelByFDelta</A>, <A HREF="./01LDO140.html#XREF27283">OffsetCelListByFDelta</A> </CODE><P>

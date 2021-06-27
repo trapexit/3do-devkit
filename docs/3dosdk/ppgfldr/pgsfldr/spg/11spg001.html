@@ -1,0 +1,49 @@
+<TITLE>3DO File System Interface</TITLE>
+<H1>3DO File System Interface</H1><HR>
+The 3DO file system is, in essence, a high-level device driver that interposes itself between an application and the "raw" disk device. The application can issue a call to open a specific disk file and will receive in return an item for a device node. This device item (referred to internally as an "open file") can be treated like most other device items-you can create one or more IOReq items for the device item, and send these IOReqs to the device to read data from the file.<P>
+The file system architecture is implemented as a combination of the following elements:<P>
+<UL>
+<LI>The <B>File folio</B> that provides high-level functions to interface to the lower-level components.
+<LI>The <B>driver</B> that manages the file system and open file devices.
+<LI>The <B>daemon</B> task that manages I/O scheduling.
+</UL>
+The 3DO filesystem is an intrinsic part of Portfolio and starts automatically during system start up.<P>
+<H2>Design Philosophy</H2>
+The 3DO filesystem structures were designed with a number of factors:<P>
+<UL>
+<LI>Most 3DO file systems reside on CD-ROM devices.
+<p>
+<LI>CD-ROM drives are slow, with seek times measured in hundreds of milliseconds. Minimizing the amount of head-seeking required during game play is critical to the responsiveness of the system.
+<p>
+<LI>3DO CD-ROMs tend to be handled and stored under less-than-ideal conditions. They can be subject to accidental damage during or between uses. 
+</UL>
+For these reasons, the 3DO file system supports data replication, in a way that is transparent to the application and to the user (except for a possible delay, if one copy of the data cannot be read and the CD-ROM mechanism must seek another copy). The file driver prioritizes, sorts, and optimizes I/O requests to the file system device to minimize the total seek-and-read time for individual requests and for groups of requests.<P>
+<H2>Files</H2>
+Files are collections of blocks, each block containing a fixed number of bytes. The block size of a file is determined generally by the block or sector size of the device on which it resides. For example, on a CD-ROM file system, most files have a block size of 2,048 bytes.<P>
+The file system deals with files exclusively in terms of blocks. However, it does maintain a logical size in bytes for each file. This logical size indicates the number of bytes actually used within the blocks allocated for the file.<P>
+The File folio provides a number of FileStream functions that offer a stream-oriented interface to the file system. Using these functions, you can read and seek in files in a manner that is similar to the C stdio routines. These functions are described in <A HREF="./11spg003.html#XREF25374">Byte-Stream File Access</A>.<P>
+<H2>Directories</H2>
+The 3DO-native file system implements directories as ordinary disk files that are flagged as a specific type. The directories can be opened as normal files using the <CODE>OpenDiskFile()</CODE> function. To read the contents of a directory, you must use the <CODE>OpenDirectory()</CODE> and <CODE>ReadDirectory()</CODE> functions.<P>
+<H2>Avatars</H2>
+The 3DO CD-ROM file system supports the unique concept of avatars. Each file consists of one or more avatars, placed in various locations across the disk. Each avatar is an exact, coequal image of the data in the file.<P>
+<H3>How Avatars Work</H3>
+The file driver keeps track of the current position of the device's read head. When asked to read data, it automatically chooses the "closest avatar in good condition" of each block of data it is asked to read. If it must perform more than one read, the driver sorts the read requests to minimize the amount of head-seeking. It honors the I/O request priorities during this process-completing all requests of one priority before scheduling any requests of a lower priority.<P>
+If the device has trouble reading a data block contained within one avatar of a file, the file driver marks that avatar as flawed and reissues the read request-thus searching out another avatar on the disk, if one exists.<P>
+It is not necessary, nor is it desirable, for all files in a 3DO file system to have the same number of avatars. Critical directories, or files accessed frequently throughout the execution of the application, can have as many as a dozen avatars scattered across the disk. Large files, or those containing noncritical data, may have only one avatar.<P>
+<H3>Placement of a File's Avatars</H3>
+The placement of a file's avatars can have a great effect on the 
+performance of a Portfolio game application. If your application opens and 
+reads several files in sequence, and the avatars lie some distance away from 
+one another on the CD-ROM, the CD-ROM drive must <I>seek</I> from one file to 
+another; your program must wait while it does so. However, if the avatars are 
+located close together, ideally, right next to one another, the CD-ROM drive 
+needs to seek less, and perhaps not at all. Every seek on a CD-ROM drive takes 
+tens to hundreds of milliseconds; it's important to minimize the number of seeks 
+for your application to perform well.<P>
+The software tool that lays out a Portfolio CD-ROM can optimize the avatar 
+locations on your files in an effective, semiautomatic fashion. It can create 
+two or more avatars of frequently used files, to reduce the distance needed to 
+seek to the file. It can even weave portions of different files together into a 
+single accelerated-access file called <I>Catapult</I>, eliminating most of the seeks that occur during the system startup process. <P>
+The layout optimization and multiple-avatar speedups, and the Catapult acceleration, are completely transparent to your application. You do not need to change any application code to take advantage of them. They do not change the functionality of the filesystem, they simply improve its performance.<P>
+Instructions on doing an optimized CD-ROM layout with Catapult acceleration can be found in the <I>3DO CD-ROM Mastering Guide</I>. You should do an optimized and Catapult-accelerated layout of your application before you submit it to The 3DO Company for encryption. If you submit a nonoptimized CD-ROM image for encryption, the company may ask you to optimize and resubmit it.<P>

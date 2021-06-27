@@ -1,0 +1,23 @@
+<Title>MulSF16_F32</Title>
+<A NAME="XREF13628"><H1>MulSF16_F32 </A></H1>
+<A NAME="XREF12116"></A> Multiplies two signed 16.16 numbers and returns a 32.32 result.<P>
+<H3>Synopsis</H3>
+<CODE>void MulSF16_F32( frac32 *prod, frac16 m1, frac16 m2 )</CODE><P>
+<H3>Description</H3>
+This function multiplies two signed 16.16 numbers together and deposits the 32.32 result in the location pointed to by the prod argument. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>prod
+<DD>A pointer to the location to store the 32-bit result. 
+</DL>
+<DL>
+<DT>m1, m2                       
+<DD>Two 16.16 multiplicands. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr044.html#XREF39505"><CODE>Mul32</A>(), <A HREF="./03spr045.html#XREF20258">Mul64</A>(), <A HREF="./03spr059.html#XREF13868">MulSF16</A>(), <A HREF="./03spr063.html#XREF12651">MulU32_64</A>(), <A HREF="./03spr046.html#XREF12566">MulF14</A>(), <A HREF="./03spr061.html#XREF41980">MulSF30</A>(), <A HREF="./03spr064.html#XREF12226">MulUF16</A>(), <A HREF="./03spr057.html#XREF24913">MulS32_64</A>(), <A HREF="./03spr065.html#XREF39874">MulUF16_F32</A>(), <A HREF="./03spr062.html#XREF11097">MulSF30_F60</A>(), <A HREF="./03spr066.html#XREF41768">MulUF30_F60</A>() </CODE><P>
+</CODE>

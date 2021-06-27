@@ -1,0 +1,45 @@
+<TITLE>PrintError</TITLE>
+<A NAME="XREF18183"><H1>PrintError </A></H1>
+<A NAME="XREF28487"></A>Prints the error string for an error<P>
+<H3>Synopsis</H3>
+<CODE>void PrintError( char *who, char *what, char *whom, Err err )</CODE><P>
+<H3>Description</H3>
+On DEVELOPMENT builds, this macro calls a procedure that prints the error string for an error to the Macintosh console for a 3DO development system. This has the same effect as using <CODE>printf()</CODE> to print the who, what, and whom strings with the string constructed by <CODE>GetSysErr()</CODE>. <P>
+On non-DEVELOPMENT builds, this macro expands to an empty statement, reducing code size and avoiding pulling in lots of extraneous junk from the support libraries. <P>
+To copy an error string into a buffer instead of sending it the console, use <CODE>GetSysErr()</CODE>. <P>
+In the task called "shell", the C statement <P>
+PrintError((char *)0, "open", filename, errno) <P>
+might result in something like this: <P>
++================ Terminal ================ | FFS-Severe-System-extended-No such file | shell: unable to open "badfile" <P>
+<H3>Arguments</H3>
+<DL>
+<DT>who
+<DD>A string that identifies the task, folio, or module that encountered the error; if a NULL pointer or a zero-length string is passed, the name of the current task is used (or, if there is no current task, "notask"). 
+</DL>
+<DL>
+<DT>what
+<DD>A string that describes what action was being taken that failed. Normally, the words "unable to" are printed before this string to save client data space; if the first character of the "what" string is a backslash, these words are not printed. 
+</DL>
+<DL>
+<DT>whom
+<DD>A string that describes the object to which the described action is being taken (for instance, the name of a file). It is printed surrounded by quotes; if a NULL pointer or zero length string is passed, the quotes are not printed. 
+</DL>
+<DL>
+<DT>err
+<DD>A (normally negative) number denoting the error that occurred, which will be decoded with GetSysErr. If not negative, then no decoded error will be printed. 
+</DL>
+<H3>Implementation</H3>
+Macro implemented in the operror.h V21. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>operror.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr108.html#XREF37909">PrintfSysErr()</A> </CODE>, 
+<CODE><A HREF="./01spr080.html#XREF41016">GetSysErr()</A> </CODE><P>
+<H1><LINK NAME="XREF18183"></LINK></H1><HR>

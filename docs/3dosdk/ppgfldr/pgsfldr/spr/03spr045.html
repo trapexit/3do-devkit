@@ -1,0 +1,25 @@
+<Title>Mul64</Title>
+<A NAME="XREF20258"><H1>Mul64 </A></H1>
+<A NAME="XREF42342"></A> Multiplies two 64-bit integers.<P>
+<H3>Synopsis</H3>
+<CODE>void Mul64( int64 *p, int64 *m1, int64 *m2 )</CODE><P>
+<H3>Description</H3>
+This function multiplies two 64-bit integers together and returns the product. An overflow condition is not detected. The 64-bit integer result is deposited in the location pointed to by the p argument. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>p
+<DD>A pointer to a the location to store the 64-bit integer result. 
+</DL>
+<DL>
+<DT>m1, m2                       
+<DD>Pointers to the locations of the two 64-bit integer multiplicands. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>Caveats</H3>
+The function does not detect overflows. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr044.html#XREF39505"><CODE>Mul32</A>(), <A HREF="./03spr057.html#XREF24913">MulS32_64</A>(), <A HREF="./03spr063.html#XREF12651">MulU32_64</A>(), <A HREF="./03spr046.html#XREF12566">MulF14</A>(), <A HREF="./03spr059.html#XREF13868">MulSF16</A>(), <A HREF="./03spr061.html#XREF41980">MulSF30</A>(), <A HREF="./03spr064.html#XREF12226">MulUF16</A>(), <A HREF="./03spr060.html#XREF13628">MulSF16_F32</A>(), <A HREF="./03spr065.html#XREF39874">MulUF16_F32</A>(), <A HREF="./03spr062.html#XREF11097">MulSF30_F60</A>(), <A HREF="./03spr066.html#XREF41768">MulUF30_F60</A>() </CODE><P>
+</CODE>

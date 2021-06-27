@@ -1,0 +1,30 @@
+<Title>SetSCelChannelFlags</Title>
+<A NAME="XREF22278"><H1>SetSCelChannelFlags</A></H1>
+<A NAME="XREF39033"></A>Sets channel flags.<P>
+<H3>Synopsis</H3>
+<CODE>long SetSCelChannelFlags (SCelContextPtr ctx, long channelNumber, long mask, long flagValues)</CODE><P>
+<H3>Description</H3>
+Sets the status flags for the specified logical channel. Enhances the standard set channels call by allowing you to set flags in the status word individually.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>ctx
+<DD>Pointer to context structure for the SCel subscriber.
+</DL>
+<DL>
+<DT>channelNumber
+<DD>Logical channel number.
+</DL>
+<DL>
+<DT>mask
+<DD>Bits set in the mask indicate which flags are to be updated.
+</DL>
+<DL>
+<DT>flagValues
+<DD>Values of the flag bits to be updated.
+</DL>
+<H3>Return Value</H3>
+Returns an error code, or zero if there was no error.<P>
+<H3>Caveat</H3>
+This function is part of the <I>Subscriber.lib</I> library file that can currently (Toolkit1.5) be found in <I>Attic:Streaming:2p1:DataStream:Subscribers:Subscriber.lib</I>. It will later be integrated into the main Streaming tree. <P>
+<H3>Associated Files</H3>
+SCelSubscriber.h<P>

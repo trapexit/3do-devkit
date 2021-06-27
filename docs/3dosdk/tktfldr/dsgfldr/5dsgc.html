@@ -1,0 +1,38 @@
+<TITLE>Selecting priorities</TITLE>
+<H1><LINK NAME="XREF21221">Selecting priorities</LINK></H1><HR>
+Data streaming is built upon the real-time multitasking facilities of the 3DO Portfolio operating system. As in any real-time system, the priorities of the tasks of the application are critical.<P>
+This section lists a recommended order of process priorities and explains the reasons for that order.<P>
+<H2>Recommended order of process priorities</H2>
+System priorities are taken care of by the 3DO Portfolio operating system. Arrange relative process priorities of all DataStreamer threads, including your own program, as follows, starting with the most important:<P>
+<OL>
+<LI>Control subscriber
+
+<LI>Audio subscriber
+<LI>Data acquisition
+<LI>Other subscribers
+<LI>Streamer
+<LI>User display/interface process (your own playback application)
+</OL>
+Here are the reasons for assigning priorities in the order listed: <P>
+<UL>
+<LI>The control subscriber thread should have the highest priority. This ensures branching or stopping have higher a priority than completion of other processes. This results in minimum delay to a user's actions. 
+<p>
+<LI>The audio subscriber thread should have the second-highest priority. This ensures the least possible delay between the time an audio data chunk arrives and the time it is transmitted to the audio folio for output.
+<p>
+<LI>The data acquisition thread should be next, since acquiring data is more crucial than transmitting it. 
+<p>
+<LI>Other subscriber threads should have lower priority than data acquisition. Depending on your application, consider whether to allow the other subscribers to time-slice or run on a strict priority basis. If subscribers are created with the same priority, the operating system performs time-slicing to give each subscriber a chance to run.
+<p>
+<LI>The streamer thread should have higher priority than the user application but lower priority than other DataStreamer threads. That way, it is most likely to encounter buffers that have been emptied and that it can pass on. 
+</UL>
+Note that all priorities discussed above are relative. That is, the actual numeric values of task priorities do not matter as long as the relative priorities are preserved. <P>
+<H2>How bad priorities can stop your stream</H2>
+When deciding on subscriber process priorities, consider their effect on the overall utilization of data streaming buffers. <P>
+All data chunks in a stream buffer must be processed before data acquisition can refill the buffer-you don't want to overwrite data that hasn't been processed yet. If a subscriber does not reply to its arriving data quickly enough, the stream eventually stops flowing, as in the following situations:<P>
+<UL>
+<LI>If a subscriber owns one data chunk in every stream buffer and doesn't reply to any of them, then the stream stops flowing completely. This can occur if a subscriber has a priority that is so low that it can't operate on its arriving data. 
+<p>
+<LI>A variation of this occurs when a subscriber gets only enough time to process some, but not all, of its data. In this case, buffers containing unprocessed subscriber data chunks must remain unavailable for refilling.
+</UL>
+The second situation is, in fact, the normal case; it represents what happens when the streamer gets ahead of the subscribers in delivering data. This is desirable for covering disc seeks: more data are stored buffered in memory than are needed right away. While those data are played, the disc seek can happen and new data can then be acquired without additional delay.<P>
+<P>

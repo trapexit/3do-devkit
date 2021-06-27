@@ -1,0 +1,67 @@
+<TITLE>Timing Audio Events</TITLE>
+<H1><LINK NAME="XREF27235">Timing Audio Events</LINK></H1><HR>
+One of the most important aspects of audio programming is timing. The Audio folio provides note internal timing in the form of envelope players and envelopes. You specify time segments for an envelope, envelope units, in microseconds; however the Audio folio specifies the actual time in the form of the <I>audio clock,</I> a timer that typically slices time up into 240 units per second. <P>
+240 Hz is usually too slow for an envelope player, but it is appropriate for timing note starts, stops, and releases. To help you time these and other events, the Audio folio provides a set of timing calls that refer to the audio clock. The Audio folio also has a timing notification mechanism, the <I>cue,</I> which a timing call can send back to a task at the appropriate time.<P>
+<H2>The Audio Clock</H2>
+The audio clock is based on interrupts from the DSP. These interrupts, <I>audio ticks</I>, occur by default every 184 sample frames. When the DSP runs at its normal rate of 44,100 Hz, the audio clock tick frequency is approximately 240 Hz (239.674 to be almost precise) and each tick has a duration of approximately 4.172 milliseconds.<P>
+<B>Note: </B>Do not depend on the audio clock being exactly 240Hz.<P>
+The audio clock keeps a running total of its ticks from the moment the Audio folio is started. The beginning total is 0. The running total, which gives elapsed time in ticks, is stored as an unsigned 32-bit integer. The clock wraps around when it reaches its maximum; that is, it stores up to 4,294,967,296 ticks, then jumps back to 0 and starts accumulating once again. At 240 ticks per second, 4,294,967,296 is enough ticks to measure the length of approximately 207 days.<P>
+Applications are not affected when the clock wraps around, because the Audio folio treats time as circular. That is, it understands that 23 ticks is 30 ticks after 4,294,967,290 ticks. And because time is circular, a 3DO system left running as a demo in a store window will not stop every 207 days when the clock resets itself.<P>
+Whenever an audio call returns a time from the audio clock, it uses the <CODE>AudioTime</CODE> variable type, which is defined as a <CODE>uint32</CODE>.<P>
+<H3>Reading the Audio Clock</H3>
+To read the audio clock and get the current time (measured in ticks since the Audio folio opened), use this call:<P>
+<DL>
+<DD><CODE>AudioTime GetAudioTime( void )</CODE><BR>
+</DL>
+The call accepts no arguments and returns the audio clock's current reading in an <CODE>AudioTime</CODE> variable type.<P>
+<H2>Timed Notification</H2>
+You can, of course, measure the passage of time by constantly getting the audio time and checking it against the first audio time you retrieved. But you should not do this; it is the equivalent of busy waiting and wastes system resources. Instead, you should take advantage of the audio calls that measure out time. To do that, you need to know about the cue.<P>
+<H3>Creating a Cue</H3>
+A cue is an item associated with a system signal (discussed in the chapter "Communicating Among Tasks"). A task passes the cue's item number to a timing call; the call uses the signal associated with the cue to notify the task at the specified time.<P>
+To create a cue, use the Audio folio call <CODE>CreateCue()</CODE>, which returns the item number of the created cue. The statement  below is a <CODE>CreateCue()</CODE> call used to create a cue. It stores the returned item number in the variable <CODE>Cue</CODE>.<P>
+<DL>
+<DD><CODE>Cue = CreateCue(NULL)</CODE><BR>
+</DL>
+After you have created a cue, you may need the signal bit allocated to the cue so you can wait for the cue's signal. To do so, use this call.<P>
+<DL>
+<DD><CODE>uint32 GetCueSignal( Item Cue )</CODE><BR>
+</DL>
+The call accepts the item number of the cue. When it executes, it returns a signal mask with the allocated signal bit set if successful. If unsuccessful, it returns 0.<P>
+<H3>Signalling at a Specified Time</H3>
+If a task needs to be signalled at a specific time on the audio clock, it can use this call:<P>
+<DL>
+<DD><CODE>Err SignalAtTime( Item Cue, AudioTime Time )</CODE><BR>
+</DL>
+The call accepts the item number of a cue with which to signal the calling task. It also accepts the time (in ticks) at which to signal the task. The signalling time is usually derived by getting the current time, adding the amount of time to wait, and then passing the result to <CODE>SignalAtTime()</CODE>.<P>
+Whenit executes, <CODE>SignalAtTime()</CODE> waits until the audio clock gets to the specified AudioTime value. At that point, the call sends a signal to the calling task using the signal bit allocated to the specified cue. The call returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+After <CODE>SignalAtTime()</CODE> is executed, the calling task can either put itself  in wait state to wait for the cue's signal (using the call <CODE>WaitSignal()</CODE>) or it can proceed to other business and check later to see if the cue's signal was received.<P>
+<H3>Sleeping a Specified Time</H3>
+If you want your task to enter wait state while waiting for a specified time, but would like to do it without finding out a cue's signal bit and calling <CODE>WaitSignal()</CODE>, you can use this convenience call:<P>
+<DL>
+<DD><CODE>Err SleepUntilTime( Item Cue, AudioTime Time )</CODE><BR>
+</DL>
+The call accepts the item number of a cue and the time at which the calling task wants to leave the wait state. When it executes, <CODE>SleepUntilTime()</CODE> puts the task in wait state until the specified time. At that point, the task leaves wait state and continues execution. <CODE>SleepUntilTime()</CODE> returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<CODE>SleepAudioTicks()</CODE> is <I>not</I> an accurate timing call when used repeatedly. For example, a task may want to start an instrument every 60 ticks. It uses <CODE>SleepAudioTicks()</CODE> to sleep 59 ticks, then wakes and starts an instrument, uses <CODE>SleepAudioTicks()</CODE> to sleep 59 more ticks, then wakes and starts an instrument, and so on. If, at any time, the process of waking and starting an instrument takes more than one cycle (which may happen during system hiccups such as drive access and so on), the time between instrument starts becomes erratic. If you are trying to keep many different instruments synchronized while playing a score, the accumulating timing error you get using <CODE>SleepAudioTicks()</CODE> will soon turn your score into random burblings. Use <CODE>SleepUntilTime()</CODE> for accurate timing of serial events.<P>
+<B>Note: </B>If you request a wake up call to the timer but you no longer want it, call <CODE>AbortTimerCue()</CODE> to remove the request.<P>
+<H2>Attachment Timing</H2>
+Waiting for a time specified by the audio clock is one way to coordinate note playing so that musical scores and sound effects all play at appropriate times. Some timing depends, however, on the state of other events, usually the progress of sample or envelope playback. The Audio folio supplies several calls that monitor the state of attachment playback and act accordingly.<P>
+<H3>Signalling at a Specified Attachment Point</H3>
+At times a task needs to be informed when a sample has played through to a specified point within the sample. For example, a task may want to start playing fireworks instruments when a sampled sound speech reaches the word "celebration."  If so, the task can specify the "celebration" point of the sample and ask to monitor that sample. When sample playback reaches that point, a cue signals the task so the task can play fireworks.<P>
+To set a signal frame within a sample attachment (or, if desired, a signal point within an envelope), use this call:<P>
+<DL>
+<DD><CODE>Err MonitorAttachment( Item Attachment, Item Cue, int32 Index )</CODE><BR>
+</DL>
+The call accepts the item number of the attachment to be monitored, the item number of a cue to be used for signalling the calling task, and an index value to the signal frame or point. The index value specifies a sample frame within a sample (counting from frame 0 at the beginning) or specifies an envelope point within an envelope (counting from point 0 at the beginning). One special index value, CUE_AT_END, specifies the last frame of a sample, useful for notification when a sample has finished playing.<P>
+<B>Note: </B>CUE_AT_END is the only supported  index value.<P>
+When <CODE>MonitorAttachment()</CODE> executes, it monitors the specified attachment playback. When playback reaches the signal frame or point, the call signals the calling task using the cue's allocated signal bit. If successful, it returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+The calling task can choose to enter wait state to wait for the cue signal. While the task waits, instruments that are playing continue to play. The calling task can also choose to go on about its business and continue execution, checking later to see if the cue signal was received.<P>
+<H3>Stopping an Instrument at Attachment's End</H3>
+It often happens that a started instrument plays on its own indefinitely, even after it makes no more sound. For example, a sampled sound instrument with an amplitude envelope attachment plays into a release loop set within the sample. The instrument plays on even after the envelope playback has finished and has reduced amplitude to 0. The instrument keeps playing until it receives a <CODE>StopInstrument()</CODE> call.<P>
+For situations like this, you can set one (or more) of the instrument's attachments as a stop linked attachment. The first stop linked attachment to finish playing stops the entire instrument along with all of its attachments. If, in the previous example, the envelope attachment was a stop linked attachment, then as soon as it had faded to 0 and finished playback, it would stop the sampled sound instrument so that it no longer used DSP cycles to play the now inaudible release loop of its sample.<P>
+<H3>Checking an Attachment's Progress</H3>
+There are times when a task wants to know where playback is within a sample or envelope. For example, a task can check to see if the sample playback has entered the sustain loop or the release loop. To find out which sample frame is currently playing in a sample attachment, use this call:<P>
+<DL>
+<DD><CODE>int32 WhereAttachment( Item Attachment )</CODE><BR>
+</DL>
+The call accepts the item number of the sample attachment to monitor. If successful, it returns the byte offset of the sample; if unsuccessful, it returns a negative value (an error code).<P>
+The byte offset returned by <CODE>WhereAttachment()</CODE> is <I>not</I> a frame index but a byte index. It starts at 0 with the first byte of the sample and counts up byte by byte from there. To get the frame number, multiply the number of bytes per sample by the number of samples per frame, use the result to divide the byte offset, and then discard the remainder. For example, if the call returns byte 9657 of a 16-bit stereo sample, then divide by 4 (two bytes times two samples) to get a frame offset of 2414. If the sample has finished, it returns a value outside the range of valid bytes; the value can be negative or positive.<P>

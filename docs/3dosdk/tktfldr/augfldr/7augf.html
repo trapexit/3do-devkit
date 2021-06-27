@@ -1,0 +1,105 @@
+<TITLE>Symbolic capabilities</TITLE>
+<H1><LINK NAME="XREF27003">Symbolic capabilities</LINK></H1><HR>
+<H2>Setting constants</H2>
+The EQU and * directives are used to give a symbolic name to a fixed or program-relative value. The syntax is:<P>
+<CODE>
+<PRE>
+label EQU expression
+label * expression
+</CODE>
+</PRE>
+<I>RN</I> defines register names. Registers can only be referred to by name. The names R0-R15, r0-r15, PC, pc, LR and lr, are predefined.<P>
+<I>FN</I> defines the names of floating point registers. The names F0-F7 and f0-f7 are built in. The syntax is:<P>
+<CODE>
+<PRE>
+label RN numeric-expression
+label FN numeric-expression
+</CODE>
+</PRE>
+<I>CP</I> gives a name to a coprocessor number, which must be within the range 0 to 15. The names p0-p15 are pre-defined.<P>
+<I>CN</I> names a coprocessor register number; c0-c15 are pre-defined. The syntax is:<P>
+<CODE>
+<PRE>
+label CP numeric-expression
+label CN numeric-expression
+</CODE>
+</PRE>
+<A NAME="XREF42681"><H2>Local and global variables </A></H2>
+While most symbols have fixed values determined during assembly, variables have values which may change as assembly proceeds. The assembler supports both global and local variables. The scope of global variables extends across the entire source file while that of local variables is restricted to a particular instantiation of a macro (see <A HREF="./7augj.html#XREF31690">Macros</A>). Variables must be declared before use with one of these directives.<P>
+<PRE>
+--------------------------------------------------------
+GBLA       |Declares a global arithmetic variable.      
+           |Values of arithmetic variables are 32-bit   
+           |unsigned integers.                          
+--------------------------------------------------------
+GBLL       |Declares a global logical variable          
+--------------------------------------------------------
+GBLS       |Declares a global string variable           
+--------------------------------------------------------
+LCLA       |Declares and initialises a local arithmetic 
+           |variable (initial state zero)               
+--------------------------------------------------------
+LCLL       |Declares and initialises a local logical    
+           |variable (initial state false)              
+--------------------------------------------------------
+LCLS       |Declares and initialises a local string     
+           |variable (initial state null string)        
+--------------------------------------------------------
+</PRE>
+<P>
+The syntax of these directives is:<P>
+<CODE>
+<PRE>
+directive variable-name
+</CODE>
+</PRE>
+The value of a variable can be altered using the relevant one of the following three directives:<P>
+<PRE>
+--------------------------------------------------------
+SETA       |Sets the value of an arithmetic variable    
+--------------------------------------------------------
+SETL       |Sets the value of a logical variable        
+--------------------------------------------------------
+SETS       |Sets the value of a string variable         
+--------------------------------------------------------
+</PRE>
+<P>
+The syntax of these directives is:<P>
+<CODE>
+<PRE>
+variable-name directive expression
+</CODE>
+</PRE>
+where <I>expression</I> evaluates to the value being assigned to the variable named.<P>
+<A NAME="XREF17481"><H2>Variable substitution </A></H2>
+Once a variable has been declared its name cannot be used for any other purpose, and any attempt to do so will result in an error. However, if the $ character is prefixed to the name, the variable's value will be substituted before the assembler checks the line's syntax. Logical and arithmetic variables are replaced by the result of performing a :STR: operation on them (see <A HREF="./7augg.html#XREF19144">Unary operators</A>), string variables by their value.<P>
+<H2>Built-in variables</H2>
+There are seven built-in variables. They are:<P>
+<PRE>
+--------------------------------------------------------
+{PC} or .  |Current value of the program location       
+           |counter.                                    
+--------------------------------------------------------
+{VAR} or @ |Current value of the storage-area location  
+           |counter.                                    
+--------------------------------------------------------
+{TRUE}     |Logical constant true.                      
+--------------------------------------------------------
+{FALSE}    |Logical constant false.                     
+--------------------------------------------------------
+{OPT}      |Value of the currently set listing option.  
+           |The OPT directive can be used to save the   
+           |current listing option, force a change in it
+           |or restore its original value.              
+--------------------------------------------------------
+{CONFIG}   |Has the value 32 if the assembler is in     
+           |32-bit program counter mode, and the value  
+           |26 if it is in 26-bit mode.                 
+--------------------------------------------------------
+{ENDIAN}   |Has the value "big" if the assembler is in  
+           |big-endian mode, and the value "little" if  
+           |it is in little-endian mode.                
+--------------------------------------------------------
+</PRE>
+<P>
+<P>

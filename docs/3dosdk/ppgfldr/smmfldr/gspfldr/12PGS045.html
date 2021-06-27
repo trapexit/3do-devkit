@@ -1,0 +1,34 @@
+<Title>playmf</Title>
+<A NAME="XREF19330"><H1>playmf </A></H1>
+<A NAME="XREF28956"> </A>Plays a standard MIDI file.<P>
+<H3>Synopsis</H3>
+<CODE>playmf &lt;MIDI file&gt; &lt;PIMap file&gt; [&lt;num 
+repeats&gt;]</CODE><P>
+<H3>Description</H3>
+Loads a standard MIDI format file, loads instruments and AIFF samples 
+described in a PIMap file, and plays the MIDI file the specified number of 
+times. Demonstrates use of the Juggler and the score playing routines. <P>
+This program is implemented as both a shell program (in $c) and as an 
+example. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>MIDI file 
+<DD>Path and file name of a Format 0 or Format 1 MIDI file.
+</DL>
+<DL>
+<DT>PIMap file
+<DD>Path and file name of a PIMap (Program-Instrument Map) text file. This 
+file is parsed at run-time to associate MIDI program numbers with AIFF 
+samples.
+</DL>
+<DL>
+<DT>num repeats
+<DD>Number of times to play the MIDI file. Defaults to 1.
+</DL>
+<H3>Implementation</H3>
+Released as an example in V20. <P>
+Also implemented as a command in V24. <P>
+<H3>Location</H3>
+$c/playmf <P>
+<CODE><CODE>examples/Audio</CODE><P>
+</CODE>

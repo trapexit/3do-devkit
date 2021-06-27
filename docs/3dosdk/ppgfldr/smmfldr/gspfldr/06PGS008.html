@@ -1,0 +1,9 @@
+<TITLE>Leaving Unused Fields in DMA Structures Uninitialized</TITLE>
+<H1>Leaving Unused Fields in DMA Structures Uninitialized</H1><HR>
+<H3>What is it:</H3>
+Leaving DMA pointers as garbage or nonsense. <P>
+The most common occurrence of this phenomenon is leaving the <CODE>ccb_NextPtr</CODE> field uninitialized. Future versions of the cel engine hardware may attempt to do pre-fetches to increase rendering speed; an uninitialized pointer pointing out of memory space could cause your process to terminate unexpectedly. <P>
+<H3>Why it's bad:</H3>
+Hardware prefetch logic could cause your program to terminate.<P>
+<H3>What to do</H3>
+Always initialize your structures. Always set DMA pointers to valid memory or to NULL<B>.</B><P>

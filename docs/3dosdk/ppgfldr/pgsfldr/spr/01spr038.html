@@ -1,0 +1,40 @@
+<Title>DoIO</Title>
+<A NAME="XREF37111"><H1>DoIO </A></H1>
+<A NAME="XREF14895"></A>Performs synchronous I/O.<P>
+<H3>Synopsis</H3>
+<CODE>Err DoIO( Item ior, const IOInfo *ioiP )</CODE><P>
+<H3>Description</H3>
+This procedure is the most efficient way to perform synchronous I/O (I/O in which the task waits for the I/O request to complete before continuing). It automatically requests quick I/O (see below), sends the I/O request, and then puts the calling task into wait state until the request is complete. <P>
+ <CODE>DoIO()</CODE> automatically sets the IO_QUICK flag in the IOInfo structure. This flag specifies quick I/O, which works as follows: The kernel tries to perform the I/O operation immediately and, if it is successful, it sends back the resulting IOReq immediately and returns 1 as the result code. The calling task can then get the necessary information from the IOReq. If quick I/O is not successful, the kernel performs normal asynchronous I/O and notifies the task with a signal or message when the I/O request is complete. This wakes up the task and DoIO() returns. <P>
+Starting with kernel folio V24, this function will automatically sample the io_Error field of the I/O request and return this to you. It is, therefore, no longer necessary to have code such as: <P>
+<CODE>
+<PRE>
+err = DoIO(iorItem,&amp;ioinfo); 
+0r err = DoIO(iorItem,&amp;ioinfo);
+    if (err &gt;= 0)
+        err = ior-&gt;io_Error;
+</CODE>
+</PRE>
+You can now just look at the return value of <CODE>DoIO()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ior
+<DD>The item number of the I/O request to use.
+</DL>
+<DL>
+<DT>ioiP
+<DD>A pointer to the IOInfo structure containing the I/O command to be executed, input and/or output data, and other information. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns when the I/O was successful (which means that the IOReq structure has already been returned and its contents can be examined). <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. Became a SWI in kernel folio V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>io.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr001.html#XREF20829"><CODE>AbortIO</A>(), <A HREF="./01spr013.html#XREF25810">CheckIO</A>(), <A HREF="./01spr021.html#XREF36930">CreateIOReq</A>(), <A HREF="./01spr031.html#XREF13807">DeleteIOReq</A>(), <A HREF="./01spr121.html#XREF16419">SendIO</A>(), <A HREF="./01spr131.html#XREF35365">WaitIO</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF37111"></LINK></H1><HR>

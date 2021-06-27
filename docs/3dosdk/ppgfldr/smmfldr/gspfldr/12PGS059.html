@@ -1,0 +1,33 @@
+<Title>ta_spool</Title>
+<A NAME="XREF29007"><H1>ta_spool </A></H1>
+<A NAME="XREF12993"> </A>Demonstrates the music.lib sound spooler.<P>
+<H3>Synopsis</H3>
+<CODE>ta_spool</CODE><P>
+<H3>Description</H3>
+Uses the music.lib sound spooler to fill buffers, parse information in the 
+buffers, signal our task when a buffer has been exhausted, and refill the 
+buffers. Use this sample code as a basis for developing your own routines 
+for playing large sampled files, or handling other kinds of buffered data. 
+<P>
+When you press one of the buttons, the following events take place:<P>
+<UL>
+<LI>Button A-simulates a hold on data delivery. The application continues 
+to consume information in its buffers. 
+<LI>Button B-stops the playback function. Releasing it restarts playback. 
+Holding down either shift button causes the spooler to be aborted instead 
+of merely stopped. 
+<LI>Button C-enters one-shot mode. Each C button press starts a 
+<CODE>ssplPlayData()</CODE> sequence. Press the play button returns to 
+normal mode. 
+<LI>Start Button-pauses the playback function. Releasing it lets the 
+application continue. 
+<LI>Stop (X) Button-quit. 
+</UL>
+<H3>Associated Files</H3>
+ta_spool.c<P>
+<H3>Location</H3>
+examples/Audio <P>
+<H3>See Also</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/02mpr098.html#XREF39302">ssplCreateSoundSpooler</A>,
+ <A HREF="./12PGS072.html#XREF11133">tsp_spoolsoundfile</A></CODE><P>
+</CODE>

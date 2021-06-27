@@ -1,0 +1,15 @@
+directory :{1} 
+set exit 0
+echo "Making" {2} "In directory" {1}
+
+#	Make sure the object directory always exists
+
+If "`Exists -d ":Objects:"`" == ""
+	newfolder :Objects:
+End
+
+make -f {2}.make {3} {4} {5} {6} {7} {8} {9} > makeout
+makeout
+delete makeout
+directory ::
+exit 0

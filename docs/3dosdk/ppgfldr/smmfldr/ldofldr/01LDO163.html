@@ -1,0 +1,32 @@
+<Title>SetTextCelSize</Title>
+<A NAME="XREF21946"><H1>SetTextCelSize </A></H1>
+ Sets new size for text in cel.<P>
+<H3>Synopsis</H3>
+<CODE>Err SetTextCelSize (TextCel *tCel, int32 width, int32 
+height)</CODE><P>
+<H3>Description</H3>
+Sets a new size for the text cel. If width and/or height are zero, the cel 
+is set to a 1 x 1 pixel size initially, and each time text is placed into 
+the cel the size automatically changes to reflect the size of the 
+characters actually in the cel. <P>
+Whenever you change a cel's size, you lose the cel's  current
+    contents, because the data buffer is discarded and reallocated at the new
+    size, and after allocation all pixels in the buffer are set to zero. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>width
+<DD>New width for the cel. 
+</DL>
+<DL>
+<DT>height
+<DD>New height for the cel. 
+</DL>
+<H3>Return Value</H3>
+Non-negative if successful, or negative if a new cel data buffer can't be 
+allocated. <P>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

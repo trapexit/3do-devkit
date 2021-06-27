@@ -1,0 +1,16 @@
+<Title>ResetCurrentFont </Title>
+<A NAME="XREF39436"><H1>ResetCurrentFont </A></H1>
+<A NAME="XREF18462"> Resets the system's default font.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err ResetCurrentFont (void)</CODE><P>
+<H3>Description</H3>
+This call resets the 3DO system font to the default font. Call <CODE>ResetCurrentFont()</CODE> at the start of the program run, if you are using any of the font calls. You must call <CODE>ResetCurrentFont()</CODE> when your application exits if you changed the system font. <P>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr032.html#XREF21455"><CODE>GetCurrentFont</A>() </CODE><P>
+</CODE>

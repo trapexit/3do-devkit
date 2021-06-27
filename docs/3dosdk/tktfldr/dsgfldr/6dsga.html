@@ -1,0 +1,19 @@
+<TITLE>Conceptual background</TITLE>
+<H1><LINK NAME="XREF32719">Conceptual background</LINK></H1><HR>
+In designing a subscriber, it's useful to understand some conceptual background. This section discusses the following topics:<P>
+
+<UL>
+<LI><A HREF="#XREF15266">Buffering</A>
+<LI><A HREF="#XREF34964">Logical channels</A>
+<LI><A HREF="#XREF39998">Control calls</A>
+</UL>
+<A NAME="XREF15266"><H2>Buffering</A></H2>
+Data that a subscriber needs should be delivered before it is needed. The subscriber retains this data until it is used, then returns it to the streamer so that the memory can be reused. To make the best use of memory for overall streaming throughput, a subscriber should return data buffers to the streamer as soon as possible. Data that is used repeatedly should <I>never </I>be kept in a stream buffer. If you load such data in a stream data block, copy it to long-term storage allocated specifically for that purpose.<P>
+The Join subscriber makes it possible to work with data that are used repeatedly. See <A HREF="./3dsgd.html#XREF38530">Displaying persistent data with the Join subscriber</A> for more information. The SCEL subscriber and the Text subscriber allow for a stream header flag that copies a specified chunk out of the stream buffer. See the <I>Attic</I> folder for more information. <P>
+<A NAME="XREF34964"><H2>Logical channels</A></H2>
+Logical channels make it possible to weave several independent data tracks into the stream and deal with them independently. Most subscribers support logical channels. <P>
+For example, an application could have three logical channels for audio: a sound track, English voice-over, and French voice-over. Users should be able to select their native language, and control music output separately. Control of the channel is handled by the subscriber, and usually accessed through <CODE>DSControl()</CODE>.<P>
+Logical channels are also helpful when you stream video into different cels. You can use a different channel for each cel, and manipulate them differently. <P>
+<A NAME="XREF39998"><H2>Control calls</A></H2>
+The playback application has to be able to control the different subscriber threads. Control over a subscriber is generally implemented through a message API to the subscriber thread via the streamer thread. The playback application has access to this API through the <CODE>DSControl()</CODE> call. <CODE>DSControl()</CODE> messages are relayed to the subscribers by the streamer. Please see the header files and documentation for the subscriber you're interested in details on the features supported by each subscriber.<P>
+<P>

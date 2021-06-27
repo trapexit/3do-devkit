@@ -1,0 +1,71 @@
+<TITLE>Classes of Peripherals</TITLE>
+<H1><LINK NAME="XREF17250">Classes of Peripherals</LINK></H1><HR>
+Peripherals supported by the 3DO Interactive Multiplayer system include:<P>
+<UL>
+<LI>Light gun
+<LI>Extended joystick
+<LI>Mouse
+<LI>Control pad
+</UL>
+<B>Note: </B>Examples for using the control pad are discussed in <A 
+HREF="./04PGSTOC.html#XREF12151">Getting User Input</A>.<P>
+Peripheral devices are divided into two classes.<P>
+<UL>
+<LI>digital
+<LI>analog
+</UL>
+<H2>Digital</H2>
+Digital peripheral devices are best suited for applications involving 
+on/off events with a limited range of motion. The control pad is a digital 
+device.<P>
+<H2>Analog</H2>
+Analog peripheral devices are best suited for applications involving a 
+broad and continuous range of motion. The joystick, light gun, and mouse 
+are analog devices.<P>
+Analog peripheral devices work best with games that require smooth 
+control. It is possible to emulate the functionality of an analog device, 
+such as the joystick, with the digital control pad, but this ultimately 
+frustrates the user and is not recommended. <P>
+This document is concerned primarily with analog peripheral devices.<p>
+<H3>Personality</H3>
+Each peripheral has a set of characteristics-a <I>personality</I>-that 
+makes it more suitable for some types of applications than for others. 
+Developers who take the time to understand the characteristics of the 
+various peripherals are in the best position to pick the appropriate 
+peripheral for their application, and to derive the maximum benefit from 
+the personality of that device.<P>
+The following list matches peripherals supported by the 3DO Interactive 
+Multiplayer system with games best suited to the personality of each:<P>
+<UL>
+<LI>Extended light gun-most often used with shooting games and arcade 
+games.
+<p>
+<LI>Joystick-the varying degrees of movement possible with this peripheral 
+ideally suit it for driving simulation and flight simulation games.
+<p>
+<LI>Mouse-best suited for games that require the player to click on items 
+on the screen, for example strategy-type games.
+</UL>
+<H3>Noise Level</H3>
+Relative noise level is another distinguishing characteristic of 
+peripherals. Noise level refers to the amount of superfluous information 
+traveling back and forth between peripheral and game. A noisy peripheral 
+is one that transfers a relatively large amount of irrelevant data. The 
+extended joystick, for example, continues to send information about minute 
+changes in its x and y coordinates even when idle.<P>
+The following is a comparative list of supported peripherals:<P>
+<UL>
+<LI>Light gun-moderately noisy
+<LI>Extended joystick-noisy
+<LI>Mouse-quiet
+</UL>
+Filtering is a way of setting the resolution of a peripheral, that is, of 
+establishing a threshold at which information exchange between game and 
+peripheral becomes significant.<P>
+Based on the minimal movement perceived by the device, some type of 
+filtering is recommended to avoid jittering and expensive recomputations. 
+The <I>3DO:Examples:Eventbroker</I> folder contains sample peripheral 
+filters.<P>
+The management of data transfer between peripheral and game is handled by 
+the event broker. See <A HREF="./08PGS003.html#XREF27911"> Event 
+broker</A> for more information. <P>

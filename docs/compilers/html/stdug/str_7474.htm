@@ -1,0 +1,118 @@
+<HTML><HEAD><TITLE>String Operations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>String Operations</H2>
+<P>In the following sections, we'll examine the standard library operations used to create and manipulate strings.</P>
+<A NAME="declarationandinitializationofstring"><H3>Declaration and Initialization of string</H3></A>
+<P>The simplest form of declaration for a string simply names a new variable, or names a variable along with the initial value for the string.  This form was used extensively in the example graph program given in <a href="exa_7078.htm#graphs">9 (<i>Example, Graphs</i>)</a>.  A copy constructor also permits a string to be declared that takes its value from a previously defined string.</P>
+<PRE>   string s1;
+   string s2 ("a string");
+   string s3 = "initial value";
+   string s4 (s3);
+</PRE>
+<P>In these simple cases the capacity is initially exactly the same as the number of characters being stored.  Alternative constructors let you explicitly set the initial capacity.  Yet another form allows you to set the capacity and initialize the string with repeated copies of a single character value.</P>
+<PRE>   string s6 ("small value", 100);// holds 11 values, can hold 100
+   string s7 (10, '\n');          // holds ten newline characters
+</PRE>
+
+<A HREF="sidebar.htm#sidebar47"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Initializing from Iterators</STRONG></A>
+
+<P>Finally, like all the container classes in the standard library, a string can be initialized using a pair of iterators.  The sequence  being denoted by the iterators must have the appropriate type of elements.</P>
+<PRE>   string s8 (aList.begin(), aList.end());
+</PRE>
+
+<A NAME="resettingsizeandcapacity"><H3>Resetting Size and Capacity</H3></A>
+<P>As with the <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> data type, the current size of a string is yielded by the <SAMP>size()</SAMP> member function, while the current capacity is returned by <SAMP>capacity().</SAMP>  The latter can be changed by a call on the <SAMP>reserve()</SAMP> member function, which (if necessary) adjusts the capacity so that the string can hold at least as many elements as specified by the argument.  The member function <SAMP>max_size()</SAMP> returns the maximum string size that can be allocated.  Usually this value is limited only by the amount of available memory. </P>
+<PRE>   cout &#60;&#60; s6.size() &#60;&#60; endl;
+   cout &#60;&#60; s6.capacity() &#60;&#60; endl;
+   s6.reserve(200);                    // change capacity to 200
+   cout &#60;&#60; s6.capacity() &#60;&#60; endl;
+   cout &#60;&#60; s6.max_size() &#60;&#60; endl;
+</PRE>
+<P>The member function<SAMP> length()</SAMP> is simply a synonym for <SAMP>size().</SAMP>  The member function <SAMP>resize()</SAMP> changes the size of a string, either truncating characters from the end or inserting new characters. The optional second argument for <SAMP>resize()</SAMP> can be used to specify the character inserted into the newly created character positions.</P>
+<PRE>   s7.resize(15, '\t');                // add tab characters at end
+   cout &#60;&#60; s7.length() &#60;&#60; endl;        // size should now be 15
+</PRE>
+<P>The member function <SAMP>empty()</SAMP> returns <SAMP>true</SAMP> if the string contains no characters, and is generally faster than testing the length against a zero constant.</P>
+<PRE>   if (s7.empty()) 
+      cout &#60;&#60; "string is empty" &#60;&#60; endl;
+</PRE>
+
+<A NAME="assignmentappendandswap"><H3>Assignment, Append and Swap</H3></A>
+<P>A string variable can be assigned the value of either another string, a literal C-style character array, or an individual character.</P>
+<PRE>   s1 = s2;
+   s2 = "a new value";
+   s3 = 'x';
+</PRE>
+<P>The operator <SAMP>+=</SAMP> can also be used with any of these three forms of argument, and specifies that the value on the right hand side should be <I>appended </I>to the end of the current string value.</P>
+<PRE>   s3 += "yz";                   // s3 is now xyz
+</PRE>
+<P>The more general <SAMP>assign()</SAMP> and <SAMP>append()</SAMP> member functions let you specify a subset of the right hand side to be assigned to or appended to the receiver.  A single integer argument <SAMP>n</SAMP> indicates that only the first <SAMP>n</SAMP> characters should be assigned/appended, while two arguments, <SAMP>pos</SAMP> and <SAMP>n</SAMP>, indicate that the <SAMP>n </SAMP>values following position <SAMP>pos</SAMP> should be used.</P>
+<PRE>   s4.assign (s2, 3);           // assign first three characters
+   s4.append (s5, 2, 3);        // append characters 2, 3 and 4
+</PRE>
+<P>The addition operator <SAMP>+</SAMP> is used to form the catenation of two strings.  The <SAMP>+</SAMP> operator creates a copy of the left argument, then appends the right argument to this value.</P>
+<PRE>   cout &#60;&#60; (s2 + s3) &#60;&#60; endl;   // output catenation of s2 and s3
+</PRE>
+<P>As with all the containers in the standard library, the contents of two strings can be exchanged using the <SAMP>swap()</SAMP> member function.</P>
+<PRE>   s5.swap (s4);                // exchange s4 and s5
+</PRE>
+
+<A NAME="characteraccess"><H3>Character Access</H3></A>
+<P>An individual character from a string can be accessed or assigned using the subscript operator.  The member function <SAMP>at()</SAMP> is a synonym for this operation.</P>
+<PRE>   cout &#60;&#60; s4[2] &#60;&#60; endl;        // output position 2 of s4
+   s4[2] = 'x';                  // change position 2
+   cout &#60;&#60; s4.at(2) &#60;&#60; endl;     // output updated value
+</PRE>
+<P>The member function<SAMP> c_str()</SAMP> returns a pointer to a null terminated character array, whose elements are the same as those contained in the string.  This lets you use strings with functions that require a pointer to a conventional C-style character array.  The resulting pointer is declared as constant, which means that you cannot use <SAMP>c_str()</SAMP> to modify the string.  In addition, the value returned by <SAMP>c_str()</SAMP> might not be valid after any operation that may cause reallocation (such as <SAMP>append()</SAMP> or <SAMP>insert()</SAMP>).  The member function <SAMP>data()</SAMP> returns a pointer to the underlying character buffer.</P>
+<PRE>   char d[256];
+   strcpy(d, s4.c_str());                // copy s4 into array d
+</PRE>
+
+<A NAME="iterators"><H3>Iterators</H3></A>
+<P>The member functions <SAMP>begin()</SAMP> and <SAMP>end()</SAMP> return beginning and ending random-access iterators for the string.  The values denoted by the iterators will be individual string elements.  The functions <SAMP>rbegin()</SAMP> and <SAMP>rend()</SAMP> return backwards iterators.</P>
+<A HREF="sidebar.htm#sidebar48"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Invalidating Iterators</STRONG></A>
+
+<A NAME="insertionremovalandreplacement"><H3>Insertion, Removal and Replacement</H3></A>
+<P>The <A HREF="../stdref/str_8586.htm"><B><I>string</I></B></A> member functions <SAMP>insert()</SAMP> and <SAMP>remove()</SAMP> are similar to the <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> functions <SAMP>insert()</SAMP> and <SAMP>erase().</SAMP>  Like the vector versions, they can take iterators as arguments, and specify the insertion or removal of the ranges specified by the arguments.   The function <SAMP>replace()</SAMP> is a combination of remove and insert, in effect replacing the specified range with new values.</P>
+<PRE>   s2.insert(s2.begin()+2, aList.begin(), aList.end());
+   s2.remove(s2.begin()+3, s2.begin()+5);
+   s2.replace(s2.begin()+3, s2.begin()+6, s3.begin(), s3.end());
+</PRE>
+<P>In addition, the functions also have non-iterator implementations.  The <SAMP>insert()</SAMP> member function takes as argument a position and a string, and inserts the string into the given position.  The remove function takes two integer arguments, a position and a length, and removes the characters specified.  And the replace function takes two similar integer arguments as well as a string and an optional length, and replaces the indicated range with the string (or an initial portion of a string, if the length has been explicitly specified).</P>
+<PRE>   s3.insert (3, "abc");      //insert abc after position 3
+   s3.remove (4, 2);          // remove positions 4 and 5
+   s3.replace (4, 2, "pqr");  //replace positions 4 and 5 with pqr
+</PRE>
+
+<A NAME="copyandsubstring"><H3>Copy and Substring</H3></A>
+<P>The member function <SAMP>copy()</SAMP> generates a substring of the receiver, then assigns this substring to the target given as the first argument.  The range of values for the substring is specified either by an initial position, or a position and a length.</P>
+<PRE>   s3.copy (s4, 2);       // assign to s4 positions 2 to end of s3
+   s5.copy (s4, 2, 3);    // assign to s4 positions 2 to 4 of s5
+</PRE>
+<P>The member function<SAMP> substr()</SAMP> returns a string that represents a portion of the current string.  The range is specified by either an initial position, or a position and a length.</P>
+<PRE>   cout &#60;&#60; s4.substr(3) &#60;&#60; endl;       // output 3 to end
+   cout &#60;&#60; s4.substr(3, 2) &#60;&#60; endl;    // output positions 3 and 4</PRE>
+
+<A NAME="stringcomparisons"><H3>String Comparisons</H3></A>
+<A HREF="sidebar.htm#sidebar49"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Comparing Strings</STRONG></A>
+
+<P>The member function <SAMP>compare()</SAMP> is used to perform a lexical comparison between the receiver and an argument string.  Optional arguments permit the specification of a different starting position or a starting position and length of the argument string. See <a href="sca_1926.htm#lexicalcomparison">Chapter 13 (<i>Lexical Comparison</i>)</a> for a description of lexical ordering.  The function returns a negative value if the receiver is lexicographically smaller than the argument, a zero value if they are equal and a positive value if the receiver is larger than the argument.</P>
+<P>The relational and equality operators <SAMP>(&#60;, &#60;=, ==, !=, >=</SAMP> and <SAMP>></SAMP>) are all defined using the comparison member function.  Comparisons can be made either between two strings, or between strings and ordinary C-style character literals.</P>
+<A NAME="searchingoperations"><H3>Searching Operations</H3></A>
+<P>The member function<SAMP> find()</SAMP> determines the first occurrence of the argument string in the current string.  An optional integer argument lets you specify the starting position for the search.  (Remember that string index positions begin at zero.) If the function can locate such a match, it returns the starting index of the match in the current string.  Otherwise, it returns a value out of the range of the set of legal subscripts for the string.  The function <SAMP>rfind()</SAMP> is similar, but scans the string from the end, moving backwards.</P>
+<PRE>   s1 = "mississippi";
+   cout &#60;&#60; s1.find("ss") &#60;&#60; endl;              // returns 2
+   cout &#60;&#60; s1.find("ss", 3) &#60;&#60; endl;           // returns 5
+   cout &#60;&#60; s1.rfind("ss") &#60;&#60; endl;             // returns 5
+   cout &#60;&#60; s1.rfind("ss", 4) &#60;&#60; endl;          // returns 2
+</PRE>
+<P>The functions <SAMP>find_first_of(),</SAMP><SAMP> find_last_of(),</SAMP><SAMP> find_first_not_of(),</SAMP> and <SAMP>find_last_not_of()</SAMP> treat the argument string as a set of characters.  As with many of the other functions, one or two optional integer arguments can be used to specify a subset of the current string.  These functions find the first (or last) character that is either present (or absent) from the argument set.   The position of the given character, if located, is returned.  If no such character exists then a value out of the range of any legal subscript is returned.</P>
+<PRE>   i = s2.find_first_of ("aeiou");            // find first vowel
+   j = s2.find_first_not_of ("aeiou", i);     // next non-vowel
+</PRE>
+
+<HR>
+<A HREF="str_1999.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="ane_8974.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

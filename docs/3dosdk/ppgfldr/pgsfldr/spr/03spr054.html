@@ -1,0 +1,37 @@
+<Title>MulObjectMat44_F16</Title>
+<A NAME="XREF40677"><H1>MulObjectMat44_F16 </A></H1>
+<A NAME="XREF15989"></A> Multiplies a matrix within an object structure by an external 4x4 matrix of 16.16 values.<P>
+<H3>Synopsis</H3>
+<CODE>void MulObjectMat44_F16( void *objectlist[],ObjOffset2 *offsetstruct, mat44f16 mat, int32 count )</CODE><P>
+<H3>Description</H3>
+This function multiplies a matrix within object structures by an external 4x4 matrix of 16.16 fractions, and repeats over a number of objects. The results of the product are deposited in the destination matrix in each object structure pointed to by the objectlist array. <P>
+The object structure argument defines offsets within objects to the elements to be manipulated. The definition for ObjOffset2 is as follows: <P>
+<CODE>typedef struct ObjOffset2 {int32 oo2_DestMatOffset; int32 oo2_SrcMatOffset;} ObjOffset2; </CODE><P>
+<UL>
+<LI>oo2_DestMatOffset is the offset (in bytes) from the beginning of an object structure to where to write the result of the matrix multiply. 
+<LI>oo2_SrcMatOffset is the offset (in bytes) from the beginning of an object structure to the location of the matrix to be multiplied. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>objectlist
+<DD>An array of pointers to object structures to modify. 
+</DL>
+<DL>
+<DT>offsetstruct
+<DD>A pointer to the source object structure that defines offsets within object's to the elements to be multiplied. 
+</DL>
+<DL>
+<DT>mat
+<DD>A 4x4 matrix of 16.16 fractions to be multiplied. 
+</DL>
+<DL>
+<DT>count
+<DD>The number of vectors for the multiplication. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr053.html#XREF30462"><CODE>MulObjectMat33_F16</A>() </CODE><P>
+</CODE>

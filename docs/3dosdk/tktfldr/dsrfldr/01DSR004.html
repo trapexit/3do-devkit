@@ -1,0 +1,20 @@
+<Title>CloseBlockFile</Title>
+<A NAME="XREF25813"><H1>CloseBlockFile</A></H1>
+<A NAME="XREF32648"> </A>Closes a block file.<P>
+<H3>Synopsis</H3>
+<CODE>void CloseBlockFile (BlockFilePtr bf)</CODE><P>
+<H3>Description</H3>
+Closes the specified block file. <CODE>CloseBlockFile()</CODE> calls <CODE>CloseDiskFile()</CODE> directly to close the file device, which frees the resources associated with the file.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>bf</CODE>
+<DD>Pointer to the block file.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>None
+</DL>
+<H3>Associated Files</H3>
+BlockFile.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR054.html#XREF38570"><CODE>OpenBlockFile</A></CODE><P>

@@ -1,0 +1,63 @@
+<TITLE>Audio Playback</TITLE>
+<H1><LINK NAME="XREF11697">Audio Playback</LINK></H1><HR>
+The 3DO system accepts both AIFF files and MIDI files for playback. This section looks at playback of AIFF files, which is done with the SAudio subscriber and player. <P>
+This section discusses:<P>
+
+<UL>
+<LI><A HREF="#XREF32685">Weaver script commands for audio</A>
+<LI><A HREF="#XREF39390">Initialization for audio</A>
+</UL>
+<A NAME="XREF32685"><H2>Weaver script commands for audio</A></H2>
+When streaming audio, you need to add certain information to the Weaver script and perform some special initialization not needed for other subscribers. <P>
+Add the following script commands to the Weaver script: <P>
+<UL>
+<LI><CODE>preloadinstrument</CODE>-preloads the instrument that will play back the audio. 
+<LI><CODE>enableaudiomask</CODE>-specifies a mask that enables specific audio channels at setup. 
+</UL>
+<A NAME="XREF39390"><H2>Initialization for audio</A></H2>
+When you use audio, some additional initialization is required. The following example shows code from <I>PlayCPackStream.c</I> in <I>NuPlayer</I>.<P>
+<B>Example 1: </B><I>Initializing the streaming application for audio. </I><P>
+<CODE>
+<PRE>
+/* If the stream has audio, then do some additional initializations.
+     */
+    if ( fStreamHasAudio )
+        {
+        /* Preload audio instrument templates, if any are specified
+         */
+        if ( ctx-&gt;hdr.preloadInstList != 0 )
+            {
+            ctlBlock.loadTemplates.tagListPtr = ctx-&gt;hdr.preloadInstList;
+        
+            status = DSControl( ctx-&gt;messageItem, NULL, ctx-&gt;streamCBPtr, 
+
+                                SNDS_CHUNK_TYPE, kSAudioCtlOpLoadTemplates, &amp;ctlBlock );
+            if ( status != 0 )
+                goto CLEANUP;
+            }
+    
+        /* Enable any audio channels whose enable bit is set.
+         * NOTE: Channel zero is enabled by default, so we don't check it.*/
+        for ( channelNum = 1; channelNum &lt; 32; channelNum++ )
+            {
+            /* If the bit corresponding to the channel number is set,
+             * then tell the audio subscriber to enable that channel.
+             */
+            if ( ctx-&gt;hdr.enableAudioChan &amp; (1L &lt;&lt; channelNum) )
+                {
+                status = DSSetChannel( ctx-&gt;messageItem, NULL, ctx-&gt;streamCBPtr, 
+                                        SNDS_CHUNK_TYPE, channelNum, CHAN_ENABLED );
+                CHECK_DS_RESULT( "DSSetChannel", status );
+                if ( status != 0 )
+                    goto CLEANUP;
+                }
+            }
+    
+        /* Set the audio clock to use the selected channel */    
+        ctlBlock.clock.channelNumber = ctx-&gt;hdr.audioClockChan;
+        status = DSControl( ctx-&gt;messageItem, NULL, ctx-&gt;streamCBPtr,
+                                SNDS_CHUNK_TYPE, kSAudioCtlOpSetClockChan, &amp;ctlBlock );
+        CHECK_DS_RESULT( "DSControl - setting audio clock chan", status );
+        }
+</CODE>
+</PRE>

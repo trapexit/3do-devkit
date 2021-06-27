@@ -1,0 +1,120 @@
+<HTML><TITLE>Random Access Iterators</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Random Access Iterators</H2>
+<HR><PRE>     Iterator</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>An iterator that reads and writes, and provides random access to a container.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Key to Iterator Requirements"><LI>Key to Iterator Requirements</LI></A>
+<A HREF="#Requirements for Random Access Iterators"><LI>Requirements for Random Access Iterators</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Description"><H3>Description</H3></A>
+<HR><STRONG><P>For a complete discussion of iterators, see the <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A> section of this reference.</P></STRONG><HR>
+<P>Iterators are a generalization of pointers that allow a C++ program to uniformly interact with different data structures.  Random access iterators can read and write, and provide random access to the containers they serve. These iterators satisfy the requirements listed below.</P>
+<A NAME="Key to Iterator Requirements"><H3>Key to Iterator Requirements</H3></A>
+<P>The following key pertains to the iterator requirements listed below: </P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD><SAMP>a </SAMP>and<SAMP> b</SAMP></TD>
+<TD>values of type <SAMP>X</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>n</SAMP></TD>
+<TD>value of <SAMP>distance</SAMP> type</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>u, Distance, tmp </SAMP>and<SAMP> m</SAMP></TD>
+<TD>identifiers</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r</SAMP></TD>
+<TD>value of type <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>t</SAMP></TD>
+<TD>value of type <SAMP>T</SAMP></TD></TR>
+</TABLE></CENTER>
+<A NAME="Requirements for Random Access Iterators"><H3>Requirements for Random Access Iterators</H3></A>
+<P>The following expressions must be valid for random access iterators:</P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD><SAMP>X u</SAMP></TD>
+<TD><SAMP>u</SAMP> might have a singular value</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X()</SAMP></TD>
+<TD><SAMP>X()</SAMP> might be singular</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X(a)</SAMP></TD>
+<TD>copy constructor, <SAMP>a == X(a)</SAMP>.</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X u(a)</SAMP></TD>
+<TD>copy constructor, <SAMP>u == a</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X u = a</SAMP></TD>
+<TD>assignment, <SAMP>u == a</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a == b, a != b</SAMP></TD>
+<TD>return value convertable to <SAMP>bool</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>*a</SAMP></TD>
+<TD>return value convertable to <SAMP>T&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a->m</SAMP></TD>
+<TD>equivalent to <SAMP>(*a).m</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>++r</SAMP></TD>
+<TD>returns <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r++</SAMP></TD>
+<TD>return value convertable to const <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>*r++</SAMP></TD>
+<TD>returns <SAMP>T&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>--r</SAMP></TD>
+<TD>returns <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r--</SAMP></TD>
+<TD>return <SAMP>value</SAMP> convertable to <SAMP>const</SAMP> <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>*r--</SAMP></TD>
+<TD>returns <SAMP>T&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r += n</SAMP></TD>
+<TD>Semantics of <SAMP>--r</SAMP> or<SAMP> ++r n</SAMP> times depending on the sign of <SAMP>n</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a + n, n + a</SAMP></TD>
+<TD>returns type <SAMP>X</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r -= n</SAMP></TD>
+<TD>returns <SAMP>X&#38;</SAMP>, behaves as<SAMP> r += -n</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a - n</SAMP></TD>
+<TD>returns type<SAMP> X</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>b - a</SAMP></TD>
+<TD>returns <SAMP>Distance</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a[n]</SAMP></TD>
+<TD><SAMP>*(a+n)</SAMP>, return value convertable to <SAMP>T</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a &#60; b</SAMP></TD>
+<TD>total ordering relation</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a > b</SAMP></TD>
+<TD>total ordering relation opposite to <SAMP>&#60;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a &#60;= b</SAMP></TD>
+<TD><SAMP>!(a &#60; b)</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a >= b</SAMP></TD>
+<TD><SAMP>!(a > b)</SAMP></TD></TR>
+</TABLE></CENTER>
+<P>Like forward iterators, random access iterators have the condition that  <SAMP>a == b</SAMP> implies <SAMP>*a == *b</SAMP>.</P>
+<P>There are no restrictions on the number of passes an algorithm may make through the structure.</P>
+<P>All relational operators return a value convertable to <SAMP>bool</SAMP>.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A>, <A HREF="For_5773.htm"><B><I>Forward Iterators</B></I></A>, <A HREF="Bid_7861.htm"><B><I>Bidirectional Iterators</B></I></A></P>
+<HR>
+<A HREF="que_0953.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="ran_2368.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

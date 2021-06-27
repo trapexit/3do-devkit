@@ -1,0 +1,236 @@
+<TITLE>Preparing Instruments</TITLE>
+<H1><LINK NAME="XREF31979">Preparing Instruments</LINK></H1><HR>
+<A NAME="XREF42728">Before a task can do any work with instruments, it must first load an instrument </A>template from disc to RAM. It must then create one or more instruments from the definition in the template, allocating necessary resources on the DSP and elsewhere so that the instruments can run.<P>
+<H3>Instrument Templates</H3>
+An instrument template defines the qualities of an instrument-how many inputs, knobs, and outputs it has; what signals it generates; how it passes input signals to outputs; and so on. Instrument templates are currently designed to use the 3DO (DSP). Each instrument template is, in fact, a DSP program. Future templates may be designed to run on other audio devices.<P>
+Portfolio comes with a set of predefined instrument templates 
+that are stored on the system disc in the audio directory. These 
+default templates are described individually in 
+<A HREF="../mprfldr/03mpr.html#XREF41103">Instrument Templates</A><I>,</I> in the <I>3DO Music and Audio Programmer's Reference</I>.<I>  </I>Because these instruments are all designed to run on the DSP, their names all end with the extension <CODE>.dsp</CODE>.<P>
+A task can create a surprisingly large variety of instrumental sounds using the default instrument templates. To do so, the task creates different instruments, connects them so that one instrument can process the output of another, and then sets knobs accordingly. If you want more variety within a single instrument, you can create your own instrument templates using the development tool ARIA. Custom instrument templates can be stored wherever you wish.<P>
+<H3>Types of Instruments</H3>
+The types of instruments defined in the Portfolio default instrument set fall into several categories:<P>
+<UL>
+<LI>Sampled sound instruments play back sampled sound tables.
+<p>
+<LI>Sound synthesis instruments synthesize audio signals from scratch.
+<p>
+<LI>Mixers accept output signals from other instruments, mix the signals together (if appropriate), and then pass their own output signals directly to the DAC for audio output.
+<p>
+<LI>Submixers accept output signals from other instruments, mix the signals together, and then pass their own output signals through outputs that can be fed to other instruments.
+<p>
+<LI>Effects instruments typically accept audio signals from other instruments and alter those signals in ways that alter the original signal (such as filtering).
+<p>
+<LI>Control signal instruments generate a low-frequency signal typically used to tweak the knobs of other instruments. Example of these include envelopes and low frequency oscillators (LFOS).
+</UL>
+<B>Sampled Sound Instruments</B>. The largest number of DSP instruments are sampled sound instruments, which can use a variety of techniques to play back sampled sound tables stored in the AIFC or AIFF formats (which can be created by most commercial sound editing programs). Sampled sound instruments play back 8- and 16-bit sampled sounds that are either compressed (square/xact/delta) or uncompressed (literal). Table 1 shows the sampled sound instruments currently available in the Audio Folio and lists their playback characteristics.<P>
+<PRE>
+<B>Table 1: </B><I> Sampled sound instruments. </I>
+-----------------------------------------------------------------------
+Instrument Name       |Sample |Sample Storage    |Playback   |Stereo/Mo
+                      |Size   |Format            |Sample Rate|no       
+-----------------------------------------------------------------------
+sampler.dsp           |16-bit |Literal           |Variable   |Mono     
+-----------------------------------------------------------------------
+samplerenv.dsp        |16-bit |                  |Variable   |         
+-----------------------------------------------------------------------
+samplermod.dsp        |16-bit |                  |Variable   |         
+-----------------------------------------------------------------------
+varmono8.dsp          |8-bit  |Literal           |Variable   |Mono     
+-----------------------------------------------------------------------
+varmono8_s.dsp        |8-bit  |                  |Variable   |Mono     
+-----------------------------------------------------------------------
+varmono16.dsp         |16-bit |Literal           |Variable   |Mono     
+-----------------------------------------------------------------------
+fixedmonosample.dsp   |16-bit |Literal           |44100 Hz   |Mono     
+-----------------------------------------------------------------------
+fixedmono8.dsp        |8-bit  |Literal           |44100 Hz   |Mono     
+-----------------------------------------------------------------------
+fixedstereosample.dsp |16-bit |Literal           |44100 Hz   |Stereo   
+-----------------------------------------------------------------------
+fixedstereo16swap.dsp |16-bit |Literal (little   |44100 Hz   |Stereo   
+                      |       |endian)           |           |         
+-----------------------------------------------------------------------
+fixedstereo8.dsp      |8-bit  |                  |44100Hz    |Stereo   
+-----------------------------------------------------------------------
+halfmonosample.dsp    |16-bit |Literal           |22050 Hz   |Mono     
+-----------------------------------------------------------------------
+halfmono8.dsp         |8-bit  |Literal           |22050 Hz   |Mono     
+-----------------------------------------------------------------------
+halfstereo8.dsp       |8-bit  |Literal           |22050 Hz   |Stereo   
+-----------------------------------------------------------------------
+halfstereosample.dsp  |16-bit |                  |22050Hz    |Stereo   
+-----------------------------------------------------------------------
+dcsqxdmono.dsp        |8-bit  |SQXD 2:1          |44100 Hz   |Mono     
+-----------------------------------------------------------------------
+dcsqxdstereo.dsp      |8-bit  |SQXD 2:1          |44100 Hz   |Stereo   
+-----------------------------------------------------------------------
+dcsqxdhalfmono.dsp    |8-bit  |SQXD 2:1          |22050 Hz   |Mono     
+-----------------------------------------------------------------------
+dcsqxdhalfstereo.dsp  |8-bit  |SQXD 2:1          |22050 Hz   |Stereo   
+-----------------------------------------------------------------------
+dcsqxdvarmono.dsp     |16-bit |SQXD              |Variable   |Mono     
+-----------------------------------------------------------------------
+adpcmvarmono.dsp      |16-bit |ADPCM             |Variable   |Mono     
+-----------------------------------------------------------------------
+adpcmmono.dsp         |4-bit  |ADPCM Intel/DVI   |44100      |Mono     
+                      |       |4:1               |           |         
+-----------------------------------------------------------------------
+adpcmhalfmono.dsp     |4-bit  |ADPCM Intel/DVI   |22050      |Mono     
+                      |       |4:1               |           |         
+-----------------------------------------------------------------------
+</PRE>
+<P>
+Although sample data used by the a\Audio folio is typically stored in the AIFC format (an unsupported variation of Apple Computer Inc.'s AIFF format), the data stored in an AIFC file can be compressed with several different compression formats, or it can be uncompressed using literal sample values. The <CODE>dcsqxd</CODE> instruments are designed to play compressed sample data with square/xact/delta compression; the <CODE>adpcm</CODE> instrument is designed to play compressed sample data using ADPCM compression; the other instruments are designed to play literal data.<P>
+A sampled sound instrument's input sample size is the size of the sample it expects to read: 4 bits, 8 bits, or 16 bits. The instrument's output is in 16-bit samples, so if it reads 8-bit original samples it must convert them to 16-bit values. The instruments designed to read literal sample data simply add 8 less-significant bits of 0s to the 8-bit value (10010111 becomes 10010111 00000000, for example). The instruments designed to read sample data compressed in square/xact/delta compression format use a technique to convert the 8-bit samples to 16-bit values with significant information in both the high- and low-order bytes.<P>
+Every sampled sound instrument has an output of 44,100 16-bit samples per second (44,100 Hz), a frequency designed for high-fidelity sound reproduction. Some sample data may have been originally recorded at 22,050 Hz, a frequency with less fidelity that requires only half the storage space for samples. If the instruments read those half-frequency tables at a 44,100 Hz playback rate, the sampled sound plays twice as fast and sounds an octave higher than it was recorded. To compensate, several sampled sound instruments have a playback sample rate of 22,050 Hz. When they read 22,050 Hz recorded sample data, they interpolate an intermediate value between each sample read to produce a 
+44,100 Hz final audio signal that does not change the original sample's pitch or duration.<P>
+The instruments <CODE>sampler.dsp</CODE>, <CODE>varmono8.dsp</CODE>, <CODE>varmono16.dsp</CODE>, <CODE>dcsqxdvarmono.dsp</CODE>, and <CODE>adpcmvarmono.dsp</CODE> have variable playback sample rates. By playing sample data at a rate higher or lower than its original recording rate, these instruments can raise the pitch of the sample higher or lower than it was originally recorded. Keep in mind that you can also use the other instruments to change original pitch if their fixed playback sample rate is different from the original recording's sample rate. For example, using a 44,100 Hz instrument to play back a voice recording made at 22,050 Hz produces the voices an octave higher,  that speak twice as fast, a cheap way to produce chipmunk voices.<P>
+Portfolio sampled sound voices come in mono and stereo varieties. Mono instruments read sample data so that all samples go in succession to a single output channel. Stereo instruments read sample data so that odd samples go in succession to the left output and even samples go in succession to the right output.<P>
+The Music library (described in <A HREF="../mprfldr/02mpr.html#XREF20449">Music Library Calls</A>,  in the <I>3DO Music and Audio Programmer's Reference</I>) includes a call named <CODE>SelectSamplePlayer()</CODE> that returns the name of an appropriate sampled sound instrument to play a given sample.<P>
+<B>Sound Synthesis Instruments</B>. Portfolio's sound synthesis instruments generate their own audio signals instead of reading them from sample data. Those instruments are:<P>
+<UL>
+<LI><CODE>triangle.dsp</CODE> generates a triangle-wave signal.
+<p>
+<LI><CODE>sawtooth.dsp</CODE> generates a sawtooth-wave signal (and has a grittier sound than a triangle-wave signal).
+<p>
+<LI><CODE>sawenv.dsp</CODE> generates a sawtooth-wave signal and includes a built-in envelope player.
+<p>
+<LI><CODE>sawenvsvfenv.dsp</CODE> generates a sawtooth-wave signal and includes two built-in envelope players.
+<p>
+<LI><CODE>pulser.dsp</CODE> generates a pulse-wave signal that is modulated by a triangle wave, creating a siren sound.
+<p>
+<LI><CODE>noise.dsp</CODE> generates a white-noise signal.
+<p>
+<LI><CODE>rednoise.dsp</CODE> generates a more gritty noise signal than <CODE>noise.dsp</CODE> generates.
+<p>
+<LI><CODE>filterednoise.dsp</CODE> generates a filtered noise signal. Changing the frequency of the filter moves the frequency range of the noise up or down, useful for producing wind or other whooshing sounds.
+<p>
+<LI><CODE>impulse.dsp</CODE> <A NAME="XREF28999">generates impulse waveforms.</A>
+<p>
+<LI><CODE>pulse.dsp</CODE> generates p<A NAME="XREF22161">ulse waveforms.</A>
+<p>
+<LI><A NAME="XREF32195"><CODE>square.dsp</A></CODE>  <A NAME="XREF18158">generates square waveforms.</A>
+</UL>
+<B>Mixers</B>. Mixers are instruments that accept audio signals from other instruments and, after mixing them, pass the final stereo audio signal on to the DAC, which converts them to stereo analog signals. These signals are the signals that the user hears in headphones or on a stereo system.<P>
+If two  or more  mixer instruments operate, their outputs 
+to the DAC are added together. If the results of an added 
+sample frame go over 0x7FFF, it is clipped to 0x7FFF, 
+which can result in horrible distortion so it is 
+important to keep the final results down to an acceptable 
+level. System amplitude allocation is a technique that 
+helps a task avoid clipping distortion (see 
+<A HREF="03mpg014.html#XREF10318">Allocating Amplitude</A>).<P>
+These mixers accept audio signals and feed a final audio 
+signal to the DAC:<P>
+<UL>
+<LI><CODE>directout.dsp</CODE> accepts a left input and a right input, and feeds those audio signals directly to the left and right DAC channels.
+<p>
+<LI><CODE>mixer2x2.dsp</CODE> accepts two audio inputs and mixes them into a stereo signal. It feeds the stereo signal directly to the left and right DAC channels.
+<p>
+<LI><CODE>mixer8x2.dsp</CODE> accepts eight audio inputs and mixes them into a stereo signal. It sends the stereo signal directly to the left and right DAC channels.
+<p>
+<LI><CODE>mixer8x2amp.dsp</CODE> adds a master gain controller.
+<p>
+<LI><CODE>mixer12x2.dsp</CODE> accepts 12 audio inputs and mixes them into a stereo signal. It sends the stereo signal directly to the left and right DAC channels.
+</UL>
+The mixers all contain knobs that control how much gain each incoming signal has in the right channel and how much in the left channel.<P>
+Keep in mind that you <I>must</I> connect an instrument to a mixer before the instrument can be heard. Only mixers send their output to the DAC, where it is turned into an analog audio signal for reproduction.<P>
+<B>Submixers</B>. Submixers, unlike mixers, do not send their mixed stereo signal directly to the DAC. Instead, they provide a left output and a right output that can be sent to another instrument. Portfolio submixer instruments are:<P>
+<UL>
+<LI><CODE>submixer2x2.dsp</CODE> accepts two inputs and mixes them into two outputs.
+<LI><CODE>submixer4x2.dsp</CODE> accepts four inputs and mixes them into two outputs.
+<LI><CODE>submixer8x2.dsp</CODE> accepts eight inputs and mixes them into two outputs.
+</UL>
+Like mixers, submixers contain knobs that control how incoming signals are balanced in the output signals. Submixers are useful for combining outputs of other instruments and feeding the results into effects instruments.<P>
+<B>Effects Instruments</B>. Effects instruments typically accept an audio signal, alter it, and pass the altered signal out. In the case of delay-effects instruments, they accept an audio signal and pass it out through DMA to memory, where it can be altered by another instrument. Portfolio's effects instruments are:<P>
+<UL>
+<LI><CODE>deemphcd.dsp</CODE> is a standard "feed-forward, feed-back" filter designed by Ayabe-san of MEI for CD de-emphasis.
+<p>
+<LI><CODE>svfilter.dsp</CODE> accepts a signal, filters it, and sends the result to its output. <CODE>svfilter.dsp</CODE> is a state-variable filter, which has knobs that control frequency, resonance, and amplitude. It has lowpass, bandpass, and highpass outputs.
+<p>
+<LI><CODE>delaymono.dsp</CODE> accepts a signal and writes the signal directly to a sample buffer, where it can be reread to create a reverb loop. (This is discussed in <A HREF="#XREF42228">Adding Reverberation</A>.)
+<p>
+<LI><CODE>delay1tap.dsp</CODE>  writes samples to an output, then reads them back on another FIFO and mixes them. It has a separate "effects send" mix and a separate output mix.
+<p>
+<LI><CODE>delaystereo.dsp</CODE> writes input to an output FIFO. It is used as a building block for reverberation and echo effects. 
+</UL>
+<B>Control Signal Instruments</B>. Control signal instruments put out a control signal, typically a low-frequency signal too slow to be heard by itself but useful for controlling instrument knobs. Sound synthesis instruments can be used as control signal instruments if they are set to a very low frequency and then connected to the knob of another instrument. For example, a triangle wave generator can be set to a low frequency and then connected to the frequency knob of a filtered noise generator to produce a wind sound that rises and falls with the frequency of the triangle wave generator.<P>
+Portfolio provides the following important dedicated control-signal instruments:<P>
+<UL>
+<LI><CODE>envelope.dsp</CODE> accepts envelope contour values through its knobs. It uses the values to create an envelope-control output signal.
+<p>
+<LI><CODE>pulse_lfo.dsp</CODE> uses extended precision arithmetic to give lower frequencies than <CODE>pulse.dsp</CODE>. It also has better resolution at the same frequency. The frequency of this instrument is 256 times lower than its corresponding high frequency version. It is useful as a modulation source for controlling other instruments, or for bass instruments.
+<p>
+<LI><CODE>add.dsp</CODE> performs a signed addition between its two inputs. 
+<p>
+<LI><CODE>multiply.dsp</CODE> accepts two signals connected to its two knobs, multiplies one signal by the other, and sends the results through its output. The result is that of a traditional ring modulator. (Typically an audio signal is connected to one knob and a much lower frequency control signal is connected to the other knob.)
+<p>
+<LI><CODE>timesplus.dsp</CODE> accepts signals connected to each of its three knobs (A, B, and C). It then multiplies the A signal by the B signal, the C signal to the results, and sends the final results through its output. (Typically an audio signal is connected to A, and constant control values are connected to B and C.)
+<p>
+<LI><CODE>subtract.dsp</CODE> accepts two inputs and outputs the difference between the two. The output is clipped.
+<p>
+<LI><CODE>minimum.dsp</CODE> accepts two inputs and outputs the smaller of the two. This can be used for clipping. 
+<p>
+<LI><CODE>maximum.dsp</CODE> accepts two inputs and outputs the larger of the two. This can be used for clipping.
+<p>
+<LI><CODE>envfollower.dsp</CODE> tracks the positive peaks of an input signal. It outputs a fairly smooth signal that can be used to control other signals. 
+<p>
+<LI><CODE>randomhold.dsp</CODE>  generates new random numbers at a given rate and holds steady until a new number is chosen. 
+<p>
+<LI><CODE>triangle_lfo.dsp</CODE> is a triangle wave generator that uses extended precision arithmetic to give lower frequencies than <CODE>triangle.dsp</CODE>. It also has better resolution at the same frequency.
+<p>
+<LI><CODE>square_lfo.dsp</CODE> is a square wave generator that uses extended precision arithmetic to give lower frequencies than <CODE>square.dsp</CODE>. It also has better resolution at the same frequency.
+</UL>
+<CODE>envelope.dsp</CODE> is used with instruments that do not contain their own envelope player. Once connected to another instrument's knob, <CODE>envelope.dsp</CODE> applies an envelope to the connected instrument by changing the knob values.<P>
+<B>Other Instruments.</B><P>
+<UL>
+<LI><CODE>directin.dsp</CODE> outputs the stereo Audio Input signal in Anvil hardware. Each task that intends to use this instrument must successfully enable audio input with <CODE>EnableAudioInput()</CODE>  before the instrument can be loaded. 
+<p>
+<LI><CODE>tapoutput.dsp</CODE> permits reading the accumulated stereo output from all currently running output instruments.
+<p>
+<LI><CODE>benchmark.dsp</CODE> outputs current Tick count. 
+</UL>
+<H3>Instrument Specifications</H3>
+When you decide to use an instrument, you can find its specifications in 
+<A HREF="../mprfldr/03mpr.html#XREF41103">Instrument Templates</A><I>,</I>  of the <I>3DO Music and Audio Programmer's Reference</I>.  The specifications give the function of each instrument, and list the name of each knob, FIFO, input, and output available from the instrument. These names are strings that you use in audio calls to specify which knob, FIFO, input, or output you want to affect.<P>
+<B>Instrument Resources</B>. The specifications also list the resources required for each instrument: memory requirements, hardware requirements, and a value measured in DSP ticks. DSP ticks are DSP time units used during each frame of the DSP output. (A DSP frame is the time the DSP takes to put out one pair of samples to the DAC, which usually takes place 44,100 times per second.)  The DSP can, at this writing, execute 565 ticks per 44,100 Hz frame.<P>
+The Audio folio allocates resources as instruments are created from templates and it totals the DSP ticks required for each instrument. If the total number of ticks goes above the possible frame total or the system runs out of other resources necessary for instrument allocation, the Audio folio refuses to allocate any more instruments. It is important to keep track of how many DSP ticks you are using with each instrument creation, because instruments are most likely to use up DSP ticks before using up other system resources.<P>
+<H2>Loading an Instrument Template</H2>
+Before you can create an instrument and use it to generate signals, you must first load the instrument's template. To do so, use this call:<P>
+<DL>
+<DD><CODE>Item LoadInsTemplate( char *Name, Item AudioDevice )</CODE><BR>
+</DL>
+The call accepts two pointers: <CODE>*Name</CODE>, which points to a string containing the filename of the file that has the instrument template; and <CODE>AudioDevice</CODE>, which is the item number of the device on which you want the instrument to be played. Pass 0 for the <CODE>AudioDevice</CODE> number if you want to use the system audio device, currently the DSP. In this release, the DSP is the <I>only</I> device available for instrument playback.<P>
+When the call executes, it uses the specified instrument template file to create an instrument template item. The call returns the item number of the template if successful, or if unsuccessful, returns a negative number (an error code).<P>
+<H3>Defining an Instrument Template</H3>
+If your task uses data streaming to import file images to RAM to avoid accessing CD-ROM later for those files, there can be instrument template file images in the data stream. If so, you can define an instrument template using an instrument template file image already loaded in RAM. To do so, use this call:<P>
+<DL>
+<DD><CODE>Item DefineInsTemplate( uint8 *Definition, int32 NumBytes, Item Device, char *Name )</CODE><BR>
+</DL>
+The call accepts four arguments: <CODE>*Definition</CODE>, which is a pointer to the beginning of the instrument template file image; <CODE>NumBytes</CODE>, which is the size of the instrument template file image in bytes; <CODE>Device</CODE>, which is the item number of the device on which you want the instrument to be played; and <CODE>*Name</CODE>, a pointer to the name of the instrument template file image. At this writing, you should use 0 as the device number to specify the DSP. The DSP is the only audio device currently available.<P>
+When executed, <CODE>DefineInsTemplate()</CODE> uses the instrument template file image to create an instrument template item. If successful, it returns the item number of the instrument template. If unsuccessful, it returns a negative value (an error code).<P>
+<H3>Creating an Instrument</H3>
+Once an instrument's template is loaded as an item, a task can use the template to create an instrument defined by the template. To do so, use this call:<P>
+<DL>
+<DD><CODE>Item CreateInstrument (Item InsTemplate, const TagArg *tagList)</CODE><BR>
+</DL>
+The call accepts the item number of a previously loaded instrument template. It also accepts a list of tag arguments. When executed, <CODE>CreateInstrument()</CODE> creates an instrument item defined by the instrument template and allocates the DSP and system resources the instrument requires. The call returns the item number of the new instrument if successful; if unsuccessful, it returns a negative value (an error code).<P>
+Note that you can create as many instruments as you like from a single loaded instrument template. In fact, some tasks can be set up to create new instruments whenever the task does not have enough voices to play desired notes. For example, if a task needs to play a four-voice chord but has created only three instruments of the same kind to play that chord, it can create one more instrument to play the chord.<P>
+<H3>Loading an Instrument</H3>
+To combine the process of loading an instrument template and the process of creating an instrument from that template in a single call, you can use this convenience call:<P>
+<DL>
+<DD><CODE>Item LoadInstrument( char *Name, Item AudioDevice, uint8 Priority )</CODE><BR>
+</DL>
+The call accepts the pointer <CODE>*Name</CODE>, which points to a string containing the filename of the file that contains the instrument template. It also accepts the item number <CODE>AudioDevice</CODE> of the device in the template on which the instrument is to be played. Both of these arguments are the same as those used in the call <CODE>LoadInsTemplate()</CODE>. The third parameter accepted, <CODE>Priority,</CODE> is a value from 0 to 200 that sets the priority of the allocated instrument. <CODE>Priority</CODE> is the same as the Priority argument to <CODE>AllocInstrument()</CODE>.<P>
+When <CODE>LoadInstrument()</CODE> executes, it loads the specified instrument template, and creates an instrument from that template. It returns the item number of the instrument if successful, or a negative number (an error code) if unsuccessful.<P>
+The instrument template loaded with this call remains in memory, but there is 
+no item number to use to unload it from memory. To do so, you must use 
+the <CODE>UnloadInstrument()</CODE> call 
+(see <A HREF="04mpg001.html#XREF22040">Deleting an Instrument and 
+Its Template</A>). Before unloading an instrument, be sure to 
+disconnect the it with the <CODE>DisconnectInstruments()</CODE> call 
+(see <A HREF="03mpg010.html#XREF34796">Disconnecting One Instrument 
+From Another</A>). See also  "CreateInstrument" in  
+<A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>.<P>
+<P>

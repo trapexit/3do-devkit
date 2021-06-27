@@ -1,0 +1,202 @@
+<TITLE>Floating point instructions</TITLE>
+<H1><LINK NAME="XREF35943">Floating point instructions</LINK></H1><HR>
+The ARM assembler supports a comprehensive floating point instruction set. Whether implemented by hardware coprocessor or software emulation, floating point operations are performed to the IEEE 754 standard. There are eight floating point registers, numbered F0 to F7. Floating point operations, like integer operations, are performed between registers. <P>
+Precision must be specified for many floating point operations where shown as <I>prec</I> below. The options are <I>S</I> (Single), <I>D</I> (Double), <I>E</I> (Extended) and <I>P</I> (Packed BCD). The format in which extended precision numbers are stored varies between FP implementations, and cannot be relied upon. The rounding mode, shown below as <I>round</I>, defaults to `round to nearest', but can optionally be set in the appropriate instructions to: <I>P</I> (round to +infinity), <I>M</I> (round to -infinity) or <I>Z</I> (round to zero).<P>
+In all the following instruction patterns, <I>Rx</I> represents an ARM register, and <I>Fx</I> a floating point register.<P>
+<H2>Floating point data transfer </H2>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+op{condition}prec Fd,[Rn]{,#offset}
+            [Rn,#offset]{!}
+
+</CODE>
+</PRE>
+The memory address can be expressed in one of three ways, as shown above. In the first, pre-indexed form, an ARM register <I>Rn</I> holds the base address, to which an offset can be added if necessary. Writeback of the effective address to <I>Rn</I> can be enabled using<I> !</I>. The offset must be divisible by 4, and within the range -1020 to 1020 bytes. With the second, post-indexed form, writeback of Rn+<I>offset</I> to Rn after the transfer, is automatic. Alternatively, a program- or register-relative expression can be used, in which case the assembler will generate a PC- or register-relative, pre-indexed address; if it is out of range an error will result.<P>
+<H2>Floating point register transfer </H2>
+The syntax of this instruction is:<P>
+<CODE>
+<PRE>
+FLT{condition}prec{round} Fn,Rd
+                          Fn,#built-in-fp-constant
+</CODE>
+</PRE>
+where <I>Rd</I> is an ARM register and <I>built-in-fp-constant</I> is one of 0, 1, 2, 3, 4, 5, 10 or 0.5.<P>
+<PRE>
+---------------------------------------------------------
+FIX        |Floating point to     |Rd:=Fn                
+           |Integer               |                      
+---------------------------------------------------------
+</PRE>
+<P>
+The syntax of this instruction is:<P>
+<CODE>
+<PRE>
+FIX{condition}{round} Rd,Fn
+</CODE>
+</PRE>
+<H2>Floating point register transfer </H2>
+The following instructions transfer values between the FP coprocessor's status and control registers, and an ARM general purpose register.<P>
+<PRE>
+---------------------------------------------------------
+WFS  |Write Floating point   |FPSR:=Rd                   
+     |Status                 |                           
+---------------------------------------------------------
+RFS  |Read Floating point    |Rd:=FPSR                   
+     |Status                 |                           
+---------------------------------------------------------
+WFC  |Write Floating point   |FPC:=Rd (privileged modes  
+     |Control                |only)                      
+---------------------------------------------------------
+RFC  |Read Floating point    |Rd:=FPC (privileged modes  
+     |Control                |only)                      
+---------------------------------------------------------
+</PRE>
+<P>
+The syntax of the above four instructions is:<P>
+<CODE>
+<PRE>
+opcode{condition} Rd
+</CODE>
+</PRE>
+<H2>Floating point multiple data transfer </H2>
+(Note that these instructions are not supported by some older versions of the Floating Point Emulator.)<P>
+<PRE>
+--------------------------------------------------------
+LFM        |Load Floating Multiple                      
+--------------------------------------------------------
+SFM        |Store Floating Multiple                     
+--------------------------------------------------------
+</PRE>
+<P>
+These instructions are used for block data transfers between the floating point registers and memory. Values are transferred in an internal 96-bit format, with no loss of precision and with no possibility of an IEEE exception occurring, (unlike STFE which may fault on loading a trapping NaN). There are two forms, depending on whether the instruction is being used for stacking operations or not. The first, non-stacking, form is:<P>
+<CODE>
+<PRE>
+op{condition} Fd,count,[Rn]
+                 [Rn,#offset]{!}
+                [Rn],#offset
+</CODE>
+</PRE>
+The first register to transfer is <I>Fd</I>, and the number of registers to transfer is <I>count</I>. Up to four registers can be transferred, always in ascending order. The count wraps round at F7, so if F6 is specified with four registers to transfer, F6, F7, F0 and F1 will be transferred in that order. With pre-indexed addressing the destination/source register can be specified with or without an <I>offset</I> expressed in bytes; writeback of the effective address to <I>Rn</I> can be specified with <I>!</I>. With post-indexed addressing (the third form above) writeback is automatically enabled. Note that R15 cannot be used with writeback, and that <I>offset</I> must be divisible by 4 and in the range -1020 to 1020, as for other coprocessor loads and stores.<P>
+The second form adds a two-letter stacking mnemonic (below <I>ss</I>) to the instruction and optional condition codes. The mnemonic, FD, denotes a full, descending stack (pre-decrement push, post-decrement pop), while EA denotes an empty, ascending stack (post-increment push, pre-decrement pop). The syntax is as follows:<P>
+<CODE>
+<PRE>
+op{condition}ss Fd,count,[Rn]{!}
+</CODE>
+</PRE>
+FD and EA define pre- and post-indexing, and the up/down bit by reference to the form of stack required. Unlike the integer block-data transfer operations, only FD and EA stacks are supported. <I>!</I>, if present, enables writeback of the updated base address to Rn; R15 cannot be the base register if writeback is enabled.<P>
+The possible combinations of mnemonics are listed below:<P>
+<PRE>
+--------------------------------------------------------
+LFMFD      |Load floating multiple from a Full stack,   
+           |Descending (Post-increment load)            
+--------------------------------------------------------
+LFMEA      |Load floating multiple from an Empty stack, 
+           |Ascending (Pre-decrement load)              
+--------------------------------------------------------
+SFMFD      |Store floating multiple to a Full stack,    
+           |Descending (Pre-decrement store)            
+--------------------------------------------------------
+SFMEA      |Store floating multiple to an Empty stack,  
+           |Ascending (Post-increment store)            
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Floating point comparisons </H2>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+opcode{condition}{E} Fn,Fm
+</CODE>
+</PRE>
+CMF raises no exceptions and should be used to test for equality (Z clear/set) and unorderedness (V set/clear). To comply with IEEE 754, all other tests should use CMFE, which may raise an exception if either of the operands is not a number.<P>
+<H2>Floating point binary operations</H2>
+
+<PRE>
+-----------------------------------------------------
+ADF  |Add            |Fd:=Fn+Fm                      
+-----------------------------------------------------
+MUF  |Multiply       |Fd:=Fn*Fm                      
+-----------------------------------------------------
+SUF  |Subtract       |Fd:=FnFm                       
+-----------------------------------------------------
+RSF  |Reverse        |Fd:=FmFn                       
+     |Subtract       |                               
+-----------------------------------------------------
+DVF  |Divide         |Fd:=Fn/Fm                      
+-----------------------------------------------------
+RDF  |Reverse Divide |Fd:=Fm/Fn                      
+-----------------------------------------------------
+POW  |Power          |Fd:=Fn to the power of Fm      
+-----------------------------------------------------
+RPW  |Reverse Power  |Fd:=Fm to the power of Fn      
+-----------------------------------------------------
+RMF  |Remainder      |Fd:=remainder of Fn/Fm         
+-----------------------------------------------------
+FML  |Fast Multiply  |Fd:=Fn*Fm                      
+-----------------------------------------------------
+FDV  |Fast Divide    |Fd:=Fn/Fm                      
+-----------------------------------------------------
+FRD  |Fast Reverse   |Fd:=Fm/Fn                      
+     |divide         |                               
+-----------------------------------------------------
+POL  |Polar angle    |Fd:=polar angle of Fn,Fm       
+     |               |=ATN(Fm/Fn) whenever the       
+     |               |quotient exists                
+-----------------------------------------------------
+</PRE>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+binop{condition}prec{round} Fd,Fn,Fm
+</CODE>
+</PRE>
+<I>Fm</I> can be either a floating point register, or one of the floating point constants #0, #1, #2, #3, #4, #5, #10 or #0.5. Fast operations produce results accurate to only single precision.<P>
+<H2>Floating point unary operations</H2>
+
+<PRE>
+---------------------------------------------------------
+MVF   |Move               |Fd:=Fm                        
+---------------------------------------------------------
+MNF   |Move negated       |Fd:=Fm                        
+---------------------------------------------------------
+ABS   |Absolute value     |Fd:=ABS(Fm)                   
+---------------------------------------------------------
+RND   |Round to integral  |Fd:=integer value of Fm (using
+      |value              |current rounding mode)        
+---------------------------------------------------------
+URD   |Unnormalised Round:|Fd:= integer value of Fm,     
+      |                   |possibly in abnormal form     
+---------------------------------------------------------
+NRM   |Normalise          |Fd:= normalised form of Fm    
+---------------------------------------------------------
+SQT   |Square root        |Fd:=square root of Fm         
+---------------------------------------------------------
+LOG   |Logarithm to base  |Fd:=log Fm                    
+      |10                 |                              
+---------------------------------------------------------
+LGN   |Logarithm to base e|Fd:=ln Fm                     
+---------------------------------------------------------
+EXP   |Exponent           |Fd:=eFm                       
+---------------------------------------------------------
+SIN   |Sine               |Fd:=sine of Fm                
+---------------------------------------------------------
+COS   |Cosine             |Fd:=cosine of Fm              
+---------------------------------------------------------
+TAN   |Tangent            |Fd:=tangent of Fm             
+---------------------------------------------------------
+ASN   |Arc sine           |Fd:=arc sine of Fm            
+---------------------------------------------------------
+ACS   |Arc cosine         |Fd:=arc cosine of Fm          
+---------------------------------------------------------
+ATN   |Arc tangent        |Fd:=arc tangent of Fm         
+---------------------------------------------------------
+</PRE>
+The syntax of these instructions is:<P>
+<CODE>
+<PRE>
+unop{condition}prec{round} Fd,Fm
+</CODE>
+</PRE>
+<I>Fm</I> can be either a floating point register or one of the floating point constants #0, #1, #2, #3, #4, #5, #10 or #0.5. <P>
+<P>

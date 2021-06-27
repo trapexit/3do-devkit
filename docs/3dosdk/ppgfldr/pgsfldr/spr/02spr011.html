@@ -1,0 +1,29 @@
+<Title>LoadCode</Title>
+<A NAME="XREF35386"><H1>LoadCode </A></H1>
+<A NAME="XREF22134"></A>Loads a binary image into memory, and obtains a handle to it.<P>
+<H3>Synopsis</H3>
+<CODE>Err LoadCode(char *fileName, CodeHandle *code);</CODE><P>
+<H3>Description</H3>
+This function loads an executable file from disk into memory. Once loaded, the code can be spawned as a thread, or executed as a subroutine. <P>
+In order to work correctly with this and associated functions, the executable file being loaded must have been linked with threadstartup.o or subroutinestartup.o instead of the usual cstartup.o.<P>
+Give this function the name of the executable file to load, as well as a pointer to a CodeHandle variable, where the handle for the loaded code will be stored. Note, "code" must point to a valid CodeHandle variable; that's where <CODE>LoadCode()</CODE> will put a pointer to the loaded code. <P>
+Once you finish using the loaded code, you can remove it from memory by passing the code handle to the <CODE>UnloadCode()</CODE> function. <P>
+To execute the loaded code, you must call either the <CODE>ExecuteAsThread()</CODE> function or the <CODE>ExecuteAsSubroutine()</CODE>function. Note that if the loaded code is reentrant, the same loaded code can be spawned multiple times simultaneously as a thread. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fileName
+<DD>A NULL-terminated string indicating the executable file to load. 
+</DL>
+<DL>
+<DT>code
+<DD>A pointer to a CodeHandle variable, where a handle to the loaded code can be put. 
+</DL>
+<H3>Return Value</H3>
+Returns &gt; = 0 if successful, or  a negative error code it the file could not be loaded. <P>
+<H3>Implementation</H3>
+Folio call implemented in file folio V21. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr012.html#XREF40015"><CODE>LoadProgram</A>(), <A HREF="./02spr022.html#XREF19343">UnloadCode</A>(), <A HREF="./02spr009.html#XREF27642">ExecuteAsThread</A>(), <A HREF="./02spr008.html#XREF38016">ExecuteAsSubroutine</A>() </CODE><P>
+</CODE>

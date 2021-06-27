@@ -1,0 +1,9 @@
+<TITLE>Opening the Graphics Folio</TITLE>
+<H1><LINK NAME="XREF11123">Opening the Graphics Folio</LINK></H1><HR>
+Before a task can use any Graphics folio calls, it must first open the Graphics folio using:<P>
+<CODE><DL>
+<DD><CODE>Err OpenGraphicsFolio( void )</CODE><BR>
+</DL>
+</CODE>When executed, this call opens the Graphics folio. It returns a positive value if successful, or a negative value (an error code) if unsuccessful.<P>
+If you don't open the Graphics folio before you make graphics calls, your task will die a hideous death the first time it makes a graphics call. If your task seems to be bombing for no good reason, check to make sure you've opened the Graphics folio.<P>
+<P>

@@ -1,0 +1,17 @@
+<Title>Semaphore</Title>
+<A NAME="XREF36532"><H1>Semaphore</A></H1>
+<A NAME="XREF22694">An item used to arbitrate access to shared resources.</A><P>
+<H3>Description</H3>
+Semaphores are used to protect shared resources. Before accessing a shared resource, a task must first try to lock the associated semaphore. Only one task at a time can have the semaphore locked at any one moment. This prevents multiple tasks from accessing the same data at the same time.<P>
+<H3>Folio</H3>
+kernel<P>
+<H3>Item Type</H3>
+SEMA4NODE<P>
+<H3>Create</H3>
+<CODE><A HREF="./01spr026.html#XREF34382"><CODE>CreateSemaphore</A>(), <A HREF="./01spr022.html#XREF15505">CreateItem</A>()</CODE><P>
+</CODE><H3>Delete</H3>
+<A HREF="./01spr036.html#XREF16912"><CODE>DeleteSemaphore</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>()</CODE><P>
+<H3>Query</H3>
+<A HREF="./01spr058.html#XREF28338"><CODE>FindSemaphore</A>()</CODE><P>
+<H3>Use</H3>
+<A HREF="./01spr098.html#XREF18240"><CODE>LockSemaphore</A>(), <A HREF="./01spr130.html#XREF20743">UnlockSemaphore</A>(), <A HREF="./01spr097.html#XREF32838">LockItem</A>(), <A HREF="./01spr129.html#XREF25491">UnlockItem</A>()</CODE><P>

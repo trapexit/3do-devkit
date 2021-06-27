@@ -1,0 +1,82 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF38194">Function Calls</LINK></H1><HR>
+The following Graphics folio calls control bitmaps, screens, and the display 
+generator. They also write to bitmaps and frame buffers. 
+See <A HREF="../gprfldr/01gpr.html#XREF37440">Graphics Folio Calls</A> for complete descriptions 
+of each call.<P>
+<H3>Screen Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr001.html#XREF27310">AddScreenGroup</A>() Adds a screen group to the display.
+<LI><CODE><A HREF="../gprfldr/01gpr008.html#XREF29335">CreateScreenGroup</A>() </CODE>Creates a screen group and all its screens, bitmaps, buffers, and VDLs.
+<LI><CODE><A HREF="../gprfldr/01gpr019.html#XREF19909">DisplayScreen</A>() </CODE>Displays the bitmap(s) of the specified screen (or screens).
+<LI><CODE><A HREF="../gprfldr/01gpr052.html#XREF35655">RemoveScreenGroup</A>() </CODE>Removes a screen group from the display.
+</UL>
+<H3>VDL Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr067.html#XREF20050">SetVDL</A>() </CODE>Sets a screen to display a specific VDL.
+<LI><CODE><A HREF="../gprfldr/01gpr070.html#XREF12966">SubmitVDL</A>() </CODE>Submits a VDL for approval by the 3DO system.
+<LI><CODE><A HREF="../gprfldr/01gpr046.html#XREF39861">ModifyVDL</A>() </CODE>Changes one or more attributes of a VDL.
+</UL>
+<H3>Screen Color Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr040.html#XREF18008">MakeCLUTColorEntry</A>() </CODE>Packs a color index and red, green, and blue values into a single word.
+<LI><CODE><A HREF="../gprfldr/01gpr039.html#XREF38531">MakeCLUTBlueEntry</A>() </CODE>Packs a color index and blue values into a single word.
+<LI><CODE><A HREF="../gprfldr/01gpr041.html#XREF36080">MakeCLUTGreenEntry</A>() </CODE>Packs a color index and green values into a single word.
+<LI><CODE><A HREF="../gprfldr/01gpr042.html#XREF20626">MakeCLUTRedEntry</A>() </CODE>Packs a color index and red values into a single word.
+<LI><CODE><A HREF="../gprfldr/01gpr065.html#XREF17003">SetScreenColor</A>() </CODE>Sets a color in the 3DO system's color palette.
+<LI><CODE><A HREF="../gprfldr/01gpr066.html#XREF28570">SetScreenColors</A>() </CODE>Sets a number of colors in the 3DO system's color palette.
+<LI><CODE><A HREF="../gprfldr/01gpr055.html#XREF39853">ResetScreenColors</A>() </CODE>Resets a screen's colors to a linear color palette.
+</UL>
+<H3>Drawing Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr025.html#XREF12426">DrawTo</A>() </CODE>Draws a line from the GrafCon's current position to a specified position.
+<LI><CODE><A HREF="../gprfldr/01gpr031.html#XREF19136">FillRect</A>() </CODE>Draws a filled rectangle.
+<LI><CODE><A HREF="../gprfldr/01gpr034.html#XREF16038">GetPixelAddress</A>() </CODE>Gets a pointer to the pixel at the specified GrafCon coordinates.
+<LI><CODE><A HREF="../gprfldr/01gpr043.html#XREF27404">MakeRGB15</A>() </CODE>Creates a 3DO RGB value out of separate red, green, and blue values.
+<LI><CODE><A HREF="../gprfldr/01gpr047.html#XREF21217">MoveTo</A>() </CODE>Moves the pen position of a GrafCon to a new location.
+<LI><CODE><A HREF="../gprfldr/01gpr056.html#XREF24897">SetBGPen</A>() </CODE>Sets the background pen of a GrafCon.
+<LI><CODE><A HREF="../gprfldr/01gpr063.html#XREF41179">SetFGPen</A>() </CODE>Sets the foreground pen of a GrafCon.
+<LI><CODE><A HREF="../gprfldr/01gpr073.html#XREF26683">WritePixel</A>() </CODE>Writes a pixel to a bitmap in a GrafCon's foreground color.
+</UL>
+<H3>Text Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr021.html#XREF10604">DrawChar</A>() </CODE>Draws a text character to a display window.
+<LI><CODE><A HREF="../gprfldr/01gpr023.html#XREF38420">DrawText16</A>() </CODE>Draws a text character to a display window.
+<LI><CODE><A HREF="../gprfldr/01gpr032.html#XREF21455">GetCurrentFont</A>() </CODE>Gets the pointer to the 3DO system's default font.
+<LI><CODE><A HREF="../gprfldr/01gpr053.html#XREF39436">ResetCurrentFont</A>() </CODE>Resets the 3DO system's default font.
+<LI><CODE><A HREF="../gprfldr/01gpr062.html#XREF30280">SetCurrentFontCCB</A>() </CODE>Sets the font.
+</UL>
+<H3>Clipping Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr059.html#XREF10063">SetClipHeight</A>() </CODE>Sets the clip height of a bitmap.
+<LI><CODE><A HREF="../gprfldr/01gpr060.html#XREF42733">SetClipOrigin</A>() </CODE>Sets the clip origin of a bitmap.
+<LI><CODE><A HREF="../gprfldr/01gpr061.html#XREF41634">SetClipWidth</A>() </CODE>Sets the clip width of a bitmap.
+</UL>
+<H3>Bitmap Copying Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr002.html#XREF11416">CloneVRAMPages</A>() </CODE>Copies one page of VRAM to a contiguous range of VRAM pages.
+<LI><CODE><A HREF="../gprfldr/01gpr005.html#XREF23988">CopyVRAMPages</A>() </CODE>Copies a contiguous number of VRAM pages to a VRAM destination.
+<LI><CODE><A HREF="../gprfldr/01gpr044.html#XREF39620">MakeRGB15Pair</A>() </CODE>Creates a double 3DO RGB value out of separate red, green, and blue values.
+<LI><CODE><A HREF="../gprfldr/01gpr068.html#XREF23837">SetVRAMPages</A>() </CODE>Sets contiguous pages of VRAM to a specified value.
+</UL>
+<H3>Display Timing Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr071.html#XREF41440">WaitVBL</A>() Waits the specified number of VBLs.
+</UL>
+<H3>Interpolation Calls</H3>
+
+<UL>
+<LI><CODE><A HREF="../gprfldr/01gpr016.html#XREF11888">DisableHAVG</A>() </CODE>Disables horizontal averaging.
+<LI><CODE><A HREF="../gprfldr/01gpr017.html#XREF29615">DisableVAVG</A>() </CODE>Disables vertical averaging.
+<LI><CODE><A HREF="../gprfldr/01gpr026.html#XREF23485">EnableHAVG</A>() </CODE>Enables horizontal averaging.
+<LI><CODE><A HREF="../gprfldr/01gpr027.html#XREF35234">EnableVAVG</A>() </CODE>Enables vertical averaging.
+</UL>
+<CODE></CODE>

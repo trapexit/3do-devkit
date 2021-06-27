@@ -1,0 +1,22 @@
+#
+# This is the application startup script, and should contain your
+# aliases, and anything else you need to prepare to run your title.
+#
+# After this script is run, the system will start $boot/LaunchMe
+#
+
+# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/dbgCfrst.html#XREF14426
+
+# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbgc.html#XREF11615
+# killkprintf
+
+# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbgx.html#XREF32552
+# $boot/System/Programs/sysload
+
+# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbge.html#XREF40448
+# $boot/system/Programs/lmadm -vta ram 3 0 nvram
+
+# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbgl.html#XREF40881
+# minmem
+# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbgk.html#XREF39139
+maxmem

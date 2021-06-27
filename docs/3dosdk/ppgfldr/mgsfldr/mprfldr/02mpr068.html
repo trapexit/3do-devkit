@@ -1,0 +1,58 @@
+<Title>spCreatePlayer</Title>
+<A NAME="XREF24761"><H1>spCreatePlayer </A></H1>
+<A NAME="XREF15927"></A> Create an SPPlayer.<P>
+<H3>Synopsis</H3>
+<CODE>Err spCreatePlayer (SPPlayer **resultPlayer, Item samplerInstrument,uint32 numBuffers, uint32 bufferSize, void * const customBuffers[])</CODE><P>
+<H3>Description</H3>
+Creates an SPPlayer (the top-level player context). The player needs:<P>
+. a sample player DSP instrument to play the sound.<P>
+. a set of identically-sized audio buffers used to spool sound off of disc. <P>
+The client must supply the sample player instrument. Buffers can be allocated automatically or supplied by the client. <P>
+At least 2 buffers are required in order to permit smooth sound playback. Since each buffer will have a signal allocated for it, there can be no more than 23 buffers (the number of free signals for a task that has no signals allocated). 4 or 5 is probably a comfortable number of buffers. <P>
+Buffer size must be at least 512 bytes for in-memory sounds or 2 * blocksize + 514 for sounds off disc. Typically much larger buffers are required to smoothly playback sounds directly off disk (e.g. 16K or so for 44100 frame/sec playback of a 16-bit monophonic sound). <P>
+For disc-based sounds, the buffer size, truncated to a multiple of block size, represents the maximum amount of data that can be read from the disc in a single I/O request. Given the nature of data being read from a CD, the larger the buffer, the more efficiently the player will read data off of disc. In order to guarantee smooth sound playback, there must be enough data spooled at all times to cover the read of 1 buffer. Obviously, this requires that the data can be read faster than it can be played. <P>
+The total size of all of the buffers represents the maximum latency between reading and the actual sound output (the responsiveness to branches and decisions). The maximum latency can be computed as follows: <P>
+max latency (sec) = numBuffers * bufferSize / frame size / sample rate <P>
+For example: <P>
+numBuffers = 4 bufferSize = 16384 bytes frame size = 2 (16-bit monophonic) sample rate = 44100 frames / sec <P>
+max latency = 4 * 16384 / 2 / 44100 = 0.743 sec <P>
+With the above buffer configuration and playback rate, the results of branches and decision functions will be heard no later than about 3/4 second afterwards. <P>
+The client is left with the problem of striking a good balance between efficient I/O usage and responsiveness for any specific application. <P>
+Use <CODE>spDeletePlayer()</CODE> to dispose of this SPPlayer when you are done with it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>resultPlayer
+<DD>Pointer to buffer to write resulting SPPlayer pointer. Must be supplied or else this function returns ML_ERR_BADPTR. 
+</DL>
+<DL>
+<DT>samplerInstrument
+<DD>Item number of sample player instrument to be used to play back sounds with this SPPlayer. Note that all sounds added to the player must be of a format that this sampler instrument can play. The player has no way to verify correctness of instrument, however. 
+</DL>
+<DL>
+<DT>numBuffers
+<DD>Number of buffers to use. Valid range is 2..23 (limited by available signals). 
+</DL>
+<DL>
+<DT>bufferSize
+<DD>Size of each buffer in bytes. For in-memory sounds, must be at least 512 bytes. For sounds to spool directly off disc, must be at least 2*blocksize+514. In practice larger buffers for disc-based sounds are probably required in order to provide smooth sound playback. 
+</DL>
+<DL>
+<DT>customBuffers
+<DD>Table of pointers to client-supplied buffers. If NULL is passed in for this argument, the player will allocate memory for the specified buffers. Use this if you want to allocate your own buffers instead of letting the player do it. The table must contain numBuffers pointers to unique buffers that must be bufferSize in length. Each buffer must be of MEMTYPE_AUDIO and have a DMA-aligned starting address. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Outputs</H3>
+A pointer to an allocated SPPlayer is written to the buffer pointed to by resultPlayer on success. NULL is written to this buffer on failure. <P>
+<H3>Caveats</H3>
+The sound player allocates one signal from your task for each buffer. Keep this in mind when deciding how many buffers to use. <P>
+The sound player will not work correctly unless the sample frame size for the sample follows these rules: <P>
+If frame size (in bytes) &lt; 4, then it must divide into 4 evenly. <P>
+If frame size (in bytes) &gt; 4, then it must be a multiple of 4. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr070.html#XREF29915"><CODE>spDeletePlayer</A>(), <A HREF="./02mpr063.html#XREF36046">spAddSoundFile</A>(), <A HREF="./02mpr062.html#XREF39542">spAddSample</A>(), <A HREF="./02mpr092.html#XREF25186">spStartReading</A>(), <A HREF="./02mpr091.html#XREF15941">spStartPlaying</A>(), <A HREF="./02mpr093.html#XREF20856">spStop</A>() </CODE><P>
+</CODE>

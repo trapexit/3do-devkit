@@ -1,0 +1,24 @@
+<Title>CenterRectAACelInCRect </Title>
+<A NAME="XREF23633"><H1>CenterRectAACelInCRect </A></H1>
+ Centers an anti-aliased cel in a CRect.<P>
+<H3>Synopsis</H3>
+<CODE>void CenterRectAACelInCRect (CCB *cel, CRect *rect)</CODE><P>
+<H3>Description</H3>
+Centers an anti-aliased cel over or within a specified rectangle. <P>
+The ccb_XPos and ccb_YPos fields in both the data and alpha- channel CCBs are modified. Other CCB fields are not modified. The centering is based on the cel's projected size, not its source data size. If the cel is projected to a nonrectangular shape, the result is invalid. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to the cel to be centered. 
+</DL>
+<DL>
+<DT>rect
+<DD>Pointer to a CRect describing the area within which the cel is to be centered. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO018.html#XREF31346"><CODE>CenterRectAACelInSRect</A>, <A HREF="./01LDO021.html#XREF34751">CenterRectCelInCRect</A>, <A HREF="./01LDO024.html#XREF22801">CenterRectCelListInCRect</A> </CODE><P>
+</CODE>

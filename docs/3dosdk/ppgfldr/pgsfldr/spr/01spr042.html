@@ -1,0 +1,27 @@
+<Title>exit</Title>
+<A NAME="XREF40201"><H1>exit </A></H1>
+<A NAME="XREF18448"></A>Exits from a task or thread.<P>
+<H3>Synopsis</H3>
+<CODE>void exit( int status )</CODE><P>
+<H3>Description</H3>
+This procedure deletes the calling task or thread. If the CREATETASK_TAG_MSGFROMCHILD tag was set when creating the calling task, then the status is sent to the parent process through a message. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>status
+<DD>The status to be returned to the parent of the calling task or thread. Negative status is reserved for system use. 
+</DL>
+<H3>Return Value</H3>
+This procedure never returns. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>stdlib.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>Notes</H3>
+When tasks (including threads) have finished their work, they should call <CODE>exit()</CODE> to die gracefully. The system will call <CODE>exit()</CODE> on behalf of the task that returns from the top-level routine. <CODE>exit()</CODE> does necessary clean-up work when a task is finished, including the cleanup required for a thread created by the <CODE>CreateThread()</CODE> library routine. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr028.html#XREF27054"><CODE>CreateThread</A>(), <A HREF="./01spr032.html#XREF18938">DeleteItem</A>(), <A HREF="./01spr037.html#XREF28597">DeleteThread</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF40201"></LINK></H1><HR>

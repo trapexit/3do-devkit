@@ -1,0 +1,30 @@
+<Title>CallFolio</Title>
+<A NAME="XREF18576"><H1>CallFolio </A></H1>
+<A NAME="XREF21821"></A>Invokes from the folio vector table a folio procedure that doesn't return a value.<P>
+<H3>Synopsis</H3>
+<CODE>void CallFolio( const Folio *folio, int32 func, args )</CODE><P>
+<H3>Description</H3>
+This macro allows a task to invoke a folio procedure directly from the folio vector table, thereby bypassing the normal procedure interface. It can be used only for folio procedures that do not return a value. (To invoke a folio procedure that does return a value, use <CODE>CallFolioRet()</CODE>.) This approach, which is slightly faster than invoking the procedure through the normal interface, is intended for use by the folios themselves, but it can be also be used by applications. <P>
+<B>Note: </B> Most tasks should invoke folio procedures in the normal way, using the interfaces described in this manual. Only tasks that require the utmost in speed and efficiency should invoke folio procedures directly from the vector table. <P>
+Example of AddTail(listP, nodeP) using CallFolio: CallFolio(KernelBase, KBV_ADDTAIL, (listP, nodeP)); <P>
+<H3>Arguments</H3>
+<DL>
+<DT>folio
+<DD>A pointer to the folio item that contains the procedure. Use LookupItem() to get this pointer. For the item number of a folio (which you pass to LookupItem() see the Portfolio Items chapter or call FindAndOpenFolio(). 
+</DL>
+<DL>
+<DT>func
+<DD>The index of the vector table entry for the procedure. This index (which is always a negative integer, because the table grows backward in memory) is listed in the header file for the folio that contains the procedure. 
+</DL>
+<DL>
+<DT>args
+<DD>The arguments for the procedure, separated by commas and enclosed within parentheses. 
+</DL>
+<H3>Implementation</H3>
+Macro implemented in folio.h V20. <P>
+<H3>Associated Files</H3>
+folio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr012.html#XREF20564"><CODE>CallFolioRet</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF18576"></LINK></H1><HR>

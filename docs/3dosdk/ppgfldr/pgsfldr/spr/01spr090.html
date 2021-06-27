@@ -1,0 +1,36 @@
+<TITLE>IsItemOpened</TITLE>
+<A NAME="XREF39534"><H1>IsItemOpened </A></H1>
+<A NAME="XREF34496"></A>Determines whether a task or thread has opened a given item.<P>
+<H3>Synopsis</H3>
+<CODE>Err IsItemOpened( Item task, Item i )</CODE><P>
+<H3>Description</H3>
+This function determines whether a task or thread has currently got an item opened. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>task
+<DD>The task or thread to inquire about. For the current task, use:
+</DL>
+<DL>
+<DT><CODE>KernelBase-&gt;kb_CurrentTask&gt;
+</DL>
+<DL>
+<DT>i
+<DD>The number of the item to verify. 
+</DL>
+<H3>Return Value</H3>
+This function returns &gt;=0 if the item was opened, or a negative error code if it is not, or if the parameters are bogus. </CODE><P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr104.html#XREF35423"><CODE>OpenItem</A>(), <A HREF="./01spr016.html#XREF39128">CloseItem</A>(), <A HREF="./01spr014.html#XREF21994">CheckItem</A>(), <A HREF="./01spr099.html#XREF27851">LookupItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF39534"></LINK></H1><HR>

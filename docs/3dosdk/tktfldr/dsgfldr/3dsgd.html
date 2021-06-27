@@ -1,0 +1,22 @@
+<TITLE>Displaying persistent data with the Join subscriber</TITLE>
+<H1><LINK NAME="XREF38530">Displaying persistent data with the Join subscriber</LINK></H1><HR>
+The Join subscriber lets you display data over a long time without affecting the buffer rotation. <P>
+For example, if you want to display a background image with an animation on top, none of the buffers which contain both animation chunks and image chunks can be reused until the image is no longer displayed. <P>
+The Join subscriber lets you copy and return a buffer and circumvent the usual use and return mechanism. <P>
+<B>Note: </B>You can also work with the SCEL subscriber or Text subscriber. They allow for a stream header flag that copies a specified chunk out of the stream buffer. See the <I>Attic</I> folder for more information.<P>
+<H2>Displaying a background image</H2>
+Displaying a background image with the Join subscriber involves the following basic steps:<P>
+<OL>
+<LI>Create a chunk file using the Chunkify tool. For the example, use a type of IMAG and MEMTYPE_ANY (the default).
+<p>
+<LI>Weave the stream, using the chunk file as one of its elements. 
+<p>
+<LI>Create and specify a message port at which to receive the specified Join elements. 
+<p>
+<DL>
+<DD><CODE>MsgPort = InitiJoinPort (joinContextPTR, &amp;MsgPort, `IMAG')</CODE><BR>
+</DL>
+<p>
+<LI>To render and release the image, call <CODE>GetJoinElement()</CODE>and <CODE>ReleaseJoinElement()</CODE>. 
+</OL>
+<P>

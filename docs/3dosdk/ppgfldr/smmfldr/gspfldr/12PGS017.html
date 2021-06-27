@@ -1,0 +1,46 @@
+<Title>effectshandler</Title>
+<A NAME="XREF18785"><H1>effectshandler </A></H1>
+<A NAME="XREF30575"> </A>Utility code for mixers and sound effects.<P>
+<H3>Synopsis</H3>
+<CODE>effectshandler</CODE><P>
+<H3>Description</H3>
+Utility code for basic management of mixers and sound effects. <P>
+Typical usage scenario: <P>
+During program initialization: <P>
+<UL>
+<LI>Open the audio folio. 
+<LI>Call <CODE>ehInitEffectsHandler()</CODE> to allocate and initialize 
+the effects handler.
+<LI>Call <CODE>ehNewMixerInfo()</CODE> to load a mixer and initialize a 
+mixerInfo structure. 
+<LI>Call <CODE>ehLoadSoundEffect()</CODE> to load a sample as a sound 
+effect and initialize a sampleInfo structure. 
+<LI>Optionally call <CODE>ehSetChannelLevels()</CODE> for each sound 
+effect. 
+</UL>
+As needed during execution:<P>
+<UL>
+<LI> Call <CODE>ehSetChannelLevels()</CODE> for a given sound effect to 
+adjust its player's output levels. Issue calls which control the sound 
+effects player instrument (the SampleInfo's si_Player structure member).
+</UL>
+During program termination: <P>
+<UL>
+<LI>Call <CODE>ehDisposeSampleInfo()</CODE> for each sound effect. 
+<LI>Call <CODE>ehDisposeMixerInfo()</CODE> for the mixer. 
+<LI>Call <CODE>ehKillEffectsHandler()</CODE>. Close the audio folio. 
+</UL>
+Depending on program requirements, you may want to load one or more sound 
+effects and assemble their player apparati but not immediately connect 
+them to a mixer. This is accomplished by calling 
+<CODE>ehNewSampleInfo()</CODE> and <CODE>ehSetupSamplePlayer()</CODE>. 
+When you want to connect the player to the mixer, call 
+<CODE>ehConnectSamplePlayer()</CODE>. <P>
+<H3>Caveats</H3>
+This program is not a complete sound management facility. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>effectshandler.c effectshandler.h 
+</DL>
+<H3>Location</H3>
+examples/ExamplesLib <P>

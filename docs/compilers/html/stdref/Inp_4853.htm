@@ -1,0 +1,72 @@
+<HTML><TITLE>Input Iterators</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Input Iterators</H2>
+<HR><PRE>     Iterator</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>A read-only, forward moving iterator.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Key to Iterator Requirements"><LI>Key to Iterator Requirements</LI></A>
+<A HREF="#Requirements for Input Iterators"><LI>Requirements for Input Iterators</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Description"><H3>Description</H3></A>
+<HR><STRONG><P>For a complete discussion of iterators, see the <A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A> section of this reference.</P>
+<P>Iterators are a generalization of pointers that allow a C++ program to uniformly interact with different data structures.  Input iterators are read-only, forward moving iterators that satisfy the requirements listed below.</P></STRONG><HR>
+<A NAME="Key to Iterator Requirements"><H3>Key to Iterator Requirements</H3></A>
+<P>The following key pertains to the iterator requirement descriptions listed below: </P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD><SAMP>a </SAMP>and<SAMP> b</SAMP></TD>
+<TD>values of type <SAMP>X</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>n</SAMP></TD>
+<TD>value of <SAMP>distance</SAMP> type</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>u, Distance, tmp </SAMP>and<SAMP> m</SAMP></TD>
+<TD>identifiers</TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r</SAMP></TD>
+<TD>value of type <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>t</SAMP></TD>
+<TD>value of type <SAMP>T</SAMP></TD></TR>
+</TABLE></CENTER>
+<A NAME="Requirements for Input Iterators"><H3>Requirements for Input Iterators</H3></A>
+<P>The following expressions must be valid for input iterators:</P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD><SAMP>X u(a)</SAMP></TD>
+<TD>copy constructor,<SAMP> u == a</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>X u = a</SAMP></TD>
+<TD>assignment, <SAMP>u == a</SAMP> </TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a == b</SAMP>, <SAMP>a != b</SAMP></TD>
+<TD>return value convertable to <SAMP>bool</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>*a</SAMP></TD>
+<TD><SAMP>a == b</SAMP> implies <SAMP>*a == *b</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>++r</SAMP></TD>
+<TD>returns <SAMP>X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>r++</SAMP></TD>
+<TD>return <SAMP>value</SAMP> convertable to <SAMP>const X&#38;</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>*r++</SAMP></TD>
+<TD>returns type <SAMP>T</SAMP></TD></TR>
+<TR VALIGN=top>
+<TD><SAMP>a -> m</SAMP></TD>
+<TD>returns <SAMP>(*a).m</SAMP></TD></TR>
+</TABLE></CENTER>
+<P>For input iterators, <SAMP>a == b</SAMP> does not imply that<SAMP> ++a == ++b</SAMP>.</P>
+<P>Algorithms using input iterators should be single pass algorithms.  That is they should not pass through the same iterator twice.</P>
+<P>The value of type <SAMP>T</SAMP> does not have to be an <SAMP>lvalue</SAMP>.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Ite_5295.htm"><B><I>Iterators</B></I></A></P>
+<HR>
+<A HREF="inp_3138.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Ins_1844.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,157 @@
+<TITLE>Moving and Distorting a Cel</TITLE>
+<H1><LINK NAME="XREF36220">Moving and Distorting a Cel</LINK></H1><HR>
+You can move and distort a cel in one of two ways: <P>
+
+<UL>
+<LI><A HREF="#XREF33813">Manipulating a Cel by Changing CCB Values</A>
+<LI><A HREF="#XREF24297">Using MapCel to Manipulate a Cel</A>
+</UL>
+<A NAME="XREF33813"><H2>Manipulating a Cel by Changing CCB Values</A></H2>
+You can move and distort a cel by changing its position fields. The <CODE>ccb_XPos</CODE> and <CODE>ccb_YPos</CODE> fields specify the location of the upper-left corner of the cel. These fields are stored as 16.16 numbers-that is, the upper 16 bits are an integer and the lower 16 bits are a fraction. Most of the time, this simply means that you'll shift the desired coordinate up 16 bits before storing it in the CCB. Changing the fields changes the location of the cel the next time the cel is rendered. <P>
+The <CODE>TargetAction()</CODE> function from <I>jsinteractivesound.c</I> moves and scales the UFO cel. The UFO starts out at distance 8000 (in arbitrary units) and flies toward the player until it reaches 200 or less, at which point it vanishes and the player is penalized for letting a UFO get away. As the UFO flies toward the camera, it is scaled appropriately. Meanwhile, the UFO also bounces off the edges of an imaginary rectangle 10 pixels in from the edges of the screen. The speed at which the UFO bounces around is divided by the distance, to reflect the way a real object would behave.<P>
+The example below shows a code fragment from <I>jsinteractivesound.c</I>. <P>
+<B>Example 1: </B><I>Moving a cel</I><P>
+<CODE>
+<PRE>
+void TargetAction(CCB* aTargetCCB)
+    /*
+        Animate the UFO: If it's still exploding, play the explosion's next frame,
+        otherwise display the UFO (after a nominal post-explosion delay).
+    */
+    {
+    static int32 iDeltaX = Convert32_F16(1);
+    static int32 iDeltaY = Convert32_F16(3) &gt;&gt; 1;
+
+    int32 iTest;
+
+    if (gDistance &gt; UFO_MAXDISTANCE)
+        {
+        gDistance = UFO_MAXDISTANCE;
+        gVelocity = -gVelocity;
+        gMisses++;
+    
+        aTargetCCB-&gt;ccb_XPos = Convert32_F16(VISIBLE_INSET + randbits(8));
+        aTargetCCB-&gt;ccb_YPos = Convert32_F16(VISIBLE_INSET + randbits(9));
+        }
+    else if (gDistance &lt; UFO_MINDISTANCE)
+        {
+        gDistance = UFO_MINDISTANCE;
+        gVelocity = -gVelocity;
+        }
+
+    if ( gHoverMode &amp;&amp; (gDistance &lt; UFO_HOVER_DISTANCE) )
+        {
+        gDistance += (gVelocity &gt;&gt; 5);
+        aTargetCCB-&gt;ccb_YPos += iDeltaY &gt;&gt; 1;
+        aTargetCCB-&gt;ccb_XPos += iDeltaX &gt;&gt; 1;
+        }
+    else
+        {
+        gDistance += gVelocity;
+        iTest = PROJECTED(UFO_MINDISTANCE);
+        aTargetCCB-&gt;ccb_YPos += (iDeltaY &gt;&gt; 7) * iTest;
+        aTargetCCB-&gt;ccb_XPos += (iDeltaX &gt;&gt; 7) * iTest;
+    
+        if (!randbits(8))
+            iDeltaX *= -1;
+    
+        if (!randbits(8))
+            iDeltaY *= -1;
+        }
+
+    aTargetCCB-&gt;ccb_HDX = PROJECTED(Convert32_F20(1));
+    aTargetCCB-&gt;ccb_VDY = PROJECTED(Convert32_F16(1));
+
+    iTest = ConvertF16_32(aTargetCCB-&gt;ccb_YPos) + 
+                                                PROJECTED( aTargetCCB-&gt;ccb_Height );
+    if (aTargetCCB-&gt;ccb_YPos &lt;= Convert32_F16(VISIBLE_INSET))
+        {
+        aTargetCCB-&gt;ccb_YPos = Convert32_F16(VISIBLE_INSET);
+        iDeltaY *= -1;
+        }
+    else if (iTest &gt;= 149)
+        {
+        aTargetCCB-&gt;ccb_YPos -= Convert32_F16(iTest - 149);
+        iDeltaY *= -1;
+        }
+
+</CODE>
+</PRE>
+The jsmovecel program actually uses a convenience function for moving a cel, which is then used by <CODE>HandleControlPad()</CODE>.<P>
+<B>Example 2: </B><I>Using the MoveCCB convenience function.</I><P>
+<CODE>
+<PRE>
+void MoveCCB( CCB *aCCB, int32 xPos, int32 yPos )
+/*
+Convenience routine to move a cel to the specified int32 coordinates
+*/
+{
+    aCCB-&gt;ccb_XPos = Convert32_F16(xPos);
+    aCCB-&gt;ccb_YPos = Convert32_F16(yPos);
+}
+</CODE>
+</PRE>
+<H3>Distorting a Cel</H3>
+In addition to moving a cel, you can stretch and rotate the cel. You can either use the <CODE>MapCel()</CODE> function, discussed below, or change field values:<P>
+<UL>
+<LI><CODE>ccb_HDX</CODE> and <CODE>ccb_HDY</CODE>-control the offset of the upper-right corner from the upper-left corner 
+<p>
+<LI><CODE>ccb_VDX</CODE> and <CODE>ccb_VDY</CODE>-control the offset of the lower-left corner from the upper-left corner 
+<p>
+<LI><CODE>ccb_HDDX</CODE> and <CODE>ccb_HDDY</CODE>-control the offset of the lower-right corner from the lower-left corner 
+</UL>
+Together, these six fields allow you to map the cel into any cel projection quadrilateral. You can scale, rotate, and skew cels and achieve a number of other effects. The operating system call <CODE>MapCel()</CODE>, discussed next, sets up these six fields and the x and y fields properly. <P>
+<A NAME="XREF24297"><H2>Using MapCel to Manipulate a Cel</A></H2>
+All cels start out as rectangles. Even when the object itself doesn't fill the rectangle, the transparent pixels surrounding the object still exist. Whenever you draw the rectangle to the screen, you can put its four corners wherever you want. The cel engine stretches and skews the image to fit the destination quadrilateral.<P>
+Cel mapping gives you access to many effects. <P>
+<UL>
+<LI>Scale a cel up or down by specifying a destination rectangle that's larger or smaller than the source image.
+<p>
+<LI>Rotate a cel around a point. By pinching two corners closer together and the other two further apart, you can achieve 3-D "vanishing point" effects. 
+<p>
+<LI>Transpose corners to get "bow-tie" effects.
+</UL>
+The graphics folio function <CODE>MapCel()</CODE> takes two parameters:<P>
+<UL>
+<LI>A pointer to the cel control block (CCB).
+<p>
+<LI>A pointer to an array of <CODE>Point</CODE> structures that contains the simple XY locations of the four corners of the destination rectangle. The upper-left corner of the source gets mapped to <CODE>Corner[0]</CODE>, the upper-right corner to <CODE>Corner[1]</CODE>, the lower-right corner to <CODE>Corner[2]</CODE>, and the lower-left corner to <CODE>Corner[3]</CODE>.
+</UL>
+The example below from jsinteractivesound.c uses MapCel to scale a cel. <P>
+<B>Example 3: </B><I>Code fragment using MapCel().</I><P>
+<CODE>
+<PRE>
+    /* While the C button and arrows are pressed distort the cel */
+    if ( controlBits &amp; ControlC )
+    {
+    if ( controlBits &amp; ControlRight )
+    {
+        ++xDistPt;
+    }
+    else if ( controlBits &amp; ControlLeft )
+    {
+        --xDistPt;
+    }
+    
+    if ( controlBits &amp; ControlUp )
+    {
+        --yDistPt;
+    }
+    else if ( controlBits &amp; ControlDown )
+    {
+        ++yDistPt;
+    }
+    
+    SetQuad (aQuad, gXPos, gYPos, 
+            gXPos + gCcb-&gt;ccb_Width + xMovePt,
+             gYPos + gCcb-&gt;ccb_Height+ yMovePt);
+    
+    aQuad[2].pt_X += xDistPt;
+    aQuad[2].pt_Y += yDistPt;
+    
+    MapCel( gCcb, aQuad );
+        
+    goto DONE;
+    }
+</CODE>
+</PRE>

@@ -1,0 +1,40 @@
+<TITLE>Testing the CD-ROM Image File on a Macintosh</TITLE>
+<H1><LINK NAME="XREF14505">Testing the CD-ROM Image File on a Macintosh</LINK></H1><HR>
+After creating the CD-ROM image file, test it on the Macintosh to make sure that all necessary files are included in the image. <P>
+To test the CD-ROM image file, follow these steps:<P>
+<OL>
+<LI>Rename any additional copies of your title's executable and data folders you have on your Macintosh so they aren't accessed instead of the files in the CD-ROM image you want to test. 
+<p>
+<LI>Make sure there are no other <I>cdrom.image </I>files anywhere on your Macintosh.
+<p>
+<LI>Make sure your environment is set up for debugging. 
+<p>
+<LI>Open the Debugger and select Cancel when prompted for a script to execute. 
+<p>
+<LI>From the Edit menu, choose Preferences and make sure the CD Emulation checkbox is checked. 
+<p>
+<LI>From the File menu, choose Directories, and then choose Setup. In the dialog that appears, click Data, then find the <I>/cdrommaster/_version</I> folder that contains the <I>cdrom.image</I> file and click Select Current Directory.
+<p>
+<LI>From the Target menu, select Launch.
+<p>
+<LI>When prompted, select the boot script and click Execute.
+<p>
+<LI>Press Command-G to start the operating system (if you didn't uncheck Set Initial Breakpoints).
+<p>
+<LI>When you see a Mac-&gt; prompt in the Debugger Terminal window, type the following:
+<p>
+<DL>
+<DD><CODE>alias boot /cd-rom</CODE><BR>
+</DL>
+<p>
+<p>This sets the alias <CODE>boot</CODE> to <CODE>/cd-rom</CODE>. In turn, any pathname in the application that contains <CODE>$boot</CODE> will properly reference the files on the CD-ROM.
+<p>
+
+<LI>Execute the program contained in the image file by typing the following command into the Terminal window:
+<p>
+<DL>
+<DD><CODE>$boot/launchme</CODE><BR>
+</DL>
+<p>
+<LI>Test the CD-ROM image in the minimum memory configuration, as described in <A HREF="./02CDM003.html#XREF27784">Checking for Low Memory Pointers</A>.
+</OL>

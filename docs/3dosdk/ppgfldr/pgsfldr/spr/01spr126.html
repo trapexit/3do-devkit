@@ -1,0 +1,34 @@
+<TITLE>SetItemPri</TITLE>
+<A NAME="XREF17657"><H1>SetItemPri </A></H1>
+<A NAME="XREF32950"></A>Changes the priority of an item.<P>
+<H3>Synopsis</H3>
+<CODE>int32 SetItemPri( Item i, uint8 newpri )</CODE><P>
+<H3>Description</H3>
+This procedure changes the priority of an item. Some items in the operating system are maintained in lists; for example, tasks and threads. Some lists are ordered by priority, with higher-priority items coming before lower-priority items. When the priority of an item in a list changes, the kernel automatically rearranges the list of items to reflect the new priority. The item is moved immediately before the first item whose priority is lower. <P>
+A task must own an item to change its priority. A task can change its own priority even if it does not own itself. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>i
+<DD>The item number of the item whose priority to change. 
+</DL>
+<DL>
+<DT>newpri
+<DD>The new priority for the item. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the previous priority of the item or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Notes</H3>
+For certain item types, such as devices, the kernel may change the priority of an item to help optimize throughput. <P>
+<H3>Caveats</H3>
+This function is not implemented for all known item types. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr022.html#XREF15505"><CODE>CreateItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF17657"></LINK></H1><HR>

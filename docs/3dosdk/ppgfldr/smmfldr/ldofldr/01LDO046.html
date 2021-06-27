@@ -1,0 +1,40 @@
+<Title>CreateTextCel</Title>
+<A NAME="XREF36470"><H1>CreateTextCel </A></H1>
+ Creates a text cel.<P>
+<H3>Synopsis</H3>
+<CODE>TextCel * CreateTextCel (FontDescriptor *fDesc, uint32 formatFlags, int32 width, int32 height)</CODE><P>
+<H3>Description</H3>
+Creates a TextCel using the specified sizes and formatting options. Initially, the cel data buffer is empty; until you place text into the cel all pixels are zero. <P>
+If width and/or height are zero, the cel is initially created with a 1 x 1 pixel size. Each time text is placed into the cel, the size automatically changes to reflect the size of the text in the cel. <P>
+The formatFlags parameter contains one or more formatting options, ORed together. Available options are:<P>
+<UL>
+<LI>TC_FORMAT_LEFT_JUSTIFY left-justify text 
+<LI>TC_FORMAT_RIGHT_JUSTIFY right -justify text
+<LI>TC_FORMAT_CENTER_JUSTIFY center-justify text 
+<LI>TC_FORMAT_WORDWRAP auto-word-wrap text 
+</UL>
+Use <CODE>DeleteTextCel()</CODE> to dispose of the cel when you are finished with it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fDesc
+<DD>Pointer to a FontDescriptor structure. 
+</DL>
+<DL>
+<DT>formatFlags
+<DD>Text-formatting options. 
+</DL>
+<DL>
+<DT>width
+<DD>Width of the cel. 
+</DL>
+<DL>
+<DT>height
+<DD>Height of the cel. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the newly created TextCel structure; NULL if there isn't enough memory to create the new TextCel. <P>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO040.html#XREF12893"><CODE>CloneTextCel</A>,<CODE> </CODE><A HREF="./01LDO057.html#XREF39255">DeleteTextCel</A><CODE>, <A HREF="./01LDO177.html#XREF11319">taCreateTextCel</A> </CODE><P>
+</CODE>

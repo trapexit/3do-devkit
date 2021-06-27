@@ -1,0 +1,104 @@
+<HTML><HEAD><TITLE>Fundamental Data Types</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Fundamental Data Types</H2>
+<P>The standard library describes a specific type by providing a specialized  implementation of the<SAMP> numeric_limits</SAMP> class for the type. Static functions and static constant data members then provide information specific to the type.  The standard library includes descriptions of the following fundamental data types.</P>
+<CENTER><TABLE CELLSPACING=3 CELLPADDING=3>
+<TR VALIGN=top>
+<TD>
+<SAMP>bool</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>char</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>int</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>float</SAMP><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>&nbsp;</TD>
+
+<TD>
+<SAMP>signed char</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>short</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>double</SAMP><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>&nbsp;</TD>
+
+<TD>
+<SAMP>unsigned char</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>long</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>long double</SAMP><BR>
+</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>&nbsp;</TD>
+
+<TD>
+<SAMP>wchar_t</SAMP><BR>
+</TD>
+
+<TD>
+<SAMP>unsigned short</SAMP><BR>
+</TD>
+
+<TD>&nbsp;</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>&nbsp;</TD>
+
+<TD>&nbsp;</TD>
+
+<TD>
+<SAMP>unsigned int</SAMP><BR>
+</TD>
+
+<TD>&nbsp;</TD>
+</TR>
+
+<TR VALIGN=top>
+<TD>&nbsp;</TD>
+
+<TD>&nbsp;</TD>
+
+<TD>
+<SAMP>unsigned long</SAMP><BR>
+</TD>
+
+<TD>&nbsp;</TD>
+</TR>
+</TABLE></CENTER>
+<P>Certain implementations may also provide information on other data types. Whether or not an implementation is described can be discovered using the static data member field<SAMP> is_specialized</SAMP>.  For example, the following is legal, and will indicate that the <A HREF="../stdref/str_8586.htm"><B><I>string</I></B></A> data type is not described by this mechanism.</P>
+<PRE>cout &#60;&#60; "are strings described " &#60;&#60;
+   numeric_limits&#60;string>::is_specialized &#60;&#60; endl;
+</PRE>
+<P>For data types that do not have a specialization, the values yielded by the  functions and data fields in <SAMP>numeric_limits</SAMP> are generally zero or false.</P>
+
+<HR>
+<A HREF="ove_1724.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="num_4324.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,65 @@
+<Title>CreateCel</Title>
+<A NAME="XREF35656"><H1>CreateCel </A></H1>
+ Creates a cel from scratch.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * CreateCel (int32 width, int32 height, int32 bitsPerPixel, 
+int32 options, void *dataBuf)</CODE><P>
+<H3>Description</H3>
+Creates a cel of any arbitrary type. The parameters provide just enough 
+information to create the basic cel. After the cel is created, you are 
+free to modify the CCB. <P>
+If you pass a NULL dataBuf pointer, an appropriately-sized buffer is 
+allocated when the cel is created. If you pass a non-NULL dataBuf pointer, 
+it is stored into the ccb_SourcePtr field instead of allocating a buffer 
+internally. <P>
+The options parameter is one or more of the following values, ORed 
+together as necessary: <P>
+CREATECEL_CODED-Create a coded cel. bitsPerPixel must be &lt;= 8. <p>
+CREATECEL_UNCODED-Create an uncoded cel. bitsPerPixel must be 8 or 16. <P>
+If bitsPerPixel is less than 8, a PLUT is always allocated when the cel is 
+created. If bitsPerPixel is 8 or 16, a PLUT is allocated only if the 
+CREATECEL_CODED option is set. If a PLUT is allocated all its entries are 
+initialized to zero. <P>
+The cel is created with a position of 0,0 and size and perspective values 
+for a 1:1 mapping. The Preamble Word 1 Blue LSB handling is set to 
+PRE1_TLLSB_PDC0. The PIXC word is set for standard opaque, 0x1F001F00. The 
+cel flags are set to: CCB_LAST | CCB_NPABS | CCB_SPABS | CCB_PPABS | 
+CCB_LDSIZE | CCB_LDPRS | CCB_LDPPMP | CCB_CCBPRE | CCB_YOXY | CCB_USEAV | 
+CCB_NOBLK | CCB_ACE | CCB_ACW | CCB_ACCW <P>
+Use <CODE>DeleteCel()</CODE> to release all resources allocated for the 
+cel. The cel data buffer and PLUT are released only if they were allocated 
+by <CODE>CreateCel()</CODE>. If you provided your own dataBuf pointer, you 
+must free the buffer yourself. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>width
+<DD>Width of the cel, and its data buffer, in pixels. 
+</DL>
+<DL>
+<DT>height
+<DD>Height of the cel, and its data buffer, in pixels. 
+</DL>
+<DL>
+<DT>bitsPerPixel
+<DD>Bits per pixel value for the cel. 
+</DL>
+<DL>
+<DT>options
+<DD>Bitmapped options, as described above. 
+</DL>
+<DL>
+<DT>dataBuf
+<DD>Option data buffer pointer; may be NULL to have a buffer allocated 
+automatically. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the new CCB, or NULL if there is not enough memory to make the 
+cel. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO041.html#XREF37012"><CODE>CreateBackdropCel</A>, <A 
+HREF="./01LDO055.html#XREF42213">DeleteCel</A> </CODE><P>
+</CODE>

@@ -1,0 +1,35 @@
+<Title>symanim</Title>
+<A NAME="XREF27345"><H1>symanim </A></H1>
+<A NAME="XREF24601"></A>Demonstrates playing animations with optional rotation 
+and scaling.<P>
+<H3>Synopsis</H3>
+<CODE>symanim</CODE><P>
+<H3>Description</H3>
+This program animates the 3 components of the 3DO logo on top of a 
+background display. While the program is running, the user can do the 
+following: <P>
+<UL>
+<LI>A button-Adds a set of 3 components to the animation. 
+<LI>B button-Starts rotating the components in 2D. Pressing the button 
+starts 3D rotation. Pressing the button again stops rotation. 
+<LI>C button-Starts to rapidly resize the components from large to small 
+and back. Pressing the button again stops this. 
+<LI>P button-Pauses and unpauses the animation. 
+<LI>X button-Exits the program. 
+</UL>
+The program adapts to NTSC vs. PAL automatically. Upon startup, the 
+program loads in an image file to use as a backdrop. It also loads three 
+ANIM files to use for the three components of the 3DO logo. Different 
+versions of the pictures are loaded depending on whether the display is 
+NTSC or PAL. <P>
+Once all components are loaded, a screen group with two screens is 
+created. The two screens are used for double-buffering. Throughout the 
+animation, we use a SPORT transfer to copy the backdrop image from its 
+buffer into the screen buffer that is not currently displayed. We then 
+render the current set of components onto the screen buffer. Once all this 
+is completed, we swap screen buffers, which makes the rendering visible. 
+The cycle starts again with the newly hidden screen buffer. <P>
+<H3>Associated Files</H3>
+symanim.c, sprite.c, sprite.h<P>
+<H3>Location</H3>
+examples/Graphics/symanim <P>

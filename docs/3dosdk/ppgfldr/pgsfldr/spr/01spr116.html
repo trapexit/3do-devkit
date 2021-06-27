@@ -1,0 +1,28 @@
+<TITLE>SampleSystemTimeTV</TITLE>
+<A NAME="XREF27088"></A><H1>SampleSystemTimeTV </H1>
+<A NAME="XREF21853">Samples the system time with very low overhead.</A><P>
+<H3>Synopsis</H3>
+<CODE>void SampleSystemTimeTV( TimeVal *time )</CODE><P>
+<H3>Description</H3>
+This function records the current system time in the supplied TimeVal structure. This is a very low overhead call giving a very high-accuracy timing. <P>
+The time value returned by this function corresponds to the time maintained by the TIMERUNIT_USEC unit of the timer device. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>time
+<DD>A pointer to a TimeVal structure which will receive the current system time. 
+</DL>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>time.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr115.html#XREF33004"><CODE>SampleSystemTime</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF27088"></LINK></H1><HR>

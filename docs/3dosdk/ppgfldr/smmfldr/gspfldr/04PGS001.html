@@ -1,0 +1,157 @@
+<TITLE>Getting Control Pad Input</TITLE>
+<H1><LINK NAME="XREF32717">Getting Control Pad Input</LINK></H1><HR>
+This section looks at user interaction with the control pad, discussing the following topics:<P>
+
+<UL>
+<LI><A HREF="#XREF39155">Utility Functions for Using the Control Pad</A>
+<LI><A HREF="#XREF30879">The jsanimation.c Example</A>
+<LI><A HREF="#XREF32901">The basicslideshow.c Example</A>
+</UL>
+<A NAME="XREF39155"><H2>Utility Functions for Using the Control Pad</A></H2>
+All examples in the Jumpstart2 example set use the functions from <I>controlpad.c</I> in the Examples folder, which offers the following utility functions:<P>
+<UL>
+<LI><CODE>ControlPadSanityCheck</CODE>-makes sure the event broker has been initialized.
+<LI><CODE>InitControlPad</CODE>-connects a task to the event broker for control pad interaction.
+<LI><CODE>DoControlPad</CODE>-queries the specified control pad and de-bounces specified key presses
+<LI><CODE>ReturnPreviousControlPad</CODE>-returns the state of the controlpad as it is remembered
+<LI><CODE>KillControlPad</CODE>-disconnects the task from the event broker and frees resources
+</UL>
+<A NAME="XREF30879"><H2>The jsanimation.c Example</A></H2>
+The animation example in the Jumpstart2 folder has been simplified to clarify how control pad interaction occurs. The <CODE>main()</CODE> function in jsanimation.c contains a loop that continuously calls <CODE>HandleControlPad()</CODE>. <CODE>HandleControlPad()</CODE> recognizes two button events: <P>
+<UL>
+<LI>If the user presses the Start button, the game is over. 
+<LI>If the user presses Control-A, the explosion is triggered. 
+</UL>
+<CODE>kContinuousMask</CODE> specifies for which buttons continuous presses are allowed. <P>
+<B>Example 1: </B><I>The HandleControlPad function in jsanimation</I><P>
+<CODE>
+<PRE>
+#define     kContinuousMask     ( ControlA )
+
+int32 HandleControlPad( void )
+/*
+    Respond to control pad input:
+      - The A key is enabled for continuous presses.
+      - Start button means quit the program.
+      - A button and arrows means fire (explode the cel).
+    Returns -1 if the user pressed the start button to quit, otherwise 0.
+*/
+{
+    uint32  controlBits;
+    Point   aUFOCenter;
+    int32 retValue = 0;
+
+    DoControlPad(1, &amp;controlBits, kContinuousMask );
+
+    if ( controlBits &amp; ControlStart )
+/* If the user has pressed the START button, the game is over. */
+    {
+        retValue = -1;
+        goto DONE;
+    }
+/* ControlA triggers the explosion */
+    if ( controlBits &amp; ControlA )
+    {
+        if ( !gBoomCount )                            /* Don't fire until previous explosion is finished */
+        {
+            gBoomCount = gExplosionAnim-&gt;num_Frames;
+                                /* Position center of explosion at center of the UFO */
+            aUFOCenter = CalcCCBCenterPoint(gUFO_CCB);
+            CenterCCB(gExplosionCCB, aUFOCenter.pt_X, aUFOCenter.pt_Y);
+                                /* Get a random center for the next UFO */
+            CenterCCB(gUFO_CCB, (Coord) Random(DISPLAY_WIDTH), (Coord)
+                                                         Random(DISPLAY_HEIGHT));
+
+        }
+    }
+
+DONE:
+    return retValue;
+
+}
+</CODE>
+</PRE>
+<A NAME="XREF32901"><H2>The basicslideshow.c Example</A></H2>
+The jsbasicslideshow.c example uses the same <CODE>JSGetControlPad()</CODE> function but a more complex <CODE>HandleControlPad()</CODE> function that allows more complex user input. <P>
+Note that this example includes controlpad.c and calls <CODE>InitControlPad()</CODE> during initialization and <CODE>KillControlPad()</CODE> during shutdown. <P>
+<B>Example 2: </B><I>The HandleControlPad function in jsbasicslideshow.c</I><P>
+<CODE>
+<PRE>
+int32 HandleControlPad( void )
+/*
+Respond to the user's control pad input.
+- Right and down arrows mean show next image in list
+- Left and up arrows mean show previous image in list
+- Start button means quit the program
+- B button means show the other buffer
+- C button means toggle automatic display mode
+Returns -1 if the user pressed the start button to quit, otherwise 0.
+*/
+{
+    int32 retValue = 0;
+    uint32  controlBits;
+
+    DoControlPad(1, &amp;controlBits, 0 ); 
+/* no continuous button presses */
+
+/* if the Start button is pressed, the user wants to quit */
+    if ( controlBits &amp; ControlStart )
+    {
+        retValue = -1;
+    }
+
+/* if the A button is pressed \xc9  (no action in this interface) */
+    else if ( controlBits &amp; ControlA )
+    {
+        ;
+    }
+
+/* if button B is pressed, display the other buffer */
+    else if ( controlBits &amp; ControlB )
+        {
+        gScreenContext-&gt;sc_curScreen = 
+                                1 - gScreenContext-&gt;sc_curScreen;
+        }
+/* if button C is pressed toggle autoshow */
+    else if ( controlBits &amp; ControlC )
+        {
+        gAutoShowFlag = !gAutoShowFlag;
+    
+        PRT( ("Auto-show mode is ") );
+        if ( gAutoShowFlag )
+            {
+             PRT( ("TRUE\n") );
+             }
+        else
+            PRT( ("FALSE\n") );
+    
+        }
+
+    else if ( controlBits &amp; 
+        (ControlUp | ControlLeft | ControlDown | ControlRight))
+        /* Arrows mean move one image forward or backward */
+        {
+        if ( controlBits &amp; ControlUp )
+            {
+            LoadPreviousImage();
+            }
+        else if ( controlBits &amp; ControlLeft )
+            {
+            LoadPreviousImage();
+            }
+        else if ( controlBits &amp; ControlDown )
+            {
+            LoadNextImage();
+            }
+        else if ( controlBits &amp; ControlRight )
+            {
+            LoadNextImage();
+            }
+    
+        }
+
+    return retValue;
+
+}
+</CODE>
+</PRE>

@@ -1,0 +1,25 @@
+<TITLE>ScavengeMem</TITLE>
+<A NAME="XREF32080"><H1>ScavengeMem </A></H1>
+<A NAME="XREF12605"></A>Returns task's free memory pages to the system memory pool.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ScavengeMem( void )</CODE><P>
+<H3>Description</H3>
+This procedure finds pages of memory in the task's free memory pool from which no memory is allocated and returns those pages to the system-wide memory pool. <P>
+If there is not enough memory in a task's free memory pool to satisfy a memory-allocation request, <CODE>AllocMem()</CODE> tries to get reclaim the necessary memory by calling <CODE>ScavengeMem()</CODE>. <P>
+<H3>Return Value</H3>
+The procedure returns the amount of memory that was returned to the system-wide memory pool, in bytes. If no memory was returned, the procedure returns 0. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr004.html#XREF40501"><CODE>AllocMem</A>(), <A HREF="./01spr007.html#XREF42660">AllocMemFromMemLists</A>(), <A HREF="./01spr064.html#XREF31542">FreeMem</A>(), <A HREF="./01spr067.html#XREF28914">FreeMemToMemLists</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF32080"></LINK></H1><HR>

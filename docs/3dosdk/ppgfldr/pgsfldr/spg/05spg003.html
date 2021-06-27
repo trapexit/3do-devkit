@@ -1,0 +1,71 @@
+<TITLE>Getting Information About Memory</TITLE>
+<H1>Getting Information About Memory</H1><HR>
+The following sections explain how to find out how much memory is available, how to find out the type of memory you have, how to get the size of a memory page, and how to find out which VRAM bank (if any) contains a memory 
+location.<P>
+<H2>Finding Out How Much Memory Is Available</H2>
+You can find out how much memory is available by calling <CODE>AvailMem()</CODE>:<P>
+<DL>
+<DD><CODE>void AvailMem( MemInfo *minfo, uint32 memflags )</CODE><BR>
+</DL>
+The <CODE>memflags</CODE> argument specifies the type of memory you want to find out about. If you want to find out how much of all types of memory is available, use <CODE>MEMTYPE_ANY</CODE> as the value of the flags argument. To find out how much DRAM is available, use <CODE>MEMTYPE_DRAM</CODE>; for VRAM, use <CODE>MEMTYPE_VRAM</CODE>. You can also use the flag <CODE>MEMTYPE_BANKSELECT</CODE> together with either <CODE>MEMTYPE_BANK1</CODE> or <CODE>MEMTYPE_BANK2</CODE> to get information about a specific VRAM bank. Other flags you can include are <CODE>MEMTYPE_DMA</CODE>, <CODE>MEMTYPE_CEL</CODE>, <CODE>MEMTYPE_AUDIO</CODE>, and <CODE>MEMTYPE_DSP</CODE>. For complete descriptions of these flags, see <A HREF="./05spg002.html#XREF40829">Allocating Memory</A>.<P>
+<B>Note: </B>When you call<I> </I><CODE>AvailMem(),</CODE> you can only request information about one memory type. Attempting to find out about more than one memory type can produce unexpected results.<P>
+The information about available memory is returned in a MemInfo structure pointed to by the <CODE>minfo</CODE> argument:<P>
+<CODE>
+<PRE>
+typedef struct MemInfo
+{ 
+    uint32 minfo_SysFree;
+    uint32 minfo_SysLargest;
+    uint32 minfo_TaskFree;
+    uint32 minfo_TaskLargest;
+} MemInfo;
+</CODE>
+</PRE>
+This structure contains the following information:<P>
+ <UL>
+<LI><B>minfo_SysFree</B>, The amount of memory, in bytes, of the specified memory type in the system-wide free memory pool. The pool contains only full pages 
+of memory.
+<p>
+<LI><B>minfo_SysLargest</B>, The size, in bytes, of the largest series of contiguous pages of the specified memory type in the system-wide free memory pool.
+<p>
+<LI><B>minfo_TaskFree</B>, The amount of memory, in bytes, of the specified type in the task's free memory pool.
+<p>
+<LI><B>minfo_TaskLargest</B>, The size, in bytes, of the largest contiguous block of the specified memory type that can be allocated from the task's free memory pool.
+</UL>
+<DL>
+<DD><B>Warning: </B>Do not depend on these numbers, as they may change if other tasks on the system allocate memory at the same time you are calling AvailMem.<BR>
+</DL>
+<H2>Getting the Memory Type of a Memory Location</H2>
+You can find out the memory type of a particular memory location by calling <CODE>GetMemType()</CODE>:<P>
+<DL>
+<DD><CODE>uint32 GetMemType( void *p )</CODE><BR>
+</DL>
+The <CODE>p</CODE> argument is a pointer to the memory location to identify. The function returns memory allocation flags (such as <CODE>MEMTYPE_VRAM</CODE>) which describe the type of memory. For descriptions of these flags, see <A HREF="./05spg002.html#XREF25963">Allocating a Memory Block</A>.<P>
+<H2>Getting the Size of a Memory Page</H2>
+You can get the size of a memory page by calling the <CODE>GetPageSize()</CODE> function:<P>
+<DL>
+<DD><CODE>int32 GetPageSize( uint32 memflags )</CODE><BR>
+</DL>
+The <CODE>memflags</CODE> argument contains memory allocation flags for the page size of the memory type you specify. There are currently only three page sizes: one for DRAM and two for VRAM. You can, however, include any of the following flags: <CODE>MEMTYPE_ANY</CODE>, <CODE>MEMTYPE_VRAM</CODE>, <CODE>MEMTYPE_DRAM</CODE>, <CODE>MEMTYPE_BANKSELECT</CODE>, <CODE>MEMTYPE_BANK1</CODE>, <CODE>MEMTYPE_BANK2</CODE>, <CODE>MEMTYPE_DMA</CODE>,<CODE> MEMTYPE_CEL</CODE>, <CODE>MEMTYPE_AUDIO</CODE>, and <CODE>MEMTYPE_DSP</CODE>. (For complete descriptions of these flags, see <A HREF="./05spg002.html#XREF25963">Allocating a Memory Block</A>.) Normally, you should include just one flag which specifies the one type of memory in which you're interested. Including more than one flag can produce an unexpected result.<P>
+The return value contains the size of the page for the specified memory type, in bytes.<P>
+<H2>Finding Out Which VRAM Bank Contains a VRAM Location</H2>
+In the current 3DO hardware, 2 MB of video random access memory (VRAM) is divided into two banks, each containing 1 MB of VRAM. Fast VRAM memory transfers using the SPORT bus can take place only between memory locations in the same bank. You can find out which bank of VRAM-if any-contains a particular memory location by calling the <CODE>GetBankBits()</CODE> macro:<P>
+<DL>
+<DD><CODE>uint32 GetBankBits( void *a )</CODE><BR>
+</DL>
+The <CODE>a</CODE> argument is a pointer to a memory location. The macro returns a set of memory flags in which the following flags can be set:<P>
+<UL>
+<LI><B>MEMTYPE_BANKSELECT</B>, Set if the memory is contained in VRAM.
+<LI><B>MEMTYPE_BANK1</B>, Set if the memory is in VRAM bank 1.
+<LI><B>MEMTYPE_BANK2</B>, Set if the memory is in VRAM bank 2.
+</UL>
+If the memory is not in VRAM, the macro returns 0.<P>
+When a task allocates VRAM, the memory block contains memory from one VRAM bank or the other; it never contains memory from both banks. Thus, if any memory location in a block is in one VRAM bank, the entire block is in the same bank.<P>
+<H2>Validating Memory Pointers</H2>
+When working with memory, sometimes it is necessary to verify the validity of memory pointers. This can be extremely useful when debugging, for example, in <CODE>ASSERT()</CODE> macros. Portfolio validates memory pointers that are passed to it, and rejects any corrupt ones.<P>
+The <CODE>IsMemReadable()</CODE> and <CODE>IsMemWritable()</CODE> functions let your code verify the validity of pointers.<P>
+<DL>
+<DD><CODE>bool IsMemReadable(void *mem, int32 size);<BR>
+bool IsMemWritable(void *mem, int32 size);</CODE><BR>
+</DL>
+To both functions, you supply a pointer to a memory region and the size of that region. The functions return TRUE if the current task or thread can access the complete memory region.<P>

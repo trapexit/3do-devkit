@@ -1,0 +1,122 @@
+<HTML><TITLE>Negators</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Negators</H2>
+<HR><PRE>     Function Object</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Function adaptors and function objects used to reverse the sense of predicate function objects.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;functional></PRE>
+<PRE>
+template &#60;class Predicate>
+class <B>unary_negate</B>;
+template &#60;class Predicate>
+unary_negate&#60;Predicate> <B>not1</B>(const Predicate&#38;);
+template &#60;class Predicate>
+class <B>binary_negate</B>;
+template &#60;class Predicate>
+binary_negate&#60;Predicate> <B>not2</B>(const Predicate&#38;);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Negators <A HREF="not_6483.htm"><B><I>not1</B></I></A> and <A HREF="not_2978.htm"><B><I>not2</B></I></A> are functions that take predicate function objects as arguments and return predicate function objects with the opposite sense.  Negators work only with function objects defined as subclasses of the classes <A HREF="una_4659.htm"><B><I>unary_function</B></I></A>  and <A HREF="bin_7851.htm"><B><I>binary_function</B></I></A>.  <B><I>not1</B></I> accepts and returns unary predicate function objects.  <B><I>not2</B></I> accepts and returns binary predicate function objects.</P>
+<P><A HREF="una_8062.htm"><B><I>unary_negate</B></I></A> and <A HREF="bin_1825.htm"><B><I>binary_negate</B></I></A> are function object classes that provide return types for the negators, <A HREF="not_6483.htm"><B><I>not1</B></I></A> and <A HREF="not_2978.htm"><B><I>not2</B></I></A>.</P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class Predicate>
+class unary_negate
+  : public unary_function&#60;typename Predicate::argument_type, bool> {
+
+public:
+  typedef typename unary_function&#60;typename Predicate::argument_type,
+                                  bool>::argument_type argument_type;
+  typedef typename unary_function&#60;typename Predicate::argument_type,
+                                  bool>::result_type result_type;
+  explicit unary_negate (const Predicate&#38;);
+  bool operator() (const argument_type&#38;) const;
+};
+template&#60;class Predicate>
+unary_negate &#60;Predicate> not1 (const Predicate&#38;);
+template&#60;class Predicate>
+class binary_negate
+  : public binary_function&#60;typename Predicate::first_argument_type,
+                           typename Predicate::second_argument_type,
+                           bool>
+{
+public:
+  typedef typename binary_function&#60;typename  
+    Predicate::first_argument_type,
+    typename Predicate::second_argument_type,   
+    bool>::second_argument_type second_argument_type;
+  typedef typename binary_function&#60;typename 
+    Predicate::first_argument_type,
+    typename Predicate::second_argument_type, 
+    bool>::first_argument_type first_argument_type;
+  typedef typename binary_function&#60;typename 
+    Predicate::first_argument_type,
+    typename Predicate::second_argument_type, bool>::result_type 
+                                                     result_type;
+  explicit binary_negate (const Predicate&#38;);
+  bool operator() (const first_argument_type&#38;,
+                    const second_argument_type&#38;) const;
+};
+template &#60;class Predicate>
+binary_negate&#60;Predicate> not2 (const Predicate&#38;);
+</PRE>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// negator.cpp
+//
+ #include&#60;functional>
+ #include&#60;algorithm>
+ #include &#60;iostream.h>
+ //Create a new predicate from unary_function
+ template&#60;class Arg>
+ class is_odd : public unary_function&#60;Arg, bool>
+ {
+   public:
+   bool operator()(const Arg&#38; arg1) const
+   {
+     return (arg1 % 2 ? true : false);
+   }
+ };
+ int main()
+ {
+   less&#60;int> less_func;
+   // Use not2 on less
+   cout &#60;&#60; (less_func(1,4) ? "TRUE" : "FALSE") &#60;&#60; endl;
+   cout &#60;&#60; (less_func(4,1) ? "TRUE" : "FALSE") &#60;&#60; endl;
+   cout &#60;&#60; (<B>not2</B>(less&#60;int>())(1,4) ? "TRUE" : "FALSE") 
+        &#60;&#60; endl;
+   cout &#60;&#60; (<B>not2</B>(less&#60;int>())(4,1) ? "TRUE" : "FALSE") 
+        &#60;&#60; endl;   
+   //Create an instance of our predicate
+   is_odd&#60;int> odd;
+   // Use not1 on our user defined predicate
+   cout &#60;&#60; (odd(1) ? "TRUE" : "FALSE") &#60;&#60; endl;
+   cout &#60;&#60; (odd(4) ? "TRUE" : "FALSE") &#60;&#60; endl;
+   cout &#60;&#60; (<B>not1</B>(odd)(1) ? "TRUE" : "FALSE") &#60;&#60; endl;
+   cout &#60;&#60; (<B>not1</B>(odd)(4) ? "TRUE" : "FALSE") &#60;&#60; endl;
+   return 0;
+ }
+Output :
+TRUE
+FALSE
+FALSE
+TRUE
+TRUE
+FALSE
+FALSE
+TRUE
+</PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Alg_5157.htm"><B><I>Algorithms</B></I></A>, <A HREF="bin_7851.htm"><B><I>binary_function</B></I></A>, <A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A>, <A HREF="una_4659.htm"><B><I>unary_function</B></I></A></P>
+<HR>
+<A HREF="neg_4682.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="nex_1756.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

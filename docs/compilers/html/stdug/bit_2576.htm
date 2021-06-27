@@ -1,0 +1,48 @@
+<HTML><HEAD><TITLE>The bitset Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The bitset Abstraction</H2>
+<P>A <B><I>bitset</I></B><B><I></I></B><B><I> </I></B>is really a cross between a <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> and a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>.  Like the vector abstraction <B><I>vector&#60;bool></I></B>, the abstraction represents a set of binary (0/1 bit) values.  However, set operations can be performed on bitsets using the logical bit-wise operators.  The class <A HREF="../stdref/bit_0857.htm"><B><I>bitset</I></B></A> does not provide any iterators for accessing elements.</P>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<PRE>#include &#60;bitset></PRE>
+
+<A NAME="declarationandinitializationofbitset"><H3>Declaration and Initialization of bitset</H3></A>
+<P>A <A HREF="../stdref/bit_0857.htm"><B><I>bitset</I></B></A> is a template class abstraction.  The template argument is not, however, a type, but an integer value.  The value represents the number of bits the set will contains.</P>
+<PRE>bitset&#60;126> bset_one;        // create a set of 126 bits</PRE>
+<!--ASQ-1 The style "teletype gap" is not associated; its content follows: --><P>An alternative technique permits the size of the set to be specified as an argument to the constructor.  The actual size will be the smaller of the value used as the template argument and the constructor argument.   This technique is useful when a program contains two or more bit vectors of differing sizes.  Consistently using the larger size for the template argument means that only one set of methods for the class will be generated.  The actual size, however, will be determined by the constructor.</P>
+<PRE>bitset&#60;126> bset_two(100);   // this set has only 100 elements
+</PRE>
+<P>A third form of constructor takes as argument a string of 0 and 1 characters.  A bitset is created that has as many elements as are characters in the string, and is initialized with the values from the string.</P>
+<PRE>bitset&#60;126> small_set("10101010");   // this set has 8 elements</PRE>
+<!--ASQ-1 The style "teletype gap" is not associated; its content follows: -->
+<A NAME="accessingandtestingelements"><H3>Accessing and Testing Elements</H3></A>
+<P>An individual bit in the bitset can be accessed using the subscript operation.  Whether the bit is one or not can be determined using the member function<SAMP> test().</SAMP>  Whether any bit in the bitset is "on" is tested using the member function <SAMP>any(),</SAMP> which yields a boolean value.  The inverse of <SAMP>any()</SAMP> is returned by the member function <SAMP>none().</SAMP></P>
+<PRE>   bset_one[3] = 1;
+   if (bset_one.test(4))
+      cout &#60;&#60; "bit position 4 is set" &#60;&#60; endl;
+   if (bset_one.any())
+      cout &#60;&#60; "some bit position is set" &#60;&#60; endl;
+   if (bset_one.none()) cout &#60;&#60; "no bit position is set" &#60;&#60; endl;
+</PRE>
+<P>The function <SAMP>set()</SAMP> can be used to set a specific bit. <SAMP>bset_one.set(i)</SAMP> is equivalent to <SAMP>bset_one[i] = true</SAMP>.  Invoking the function without any arguments sets all bit positions to true.  The function <SAMP>reset()</SAMP> is similar, and sets the indicated positions to false (sets all positions to false if invoked with no argument).  The function <SAMP>flip()</SAMP> flips either the indicated position, or all positions if no argument is provided.  The function <SAMP>flip()</SAMP> is also provided as a member function for the individual bit references.</P>
+<PRE>   bset_one.flip();   // flip the entire set
+   bset_one.flip(12);   // flip only bit 12
+   bset_one[12].flip();   // reflip bit 12</PRE>
+<!--ASQ-1 The style "teletype gap" is not associated; its content follows: --><P>The member function <SAMP>size()</SAMP> returns the size of the bitset, while the member function <SAMP>count()</SAMP> yields the number of bits that are set.</P>
+
+<A NAME="setoperations"><H3>Set operations</H3></A>
+<P>Set operations on bitsets are implemented using the bit-wise operators, in a manner analogous to the way in which the same operators act on integer arguments.</P>
+<P>The negation operator (operator <SAMP>~</SAMP>) applied to a bitset returns a new bitset containing the inverse of elements in the argument set.</P>
+<P>The intersection of two bitsets is formed using the <SAMP>and</SAMP> operator (operator <SAMP>&#38;</SAMP>).  The assignment form of the operator can be used.  In the assignment form, the target becomes the disjunction of the two sets.</P>
+<PRE>   bset_three = bset_two &#38; bset_four;
+   bset_five &#38;= bset_three;</PRE>
+<!--ASQ-1 The style "teletype gap" is not associated; its content follows: --><P>The union of two sets is formed in a similar manner using the <I>or</I> operator (operator <SAMP>|</SAMP>).  The exclusive-or is formed using the bit-wise exclusive or operator (operator <SAMP>^</SAMP>).</P>
+<P>The left and right shift operators (operator <SAMP>&#60;&#60;</SAMP> and <SAMP>>></SAMP>) can be used to shift a bitset left or right, in a manner analogous to the use of these operators on integer arguments.  If a bit is shifted left by an integer value <I>n</I>, then the new bit position <I>i</I> is the value of the former <I>i-n</I>.  Zeros are shifted into the new positions.</P>
+
+<A NAME="conversions"><H3>Conversions</H3></A>
+<P>The member function <SAMP>to_ulong()</SAMP> converts a <A HREF="../stdref/bit_0857.htm"><B><I>bitset</I></B></A> into an <SAMP>unsigned long</SAMP>.  It is an error to perform this operation on a bitset containing more elements than will fit into this representation.</P>
+<P>The member function <SAMP>to_string()</SAMP> converts a<A HREF="../stdref/bit_0857.htm"><B><I> bitset</I></B></A> into an object of type <A HREF="../stdref/str_8586.htm"><B><I>string.</I></B></A>  The string will have as many characters as the bitset.  Each zero bit will correspond to the character <SAMP>0</SAMP>, while each one bit will be represented by the character <SAMP>1</SAMP>.</P>
+<HR>
+<A HREF="exa_2257.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="map_7716.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

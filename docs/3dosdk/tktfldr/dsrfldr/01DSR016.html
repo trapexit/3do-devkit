@@ -1,0 +1,39 @@
+<Title>DisposeSemaphore</Title>
+<A NAME="XREF30377"><H1>DisposeSemaphore</A></H1>
+<A NAME="XREF37497"> Deletes a semaphore.</A><P>
+<H3>Synopsis</H3>
+<CODE>DisposeSemaphore (semaphore)</CODE><P>
+<H3>Description</H3>
+Deletes a semaphore. <CODE>DisposeSemaphore()</CODE> is a macro for <CODE>DeleteItem()</CODE>:<P>
+<DL>
+<DD><CODE>#define DisposeSemaphore (semaphore) DeleteItem(semaphore)</CODE><BR>
+</DL>
+<CODE>DisposeSemaphore()</CODE> is not currently used by the DataStreamer.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>semaphore</CODE>
+<DD>Semaphore to be deleted.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT>(A <CODE>DeleteItem()</CODE> item-
+<DD>None
+</DL>
+<DL>
+<DT>dependant return value)
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>DeleteItem()</CODE> failed
+<DD>
+</DL>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a listing of error messages be returned by <CODE>DeleteItem()</CODE>.<P>
+<H3>Associated Files</H3>
+SemHelper.h<P>
+<H3>See Also</H3>
+<CODE>DeleteItem(KRN), <A HREF="#XREF35522">NewTextSubscriber</A></CODE><P>

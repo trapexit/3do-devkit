@@ -1,0 +1,235 @@
+<TITLE>In-Line SWIs</TITLE>
+<H1><LINK NAME="XREF35534">In-Line SWIs</LINK></H1><HR>
+<H2>About this recipe</H2>
+This recipe shows how the ARM C Compiler can be used to generate in-line 
+SWIs directly from C.<P>
+<H2>Introduction</H2>
+The ARM instruction set provides the Software Interrupt (SWI) instruction 
+to call Operating System routines.  It is useful to be able to generate 
+such operating system calls from C without having to call hand crafted ARM 
+Assembly Language to provide an interface between C and the SWI.<P>
+The ARM C Compiler provides a mechanism which allows many SWIs to be 
+called efficiently from C.  SWIs which conform to the following rules can 
+be compiled in-line,  without additional calling overhead:<P>
+<UL>
+<LI>The arguments to the SWI (if any) must be passed in r0-r3 only.
+<LI>The results returned from the SWI (if any) must be returned in r0-r3 
+only.
+</UL>
+The following sections demonstrate how to use the in-line SWI facility of 
+<I>armcc</I> for a variety of different SWIs which conform to these 
+rules.  These SWIs are taken from the ARM Debug Monitor interface, .<P>
+In the examples below, the following options are used with <I>armcc</I>:<P>
+<PRE>
+--------------------------------------------------------
+Option        |Use                                      
+--------------------------------------------------------
+-li           |Specifies that the the target is a little
+              |endian ARM.                              
+--------------------------------------------------------
+-apcs 3/32bit |Specifies that the 32 bit variant of APCS
+              |3 should be used.                        
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Using a SWI which returns no result</H2>
+For example: SWI_WriteC, which we want to be SWI number 0.<P>
+This SWI is intended to write a byte to the debugging channel.  The byte 
+to be written is passed in r0.<P>
+The following C code, intended to write a Carriage Return / Line Feed 
+sequence to the debugging channel, can be found in the <I>examples</I> 
+directory as <I>newline.c</I>:<P>
+<CODE>
+<PRE>
+void __swi(0) SWI_WriteC(int ch);
+
+void output_newline(void)
+{ SWI_WriteC(13);
+  SWI_WriteC(10);
+}
+</CODE>
+</PRE>
+Look carefully at the declaration of SWI_WriteC.  __swi(0) is the way in 
+which the SWI_WriteC 'function' is declared to be in-line SWI number 0.<P>
+This code can be compiled to produce ARM Assembly Language source using:<P>
+<CODE>
+<PRE>
+armcc -S -li -apcs 3/32bit newline.c -o newline.s
+</CODE>
+</PRE>
+The code produced for the output_newline function is:<P>
+<CODE>
+<PRE>
+output_newline
+    MOV    a1,#&amp;d
+    SWI    &amp;0
+    MOV    a1,#&amp;a
+    SWI    &amp;0
+    MOV    pc,lr
+</CODE>
+</PRE>
+<H2>Using a SWI which returns one result</H2>
+Consider SWI_ReadC, which we want to be SWI number 4.<P>
+This SWI is intended to read a byte from the debug channel, returning it 
+in r0.<P>
+The following C code, a naive read a line routine, can be found in the 
+<I>examples</I> directory as <I>readline.c</I>:<P>
+<CODE>
+<PRE>
+char __swi(4) SWI_ReadC(void);
+
+void readline(char *buffer)
+{
+    char ch;
+    do {
+        *buffer++=ch=SWI_ReadC();
+  }     while (ch!=13);
+    *buffer=0;
+}
+</CODE>
+</PRE>
+Again, the way in which SWI_ReadC is declared should be noted: it is a 
+function which takes no arguments and returns a char, and is implemented 
+as in-line SWI number 4. <P>
+This code can be compiled to produce ARM Assembler source using:<P>
+<CODE>
+<PRE>
+armcc -S -li -apcs 3/32bit readline.c -o readline.s
+</CODE>
+</PRE>
+The code produced for the readline function is:<P>
+<CODE>
+<PRE>
+readline
+    STMDB  sp!,{lr}
+    MOV    lr,a1
+|L000008.J4.readline|
+    SWI    &amp;4
+    STRB   a1,[lr],#1
+    CMP    a1,#&amp;d
+    BNE    |L000008.J4.readline|
+    MOV    a1,#0
+    STRB   a1,[lr,#0]
+    LDMIA  sp!,{pc}
+</CODE>
+</PRE>
+<H2>Using a SWI which returns 2-4 results</H2>
+If a SWI returns two, three or four results then its declaration must 
+specify that it is a struct-valued SWI, and the special keyword 
+__value_in_regs must also be used.  This is because a struct valued 
+function is usually treated much as if it were a void function with a 
+pointer to where to return the struct as the first argument.  See <A 
+HREF="./3acbb.html#XREF32701">Passing and returning structs</A> for more 
+details.<P>
+As an example consider SWI_InstallHandler, which we want to be SWI number 
+0x70.<P>
+On entry r0 contains the exception number, r1 contains the workspace 
+pointer, r2 contains the address of the handler.<P>
+On exit r0 is undefined, r2 contains the address of the previous handler 
+and r1 the previous handler's workspace pointer.<P>
+The following C code fragment demonstrates how this SWI could be declared 
+and used in C:<P>
+<CODE>
+<PRE>
+typedef struct SWI_InstallHandler_struct
+{ 
+    unsigned exception;
+    unsigned workspace;
+    unsigned handler;
+}   SWI_InstallHandler_block;
+
+
+SWI_InstallHandler_block 
+    __value_in_regs  
+        __swi(0x70) SWI_InstallHandler
+                            (unsigned r0, unsigned r1, unsigned r2);
+
+void InstallHandler(SWI_InstallHandler_block *regs_in,
+                            SWI_InstallHandler_block *regs_out)
+{ *regs_out=SWI_InstallHandler(regs_in-&gt;exception,
+                                            regs_in-&gt;workspace,
+                                            regs_in-&gt;handler);
+}
+</CODE>
+</PRE>
+This code is provided in the <I>examples</I> directory as 
+<I>installh.c</I>, and can be compiled to produce ARM Assembler source 
+using:<P>
+<CODE>
+<PRE>
+armcc -S -li -apcs 3/32bit installh.c -o installh.s 
+</CODE>
+</PRE>
+The code which <I>armcc</I> produces is:<P>
+<CODE>
+<PRE>
+InstallHandler
+    STMDB  sp!,{lr}
+    MOV    lr,a2
+    LDMIA  a1,{a1-a3}
+    SWI    &amp;70
+    STMIA  lr,{a1-a3}
+    LDMIA  sp!,{pc}
+</CODE>
+</PRE>
+<H2>The SWI number is not known until run time</H2>
+If a SWI is to be called, but the number of the SWI is not known until run 
+time, then the mechanisms discussed above are not appropriate.<P>
+This situation might occur when there are a number of related operations 
+which can be performed on a object, and these various operations are 
+implemented by SWIs with different numbers.<P>
+There are several ways to deal with this, including:<P>
+<UL>
+<LI>The SWI instruction can be constructed from the SWI Number, stored 
+somewhere and then executed.<P>
+<LI>A 'generic' SWI can be used which takes as an extra argument a code 
+for the actual operation to be performed on its arguments.  This 'generic' 
+SWI must then decode the operation and then perform it.
+</UL>
+A mechanism has been added to <I>armcc</I> to support the second method 
+outlined here.  The operation is specified by a value which is passed in 
+r12 (ip).  The arguments to the 'generic' SWI are as usual passed in 
+registers r0-r3, and values may optionally be returned in r0-r3 using the 
+mechanisms described above.  The operation number passed in r12 may well 
+be the number of the SWI to be called by the 'generic' SWI, but it need 
+not be.<P>
+Here is an C fragment which uses a 'generic', or 'indirect' SWI:<P>
+<CODE>
+<PRE>
+unsigned __swi_indirect(0x80)
+    SWI_ManipulateObject(unsigned operationNumber, unsigned object,
+                            unsigned parameter);
+
+unsigned DoSelectedManipulation(unsigned object, 
+                            unsigned parameter, unsigned operation)
+                               { return 
+SWI_ManipulateObject(operation, object, parameter);
+}
+</CODE>
+</PRE>
+This code is provided in the <I>examples</I> directory as 
+<I>swimanip.c</I>, and can be compiled to produce ARM Assembler source 
+using:<P>
+<CODE>
+<PRE>
+armcc -S -li -apcs 3/32bit swimanip.c -o swimanip.s 
+</CODE>
+</PRE>
+The code which <I>armcc</I> produces is:<P>
+<CODE>
+<PRE>
+DoSelectedManipulation
+    MOV    ip,a3
+    SWI    &amp;80
+    MOV    pc,lr
+</CODE>
+</PRE>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./3acba.html#XREF36909">Register usage under the ARM 
+procedure call standard</A>
+<LI><A HREF="./3acbb.html#XREF32701">Passing and returning structs</A>;
+<LI><A HREF="./4acbc.html#XREF10783">C Programming for deeply embedded 
+applications</A> for example programs which make use of in line swis.
+</UL>

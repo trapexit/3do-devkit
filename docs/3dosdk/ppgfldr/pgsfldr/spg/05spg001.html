@@ -1,0 +1,125 @@
+<TITLE>About Memory</TITLE>
+<H1><LINK NAME="XREF32411">About Memory</LINK></H1><HR>
+This section explains the fundamentals of memory and memory usage for 3DO software.<P>
+<H2>Types of Memory</H2>
+Current 3DO systems include three types of memory: dynamic random access memory (DRAM), video random access memory (VRAM), and nonvolatile random access memory (NVRAM). Future systems may include additional types of memory.<P>
+<H3>DRAM</H3>
+Dynamic random access memory (DRAM) is generic memory for operations that don't involve special interactions with 3DO hardware, such as the SPORT bus transfers. Current 3DO systems include 2 MB of DRAM, which can be expanded to either 15 MB (in systems with 1 MB of VRAM) or 14 MB (in systems with 2 MB of VRAM). Future systems may have larger memory capacities.<P>
+<H3>VRAM</H3>
+Not all memory is created equal. VRAM is one kind of special purpose memory, that is, memory primarily or exclusively used with particular parts of the 3DO hardware (in this case, the SPORT bus). Video random access memory (VRAM) is RAM for video and graphics operations that involve the SPORT bus. (For information about the SPORT bus, see the <A HREF="../../ggsfldr/gpgfldr/3gpg.html#XREF38473">Understanding the Cel Engine and SPORT</A> in the <I>3DO Graphics Programmer's Guide</I>.) Because VRAM is connected to the standard memory bus as well as the SPORT bus, you can also use it for generic operations.<P>
+Current systems include 1 MB of VRAM, which can be expanded to 2 MB. Future systems may have larger memory capacities.<P>
+In systems with 2 MB of VRAM, VRAM is divided into two 1 MB banks. The SPORT bus can only transfer data between locations in the same bank, never between banks. When blocks of VRAM are allocated, each block must come from the same bank.<P>
+<B>Note: </B>Future 3DO systems may have other kinds of special purpose memory, including memory for direct memory access (DMA), for the cel engine, for audio, and for the digital signal processor (DSP). See <A HREF="./05spg002.html#XREF40829">Allocating Memory</A> for information about when to specify these future memory types in current software.<P>
+<H3>NVRAM</H3>
+Every 3DO system includes at least 32 KB of nonvolatile random access memory (NVRAM) that can preserve information when the system is turned off or rebooted. Applications can use NVRAM to store small amounts of information, such as application configuration information, user preferences, and high scores for games.<P>
+Unlike other types of memory, access to NVRAM is through the Portfolio file system, where it is treated as a separate volume. For more information about NVRAM, see <A HREF="./11spg.html#XREF25374">The Filesystem and the File Folio</A>.<P>
+<H2>Organization of Memory</H2>
+The following sections explain how memory is arranged (in fixed-size units known as <I>pages</I>), how it is divided up when allocated (into contiguous arrays of bytes known as <I>blocks</I>), how the kernel keeps track of memory available for allocation (in special lists known as <I>free memory lists</I>), and where allocated memory comes from (from lists of free memory lists known as free memory pools).<P>
+<H3>Memory Pages</H3>
+In 3DO system the hardware divides memory into pages. Currently, the number of pages in the system, also called system pages, is fixed (64 pages of DRAM and 64 pages of VRAM); the size of each page depends on the amount of each type of memory in the system. For example, in current systems with 2 MB of DRAM and 1 MB of VRAM, DRAM pages are 32 KB (2 MB divided by 64) and VRAM pages are 16K (1 MB divided by 64). In a loaded system with 14 MB of DRAM, 2 MB of VRAM, and cruise control, DRAM pages are 256 KB and VRAM pages are 32 KB.<P>
+Each page of memory has an owner. Although any task can read any memory location in RAM, only the task that owns a page (or a task that the owner designates) can write to the page. How tasks become owners of memory is explained in <A HREF="#XREF34325">How Memory Allocation Works</A>. How tasks can transfer ownership of memory to other tasks is explained in the section <A HREF="./05spg006.html#XREF39785">Transferring Memory to Other Tasks</A>.<P>
+When a task needs memory, it allocates a block of memory from the memory pages it owns. It specifies the size of the block in a call to a memory allocation function. The bytes in a memory block are always contiguous, even when the block crosses page boundaries.<P>
+<H3>VRAM Memory Pages</H3>
+As described in the previous section, VRAM is divided by the hardware into 64 pages. These pages are part of the memory protection scheme. VRAM has a secondary page size imposed by the SPORT hardware, and is used for graphics operations. This secondary page size is currently fixed at 2K. SPORT operation can only be performed in increments of 2K with blocks aligned on a 2K boundary. You can find more information about the SPORT device and its restrictions in the <I>3DO Portfolio </I><I>Graphics Programmer's Guide</I>.<P>
+For the remainder of this chapter, unless otherwise indicated, the term "pages" refers to the memory protection pages, and not to the SPORT hardware pages.<P>
+<H3>Free Memory Lists</H3>
+The kernel uses linked lists to keep track of memory that is available for allocation. These lists, known as free memory lists, contain entries for all currently free blocks. <P>
+Most tasks let the kernel take care of memory allocation and free memory lists. However, tasks that need additional control over memory allocation can create their own memory lists and allocate memory to themselves from those lists.<P>
+<A NAME="XREF19557"><H3>Free Memory Pools</A></H3>
+The kernel keeps a list of free memory lists for each owner of memory. For example, it creates a list containing two free memory lists, one for DRAM and one for VRAM, for each new task that is created. This list of memory lists-which contains all the unused memory that a task owns -is the task's free memory pool. When a task allocates memory, it must allocate it from its own free memory pool.<P>
+<B>Note: </B>Threads share the free memory lists with their parent and sibling threads. Access to these lists is controlled by a semaphore.<P>
+In addition to the free memory pools for tasks, there is a system-wide free memory pool that contains the unused memory that the kernel owns. The next section explains how memory is transferred from the system-wide free memory pool to the free memory pools for specific tasks.<P>
+<A NAME="XREF34325"><H2>How Memory Allocation Works</A></H2>
+The following sections take you step-by-step through the process of memory allocation and illustrates what happens to memory pools, lists, and blocks at each step.<P>
+<H3>The Beginning: The System-Wide Free Memory Pool</H3>
+In the beginning, after the system is started and before any user tasks are launched, there is a system-wide free memory pool with DRAM and VRAM. Figure 1 shows this memory pool.<P>
+
+<IMG SRC="Artwork/5-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>System-wide free memory pool on bootup.</I><P>
+Figure 1 illustrates that the system software allocates a number of pages for itself (currently 19 pages of DRAM and 1 page of VRAM for a system with 2 MB DRAM and 1 MB VRAM). On current 3DO systems with 2 MB of DRAM and 1 MB of VRAM, this leaves at least 1440 KB of DRAM and 1008 KB of VRAM for applications. In certain cases, the operating system can free additional memory for applications. <P>
+<H3>A Task Gets a Free Memory Pool</H3>
+Next, the first user task is launched. The kernel creates a free memory pool for each new task. The pool consists of two free memory lists: one for DRAM and one for VRAM. The kernel then gives the task the memory it needs to get started (the amount needed for the task's code, global variables, and stack) by transferring the necessary pages of DRAM and VRAM from the system-wide free memory pool to the task's pool, thereby making the task the owner of the memory. Figure 2 shows the result.<P>
+<B>Note: </B>A task's VRAM pool is usually empty when the task first starts up.<P>
+
+<IMG SRC="Artwork/5-2.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>A task receives necessary memory for its own free memory pool.</I><P>
+When memory moves from one free memory pool to another, only full pages of memory are moved. All the memory in a page belongs to the same owner, so a page is the smallest amount of memory that can be transferred from one owner to another.<P>
+<H3>The Task Allocates Its First Memory Block</H3>
+The new task allocates its first memory block, a block of VRAM for its frame buffer. Figure 3 shows this VRAM allocation.<P>
+
+<IMG SRC="Artwork/5-3.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 3: </B><I>A task allocates a block of VRAM for its frame buffer.</I><P>
+<H3>The Task Allocates More Blocks</H3>
+The task allocates several blocks of DRAM, as shown in Figure 4.<P>
+
+<IMG SRC="Artwork/5-4.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 4: </B><I>A task allocates blocks of DRAM.</I><P>
+<H3>The Task Frees Memory</H3>
+When the task finishes with a particular block of memory, it returns the block to its free memory pool, as shown in Figure 5. The kernel automatically coalesces any free blocks in an adjacent free memory list. To make it easy to find adjacent blocks, the kernel sorts memory lists by memory address; adjacent blocks are thus next to each other in a list.<P>
+
+<IMG SRC="Artwork/5-6.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 5: </B><I>A task frees a block of memory.</I><P>
+<H3>The Task Needs More Memory</H3>
+When the amount of memory a task requests in an allocation is more than the amount of contiguous DRAM remaining in the task's free memory pool, the kernel transfers pages from the system free pool to the task, thereby replenishing the task's pool.<P>
+
+<IMG SRC="Artwork/5-6.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 6: </B><I>The kernel transfers pages of DRAM to satisfy a memory request.</I><P>
+<H3>Another Task Gets a Free Memory Pool</H3>
+A second task is now launched. Like all new tasks, it gets its own free memory pool as shown in Figure 7.<P>
+
+<IMG SRC="Artwork/5-7.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 7: </B><I>A second task receives its own free memory pool.</I><P>
+<H3>The System-Wide Free Memory Pool Is Drained</H3>
+The two tasks keep allocating memory blocks from their free memory pools, and the kernel continues to replenish the task pools from the system-wide free memory pool when necessary. Finally, the system-wide free memory pool gets low on memory, as shown in Figure 8.<P>
+
+<IMG SRC="Artwork/5-8.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 8: </B><I>The system wide free memory pool runs low on memory.</I><P>
+<H3>Tasks Reclaim Memory and Return It to the Kernel</H3>
+When the tasks try to allocate more memory, the system calls <CODE>ScavengeMem()</CODE> on the tasks behalf, as shown Figure 9.<P>
+<CODE>ScavengeMem()</CODE>returns any completely unused pages of memory in a task's free memory pool to the system-wide free memory pool, thereby making the pages available to other tasks.<P>
+
+<IMG SRC="Artwork/5-9.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 9: </B><I>Tasks scavenge memory in response to the kernel's signal.</I><P>
+<H2>Guidelines for Using Memory</H2>
+Remember the following guidelines when using memory:<P>
+<UL>
+<LI>For each memory allocation function, there is a corresponding function to free the memory that was allocated and return it to the free memory list it came from. You must use this corresponding function to free memory. Table 1 lists the corresponding functions:
+<PRE>
+<B>Table 1: </B><I>  Corresponding memory allocation and memory freeing calls.</I>
+--------------------------------------------------
+Allocate Function     |Corresponding Free Function
+--------------------------------------------------
+AllocMem()            |FreeMem()                  
+--------------------------------------------------
+malloc()              |free()                     
+--------------------------------------------------
+AllocMemList()        |FreeMemList()              
+--------------------------------------------------
+AllocMemFromMemList() |FreeMemToMemList()         
+--------------------------------------------------
+AllocMemFromMemLists()|FreeMemToMemLists()        
+--------------------------------------------------
+AllocMemBlocks()      |ControlMem()               
+--------------------------------------------------
+</PRE>
+
+<LI>Use 32-bit addressing for all memory. Future 3DO systems may have enough memory to need it.
+<p>
+<LI>Don't tamper with the system structures (such as free memory lists) that control memory allocation, ownership, and write access. The ways these work are subject to change in future versions of Portfolio. 
+<p>
+<LI>Although tasks can write to each other's memory, tasks should normally use intertask communication to share information. Intertask communications are described in <A HREF="./08spg.html#XREF26903">Communicating Among Tasks</A>.
+<p>
+<LI>Certain regions of the address space must not be accessed. Memory references must be restricted to addresses that have valid RAM. In addition, the lower page of RAM should never be accessed by applications.
+<p>
+<LI>Use <CODE>memdebug</CODE> to identify problems with your memory usage. See <A HREF="./05spg010.html#XREF26354">Debugging Memory Usage</A> for more information.
+</UL>
+<A NAME="XREF40829"></A>

@@ -1,0 +1,24 @@
+<TITLE>Working With Folios</TITLE>
+<H1><LINK NAME="XREF11766">Working With Folios</LINK></H1><HR>
+Portfolio's folios, each a collection of function calls dealing with a 
+different aspect of 3DO operation, come in two types:<P>
+<UL>
+<LI><b>Permanent,</b> where the folio is constantly in RAM and ready to 
+handle function calls.
+<p>
+<LI><b>Demand-loaded,</b> where the folio is stored on disk and must be 
+loaded first before tasks can make function calls to the folio.
+</UL>
+The Kernel folio is a permanent folio by necessity; it includes the 
+function calls that open other folios. Other permanent folios are the 
+Graphics, Audio, Math, and File folios. Examples of demand-loaded folios 
+include the International and Compression folios.<P>
+Demand-loaded folios are automatically fetched from disk when they are 
+needed by a task. When a task tries to open the folio, the kernel first 
+looks in memory for the folio. If the folio isn't found in memory, the 
+kernel then tries to load it from disk. Once the folio has been loaded 
+from disk, it can be used by other tasks in the system without having to 
+reload it.<P>
+When demand-loaded folios are no longer in use by any task, the kernel can 
+remove them from memory to make the memory available to other uses in the 
+system.<P>

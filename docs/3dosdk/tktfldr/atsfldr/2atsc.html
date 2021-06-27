@@ -1,0 +1,134 @@
+<TITLE>ARM object format </TITLE>
+<H1>ARM object format </H1><HR>
+Each piece of an object file is stored in a separate, identifiable, chunk. AOF defines five chunks as follows:<P>
+<PRE>
+--------------------------------------------------------
+Chunk                |Chunk Name                        
+--------------------------------------------------------
+AOF Header           |OBJ_HEAD                          
+--------------------------------------------------------
+Areas                |OBJ_AREA                          
+--------------------------------------------------------
+Identification       |OBJ_IDFN                          
+--------------------------------------------------------
+Symbol Table         |OBJ_SYMT                          
+--------------------------------------------------------
+String Table         |OBJ_STRT                          
+--------------------------------------------------------
+</PRE>
+<P>
+Only the header and areas chunks must be present, but a typical object file contains all five of the above chunks.<P>
+Each name in an object file is encoded as an offset into the string table, stored in the OBJ_STRT chunk (see <A HREF="./2atsf.html#XREF26065">The string table chunk (OBJ_STRT)</A>). This allows the variable-length nature of names to be factored out from primary data formats.<P>
+A feature of ARM Object Format is that chunks may appear in any order in the file (indeed, the ARM C Compiler and the ARM Assembler produce their AOF chunks in different orders).<P>
+A language translator or other utility may add additional chunks to an object file, for example a language-specific symbol table or language-specific debugging data. Therefore it is conventional to allow space in the chunk header for additional chunks; space for eight chunks is conventional when the AOF file is produced by a language processor which generates all 5 chunks described here.<P>
+The AOF header chunk should not be confused with the chunk file's header.<P>
+<H2>Format of the AOF header chunk</H2>
+The AOF header consists of two parts, which appear contiguously in the header chunk. The first part is of fixed size and describes the contents and nature of the object file. The second part has a variable length (specified in the fixed part of the header), and consists of a sequence of area declarations describing the code and data areas within the OBJ_AREA chunk.<P>
+Pictorially, the AOF header chunk has the following format<P>
+
+<IMG SRC="Figures/AOFHeader.gif" ALT="Graphic cannot be displayed">
+<P>
+An <I>Object File Type</I> of 0xC5E2D080 marks the file as being in relocatable object format (the usual output of compilers and assemblers and the usual input to the linker).<P>
+The endian-ness of the object code can be deduced from this value and shall be identical to the endian-ness of the containing chunk file.<P>
+The Version Id encodes the version of AOF to which the object file complies: version 1.50 is denoted by decimal 150; version 2.00 by 200; and this version by decimal 310 (0x136).<P>
+The code and data of an object file are encapsulated in a number of separate <I>areas</I> in the OBJ_AREA chunk, each with a name and some attributes (see below). Each area is described in the variable-length part of the AOF header which immediately follows the fixed part. Number of Areas gives the number of areas in the file and, equivalently, the number of area declarations which follow the fixed part of the AOF header.<P>
+If the object file contains a symbol table chunk (named OBJ_SYMT), then Number of Symbols records the number of symbols in the symbol table.<P>
+One of the areas in an object file may be designated as containing the start address of any program which is linked to include the file. If this is the case, the entry address is specified as an Entry Area Index, Entry Offset pair. Entry Area Index, in the range 1 to Number of Areas, gives the 1-origin index in the following array of area headers of the area containing the entry point. The entry address is defined to be the base address of this area plus Entry Offset.<P>
+A value of 0 for Entry Area Index signifies that no program entry address is defined by this AOF file.<P>
+<H2>Format of area headers </H2>
+The area headers follow the fixed part of the AOF header. Each area header has the following format:<P>
+<PRE>
+--------------------------------------------------------
+Area name             |(offset into string table)       
+--------------------------------------------------------
+Attributes + Alignment|                                 
+--------------------------------------------------------
+Area Size             |                                 
+--------------------------------------------------------
+Number of Relocations |                                 
+--------------------------------------------------------
+Base Address or 0     |5 words total                    
+--------------------------------------------------------
+</PRE>
+<P>
+Each area within an object file must be given a name which is unique amongst all the areas in the file. Area Name gives the offset of that name in the string table (stored in the OBJ_STRT chunk - see <A HREF="./2atsf.html#XREF26065">The string table chunk (OBJ_STRT)</A>).<P>
+The <I>Area Size</I> field gives the size of the area in bytes, which must be a multiple of 4. Unless the Not Initialised bit (bit 4) is set in the area attributes (see <A HREF="#XREF41510">Attributes + Alignment</A>), there must be this number of bytes for this area in the OBJ_AREA chunk. If the Not Initialised bit is set, then there shall be no initialising bytes for this area in the OBJ_AREA chunk.<P>
+The Number of Relocations word specifies the number of relocation directives which apply to this area, (equivalently: the number of relocation records following the area's contents in the OBJ_AREA chunk - see <A HREF="./2atsd.html#XREF30575">Format of the areas chunk</A>).<P>
+The Base Address field is unused unless the area has the absolute attribute (see below). In this case the field records the base address of the area. In general, giving an area a base address prior to linking, will cause problems for the linker and may prevent linking altogether, unless only a single object file is involved.<P>
+<A NAME="XREF41510"><H2>Attributes + Alignment </A></H2>
+Each area has a set of attributes encoded in the most-significant 24 bits of the<I> </I><I>Attributes + Alignment</I> word. The least-significant 8 bits of this word encode the alignment of the start of the area as a power of 2 and shall have a value between 2 and 32 (this value denotes that the area should start at an address divisible by 2 () <I>alignment</I>).<P>
+The linker orders areas in a generated image first by attributes, then by the (case-significant) lexicographic order of area names, then by position of the containing object module in the link list. The position in the link list of an object module loaded from a library is not predictable.<P>
+The precise significance to the linker of area attributes depends on the output being generated. For details see <A HREF="../arrfldr/arr3frst.html#XREF25184">The ARM Linker</A>.<P>
+Bit 8-encodes the absolute attribute and denotes that the area must be placed at its Base Address. This bit is not usually set by language processors.<P>
+Bit 9<I>-</I>encodes the <I>code</I> attribute: if set the area contains code; otherwise it contains data.<P>
+Bits 10, 11-encode the common block definition and common block reference attributes, respectively.<P>
+Bit 10<I>-</I>specifies that the area is a common definition.<P>
+Bit 11-<I> </I>defines the area to be a reference to a common block, and precludes the area having initialising data (see Bit 12, below). In effect, bit 11<I> </I>implies bit 12. If both bits 10 and 11 are set, bit 11 is ignored.<P>
+Common areas with the same name are overlaid on each other by the linker. The <I>Area Size</I> field of a common definition area defines the size of a common block. All other references to this common block must specify a size which is smaller or equal to the definition size. If, in a link step, there is more than one definition of an area with the common definition attribute (area of the given name with bit 10 set), then each of these areas must have exactly the same contents. If there is no definition of a common area, its size will be the size of the largest common reference to it.<P>
+Although common areas conventionally hold data, it is quite legal to use bit 10 in conjunction with bit 9 to define a common block containing code. This is most useful for defining a code area which must be generated in several compilation units but which should be included in the final image only once.<P>
+Bit 12-encodes the zero-initialised attribute, specifying that the area has no initialising data in this object file, and that the area contents are missing from the OBJ_AREA chunk. Typically, this attribute is given to large uninitialised data areas. When an uninitialised area is included in an image, the linker either includes a read-write area of binary zeroes of appropriate size, or maps a read-write area of appropriate size that will be zeroed at image start-up time. This attribute is incompatible with the read-only attribute (see Bit 13, below).<P>
+Whether or not a zero-initialised area is re-zeroed if the image is re-entered is a property of the relevant image format and/or the system on which it will be executed. The definition of AOF neither requires nor precludes re-zeroing.<P>
+A combination of bit 10 (common definition) and bit 12 (zero initialised) has exactly the same meaning as bit 11 (reference to common). <P>
+Bit 13 encodes the read only attribute and denotes that the area will not be modified following relocation by the linker. The linker groups read-only areas together so that they may be write protected at run-time, hardware permitting. Code areas and debugging tables should have this bit set. The setting of this bit is incompatible with the setting of bit 12.<P>
+Bit 14 encodes the position independent (PI) attribute, usually only of significance for code areas. Any reference to a memory address from a PI area must be in the form of a link-time-fixed offset from a base register (e.g. a PC-relative branch offset).<P>
+Bit 15 encodes the debugging table attribute and denotes that the area contains symbolic debugging tables. The linker groups these areas together so they can be accessed as a single continuous chunk at or before run-time (usually, a debugger will extract its debugging tables from the image file prior to starting the debugger).<P>
+Usually, debugging tables are read-only and, therefore, have bit 13 set also. In debugging table areas, bit 9 (the <I>code</I> attribute) is ignored.<P>
+Bits 16-19 encode additional attributes of code areas and shall be non-0 only if the area has the code attribute (bit 9 set).<P>
+Bit 16<I> </I>encodes the 32-bit PC attribute, and denotes that code in this area complies with a 32-bit variant of the ARM Procedure Call Standard (APCS). For details, refer to <A HREF="./4atsb.html#XREF34877">32-bit PC vs 26-bit PC</A>. Such code may be incompatible with code which complies with a 26-bit variant of the APCS.<P>
+Bit 17<I> </I>encodes the reentrant attribute, and denotes that code in this area complies with a reentrant variant of the ARM Procedure Call Standard.<P>
+Bit 18, when set, denotes that code in this area uses the ARM's extended floating-point instruction set. Specifically, function entry and exit use the LFM and SFM floating-point save and restore instructions rather than multiple LDFEs and STFEs. Code with this attribute may not execute on older ARM-based systems.<P>
+Bit 19 encodes the No Software Stack Check attribute, denoting that code in this area complies with a variant of the ARM Procedure Call Standard<I> </I>without software stack-limit checking. Such code may be incompatible with code which complies with a limit-checked variant of the APCS.<P>
+Bits 20-27<I> </I>encode additional attributes of data areas, and shall be non-0 only if the area does not have the code attribute (bit 9) unset.<P>
+Bit 20<I> </I>encodes the based attribute, denoting that the area is addressed via link-time-fixed offsets from a base register (encoded in bits 24-27). Based areas have a special role in the construction of shared libraries and ROM-able code, and are treated specially by the linker.<P>
+Bit 21 encodes the Shared Library Stub Data attribute. In a link step involving layered shared libraries, there may be several copies of the stub data for any library not at the top level. In other respects, areas with this attribute are treated like data areas with the common definition (bit 10) attribute. Areas which also have the zero initialied attribute (bite 12) are treated much the same as areas with the common reference (bit 11) attribute.<P>
+This attribute is not usually set by language processors, but is set only by the linker (refer to <A HREF="../arrfldr/3arrj.html#XREF31382">ARM shared library format</A>).<P>
+Bits 22-23-reserved and shall be set to 0.<P>
+Bits 24-27<I>-</I>encode the base register used to address a <I>based</I> area. If the area does not have the <I>based</I> attribute then these bits shall be set to 0.<P>
+Bits 28-31<I>-</I>reserved and shall be set to 0.<P>
+<H2>Area attributes ummary</H2>
+
+<PRE>
+-----------------------------------------------------------
+Bit  |Mask        |Attribute Description  |                
+-----------------------------------------------------------
+8    |0x00000100  |Absolute attribute     |                
+-----------------------------------------------------------
+9    |0x00000200  |Code attribute         |                
+-----------------------------------------------------------
+10   |0x00000400  |Common block definition|                
+-----------------------------------------------------------
+11   |0x00000800  |Common block reference |                
+-----------------------------------------------------------
+12   |0x00001000  |Uninitialised(0-initial|                
+     |            |ised)                  |                
+-----------------------------------------------------------
+13   |0x00002000  |Read only              |                
+-----------------------------------------------------------
+14   |0x00004000  |Position independent   |                
+-----------------------------------------------------------
+15   |0x00008000  |Debugging tables       |                
+-----------------------------------------------------------
+     |            |                       |                
+-----------------------------------------------------------
+16   |0x00010000  |Coplies with the 32-bit|Code areas only 
+     |            |APCS                   |                
+-----------------------------------------------------------
+17   |0x00020000  |Reentrant code         |Code areas only 
+-----------------------------------------------------------
+18   |0x00040000  |Uses extended FP inst  |Code areas only 
+     |            |set                    |                
+-----------------------------------------------------------
+19   |0x00080000  |No software stack      |Code areas only 
+     |            |checking               |                
+-----------------------------------------------------------
+     |            |                       |                
+-----------------------------------------------------------
+20   |0x00100000  |Based area             |Data areas only 
+-----------------------------------------------------------
+21   |0x00200000  |Shared library stub    |Data areas only 
+     |            |data                   |                
+-----------------------------------------------------------
+24-  |0x0F000000  |Base register for based|Data areas only 
+27   |            |area                   |                
+-----------------------------------------------------------
+</PRE>

@@ -1,0 +1,33 @@
+<TITLE>How Do I Manage Multiple Sound Effects?</TITLE>
+<H1><LINK NAME="XREF38933">How Do I Manage Multiple Sound Effects?</LINK></H1><HR>
+There are several ways to manage multiple sound effects, depending on the nature of the sound effects.<P>
+If you have a few Samples and they can be played by instruments that fit in the DSP at the same time, you can do the following: <P>
+<OL>
+<LI>Load all the instruments and samples.
+
+<LI>Attach the samples.
+<LI>Connect all the instruments to a mixer. 
+<LI>Call <CODE>StartInstrument()</CODE> to trigger the sound effect for the appropriate instrument.
+</OL>
+If the instruments do not all fit in the DSP at the same time, but the Samples are all of the same format,  you can do the following:<P>
+<OL>
+<LI>Load several instruments and connect them to a mixer as above. 
+<p>
+<LI>Load all of the samples.
+<p>
+<LI>Attach all of the samples to each instrument. 
+<p>
+<LI>Keep track of the attachments returned by <CODE>AttachSample()</CODE> in arrays. 
+<p>
+<LI>Set the attachment flags to AF_ATTF_NOAUTOSTART<CODE>|</CODE>AF_ATTF_FATLADYSINGS using <CODE>SetAudioItemInfo()</CODE> so that you can start the instrument without triggering any particular sample. 
+<p>
+<LI>Start each of the instruments playing. 
+<p>
+<LI>Call <CODE>StartAttachment()</CODE> when you want to trigger a sample on a particular  instrument for the appropriate attachment.
+<p>
+<LI>Call <CODE>GetAudioItemInfo()</CODE> with AF_TAG_STATUS to determine which instrument is stopped when you want to trigger the next attachment. See <A HREF="./01mpg004.html#XREF20901">How Do I Play a Long Sound File?</A> for more details.
+</OL>
+If you have multiple kinds of instruments, you need a more sophisticated dynamic voice allocation scheme. You can use the voice allocator that is part of the score playing utility in the Music library. See the example file <I>tsc_soundfx.c</I>.<P>
+<H3>For More Information</H3>
+See <A HREF="./03mpg.html#XREF22719">Preparing Instruments</A>, and  <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>, for complete programming details. <P>
+See <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>, in the <I>3DO Music and Audio Programmer's Reference</I> for descriptions of the calls.<P>

@@ -1,0 +1,27 @@
+<Title>CompareTimes</Title>
+<A NAME="XREF39340"><H1>CompareTimes </A></H1>
+<A NAME="XREF20436"></A>Compares two time values.<P>
+<H3>Synopsis</H3>
+<CODE>int32 CompareTimes(const TimeVal *tv1,const TimeVal *tv2);</CODE><P>
+<H3>Description</H3>
+Compares two time values to determine which came first. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tv1
+<DD>The first time value. 
+</DL>
+<DL>
+<DT>tv2
+<DD>The second time value. 
+</DL>
+<H3>Return Value</H3>
+&lt; 0                         if (tv1 &lt; tv2) <P>
+== 0                          if (tv1 == tv2) <P>
+&gt; 0                         if (tv1 &gt; tv2) <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+time.h, clib.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./05spr001.html#XREF17030"><CODE>AddTimes</A>(), <A HREF="./05spr005.html#XREF31407">SubTimes</A>(), <A HREF="./05spr006.html#XREF24661">TimeLaterThan</A>(), <A HREF="./05spr007.html#XREF41840">TimeLaterThanOrEqual</A>() </CODE><P>
+</CODE>

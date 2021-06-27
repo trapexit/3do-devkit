@@ -1,0 +1,21 @@
+<Title>ssplDumpSoundSpooler</Title>
+<A NAME="XREF14034"><H1>ssplDumpSoundSpooler </A></H1>
+<A NAME="XREF33776"></A> Print debug info for SoundSpooler.<P>
+<H3>Synopsis</H3>
+<CODE>void ssplDumpSoundSpooler ( const SoundSpooler *sspl )</CODE><P>
+<H3>Description</H3>
+Prints debugging information for SoundSpooler including the contents of both the active and free queues (calls <CODE>ssplDumpSoundBufferNode()</CODE> for each SoundBufferNode). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>SoundSpooler to print. 
+</DL>
+<H3>Return Value</H3>
+None <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr101.html#XREF14519"><CODE>ssplDumpSoundBufferNode</A>() </CODE><P>
+</CODE>

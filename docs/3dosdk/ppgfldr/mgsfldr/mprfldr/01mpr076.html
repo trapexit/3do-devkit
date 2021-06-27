@@ -1,0 +1,82 @@
+<Title>TraceAudio</Title>
+<A NAME="XREF19994"><H1>TraceAudio </A></H1>
+<A NAME="XREF30159"> </A>Turns specific audio diagnostics on or off (OBSOLETE)<P>
+<H3>Synopsis</H3>
+<CODE>uint32 TraceAudio (uint32 traceMask)</CODE><P>
+<H3>Description</H3>
+This function is obsolete.<P>
+Development versions of the Audio folio have diagnostic information available which can be turned on or off with this function. To help 3DO Technical Support diagnose a bug, you may be asked to turn on certain TRACE _ flags and send the result for interpretation. <P>
+This function has no effect in production versions of the Audio folio. <P>
+Note that this is a system-wide setting. It affects all clients of the Audio folio, not just the task that calls <CODE>TraceAudio()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>traceMask
+<DD>Set of flags indicating which information should be on. A set flag turns on the corresponding trace feature, a cleared flag turns off the corresponding trace feature. 0 turns off all tracing. See Flags section for complete description of each trace flag. 
+</DL>
+<H3>Flags</H3>
+<DL>
+<DT>TRACE_ATTACHMENT
+<DD>Trace an attachment. 
+</DL>
+<DL>
+<DT>TRACE_DSP
+<DD>Trace DSP specific calls such as <CODE>AllocAmplitude()</CODE>. 
+</DL>
+<DL>
+<DT>TRACE_ENVELOPE
+<DD>Trace an envelope. 
+</DL>
+<DL>
+<DT>TRACE_INT
+<DD>Trace internal information. 
+</DL>
+<DL>
+<DT>TRACE_ITEM
+<DD>Trace item creation and deletion. 
+</DL>
+<DL>
+<DT>TRACE_KNOB
+<DD>Trace a knob. 
+</DL>
+<DL>
+<DT>TRACE_NOTE
+<DD>Trace note playing. 
+</DL>
+<DL>
+<DT>TRACE_OFX
+<DD>Trace parsing of DSP instrument files, DSP resource allocation, and so on. 
+</DL>
+<DL>
+<DT>TRACE_SAMPLE
+<DD>Trace AIFF sample loading, and so on. 
+</DL>
+<DL>
+<DT>TRACE_TIMER
+<DD>Trace a timer. 
+</DL>
+<DL>
+<DT>TRACE_TOP
+<DD>Trace the parameters passed to, and returned from, most Audio folio calls. 
+</DL>
+<DL>
+<DT>TRACE_TUNING
+<DD>Trace a tuning. 
+</DL>
+<H3>Return Value</H3>
+The function returns the previous trace mask setting. <P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V20. <P>
+<H3>Examples</H3>
+<CODE>
+<PRE>
+// Turn on a few interesting things
+TraceAudio (TRACE_TOP | TRACE_INT | TRACE_KNOB);
+// Turn off all tracing
+TraceAudio (0);
+</CODE>
+</PRE>
+<H3>Caveats</H3>
+Given that this is a system-wide setting that any task can set at any time, it really isn't possible to use the return value of this function to create a stack of previous settings. As soon as more than one task starts setting <CODE>TraceAudio()</CODE>, the stack would be invalid. <P>
+As of V24, this function has no longer has any effect.  The messages were removed to reduce code size. <P>
+<H3>Associated Files</H3>
+audio.h<P>

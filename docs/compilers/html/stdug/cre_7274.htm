@@ -1,0 +1,63 @@
+<HTML><HEAD><TITLE>Creating and Using Complex Numbers</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Creating and Using Complex Numbers</H2>
+<P>In the following sections we will describe the operations used to create and manipulate complex numbers.</P>
+<A NAME="declaringcomplexnumbers"><H3>Declaring Complex Numbers</H3></A>
+<P>The template argument is used to define the types associated with the real and imaginary fields.  This argument must be one of the floating point number data types available in the C++ language, either <SAMP>float</SAMP>, <SAMP>double</SAMP>, or <SAMP>long</SAMP> <SAMP>double</SAMP>.</P>
+<P>There are several constructors associated with the class.  A constructor with no arguments initializes both the real and imaginary fields to zero.  A constructor with a single argument initializes the real field to the given value, and the imaginary value to zero.  A constructor with two arguments initializes both real and imaginary fields.  Finally, a copy constructor can be used to initialize a complex number with values derived from another complex number.</P>
+<PRE>   complex&#60;double> com_one;              // value 0 + 0i
+   complex&#60;double> com_two(3.14);        // value 3.14 + 0i
+   complex&#60;double> com_three(1.5, 3.14)  // value 1.5 + 3.14i
+   complex&#60;double> com_four(com_two);    // value is also 3.14 + 0i
+</PRE>
+<P>A complex number can be assigned the value of another complex number.  Since the one-argument constructor is also used for a conversion operator, a complex number can also be assigned the value of a real number.  The real field is changed to the right hand side, while the imaginary field is set to zero.</P>
+<PRE>   com_one = com_three;                   // becomes 1.5 + 3.14i
+   com_three = 2.17;                      // becomes 2.17 + 0i
+</PRE>
+<P>The function <SAMP>polar()</SAMP> can be used to construct a complex number with the given magnitude and phase angle.</P>
+<PRE>   com_four = polar(5.6, 1.8);
+</PRE>
+<P>The conjugate of a complex number is formed using the function <SAMP>conj().</SAMP>  If a complex number represents <SAMP>x + iy</SAMP>, then the conjugate is the value <SAMP>x-iy</SAMP>.</P>
+<PRE>   complex&#60;double> com_five = conj(com_four);
+</PRE>
+
+<A NAME="accessingcomplexnumbervalues"><H3>Accessing Complex Number Values</H3></A>
+<P>The member functions <SAMP>real()</SAMP> and <SAMP>imag()</SAMP> return the real and imaginary fields of a complex number, respectively.  These functions can also be invoked as ordinary functions with complex number arguments.</P>
+<PRE>      // the following should be the same
+   cout &#60;&#60; com_one.real() &#60;&#60; "+" &#60;&#60; com_one.imag() &#60;&#60; "i" &#60;&#60; endl;
+   cout &#60;&#60; real(com_one) &#60;&#60; "+" &#60;&#60; imag(com_one) &#60;&#60; "i" &#60;&#60; endl;
+</PRE>
+<A HREF="sidebar.htm#sidebar76"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Functions and Member Functions</STRONG></A>
+
+<A NAME="arithmeticoperations"><H3>Arithmetic Operations</H3></A>
+<P>The arithmetic operators <SAMP>+, -, *,</SAMP> and <SAMP>/</SAMP> can be used to perform addition, subtraction, multiplication and division of complex numbers.  All four work either with two complex numbers, or with a complex number and a real value.  Assignment operators are also defined for all four.</P>
+<PRE>   cout &#60;&#60; com_one + com_two &#60;&#60; endl;
+   cout &#60;&#60; com_one - 3.14 &#60;&#60; endl;
+   cout &#60;&#60; 2.75 * com_two &#60;&#60; endl;
+   com_one += com_three / 2.0;
+</PRE>
+<P>The unary operators <SAMP>+</SAMP> and <SAMP>-</SAMP> can also be applied to complex numbers.</P>
+
+<A NAME="comparingcomplexvalues"><H3>Comparing Complex Values</H3></A>
+<P>Two complex numbers can be compared for equality or inequality, using the operators <SAMP>==</SAMP> and<SAMP> !=.</SAMP>  Two values are equal if their corresponding fields are equal.  Complex numbers are not well-ordered, and thus cannot be compared using any other relational operator.</P>
+<A NAME="streaminputandoutput"><H3>Stream Input and Output</H3></A>
+<P>Complex numbers can be written to an output stream, or read from an input stream, using the normal stream I/O conventions.  A value is written in parentheses, either as (u) or (u,v), depending upon whether or not the imaginary value is zero.  A value is read as a set of parentheses surrounding two numeric values.</P>
+<A NAME="normandabsolutevalue"><H3>Norm and Absolute Value</H3></A>
+<P>The function <SAMP>norm()</SAMP> returns the norm of the complex number.  This is the sum of the squares of the real and imaginary parts.  The function <SAMP>abs()</SAMP> returns the absolute value, which is the square root of the norm.  Note that both are ordinary functions that take the complex value as an argument, not member functions.</P>
+<PRE>   cout &#60;&#60; norm(com_two) &#60;&#60; endl;
+   cout &#60;&#60; abs(com_two) &#60;&#60; endl;
+</PRE>
+<P>The directed phase angle of a complex number is yielded by the function <SAMP>arg().</SAMP></P>
+<PRE>   cout &#60;&#60; com_four &#60;&#60; " in polar coordinates is "
+      &#60;&#60; arg(com_four) &#60;&#60; " and " &#60;&#60; norm(com_four) &#60;&#60; endl;</PRE>
+
+<A NAME="trigonometricfunctions"><H3>Trigonometric Functions</H3></A>
+<P>The trigonometric functions defined for floating point values (namely, <SAMP>sin(), cos(), tan(), asin(), acos(), atan(), sinh(), cosh(),</SAMP> and <SAMP>tanh()</SAMP>), have all been extended to complex number arguments.  Each takes a single complex number as argument and returns a complex number as result.  The function <SAMP>atan2()</SAMP> takes two complex number arguments, or a complex number and a real value (in either order), and returns a complex number result.</P>
+<A NAME="transcendentalfunctions"><H3>Transcendental Functions</H3></A>
+<P>The transcendental functions<SAMP> exp(), log(), log10()</SAMP> and <SAMP>sqrt()</SAMP> have been extended to complex arguments.  Each takes a single complex number as argument, and returns a complex number as result.</P>
+<P>The standard library defines several variations of the exponential function <SAMP>pow().</SAMP>  Versions exist to raise a complex number to an integer power, to raise a complex number to a complex power or to a real power, or to raise a real value to a complex power.</P>
+<HR>
+<A HREF="ove_7764.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="exa_2656.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,24 @@
+<TITLE>Independently Controlling Attachments</TITLE>
+<H1><LINK NAME="XREF15133">Independently Controlling Attachments</LINK></H1><HR>
+When an instrument has start dependent attachments to samples and envelopes, those attachments start, release, and stop when the instrument does. If, however, an instrument has start independent attachments to items, then those attachments are not affected by instrument start and release calls. The Audio folio supplies separate calls to start, release, and stop start independent attachments. You can use these same calls to start, release, and stop start dependent attachments as well.<P>
+<H2>Starting an Attachment</H2>
+To start an attachment, use this call:<P>
+<DL>
+<DD><CODE>Err StartAttachment( Item Attachment, TagArg *tp )</CODE><BR>
+</DL>
+The call accepts the item number of an attachment and a pointer to a list of tag arguments. The tag arguments are not currently defined for this call. When <CODE>StartAttachment</CODE> () executes, it starts playback of the item listed in the specified attachment: a sample or an envelope. If successful, the call returns 0; if unsuccessful, it returns a negative value (an error code).<P>
+Starting an attachment is not like starting an instrument. <CODE>StartAttachment()</CODE> just triggers the playback of an attached item to start; it does not load a DSP program and start it running the way <CODE>StartInstrument()</CODE> does. The item started, however, plays back just as it would if it were started with the instrument. Its sustain and release loops work just as they do with <CODE>StartInstrument()</CODE> with one exception: they must be released with <CODE>ReleaseAttachment()</CODE> instead of with <CODE>ReleaseInstrument()</CODE>.<P>
+<H2>Releasing an Attachment</H2>
+To release an attachment, use this call:<P>
+<DL>
+<DD><CODE>Err ReleaseAttachment( Item Attachment, TagArg *tp )</CODE><BR>
+</DL>
+The call accepts the item number of an attachment and a pointer to a list of tag arguments. The tag arguments are not currently defined for this call. When <CODE>ReleaseAttachment()</CODE> executes, it releases playback of the item listed in the specified attachment so playback can continue to the release loop or (if there is no release loop) to the end of the item. If successful, the call returns 0; if unsuccessful, it returns a negative value (an error code).<P>
+<H2>Stopping an Attachment</H2>
+To stop an attachment, use this call:<P>
+<DL>
+<DD><CODE>Err StopAttachment( Item Attachment, TagArg *tp )</CODE><BR>
+</DL>
+The call accepts the item number of an attachment and a pointer to a list of tag arguments. The tag arguments are not currently defined for this call. When <CODE>StopAttachment()</CODE> executes, it completely stops playback of the item listed in the specified attachment. If successful, the call returns 0; if unsuccessful, it returns a negative value (an error code).<P>
+If the attachment stopped is a stop linked attachment, the instrument to which it is attached stops as well. Stopping a non-stop-linked attachment does <I>not</I> stop the instrument.<P>
+Stopping an instrument directly stops all of the instruments attachments with it.<P>

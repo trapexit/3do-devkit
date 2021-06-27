@@ -1,0 +1,22 @@
+<Title>EnableMSEvent</Title>
+<A NAME="XREF13048"><H1>EnableMSEvent </A></H1>
+ Enables dispatching for one event.<P>
+<H3>Synopsis</H3>
+<CODE>void EnableMSEvent (MSEventData *theEvent, int32 reserved)</CODE><P>
+<H3>Description</H3>
+Re-enables dispatching of an event previously disabled by <CODE>DisableMSEvent()</CODE>. If a message or signal was pending at the time you called <CODE>DisableMSEvent()</CODE>, or if an event arrived while the handler was disabled, the event is dispatched to the handler as soon as it is re-enabled by this function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>theEvent
+<DD>Pointer to the element of the MSEventData array that describes the event to disable. 
+</DL>
+<DL>
+<DT>reserved
+<DD>Reserved for future expansion; pass zero. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, msgutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO059.html#XREF22950"><CODE>DisableMSEvent</A></CODE><P>

@@ -1,0 +1,745 @@
+/***************************************************************************
+ *
+ * deque - Declaration and definition for the Standard Library deque class
+ *
+ * $Id: deque@#/main/1.52.1/sl1main/sl121main/7  02/04/97 18:48:04  smithey (SL121RA_UNIX)
+ *
+ ***************************************************************************
+ *
+ * Copyright (c) 1994
+ * Hewlett-Packard Company
+ *
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.  Hewlett-Packard Company makes no
+ * representations about the suitability of this software for any
+ * purpose.  It is provided "as is" without express or implied warranty.
+ *
+ *
+ ***************************************************************************
+ *
+ * (c) Copyright 1994-1997 Rogue Wave Software, Inc.
+ * ALL RIGHTS RESERVED
+ *
+ * The software and information contained herein are proprietary to, and
+ * comprise valuable trade secrets of, Rogue Wave Software, Inc., which
+ * intends to preserve as trade secrets such software and information.
+ * This software is furnished pursuant to a written license agreement and
+ * may be used, copied, transmitted, and stored only in accordance with
+ * the terms of such license and with the inclusion of the above copyright
+ * notice.  This software and information or any other copies thereof may
+ * not be provided or otherwise made available to any other person.
+ *
+ * Notwithstanding any other lease or license that may pertain to, or
+ * accompany the delivery of, this computer software and information, the
+ * rights of the Government regarding its use, reproduction and disclosure
+ * are as set forth in Section 52.227-19 of the FARS Computer
+ * Software-Restricted Rights clause.
+ * 
+ * Use, duplication, or disclosure by the Government is subject to
+ * restrictions as set forth in subparagraph (c)(1)(ii) of the Rights in
+ * Technical Data and Computer Software clause at DFARS 252.227-7013.
+ * Contractor/Manufacturer is Rogue Wave Software, Inc.,
+ * P.O. Box 2328, Corvallis, Oregon 97339.
+ *
+ * This computer software and information is distributed with "restricted
+ * rights."  Use, duplication or disclosure is subject to restrictions as
+ * set forth in NASA FAR SUP 18-52.227-79 (April 1985) "Commercial
+ * Computer Software-Restricted Rights (April 1985)."  If the Clause at
+ * 18-52.227-74 "Rights in Data General" is specified in the contract,
+ * then the "Alternate III" clause applies.
+ *
+ **************************************************************************/
+
+#ifndef __STD_DEQUE__
+#define __STD_DEQUE__
+
+#include <stdcomp.h>
+#include "rw/stddefs.h"
+
+#ifndef RWSTD_HEADER_REQUIRES_HPP
+#include <functional>
+#include <algorithm>
+#include <iterator>
+#include <memory>
+#include <stdexcept>
+#else
+#include <functional.hpp>
+#include <algorithm.hpp>
+#include <iterator.hpp>
+#include <memory.hpp>
+#include <stdexcept.hpp>
+#endif
+
+#ifndef deque 
+#define deque deque
+#endif
+
+#ifndef RWSTD_NO_NAMESPACE
+namespace std {
+#endif
+
+//
+// Note that RWSTD_SIMPLE_DEFAULT(x)
+// will expand to: ' = x', or nothing,
+// depending on your compiler's capabilities and/or
+// flag settings (see stdcomp.h).
+//
+template <class T, class Allocator RWSTD_SIMPLE_DEFAULT(allocator) >
+class  deque
+{
+  public:
+
+    class  iterator;
+    class  const_iterator;
+    friend class iterator;
+    friend class const_iterator;
+
+  public:
+    //
+    // Types.
+    //
+    typedef T                                          value_type;
+    typedef Allocator                                  allocator_type;
+    typedef typename RWSTD_ALLOC_SIZE_TYPE             size_type;
+    typedef typename RWSTD_ALLOC_DIFF_TYPE             difference_type;
+
+#ifdef RWSTD_ALLOCATOR
+    typedef typename allocator_type::types<T>::reference                reference;
+    typedef typename allocator_type::types<T>::const_reference          const_reference;
+#else
+    typedef typename allocator_interface<Allocator,T>::reference        reference;
+    typedef typename allocator_interface<Allocator,T>::const_reference  const_reference;
+#endif
+
+  protected:
+    allocator_type          the_allocator;
+
+      
+#ifdef RWSTD_ALLOCATOR
+    typedef typename allocator_type::types<T>::pointer          pointer;
+    typedef typename allocator_type::types<T>::const_pointer    const_pointer;
+    typedef typename allocator_type::types<pointer>::pointer    map_pointer;
+#  define RWSTD_DEQUE_VALUE_ALLOCATOR  the_allocator
+#  define RWSTD_DEQUE_MAP_ALLOCATOR  the_allocator
+#else
+    typedef typename allocator_interface<allocator_type,T>::pointer       pointer;
+    typedef typename allocator_interface<allocator_type,T>::const_pointer const_pointer;
+
+#ifdef RWSTD_NO_POINTER_ALLOCATOR
+    // One compiler cannot handle using allocator on an arbitrary pointer
+    typedef pointer* map_pointer;
+    struct map_allocator_type {
+        map_pointer allocate(size_type n, pointer = 0) { return new pointer[n]; }
+        void deallocate(pointer * p) { delete p; }
+    };
+    map_allocator_type map_allocator;
+#else
+    typedef typename allocator_interface<allocator_type,pointer>::pointer map_pointer;
+    allocator_interface<allocator_type,pointer>  map_allocator;
+#endif
+    allocator_interface<allocator_type,T>  data_allocator;
+
+#  define RWSTD_DEQUE_VALUE_ALLOCATOR  data_allocator
+#  define RWSTD_DEQUE_MAP_ALLOCATOR  map_allocator
+#endif
+  
+    static size_type buffer_size ();
+ 
+  public:
+    //
+    // Definition of our iterator.
+    //
+    class iterator : public random_access_iterator<T, difference_type>
+    {
+        friend class deque<T,Allocator>;
+        friend class const_iterator;
+
+      protected:
+
+        pointer     current;
+        pointer     first;
+        pointer     last;
+        map_pointer node;
+
+        iterator (pointer x, map_pointer y)
+            : current(x), first(*y), last(*y + buffer_size()), node(y) {}
+
+      public:
+
+        iterator () : current(0), first(0), last(0), node(0) {}
+        reference operator* () const { return *current; }
+        difference_type operator- (const iterator& x) const
+        {
+            return node == x.node 
+                ? current - x.current 
+                : difference_type(buffer_size() * (node - x.node - 1) +
+                                  (current - first) + (x.last - x.current));
+        }
+        iterator& operator++ ()
+        {
+            if (++current == last)
+            {
+                first = *(++node);
+                current = first;
+                last = first + buffer_size();
+            }
+            return *this; 
+        }
+        iterator operator++ (int)
+        {
+            iterator tmp = *this; ++*this; return tmp;
+        }
+        iterator& operator-- ()
+        {
+            if (current == first)
+            {
+                first = *(--node);
+                last = first + buffer_size();
+                current = last;
+            }
+            --current;
+            return *this;
+        }
+        iterator operator-- (int)
+        {
+            iterator tmp = *this; --*this; return tmp;
+        }
+        iterator& operator+= (difference_type n)
+        {
+            difference_type offset = n + (current - first);
+            difference_type num_node_to_jump = offset >= 0
+                ? offset / buffer_size()
+                : -((-offset + buffer_size() - 1) / buffer_size());
+            if (num_node_to_jump == 0)
+                current += n;
+            else
+            {
+                node = node + num_node_to_jump;
+                first = *node;
+                last = first + buffer_size();
+                current = first + (offset - num_node_to_jump * buffer_size());
+            }
+            return *this;
+        }
+        iterator& operator-= (difference_type n) { return *this += -n; }
+        iterator operator+ (difference_type n) const
+        {
+            iterator tmp = *this; return tmp += n;
+        }
+        iterator operator- (difference_type n) const
+        {
+            iterator tmp = *this; return tmp -= n;
+        }
+        reference operator[] (difference_type n) { return *(*this + n); }
+        bool operator== (const iterator& x) const
+        {
+            return current == x.current || 
+                ((current == first || x.current == x.first) && 
+                 *this - x == 0);
+        }
+        bool operator< (const iterator& x) const
+        {
+            return (node == x.node) ? (current < x.current) : (node < x.node);
+        }
+    };  // End of nested definiton of iterator.
+
+    //
+    // Definition of our constant iterator.
+    //
+    class const_iterator : public random_access_iterator<T, difference_type>
+    {
+        friend class deque<T,Allocator>;
+
+      protected:
+
+        pointer     current;
+        pointer     first;
+        pointer     last;
+        map_pointer node;
+
+        const_iterator (pointer x, map_pointer y) 
+            : current(x), first(*y), last(*y + buffer_size()), node(y) {}
+
+      public:
+
+        const_iterator () : current(0), first(0), last(0), node(0) {}
+        const_iterator (const iterator& x) 
+            : current(x.current), first(x.first), last(x.last), node(x.node) {}     
+        const_reference operator* () const { return *current; }
+        difference_type operator- (const const_iterator& x) const
+        {
+            return node == x.node 
+            ? current - x.current 
+            : difference_type(buffer_size() * (node - x.node - 1) +
+                  (current - first) + (x.last - x.current));
+        }
+        const_iterator& operator++ ()
+        {
+            if (++current == last)
+            {
+                first = *(++node);
+                current = first;
+                last = first + buffer_size();
+            }
+        return *this; 
+        }
+        const_iterator operator++ (int)
+        {
+            const_iterator tmp = *this; ++*this; return tmp;
+        }
+        const_iterator& operator-- ()
+        {
+            if (current == first)
+            {
+                first = *(--node);
+                last = first + buffer_size();
+                current = last;
+            }
+            --current;
+            return *this;
+        }
+        const_iterator operator-- (int)
+        {
+            const_iterator tmp = *this; --*this; return tmp;
+        }
+        const_iterator& operator+= (difference_type n)
+        {
+            difference_type offset = n + (current - first);
+            difference_type num_node_to_jump = offset >= 0
+                ? offset / buffer_size()
+                : -((-offset + buffer_size() - 1) / buffer_size());
+            if (num_node_to_jump == 0)
+                current += n;
+            else
+            {
+                node = node + num_node_to_jump;
+                first = *node;
+                last = first + buffer_size();
+                current = first + (offset - num_node_to_jump * buffer_size());
+            }
+            return *this;
+        }
+        const_iterator& operator-= (difference_type n) { return *this += -n; }
+        const_iterator operator+ (difference_type n) const
+        {
+            const_iterator tmp = *this; return tmp += n;
+        }
+        const_iterator operator- (difference_type n) const
+        {
+            const_iterator tmp = *this; return tmp -= n;
+        }
+        const_reference operator[] (difference_type n)
+        { 
+            return *(*this + n); 
+        }
+        bool operator== (const const_iterator& x) const
+        {
+            return current == x.current || 
+                ((current == first || x.current == x.first) && 
+             *this - x == 0);
+        }
+        bool operator< (const const_iterator& x) const
+        {
+            return (node == x.node) ? (current < x.current) : (node < x.node);
+        }
+    };  // End of nested definiton of const_iterator.
+
+    typedef reverse_iterator<const_iterator, value_type, const_reference, 
+                             const_pointer, difference_type>
+            const_reverse_iterator;
+    typedef reverse_iterator<iterator, value_type, reference, 
+                             pointer, difference_type> 
+            reverse_iterator;
+
+  protected:
+
+    iterator    start;
+    iterator    finish;
+    size_type   length;
+    map_pointer map;
+    size_type   map_size;
+
+    void allocate_at_begin   ();
+    void allocate_at_end     ();
+    void deallocate_at_begin ();
+    void deallocate_at_end   ();
+
+  public:
+    //
+    // construct/copy/destroy
+    //
+    explicit deque (const Allocator& alloc RWSTD_DEFAULT_ARG(Allocator())) 
+      : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(alloc) 
+    { 
+       initialize(); 
+    }
+
+#ifdef RWSTD_NO_DEFAULT_TEMPLATE_ARGS
+    deque (void) 
+      : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(Allocator()) 
+    { 
+       initialize(); 
+    }
+#endif
+
+    //
+    // Build a deque of size n with each element set to default for type T.
+    // Requires that T have a default constructor.
+    //
+    explicit deque (size_type n, const Allocator& alloc RWSTD_DEFAULT_ARG(Allocator()))
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(alloc) 
+    {
+        initialize();
+        insert(begin(), n, T());
+    }
+
+    //
+    // Build a deque of size n with each element set to copy of value.
+    //
+    deque (size_type n, const T& value, const Allocator& alloc RWSTD_DEFAULT_ARG(Allocator()))
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(alloc) 
+    {
+        initialize();
+        insert(begin(), n, value);
+    }
+
+#ifdef RWSTD_NO_DEFAULT_TEMPLATE_ARGS
+    explicit deque (size_type n)
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(Allocator()) 
+    {
+        initialize();
+        insert(begin(), n, T());
+    }
+
+    deque (size_type n, const T& value)
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(Allocator()) 
+    {
+        initialize();
+        insert(begin(), n, value);
+    }
+#endif
+
+    deque (const deque<T,Allocator>& x)
+        : start(), finish(), length(0), map(0), map_size(0)
+    {
+        the_allocator = x.get_allocator();
+        initialize();
+        copy(x.begin(), x.end(), back_inserter(*this));
+    }
+
+#ifndef RWSTD_NO_MEMBER_TEMPLATES
+    template<class InputIterator>
+    deque (InputIterator first, InputIterator last, const Allocator& alloc = Allocator())
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(alloc) 
+    {
+        initialize();
+        copy(first, last, back_inserter(*this));
+    }
+#else
+    deque (const_iterator first, const_iterator last, const Allocator& alloc RWSTD_DEFAULT_ARG(Allocator()))
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(alloc) 
+    {
+        initialize();
+        copy(first, last, back_inserter(*this));
+    }
+    
+    deque (const T* first, const T* last, const Allocator& alloc RWSTD_DEFAULT_ARG(Allocator()))
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(alloc) 
+    {
+        initialize();
+        copy(first, last, back_inserter(*this));
+    }
+
+#ifdef RWSTD_NO_DEFAULT_TEMPLATE_ARGS
+    deque (const_iterator first, const_iterator last)
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(Allocator()) 
+    {
+        initialize();
+        copy(first, last, back_inserter(*this));
+    }
+    
+    deque (const T* first, const T* last)
+        : start(), finish(), length(0), map(0), map_size(0),
+        the_allocator(Allocator()) 
+    {
+        initialize();
+        copy(first, last, back_inserter(*this));
+    }
+#endif
+#endif
+
+    void initialize()
+    {
+#ifndef RWSTD_ALLOCATOR
+        data_allocator.alloc(&the_allocator);
+#ifndef RWSTD_NO_POINTER_ALLOCATOR
+        map_allocator.alloc(&the_allocator);
+#endif
+#endif
+    }
+
+    ~deque ();
+    deque<T,Allocator>& operator= (const deque<T,Allocator>& x)
+    {
+        if (!(this == &x))
+        {
+            if (size() >= x.size()) 
+                erase(copy(x.begin(), x.end(), begin()), end());
+            else 
+                copy(x.begin() + size(), x.end(),
+                     inserter(*this,copy(x.begin(),x.begin()+size(),begin())));
+        }
+        return *this;
+    }
+
+#ifndef RWSTD_NO_MEMBER_TEMPLATES
+    template<class InputIterator>
+    void assign (InputIterator first, InputIterator last)
+    {
+        erase(begin(), end()); insert(begin(), first, last);
+    }
+    //
+    // Assign n copies of default value of type T to vector.
+    // This requires that T have a default constructor.
+    //
+    template<class Size>
+    void assign (Size n)
+    {
+        erase(begin(), end()); insert(begin(), n, T());
+    }
+    //
+    // Assign n copies of t to this vector.
+    //
+    template<class Size, class X>
+    void assign (Size n, const X& t)
+    {
+        erase(begin(), end()); insert(begin(), n, t);
+    }
+#else
+    void assign (const_iterator first, const_iterator last)
+    {
+        erase(begin(), end()); insert(begin(), first, last);
+    }
+    void assign (const T* first, const T* last)
+    {
+        erase(begin(), end()); insert(begin(), first, last);
+    }
+    //
+    // Assign n copies of default value of type T to vector.
+    // This requires that T have a default constructor.
+    //
+    void assign (size_type n)
+    {
+        erase(begin(), end()); insert(begin(), n, T());
+    }
+    //
+    // Assign n copies of t to this vector.
+    //
+    void assign (size_type n, const T& t)
+    {
+        erase(begin(), end()); insert(begin(), n, t);
+    }
+#endif
+    allocator_type get_allocator() const
+    {
+        return the_allocator;
+    }
+
+    //
+    // Iterators.
+    //
+    iterator         begin  ()       { return start;  }
+    const_iterator   begin  () const { return start;  }
+    iterator         end    ()       { return finish; }
+    const_iterator   end    () const { return finish; }
+    reverse_iterator rbegin ()
+    { 
+      reverse_iterator tmp(end()); return tmp;
+    }
+    const_reverse_iterator rbegin () const
+    { 
+        const_reverse_iterator tmp(end()); return tmp;
+    }
+    reverse_iterator rend ()
+    { 
+        reverse_iterator tmp(begin()); return tmp;
+    }
+    const_reverse_iterator rend () const
+    { 
+        const_reverse_iterator tmp(begin()); return tmp;
+    }
+
+    //
+    // Capacity.
+    //
+    size_type size     () const { return length;                    }
+    size_type max_size () const { return data_allocator.max_size(); }
+    bool      empty    () const { return length == 0;               }
+    void      resize (size_type new_size);
+    void      resize (size_type new_size, T value);
+
+    //
+    // Element access.
+    //
+    reference       operator[] (size_type n)
+    {
+#ifdef RWSTD_BOUNDS_CHECKING
+      RWSTD_THROW(n >= size(), out_of_range, rwse_OutOfRange);
+      return *(begin() + n);
+#else
+      return *(begin() + n);
+#endif
+    }
+    const_reference operator[] (size_type n) const
+    {
+#ifdef RWSTD_BOUNDS_CHECKING
+      RWSTD_THROW(n >= size(), out_of_range, rwse_OutOfRange);
+      return *(begin() + n);
+#else
+      return *(begin() + n);
+#endif
+    }
+    const_reference at (size_type n)         const 
+    { 
+      RWSTD_THROW(n >= size(), out_of_range, rwse_OutOfRange);
+      return *(begin() + n); 
+    }
+    reference       at (size_type n)
+    { 
+      RWSTD_THROW(n >= size(), out_of_range, rwse_OutOfRange);
+      return *(begin() + n); 
+    }
+    reference       front ()                       { return *begin();       }
+    const_reference front ()                 const { return *begin();       }
+    reference       back ()                        { return *(end() - 1);   }
+    const_reference back ()                  const { return *(end() - 1);   }
+
+    //
+    // Modifiers.
+    //
+    void push_front (const T& x)
+    {
+        if (empty() || begin().current == begin().first) allocate_at_begin();
+        --start.current;
+        RWSTD_DEQUE_VALUE_ALLOCATOR.construct(start.current, x);
+        ++length;
+    }
+    void push_back (const T& x)
+    {
+        if (empty() || end().current == end().last) allocate_at_end();
+        RWSTD_DEQUE_VALUE_ALLOCATOR.construct(finish.current, x);
+        ++finish.current;
+        ++length;
+    }
+    //
+    // Insert default value of type T at position.
+    // Requires that T have a default constructor.
+    //
+    iterator insert (iterator position);
+    //
+    // Insert x at position.
+    //
+    iterator insert (iterator position, const T& x);
+    void insert (iterator position, size_type n, const T& x);
+
+#ifndef RWSTD_NO_MEMBER_TEMPLATES
+    template <class InputIterator>
+    void insert(iterator position, InputIterator first, InputIterator last);
+#else
+    void insert (iterator position, const T* first, const T* last);
+    void insert (iterator position, const_iterator first, const_iterator last);
+#endif
+
+    void pop_front ()
+    {
+        RWSTD_DEQUE_VALUE_ALLOCATOR.destroy(start.current);
+        ++start.current;
+        --length; 
+        if (empty() || begin().current == begin().last) deallocate_at_begin();
+    }
+    void pop_back ()
+    {
+        --finish.current;
+        RWSTD_DEQUE_VALUE_ALLOCATOR.destroy(finish.current);
+        --length; 
+        if (empty() || end().current == end().first) deallocate_at_end();
+    }
+    iterator erase (iterator position);
+    iterator erase (iterator first, iterator last);    
+    void clear()
+    {
+        erase(begin(),end());
+    }
+    void swap (deque<T,Allocator>& x)
+    {
+       if(the_allocator== x.the_allocator)
+       {
+#ifndef RWSTD_NO_NAMESPACE
+        std::swap(start,          x.start);
+        std::swap(finish,         x.finish);
+        std::swap(length,         x.length);
+        std::swap(map,            x.map);
+        std::swap(map_size,       x.map_size);
+ #else
+        ::swap(start,             x.start);
+        ::swap(finish,            x.finish);
+        ::swap(length,            x.length);
+        ::swap(map,               x.map);
+        ::swap(map_size,          x.map_size);
+ #endif 
+       }
+       else
+       {
+         deque<T,Allocator> _x=*this;
+         *this=x;
+         x=_x;
+       }
+    }
+};
+
+
+template <class T, class Allocator>
+inline bool operator== (const deque<T,Allocator>& x, const deque<T,Allocator>& y)
+{
+    return x.size() == y.size() && equal(x.begin(), x.end(), y.begin());
+}
+
+template <class T, class Allocator>
+inline bool operator< (const deque<T,Allocator>& x, const deque<T,Allocator>& y)
+{
+    return lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+}
+
+
+#if !defined(RWSTD_NO_PART_SPEC_OVERLOAD)
+template <class T, class Allocator>
+inline void swap(deque<T,Allocator>& a, deque<T,Allocator>& b)
+{
+    a.swap(b);
+}
+#endif
+
+#ifndef RWSTD_NO_NAMESPACE
+}
+#endif
+
+#ifdef RWSTD_COMPILE_INSTANTIATE
+#include <deque.cc>
+#endif
+
+#undef deque
+
+#endif /*__STD_DEQUE__*/

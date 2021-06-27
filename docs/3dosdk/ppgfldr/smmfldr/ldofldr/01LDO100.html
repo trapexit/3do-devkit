@@ -1,0 +1,18 @@
+<Title>HZ_To_USEC</Title>
+<A NAME="XREF33242"><H1>HZ_TO_USEC </A></H1>
+ Converts hertz to microseconds.<P>
+<H3>Synopsis</H3>
+<CODE>int32 HZ_TO_USEC (value)</CODE><P>
+<H3>Description</H3>
+This macro converts a value expressed in Hertz (cycles or ticks per second) to the equivalent number of microseconds for each tick. True floating point constant values are legal, for example HZ_TO_USEC(2.5). The compiler will resolve the constant at compile time without needing runtime floating point support. The macro is usable in expression context and only evaluates its argument once. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>value
+<DD>Integer constant or variable, or a floating point constant to be converted to microseconds. 
+</DL>
+<H3>Return Value</H3>
+The number of microseconds. <P>
+<H3>Implementation</H3>
+Macro <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>

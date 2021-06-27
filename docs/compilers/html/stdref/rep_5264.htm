@@ -1,0 +1,114 @@
+<HTML><TITLE>replace_copy</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>replace_copy</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Substitutes elements stored in a collection with new values.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class InputIterator,
+          class OutputIterator,
+          class T>
+OutputIterator <B>replace_copy</B> (InputIterator first,
+                             InputIterator last,
+                             OutputIterator result,
+                             const T&#38; old_value,
+                             const T&#38; new_value);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>replace_copy</B></I> algorithm leaves the original sequence intact and places the revised sequence into <SAMP>result</SAMP>. The algorithm compares elements referred to by interator <SAMP>i</SAMP> in the range <SAMP>[first, last)</SAMP> with <SAMP>old_value</SAMP>.  If <SAMP>*i </SAMP>does not equal <SAMP>old_value</SAMP>, then the <B><I>replace_copy</B></I> copies <SAMP>*i</SAMP> to <SAMP>result+(first-i)</SAMP>.  If <SAMP>*i==old_value</SAMP>, then <B><I>replace_copy</B></I> copies <SAMP>new_value</SAMP> to <SAMP>result+(first-i)</SAMP>. <B><I>replace_copy</B></I> returns <SAMP>result+(last-first)</SAMP>.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>Exactly <SAMP>last - first</SAMP>  comparisons between values are done.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// replace.cpp
+//
+ #include &#60;algorithm>
+ #include &#60;vector>
+ #include &#60;iterator>
+ #include &#60;iostream.h>
+ template&#60;class Arg>
+ struct all_true : public unary_function&#60;Arg, bool>
+ {
+   bool operator() (const Arg&#38;) { return 1; }
+ };
+ int main ()
+ {
+   //
+   // Initialize a vector with an array of integers.
+   //
+   int arr[10] = { 1,2,3,4,5,6,7,8,9,10 };
+   vector&#60;int> v(arr+0, arr+10);
+   //
+   // Print out original vector.
+   //
+   cout &#60;&#60; "The original list: " &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(), v.end(), ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;
+   //
+   // Replace the number 7 with 11.
+   //
+   replace(v.begin(), v.end(), 7, 11);
+   //
+   // Print out vector with 7 replaced. 
+   //
+   cout &#60;&#60; "List after replace:" &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(), v.end(), ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;
+   //
+   // Replace 1 2 3 with 13 13 13.
+   //
+   replace_if(v.begin(), v.begin()+3, all_true&#60;int>(), 13);
+   //
+   // Print out the remaining vector.
+   //
+   cout &#60;&#60; "List after replace_if:" &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(), v.end(), ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;
+   //
+   // Replace those 13s with 17s on output.
+   //
+   cout &#60;&#60; "List using replace_copy to cout:" &#60;&#60; endl &#60;&#60; "     ";
+   <B>replace_copy</B>(v.begin(), v.end(),                 ostream_iterator&#60;int>(cout, " "), 13, 17);</PRE>
+<PRE>   cout &#60;&#60; endl &#60;&#60; endl;
+   //
+   // A simple example of replace_copy_if.
+   //
+   cout &#60;&#60; "List w/ all elements output as 19s:" &#60;&#60; endl &#60;&#60; "   ";
+   replace_copy_if(v.begin(), v.end(),                    ostream_iterator&#60;int>(cout, " "),</PRE>
+<PRE>                   all_true&#60;int>(), 19);
+   cout &#60;&#60; endl;
+   return 0;
+ }
+Output :
+The original list:
+     1 2 3 4 5 6 7 8 9 10
+List after replace:
+     1 2 3 4 5 6 11 8 9 10
+List after replace_if:
+     13 13 13 4 5 6 11 8 9 10
+List using replace_copy to cout:
+     17 17 17 4 5 6 11 8 9 10
+List with all elements output as 19s:
+     19 19 19 19 19 19 19 19 19 19</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="rep_6131.htm"><B><I>replace</B></I></A>, <A HREF="rep_6837.htm"><B><I>replace_if</B></I></A>, <A HREF="rep_8915.htm"><B><I>replace_copy_if</B></I></A></P>
+<HR>
+<A HREF="rep_6131.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="rep_8915.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

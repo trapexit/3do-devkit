@@ -1,0 +1,201 @@
+	machine	MC68020
+	CASE	ON
+	
+	IMPORT directPixmapAddr:DATA
+	IMPORT directRowBytes:DATA
+	IMPORT directClipRect:DATA
+	
+; definitions for GWorldData
+
+initialized	equ	0					; word
+rowBytes	equ	initialized+2		; word (unsigned)
+pixmapAddr	equ	rowBytes+2		; long
+clipRect	equ	pixmapAddr+4	; 4 words (top, left, bottom, right)
+nextPixel	equ	clipRect+8		; long
+lastPixel	equ	nextPixel+4		; long
+	
+	
+; definitions for Rect structure
+top	equ	0
+left	equ	top+2
+bottom	equ	left+2
+right	equ	bottom+2
+
+;definitions for parms
+
+r		equ	4	; long
+x		equ	r+6	; word
+y		equ	x+4	; word
+data	equ	y+2	; long
+pixel	equ	y+2	; long
+
+initGWorldRow	PROC	EXPORT	; int InitGWorldData(Rect *r, short x, short y, GWorldData *data)
+	; return 0 if cannot initialize properly, -1 if OK
+	;dc.w $a9ff
+	move.l r(sp),A0		; address of rect
+	move.l (a0),d0		; top, left
+	add.w x(sp),d0		; left+x
+	
+	move.l a1,-(sp)		; save a1 -- increment subsequent stack addresses by 4
+	
+	move.l data+4(sp),a1	; address of GWorldData
+	lea clipRect(a1),a0	
+	cmp.w left(a0),d0		; clipRect.left
+		blt.s @1			; out of bounds
+	cmp.w right(a0)	,d0	; clipRect.right
+		bgt.s @1			; out of bounds
+		
+	lsl.w #2,d0				; x = x*4
+	move.w d0,x+4(sp)			; save x*4
+	
+	swap d0					; d0.w = r.top
+	add.w y+4(sp),d0			; top+y
+	
+	cmp.w top(a0),d0		; clipRect.top
+		blt.s @1			; out of bounds
+	cmp.w bottom(a0)	,d0	; clipRect.top
+		bgt.s @1			; out of bounds
+		
+	mulu.w	rowBytes(a1),d0	; y = y*rowbytes
+	move.l pixmapAddr(a1),a0
+	adda.w	x+4(sp),a0		; x*4
+	add.l	d0,a0			; &directPixmapAddr[(long)y*directRowBytes + x*4]
+	
+	move.l a0,nextPixel(a1)	; address for next pixel
+	sub.w x+4(sp),a0		; now calculate address of last pixel
+	add.w rowBytes(a1),a0	; point to start of next row
+	subq	#4,a0			; back it up to end of this row
+	move.l a0,lastPixel(a1)	; save it
+	
+	moveq.l #-1,d0			; return result = -1 for OK
+	
+@2:	; d0 = return result (0 = error, -1 = OK)
+	move.l (sp)+,a1			; restore a1
+	move.l data(sp),a0		; address of GWorldData
+	move.w d0,initialized(a0)	; set the flag
+	rts
+	
+@1:	
+	clr.l	d0				; result = 0 for error
+	bra.s @2
+	
+	ENDPROC
+	
+getPixelandIncrement	proc	EXPORT	; StorePixelandIncrement(GWorldData, RGBColor *pixel)
+	move.l a1,-(sp)			; save a1
+	move.l 8(sp),a1			; GWorldData pointer
+	tst.w	initialized(a1)	; is it initialized?
+		beq.s @1			; nope -- bail out
+	move.l nextPixel(a1),a0	; address of pixel
+	cmp.l  lastPixel(a1),a0	; compare them
+		beq.s @2			; branch if at end of row
+	addq.l	#4,nextPixel(a1)	; increment pointer
+@2:	move.l 12(sp),a1		; RGB pixel address
+	clr.l (a1)				; clear dest
+	clr.w 4(a1)				; clear dest
+	move.b 1(a0),0(a1)		; get red
+	move.b 2(a0),2(a1)		; get green
+	move.b 3(a0),4(a1)		; get blue
+	
+@1:
+	move.l (sp)+,a1			; restore a1
+	rts
+	
+storePixelandIncrement	proc	EXPORT	; StorePixelandIncrement(GWorldData, RGBColor *pixel)
+	move.l a1,-(sp)			; save a1
+	move.l 8(sp),a1			; GWorldData pointer
+	tst.w	initialized(a1)	; is it initialized?
+		beq.s @1			; nope -- bail out
+	move.l nextPixel(a1),a0	; address of pixel
+	cmp.l  lastPixel(a1),a0	; compare them
+		beq.s @2			; branch if at end of row
+	addq.l	#4,nextPixel(a1)	; increment pointer
+@2:	move.l 12(sp),a1		; RGB pixel address
+	move.b 0(a1),1(a0)		; store red
+	move.b 2(a1),2(a0)		; store green
+	move.b 4(a1),3(a0)		; store blue
+@1:
+	move.l (sp)+,a1			; restore a1
+	rts
+
+myGetPixel	PROC	EXPORT	; myGetPixel(Rect *r, short x, short y, RGBColor *pixel)
+
+	move.l r(sp),A0		; address of rect
+	move.l (a0),d0		; top, left
+	add.w x(sp),d0		; left+x
+	
+	lea directClipRect(A5),a0	
+	cmp.w left(a0),d0		; clipRect.left
+		blt.s @1			; out of bounds
+	cmp.w right(a0)	,d0	; clipRect.right
+		bgt.s @1			; out of bounds
+		
+	lsl.w #2,d0				; x = x*4
+	move.w d0,x(sp)			; save x*4
+	
+	swap d0					; d0.w = r.top
+	add.w y(sp),d0			; top+y
+	
+	cmp.w top(a0),d0		; clipRect.top
+		blt.s @1			; out of bounds
+	cmp.w bottom(a0)	,d0	; clipRect.top
+		bgt.s @1			; out of bounds
+		
+	mulu.w	directRowBytes(a5),d0	; y = y*rowbytes
+	move.l directPixmapAddr(a5),a0
+	adda.w	x(sp),a0		; x*4
+	add.l	d0,a0			; &directPixmapAddr[(long)y*directRowBytes + x*4]
+	
+	move.l a1,-(sp)
+	move.l pixel+4(sp),a1
+	clr.l (a1)				; clear dest
+	clr.w 4(a1)				; clear dest
+	move.b 1(a0),0(a1)		; get red
+	move.b 2(a0),2(a1)		; get green
+	move.b 3(a0),4(a1)		; get blue
+	move.l (sp)+,a1
+@1:
+	rts
+	
+	ENDPROC
+	
+mySetPixel	PROC	EXPORT	; mySetPixel(Rect *r, short x, short y, RGBColor *pixel)
+
+	move.l r(sp),A0		; address of rect
+	move.l (a0),d0		; top, left
+	add.w x(sp),d0		; left+x
+	
+	lea directClipRect(A5),a0	
+	cmp.w left(a0),d0		; clipRect.left
+		blt.s @1			; out of bounds
+	cmp.w right(a0)	,d0	; clipRect.right
+		bgt.s @1			; out of bounds
+		
+	lsl.w #2,d0				; x = x*4
+	move.w d0,x(sp)			; save x*4
+	
+	swap d0					; d0.w = r.top
+	add.w y(sp),d0			; top+y
+	
+	cmp.w top(a0),d0		; clipRect.top
+		blt.s @1			; out of bounds
+	cmp.w bottom(a0)	,d0	; clipRect.top
+		bgt.s @1			; out of bounds
+		
+	mulu.w	directRowBytes(a5),d0	; y = y*rowbytes
+	move.l directPixmapAddr(a5),a0
+	adda.w	x(sp),a0		; x*4
+	add.l	d0,a0			; &directPixmapAddr[(long)y*directRowBytes + x*4]
+	
+	move.l a1,-(sp)
+	move.l pixel+4(sp),a1
+	move.b 0(a1),1(a0)		; store red
+	move.b 2(a1),2(a0)		; store green
+	move.b 4(a1),3(a0)		; store blue
+	move.l (sp)+,a1
+@1:
+	rts
+	
+	ENDPROC
+	
+	END

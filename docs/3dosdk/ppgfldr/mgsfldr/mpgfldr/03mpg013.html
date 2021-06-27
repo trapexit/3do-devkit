@@ -1,0 +1,26 @@
+<TITLE>Using Probes</TITLE>
+<H1><LINK NAME="XREF39616">Using Probes</LINK></H1><HR>
+A Probe is an item that gives a program access to the output of a DSP instrument. It is sort of like the opposite of a knob. Multiple probes can be connected to a single output. A probe does not interfere with a connection between instruments. <P>
+<H2>Creating Probes</H2>
+You can create a probe for any named output of any DSP instrument using this call:<P>
+<DL>
+<DD><CODE>Item CreateProbe( Item Instrument, const char *Name, const TagArg *Tags )<BR>
+Item CreateProbeVA( Item Instrument, const char *Name, uint32 tag1, ... )</CODE><BR>
+</DL>
+<CODE>CreateProbe()</CODE> accepts three arguments: <CODE>Item</CODE>, the Item number of the instrument; <CODE>Name</CODE>, the name of the output; and <CODE>Tags</CODE>, which should be a NULL pointer because there are currently no tag arguments defined for Probes. The call creates a Probe item that provides a fast connection between a task and one of an instrument's outputs. You can then call <CODE>ReadProbe()</CODE> to poll the value of output. When you finish with the probe item, you should call <CODE>DeleteProbe()</CODE> to deallocate the item. <P>
+<CODE>CreateProbe()</CODE> returns the item number of the probe if successful, or an error code (a negative value) if an error occurs. <P>
+<H2>Reading Probes</H2>
+You can read the most recent value of an output for which you have created a Probe. To do so, use the <CODE>ReadProbe()</CODE> call:<P>
+<DL>
+<DD><CODE>Err ReadProbe( Item ProbeItem, int32 *ValuePtr )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>ProbeItem</CODE>, the Item number of the knob to be tweaked; and <CODE>ValuePtr</CODE>, a pointer to where to put result. The task must have write permission for the address specified by <CODE>ValuePtr</CODE>. <P>
+<CODE>ReadProbe()</CODE> reads the instantaneous value of an instrument output. It is useful for reading the output of slowly changing instruments such as <CODE>envelope.dsp</CODE>, <CODE>envfollower.dsp</CODE>, <CODE>minimum.dsp</CODE>, and <CODE>maximum.dsp</CODE>. It replaces the now obsolete function <CODE>DSPReadEO()</CODE>.<P>
+<CODE>ReadProbe()</CODE> returns a non-negative value if successful, or an error code ( a negative value) if unsuccessful. <P>
+<H2>Deleting Probes</H2>
+When you are finished using a Probe, you should delete it with this call:<P>
+<DL>
+<DD><CODE>Err DeleteProbe( Item ProbeItem )</CODE><BR>
+</DL>
+The call accepts one argument: <CODE>ProbeItem</CODE>, the Item number of the Probe to delete. <CODE>DeleteProbe()</CODE> deletes the probe item created by <CODE>CreateProbe()</CODE>, freeing its resource and disconnecting the task that created the probe item from the instrument containing the probe. <P>
+<CODE>DeleteProbe()</CODE> returns a non-negative value if successful, or an error code ( a negative value) if an error occurs. <A NAME="XREF10318"></A><P>

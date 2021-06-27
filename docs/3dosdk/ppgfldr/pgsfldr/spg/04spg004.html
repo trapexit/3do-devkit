@@ -1,0 +1,7 @@
+<TITLE>Changing the Priority of a Node</TITLE>
+<H1>Changing the Priority of a Node</H1><HR>
+List nodes are often ordered by priority. You can change the priority of a list node (and thereby change its position in the list) by using the <CODE>SetNodePri()</CODE> function:<P>
+<DL>
+<DD><CODE>uint8 SetNodePri( Node *n, uint8 newpri )</CODE><BR>
+</DL>
+The <CODE>n</CODE> argument is a pointer to the list node whose priority you want to change. The <CODE>newpri</CODE> argument specifies the new priority for the node (a value from 0 to 255). The function returns the previous priority of the node. When you change the priority of a node, the kernel automatically moves the node immediately.<A NAME="XREF14736"></A><P>

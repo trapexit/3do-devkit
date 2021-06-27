@@ -1,0 +1,35 @@
+<Title>ssplGetSpoolerStatus</Title>
+<A NAME="XREF10988"><H1>ssplGetSpoolerStatus </A></H1>
+<A NAME="XREF37996"></A> Get SoundSpooler status flags.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ssplGetSpoolerStatus (const SoundSpooler *sspl)</CODE><P>
+<H3>Description</H3>
+Returns a set of flags SSPL_STATUS_F_ flags describing the current state of the SoundSpooler. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<H3>Return Value</H3>
+Any combination of these flags (always a positive value): <P>
+<DL>
+<DT>SSPL_STATUS_F_ACTIVE
+<DD>This flag are SoundBufferNodes in the SoundSpooler's active queue. It is set by <CODE>ssplSendBuffer()</CODE>. It can be cleared by <CODE>ssplProcessSignals()</CODE> when all of the buffers in the active queue have completed. It is always cleared by <CODE>ssplReset()</CODE> and <CODE>ssplAbort()</CODE>. You can use this flag as an indicator that all of the sound data submitted by <CODE>ssplSendBuffer()</CODE> has been played as of the most recent call to <CODE>ssplProcessSignals()</CODE>. 
+</DL>
+<DL>
+<DT>SSPL_STATUS_F_STARTED
+<DD>This flag indicates that the SoundSpooler has been started. Unless it has been paused, it is playing sound or will as soon as there is some to play. This flag is set by <CODE>ssplStartSpooler()</CODE> and cleared by <CODE>ssplStopSpooler()</CODE> and <CODE>ssplAbort()</CODE>. 
+</DL>
+<DL>
+<DT>SSPL_STATUS_F_PAUSED
+<DD>This flag indicates that the SoundSpooler has been paused. It is only meaningful if SSPL_STATUS_F_STARTED is also set. This flag is set by <CODE>ssplPause()</CODE> and cleared by <CODE>ssplResume()</CODE>,<CODE> ssplStartSpooler()</CODE>, and <CODE>ssplStopSpooler()</CODE>. 
+</DL>
+<H3>Caveats</H3>
+This state of SSPL_STATUS_F_ACTIVE is undefined when inside any SoundSpooler callback function. This is the case because the callback functions can be called inside the loop that processes the active queue. No guarantee is made about whether a SoundBufferNode is removed from the active queue before or after the callback functions are called. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr107.html#XREF27716"><CODE>ssplIsSpoolerActive</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>(), <A HREF="./02mpr110.html#XREF20300">ssplProcessSignals</A>() </CODE><P>
+</CODE>

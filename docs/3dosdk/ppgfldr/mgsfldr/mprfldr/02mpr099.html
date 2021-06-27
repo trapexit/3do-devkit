@@ -1,0 +1,25 @@
+<Title>ssplDeleteSoundSpooler</Title>
+<A NAME="XREF13890"><H1>ssplDeleteSoundSpooler </A></H1>
+<A NAME="XREF40624"></A> Delete a SoundSpooler.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplDeleteSoundSpooler ( SoundSpooler *sspl )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplDeleteSoundSpooler()</CODE> disposes of a SoundSpooler created by <CODE>ssplCreateSoundSpooler()</CODE>  after first stopping it with <CODE>ssplStopSpooler()</CODE>. All SoundBufferNodes associated with the SoundSpooler are deleted. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. Starting with music.lib v22, can be NULL. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Caveats</H3>
+Doesn't tolerate a NULL sspl pointer prior to music.lib v22. <P>
+<H3>Note</H3>
+This function does no notification of SoundBufferNode removal from the active queue. If this is an issue, call <CODE>ssplAbort()</CODE> prior to calling this function. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr098.html#XREF39302"><CODE>ssplCreateSoundSpooler</A>(), <A HREF="./02mpr121.html#XREF17770">ssplStopSpooler</A>() </CODE><P>
+</CODE>

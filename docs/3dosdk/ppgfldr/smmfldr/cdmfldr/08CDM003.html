@@ -1,0 +1,128 @@
+<TITLE>DSP Instrument Templates</TITLE>
+<H1><LINK NAME="XREF41866">DSP Instrument Templates</LINK></H1><HR>
+A DSP instrument template contains information used by the audio folio to load the program into the DSP, allocate the necessary resources, and to control the program via knobs.<P>
+The template consists of chunks stored in 3DO file format that specify an offset into the DSP code. The offset points to the first DSP code location that references the resource. The code at that location begins a singly linked list of other locations to be resolved with the same value, ending with a NULL field. The fields patched are all 10 bits right-justified.<P>
+The chunks in a DSPP FORM include:<P>
+
+<UL>
+<LI><A HREF="#XREF25510">DCOD Chunk (Code Plus TagArgs)</A>
+<LI><A HREF="#XREF10686">DKNB Chunk (Knob)</A>
+<LI><A HREF="#XREF19989">DRSC Chunk (Resource Allocation Request)</A>
+<LI><A HREF="#XREF14022">DRLC Chunk (Relocation)</A>
+<LI><A HREF="#XREF21605">DNMS Chunk (Packed Resource Names)</A>
+</UL>
+<A NAME="XREF25510"><H2>DCOD Chunk (Code Plus TagArgs)</A></H2>
+The beginning of a DCPD chunk contains a table with entries for each subchunk, as follows:<P>
+<CODE>
+<PRE>
+int32    dcod_Type 
+int32    dcod_Offset
+int32    dcod_Size
+</CODE>
+</PRE>
+There are three possible values for dcod_Type: <P>
+<UL>
+<LI>DCOD_INIT_DSPP = initialization code for DSP
+<LI>DCOD_RUN_DSPP = run time DSP code
+<LI>DCOD_ARGS = TagArgs with null terminator
+</UL>
+<A NAME="XREF10686"><H2>DKNB Chunk (Knob)</A></H2>
+The DKNB Chunk is an array of knob declarations used to control DSP programs, typically through the EI stack. Knobs may require single or double precision EI space or they may be virtual knobs that control ARM parameters and require no EI space.<P>
+<CODE>
+<PRE>
+int32 dknb_Next   /* offset in chunk of next knob */
+int32 dknb_Min
+int32 dknb_Max
+int32 dknb_Nominal
+int32 dknb_NumResources
+char dknb_Name[AF_MAX_NAME_SIZE]
+arrayof
+int32 dknr_RsrcIndex
+int32 dknr_CalcType
+int32 dknr_Data1
+int32 dknr_Data2
+</CODE>
+</PRE>
+The CalcType (see the table below) determines how the knob parameters are converted.<P>
+<PRE>
+<B>Table 1: </B><I>  CalcType and available resources.</I>
+-------------------------------------------------------
+CALC_LINEAR     |Resource = knob_value * Data1 + Data2 
+-------------------------------------------------------
+CALC_INVERT     |Resource = (Data1/knob_value) + Data2 
+-------------------------------------------------------
+CALC_LINEAR_FP  |Resource = knob_value * Data1 + Data2 
+                |(Multiplication is fixed point)       
+-------------------------------------------------------
+CALC_SIN        |Resource = sin( knob_value *          
+                |Data1)*Data (Useful for cordics and   
+                |State Variable Filter)                
+-------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF14022"><H2>DRLC Chunk (Relocation)</A></H2>
+A DRLC chunk is an array of relocation commands consisting of the following:<P>
+<CODE>
+<PRE>
+uchar    drlc_Attribute                        /* of resource */
+uchar    drlc_Flags
+uchar    drlc_Width                        /* of field to update */
+uchar    drlc_Bit                         /* bit position of LSB of field*/
+int32    drlc_CodeIndex                        /* Index of subchunk in DCOD */
+int32    drlc_RsrcIndex                        /* Index of entry in Resource Chunk */
+int32    drlc_CodeOffset                        /* Offset within subchunk */
+</CODE>
+</PRE>
+Some important fields are discussed in the following table<P>
+<PRE>
+<B>Table 2: </B><I> DLRC chunk fields.</I>
+--------------------------------------------------------
+DLRC_Attribute|Used to calculate the relocation value   
+              |from the allocated value. An example     
+              |would be the STATUS address for a FIFO as
+              |opposed to the normal FIFO address.      
+--------------------------------------------------------
+DRLC_ADD      |Adds allocated value to current contents 
+              |of word pointed to by CodeOffset instead 
+              |of simply setting contents. Generally    
+              |used for relocating branches by          
+              |referencing EN Resource. When the EN     
+              |instruction space is allocated, the new  
+              |base address is added to the offset      
+              |currently compiled for each branch.      
+--------------------------------------------------------
+DRLC_LIST     |The CodeOffset points to a singly linked 
+              |list of fields to be set to the allocated
+              |value. This field should not be set if   
+              |DRLC_ADD is set.                         
+--------------------------------------------------------
+DRLC_32       |32-bit data are relocated. Offsets are   
+              |indexes into uint32 instead of ushort    
+              |arrays.                                  
+--------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF19989"><H2>DRSC Chunk (Resource Allocation Request)</A></H2>
+A DRSC chunk consists of an array of resource requests, as follows:<P>
+<CODE>
+<PRE>
+int32 drsc_Type
+int32 drsc_Many
+various drsc_Allocated                                 /* Filled when allocated */
+int32 drsc_References                                   /* Count for exported references */
+</CODE>
+</PRE>
+The following types are supported are:<P>
+<UL>
+<LI>DRSC_EN_MEM = EN Memory for DSPP programs
+<LI>DRSC_EI_MEM = EI Input Memory for knobs
+<LI>DRSC_I_MEM = I Memory
+<LI>DRSC_EO_MEM = EO Output Memory for debugging
+<LI>DRSC_RBASE4 = RBASE with 4 I regs
+<LI>DRSC_RBASE8 = RBASE with 8 I regs
+<LI>DRSC_INFIFO
+<LI>DRSC_OUTFIFO
+<LI>DRSC_TICKS = CPU cycles in DSPP
+</UL>
+<A NAME="XREF21605"><H2>DNMS Chunk (Packed Resource Names)</A></H2>
+A DNMS chunk is a packed array of Forth/Pascal style strings. Resources without names have a 0-byte placeholder.<P>

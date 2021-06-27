@@ -1,0 +1,41 @@
+<Title>AllocMemFromMemList</Title>
+<A NAME="XREF20160"><H1>AllocMemFromMemList </A></H1>
+<A NAME="XREF30059"></A>Allocates memory from a private memory pool.<P>
+<H3>Synopsis</H3>
+<CODE>void *AllocMemFromMemList( MemList *ml, int32 size, uint32 memflags)</CODE><P>
+<H3>Description</H3>
+A task can do its own memory management by creating one or more private memory lists. Use this procedure to allocate a memory block from a private memory list. <P>
+<B>Note: </B> Most applications do not need to do their own memory management. When you use standard memory-allocation procedures like <CODE>AllocMem()</CODE>, the details of memory management are handled for you by the kernel. <P>
+To create a private memory list, use the <CODE>AllocMemList()</CODE> procedure. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ml
+<DD>A pointer to the private memory list from which to allocate the memory block. 
+</DL>
+<DL>
+<DT>size
+<DD>The size of the memory block to allocate, in bytes. 
+</DL>
+<DL>
+<DT>memflags
+<DD>Flags that specify the type of memory to allocate. These flags include MEMTYPE_ANY, MEMTYPE_VRAM, MEMTYPE_DRAM, MEMTYPE_BANKSELECT, MEMTYPE_BANK1, MEMTYPE_BANK2, MEMTYPE_DMA, MEMTYPE_CEL, MEMTYPE_AUDIO, MEMTYPE_DSP, MEMTYPE_FILL, MEMTYPE_INPAGE, MEMTYPE_TRACKSIZE, and MEMTYPE_STARTPAGE. For information about these flags, see the description of AllocMem(). 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a pointer to the allocated memory or NULL if the memory couldn't be allocated.<P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+To free a memory block allocated with <CODE>AllocMemFromMemList()</CODE>, use the <CODE>FreeMemToMemList()</CODE> procedure. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr008.html#XREF23775"><CODE>AllocMemList</A>(), <A HREF="./01spr066.html#XREF14037">FreeMemToMemList</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF20160"></LINK></H1><HR>

@@ -1,0 +1,21 @@
+<Title>ChangeDirectory</Title>
+<A NAME="XREF36854"><H1>ChangeDirectory </A></H1>
+<A NAME="XREF26802"></A> Changes the current directory.<P>
+<H3>Synopsis</H3>
+<CODE>Item ChangeDirectory( char *path )</CODE><P>
+<H3>Description</H3>
+Changes the current task's working directory to the absolute or relative location specified by the path, and returns the item number for the directory. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>path
+<DD>An absolute or relative pathname for the new current directory. 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of the new directory or a negative error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr010.html#XREF39534"><CODE>GetDirectory</A>() </CODE><P>
+</CODE>

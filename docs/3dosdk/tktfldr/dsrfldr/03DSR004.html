@@ -1,0 +1,88 @@
+<Title>CtlMaker</Title>
+<A NAME="XREF14757"><H1>CtlMaker</A></H1>
+<A NAME="XREF30770"></A>Creates Control Subscriber data chunks.<P>
+<H3>Synopsis</H3>
+<CODE>CtlMaker &lt;flags&gt; -o &lt;file&gt; -time &lt;stream time&gt; -goto &lt;marker value&gt; -pause &lt;pause duration&gt; -stop -alarm &lt;new Time&gt; -options &lt;chunk options&gt;</CODE><P>
+<H3>Description</H3>
+CtlMaker is an MPW tool to create Control Subscriber data chunks that can be woven into streams to accomplish:<P>
+<UL>
+<LI>branching 
+<LI>pausing 
+<LI>stopping 
+<LI>looping
+</UL>
+All but looping are simple and require little further explanation. Generally, the way the Control subscriber works is that it receives a chunk from the stream and executes a command or set of commands based upon the chunk it receives. There are currently 4 types of control chunks that are user specifiable. These are:<P>
+<DL>
+<DT>SubChunk
+<DD>Action taken by Control Subscriber 
+</DL>
+<DL>
+<DT>GOTO 
+<DD>Execute a <CODE>DSGoMarker()</CODE> call to the streamer, effecting a branch in the stream's data flow.
+</DL>
+<DL>
+<DT>PAUS 
+<DD>Call <CODE>DSStopStream()</CODE>, pause the specified amount of audio time, then call <CODE>DSStartStream()</CODE> to resume playback.
+</DL>
+<DL>
+<DT>STOP 
+<DD>Call <CODE>DSStopStream()</CODE>, halting playback altogether. 
+</DL>
+<DL>
+<DT>ALRM 
+<DD>Used in looping; see comments below.
+</DL>
+The last subchunk type, ALRM, is used in looping and requires some additional explanation. When a stream is performing a looping operation, it is frequently desirable to allow all data in the looping section to playback before restarting the loop. Since subscribers handle data flushing based on receipt of the "clocksync" message, it would be inappropriate to set the clock back (in looping) the moment the data representing the branch arrival was received. Doing so would cause desirable data to be flushed, resulting in a perceived gap in the loop. The ALRM chunk is used to deal with this situation in the following way.<P>
+When an ALRM chunk is receive by the Control subscriber, the subscriber uses the timestamp built in to every chunk, and sets a timer to expire when that actual stream time is to happen. When the stream time arrives that matches the chunk, the Control Subscriber calls <CODE>DSSetClock()</CODE> to set the stream time to the specified value.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-o &lt;file&gt; 
+<DD>Output file name.
+</DL>
+<DL>
+<DT>-time &lt;stream time&gt;
+<DD>Timestamp for output chunk.
+</DL>
+<DL>
+<DT>-goto &lt;marker value&gt;
+<DD>Place to branch in the stream.
+</DL>
+<DL>
+<DT>-pause &lt;pause duration&gt;
+<DD>Length of pause in stream time.
+</DL>
+<DL>
+<DT>-stop
+<DD>Specify creation of a STOP chunk.
+</DL>
+<DL>
+<DT>-alarm &lt;new Time&gt;
+<DD>Mew stream clock value.
+</DL>
+<DL>
+<DT>-options &lt;chunk options&gt;
+<DD>Options for chunk, if applicable.
+</DL>
+<H3>Examples</H3>
+1. Create a STOP subchunk at stream time = 256, with options # set to 0x1F00. Put the output in file <I>test</I> <P>
+<CODE>
+<PRE>
+CtlMaker -stop -o test -time 0x100 -options 0x1f00 
+</CODE>
+</PRE>
+2. Create a PAUS subchunk at stream time = 0x20000, with options # set to 1, and pause time = 240. Put the output in file <I>test</I> <P>
+<CODE>
+<PRE>
+CtlMaker -pause 240 -o test -options 1 -time 0x20000
+</CODE>
+</PRE>
+3. Create an ALRM subchunk at stream time = 1000, with options # set to 1, and alarm newTime = 0. Put the output in file <I>test</I> <P>
+<CODE>CtlMaker -alarm 0 -o test -options 1 -time 1000</CODE><P>
+4. Create a GOTO subchunk at stream time = 1000, with options # set to 1, destination = 240. Put the output in file <I>test</I>. <P>
+<CODE>CtlMaker -goto 240 -o test -options 1 -time 1000</CODE><P>
+To verify any of the examples, use:<P>
+<CODE>
+<PRE>
+dumpfile test
+</CODE>
+</PRE>

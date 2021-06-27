@@ -1,0 +1,31 @@
+<Title>fontviewer</Title>
+<A NAME="XREF21459"><H1>fontviewer</A></H1>
+<A NAME="XREF37934"></A>Displays and manipulates a font.<P>
+<H3>Synopsis</H3>
+<CODE>fontviewer &lt;fontFilename&gt; [-b &lt;backgroundcel&gt;] [-t 
+&lt;textfilename&gt;]</CODE><P>
+<H3>Description</H3>
+Simple viewer program for anti-aliased fonts created by 3DO FontWriter. <P>
+The arrow keys let you scroll around the displayed font cel. The A button 
+forces a reload of the font from disk, so that you can work on a font, 
+save a new version of it, and just hit A to view the results without 
+having to stop/restart the program. The C button toggles between x1 and x2 
+magnification of the displayed font. The B button toggles the background 
+cel (if any) on and off. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fontFilename
+<DD>Name of font in which text is displayed 
+</DL>
+<DL>
+<DT>backgroundcel
+<DD>Background cel against which text is displayed 
+</DL>
+<DL>
+<DT>textfilename
+<DD>Name of file containing text to display 
+</DL>
+<H3>Associated Files</H3>
+fontviewer.c, fontviewer.make<P>
+<H3>Location</H3>
+examples/Fonts/FontViewer <P>

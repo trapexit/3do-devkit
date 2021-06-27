@@ -1,0 +1,39 @@
+<TITLE>GetBankBits</TITLE>
+<A NAME="XREF12605"><H1>GetBankBits </A></H1>
+<A NAME="XREF32379"></A>Finds out which VRAM bank contains a memory location.<P>
+<H3>Synopsis</H3>
+<CODE>uint32 GetBankBits( const void *a )</CODE><P>
+<H3>Description</H3>
+In the current 3DO hardware, 2 MB of video random-access memory (VRAM) is divided into two banks, each containing 1 MB of VRAM. Fast VRAM memory transfers using the SPORT bus can take place only between memory locations in the same bank. Use this procedure to find out which VRAM bank contains a specified memory location. <P>
+When a task allocates VRAM, the memory block contains memory from one VRAM bank or the other; it never contains memory from both banks. Thus, if any memory location in a block is in one VRAM bank, the entire block is guaranteed to be in the same bank. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>a
+<DD>A pointer to the memory to be examined. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a set of memory flags in which the following flags can be set: <P>
+<DL>
+<DT>MEMTYPE_BANKSELECT
+<DD>Set if the memory is contained in VRAM. 
+</DL>
+<DL>
+<DT>MEMTYPE_BANK1
+<DD>Set if the memory is in the primary VRAM Bank. 
+</DL>
+<DL>
+<DT>MEMTYPE_BANK2
+<DD>Set if the memory is in the secondary VRAM bank. 
+</DL>
+If the memory is not in VRAM, the procedure returns 0. <P>
+<H3>Implementation</H3>
+Macro implemented in mem.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr074.html#XREF40631"><CODE>GetMemType</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF12605"></LINK></H1><HR>

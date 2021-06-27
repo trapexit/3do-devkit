@@ -1,0 +1,75 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF21782">Function Calls</LINK></H1><HR>
+These Music library function calls control the advanced sound player. 
+See <A HREF="../mprfldr/02mpr.html#XREF20449">Music Library Calls</A> in the <I>3DO Music and Audio Programmer's Reference</I> for additional information on these calls.<P>
+<H2>Player Management Function Calls</H2>
+The following calls are used to manage <CODE>SPPlayer</CODE>s:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/02mpr068.html#XREF24761">spCreatePlayer</A>()</CODE> Create an <CODE>SPPlayer</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr070.html#XREF29915">spDeletePlayer</A>()</CODE> Delete an <CODE>SPPlayer</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr076.html#XREF26745">spGetPlayerSignalMask</A>()</CODE> Get set of signals player sends to client for an <CODE>SPPlayer</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr092.html#XREF25186">spStartReading</A>()</CODE> Start <CODE>SPPlayer</CODE> reading from an <CODE>SPSound</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr091.html#XREF15941">spStartPlaying</A>()</CODE> Begin emitting sound for an <CODE>SPPlayer</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr093.html#XREF20856">spStop</A>()</CODE> Stop an <CODE>SPPlayer</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr082.html#XREF24746">spPause</A>()</CODE>Pause an <CODE>SPPlayer</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr085.html#XREF28772">spResume</A>()</CODE> Resume playback of an <CODE>SPPlayer</CODE> that has been paused.
+<LI><CODE><A HREF="../mprfldr/02mpr086.html#XREF41970">spService</A>()</CODE> Process signals sent by the <CODE>SPPlayer</CODE>, read and spool more sound data, and process markers.
+<LI><CODE><A HREF="../mprfldr/02mpr077.html#XREF27522">spGetPlayerStatus</A>()</CODE> Get playback status of an <CODE>SPPlayer</CODE>.
+</UL>
+<H2>Sound Management Function Calls</H2>
+The following calls are used to manage <CODE>SPSound</CODE>s:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/02mpr062.html#XREF39542">spAddSample</A>()</CODE> Create an <CODE>SPSound</CODE> for a Sample Item.
+<LI><CODE><A HREF="../mprfldr/02mpr063.html#XREF36046">spAddSoundFile</A>()</CODE> Create an <CODE>SPSound</CODE> for an AIFF sound file.
+<LI><CODE><A HREF="../mprfldr/02mpr084.html#XREF24744">spRemoveSound</A>()</CODE> Remove an <CODE>SPSound</CODE> from an <CODE>SPPlayer</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr075.html#XREF12284">spGetPlayerFromSound</A>()</CODE> Get <CODE>SPPlayer</CODE> that owns the specified 
+<CODE>SPSound</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr079.html#XREF14588">spIsSoundInUse</A>()</CODE> Determines if <CODE>SPPlayer</CODE> is currently reading from a particular <CODE>SPSound</CODE>.
+</UL>
+<H2>Marker Management Function Calls</H2>
+The following calls are used to add and remove <CODE>SPMarker</CODE>s or set up a static action at an <CODE>SPMarker</CODE>:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/02mpr061.html#XREF17185">spAddMarker</A>() </CODE>Add a new <CODE>SPMarker</CODE> to an <CODE>SPSound</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr083.html#XREF25941">spRemoveMarker</A>() </CODE>Remove an <CODE>SPMarker</CODE> from an <CODE>SPSound</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr072.html#XREF37325">spFindMarkerName</A>()</CODE> Finds an SPMarker by name belonging to the specified <CODE>SPSound</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr078.html#XREF27293">spGetSoundFromMarker</A>()</CODE> Returns a pointer to the <CODE>SPSound</CODE> to which the specified <CODE>SPMarker</CODE> belongs.
+<LI><CODE><A HREF="../mprfldr/02mpr074.html#XREF11695">spGetMarkerPosition</A>()</CODE> Returns the frame position of an <CODE>SPMarker</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr073.html#XREF41518">spGetMarkerName</A>()</CODE> Returns the name of an <CODE>SPMarker</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr067.html#XREF24196">spContinueAtMarker</A>()</CODE> Restores the <CODE>SPMarker</CODE> to its default action.
+<LI><CODE><A HREF="../mprfldr/02mpr094.html#XREF41521">spStopAtMarker</A>()</CODE> Stop when playback reaches <CODE>SPMarker</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr064.html#XREF40639">spBranchAtMarker</A>()</CODE>Set up a static branch at an <CODE>SPMarker</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr080.html#XREF21427">spLinkSounds</A>()</CODE> Branch at end of one <CODE>SPSound</CODE> to beginning of another.
+<LI><CODE><A HREF="../mprfldr/02mpr081.html#XREF27508">spLoopSound</A>()</CODE>Branch at end of an <CODE>SPSound</CODE> back to its beginning.
+</UL>
+<H2>Decision Function Function Calls</H2>
+The following calls are used to install and remove decision functions and to set <CODE>SPAction</CODE> from within decision functions:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/02mpr088.html#XREF33640">spSetDefaultDecisionFunction</A>()</CODE> Install a global decision function to be called for every <CODE>SPMarker</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr065.html#XREF40544">spClearDefaultDecisionFunction</A>()</CODE>Removes a global decision function installed by <CODE>spSetDefaultDecisionFunction()</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr089.html#XREF13040">spSetMarkerDecisionFunction</A>()</CODE>Install a marker decision function for the specified <CODE>SPMarker</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr066.html#XREF39335">spClearMarkerDecisionFunction</A></CODE>() Removes a marker decision function
+installed by<CODE> spSetMarkerDecisionFunction()</CODE>. 
+<LI><CODE><A HREF="../mprfldr/02mpr087.html#XREF19779">spSetBranchAction</A>() </CODE>Called from within a decision function to specify that resulting decision is a branch to an <CODE>SPMarker</CODE>.
+<LI><CODE><A HREF="../mprfldr/02mpr090.html#XREF22533">spSetStopAction</A>()</CODE>Called from within a decision function to specify that resulting decision is to stop.
+</UL>
+<H2>Debug Function Calls</H2>
+The following call is used to display debugging information about an <CODE>SPPlayer</CODE>.<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/02mpr071.html#XREF16569">spDumpPlayer</A>() </CODE>Print debug information for an <CODE>SPPlayer</CODE>.
+</UL>
+<H2>Constants</H2>
+The following constants are used to refer to special markers encounted in a sound 
+(see <A HREF="../mprfldr/02mpr062.html#XREF39542">spAddSample</A>() and <A HREF="../mprfldr/02mpr063.html#XREF36046">spAddSoundFile</A>() for details):<P>
+<UL>
+<LI>SP_MARKER_NAME_BEGIN Set to the beginning of the sample 
+<LI>SP_MARKER_NAME_END Set to the end of the sample 
+<LI>SP_MARKER_NAME_SUSTAIN_BEGIN Set to the beginning of the sustain loop if the sample has a sustain loop. 
+<LI>SP_MARKER_NAME_SUSTAIN_END Set to the end of the sustain loop if the sample has a sustain loop. 
+<LI>SP_MARKER_NAME_RELEASE_BEGIN Set to the beginning of the release loop if the sound file has a release loop. 
+<LI>SP_MARKER_NAME_RELEASE_END Set to the end of the release loop if the sound file has a release loop. 
+</UL>

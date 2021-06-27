@@ -1,0 +1,7 @@
+<TITLE>Unlocking a Semaphore</TITLE>
+<H1><LINK NAME="XREF24767">Unlocking a Semaphore</LINK></H1><HR>
+To unlock a semaphore that you've locked, use the <CODE>UnlockSemaphore()</CODE> function:<P>
+<DL>
+<DD><CODE>Err UnlockSemaphore( Item s )</CODE><BR>
+</DL>
+The <CODE>s</CODE> argument is the item number of the semaphore for the resource you want to unlock. The function returns 0 if successful or an error code (a negative value) if an error occurred. It returns the <CODE>NOTOWNER</CODE> error code if your task did not call <CODE>LockSemaphore()</CODE> for the specified semaphore.<A NAME="XREF25357"></A><P>

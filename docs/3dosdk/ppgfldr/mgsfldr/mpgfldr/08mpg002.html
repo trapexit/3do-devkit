@@ -1,0 +1,33 @@
+<TITLE>Managing Juggler Objects</TITLE>
+<H1>Managing Juggler Objects</H1><HR>
+A group of Music library functions allows a task to manage Juggler objects. The library functions allow a task to initialize the Juggler, define new classes, create objects from those classes, destroy existing objects, and check an object's validity.<P>
+<H2>Initializing the Juggler</H2>
+Before a task can perform any object-oriented work in the Juggler environment, including object management and playing objects with the Juggler, the task must first initialize the Juggler with the following call:<P>
+<DL>
+<DD><CODE>int32 InitJuggler( void )</CODE><BR>
+</DL>
+This call accepts no arguments and, when it executes, initializes the Juggler and its object-oriented programming environment. It also defines the Juggler default classes so the task can create objects or define new classes based on the default classes.<P>
+If successful, <CODE>InitJugger()</CODE> returns 0. If unsuccessful, it returns an error code (a negative value).<P>
+Note that a task <I>must</I> call <CODE>InitJuggler()</CODE> before it can use any Juggler calls or play Juggler objects (including MIDI scores created as described in <A HREF="./09mpg.html#XREF20742">Playing MIDI Scores</A>).<P>
+<H2>Creating an Object</H2>
+To create an object based on an existing class, a task uses this call:<P>
+<DL>
+<DD><CODE>COBObject *CreateObject( COBClass *Class )</CODE><BR>
+</DL>
+The call accepts a single argument: <CODE>*Class</CODE>, a pointer to the <CODE>COBClass</CODE> data structure containing the class definition. There are currently two classes defined in the header file<I> juggler.h</I>. The classes are <CODE>SequenceClass</CODE> and <CODE>CollectionClass</CODE>, which you can supply to this call as the pointers <CODE>&amp;SequenceClass</CODE> and<CODE> &amp;CollectionClass</CODE>.<P>
+When it executes, <CODE>CreateObject()</CODE> allocates memory for the object, sets up object variables and method pointers in that memory, and initializes the object variables to default values.<P>
+<CODE>CreateObject()</CODE> returns a pointer to the <CODE>COBObject</CODE> data structure defining the object if successful or a negative value (an error code) if unsuccessful. The task uses the pointer to the <CODE>COBObject</CODE> structure when sending messages to the object or when using other object management calls on the object.<P>
+<H2>Destroying an Object</H2>
+When a task is finished with an object, it deletes the object from memory using this call:<P>
+<DL>
+<DD><CODE>int32 DestroyObject( COBObject *Object )</CODE><BR>
+</DL>
+The call accepts one argument: <CODE>*Object</CODE>, a pointer to the object to be destroyed. When executed, the call terminates any methods the object may be executing and frees the memory used to contain the object's <CODE>COBObject</CODE> data structure.<P>
+<CODE>DestroyObject()</CODE> returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<H2>Checking an Object's Validity</H2>
+A task must pass a pointer to an object to an object-management call or a method. If the argument does not point to an object, the results of the call are unpredictable. A task can check a pointer's validity using this call:<P>
+<DL>
+<DD><CODE>int32 ValidateObject( COBObject *cob )</CODE><BR>
+</DL>
+The call accepts one argument: <CODE>*cob</CODE>, a pointer to an object's <CODE>COBObject</CODE> data structure. When the call executes, it looks in the object's data structure for an element that confirms the object's validity.<P>
+If the object is valid, <CODE>ValidateObject()</CODE> returns 0. Otherwise, the call returns a negative value (an error code).<P>

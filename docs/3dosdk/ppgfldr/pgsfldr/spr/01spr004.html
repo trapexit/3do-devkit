@@ -1,0 +1,97 @@
+<Title>AllocMem</Title>
+<A NAME="XREF40501"><H1>AllocMem </A></H1>
+<A NAME="XREF23440"></A>Allocate a memory block of a specific type.<P>
+<H3>Synopsis</H3>
+<CODE>void *AllocMem( int32 s, uint32 t )</CODE><P>
+<H3>Description</H3>
+This macro allocates a memory block of a specific type. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>s
+<DD>The size of the memory block to allocate, in bytes. 
+</DL>
+<DL>
+<DT>t
+<DD>Flags that specify the type, alignment, and fill characteristics of memory to allocate. 
+</DL>
+One of the following flags must be set: <P>
+<DL>
+<DT>MEMTYPE_ANY
+<DD>Any memory can be allocated. 
+</DL>
+<DL>
+<DT>MEMTYPE_VRAM
+<DD>Allocate only video random-access memory (VRAM). 
+</DL>
+<DL>
+<DT>MEMTYPE_DRAM
+<DD>Allocate only dynamic random-access memory (DRAM). 
+</DL>
+If a block of VRAM must come from a specific VRAM bank, the following flag must be set: <P>
+<DL>
+<DT>MEMTYPE_BANKSELECT
+<DD>Allocate VRAM from a specific VRAM bank. In addition, one of the following two VRAM bank selection flags must be set: 
+</DL>
+<DL>
+<DT>MEMTYPE_BANK1
+<DD>Allocate only memory from VRAM bank 1. 
+</DL>
+<DL>
+<DT>MEMTYPE_BANK2
+<DD>Allocate only memory from VRAM bank 2. 
+</DL>
+The following flags are provided for compatibility with future hardware. You can set them in addition to the preceding flags. <P>
+<DL>
+<DT>MEMTYPE_DMA
+<DD>Allocate only memory that is accessible via direct memory access (DMA). Currently, all memory is accessible via DMA, but this may not be true in future hardware. Set this flag if you know the memory must be accessible via DMA. 
+</DL>
+<DL>
+<DT>MEMTYPE_CEL
+<DD>Allocate only memory that is accessible to the cel engine. Currently, all memory is accessible to the cel engine, but this may not be true in future hardware. Set this flag if you know the memory will be used for graphics. 
+</DL>
+<DL>
+<DT>MEMTYPE_AUDIO
+<DD>Allocate only memory that can be used for audio data (such as digitized sound). Currently, all memory can be used for audio, but this may not be true in future hardware. Set this flag if you know the memory will be used for audio data. 
+</DL>
+<DL>
+<DT>MEMTYPE_DSP
+<DD>Allocate only memory that is accessible to the digital signal processor (DSP). Currently, all memory is accessible to the DSP, but this may not be true in future hardware. Set this flag if you know the memory must be accessible to the DSP. 
+</DL>
+<p>The following flags specify alignment, fill, and other allocation characteristics: <P>
+<DL>
+<DT>MEMTYPE_FILL
+<DD>Set every byte in the memory block to the value of the lower eight bits of the flags. If this flag is not set, the previous contents of the memory block are not changed. (Using 0 as the fill value can be useful for debugging: Any memory that is inadvertently changed can easily be detected.) 
+</DL>
+<DT>MEMTYPE_INPAGE
+<DD>Allocate a memory block that does not cross page boundaries. 
+</DL>
+<DL>
+<DT>MEMTYPE_STARTPAGE
+<DD>Allocate a memory block that starts on a page boundary. 
+</DL>
+<DL>
+<DT>MEMTYPE_MYPOOL
+<DD>Specifies that the memory block must be allocated only from the task's free memory pool. This means that if there is not sufficient memory in the task's pool, the kernel must not allocate additional memory from the system-wide free memory pool (see Notes).
+</DL>
+<DL>
+<DT>MEMTYPE_SYSTEMPAGESIZE
+<DD>Use the system's protection page size for that type of memory and not the special feature page size. This is necessary for MEMTYPE_VRAM to distinguish between allocations on page boundaries for graphics operations (normally 2 K) and task page sizes (normally 16 K). 
+</DL>
+
+<H3>Return Value</H3>
+The procedure returns a pointer to the memory block that was allocated or NULL if the memory couldn't be allocated.<P>
+<H3>Implementation</H3>
+Macro implemented in mem.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>C Macro Definition 
+</DL>
+<H3>Notes</H3>
+Use <CODE>FreeMem()</CODE> to free a block of memory that was allocated with <CODE>AllocMem()</CODE>. <P>
+If there is insufficient memory in a task's free memory pool to allocate the requested memory, the kernel automatically transfers the necessary pages of additional memory from the system-wide free memory pool to the task's free memory pool. The only exceptions are (1) when there is not enough memory in both pools together to satisfy the request, or (2) when the MEMTYPE_MYPOOL memory flag-which specifies that the memory block must be allocated only from the task's free memory pool-is set.<P>
+You can enable memory debugging in your application by compiling your entire project with the MEMDEBUG value defined on the compiler's command-line. Refer to the <CODE>CreateMemDebug()</CODE> function for more details. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr005.html#XREF36147"><CODE>AllocMemBlocks</A>(), <A HREF="./01spr006.html#XREF20160">AllocMemFromMemList</A>(), <A HREF="./01spr008.html#XREF23775">AllocMemList</A>(), <A HREF="./01spr018.html#XREF21673">ControlMem</A>(), <A HREF="./01spr064.html#XREF31542">FreeMem</A>(), <A HREF="./01spr065.html#XREF12757">FreeMemList</A>(), <A HREF="./01spr066.html#XREF14037">FreeMemToMemList</A>(), <A HREF="./01spr100.html#XREF14880">malloc</A>(), <A HREF="./01spr120.html#XREF32080">ScavengeMem</A>(),</CODE><P>
+</CODE>
+<H1><LINK NAME="XREF40501"></LINK></H1><HR>

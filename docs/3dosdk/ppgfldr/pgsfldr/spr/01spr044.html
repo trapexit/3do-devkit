@@ -1,0 +1,25 @@
+<Title>FindAndOpenDevice</Title>
+<A NAME="XREF33729"><H1>FindAndOpenDevice </A></H1>
+<A NAME="XREF31681"></A>Finds a device by name and opens it.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindAndOpenDevice( const char *name )</CODE><P>
+<H3>Description</H3>
+This macro finds a device whose name matches the name argument. The search is not case-sensitive (that is, the kernel does not distinguish uppercase and lowercase letters in device names). If the device is found, it is opened. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the device to find. 
+</DL>
+<H3>Return Value</H3>
+The macro returns the item number of the device or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in device.h V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>device.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr105.html#XREF24352"><CODE>OpenNamedDevice</A>(), <A HREF="./01spr046.html#XREF40895">FindAndOpenItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF33729"></LINK></H1><HR>

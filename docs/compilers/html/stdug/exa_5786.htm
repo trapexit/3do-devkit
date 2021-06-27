@@ -1,0 +1,52 @@
+<HTML><HEAD><TITLE>Example Program</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Example Program</H2>
+<P>This program illustrates the use of <A HREF="../stdref/aut_3512.htm"><B><I>auto_ptr</I></B></A> to ensure that pointers held in a vector are deleted when they are removed.  Often, we might want to hold pointers to strings, since the strings themselves may be quite large and we'll be copying them when we put them into the vector.  Particularly in contrast to a string, an <B><I>auto_ptr</I></B> is quite small:  hardly bigger than a pointer. (Note that the program runs as is because the vector includes memory.)</P>
+<A HREF="sidebar.htm#sidebar75"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program.</STRONG></A>
+
+<PRE>#include &#60;vector>
+#include &#60;memory>
+#include &#60;string>
+ 
+int main()
+{
+  {
+    // First the wrong way
+    vector&#60;string*> v;
+    v.insert(v.begin(), new string("Florence"));
+    v.insert(v.begin(), new string("Milan"));
+    v.insert(v.begin(), new string("Venice"));
+    
+    // Now remove the first element
+
+    v.erase(v.begin());
+  
+  // Whoops, memory leak
+    // string("Venice") was removed, but not deleted
+    // We were supposed to handle that ourselves
+  }
+  {
+    // Now the right way
+    vector&#60;auto_ptr&#60;string> > v;
+    v.insert(v.begin(), 
+             auto_ptr&#60;string>(new string("Florence")));
+    v.insert(v.begin(), auto_ptr&#60;string>(new string("Milan")));
+    v.insert(v.begin(), auto_ptr&#60;string>(new string("Venice")));
+   
+    // Everything is fine since auto_ptrs transfer ownership of
+    // their pointers when copied
+
+    // Now remove the first element
+    v.erase(v.begin());
+    // Success
+    // When auto_ptr(string("Venice")) is erased (and destroyed) 
+    // string("Venice") is deleted
+  }
+
+  return 0;
+}</PRE>
+<HR>
+<A HREF="dec_3723.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="com_8038.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,28 @@
+<Title>timerread</Title>
+<A NAME="XREF19147"><H1>timerread </A></H1>
+<A NAME="XREF15486"></A>Demonstrates how to use the timer device to read the 
+current system time.<P>
+<H3>Synopsis</H3>
+<CODE>timerread</CODE><P>
+<H3>Description</H3>
+This program demonstrates how to use the timer device to read the current 
+system time. <P>
+The program does the following: <P>
+<UL>
+<LI>Opens the timer device 
+<LI>Creates an IOReq 
+<LI>Initializes an IOInfo structure 
+<LI>Calls <CODE>DoIO()</CODE> to perform the read operation 
+<LI>Prints out the current time 
+<LI>Cleans up 
+</UL>
+Note that Portfolio provides convenience routines to make using the timer 
+device easier. For example, <CODE>CreateTimerIOReq()</CODE> and 
+<CODE>DeleteTimerIOReq()</CODE>. This example intends to show how in 
+general one can communicate with devices in the Portfolio environment. For 
+more information on the timer convenience routines, see the timer device 
+documentation. <P>
+<H3>Associated Files</H3>
+timerread.c<P>
+<H3>Location</H3>
+examples/Kernel <P>

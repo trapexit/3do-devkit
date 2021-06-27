@@ -1,0 +1,25 @@
+<Title>tapoutput.dsp</Title>
+<A NAME="XREF26101"><H1>tapoutput.dsp </A></H1>
+<A NAME="XREF15887"></A> Tap accumulated DSP output.<P>
+<H3>Function</H3>
+This instrument permits reading the accumulated stereo output from all currently running output instruments (e.g. directout.dsp, mixerNxN.dsp). These signals are what is eventually sent to the audio DACs. <P>
+This can be used to snoop the audio output of an application without the application being aware of it (real handy for debugging!). <P>
+It can also be used to provide instrumentation, and such, for the accumulated audio output of the DSP (see examples). <P>
+<H3>Outputs</H3>
+LeftOutput <P>
+RightOutput <P>
+<H3>Resources</H3>
+Ticks: 6 <P>
+Code: 6 words <P>
+<H3>Implementation</H3>
+V24 <P>
+<H3>Examples</H3>
+Combine with delaystereo.dsp to capture the output of an application to memory without the cooperation of the application (kind of like a screen grabber for audio).<P>
+Combine with a pair of envfollower.dsp instruments and a pair of Probes to make stereo VU meters for the accumulated audio of all applications currently running.<P>
+Combine with a pair of envfollower.dsp instruments, a pair of maximum.dsp instruments, and a pair of Probes to make a stereo peak level detector for the accumulated audio of all applications currently running.<P>
+<H3>Notes</H3>
+You should only use this instrument when there's no direct way to get the signals you want. For example, if you want to add metering or peak detection to your own application (as opposed to every application that is running on the 3DO at a given time), split your audio (e.g. the output of a submixer), between directout.dsp and envfollowers instead of using tapoutput.dsp. <P>
+This instrument must be allocated at a lower priority than all the output instruments that you want to snoop. If not, you'll only get the accumulated results of all of the output instruments at higher (and perhaps equal) priority to tapoutput.dsp. Allocate at a priority of 0 to get the accumulated results of most output instruments. <P>
+<H3>See Also</H3>
+<A HREF="./03mpr017.html#XREF12767"><CODE>directout.dsp</A><CODE>, </CODE><A HREF="./03mpr015.html#XREF23152">delaystereo.dsp</A><CODE>, </CODE><A HREF="./03mpr019.html#XREF39052">envfollower.dsp</A><CODE>, </CODE><A HREF="./03mpr032.html#XREF31709">maximum.dsp</A><CODE>, examples/capture_audio.c examples/minmax_audio.c</CODE><P>
+</CODE>

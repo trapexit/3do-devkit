@@ -1,0 +1,30 @@
+# Weaver script for a SlideStream file. Writes a stream header
+# that is compatible with PlayImageStream.c
+
+	WriteStreamHeader
+	StreamBlockSize		32768
+	StreamBuffers		4
+	NumSubsMessages		200
+
+#	Standard delta priorities for the streamer thread and data acquisition
+
+	StreamerDeltaPri	6
+	DataAcqDeltaPri		8
+
+#	Standard subscribers & delta priorities
+
+	Subscriber 			JOIN			7
+	Subscriber 			SNDS			10
+	Subscriber 			CTRL			11
+
+#	16 bit mono, 22KHz, 2:1 compressed, audio in channel zero,
+
+	PreloadInstrument	SA_44K_16B_M
+	AudioClockChan		0
+	EnableAudioMask		0x1
+
+
+#	Input files go here...
+
+	File	bach_44K_16B_M.saudio	0	0
+

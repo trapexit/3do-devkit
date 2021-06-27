@@ -1,0 +1,246 @@
+<TITLE>Division by a constant</TITLE>
+<H1>Division by a constant</H1><HR>
+<H2>About this recipe</H2>
+This recipe shows you:<P>
+<UL>
+<LI>how to improve on the general divide code for the case when the 
+divisor is a constant.
+<LI>the simple case for divide-by-2^n using the barrel shifter. 
+<LI>how to use <B>divc.c</B> to generate ARM code for divide-by-constant.
+</UL>
+<H2>Introduction</H2>
+The ARM instruction set was designed following a RISC philosophy.  One of 
+the consequences of this is that the ARM core has no divide instruction, 
+so divides must be performed using a subroutine.  This means that divide 
+can be quite slow, but this is not a major issue as divide performance is 
+rarely critical for applications.<P>
+It is possible to do better than the general divide in the special case 
+when the divisor is a constant.  This recipe explains how the 
+divide-by-constant technique works, and how to generate ARM assembler code 
+for divide-by-constant.<P>
+<H2>Special case for divide-by-2^n</H2>
+In the special case when dividing by 2^n, a simple right shift is all that 
+is required (instead of a left shift which multiplies by a power of 2).<P>
+There is a small caveat which concerns the handling of signed and unsigned 
+numbers.  For signed numbers, an arithmetic right shift is required as 
+this performs sign extension (to handle negative numbers correctly). In 
+contrast, unsigned numbers require a 0-filled logical shift right. Please 
+refer to an ARM datasheet for more details of the difference between 
+arithmetic and logical shifts.<P>
+    <CODE>
+<PRE>
+    MOV    a2, a1, lsr #5;            unsigned division by 32
+    MOV    a2, a1, asr #10;           signed division by 1024
+</CODE>
+</PRE>
+<H2>Explanation of divide-by-constant ARM code</H2>
+The divide-by-constant technique basically does a multiply in place of the 
+divide, but it is somewhat more complicated than multiply-by-constant (see 
+<A HREF="./2acbb.html#XREF38728">Multiply by a constant</A>):<P>
+<CODE>
+<PRE>
+x/y == x * (1/y)
+           ^^^^^
+</CODE>
+</PRE>
+consider the underlined portion as a 0.32 fixed-point number (truncating 
+any bits past the most significant 32). 0.32 means 0 bits before the 
+decimal point and 32 after it.<P>
+<CODE>
+<PRE>
+    == (x * (2^32/y)) / 2^32
+            ^^^^^^^^
+</CODE>
+</PRE>
+the underlined portion here is a 32.0 bit fixed-point number<P>
+<CODE>
+<PRE>
+    == (x * (2^32/y)) &gt;&gt; 32
+</CODE>
+</PRE>
+This is effectively returning the top 32-bits of the 64-bit product of x 
+and (2^32/y).<P>
+If y is a constant, then (2^32/y) is obviously also a constant.<P>
+For certain y, the reciprocal (2^32/y) is a repeating pattern in binary:<P>
+<CODE>
+<PRE>
+   
+</CODE>
+</PRE>
+
+<CODE>
+<PRE>
+   2      10000000000000000000000000000000    #
+   3      01010101010101010101010101010101    *
+   4      01000000000000000000000000000000    #
+   5      00110011001100110011001100110011    *
+   6      00101010101010101010101010101010    *
+   7      00100100100100100100100100100100    *
+   8      00100000000000000000000000000000    #
+   9      00011100011100011100011100011100    *
+  10      00011001100110011001100110011001    *
+  11      00010111010001011101000101110100
+  12      00010101010101010101010101010101    *
+  13      00010011101100010011101100010011
+  14      00010010010010010010010010010010    *
+  15      00010001000100010001000100010001    *
+  16      00010000000000000000000000000000    #
+  17      00001111000011110000111100001111    *
+  18      00001110001110001110001110001110    *
+  19      00001101011110010100001101011110
+  20      00001100110011001100110011001100    *
+  21      00001100001100001100001100001100    *
+  22      00001011101000101110100010111010
+  23      00001011001000010110010000101100
+  24      00001010101010101010101010101010    *
+  25      00001010001111010111000010100011
+</CODE>
+</PRE>
+The lines marked with a '#' are the special cases 2^n, which have already 
+been dealt with.  The lines marked with a '*' have a simple repeating 
+pattern.<P>
+Note how regular the patterns are for y=2^n+2^m or y=2^n-2^m (for 
+n&gt;m)...<B><P>
+<PRE>
+----------------------------------------
+n    |m  |(2^n+2^m) |n   |m   |(2^n-2^m)
+----------------------------------------
+  1  |0  |3         |1   |0   |1        
+----------------------------------------
+  2  |0  |5         |2   |1   |2        
+----------------------------------------
+  2  |1  |6         |2   |0   |3        
+----------------------------------------
+  3  |0  |9         |3   |2   |4        
+----------------------------------------
+  3  |1  |10        |3   |1   |6        
+----------------------------------------
+  3  |2  |12        |3   |0   |7        
+----------------------------------------
+  4  |0  |17        |4   |3   |8        
+----------------------------------------
+  4  |1  |18        |4   |2   |12       
+----------------------------------------
+  4  |2  |20        |4   |1   |14       
+----------------------------------------
+  4  |3  |24        |4   |0   |15       
+----------------------------------------
+  5  |0  |33        |5   |4   |16       
+----------------------------------------
+  5  |1  |34        |5   |3   |24       
+----------------------------------------
+  5  |2  |36        |5   |2   |28       
+----------------------------------------
+  5  |3  |40        |5   |1   |30       
+----------------------------------------
+  5  |4  |48        |5   |0   |31       
+----------------------------------------
+</PRE>
+</B><P>
+For the repeating patterns, it is a relatively easy matter to calculate 
+the product by using a multiply-by-constant method.<P>
+The result can be calculated in a small number of instructions by taking 
+advantage of the repetition in the pattern; this corresponds to the 
+optimal solution in the multiply-by-constant problem (see <A 
+HREF="./2acbb.html#XREF38728">Multiply by a constant</A>).<P>
+The actual multiply is slightly unusual due to the need to return the top  
+32-bits of the 64-bit result.  It efficient to calculate just the top 
+32-bits;  this can be achieved by modifying the multiply-by-constant 
+sequence so that the input value is shifted right rather than left.<P>
+Consider this fragment of the divide-by-ten code (x is the input dividend 
+as used in the above equations):<P>
+<CODE>
+<PRE>
+SUB  a1,  x,  x, lsr #2 ;a1 = x*%0.11000000000000000000000000000000
+ADD  a1, a1, a1, lsr #4 ;a1 = x*%0.11001100000000000000000000000000
+ADD  a1, a1, a1, lsr #8 ;a1 = x*%0.11001100110011000000000000000000
+ADD  a1, a1, a1, lsr #16;a1 = x*%0.11001100110011001100110011001100
+MOV  a1, a1, lsr #3     ;a1 = x*%0.00011001100110011001100110011001
+</CODE>
+</PRE>
+The SUB calculates (for example)<P>
+<CODE>
+<PRE>
+a1 = x - x/4
+   = x - x*%0.01
+   = x*%0.11
+</CODE>
+</PRE>
+Hence, just 5 instructions are needed to perform the multiply.<P>
+A small problem is caused by calculating just the top 32-bits, as this 
+ignores any carry from the low 32-bits of the 64-bit product.  
+Fortunately, this  can be corrected.  A correct divide would round down, 
+so the remainder can be  calculated by:<P>
+<CODE>
+<PRE>
+x - (x/10)*10 = 0..9
+</CODE>
+</PRE>
+It takes just 2 ARM instructions to perform this multiply-by-10 and 
+subtract, by making good use of the ARM's barrel shifter. In the case when 
+(x/10) is too small by 1 (if carry has been lost), the remainder will be 
+in the range 10..19 in which case corrections must be applied. This test 
+would require a compare-with-10 instruction, but this can be combined with 
+other operations to save an instruction (see below).<P>
+When a lost carry is detected, both the quotient and remainder must be 
+fixed up (1 instruction each).<P>
+This should explain the full divide-by-10 code:<P>
+<CODE>
+<PRE>
+div10
+; takes argument in a1
+; returns quotient in a1, remainder in a2
+; cycles could be saved if only divide or remainder is required
+    SUB    a2, a1, #10                       ; keep (x-10) for later
+    SUB    a1, a1, a1, lsr #2
+    ADD    a1, a1, a1, lsr #4
+    ADD    a1, a1, a1, lsr #8
+    ADD    a1, a1, a1, lsr #16
+    MOV    a1, a1, lsr #3
+    ADD    a3, a1, a1, asl #2
+    SUBS   a2, a2, a3, asl #1                ; calc (x-10) - (x/10)*10
+    ADDPL  a1, a1, #1                        ; fix-up quotient
+    ADDMI  a2, a2, #10                       ; fix-up remainder
+    MOV    pc, lr
+</CODE>
+</PRE>
+The optimisation which eliminates the compare-with-10 instruction is to 
+keep (x-10) for use in the subtraction to calculate the remainder.  This 
+means that compare-with-0 is required instead, which is easily achieved by 
+adding an S (to set the flags) to the SUB opcode.  This also means that 
+the subtraction has to be undone if no rounding error occured (which is 
+why the ADDMI instruction is used).<P>
+<H2>How to generate divide-by-constant sequences</H2>
+For suitable numbers , the details of the divide-by-constant technique can 
+be avoided completely by using the <B>divc</B> program.  This is supplied 
+in ANSI C source form which is in the <B>examples</B> directory.  
+Naturally, it must be compiled it in order to use it; use your host 
+system's C compiler, or <B>armcc</B> in which case the executable must  be 
+run using <B>armsd</B>.<P>
+The <B>divc</B> command-line help can be obtained by running <B>divc</B> 
+with no  arguments:<P>
+<CODE>
+<PRE>
+Usage: divc &lt;n&gt;
+Generates optimal ARM code for divide-by-constant
+where &lt;n&gt; is one of (2^n-2^m) or (2^n+2^m) eg. 10
+Advanced RISC Machines [01 Jul 92]
+</CODE>
+</PRE>
+Type "<CODE>divc 10</CODE>" to generate the ARM assembler code for 
+divide-by-10.  The output is suitable for immediate use as an 
+<B>armasm</B> source file.<P>
+The routine is called 'udiv10' for unsigned divide-by-10 (for example).  
+It takes the unsigned argument in a1, and returns the quotient in a1 and 
+the  remainder in a2.  It conforms fully to the APCS, but the remainder 
+may not be  available when called from C.<P>
+The range of values covered by (2^n-2^m) and (2^n+2^m) contains some 
+useful numbers such as 7, 10, 24, 60.<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./2acbb.html#XREF38728">Multiply by a constant</A>;
+<LI><A HREF="./4acbc.html#XREF10783">C Programming for deeply embedded 
+applications</A> for information about the division routines to which 
+<B>armcc</B> generates references;
+</UL>

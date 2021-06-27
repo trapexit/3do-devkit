@@ -1,0 +1,60 @@
+<TITLE>Portfolio Error Codes</TITLE>
+<H1><LINK NAME="XREF14607">Portfolio Error Codes</LINK></H1><HR>
+Portfolio has a uniform definition for the format of error codes. Whenever system components must return an error, they always use the standard error code format explained here.<P>
+All Portfolio error codes are negative 32-bit numbers that are subdivided into multiple subcomponents. Using these components, you can identify which subsystem generated the error, and get a module-specific error number. Table 1 lists the various components of an error code:<P>
+<PRE>
+<B>Table 1: </B><I> Error code components.</I>
+-------------------------------------------------------
+Bit(s)|Purpose                                         
+-------------------------------------------------------
+31    |This bit is always set. It makes all error codes
+      |negative numbers.                               
+-------------------------------------------------------
+25-30 |Object type that generated the error. This field
+      |identifies what generated the error: a folio, a 
+      |device, a task, or another object type,         
+      |generated the error. Possible values for this   
+      |field include ER_FOLI, ER_DEVC, ER_TASK, or     
+      |ER_LINKLIB.                                     
+-------------------------------------------------------
+13-24 |Object ID. This is a code that uniquely         
+      |identifies the component that generated the     
+      |error. The value for this field is created with 
+      |MakeErrID() and is basically two 6-bit          
+      |characters identifying the module that caused   
+      |the error. For example, kernel errors have an   
+      |object ID of Kr.                                
+-------------------------------------------------------
+11-12 |A severity code. Possible values for this field 
+      |include: ER_INFO, ER_WARN, ER_SEVERE, or        
+      |ER_FATAL.                                       
+-------------------------------------------------------
+9-10  |An environment code. This code defines who      
+      |created the module that generated the error.    
+      |Possible error values for this field include:   
+      |ER_E_SSTM for system modules, ER_E_APPL for     
+      |application modules, and ER_E_USER for user-code
+      |modules.                                        
+-------------------------------------------------------
+8     |Error class. Possible error values for this     
+      |field are: either ER_C_STND for a standard error
+      |code or ER_C_NSTND for a nonstandard error code.
+      |Standard error codes are errors that are well   
+      |known in the system and have a default string to
+      |describe them. Nonstandard errors are           
+      |module-specific and the module must provide a   
+      |string to the system to describe the error.     
+-------------------------------------------------------
+0-7   |The actual error code. The meaning of this code 
+      |depends on the module that generated the error, 
+      |and whether it is a standard or nonstandard     
+      |error.                                          
+-------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF23096">The </A><CODE>PrintfSysErr()</CODE> kernel call accepts any error code, and prints an error string describing the error to the debugging terminal. When developing code, it is extremely useful to know why a system call is failing.<P>
+<B>Note: </B>Besides handling multitasking, memory management, folios, items, 
+intertask communication, and linked lists, the kernel also handles I/O and 
+hardware control-both topics for another section. 
+You'll find them described in <A HREF="./09spg.html#XREF37505">The 
+Portfolio I/O Model</A>." <P>

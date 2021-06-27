@@ -1,0 +1,59 @@
+<TITLE>Audio production</TITLE>
+<H1><LINK NAME="XREF35299">Audio production</LINK></H1><HR>
+In your title development, use the best recording environment available, whether you are sampling a small sound effect or producing a live orchestral score.<P>
+<H2>Sampling sound effects</H2>
+You can use sound effects from the 3DO Content Library or record the effects yourself. <P>
+<UL>
+<LI>The Content Library provides almost 20,000 copyright-free sound effects (and 60 hours of music), which you can access using the 3DO CD Browser. The Content Library is available for the cost of production-contact The 3DO Company for more details.
+<p>
+<LI>If you need only few sound effects, consider recording them yourself, or use ARIA to synthesize them. 
+</UL>
+<H3>Preparing AIFF files</H3>
+A variety of tools are available for working with AIFF files. <P>
+<UL>
+<LI>To convert sound effects from Red Book format to AIFF format, use the Disc-to-Disk tool from Optical Media International.
+<p>
+<LI>To edit AIFF files, use Digidesign's Sound Designer II. Note that Sound Designer employs a software filter in its edit window. To audition 22 kHz or lower SR files, click on the Play tool in the dialog box that appears when you choose Open from the File menu. 
+</UL>
+<DL>
+<DD><B>Caution: </B>Having the AudioMedia board's inputs and outputs looped through a mixer produces a painfully loud sound when you go into the record window of Sound Designer. Lower the output faders when recording.<BR>
+</DL>
+<UL>
+<LI>To convert audio file formats and sample rates, use SoundHack.
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>From the Hack menu, choose Varispeed for SR conversions.
+<p>
+<LI>From the File menu, choose Save A Copy, then select the file type Audio IFC and the Format 3DO 2:1 SDXC (or the 4:1 compression if you prefer).
+</UL><BR>
+</DL>
+<UL>
+<LI>For 2:1 compression, use the MPW tool SquashSnd. This is especially helpful for batch-processing files.
+</UL>
+<H3>Testing audio/video synchronization</H3>
+To test synchronization of a sound effect with an animation or a short video clip, you can use 3DO Animator:<P>
+<OL>
+<LI>Save the sound as Macintosh System 7 Sound Resource (using Sound Designer II, 3DO SoundHack, or SoundEditPro).
+<p>
+
+<LI>In 3DO Animator, load the animation and move it to the desired starting frame, then click the Sound button in the Anim Control Panel and select the sound resource file you want to attach. 
+<p>
+<LI>Make sure to use the same frame rate as the title will use (or record the frame you are happy with and convince the rest of the team to go with that rate). Then play the animation using the Play button (single arrow) on the control panel. 
+<p>
+<LI>If you want to save the audio attachment, save the file in VDAN format. 
+<p>
+<LI>Remember that the final animation has to be in 3DO file format and the sound file has to be in AIFF file format. 
+</OL>
+<H2>Working with sampled music</H2>
+If you want to include music in a title, record in the best studio environment available or consider production music from the Content Library. The music in the Content Library includes pieces indexed by composer, by instrument, and by type-for example, "sad" or "exuberant."<P>
+<B><B>Note: </B> </B>If you use music from the 3DO Content Library, remember that there is no guarantee that other developers have not selected the same composition for their title. <P>
+If you create your own music, you can produce an AIFF file using a hard disk recording system or DAT. Then perform a digital transfer to Sound Designer II or some other sample editing program for final edits-for example, to make sure a sample is as small as possible, to do SR conversions, to find loop points.<P>
+Since music files need memory, you and the producer have to decide on ROM and RAM budgets for your files. Looping music or sound effects files-for example, the sound of fire-may reduce file size, but may compromise drama and realism. To make the loop point less noticeable, you can use tricks like a vague end or a "timed end," where some rhythmic oscillation between sound and silence covers seek time. You need to experiment with this since different audio buffer sizes change the length of silence at the loop point.<P>
+<H3>Testing synchronization</H3>
+To test synchronization of a music file you can use Adobe Premiere. For other files, use 3DO Animator. Note that Adobe Premiere does <I>not</I> read or write SMPTE, but it facilitates editing QuickTime movies <I>and</I> it can mix its three digital audio tracks when you save a videoless movie.<P>
+If SMPTE is available in your development environment, you can lock to video and set audio sync on tape. Then transfer this sync to the 3DO system by coordinating SMPTE numbers to your animation. Sound Designer II allows you to stipulate horizontal measurements in SMPTE. Premier or Passport's Producer can synchronize a QuickTime movie from an animation to SMPTE frame numbers. <P>
+<H2>Creating algorithmic sound effects</H2>
+The 3DO system lets you change existing sounds programmatically by adding filters, changing the pitch, or adding an envelope. Use ARIA or Patchdemo, or work with programmers to achieve program-controlled sound effects, for example, engines based on samples, or purely algorithmic sound effects based on synthetic sounds. <P>
+<B>Note: </B>The ARIA tool, which allows nonprogrammers to create patches and work with MIDI projects, is now available on the 3DO InfoServer bulletin board and on the Toolkit 1.5 CD-ROM. A manual that helps you get started with the tool is included in this book. <P>

@@ -1,0 +1,296 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_MEMORY_UNIQUE_PTR
+#define TTL_MEMORY_UNIQUE_PTR
+
+#include "memory_default_delete"
+
+template<typename T,
+         typename DELETER = default_delete<T> >
+class unique_ptr
+{
+public:
+  typedef T  element_type;
+  typedef T* pointer;
+  typedef T& reference;
+
+public:
+  unique_ptr()
+    : _ptr(0)
+  {
+  }
+
+  unique_ptr(pointer ptr_)
+  {
+    _ptr = ptr_;
+  }
+
+  ~unique_ptr()
+  {
+    deleter(_ptr);
+  }
+
+private:
+  unique_ptr(const unique_ptr &)
+  {
+  }
+
+public:
+  reference
+  operator*() const
+  {
+    return *_ptr;
+  }
+
+  pointer
+  operator->() const
+  {
+    return _ptr;
+  }
+
+  pointer
+  get() const
+  {
+    return _ptr;
+  }
+
+  DELETER&
+  get_deleter()
+  {
+    return _deleter;
+  }
+
+  const
+  DELETER&
+  get_deleter() const
+  {
+    return _deleter;
+  }
+
+public:
+  operator bool() const
+  {
+    return (_ptr != 0);
+  }
+
+public:
+  pointer
+  release()
+  {
+    pointer tmp;
+
+    tmp  = get();
+    _ptr = 0;
+
+    return tmp;
+  }
+
+  void
+  reset(pointer ptr_ = pointer())
+  {
+    _deleter(_ptr);
+    _ptr = ptr_;
+  }
+
+  void
+  swap(unique_ptr &ptr_)
+  {
+    pointer tmp;
+
+    tmp = _ptr;
+    _ptr = ptr_._ptr;
+    ptr_._ptr = tmp;
+  }
+
+  unique_ptr&
+  operator=(const void*)
+  {
+    reset(0);
+
+    return *this;
+  }
+
+private:
+  unique_ptr&
+  operator=(const unique_ptr &)
+  {
+  }
+
+private:
+  pointer _ptr;
+  DELETER _deleter;
+};
+
+template<typename T,
+         typename DELETER>
+class unique_ptr<T[],DELETER>
+{
+public:
+  typedef T  element_type;
+  typedef T* pointer;
+  typedef T& reference;
+
+public:
+  unique_ptr()
+    : _ptr(0)
+  {
+  }
+
+  unique_ptr(pointer ptr_)
+    : _ptr(ptr_)
+  {
+  }
+
+  ~unique_ptr()
+  {
+    deleter(_ptr);
+  }
+
+private:
+  unique_ptr(const unique_ptr &)
+  {
+  }
+
+  unique_ptr&
+  operator=(const unique_ptr&)
+  {
+  }
+
+public:
+  reference
+  operator*() const
+  {
+    return *_ptr;
+  }
+
+  pointer
+  operator->() const
+  {
+    return _ptr;
+  }
+
+  reference
+  operator[](unsigned int idx_) const
+  {
+    return _ptr[idx_];
+  }
+
+  pointer
+  get() const
+  {
+    return _ptr;
+  }
+
+  DELETER&
+  get_deleter()
+  {
+    return _deleter;
+  }
+
+  const
+  DELETER&
+  get_deleter() const
+  {
+    return _deleter;
+  }
+
+public:
+  operator bool() const
+  {
+    return (_ptr != 0);
+  }
+
+public:
+  pointer
+  release()
+  {
+    pointer tmp;
+
+    tmp = get();
+    _ptr = 0;
+
+    return tmp;
+  }
+
+  void
+  reset(pointer ptr_)
+  {
+    delete[] _ptr;
+    _ptr = ptr_;
+  }
+
+  void
+  swap(unique_ptr &ptr_)
+  {
+    pointer tmp;
+
+    tmp = _ptr;
+    _ptr = ptr_._ptr;
+    ptr_._ptr = tmp;
+  }
+
+private:
+  pointer _ptr;
+  DELETER _deleter;
+};
+
+template<typename T1,
+         typename D1,
+         typename T2,
+         typename D2>
+bool
+operator==(const unique_ptr<T1,D1> &lhs_,
+           const unique_ptr<T2,D2> &rhs_)
+{
+  return (lhs_.get() == rhs_.get());
+}
+
+template<typename T1,typename D1,typename T2,typename D2>
+bool
+operator<(const unique_ptr<T1,D1> &lhs_,
+          const unique_ptr<T2,D2> &rhs_)
+{
+  return (((char*)lhs_.get()) < ((char*)rhs_.get()));
+}
+
+template<typename T1,typename D1,typename T2,typename D2>
+bool
+operator<=(const unique_ptr<T1,D1> &lhs_,
+           const unique_ptr<T2,D2> &rhs_)
+{
+  return !(rhs_ < lhs_);
+}
+
+template<typename T1,typename D1,typename T2,typename D2>
+bool
+operator>(const unique_ptr<T1,D1> &lhs_,
+          const unique_ptr<T2,D2> &rhs_)
+{
+  return (rhs_ < lhs_);
+}
+
+template<typename T1,typename D1,typename T2,typename D2>
+bool
+operator>=(const unique_ptr<T1,D1> &lhs_,
+           const unique_ptr<T2,D2> &rhs_)
+{
+  return !(lhs_ < rhs_);
+}
+
+#endif

@@ -1,0 +1,24 @@
+<TITLE>Yield</TITLE>
+<A NAME="XREF31359"><H1>Yield </A></H1>
+<A NAME="XREF41606"> </A>Give up the CPU to a task of equal priority.<P>
+<H3>Synopsis</H3>
+<CODE>void Yield( void )</CODE><P>
+<H3>Description</H3>
+In Portfolio, high-priority tasks always have precedence over lower priority tasks. Whenever a high priority task becomes ready to execute, it will instantly interrupt lower priority tasks and start running. The lower priority tasks do not get to finish their time quantum, and just get put into the system's ready queue for future scheduling. <P>
+If there are a number of tasks of equal priority which are all ready to run, the kernel does round-robin scheduling of these tasks. This is a process by which each task is allowed to run for a fixed amount of time before the CPU is taken away from it, and given to another task of the same priority. The amount of time a task is allowed to run before being preempted is called the task's "quantum".<P>
+The purpose of the <CODE>Yield()</CODE> function is to let a task voluntarily give up the remaining time of its quantum. Since the time quantum is only an issue when the kernel does round-robin scheduling, it means that <CODE>Yield()</CODE> actually only does something when there are multiple ready tasks at the same priority. However, since the yielding task does not know exactly which task, if any, is going to run next, <CODE>Yield()</CODE> should not be used for implicit communication amongst tasks. The way to cooperate amongst tasks is using signals, messages, and semaphores. <P>
+In short, if there are higher-priority tasks in the system, the current task will only run if the higher-priority tasks are all in the wait queue. If there are lower-priority tasks, these will only run if the current task is in the wait queue. And if there are other tasks of the same priority, the kernel automatically cycles through all the tasks, spending a quantum of time on each task, unless a task calls <CODE>Yield()</CODE>, which will cut short its quantum. <P>
+If there are no other ready tasks of the same priority as the task that calls <CODE>Yield()</CODE>, then that task will keep running as if nothing happened. <P>
+ <CODE>Yield()</CODE> is only useful in very specific circumstances. If you plan on using it, think twice. In most cases it is not needed, and using it will result in a decrease in performance. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr133.html#XREF12306"><CODE>WaitSignal</A>() <BR>
+</CODE><CODE></CODE><P>
+</CODE>
+<H1></H1><HR>

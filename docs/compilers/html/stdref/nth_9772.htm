@@ -1,0 +1,104 @@
+<HTML><TITLE>nth_element</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>nth_element</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Rearranges a collection so that all elements lower in sorted order than the nth element come before it and all elements higher in sorter order than the nth element come after it.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class RandomAccessIterator>
+ void <B>nth_element</B> (RandomAccessIterator first,
+                   RandomAccessIterator nth,
+                   RandomAccessIterator last);
+template &#60;class RandomAccessIterator, class Compare>
+ void <B>nth_element</B> (RandomAccessIterator first,
+                   RandomAccessIterator nth,
+                   RandomAccessIterator last,
+                   Compare comp);
+</PRE
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>nth_element</B></I> algorithm rearranges a collection according to either the default comparison operator (<SAMP>></SAMP>) or the provided comparison operator.  After the algorithm applies, three things are true:</P>
+<UL><LI><P>The element that would be in the nth position if the collection were completely sorted is in the nth position</P>
+</LI>
+<LI><P>All elements prior to the nth position would precede that position in an ordered collection</P>
+</LI>
+<LI><P>All elements following the nth position would follow that position in an ordered collection</P>
+</LI>
+</UL>
+<P>That is, for any iterator <SAMP>i</SAMP> in the range <SAMP>[first, nth)</SAMP> and any iterator <SAMP>j</SAMP> in the range <SAMP>[nth, last)</SAMP> it holds that <SAMP>!(*i > *j)</SAMP> or <SAMP>comp(*i, *j) == false</SAMP>.  </P><PARA>Note that the elements that precede or follow the nth postion are not necessarily sorted relative to each other.  The <B><I>nth_element</B></I> algorithm does <I>not</I> sort the entire collection.</PARA>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>The algorithm is linear, on average, where <SAMP>N</SAMP> is the size of the range <SAMP>[first, last)</SAMP>.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// nthelem.cpp
+//
+ #include &#60;algorithm>
+ #include &#60;vector>
+ #include &#60;iostream.h>
+ template&#60;class RandomAccessIterator>
+ void quik_sort(RandomAccessIterator start, 
+                RandomAccessIterator end)
+ {
+   size_t dist = 0;
+   distance(start, end, dist);
+   //Stop condition for recursion
+   if(dist > 2)
+   {
+     //Use nth_element to do all the work for quik_sort
+     <B>nth_element</B>(start, start+(dist/2), end);
+     //Recursive calls to each remaining unsorted portion
+     quik_sort(start, start+(dist/2-1));
+     quik_sort(start+(dist/2+1), end);
+   }
+   if(dist == 2 &#38;&#38; *end &#60; *start)
+     swap(start, end);
+ }
+ int main()
+ {
+   //Initialize a vector using an array of ints
+   int arr[10] = {37, 12, 2, -5, 14, 1, 0, -1, 14, 32};
+   vector&#60;int> v(arr, arr+10);
+   //Print the initial vector
+   cout &#60;&#60; "The unsorted values are: " &#60;&#60; endl &#60;&#60; "     ";
+   vector&#60;int>::iterator i; 
+   for(i = v.begin(); i != v.end(); i++)
+     cout &#60;&#60; *i &#60;&#60; ", ";
+   cout &#60;&#60; endl &#60;&#60; endl;
+   //Use the new sort algorithm
+   quik_sort(v.begin(), v.end());
+   //Output the sorted vector
+   cout &#60;&#60; "The sorted values are: " &#60;&#60; endl &#60;&#60; "     ";
+   for(i = v.begin(); i != v.end(); i++)
+     cout &#60;&#60; *i &#60;&#60; ", ";
+   cout &#60;&#60; endl &#60;&#60; endl;
+   return 0;
+ }
+Output :
+The unsorted values are:
+     37, 12, 2, -5, 14, 1, 0, -1, 14, 32,
+The sorted values are:
+     -5, -1, 0, 1, 2, 12, 14, 14, 32, 37,
+</PRE
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument. For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Alg_5157.htm"><B><I>Algorithms</B></I></A></P>
+</BOOK>
+<HR>
+<A HREF="not_5572.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="num_5679.htm"><IMG SRC="images/next.gif"></A>
+</BODY></HTML>

@@ -1,0 +1,100 @@
+<TITLE>Creating images with custom 
+VDLs</TITLE>
+<H1><LINK NAME="XREF25885">Creating images with custom VDLs</LINK></H1><HR>
+A custom VDL (video display list) is useful if the 3DO Image Writer has to 
+reduce the number of colors during conversion. It is especially 
+recommended if the image shows banding after the colors have been reduced 
+to 15-bit. <P>
+This section discusses images with custom VDLs:<P>
+<UL>
+<LI><A HREF="#XREF13506">Creating an image with a custom VDL</A>, 
+contains step-by-step instructions.
+<LI><A HREF="#XREF11822">Standard and custom VDLs</A>, provides some 
+background about custom VDLs.
+</UL>
+<A NAME="XREF13506"><H2>Creating an image with a custom VDL</A></H2>
+If you choose a custom VDL, the Image Writer creates a color table based 
+on the image you are working with. This is helpful, for example, if you 
+start out with 24-bit source art: The Image Writer can perform color 
+reduction based on the characteristics of the picture you are dealing 
+with. There are two options:<P>
+<UL>
+<LI>The dynamic VDL is computed on a scanline-by-scanline basis. 
+<LI>The fixed VDL is computed once and used for the entire image. 
+</UL>
+<H3>How to create an image with a custom VDL</H3>
+To convert your source art to an image using a custom VDL, follow these 
+steps: <P>
+<OL>
+<LI>Resize the image if necessary (see <A 
+HREF="./1plua.html#XREF28979">Resizing source art</A>).
+<p>
+<LI>From the File menu, choose Export &gt; 3DO Image Writer.
+<p>
+<LI>Specify the name of the image. An extension .img is recommended.
+<p>
+<LI>In the dialog that appears, choose Custom in the "VDL type" box. 
+<p>
+<LI>Choose between dynamic and fixed VDL.
+<p> 
+<UL>
+<LI>If you choose Dynamic, the Image Writer creates a custom VDL on a 
+scanline-by-scanline basis. 
+<p> 
+<LI>If you choose Fixed, the Image Writer uses the system VDL for the 
+image. 
+</UL><BR>
+<p>
+<LI>Leave the default color reduction method: BoxPopLength sort.
+<p>
+<LI>If you expect to draw cels on top of the image, choose the CLUT bypass 
+option.
+<p>
+<p>This option allows the parts of the image that are covered by the cel 
+to use the standard VDL instead of the custom VDL. In addition to setting 
+the CLUT bypass option for the image, you also need to set the high bit of 
+the frame buffer pixel for the cel. This has to be done by the program 
+that displays the cel. 
+<p>
+<p><B>Note: </B> You can have transparent and opaque cel pixels on top of 
+an image that uses a custom VDL. Translucent cels will not work correctly 
+even if you have turned on the CLUT bypass option, because the cel engine 
+assumes a linear ascending CLUT. <BR>
+<p>
+<LI>Choose OK and you're done. 
+</OL>
+<H3>For more information</H3>
+<A HREF="4plua.html#XREF37166">The 3DO Image Writer dialog</A> 
+discusses additional options you have when creating images with 
+a custom VDL.<P>
+<A NAME="XREF11822"><H2>Standard and custom VDLs</A></H2>
+A VDL is a list of display control commands that tell the video display 
+list processor (VDLP) how to control the display generator. A VDL contains 
+information about three color lookup tables (CLUTs) that the 3DO hardware 
+uses to index the color from the 15-bit frame buffer color to the 24-bit 
+color your TV uses. <P>
+<UL>
+<LI>The standard (system-supplied) color table divides red, green, and 
+blue into even parts, using the same 32 shades for each image. 
+<p>
+<LI>A custom VDL using a custom color table tries to stay as close to the 
+original colors as possible, which is useful if they all belong to the 
+same range (for example, 32 shades of blue). 
+</UL>
+<H3>About custom VDLs</H3>
+The standard VDL uses the standard (system-supplied) color table, which 
+means that the 8-bit values contained in the CLUT are linear ascending. 
+They ascend in even intervals from a low value in register 0 to a high 
+value in register 31. For example, they may ascend in steps of 8-from 0 in 
+register 0 to 255 in register 
+31-0, 7, 15, 23, 31, 39, and so on. Banding may occur because the cel 
+engine assumes a linear palette that covers the full range of the color 
+spectrum when it scales color values to create lighting effects. For 
+example, if the cel engine multiplies the red, green, and blue components 
+of a 15-bit color value by 1.5, it assumes that the higher resulting color 
+value will result in a brighter (or darker) color, which is true if the 
+palette is linear and is either ascending or descending.<P>
+<H3>For more information</H3>
+To understand how custom color tables work,see <A 
+HREF="../.././ppgfldr/ggsfldr/gpgfldr/2gpg.html#XREF34189">Understanding the Display Generator</A>. It describes how an image is processed on its way 
+from the frame buffer to the TV screen. <P>

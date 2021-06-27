@@ -1,0 +1,195 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_UNORDERED_MAP_INCLUDED
+#define TTL_UNORDERED_MAP_INCLUDED
+
+#include "hash"
+#include "utility_pair"
+#include "algorithm"
+#include "vector"
+
+template<typename TKEY,
+         typename T>
+class unordered_map
+{
+public:
+  typedef TKEY               key_type;
+  typedef T                  mapped_type;
+  typedef pair<const TKEY,T> value_type;
+
+private:
+  typedef vector<value_type> rep_type;
+
+public:
+  typedef typename rep_type::reference              reference;
+  typedef typename rep_type::const_reference        const_reference;
+  typedef typename rep_type::iterator               iterator;
+  typedef typename rep_type::const_iterator         const_iterator;
+  typedef typename rep_type::size_type              size_type;
+  typedef typename rep_type::difference_type        difference_type;
+  //  typedef typename rep_type::reverse_iterator       reverse_iterator;
+  //  typedef typename rep_type::const_reverse_iterator const_reverse_iterator;
+
+public:
+  vector<value_type> _map;
+
+public:
+  void*
+  end()
+  {
+    return (void*)_map.end();
+  }
+
+  const_iterator
+  end() const
+  {
+    return _map.end();
+  }
+
+  const_iterator
+  cend() const
+  {
+    return _map.end();
+  }
+
+public:
+  bool
+  empty() const
+  {
+    return _map.empty();
+  }
+
+  size_type
+  size() const
+  {
+    return _map.size();
+  }
+
+  size_type
+  max_size() const
+  {
+    _map.max_size();
+  }
+
+public:
+  void
+  clear()
+  {
+    _map.clear();
+  }
+
+  // pair<iterator,bool>
+  // insert(const value_type &val_)
+  // {
+
+  // }
+
+  size_type
+  erase(const key_type &key_)
+  {
+    for(size_type i = 0; i < _map.size(); i++)
+      {
+        if(_map[i].first != key_)
+          continue;
+
+        _map[i] = _map.back();
+        _map.pop_back();
+        return 1;
+      }
+
+    return 0;
+  }
+
+  void
+  swap(unordered_map &obj_)
+  {
+    _map.swap(obj_._map);
+  }
+
+public:
+  T&
+  operator[](const TKEY &key_)
+  {
+    for(size_type i = 0; i < _map.size(); i++)
+      {
+        if(_map[i].first != key_)
+          continue;
+        return _map[i].second;
+      }
+
+    _map.push_back(value_type(key_,T()));
+
+    return _map.back().second;
+  }
+
+  iterator
+  find(const TKEY &key_)
+  {
+    for(size_type i = 0; i < _map.size(); i++)
+      {
+        if(_map[i].first != key_)
+          continue;
+        return &_map[i];
+      }
+
+    return 0;
+  }
+
+  const_iterator
+  find(const TKEY &key_) const
+  {
+    for(size_type i = 0; i < _map.size(); i++)
+      {
+        if(_map[i].first != key_)
+          continue;
+        return &_map[i];
+      }
+
+    return 0;
+  }
+
+  size_type
+  count(const TKEY &key_) const
+  {
+    for(size_type i = 0; i < _map.size(); i++)
+      {
+        if(_map[i].first != key_)
+          continue;
+
+        return 1;
+      }
+
+    return 0;
+  }
+
+  bool
+  contains(const TKEY &key_) const
+  {
+    for(size_type i = 0; i < _map.size(); i++)
+      {
+        if(_map[i].first != key_)
+          continue;
+        return true;
+      }
+
+    return false;
+  }
+};
+
+#endif

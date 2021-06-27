@@ -1,0 +1,21 @@
+<Title>UnloadCode</Title>
+<A NAME="XREF19343"><H1>UnloadCode </A></H1>
+<A NAME="XREF25950"></A>Unloads a binary image previously loaded with LoadCode().<P>
+<H3>Synopsis</H3>
+<CODE>Err UnloadCode(CodeHandle code);</CODE><P>
+<H3>Description</H3>
+This function frees any resources allocated by <CODE>LoadCode()</CODE>. Once <CODE>UnloadCode()</CODE> has been called, the code handle supplied becomes invalid and cannot be used again. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>code
+<DD>A code handle filled in by a previous call to LoadCode(). 
+</DL>
+<H3>Return Value</H3>
+Returns &gt; = 0 if successful, or  a negative error code of the CodeHandle supplied is somehow invalid. <P>
+<H3>Implementation</H3>
+Folio call Implemented in file folio V21. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr011.html#XREF35386"><CODE>LoadCode</A>() </CODE><P>
+</CODE>

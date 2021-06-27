@@ -1,0 +1,27 @@
+<Title>ReturnPoolMem</Title>
+<A NAME="XREF19657"><H1>ReturnPoolMem</A></H1>
+<A NAME="XREF24999"></A> Returns a memory pool entry.<P>
+<H3>Synopsis</H3>
+<CODE>void ReturnPoolMem (MemPoolPtr memPool, void* poolEntry)</CODE><P>
+<H3>Description</H3>
+Returns a memory pool entry to the list of available entries. 
+<CODE>ReturnPoolMem()</CODE> updates the <CODE>availList</CODE> field of 
+the memory pool so that it specifies the returned entry.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>memPool</CODE>
+<DD>Memory pool to which the entry is returned.
+</DL>
+<DL>
+<DT><CODE>poolEntry</CODE>
+<DD>Pointer to the entry.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>None
+</DL>
+<H3>Associated Files</H3>
+MemPool.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR002.html#XREF38866">AllocPoolMem</A>, 
+<A HREF="./02DSR016.html#XREF32433">MemPool</A><P>

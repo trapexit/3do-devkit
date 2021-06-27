@@ -1,0 +1,35 @@
+<Title>MulObjectVec3Mat33_F16</Title>
+<A NAME="XREF32559"><H1>MulObjectVec3Mat33_F16 </A></H1>
+<A NAME="XREF30432"></A> Multiplies many vectors within an object structure by a 3x3 matrix of 16.16 values.<P>
+<H3>Synopsis</H3>
+<CODE>void MulObjectVec3Mat33_F16( void *objectlist[],ObjOffset1 *offsetstruct, int32 count )</CODE><P>
+<H3>Description</H3>
+This function multiplies one or more vectors within object structures by a 3x3 matrix of 16.16 fractions also within that structure, and repeats over a number of objects. The results of the product are deposited in the destination arrays pointed to by object structures pointed to by the objectlist array. <P>
+The object structure argument defines offsets within objects to the elements to be manipulated. The object structure has a pointer to an array of points associated with the object, a pointer to an array of transformed points, a count of the number of points, and an orientation matrix. The definition for ObjOffset1 is as follows: <P>
+typedef struct ObjOffset1 {int32 oo1_DestArrayPtrOffset; int32 oo1_SrcArrayPtrOffset; int32 oo1_MatOffset; int32 oo1_CountOffset;} ObjOffset1; <P>
+<UL>
+<LI>oo1_DestArrayPtrOffset is the offset (in bytes) from the beginning of an object structure to the location of the pointer to an array of vectors to fill with the results of the multiplies. 
+<LI>oo1_SrcArrayPtrOffset is the offset (in bytes) from the beginning of an object structure to the location of the pointer to an array of vectors to be multiplied. 
+<LI>oo1_MatOffset is the offset (in bytes) from the beginning of an object structure to the location of the matrix to be multiplied. 
+<LI>oo1_CountOffset is the offset (in bytes) from the beginning of an object structure to the location of the count of the number of vectors to be multiplied. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>objectlist
+<DD>An array of pointers to object structures to modify. 
+</DL>
+<DL>
+<DT>offsetstruct
+<DD>A pointer to the source object structure that defines offsets within object's to the elements to be multiplied. 
+</DL>
+<DL>
+<DT>count
+<DD>The number of vectors for the multiplication. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr056.html#XREF11958"><CODE>MulObjectVec4Mat44_F16</A>() </CODE><P>
+</CODE>

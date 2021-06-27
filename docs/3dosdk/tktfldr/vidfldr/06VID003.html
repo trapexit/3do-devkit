@@ -1,0 +1,65 @@
+<TITLE>Installing EZ Squeeze</TITLE>
+<H1><LINK NAME="XREF22128">Installing EZ Squeeze</LINK></H1><HR>
+The Beta version of EZ Squeeze is located in the Pioneers folder of the 
+3DO Toolkit 1.5. Two methods of installing the tool are described below.<P>
+<H2>Quick install</H2>
+Use quick install if  you want to evaluate the EZ Squeeze codec. This will 
+allow you to compress your own QuickTime movies, weave the compressed 
+video with your audio, and play the resulting stream with the EZQPlayer 
+application.  <P>
+<OL>
+<LI> In the<I> Pioneers</I> folder on the Toolkit 1.5 CD, open the 
+<I>Tools</I> folder and the <I>MovieToEZQ</I> folder and copy MovietoEZQ 
+into your 3DO:Streaming:2p1:Stream Tools folder. 
+<p>
+<LI> Open the EZ Squeeze <I>Examples:EZQPlayer</I> folder and copy 
+EZQPlayer into your <I>remote</I> folder.
+<p>
+<LI>Open the <I>Examples:EZQPlayer:Apps&amp;Data</I> folder and copy 
+COPTER.STREAM to your <I>remote</I> folder.
+<p>
+<LI>To play a movie launch the Debugger, and in the Debugger Terminal 
+window type ezqplayer copter.stream.
+</OL>
+Installing MovieToEZQ lets you convert a QuickTime movie into an EZ 
+Squeeze chunk file.  After using the Weaver tool to convert the chunk file 
+into a stream file, you can use EZQPlayer to play the EZ Squeeze stream on 
+a 3DO Development Station or Development Card.<P>
+<H2>Full installation</H2>
+Full installation installs source code for most of the EZ Squeeze 
+components.<P>
+<OL>
+<LI>Open the EZ Squeeze <I>Subscribers</I> folder and copy the 
+<I>EZQSubscriber</I> folder into the <I>Subscribers</I> folder in the 2.1 
+<I>Data Stream</I> folder (3DO: Streaming 2p1:Data Stream:Subscribers).
+<p>
+
+<LI>In MPW, set you directory to the 
+3DO:Streaming:2pa:Datastream:Subscribers folder and run the MPW script 
+BuildSubscriberLib. This rebuilds the SubscriberLib to include 
+EZQSubscriber.
+<p>
+<LI>Copy the <I>EZQPlayer</I> folder to the Streaming 2p1 <I>Examples</I> 
+folder.
+<p>
+<LI>In the EZ Squeeze <I>Tools</I> folder, open the 
+<I>MovieToEZSqueeze</I> folder and copy it to the <I>Source</I> folder in 
+the Steaming 2p1 <I>Stream Tools</I> folder.
+</OL>
+<B>Note: </B>The lowest level compression and decompression modules are 
+supplied in object format only.  These are squeeze.lib, the Mac 
+compression library, and ezqcodec.lib the 3DO decompression library.<P>
+<H2>Sample data</H2>
+In the folder Pioneers:EZSqueeze:Examples:EZQPlayer:Apps &amp; Data, you 
+will find the following sample files:<P>
+<UL>
+<LI>COPTER.DM - Uncompressed QuickTime movie. Note that this sample takes 
+up 57 MB of disk space.
+<p>
+<LI>COPTER.SCRIPT - Weave script for making COPTER.STREAM.
+<p>
+<LI>COPTER.STREAM - An EZ Squeeze stream, playable with  EZQPlayer (6.5 MB 
+of disk space).
+<p>
+<LI>COPTER.MAKE - An MPW script that will create COPTER.STREAM.
+</UL>

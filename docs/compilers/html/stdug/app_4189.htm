@@ -1,0 +1,180 @@
+<HTML><HEAD><TITLE>Application - Event-Driven Simulation</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Application - Event-Driven Simulation</H2>
+<P>An extended example will illustrate the use of priority queues.  The example illustrates one of the more common uses for priority queues, which is to support the construction of a simulation model.</P>
+<P>A <I>discrete event-driven simulation</I> is a popular simulation technique.  Objects in the simulation model objects in the real world, and are programmed to react as much as possible as the real objects would react.  A priority queue is used to store a representation of "events" that are waiting to happen.  This queue is stored in order, based on the time the event should occur, so the smallest element will always be the next event to be modeled.  As an event occurs, it can spawn other events. These subsequent events are placed into the queue as well.  Execution continues until all events have been processed.</P>
+<A HREF="sidebar.htm#sidebar43"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Finding Smallest Elements</STRONG></A>
+
+<P>Events can be represented as subclasses of a base class, which we will call <B><I>event</I></B>.  The base class simply records the time at which the event will take place.  A pure virtual function named <SAMP>processEvent</SAMP> will be invoked to execute the event.</P>
+<PRE>class event {
+public:
+   event (unsigned int t) : time(t) { }
+   const unsigned int time;
+   virtual void processEvent() = 0;
+};
+</PRE>
+<P>The simulation queue will need to maintain a collection of different types of events.  Each different form of event will be represented by a different subclass of class <B><I>event</I></B>.  Not all events will have the same exact type, although they will all be subclasses of class <B><I>event</I></B>.  (This is sometimes called a <I>heterogeneous</I> collection.) For this reason the collection must store <I>pointers</I> to events, instead of the events themselves.  (In theory one could store references, instead of pointers, however the standard library containers cannot hold references).</P>
+<P>Since comparison of pointers cannot be specialized on the basis of the pointer types, we must instead define a new comparison function for pointers to events.  In the standard library this is accomplished by defining a new structure, the sole purpose of which is to define the function invocation operator (the <SAMP>()</SAMP> operator) in the appropriate fashion.   Since in this particular example we wish to use the priority queue to return the <I>smallest</I> element each time, rather than the largest, the order of the comparison is reversed, as follows:</P>
+<PRE>struct eventComparison {
+   bool operator () (event * left, event * right) const
+      { return left->time > right->time; }
+};
+</PRE>
+<P>We are now ready to define the class <B><I>simulation</I></B>, which provides the structure for the simulation activities.  The class <B><I>simulation</I></B> provides two functions.  The first is used to insert a new event into the queue, while the second runs the simulation.  A data field is also provided to hold the current simulation "time."</P>
+
+<A HREF="sidebar.htm#sidebar44"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Storing Pointers versus Storing Values</STRONG></A>
+<PRE>class simulation {
+public:
+   simulation () : eventQueue(), time(0) { }
+
+   void scheduleEvent (event * newEvent)
+      { eventQueue.push (newEvent); }
+
+   void run();
+
+   unsigned int time;
+
+protected:
+   priority_queue&#60;event *, vector&#60;event *>, eventComparison> eventQueue;
+};
+</PRE>
+<P>Notice the declaration of the priority queue used to hold the pending events.  In this case we are using a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> as the underlying container.  We could just as easily have used a <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A>. </P>
+<P>The heart of the simulation is the member function<SAMP> run(),</SAMP> which defines the event loop.  This procedure makes use of three of the five priority queue operations, namely <SAMP>top(),</SAMP> <SAMP>pop(),</SAMP> and<SAMP> empty().</SAMP>  It is implemented as follows:</P>
+<PRE>void simulation::run()
+{
+   while (! eventQueue.empty()) {
+      event * nextEvent = eventQueue.top();
+      eventQueue.pop();
+      time = nextEvent->time;
+      nextEvent->processEvent();
+      delete nextEvent;   // free memory used by event
+      }
+}
+</PRE>
+
+<A NAME="anicecreamstoresimulation"><H3>An Ice Cream Store Simulation</H3></A>
+
+<A HREF="sidebar.htm#sidebar45"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the sample program</STRONG></A>
+
+<P>To illustrate the use of our simulation framework, this example program gives a simple simulation of an ice cream store.  Such a simulation might be used, for example, to determine the optimal number of chairs that should be provided, based on assumptions such as the frequency that customers will arrive, the length of time they will stay, and so on.</P>
+<P>Our store simulation will be based around a subclass of class <B><I>simulation</I></B>, defined as follows:</P>
+<PRE>class storeSimulation : public simulation {
+public:
+   storeSimulation()
+      : freeChairs(35), profit(0.0), simulation() { }
+
+   bool canSeat (unsigned int numberOfPeople);
+   void order(unsigned int numberOfScoops);
+   void leave(unsigned int numberOfPeople);
+
+private:
+   unsigned int freeChairs;
+   double profit;
+} theSimulation;
+</PRE>
+<P>There are three basic activities associated with the store.  These are arrival, ordering and eating, and leaving.  This is reflected not only in the three member functions defined in the simulation class, but in three separate subclasses of <B><I>event</I></B>.</P>
+<P>The member functions associated with the store simply record the activities taking place, producing a log that can later be studied to evaluate the simulation.</P>
+<PRE>bool storeSimulation::canSeat (unsigned int numberOfPeople)
+   // if sufficient room, then seat customers
+{
+   cout &#60;&#60; "Time: " &#60;&#60; time;
+   cout &#60;&#60; " group of " &#60;&#60; numberOfPeople &#60;&#60; " customers arrives";
+   if (numberOfPeople &#60; freeChairs) {
+      cout &#60;&#60; " is seated" &#60;&#60; endl;
+      freeChairs -= numberOfPeople;
+      return true;
+      }
+   else {
+      cout &#60;&#60; " no room, they leave" &#60;&#60; endl;
+      return false;
+      }
+}
+
+void storeSimulation::order (unsigned int numberOfScoops)
+   // serve icecream, compute profits
+{
+   cout &#60;&#60; "Time: " &#60;&#60; time;
+   cout &#60;&#60; " serviced order for " &#60;&#60; numberOfScoops &#60;&#60; endl;
+   profit += 0.35 * numberOfScoops;
+}
+
+void storeSimulation::leave (unsigned int numberOfPeople)
+   // people leave, free up chairs
+{
+   cout &#60;&#60; "Time: " &#60;&#60; time;
+   cout &#60;&#60; " group of size " &#60;&#60; numberOfPeople &#60;&#60; 
+         " leaves" &#60;&#60; endl;
+   freeChairs += numberOfPeople;
+}
+</PRE>
+<P>As we noted already, each activity is matched by a subclass of event.  Each subclass of <B><I>event</I></B> includes an integer data field, which represents the size of a group of customers.  The arrival event occurs when a group enters.  When executed, the arrival event creates and installs a new instance of order event.  The function <SAMP>randomInteger()</SAMP> (<i>see <a href="var_0565.htm#randomaccessiterators">Chapter 2: Random Access Iterators</a></i>) is used to compute a random integer between 1 and the argument value.</P>
+<PRE>class arriveEvent : public event {
+public:
+   arriveEvent (unsigned int time, unsigned int groupSize)
+      : event(time), size(groupSize) { }
+   virtual void processEvent ();
+private:
+   unsigned int size;
+};
+
+void arriveEvent::processEvent()
+{               // see if everybody can be seated
+   if (theSimulation.canSeat(size))
+      theSimulation.scheduleEvent
+         (new orderEvent(time + 1 + randomInteger(4), size));
+}
+</PRE>
+<P>An order event similarly spawns a leave event.</P>
+<PRE>class orderEvent : public event {
+public:
+   orderEvent (unsigned int time, unsigned int groupSize)
+      : event(time), size(groupSize) { }
+   virtual void processEvent ();
+private:
+   unsigned int size;
+};
+
+void orderEvent::processEvent()
+{               // each person orders some number of scoops
+   for (int i = 0; i &#60; size; i++)
+      theSimulation.order(1 + rand(3));
+   theSimulation.scheduleEvent
+      (new leaveEvent(time + 1 + randomInteger(10), size));
+};
+</PRE>
+<P>Finally, leave events free up chairs, but do not spawn any new events.</P>
+<PRE>class leaveEvent : public event {
+public:
+   leaveEvent (unsigned int time, unsigned int groupSize)
+      : event(time), size(groupSize) { }
+   virtual void processEvent ();
+private:
+   unsigned int size;
+};
+
+void leaveEvent::processEvent ()
+{               // leave and free up chairs
+   theSimulation.leave(size);
+}
+</PRE>
+<P>To run the simulation we simply create some number of initial events (say, 30 minutes worth), then invoke the <SAMP>run()</SAMP> member function.</P>
+<PRE>void main() {
+   // load queue with some number of initial events
+   unsigned int t = 0;
+   while (t &#60; 30) {
+      t += rand(6);
+      theSimulation.scheduleEvent(
+         new arriveEvent(t, 1 + randomInteger(4)));
+      }
+
+   // then run simulation and print profits
+   theSimulation.run();
+   cout &#60;&#60; "Total profits " &#60;&#60; theSimulation.profit &#60;&#60; endl;
+}
+</PRE>
+
+<HR>
+<A HREF="pri_0581.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="str_8586.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

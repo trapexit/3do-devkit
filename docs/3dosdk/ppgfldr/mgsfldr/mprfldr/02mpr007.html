@@ -1,0 +1,20 @@
+<Title>CreateObject</Title>
+<A NAME="XREF24520"><H1>CreateObject </A></H1>
+<A NAME="XREF10099"></A> Creates an object of the given class.<P>
+<H3>Synopsis</H3>
+<CODE>COBObject *CreateObject( COBClass *Class )</CODE><P>
+<H3>Description</H3>
+This function is part of the Juggler object-oriented toolbox that supports the various classes of Juggler objects.  This function creates an object of the given class.  Execute the object's <CODE>Init()</CODE> method to correctly set up the object. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Class
+<DD>A pointer to the COBClass data structure for the class (currently available: &amp;SequenceClass and &amp;CollectionClass as defined in juggler.h). 
+</DL>
+<H3>Return Value</H3>
+This function returns a pointer to the COBObject data structure defining the object if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+cobj.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr008.html#XREF20394"><CODE>DefineClass</A>(), <A HREF="./02mpr009.html#XREF42157">DestroyObject</A>(), <A HREF="./02mpr020.html#XREF12026">ValidateObject</A>() </CODE></CODE><P>

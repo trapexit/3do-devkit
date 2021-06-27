@@ -1,0 +1,38 @@
+3dlib example1 documentation :
+
+The example1 of the 3dlib was created to demonstrate the
+use of the basic 3dlib calls. A single world is created. At the
+origin is placed a tumbling cube. Orbiting around the  cube is a pyramid.
+
+Once you start the animation, the joypad controls will change various
+elements:
+
+Button A will modify the CCB on the fly and will toggle Doloresizing.
+
+Button B will cause the camera to pan CW.
+
+Button C will freeze the animation.
+
+The up/down positions on the pad will move the camera up and
+down. Left/right will move it side to side along the x-axis.
+
+Exit the example by using the "enter" button.
+
+Most of the stuff in 3d_example1_core.c is not needed specifically
+for 3d use, but is merely set up and driver code.
+
+This also gives an example of how to use the eventbroker for 
+joystick operations.
+
+For slightly more complex 3d operations see 3d_example2. It will
+put different images on the faces, manipulate multiple cameras and
+worlds and demonstrate multiple levels of detail.
+
+3d_example3 shows how to use the LookAt() command to keep on point
+centered all of the time.
+
+3d_example4 is just like this version except that it demonstrates
+3D-Audio and lighting effects.
+
+
+

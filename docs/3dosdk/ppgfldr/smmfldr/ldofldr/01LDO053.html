@@ -1,0 +1,76 @@
+<Title>CrossFadeCels8</Title>
+<A NAME="XREF15265"><H1>CrossFadeCels8 </A></H1>
+ Crossfades between two cels.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * CrossFadeCels8 (Item screen, int32 step, CCB *oldCel, CCB 
+*newCel)</CODE><P>
+<H3>Description</H3>
+Calculates and optionally draws an 8-level crossfade between two cels. The 
+crossfade is accomplished in eight equal steps by eight calls to this 
+function with the step parameter varying between 0 and 7 on each 
+subsequent call. Step 0 draws oldCel at 7/8 intensity and newCel at 1/8 
+intensity, step 1 draws 6/8 oldCel and 2/8 newCel, and so on up to step 7 
+which is 0/8 oldCel and 8/8 newCel (IE, oldCel is not drawn and newCel is 
+drawn as opaque). <P>
+The screen parameter can be either a Screen or Bitmap item in which case 
+the cels are drawn on each call, or it can be zero in which case the 
+calculations are done but the cels are not drawn. In the latter case, the 
+return value is a pointer to the cels you must draw; the oldCel and newCel 
+CCBs will be linked together in the right order for drawing. As the 
+crossfade progresses, the order in which the cels are drawn changes, so if 
+you pass zero for the screen item you must draw the cels based on this 
+function's return value.<P>
+This function make certain assumptions about the cels. If the cels don't 
+match the assumptions your mileage may vary, visually. Both cels should be 
+single cels, not lists of cels and not anti-aliased cels. Both cels should 
+project to the same screen area. If the cels contain transparency in 
+differing locations and there are non-black pixels under the transparency 
+area in the bitmap, the results may not be what you expect in that area. 
+Coded-8 cels won't work because their AMV-based scaling can't be mixed 
+with the PIXC-based scaling set up by this function. The ccb_NextPtr, PIXC 
+word, and CCB_LAST flag values in both cels are modified on each call. 
+After the last call (step=15) both cel's PIXC words are reset to 
+0x1F001F00, both cel's CCB_LAST flags are set, and both cel's ccb_NextPtr 
+links are NULL. If this doesn't work for your needs, save and restore 
+these values yourself, or clone the CCBs and pass the clones to this 
+function. <P>
+Other than the limitations/assumptions mentioned above, any type of cels 
+should work just fine (EG, coded/uncoded, packed/not-packed, any flags 
+settings, any PLUT values, any size/perspective mapping, etc.). The two 
+cels can be different types (EG, oldCel is coded6/newCel is uncoded16, 
+oldCel is LRFORM/newCel isn't, etc.).<P>
+Each cel is drawn just once; no intermediate pre-scale-the-bitmap drawing 
+is done. <P>
+This function is coded so that you can start at any fade level, and skip 
+intermediate levels if you want. The last step should not be skipped, 
+because it'the one that restores the PIXCwords. You can also call any step multiple 
+times. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screen
+<DD>A Screen or Bitmap item to which the cels are drawn, or zero to bypass 
+the internal drawing step. 
+</DL>
+<DL>
+<DT>step
+<DD>A value between 0 and 15 inclusive. 
+</DL>
+<DL>
+<DT>oldCel
+<DD>Pointer to the old (outgoing) cel. 
+</DL>
+<DL>
+<DT>newCel
+<DD>Pointer to the new (incoming) cel. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the cels to be drawn, useful only if the screen parameter was 
+zero to bypass internal drawing. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO052.html#XREF31111"><CODE>CrossFadeCels</A> 
+</CODE><P>
+</CODE>

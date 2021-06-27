@@ -1,0 +1,15 @@
+<Title>dataacqdeltapri</Title>
+<A NAME="XREF26885"><H1>dataacqdeltapri</A></H1>
+<A NAME="XREF35551"></A> Specifies data acquisition thread priority.<P>
+<H3>Synopsis</H3>
+<CODE>dataacqdeltapri &lt;priority&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>S</CODE>pecifies data acquisition thread priority.<P>
+The task priority of the data acquisition thread is calculated in relation to the priority of the application that uses the data acquisition task. Therefore, <CODE>delta priority of the data acquisition thread plus the priority of the application should not exceed 200. </CODE><P>
+<H3>Arguments</H3>
+<DL>
+<DT>delta_priority
+<DD>Integer. If you add the priority of the application that uses the data acquisition thread and the delta priority, the number must not exceed 210. The higher the number, the higher the priority. 
+</DL>
+<H3>See Also</H3>
+<A HREF="./04DSR011.html#XREF37581">streamdeltapri</A><P>

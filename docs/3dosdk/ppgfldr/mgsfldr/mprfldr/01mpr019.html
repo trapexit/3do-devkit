@@ -1,0 +1,38 @@
+<Title>CreateInstrument</Title>
+<A NAME="XREF12062"><H1>CreateInstrument </H1>
+<A NAME="XREF39008"></A> Creates an instrument using a template.</A><P>
+<H3>Synopsis</H3>
+<CODE>Item CreateInstrument (Item InsTemplate, const TagArg *tagList)<BR>
+Item CreateInstrumentVA (Item InsTemplate, uint32 tag1, ...)</CODE><P>
+<H3>Description</H3>
+This function allocates an Instrument based on an instrument Template, previously loaded using <CODE>LoadInsTemplate()</CODE> or similar call, and allocates the DSP resources necessary for the Instrument. See also the convenience function <CODE>LoadInstrument()</CODE> which combines these two steps. <P>
+The new instrument is always created in the AF_STOPPED state, regardless of the setting of AF_INSF_ABANDONED. <P>
+Call <CODE>DeleteInstrument()</CODE> when you're finished with the Instrument to deallocate its resources. <P>
+This function is a superset of <CODE>AllocInstrument()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>InsTemplate
+<DD>Item number of a loaded instrument template used to allocate the instrument. 
+</DL>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_CALCRATE_DIVIDE
+<DD>(uint32) (new tag for V24) Create.  Specifies the the denominator of the fraction  of the total DSP cycles on which this instrument is to run. The only valid settings at this time are 1 to run on all DSP cycles (i.e. execute at 44,100 cycles/sec) and 2 to run on only 1/2 of the DSP cycles (i.e. execute at 22,050 cycles/sec). Defaults to 1. 
+</DL>
+<DL>
+<DT>AF_TAG_PRIORITY
+<DD>(uint32) Priority of new instrument in range of 0..255. Defaults to 100. 
+</DL>
+<DL>
+<DT>AF_TAG_SET_FLAGS
+<DD>(uint32) Set of AF_INSF_ flags to set in new instrument. All flags default to cleared. See the Instrument item page a for complete description of AF_INSF_ flags. 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number for the Instrument (a positive value) or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V24. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr029.html#XREF39688"><CODE>DeleteInstrument</A>(), <A HREF="./01mpr005.html#XREF27095">AllocInstrument</A>(), <A HREF="./01mpr051.html#XREF12263">LoadInsTemplate</A>(), <A HREF="./01mpr052.html#XREF40571">LoadInstrument</A>() </CODE><P>
+</CODE>

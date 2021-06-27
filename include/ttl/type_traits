@@ -1,0 +1,83 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_TYPE_TRAITS_INCLUDED
+#define TTL_TYPE_TRAITS_INCLUDED
+
+template<class T,
+         T VALUE>
+struct integral_constant
+{
+  typedef T value_type;
+  typedef integral_constant<T,VALUE> type;
+  static const T value = VALUE;
+
+  operator value_type&() const
+  {
+    return value;
+  }
+};
+
+template<class T,
+         T VALUE>
+extern T const integral_constant<T,VALUE>::value;
+
+template<bool VALUE>
+struct integral_constant<bool,VALUE>
+{
+  typedef bool value_type;
+  typedef integral_constant<bool,VALUE> type;
+  static const bool value = VALUE;
+
+  operator value_type() const
+  {
+    return value;
+  }
+};
+
+template<bool VALUE>
+extern bool const integral_constant<bool,VALUE>::value;
+
+typedef integral_constant<bool,true>  true_type;
+typedef integral_constant<bool,false> false_type;
+
+template<typename>   struct is_pod                     : false_type {};
+template<>           struct is_pod<void>               : true_type {};
+template<>           struct is_pod<signed char>        : true_type {};
+template<>           struct is_pod<unsigned char>      : true_type {};
+template<>           struct is_pod<signed short>       : true_type {};
+template<>           struct is_pod<unsigned short>     : true_type {};
+template<>           struct is_pod<signed int>         : true_type {};
+template<>           struct is_pod<unsigned int>       : true_type {};
+template<>           struct is_pod<signed long>        : true_type {};
+template<>           struct is_pod<unsigned long>      : true_type {};
+template<>           struct is_pod<signed long long>   : true_type {};
+template<>           struct is_pod<unsigned long long> : true_type {};
+template<>           struct is_pod<float>              : true_type {};
+template<>           struct is_pod<double>             : true_type {};
+template<>           struct is_pod<long double>        : true_type {};
+template<typename T> struct is_pod<T*>                 : is_pod<T> {};
+//template<typename T> struct is_pod<const T>            : is_pod<T> {};
+
+//template<typename T> struct is_trivially_constructible : is_pod<T> {};
+
+//template<bool B,class T = void> struct enable_if {};
+//template<class T> struct enable_if<true,T> { typedef T type; };
+//};
+
+#endif

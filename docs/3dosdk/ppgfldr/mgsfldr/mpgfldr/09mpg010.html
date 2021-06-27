@@ -1,0 +1,4 @@
+<TITLE>Changing Characteristics During Playback</TITLE>
+<H1><LINK NAME="XREF38885">Changing Characteristics During Playback</LINK></H1><HR>
+A task can play a MIDI score using the Juggler, or it can play notes by directly calling MIDI playback functions. A third option is for the task to play a MIDI score using the Juggler and make direct calls to MIDI playback functions during the score playback to change playback characteristics. For example, a task can call <CODE>ChangeScoreControl()</CODE> during playback to set panning for one channel, effectively moving the notes played in that channel from one side of the stereo output to the other.<P>
+All of the MIDI playback functions can safely be called directly during score playback.<A NAME="XREF22304"></A><P>

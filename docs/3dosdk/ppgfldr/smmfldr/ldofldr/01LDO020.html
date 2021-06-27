@@ -1,0 +1,23 @@
+<Title>CenterRectAACelOverIPoint </Title>
+<A NAME="XREF42484"><H1>CenterRectAACelOverIPoint </A></H1>
+ Centers an anti-aliased cel over a point.<P>
+<H3>Synopsis</H3>
+<CODE>void CenterRectAACelOverIPoint (CCB *cel, IPoint *point)</CODE><P>
+<H3>Description</H3>
+Centers an anti-aliased cel over the specified point. <P>
+The ccb_XPos and ccb_YPos fields in both the data and alpha- channel CCBs are modified. Other CCB fields are not modified.The centering is based on the cel's projected size, not its source data size. If the cel is projected to a non-rectangular shape, the result is invalid. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to the cel to be centered. 
+</DL>
+<DL>
+<DT>point
+<DD>Pointer to an IPoint over which the cel is to be centered. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO019.html#XREF21728"><CODE>CenterRectAACelOverFPoint</A>, <A HREF="./01LDO028.html#XREF31246">CenterRectCelListOverIPoint</A>, <A HREF="./01LDO030.html#XREF18762">CenterRectCelOverIPoint</A></CODE><P>

@@ -1,0 +1,20 @@
+<Title>nvram</Title>
+<A NAME="XREF34310"><H1>nvram </A></H1>
+<A NAME="XREF37306"></A>Demonstrate how to save files to nvram and other 
+writable devices.<P>
+<H3>Synopsis</H3>
+<CODE>nvram</CODE><P>
+<H3>Description</H3>
+Demonstrates how to save data to a file in NVRAM or to any other writable 
+device. <P>
+The <CODE>SaveDataFile()</CODE> function takes a name, a data pointer, and 
+a size indicator, and creates a file of that name and size, containing the 
+supplied data. <P>
+Writing data to a file requires a bit of finesse. Data can only be written 
+in blocks, not bytes. If the data being written is not a multiple of the 
+target device's blocksize, the last chunk of data must be copied to a 
+buffer which is the size of a block, and the block can then be written. <P>
+<H3>Associated Files</H3>
+nvram.c<P>
+<H3>Location</H3>
+examples/Nvram <P>

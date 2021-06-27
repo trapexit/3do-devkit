@@ -1,0 +1,116 @@
+End-User Licence Agreement for ARM C++ 1.11 for use with the ARM Software Development Toolkit 2.51.
+
+IMPORTANT: READ CAREFULLY PRIOR TO ANY USE OF THE SOFTWARE
+
+You are in possession of certain software (the "Software") identified in the attached Schedule 1. The Software is owned by ARM Limited ("ARM")  or its licensors and is protected by copyright laws and international  copyright treaties as well as other intellectual property laws and  treaties. You were advised, at the time that the Software was provided  to you, that any use, by you, of the Software will be regulated by the  terms and conditions of this Agreement (the "Agreement").
+
+ACCEPTANCE
+If you agree with and wish to accept the terms and conditions of this Agreement it shall become a legally binding agreement between you and ARM Limited and you may proceed to install, copy and use the Software  in accordance with the terms and conditions of the Agreement.
+
+REJECTION AND RIGHT TO A REFUND
+If you do not agree with or do not wish to be bound by the terms and conditions of this Agreement you may NOT install, copy or use the Software and should promptly return the Software to the person who provided it to you for a refund.
+
+Terms and Conditions
+
+1.      Software Licence Grant
+
+ARM hereby grants to you, subject to the terms and conditions of this Agreement, a non-exclusive, non-transferable, worldwide licence to;
+
+* use and copy the Software identified in Schedule 1 Part A (the "Object Code");
+
+* use copy and modify the Software identified in Schedule 1 Part B (the "Source Code);
+
+* incorporate any binary code derived from the Source Code, and any binary code derived from any modified version thereof, into such software application programs that you may develop,
+
+* distribute binary code derived from the Source Code, and any binary code derived from any modified version thereof provided that such binary code is incorporated into a software application program developed by you; and
+
+* use the documentation identified in Schedule 1 Part C.
+
+2.      Restrictions on Use of the Software
+
+Except for the making of one additional copy of the Software for backup purposes only, copying of the Software by you is limited to the extent necessary for; (a) use of the Software on a single computer; and (b) distributing derived binary code incorporated under this Agreement into software application programs developed by you.
+
+You shall not reverse engineer, decompile or disassemble any of the Software identified in Schedule 1 Part A except and only to the extent that such activity is permitted by applicable law notwithstanding this restriction. If the Software was provided to you in Europe you shall not reverse engineer, decompile or disassemble any of the Software identified in Schedule 1 Part A for the purposes of error correction.
+
+You shall only use the Software on a single monitor connected to a single computer at any one time except that you may use the Software from a common disc running on a server and shared by multiple computers provided that one authorised copy of the Software has been licensed for each computer concurrently using the Software.
+
+You shall not make copies of the documentation identified in Schedule 1 Part C.
+
+You acquire no rights to the Software other than as expressly provided by this Agreement.
+
+You shall not remove from the Software any copyright notice or other notice and shall ensure that any such notice is reproduced in any copies of the Software made by you.
+
+3.      Support
+
+If you have purchased the software from ARM, you are entitled to telephone and e-mail support of the Software for the period of one (1)  year, starting on the day of purchase; such support to be provided based upon order of support request, ARM's determination of priority and ARM's support resource availability.  Support supplied by ARM is not to be used as a substitute for employee training nor as additional resource for the purchaser's programming projects.
+
+In the Americas email techsup-usa@arm.com or telephone +1 408 579 2235.
+In Europe email techsup-europe@arm.com or telephone +44 1223 400600.
+In Japan email techsup-asia@arm.com or telephone +81 45 477 5260.
+In the rest of Asia email techsup-asia@arm.com +82 342 712 8234.
+
+If not purchased directly from ARM then this license to use the Software does not provide you with any right to receive support and maintenance from ARM in respect of the Software, except as provided under any claim under the limited warranties provided in Clause 5.  The vendor of the Software may or may not offer support to you for the  Software.
+
+4.      Restrictions on Transfer of Licensed Rights
+
+The rights granted to you under this agreement may not be, assigned, sublicensed or otherwise transferred by you to any third party without the prior written consent of ARM. You shall not rent or lease the Software.
+
+5.      Limited Warranties
+
+For the period of ninety (90) days from the date of receipt by you of the Software, ARM warrants to you that;
+
+* the media on which the Software is provided shall be free from defects in materials and workmanship under normal use;  and
+
+* the Software will perform substantially in accordance with the accompanying documentation.
+
+ARM's total liability and your exclusive remedy for breach of the limited warranties given above shall be limited to ARM, at ARM's option, replacing the defective Software or using reasonable efforts to correct material, documented, reproducible defects in the Software and delivering such corrected Software to you. Any replacement Software will be warranted for the remainder of the original warranty period or thirty (30) days, whichever is the longer.
+
+EXCEPT AS PROVIDED ABOVE ARM EXPRESSLY DISCLAIMS ALL OTHER REPRESENTATIONS, WARRANTIES, CONDITIONS OR OTHER TERMS, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, SATISFACTORY QUALITY, AND FITNESS FOR A PARTICULAR PURPOSE
+
+6.      Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL ARM BE LIABLE FOR ANY INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES (INCLUDING LOSS OF PROFITS) ARISING OUT OF THE USE OR INABILITY TO USE THE SOFTWARE WHETHER BASED ON A CLAIM UNDER CONTACT, TORT OR OTHER LEGAL THEORY, EVEN IF ARM WAS ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. ARM does not seek to limit or exclude liability for death or personal injury arising from ARM's negligence and because some jurisdictions do not permit the exclusion or limitation of liability for consequential or incidental damages the above limitation relating to liability for consequential damages may not apply to you.
+
+7.      Term and termination
+
+This Agreement shall remain in force until terminated by you or by ARM.
+
+Without prejudice to any of its other rights if you are in breach of any of the terms and conditions of the Agreement then ARM may terminate the Agreement immediately upon giving written notice to you.
+
+You may terminate this Agreement at any time.
+
+Upon termination of this Agreement by you or by ARM you shall stop using the Software and destroy all copies of the Software in your possession together with all documentation and related materials.
+
+The provisions of Clauses 6, 7 and 8 shall survive termination of the Agreement.
+
+8.      General
+
+This Agreement is governed by English Law.
+
+This is the only agreement between you and ARM relating to the Software and it may only be modified by written agreement between you and ARM. This Agreement cannot be modified by purchase orders, advertising or other representation by any person.
+
+If any Clause in this Agreement is held by a court of law to be illegal or unenforceable the remaining provisions of the Agreement shall not be affected thereby.
+
+The failure by ARM to enforce any of the provisions of this Agreement, unless waived in writing shall not constitute a waiver of ARM's rights to enforce such provision or any other provision of the Agreement in future.
+
+You acknowledge that the Software is a "Commercial item" as that term is defined 48 C.F.R. 2.101 (OCT 1995), consisting of "Commercial Computer Software" and "Commercial Computer Software documentation," as such terms are used in 48 C.F.R .12.212 (SEPT 1995). Consistent with 48 C.F.R .12.212 and 48 C.F.R. 227.7202-1 through 227.7202.4 (JUNE 1995), Licensee will provide the Software to U.S Government End Users; (i) only as a commercial end item; and (ii) with only those rights as granted to all other End Users pursuant to the terms and conditions herein.
+
+Schedule 1
+
+C++ Version 1.11 for the ARM Software Development Toolkit Version 2.51
+
+Part A (Binary)
+
+ARM C++ Compiler (armcpp)
+Thumb C Compiler (tcpp)
+ARM Debugger for Windows enhancements for C++
+C++ Debug Support DLL
+ARM C++ Library including Standard Template Library
+
+Part B (Source)
+
+ARM Minimal C++ Library (excludes Standard Template Library)
+
+Part C (Documentation)
+<none>
+

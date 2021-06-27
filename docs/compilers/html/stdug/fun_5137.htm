@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>Functions</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Functions</H2>
+<P>A number of algorithms provided in the standard library require functions as arguments.  A simple example is the algorithm <SAMP>for_each(),</SAMP> which invokes a function, passed as an argument, on each value held in a container.  The following, for example, applies the <SAMP>printElement()</SAMP> function to produce output describing each element in a list of integer values:</P>
+<PRE>void printElement (int value)
+{
+   cout &#60;&#60; "The list contains " &#60;&#60; value &#60;&#60; endl;
+}
+
+main () 
+{
+   list&#60;int> aList;
+      ...
+   for_each (aList.begin(), aList.end(), printElement);
+}</PRE>
+<P><I>Binary functions</I> take two arguments, and are often applied to values from two different sequences.  For example, suppose we have a list of strings and a list of integers.  For each element in the first list we wish to replicate the string the number of times given by the corresponding value in the second list.  We could perform this easily using the function <SAMP>transform()</SAMP> from the standard library.  First, we define a binary function with the desired characteristics:</P>
+<PRE>string stringRepeat (const string &#38; base, int number)
+                    // replicate base the given number of times
+{
+   string result;   // initially the result is empty
+   while (number--)  result += base;
+   return result;
+}
+</PRE>
+<P>The following call on <SAMP>transform()</SAMP> then produces the desired effect:</P>
+<PRE>list&#60;string> words;
+list&#60;int> counts;
+   ...
+transform (words.begin(), words.end(), 
+   counts.begin(), words.begin(), stringRepeat);
+</PRE>
+<P>Transforming the words <SAMP>one, two, three</SAMP> with the values 3, 2, 3 would yield the result <SAMP>oneoneone, twotwo, threethreethree</SAMP>.</P>
+
+<HR>
+<A HREF="fun_1852.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="pre_1157.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,30 @@
+<Title>MFLoadSequence</Title>
+<A NAME="XREF17171"><H1>MFLoadSequence </A></H1>
+<A NAME="XREF41456"></A> Loads a sequence from a MIDI file.<P>
+<H3>Synopsis</H3>
+<CODE>Err MFLoadSequence( MIDIFileParser *mfpptr, char*filename, Sequence *SeqPtr )</CODE><P>
+<H3>Description</H3>
+This function loads a single sequence from a Format 0 MIDI file and turns it into a Juggler sequence for playback using the Juggler.  To use this function, you must first create the Juggler sequence using <CODE>CreateObject()</CODE>. The function translates the MIDI messages in the sequence into MIDI events in the Juggler sequence.  To work, the function must have a MIDIFileParser data structure to keep track of the MIDI sequence's original settings. <P>
+Note that this function will accept a Format 1 MIDI file, in which case it converts only the first track (sequence) of the file.  That track typically contains no notes. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>mfpptr
+<DD>Pointer to a MIDIFileParser data structure. 
+</DL>
+<DL>
+<DT>filename
+<DD>Pointer to a character string containing the name of the Format 0 MIDI file from which to load the sequence. 
+</DL>
+<DL>
+<DT>SeqPtr
+<DD>Pointer to a Juggler sequence in which to store the converted MIDI sequence. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr007.html#XREF24520"><CODE>CreateObject</A>(), <A HREF="./02mpr036.html#XREF40622">MFLoadCollection</A>(), <A HREF="./02mpr038.html#XREF15596">MFUnloadCollection</A>() </CODE><P>
+</CODE>

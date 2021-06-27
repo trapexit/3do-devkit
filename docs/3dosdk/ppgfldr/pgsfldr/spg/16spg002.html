@@ -1,0 +1,83 @@
+<TITLE>How to Use Access</TITLE>
+<H1><LINK NAME="XREF31774">How to Use Access</LINK></H1><HR>
+Using Access is simple. The calling task must follow these steps, which are explained in detail in the sections that follow:<P>
+<OL>
+<LI>Create a message to send to Access and a reply port to receive a reply to the message.
+<p>
+<LI>Find the Access message port.
+<p>
+<LI>Create a list of tag arguments that request a specific user-interface transaction and describe the properties of the transaction box that carries out the request.
+<p>
+<LI>Send a message to Access that points to the tag argument list.
+<p>
+<LI>Enter the wait state and wait for a reply from access.
+<p>
+<LI>Read the returned user input from Access's reply message.
+</OL>
+The trick is in setting up the tag arguments to specify the interface transaction with the desired transaction box layout.<P>
+<H2>Setting Up Message Communication With Access</H2>
+Before a task can send tag argument lists to Access, it must first create a message item and a message port as described in <A HREF="./08spg.html#XREF26903">Communicating Among Tasks</A>. Then, it must then find Access's message port, "access," using the <CODE>FindMsgPort()</CODE> call. The following code segment returns the item number of Access's message port:<P>
+<DL>
+<DD><CODE>FindMsgPort("access");</CODE><BR>
+</DL>
+<H2>Creating a Tag Argument List</H2>
+Once a task is set up to communicate with Access, it must create a tag argument list to carry tag arguments to Access. The tag arguments that Access reads are the same tag argument data types used to specify item attributes with the <CODE>CreateItem()</CODE> call<CODE>. </CODE>For a list of the tag argument data types, see <A HREF="./06spg.html#XREF29474">Managing Items</A>. Each tag argument has two fields: the tag and the argument value. You need only provide tag arguments for the attributes you wish to specify; all nonspecified attributes are set to default values. Two tag arguments are mandatory: <CODE>ACCTAG_REQUEST</CODE> and <CODE>ACCTAG_SCREEN</CODE>. The final tag argument in the list must be set to <CODE>TAG_END</CODE> to terminate the list.<P>
+All Access tags and the constants used to set their argument values are found in the include file <I>access.h</I>.<P>
+<H3>Specifying a Request</H3>
+The first order of business is to request the type of user-input transaction the task wants Access to perform. To specify, the task uses the tag <CODE>ACCTAG_REQUEST</CODE>, which can accept any one of the following arguments:<P>
+<UL>
+<LI><CODE>ACCREQ_LOAD </CODE>displays a transaction box that asks the user to specify a file to be loaded. The transaction returns the pathname of a file to be loaded.
+<p>
+<LI><CODE>ACCREQ_SAVE </CODE>displays a transaction box that asks the user to specify a file to save. The transaction returns the pathname of a file to save.
+<p>
+<LI><CODE>ACCREQ_DELETE </CODE>displays a transaction box that asks the user to specify a file to delete. The transaction returns the pathname of a file to delete.
+<p>
+<LI><CODE>ACCREQ_OK </CODE>displays a transaction box with text supplied by the calling task to inform the user of a fact. The transaction box contains a single OK button, which the user can click to continue. The transaction returns a 0.
+<p>
+<LI><CODE>ACCREQ_OKCANCEL</CODE> displays a transaction box with text supplied by the calling task to inform the user of a proposed action. The transaction box contains two buttons, OK and Cancel, which the user can click on either to confirm the action or cancel it. The transaction returns a 0 for the OK button or a 1 for the Cancel button.
+<p>
+<LI><CODE>ACCREQ_ONEBUTTON </CODE>displays a transaction box with text supplied by the calling task to inform the user. The transaction box has a single button with text also supplied by the calling task. The user can click on it to continue. The transaction returns a 0.
+<p>
+<LI><CODE>ACCREQ_TWOBUTTON </CODE>displays a transaction box with text supplied by the calling task to inform the user. The transaction box has two buttons, each with text supplied by the calling task. The user can click on either button to choose between the two choices. The transaction returns a 0 for the left button or a 1 for the right button.
+</UL>
+When the calling task requests a specific user interface transaction, it must supply the necessary information for carrying out the transaction. For example, if it specifies <CODE>ACCREQ_TWOBUTTON</CODE>, it must supply text for both of the buttons in the transaction box and background text to explain the context of the buttons.<P>
+<H3>Specifying a Screen</H3>
+When a task requests a user interface transaction through Access, it must specify a screen where the transaction box appears. To do so, the task provides the tag argument <CODE>ACCTAG_SCREEN</CODE>, which takes the item number of the screen as its argument.<P>
+<B>Note: </B>Before you call Access, you must call <CODE>ControlMem()</CODE> so that Access can write to the screen's memory.<P>
+<H3>Specifying Transaction Box Text</H3>
+When Access puts a transaction box up on a screen, it can give the box a title that appears in its upper-left corner, fill the center of the box with explanatory text, and specify text for custom buttons as shown in Figure 1.<P>
+
+<IMG SRC="Artwork/12-1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>An Access transaction box.</I><P>
+To specify a title for the transaction box, a task uses the tag argument <CODE>ACCTAG_TITLE</CODE>, which takes as its argument a pointer to a NULL-terminated text string to be used as the title.<P>
+To specify text for the center of the transaction box, a task uses the tag argument <CODE>ACCTAG_TEXT</CODE>, which takes as its argument a pointer to a NULL-terminated text string to be used as explanatory text. Access automatically wraps text within the transaction box.<P>
+To specify text for the first button (the left button), a task uses the tag argument <CODE>ACCTAG_BUTTON_ONE</CODE>; to specify text for the second button (the right button), it uses the tag <CODE>ACCTAG_BUTTON_TWO</CODE>. Both tag arguments accept a pointer to a NULL-terminated text strings containing the text to be inserted in the button.<P>
+Keep in mind that if you supply too much text for a button or the title, you may overflow the display.<P>
+<H3>Preserving the Screen Background</H3>
+When Access presents a transaction box in a screen, it can overwrite the pixels beneath the transaction box without restoring them (which leaves a big blank rectangle when the transaction box closes), or it can save the pixels and restore them after closing the transaction box. To choose screen background preservation, a task sends the tag <CODE>ACCTAG_SAVE_BACK</CODE> with the argument 0.<P>
+Preserving the screen background requires a fair amount of memory. To be memory efficient, you can choose not to preserve the screen background by not sending the <CODE>ACCTAG_SAVE_BACK</CODE> tag argument at all.<P>
+<H3>Creating a String Buffer for User Input Return</H3>
+When an Access transaction box returns user input in the form of a text string, Access returns the string by storing it in a buffer and then pointing to the buffer in its reply message. The task requesting the transaction must supply the string buffer, allocating memory if necessary and then pointing to it and giving its size. To point to a buffer, a task uses the tag argument <CODE>ACCTAG_STRINGBUF</CODE>, which takes a pointer to the beginning address of the string buffer as its argument. It must also supply the tag argument <CODE>ACCTAG_STRINGBUF_SIZE</CODE>, which takes the size in bytes of the string buffer as its argument.<P>
+<B>Note: </B>Before you call Access, you must call <CODE>ControlMem()</CODE> so that Access can write to the buffers.<P>
+<H3>Setting Transaction Box Colors</H3>
+When Access presents a transaction box, it uses four colors:<P>
+<UL>
+<LI>The<B> background color</B> fills the interior of the box and the interior of any unselected buttons.
+<LI>The <B>foreground color</B> forms the characters in all text within the transaction box.
+<LI>The<B> highlight color</B> fills the interior of any selected button.
+<LI>The <B>shadow color</B> forms the outline of buttons in the transaction box.
+</UL>
+To set those colors, a task uses these four tag arguments:<P>
+<UL>
+<LI><CODE>ACCTAG_FG_PEN</CODE> sets the foreground color.
+<LI><CODE>ACCTAG_BG_PEN</CODE> sets the background color.
+<LI><CODE>ACCTAG_HILITE_PEN</CODE> sets the highlight color.
+<LI><CODE>ACCTAG_SHADOW_PEN</CODE> sets the shadow color.
+</UL>
+Each of these tags takes as an argument a pen color value, which is a 15-bit 3DO RGB value stored in the low 15-bits of a 32-bit unsigned integer. (The upper 17 bits are set to 0.) <P>
+<H2>Sending a Message to Access and Waiting for a Reply</H2>
+Once the tag argument list for a transaction is created, the task requesting the transaction sends a message to Access. The message points to the first tag argument in the list and gives the size of the buffer used to store the tag arguments in bytes. Access receives the message, reads the tag arguments to define a transaction, and puts up the appropriate transaction box to query the user.<P>
+In the meantime, the task that requested the transaction should entering the wait state to wait for a reply message from Access. It can do so using the <CODE>WaitPort()</CODE> call. When Access is finished with the transaction, it sends a reply to the task's reply port, which wakes up the task. The task can then read the contents of Access's reply message.<P>
+<H2>Reading a Reply Message</H2>
+Access's reply message to a task requesting a transaction contains the field <CODE>msg_Result</CODE>, which contains the results of the transaction. If an error occurs, it contains a negative value (an error code defined in <I>access.h</I>). If the transaction was successful, <CODE>msg_Result</CODE> contains a 0 or a 1. These values can be interpreted in different ways depending on the button content of the transaction box. If the box contains a single button, <CODE>msg_Result</CODE> contains 0 if the button was clicked. If the box contains a Cancel and an OK button, it contains 0 for OK and 1 for Cancel. If the box contains two task-labeled buttons, it contains 0 for the left button and 1 for the right button.<A NAME="XREF38125"></A><P>

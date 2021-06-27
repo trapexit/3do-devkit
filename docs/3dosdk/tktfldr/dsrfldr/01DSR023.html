@@ -1,0 +1,37 @@
+<Title>DSGetClock</Title>
+<A NAME="XREF18499"><H1>DSGetClock</A></H1>
+<A NAME="XREF31528"> Returns the DataStreamer clock.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 DSGetClock (DSStreamCBPtr streamCBPtr, uint32* streamClock)</CODE><P>
+<H3>Description</H3>
+Returns the value of the DataStreamer clock. The current clock time is calculated as the difference between the Portfolio audio clock and the current stream clock offset.<P>
+Clock time in the DataStreamer is measured in standard Portfolio audio clock ticks (the DataStreamer does not change the rate of the audio clock or the duration of audio ticks). Since the DataStreamer does not own the audio clock, however, external tasks can affect the DataStreamer clock by altering the state of the audio clock.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Pointer to the stream context block.
+</DL>
+<DL>
+<DT><CODE>streamClock</CODE>
+<DD>Pointer to where stream clock value is returned.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoErr</CODE>
+<DD>None
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSClockNotValidErr</CODE> 
+<DD>Current clock value not valid (the <CODE>STRM_CLOCK_VALID</CODE> flag of the streamFlags field in the specified stream context block is set to <CODE>FALSE</CODE>)
+<DD>
+</DL>
+<H3>Associated Files</H3>
+DataStreamLib.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR028.html#XREF23945"><CODE>DSSetClock</A></CODE><P>

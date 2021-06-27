@@ -1,0 +1,17 @@
+<Title>msgpassing</Title>
+<A NAME="XREF23329"><H1>msgpassing </A></H1>
+<A NAME="XREF32035"></A>Demonstrates sending and receiving messages between 
+two threads.<P>
+<H3>Synopsis</H3>
+<CODE>msgpassing</CODE><P>
+<H3>Description</H3>
+Demonstrates how to send messages between threads or tasks. <P>
+The <CODE>main()</CODE> routine of the program creates a message port 
+where it can receive messages. It then spawns a thread. This thread 
+creates its own message port, and a message. The thread then sends the 
+message to the parent message port. Once the parent receives the message, 
+it passes it on to the thread. <P>
+<H3>Associated Files</H3>
+msgpassing.c<P>
+<H3>Location</H3>
+examples/Kernel <P>

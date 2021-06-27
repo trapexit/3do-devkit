@@ -1,0 +1,21 @@
+<Title>multiply.dsp</Title>
+<A NAME="XREF13470"><H1>multiply.dsp </A></H1>
+<A NAME="XREF17421"></A> Ring modulator.<P>
+<H3>Function</H3>
+This is a 4-quadrant multiplier using fixed point arithmetic.  Basically Output = A*B. It is the same as a ring modulator. <P>
+<H3>Notes</H3>
+Multiplying 0x8000 by 0x8000 causes an overflow yielding a result of 0x8000.  This means that (-1) x (-1) = (-1).  Thus, if you multiply a signal by 0x8000, it will pop if the signal also contains 0x8000.<P>
+<H3>Knobs</H3>
+InputA <P>
+InputB <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks = 6 <P>
+N memory = 6 words <P>

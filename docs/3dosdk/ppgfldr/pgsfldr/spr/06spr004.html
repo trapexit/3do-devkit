@@ -1,0 +1,87 @@
+<Title>intlFormatDate </Title>
+<A NAME="XREF13956"></A><H1>intlFormatDate </A></H1>
+Formats a date in a localized manner.<P>
+<H3>Synopsis</H3>
+<CODE>int32 intlFormatDate(Item locItem,DateSpec spec,const GregorianDate *date,unichar *result, uint32 resultSize);</CODE><P>
+<H3>Description</H3>
+This function formats a date according to a template and to the rules specified by the locale item provided. The formatting string works in a manner similar to the way <CODE>printf()</CODE> formatting strings are handled, but uses some specialized format commands tailored to date generation. The following format commands are supported: <P>
+%D - day of month <P>
+%H - hour using 24-hour style <P>
+%h - hour using 12-hour style <P>
+%M - minutes <P>
+%N - month name <P>
+%n - abbreviated month name <P>
+%O - month number <P>
+%P - AM or PM strings <P>
+%S - seconds <P>
+%W - weekday name <P>
+%w - abbreviated weekday name <P>
+%Y - year <P>
+In addition to straight format commands, the formatting string can also specify a field width, a field limit, and a field pad character. This is done in a manner identical to the way <CODE>printf()</CODE> formatting strings specify these values. That is <P>
+<DL>
+<DD><CODE>%[flags][width][.limit]command </CODE><BR>
+</DL>
+where flags can be "-" or "0", width is a positive numeric value, limit is a positive numeric value, and command is one of the format commands mentioned above. Refer to documentation on the standard C <CODE>printf()</CODE> function for more information on how these numbers and flags interact. <P>
+A difference with standard <CODE>printf()</CODE> processing is that the limit value is applied starting from the rightmost digits, instead of the leftmost. For example; <P>
+<DL>
+<DD><CODE>%.2Y </CODE><BR>
+</DL>
+Prints the rightmost two digits of the current year. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>locItem
+<DD>A locale item, as obtained from intlOpenLocale(). 
+</DL>
+<DL>
+<DT>spec
+<DD>The formatting template describing the date layout. This value is typically taken from the locale structure (loc_Date, loc_ShortDate, loc_Time, loc_ShortTime), but it can also be built up by the title for custom formatting. 
+</DL>
+<DL>
+<DT>date
+<DD>The date to convert into a string. 
+</DL>
+<DL>
+<DT>result
+<DD>Where the result of the formatting is put. 
+</DL>
+<DL>
+<DT>resultSize
+<DD>The number of bytes available in the result buffer. This limits the number of bytes that are put into the buffer. 
+</DL>
+<H3>Return Value</H3>
+If positive, then the number of characters in the result buffer. If negative, then an error code. The string copied into the result buffer is guaranteed to be NULL-terminated. <P>
+<DL>
+<DT>&gt; = 0
+<DD>Number of characters copied.
+</DL>
+<DL>
+<DT>INTL_ERR_BADRESULTBUFFER
+</DL>
+<DL>
+<DT>The result buffer pointer was NULL or wasn't invalid writable memory.
+</DL>
+<DL>
+<DT>INTL_ERR_BUFFERTOOSMALL
+</DL>
+<DL>
+<DT>There was not enough room in the result buffer. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADDATESPEC
+<DD>The pointer to the DateSpec array was bad. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADITEM
+<DD>locItem was not an existing locale item. 
+</DL>
+<DL>
+<DT>INTL_ERR_BADDATE
+<DD>The date specified in the GregorianDate structure is not a valid date. For example, the gd_Month is greater than 12. 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in international folio V24. <P>
+<H3>Associated Files</H3>
+intl.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./06spr008.html#XREF34028"><CODE>intlOpenLocale</A>(), <A HREF="./06spr005.html#XREF33471">IntlFormatNumber</A>() </CODE><P>
+</CODE>

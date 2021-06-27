@@ -1,0 +1,88 @@
+<TITLE>Working with the Cel Engine Control Word</TITLE>
+<H1><LINK NAME="XREF19438">Working with the Cel Engine Control Word</LINK></H1><HR>
+The cel engine control word controls global settings of the cel engine as it operates within a single bitmap. It controls the way VH values are added to RGB values, when super clipping is turned on or off; and it also controls where the source for least-significant bit blue values comes from if the least-significant byte of the blue value is coopted for VH values.<P>
+<H2>Changing a Bitmap's Cel Engine Control Word</H2>
+Each bitmap item in the 3DO system has its own cel engine control word stored as part of the item. Whenever a cel is projected into a bitmap, the bitmap's control word is written to the cel engine. To set a bitmap's cel engine control word, use this call:<P>
+<CODE><DL>
+<DD><CODE>int32 SetCEControl( Item bitmapItem, int32 controlWord, int32 controlMask )</CODE><BR>
+</DL>
+</CODE><CODE>SetCEControl()</CODE> accepts three arguments: the item number of the bitmap where the control word should be changed; a 32-bit cel engine control word to write to the bitmap item; and a 32-bit control mask that determines which bits of the control word are written into the bitmap item number.<P>
+When executed, <CODE>SetCEControl()</CODE> writes the supplied control word into the bitmap item's current cel engine control word. The control mask determines which bits of the control word it writes: 1 bit in the control mask specify that the corresponding control word bits are written; 0 bits in the control mask specifies that corresponding control word bits are not written. Use 0 bits in the mask for any bits in the bitmap's current cel engine control word you do not want changed when the new control word is written.<P>
+<H2>The Cel Engine Control Word Values</H2>
+A bitmap's cel engine control word is loaded into the cel engine when any cels are projected into the bitmap. The control word settings, shown in Table 9, control any cels projected in that bitmap.<P>
+<PRE>
+<B>Table 6: </B><I> Control word settings. </I>
+---------------------------------------------------------
+Bits  |Name        |Parameter Controlled                 
+---------------------------------------------------------
+3130  |B15POS      |Sets the bit 15 output of the        
+      |            |projector. 00=0; 01=1; 10=xxx; 11=use
+      |            |bit 15 of the data decoder output.   
+---------------------------------------------------------
+2928  |B0POS       |Sets the bit 0 output of the         
+      |            |projector. 00=0l; 01=1; 10=as figured
+      |            |by the pixel processor; 11=use bit 0 
+      |            |of the data decoder output.          
+---------------------------------------------------------
+27    |SWAPHV      |1=swap the V and H values (bits 15   
+      |            |and 0) before the pixel enters the   
+      |            |pixel processor; 0=do not swap the V 
+      |            |and H values.                        
+---------------------------------------------------------
+26    |ASCALL      |1=allow super clipping; 0=disable    
+      |            |super clipping. The 0 setting has    
+      |            |priority over any CCB flags.         
+---------------------------------------------------------
+25    |not used    |                                     
+---------------------------------------------------------
+24    |CFBDSUB     |1=use the VH values coming from the  
+      |            |current frame buffer pixel; 0=use the
+      |            |VH values coming from the data       
+      |            |decoder.                             
+---------------------------------------------------------
+2322  |CFBDLSB     |Sets the value of the blue LSB coming
+      |            |into the pixel processor from the    
+      |            |frame buffer. 00=0; 01=the blue LSB  
+      |            |(bit 0) of the current frame buffer  
+      |            |pixel; 10=the blue MSB (bit 4) of the
+      |            |current frame buffer pixel; 11=the   
+      |            |green LSB (bit 5) of the current     
+      |            |frame buffer pixel.                  
+---------------------------------------------------------
+2120  |PDCLSB      |Sets the value of the blue LSB coming
+      |            |into the pixel processor from the    
+      |            |data decoder. 00=0; 01=the blue LSB  
+      |            |(bit 0) of the current frame buffer  
+      |            |pixel; 10=the blue MSB (bit 4) of the
+      |            |current frame buffer pixel; 11=the   
+      |            |green LSB (bit 5) of the current     
+      |            |frame buffer pixel.                  
+---------------------------------------------------------
+190   |not used    |Must be set to 0.                    
+---------------------------------------------------------
+</PRE>
+<P>
+<H3>The B15POS Value</H3>
+The <CODE>B15POS</CODE> value sets the bit 15 output of the projector to a constant (either 0 or 1), or it can use the bit 15 that comes out of the data decoder.<P>
+<H3>The B0POS Value</H3>
+The <CODE>B0POS</CODE> value sets the bit 0 output of the projector to a constant (either 0 or 1), to the bit 0 output of the data decoder, or the bit 0 output of the pixel processor.<P>
+<H3>The SWAPHV Flag</H3>
+The <CODE>SWAPHV</CODE> flag enables V and H value swapping. When set to 1, it swaps bits 15 and 0 in a pixel before the pixel enters the pixel processor. This flag can be overridden by the preamble of an uncoded cel so that its pixels cannot have bits 15 and 0 swapped.<P>
+<H3>The ASCALL Flag</H3>
+The <CODE>ASCALL</CODE> flag enables or disables super clipping. Because the flag is ANDed with one of the CCB's super clipping flags, this flag must be set to 1 for any super clipping to occur. When <CODE>ASCALL</CODE> is set to 0, no super clipping can occur even if a CCB chooses to use it.<P>
+<H3>The CFBDSUB Flag</H3>
+The <CODE>CFBDSUB</CODE> flag determines where the VH value that is added to the pixel- processor output before the pixel is projected into the frame buffer comes from. When set to 1, the VH value comes from the current frame buffer pixel (which makes it possible to retain all VH values existing in the frame buffer such as those in lettering). When set to 0, the VH value comes from the data decoder.<P>
+<H3>The CFBDLSB Value</H3>
+When the pixel processor is set to receive its primary or secondary color source from the current frame buffer pixel, the least-significant blue bit of the frame buffer pixel may have been coopted for a VH value. If this has happened, it can be filled in with another value. The <CODE>CFBDLSB</CODE> value determines what value gets plugged into the least-significant blue bit that is passed on to the pixel processor. The settings are 00, which sets the least-significant bit to 0; 01, which sets the least-significant bit to frame buffer bit 0 (the least-significant blue bit); 10, which sets the LSB to frame buffer bit 4 (the most-significant blue bit); and 11, which sets the least-significant bit to bit 5 of the frame buffer (the least-significant green bit).<P>
+<A NAME="XREF33388"><H3>The PDCLSB Value</A></H3>
+When the pixel processor is set to receive its primary or secondary color source from the data decoder, the least-significant blue bit may have been coopted for a VH value. If this has happened, it can be filled in with another value. The <CODE>PDCLSB</CODE> value determines what gets plugged into the least-significant blue bit that is passed on to the pixel processor. The settings are 00, which sets the least-significant bit to 0; 01, which sets the least-significant bit to data decoder bit 0 (the least-significant blue bit); 10, which sets the least-significant bit to decoder bit 4 (the most-significant blue bit); and 11, which sets the least-significant bit to bit 5 of the decoder (the least-significant green bit).<P>
+<CODE>PDCLSB</CODE> is effective only for pixels that are not controlled by a <CODE>UNCLSB</CODE> value, which appears in the second preamble word for unpacked cel source data. This means that <CODE>PDCLSB</CODE> works only for packed cel source data, which does not have a second preamble word. Unpacked data always uses the <CODE>UNCLSB</CODE>.<P>
+<H2>Controlling VH Values</H2>
+The cel engine control word settings control the way VH values are set within the projector. These settings work with VH settings in the CCB and VH values coming out of the pixel decoder to determine the final VH value. The final value is added to the pixel processor's RGB output and then projected into the frame buffer. <P>
+Figure 1 shows the path of VH values as described in <A HREF="./3gpg.html#XREF38473"> Understanding the Cel Engine and SPORT</A>. The figure shows the context of each setting hierarchically. For example, <CODE>CECW:B15POS</CODE> is the <CODE>B15POS</CODE> value in the cel engine control word.<P>
+
+<IMG SRC="figures/G.5-3.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>VH settings.</I><P>
+<H2>Loading a New Cel Engine Control Word</H2>
+The cel engine control word is not handled as the CCB is handled. It is not tied to a specific cel, but to a specific bitmap. Its values are loaded into the cel engine whenever a cel is projected into its bitmap, and they remain in effect until cel projection moves to another bitmap or until <CODE>SetCEControl()</CODE>call sets a new cel engine control word for the bitmap. All <CODE>DrawCels()</CODE> or <CODE>DrawScreenCels()</CODE> calls in a bitmap use the current value set by the most recent <CODE>SetCEControl()</CODE> for that bitmap.<P>

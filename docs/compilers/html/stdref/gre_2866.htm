@@ -1,0 +1,45 @@
+<HTML><TITLE>greater_equal</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>greater_equal</H2>
+<HR><PRE>     Function Object</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Binary function object that returns <SAMP>true</SAMP> if its first argument is greater than or equal to its second</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;functional></PRE>
+<PRE>
+template &#60;class T>
+struct <B>greater_equal</B> ; : binary_function&#60;T, T, bool> {
+  typedef typename binary_function&#60;T, T, bool>::second_argument_type 
+                                                second_argument_type;
+  typedef typename binary_function&#60;T, T, bool>::first_argument_type     
+                                                first_argument_type;
+  typedef typename binary_function&#60;T, T, bool>::result_type 
+                                                result_type;
+  bool operator() (const T&#38;, const T&#38;) const;
+};
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P><B><I>greater_equal</B></I> is a binary function object.  Its <SAMP>operator()</SAMP> returns <SAMP>true</SAMP> if <SAMP>x</SAMP> is greater than or equal to <SAMP>y</SAMP>.  You can pass a <B><I>greater_equal</B></I> object to any algorithm that requires a binary function.  For example, the <A HREF="sor_1439.htm"><B><I>sort</B></I></A> algorithm can acceept a binary function as an alternate comparison object to sort a sequence.  <B><I>greater_equal</B></I> would be used in that algorithm in the following manner:</P>
+<PRE>vector&#60;int> vec1;</PRE>
+<PRE>.
+.
+sort(vec1.begin(), vec1.end(),<B>greater_equal&#60;int>()</B>);
+</PRE><P>After this call to <A HREF="sor_1439.htm"><B><I>sort</B></I></A>, <SAMP>vec1</SAMP> will be sorted in descending order.</P>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you'll have to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of </P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A></P>
+<HR>
+<A HREF="gre_0376.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Hea_4928.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

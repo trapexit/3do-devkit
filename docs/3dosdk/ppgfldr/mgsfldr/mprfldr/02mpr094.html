@@ -1,0 +1,26 @@
+<Title>spStopAtMarker</Title>
+<A NAME="XREF41521"><H1>spStopAtMarker </A></H1>
+<A NAME="XREF26392"></A> Stop when playback reaches marker.<P>
+<H3>Synopsis</H3>
+<CODE>Err spStopAtMarker (SPSound *sound, const char *markerName)</CODE><P>
+<H3>Description</H3>
+Barring results of a marker or default decision function, causes playback to stop when the player reaches this marker. <P>
+Markers can have one of 3 static actions: continue, branch, or stop. This action can be changed at any time, including while the player is playing. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to SPSound containing marker to stop at. 
+</DL>
+<DL>
+<DT>markerName
+<DD>Name of marker in sound to stop at. All markers except markers at the beginning of sounds are considered valid places to stop. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr064.html#XREF40639"><CODE>spBranchAtMarker</A>(), <A HREF="./02mpr067.html#XREF24196">spContinueAtMarker</A>(), <A HREF="./02mpr089.html#XREF13040">spSetMarkerDecisionFunction</A>(), <A HREF="./02mpr088.html#XREF33640">spSetDefaultDecisionFunction</A>() </CODE><P>
+</CODE>

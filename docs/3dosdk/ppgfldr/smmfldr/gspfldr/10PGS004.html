@@ -1,0 +1,49 @@
+<TITLE>Programming the Extended Joystick</TITLE>
+<H1>Programming the Extended Joystick</H1><HR>
+This section discusses:<P>
+
+<UL>
+<LI><A HREF="#XREF20330">Extended Joystick Resistors</A>
+<LI><A HREF="#XREF27119">Calibrating the Extended Joystick</A>
+<LI><A HREF="#XREF28311">Recommended Sequence for Setup</A>
+</UL>
+<A NAME="XREF20330"><H2>Extended Joystick Resistors</A></H2>
+Compared to some peripherals, such as the control pad, the variable resistors used to sense the x, y, and z values in the extended joystick are inherently noisy. This has two implications for your software.<P>
+<UL>
+<LI>Even when idle, the joystick registers movement. Therefore if you ask for any of the axis data, you typically get new events at every vertical refresh. Make sure that your program code expects this. If it takes more than one frame-time to draw its graphics, for example, there are likely to be many events in your input queue that must be processed before you get the most current one.
+<p>
+<LI>Because the data tends to jump around, you must filter the input before use. The <I>feel</I> of a title depends on the kind of filtering you do (which is why the device driver doesn't do it), and you are encouraged to develop your own filters.
+</UL>
+<A NAME="XREF27119"><H2>Calibrating the Extended Joystick</A></H2>
+All software titles must allow the user to calibrate the extended joystick prior to game play. This is a critical element of joystick programming. <P>
+The purpose of a setup routine for the joystick is to:<P>
+<UL>
+<LI>Allow the user to center the trim controls (x and y calibration) so that an un-touched stick registers about 512 for both the stk_HorizPosition and stk_VertPosition (x and y) axes.
+<p>
+<LI>Determine a nominal maximum and minimum range for each axis that the title uses (i.e., x, y, and z if all three are used).
+</UL>
+An example calibration routine is included in the code listing in this chapter. This calibration routine is intended as a starting point only, to ensure that the final routine is user friendly. <P>
+The purpose of extended joystick autorecalibration is to:<P>
+<UL>
+<LI>Get the most dynamic range possible from the joystick. In other words, to always use all of the bits provided by the joystick.
+<p>
+<LI>Compensate for any possible change of extreme values. Although theoretically the device is capable of a range of from 0-1024, joysticks are unlikely to produce this full range. Therefore you must perform some calibration, and use the results to map actual input values to the values the title expects to see. These values also can vary during use, so use autoranging with continuous recalibration for maximum sensitivity at all times.
+</UL>
+<A NAME="XREF28311"><H2>Recommended Sequence for Setup </A></H2>
+The following procedure steps you through the recommended sequence for setting up the extended joystick at the beginning of a title. Use this sequence as a model to develope an extended joystick setup routine.<P>
+<OL>
+<LI>Over a background image, center a small cursor over a target using just the trim controls. Position the cursor so that a value of 512 in the <CODE>stk_HorizPosition</CODE> and <CODE>stk_VertPosition</CODE> elements of the <CODE>StickEventData </CODE>structure place it visually in the center of the target.
+<p>
+<p>When the cursor is centered, press the Play button on the base of the consumer joystick; this is to encourage the hands-free aspect of this part of the setup.
+<p>
+
+<LI>Move the stick to the top-left corner of its range and depress the Fire button.
+<p>
+<LI>Move the stick to the bottom-right corner of its range and depress the Fire button.
+<p>
+<p>If <CODE>stk_DepthPosition</CODE> (z) is being used, roll the Auxiliary Axis control away from you to the extreme end position and press the Fire button.
+<p>
+
+<LI>Roll the Auxiliary control towards you to the extreme end position and press the Fire button.
+</OL>
+Sample programs are provided on the 3DO InfoServer bulletin board (415.261.3405). Sample programs also are provided in the <I>3DO:Examples:Eventbroker</I> folder included with this version of the Portfolio. The Developer Technical Support staff on the InfoLine (415.261.3400) is available for additional information<P>

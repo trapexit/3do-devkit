@@ -1,0 +1,17 @@
+<TITLE>3DO Debugger overview</TITLE>
+<H1><LINK NAME="XREF38425">3DO Debugger overview</LINK></H1><HR>
+The<B> </B>3DO Debugger environment has three components: the 3DO Debugger, the 3DO driver and the target monitor (see Figure 1).<P>
+<UL>
+<LI>The 3DO Debugger runs on the Macintosh. It presents the user interface and controls the 3DO hardware through the 3DO driver running on the Macintosh, and the target monitor running on the 3DO hardware. 
+<p>
+<LI>The 3DO driver also runs on the Macintosh. It performs the low-level control through the NuBus card. The Macintosh automatically launches the 3DO driver each time you boot the system. 
+<p>
+<LI>The target monitor resides on the 3DO hardware. It performs low-level 
+hardware control in response to the 3DO driver. The 3DO driver communicates 
+with the target monitor through the NuBus communication board and launches the 
+target monitor each time you reset the 3DO hardware.
+<p>
+<IMG SRC="Figures/001Ch1Pics/Debug Environment.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Components of the 3DO Debugger.</I><P>
+</UL>

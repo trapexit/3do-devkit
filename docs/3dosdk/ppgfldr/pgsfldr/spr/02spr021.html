@@ -1,0 +1,37 @@
+<Title>SeekDiskStream</Title>
+<A NAME="XREF35241"><H1>SeekDiskStream </A></H1>
+<A NAME="XREF17789"></A> Performs a seek operation on a disk stream.<P>
+<H3>Synopsis</H3>
+<CODE>int32 SeekDiskStream( Stream *theStream, int32 offset,enum SeekOrigin whence )</CODE><P>
+<H3>Description</H3>
+This function does a seek operation on a stream file, thereby changing the I/O byte position within the file. After calling this function, data transfers start with the first byte at the new file position. The whence argument specifies whether the operation is to be relative to either the beginning or end of the file or to the current position in the file. The offset argument specifies the number of bytes of offset relative to the whence position. The result is the actual absolute file position that results from the seek or an error code if anything went wrong. <P>
+The offset is specified in any of three ways: absolute (positive) byte offset from the beginning of file (SEEK_SET); relative byte offset from the current position in the file (SEEK_CUR); or absolute (negative) byte offset from the end of the file (SEEK_END). <P>
+This function doesn't actually perform the seek, or do any I/O, or invalidate the data in the stream, or abort a read-ahead in progress. It simply stores the desired offset and a "please seek" request into the stream structure. The actual seeking, if any, occurs on the next call to <CODE>ReadDiskStream()</CODE>. <P>
+Seeks are very efficient if they are backward seeks that don't take you outside of the current block, or forward seeks that don't take you outside of the amount of data actually read ahead into the buffer. Short seeks of this nature simply adjust the pointers, and then allow the read to continue from the appropriate place in the buffer. <P>
+Seeks that move you backward outside of the current block or forward past the amount of data in the buffer force all of the data in the buffer to be flushed. Data from the sought after portion of the file will be read into the buffer (synchronously) and the read will be completed. As a result, you'll see some latency when you issue the ReadDiskStream call. <P>
+If you wish to do a seek-ahead that is, you wish to seek to a specified location in the file but not necessarily read anything immediately the best thing to do is a SeekDiskStream followed immediately by a zero-byte ReadDiskStream. This is a special case that will start the read-ahead for the data you're seeking, and then return without waiting for the I/O to complete. When you issue a non-zero-length ReadDiskStream some time later, the data will probably have been read in, and there will be no delay in accessing it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>theStream
+<DD>A pointer to an open Stream. "offset" is a byte offset into the file, and whence is SEEK_SET, SEEK_CUR, or SEEK_END. 
+</DL>
+<DL>
+<DT>offset
+<DD>Specified in any of three ways: absolute (positive) byte offset from the beginning of file (SEEK_SET); relative byte offset from the current position in the file (SEEK_CUR); or absolute (negative) byte offset from the end of the file (SEEK_END). 
+</DL>
+<DL>
+<DT>whence
+<DD>The anchor point (either the beginning of the file, the current position, or the end of the file) to which the offset should be applied to create the new file position. 
+</DL>
+<H3>Return Value</H3>
+The function returns the actual (absolute) offset to which the seek occurs or a negative error code if (1) the offset is outside of the legal range; (2) the whence field contains an illegal value; or (3) there was any other problem. <P>
+<H3>Implementation</H3>
+Folio call implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filestreamfunctions.h, filesystem.lib<P>
+<H3>Notes</H3>
+Seeks that move backward outside the current block or forward past the amount of data in the buffer flush all of the data from the buffer. Data from the sought-after portion of the file is read synchronously into the buffer and the read operation is then completed. As a result, you'll see some latency when you call <CODE>ReadDiskStream()</CODE>. <P>
+To perform a seek-ahead (seeking to an actual physical location in the file but not necessarily read anything immediately), call <CODE>SeekDiskStream()</CODE> followed immediately by a zero-byte <CODE>ReadDiskStream()</CODE>. This is a special case that starts the read-ahead for the data you're seeking. You then return without waiting for the I/O to complete. Later, you can call <CODE>ReadDiskStream()</CODE> with a non-zero read-length value, and if the data has been read in, you have immediate access to it. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr004.html#XREF24518"><CODE>CloseDiskStream</A>(), <A HREF="./02spr018.html#XREF14517">OpenDiskStream</A>(), <A HREF="./02spr020.html#XREF35267">ReadDiskStream</A>() </CODE><P>
+</CODE>

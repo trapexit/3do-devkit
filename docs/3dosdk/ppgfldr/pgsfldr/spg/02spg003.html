@@ -1,0 +1,44 @@
+<TITLE>Controlling the State of a Task</TITLE>
+<H1><LINK NAME="XREF11821">Controlling the State of a Task</LINK></H1><HR>
+A task can be in one of three states at any moment:<P>
+<UL>
+<LI><B>Running</B>, in which the task is the currently executing task. 
+<p>
+<LI><B>Ready to run</B>, in which the task is in the ready queue, awaiting execution.
+<p>
+<LI><B>Waiting</B>, in which the task is in the wait queue, awaiting an external event to occur, so it becomes the running task, or if the priority of the current running task is greater than its own, it moves to the ready queue where it awaits execution.
+</UL>
+Each non-privileged task has a priority that ranges from the lowest priority of 10 to the highest priority of 199. Priority determines the order of task execution for tasks that are in the ready queue. The kernel only executes the tasks in the ready queue with the highest-priority values.<P>
+The state of a task is determined partly by its own priority, and partly by the other tasks in the system and the interactions among them. A task can wait for other tasks to complete certain processing, at which point it resumes its own processing. Intertask communication is essential because it enables one task to notify another task on the waiting queue that an external event is complete.<P>
+If there are no external events, preemptive multitasking only takes place when tasks of equal priority are the highest priority tasks in the ready queue. If only one task has the highest-priority, only that task runs, and all other tasks wait until the task finishes or is replaced by another task with higher priority.<P>
+<H2>Yielding the CPU to Another Task</H2>
+A task that executes a <CODE>Yield()</CODE> call cedes its CPU time immediately to another task with the same priority. The <CODE>Yield()</CODE> call, which neither takes arguments nor returns anything, is:<P>
+<DL>
+<DD><CODE>void Yield( void )</CODE><BR>
+</DL>
+The next task in the ready queue with equal priority takes the place of the task that executes the <CODE>Yield()</CODE>. If there is no other task in the ready queue with equal priority, then the task that executes the <CODE>Yield()</CODE> call immediately resumes processing.<P>
+<H2>Going to and From the Waiting Queue</H2>
+A task can place itself in the waiting queue with a wait function call, where it uses no CPU time waiting for an event to occur. A wait call defines the event or condition for which the task waits. When the condition occurs, the task moves to the ready queue and resumes running based on its priority. The basic wait call is:<P>
+<DL>
+<DD><CODE>int32 WaitSignal( uint32 sigMask )</CODE><BR>
+</DL>
+Many other functions in Portfolio can make your task wait. Internally, all of these other functions eventually end up calling <CODE>WaitSignal()</CODE> to put your task to sleep.<P>
+<CODE>WaitSignal()</CODE> is the basic wait call that a task uses to wait for a signal. The wait calls <CODE>WaitIO()</CODE> and <CODE>WaitPort()</CODE> are built on <CODE>WaitSignal(). </CODE>Each of these calls puts a task on the waiting queue to await a signal, an I/O request return, or a message. Once the signal, I/O request, or message is received, the task returns to the ready queue.<P>
+<H2>Changing a Task's Parent</H2>
+Normally, a task created by another task ends when the parent task ends. However, by passing ownership of the child task to another parent task, the child task can live on after the parent task ends. To change ownership, use this call:<P>
+<DL>
+<DD><CODE>Err SetItemOwner( Item i, Item newOwner )</CODE><BR>
+</DL>
+The <CODE>SetItemOwner()</CODE> call takes two arguments, the item number of the task whose ownership you wish to change (<CODE>Item</CODE>), and the item number of the task that is to become the new parent (<CODE>newOwner</CODE>). This routine returns an error code if an error occurs.<P>
+A task must be the parent of a child task to change its ownership. If this call is successful, the child task's TCB is removed from the current task's resource table and placed in the parent task's resource table.<P>
+<A NAME="XREF11213"><H2>Changing Task Priorities</A></H2>
+When a task first runs, its priority is set based on a field defined in its TCB data structure. You can change the priority (in the range of 10 through 199) of a task after it has been created by using this call:<P>
+<DL>
+<DD><CODE>int32 SetItemPri( Item i, uint8 newpri )</CODE><BR>
+</DL>
+The call changes the priority of an existing task. The first argument, <CODE>i</CODE>, is the item number of the task whose priority you want to change. The second argument, <CODE>newpri</CODE>, is the new priority value that you want the task to have. The call returns the old or former priority of the task or an error code (a negative number) if an error occurred.<P>
+A task can change its own priority by calling:<P>
+<DL>
+<DD><CODE>SetItemPri(CURRENTTASK-&gt;t.n_Item, newPriority);</CODE><BR>
+</DL>
+Keep in mind that changing a task's priority affects its status in the ready queue. If you drop the priority below other tasks in the queue, the task can stop executing. If you raise the priority above other tasks in the queue, the task can run alone while the other tasks wait.<P>

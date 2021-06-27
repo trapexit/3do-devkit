@@ -1,0 +1,33 @@
+<TITLE>Tips, Tricks, and Troubleshooting</TITLE>
+<H1><LINK NAME="XREF36715">Tips, Tricks, and Troubleshooting</LINK></H1><HR>
+This section provides some information on:<P>
+<UL>
+<LI>MPW extensions provided by the 3DO environment, including the 3DO menu and 3DO extensions to 411 Help.
+<p>
+<LI>Creating your own makefile.
+</UL>
+<H2>MPW Extensions</H2>
+MPW (Macintosh Programmer's Workshop) is a complete programming environment for the Macintosh. When you install 3DO software on the Macintosh, the environment is expanded in a few ways: <P>
+<UL>
+<LI>3DO menu-The 3DO menu lets you select which currently installed version of the 3DO software you want to use during the compile and link process. 
+<p>
+<LI>Create3DOMake-This command in the 3DO menu lets you connect to some commonly used directories and create a 3DO makefile, as described in the section "Creating your Makefile" above.
+<p>
+<LI>411 Help-As part of the installation process, you should have expanded the MPW 411 Help utility to include all 3DO folio and library functions. 
+</UL>
+<H3>How to Use 411 Help</H3>
+When you install the 3DO software from the installation disc, 411 Help files for all folios and libraries are added to the default 411 Help utility. You can then look at function descriptions for each function via 411 Help. <P>
+For a quick introduction, place the cursor next to the name of a 3DO function and press Command-5. An explanation of the function should appear. For more information about using 411 Help, consult the Macintosh documentation for the version of MPW you are working with. <P>
+<B>Note: </B>The 411 Help files included with the Portfolio 2.5 release have some problems with the more recent versions of MPW. Consider using the hypertext online documents available in html format with your favorite html reader instead. <P>
+<H2>Creating Your Own Makefile</H2>
+In most cases, you will find it useful to use the MPW tool Create3DOMake for creating the makefile for your program. If you decide to use your own makefile, pay attention to the following:<P>
+<UL>
+<LI>Compile and assemble with the -g flag and link with the -debug flag if you want debugging information. 
+<p>
+<LI>Use the stripaif MPW command to create a separate file containing the debugging symbols.
+<p>
+<LI>Use the modbin MPW command to prepare your executable for running on the 3DO system. Using modbin, you can set the stack size. 
+<p>
+<LI>Use duplicate to place a copy of the .sym file and the executable into {3DORemote}.
+</UL>
+If there are problems, consider building a basic makefile using Create3DOMake and expanding it to fit your needs. <P>

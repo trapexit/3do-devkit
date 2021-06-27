@@ -1,0 +1,8 @@
+READ ME FIRST—Lib3DO
+
+The version of Lib3DO in the Toolkit1.5 release is a Beta version. The library is migrating to the Portfolio CD-ROM. 
+Hardcopy documentation is not included in this release. Instead, you find the following online documentation in this folder: 
+•	Lib3DO.doc—ASCII file containing all functions and structures. 
+•	Lib3DOHelp—MPW 411 Help file. Place this file into the folder in which your MPW Help files reside. 
+•	Lib3DOHelp.index—MPW 411 Help index file. Place this file into the folder in which your MPW Help files reside. 
+Hardcopy documentation will be included with the next version of the library in the Winter Portfolio release. 

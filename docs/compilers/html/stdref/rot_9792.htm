@@ -1,0 +1,81 @@
+<HTML><TITLE>rotate, rotate_copy</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>rotate, rotate_copy</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Left rotates the order of items in a collection, placing the first item at the end, second item first, etc., until the item pointed to by a specified iterator is the first item in the collection. </P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning "><LI>Warning </LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class ForwardIterator>
+void <B>rotate</B> (ForwardIterator first,
+             ForwardIterator middle,
+             ForwardIterator last);
+template &#60;class ForwardIterator, class OutputIterator>
+OutputIterator <B>rotate_copy</B> (ForwardIterator first,
+                            ForwardIterator middle,
+                            ForwardIterator last,
+                            OutputIterator result);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>rotate</B></I> algorithm takes three iterator arguments, <SAMP>first</SAMP>, which defines the start of a sequence, <SAMP>last</SAMP>, which defines the end of the sequence, and <SAMP>middle</SAMP> which defines a point within the sequence.  <B><I>rotate</B></I> "swaps" the segment that contains elements from <SAMP>first</SAMP> through <SAMP>middle-1</SAMP> with the segment that contains the elements from <SAMP>middle</SAMP> through <SAMP>last</SAMP>.  After <B><I>rotate</B></I> has been applied, the element that was in position <SAMP>middle</SAMP>, is in position<SAMP> first</SAMP>, and the other elements in that segment are in the same order relative to each other.  Similarly, the element that was in position <SAMP>first</SAMP> is now in position <SAMP>last-middle +1</SAMP>.  An example will illustrate how <B><I>rotate</B></I> works:</P>
+<P>Say that we have the sequence:</P>
+<PRE>   2 4 6 8 1 3 5 </PRE>
+<PRE></PRE><P>If we call <B><I>rotate</B></I> with <SAMP>middle = 5</SAMP>, the two segments are</P>
+<PRE>   2 4 6  8      and      1 3 5 </PRE>
+<PRE></PRE><P>After we apply rotate, the new sequence will be:</P>
+<PRE>   1 3 5 2 4 6 8</PRE>
+<PRE></PRE><P>Note that the element that was in the fifth position is now in the first position, and the element that was in the first position is in position 4 (<SAMP>last - first + 1</SAMP>, or 8 - 5 +1 =4).</P>
+<P>The formal description of this algorithms is:  for each non-negative integer <SAMP>i &#60; (last - first)</SAMP>, <B><I>rotate</B></I> places the element from the position<SAMP> first + i</SAMP> into position <SAMP>first + (i + (last - middle)) % (last - first)</SAMP>.<SAMP> [first, middle)</SAMP> and <SAMP>[middle, last)</SAMP> are valid ranges. </P>
+<P><B><I>rotate_copy</B></I> rotates the elements as described above, but instead of swapping elements within the same sequence, it copies the result of the rotation to a container specified by <SAMP>result</SAMP>.  <B><I>rotate_copy</B></I> copies the range <SAMP>[first, last)</SAMP> to the range <SAMP>[result, result + (last - first))</SAMP> such that for each non- negative integer <SAMP>i &#60; (last - first)</SAMP> the following assignment takes place:  </P>
+<PRE>*(result + (i + (last - middle)) % (last -first)) = *(first + i).</PRE>
+<PRE></PRE><P>The ranges <SAMP>[first,  last)</SAMP>  and <SAMP>[result, result, + (last - first)) </SAMP>may not overlap. </P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>For <B><I>rotate</B></I> at most <SAMP>last - first </SAMP>swaps are performed.</P>
+<P>For <B><I>rotate_copy</B></I><SAMP> last - first</SAMP> assignments are performed.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// rotate
+//
+ #include &#60;algorithm>
+ #include &#60;vector>
+ #include &#60;iostream.h>
+ int main()
+ {
+   //Initialize a vector with an array of ints
+   int arr[10] = {1,2,3,4,5,6,7,8,9,10};
+   vector&#60;int> v(arr, arr+10);
+   //Print out elements in original (sorted) order
+   cout &#60;&#60; "Elements before rotate: " &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;
+   //Rotate the elements
+   <B>rotate</B>(v.begin(), v.begin()+4, v.end());
+   //Print out the rotated elements
+   cout &#60;&#60; "Elements after rotate: " &#60;&#60; endl &#60;&#60; "     ";
+   copy(v.begin(),v.end(),ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl;
+   return 0;
+ }
+Output :
+Elements before rotate:
+     1 2 3 4 5 6 7 8 9 10
+Elements after rotate:
+     5 6 7 8 9 10 1 2 3 4</PRE>
+<A NAME="Warning "><H3>Warning </H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<HR>
+<A HREF="rev_1561.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="sea_8558.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

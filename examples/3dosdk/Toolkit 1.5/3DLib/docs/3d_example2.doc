@@ -1,0 +1,24 @@
+3dlib example2 documentation :
+
+	The example2 of the 3dlib was created to demonstrate a few
+more options available, and to build up a bigger universe than
+example1. This creates two "worlds". World1 is populated with 3 objects,
+a tumbling cube placed at the origin, a rotating pyramid behind the cube,
+and a combination pyramid/cube object that orbits the cube. Object3 
+demonstrates the multiple levels of details which a thing can have. When
+closer to the camera you see a cube, when further away it changes to 
+a pyramid. World1 also has two cameras, which are toggled by the C button
+on the joypad.
+
+World2 has a single pyramid, tumbling at the origin.
+
+The up/down positions on the pad will move camera1 in world1 up and
+down. Left/right will move the camera side to side along the x-axis.
+The B button will cause the camera to pan CW. 
+
+You may toggle between both worlds with the A button.
+
+Exit the example by using the "enter" button.
+
+This example also shows how you can modify an object's ccb and
+have different bitmaps for each face if you are so inclined.

@@ -1,0 +1,29 @@
+<Title>CRectBounds</Title>
+<A NAME="XREF17718"><H1>CRectBounds </A></H1>
+ Calculates the bounding box of two CRects.<P>
+<H3>Synopsis</H3>
+<CODE>CRect * CRectBounds (CRect *dst, CRect *rect1, CRect *rect2)</CODE><P>
+<H3>Description</H3>
+Calculates the bounding box of two rectangles, returning a rectangle that encompasses all the area described by the two source rectangles. The destination rectangle can be the same as either source rectangle. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to a CRect where the results are to be stored. 
+</DL>
+<DL>
+<DT>rect1
+<DD>Pointer to one of the source CRects. 
+</DL>
+<DL>
+<DT>rect2
+<DD>Pointer to the other source CRect. 
+</DL>
+<H3>Return Value</H3>
+Returns dst. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO051.html#XREF41232"><CODE>CRectIntersection</A>, <A HREF="./01LDO172.html#XREF40279">SRectBounds</A></CODE><P>
+</CODE>

@@ -1,0 +1,28 @@
+<Title>ServiceSoundFile</Title>
+<A NAME="XREF11879"><H1>ServiceSoundFile </A></H1>
+<A NAME="XREF40394"></A> Spools a sound file from disk to a sound buffer.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ServiceSoundFile( SoundFilePlayer *sfp, int32 SignalIn, int32 *SignalNeeded )</CODE><P>
+<H3>Description</H3>
+This function is called repeatedly to spool the sound file from disk to a sound buffer played by <CODE>StartSoundFile()</CODE> and controlled by the specified SoundFilePlayer data structure.  It returns, in the SignalNeeded mask, the signal for the next sound buffer to finish playing.   The task should use that signal in <CODE>WaitSignal()</CODE> to enter wait state where it can wait for the buffer to finish playing.  When it exits wait state, it passes the signal mask returned to <CODE>ServiceSoundFile()</CODE> as the next buffer to write to. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sfp
+<DD>A pointer to the SoundFilePlayer data structure. 
+</DL>
+<DL>
+<DT>SignalIn
+<DD>A signal mask containing bits set corresponding to the cue bits of sound buffers to be filled. 
+</DL>
+<DL>
+<DT>SignalNeeded
+<DD>A pointer to a signal mask where the function writes the cue bit of the sound buffers for which the task should wait. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+soundfile.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr054.html#XREF26861"><CODE>OpenSoundFile</A>(), <A HREF="./02mpr050.html#XREF25761">CloseSoundFile</A>(), <A HREF="./02mpr052.html#XREF37655">DeleteSoundFilePlayer</A>(), <A HREF="./02mpr053.html#XREF30905">LoadSoundFile</A>(), <A HREF="./02mpr055.html#XREF26293">ReadSoundFile</A>(), <A HREF="./02mpr056.html#XREF37577">RewindSoundFile</A>(), <A HREF="./02mpr058.html#XREF32478">StartSoundFile</A>(), <A HREF="./02mpr059.html#XREF24025">StopSoundFile</A>(), <A HREF="./02mpr060.html#XREF41161">UnloadSoundFile</A>(), <A HREF="./02mpr051.html#XREF42166">CreateSoundFilePlayer</A>() </CODE></CODE><P>

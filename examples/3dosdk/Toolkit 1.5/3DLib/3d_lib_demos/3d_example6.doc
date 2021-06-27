@@ -1,0 +1,20 @@
+3d_example6 documentation :
+
+3d_example6 demonstrates the use of hierarchical objects. An hierarchical
+object is one which inherits the transformations from a parent and in 
+turn can be transformed using the parent as a point of reference.
+
+This demo displays our good friend, Mr. Spaceman, on the rotating cube. 
+Centered up against one of the faces is a pyramid rotating, balanced 
+on its nose. If you look at the code in 3d_example6_stuff.c you will 
+notice that even though the pyramid's motion is quite complex the actual 
+code is quite simple, as all we are doing is spinning it on it's local Y 
+axis. The other rotations are being inherited from the cube. Note that if 
+the pyramid was never rotated, it will still be attached to the cube.
+
+To set up a hierarchical object such as this, simply use the tag 
+"F3D_TAG_MODEL_PARENT" followed by a pointer to the parent (which itself 
+may be a hierarchical object).
+
+This feature will be useful for things such as tires on a truck or a gun turret.
+

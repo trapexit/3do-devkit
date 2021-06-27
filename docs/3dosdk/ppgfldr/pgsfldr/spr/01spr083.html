@@ -1,0 +1,37 @@
+<TITLE>GetThisMsg</TITLE>
+<A NAME="XREF31956"><H1>GetThisMsg </A></H1>
+<A NAME="XREF26083"></A>Gets a specific message.<P>
+<H3>Synopsis</H3>
+<CODE>Item GetThisMsg( Item message )</CODE><P>
+<H3>Description</H3>
+This procedure gets a specific message and removes it from the message queue that contains it, if any. <P>
+A task that is receiving messages can use <CODE>GetThisMsg()</CODE> to get an incoming message. Unlike <CODE>GetMsg()</CODE>, which gets the first message in a specific message queue, <CODE>GetThisMsg()</CODE> can get any message from any of the task's message queues.<P>
+A task that has sent a message can use <CODE>GetThisMsg()</CODE> to get it back. If the receiving task hasn't already taken the message from its message queue, <CODE>GetThisMsg()</CODE> removes it from the queue. If the message is not on any MsgPort a zero is returned. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>message
+<DD>The item number of the message to get. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the message or an error code (a negative value) if an error occurred. Possible error codes include: <P>
+<DL>
+<DT>BADITEM
+<DD>The message argument does not specify a message. 
+</DL>
+<DL>
+<DT>BADPRIV
+<DD>The calling task is not allowed to get this message. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype 
+</DL>
+<H3>Caveats</H3>
+Prior to V21, if the message was not on any message port this procedure still returned the item number of the message. In V21 and beyond, if the message is not on any port, the procedure returns an error. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr024.html#XREF10430"><CODE>CreateMsg</A>(), <A HREF="./01spr075.html#XREF37256">GetMsg</A>(), <A HREF="./01spr113.html#XREF31623">ReplyMsg</A>(), <A HREF="./01spr114.html#XREF39369">ReplySmallMsg</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>(), <A HREF="./01spr124.html#XREF40209">SendSmallMsg</A>(), <A HREF="./01spr132.html#XREF19568">WaitPort</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF31956"></LINK></H1><HR>

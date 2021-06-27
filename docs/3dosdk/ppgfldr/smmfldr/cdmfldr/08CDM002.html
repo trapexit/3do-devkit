@@ -1,0 +1,21 @@
+<TITLE>MDFL FORM</TITLE>
+<H1><LINK NAME="XREF24607">MDFL FORM</LINK></H1><HR>
+The MDFL FORM is a form within a 3DO file format file that is based on the standard MIDI file (as specified by the International MIDI Association). MIDI files are put out by most commercial sequencers and can easily be created by composers. For information on the MIDI specification itself, contact the International MIDI Association, U. S. telephone number (310) 649-6434.<P>
+The MIDI file specification describes two standard chunk types.<P>
+<H2>MThd Chunk - Header</H2>
+<CODE>
+<PRE>
+typedef struct MIDIFileHeader
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+{
+    ushort         mdfh_format;                            /* 0,1 or 2 */
+    ushort         mdfh_ntrks;                             /* number of tracks */
+    ushort         mdfh_division;                            /* ticks/quarter_note */
+} MIDIFileHeader;
+</CODE>
+</PRE>
+<H2>MIDI Track Chunks (MTrk)</H2>
+Tracks consists of a series of MTrk events, each of which contains a delta-time and an event. The delta-time is a variable-length quantity that is the time in ticks since the previous event. The event is a fairly standard binary MIDI message such as NoteOn/channel/note/velocity. Exceptions are events that start with F0, F7, or FF, which are system exclusive, escape, and meta events.<P>

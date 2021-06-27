@@ -1,0 +1,23 @@
+<Title>SetTextCelMargins</Title>
+<A NAME="XREF19625"><H1>SetTextCelMargins </A></H1>
+ Sets top and left margin in cel data buffer.<P>
+<H3>Synopsis</H3>
+<CODE>void SetTextCelMargins (TextCel *tCel, int32 leftMargin, int32 topMargin)</CODE><P>
+<H3>Description</H3>
+Sets the top and left margins within the cel data buffer. When you erase the text in a cel, the pen returns to the top and left margin values. When the pen encounters a newline in the text, the pen returns to the left-margin value (and down to the next text line). <P>
+If you set a margin value greater than the width and/or height of the cel, all text rendered into the cel will be clipped. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>leftMargin
+<DD>New left margin for the cel. 
+</DL>
+<DL>
+<DT>topMargin
+<DD>New top margin for the cel. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

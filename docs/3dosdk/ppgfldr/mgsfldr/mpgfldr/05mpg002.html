@@ -1,0 +1,161 @@
+<TITLE>Operating the Sound File Player</TITLE>
+<H1>Operating the Sound File Player</H1><HR>
+A task uses the sound file player by making Music library calls. This section of the chapter describes how each of those calls works in the process of sound file player operation.<P>
+<H2>Creating a Sound File Player</H2>
+The first step in using the sound file player is to create a sound file player. This is a process that creates a <CODE>SoundFilePlayer</CODE> data structure, sets initial values for the structure's fields, and, optionally, creates the sound buffers to go with the player. To create a sound file player, use this call:<P>
+<DL>
+<DD><CODE>SoundFilePlayer *CreateSoundFilePlayer( int32 NumBuffers, int32 BufSize, void *Buffers[] )</CODE><BR>
+</DL>
+The call accepts three arguments. The first, <CODE>NumBuffers</CODE>, is the number of buffers set up for use with the sound file player; the second is the size in bytes of a buffer. (Remember that all of a sound file player's buffers must be the same size.)  The third, <CODE>*Buffers[]</CODE>, is an array of pointers, one for each player buffer. Each pointer in the array points to the buffer's beginning location in memory. This is <I>not</I> the location of the sample item that uses this memory, but of the memory used to store the sampled sound data for the buffer.<P>
+When a task creates a sound file player, it can ask the Music library to create the buffers for it. To do so, it passes a NULL for the <CODE>*Buffers[]</CODE> argument. <CODE>CreateSoundFilePlayer()</CODE> then uses the <CODE>NumBuffers</CODE> and <CODE>BufSize</CODE> values to allocate the proper amount of memory and to create sample items and <CODE>SoundFileBuffer</CODE> data structures for each buffer. It sets the appropriate <CODE>SoundFilePlayer</CODE> values to refer to those data structures.<P>
+If a task wants to allocate its own memory for sound file buffers, it first allocates the memory and then sets the appropriate pointers in the <CODE>*Buffers[]</CODE> array. (It is important to remember that all buffers must be the same size.)  When <CODE>CreateSoundFilePlayer()</CODE> executes, it creates sound file buffers using the allocated memory and includes the buffers in the buffer array of the <CODE>SoundFilePlayer</CODE> data structure. If you use this option, be sure to set <CODE>NumBuffers</CODE> and <CODE>BufSize</CODE> to values that match the buffers you point to. When you allocate memory for sound buffers, specify the memory type MEMTYPE_AUDIO.<P>
+When it executes, <CODE>CreateSoundFilePlayer()</CODE> creates a <CODE>SoundFilePlayer</CODE> data structure and sets its field values to default values. If requested, it allocates memory for sound buffers. It creates a <CODE>SoundFileBuffer</CODE> data structure for each buffer, then sets the appropriate buffer values in the <CODE>SoundFilePlayer</CODE> data structure. If successful, this call returns a pointer to the newly created <CODE>SoundFilePlayer</CODE> data structure. If unsuccessful, it returns a NULL.<P>
+<H2>Preloading a Sound File</H2>
+Once a sound file player is created, a task specifies which AIFF file to play and asks the sound file player to preload the file using this call:<P>
+<DL>
+<DD><CODE>int32 LoadSoundFile( SoundFilePlayer *sfp, char *FileName )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>*sfp</CODE>, which is a pointer to the <CODE>SoundFilePlayer</CODE> data structure controlling playback; and <I>*FileName</I>, which is a pointer to a null terminated string containing the pathname to the AIFF file.<P>
+When executed, <CODE>LoadSoundFile()</CODE> preloads as much of the specified AIFF file's sample data as fits into the sound buffers and sends them to the sound spooler. It also determines the sampled sound instrument most appropriate to play back the sampled sound, loads that instrument, attaches it to the sound buffers, and connects the instrument's output to an output mixer. The call then sets SoundFilePlayer values to store the item number of the specified AIFF file, the item number of the sampled sound instrument. <CODE>LoadSoundFile()</CODE> also creates an <CODE>IOReq</CODE> item to read the AIFF file, and stores its item number in the <CODE>SoundFilePlayer</CODE> data structure.<P>
+If successful, <CODE>LoadSoundFile()</CODE> returns 0. If unsuccessful, it returns an error code (a negative value).<P>
+<H2>Creating a Sound File Player and Preloading a File</H2>
+If you want to combine the process of creating a sound file player and preloading a sound file, you can use this convenience call:<P>
+<DL>
+<DD><CODE>SoundFilePlayer *OpenSoundFile( char *FileName, int32 NumBuffers, int32 BufSize )</CODE><BR>
+</DL>
+The call accepts three arguments: <CODE>*FileName</CODE>, which is a pointer to a null terminated string containing the pathname to the AIFF file; <CODE>NumBuffers</CODE>, which is the number of buffers desired for the sound file player; and <CODE>BufSize</CODE>, which is the size in bytes of each sound buffer.<P>
+When it executes, <CODE>StartSoundFile()</CODE> instructs the sound spooler to begin playing the preloaded sound buffers. Playback starts in the first preloaded buffer, and continues sequentially through the successive buffers. The sound file player stops after playing the last filled buffer if the sound file player is not serviced (see below) before then.<P>
+Note that <CODE>OpenSoundFile()</CODE> does <I>not</I> allow you to specify existing sound buffers. If you want to create your own buffers or reuse existing buffers, use 
+<CODE>CreateSoundFilePlayer()</CODE> and <CODE>LoadSoundFile()</CODE> instead.<P>
+<H2>Specifying an Output Mixer</H2>
+Whenever a task uses <CODE>LoadSoundFile()</CODE> or <CODE>OpenSoundFile()</CODE> to specify and 
+preload an AIFF file, the sound file player, by default, loads a <CODE>directout.dsp</CODE> output mixer and connects the sampled sound instrument output to the mixer. If you want to send the sampled sound output to a different mixer or to an effects instrument, you must set to true the SFP_NO_DIRECTOUT flag in the <CODE>sfp_Flags</CODE> field of the <CODE>SoundFilePlayer</CODE> data structure before calling <CODE>LoadSoundFile()</CODE>. (Be careful not to unset other flags in the field when you do.)  When true, the flag tells the sound file player <I>not</I> to automatically load and connect a <CODE>directout.dsp</CODE> mixer. The calling task is then responsible for connecting the sound file player's sampled sound instrument to an existing mixer or effects instrument. It is also responsible for deleting the connection when the sound file player is deleted.<P>
+<H2>Starting Sound File Playback</H2>
+Once a sound file player is set up and a sound file is preloaded, a task can start sound playback using this call:<P>
+<DL>
+<DD><CODE>int32 StartSoundFile( SoundFilePlayer *sfp, int32 Amplitude )</CODE><BR>
+</DL>
+The call accepts the argument <CODE>*sfp</CODE>, a pointer to the <CODE>SoundFilePlayer</CODE> data structure used to control sound playback; and the argument <CODE>Amplitude</CODE>, a value from 0 to 0x7FFF that controls the amplitude of the sound's playback. Use the amplitude value to limit playback amplitude so that it does not overload the system amplitude. (For details, see <A HREF="./03mpg.html#XREF22719">Preparing Instruments</A>.)<P>
+When executed, <CODE>StartSoundFile()</CODE> begins playing back the contents of the first sound buffer, feeding them to the SoundFilePlayer specified sampled sound instrument. The instrument feeds its output to the specified output mixer. When the first buffer finishes playback, the spooler uses the buffer's cue to send a signal to the playback calling task, and then starts playing the contents of the next sound buffer. As each buffer finishes playback, the spooler sends the buffer's signal to the calling task. When the spooler finishes playing the last buffer in the buffer array, it starts playback at the beginning of the first buffer, and the playback cycle begins again. Playback does not stop until the task calls <CODE>StopSoundFile()</CODE> or dies.<P>
+If successful, <CODE>StartSoundFile()</CODE> returns 0. If unsuccessful, it returns an error code (a negative value).<P>
+<H2>Servicing a Sound File</H2>
+To keep fresh sound file data loaded in the sound buffers ahead of playback, a task must constantly service the sound file. To do so, it must use a loop. The task should ideally be a high priority task or thread so that it is not interrupted in its file service.<P>
+Within the service loop, the task checks to see what buffers it must wait for. It then enters wait state until it receives a signal from one or more of those buffers, signifying that the buffer has finished playing. The task then exits wait state, asks the sound file player to spool more of the AIFF sample data into the free buffer (or buffers), and checks again to see what buffers it must wait for.<P>
+The key call within such a loop is this:<P>
+<DL>
+<DD><CODE>int32 ServiceSoundFile( SoundFilePlayer *sfp, int32 SignalIn, int32 *SignalNeeded )</CODE><BR>
+</DL>
+The call accepts three arguments: <CODE>*sfp</CODE>,  a pointer to the <CODE>SoundFilePlayer</CODE> data structure used for playback; <CODE>SignalIn</CODE>,  a signal mask containing a bit set for each buffer to which the sound file player should write; and <CODE>*SignalNeeded</CODE>, a pointer to a signal mask where the sound file player writes the signal bits of each buffer for which the calling task should wait. The sound file player writes 0 to <CODE>SignalNeeded</CODE> when it finishes spooling the sound file to the buffers.<P>
+When <CODE>ServiceSoundFile()</CODE> executes, it performs an input service and an output service. Its input service is to read the signal bits specified by the calling task in <CODE>SignalIn</CODE>, to find the corresponding sound buffers, and to read sampled sound data from disc into those buffers. Its output service is to write a signal mask to <CODE>SignalNeeded</CODE> that contains a signal bit set for each buffer the task should wait for. The task should use this signal mask whenever it enters wait state. If the task needs to wait for other signals as well, it can logically OR the <CODE>SignalNeeded</CODE> signal mask with another signal mask before entering wait state. If <CODE>SignalNeeded</CODE> comes back 0, the task knows that spooling is finished, and can exit its service loop.<P>
+If successful, <CODE>ServiceSoundFile()</CODE> returns 0. If unsuccessful, it returns an error code (a negative value).<P>
+<B>Note: </B>When <CODE>ServiceSoundFile()</CODE> executes, it calls <CODE>ReadSoundFile()</CODE> to help the spooler keep its place in the AIFF file and in the buffers it uses to play the file. Although <CODE>ReadSoundFile()</CODE> is described in the 3DO Music and Audio Programmer's Reference, your tasks should not use it directly; it can mix up the sound file player's playback.<P>
+<H3>The File Service Loop</H3>
+When a task uses <CODE>ServiceSoundFile()</CODE> to service a file, it might use a loop such as the one defined in the following code fragment:<P>
+<B>Example 1: </B><I>Servicing a file.</I><P>
+<CODE>
+<PRE>
+int32 Result;
+SoundFilePlayer *sfp;
+int32 SignalIn, SignalsNeeded;
+SignalIn = 0;
+do {
+    Result = ServiceSoundFile(sfp, SignalIn, &amp;SignalsNeeded);
+    if (SignalsNeeded) SignalIn = WaitSignal(SignalsNeeded);
+} while (SignalsNeeded)
+</CODE>
+</PRE>
+Going into the loop, the task sets to 0 <CODE>SignalIn</CODE>, the mask it uses to tell <CODE>ServiceSoundFile()</CODE> which buffers the spooler should write to. The second mask, <CODE>SignalsNeeded</CODE>, is used by <CODE>ServiceSoundFile()</CODE> to receive the signals the task should wait for.<P>
+The first statement in the loop, which calls <CODE>ServiceSoundFile()</CODE>, specifies no buffers to write to (<CODE>SignalIn</CODE> = 0), so the call does not spool any of the AIFF file to the buffers. It only reports the buffers that the task should wait for, which it does by writing the buffers' signals in the <CODE>SignalsNeeded</CODE> signal mask.<P>
+The second statement in the loop checks to see if there are buffers for which the task should wait. If so, it calls <CODE>WaitSignal()</CODE>. The task supplies <CODE>WaitSignal()</CODE> with the signal mask specifying the buffers to wait for. The task enters wait state until it receives a signal from any one of these buffers, that tells the task which buffer has played. (If buffers have already played before the task enters wait state, then the task immediately gets the buffers' signals when it enters wait state. This means that the task can  receive more than one signal at this point.)  Once the task has received one or more buffer signals, it exits wait state and proceeds to the end of the loop.<P>
+The end of the loop checks the <CODE>SignalsNeeded</CODE> mask to see if it is set to 0. If it is, the AIFF file has finished playing, and the loop exits.<P>
+<H2>Stopping Sound File Playback</H2>
+A task can stop sound file playback at any point, but it usually does so when <CODE>ServiceSoundFile()</CODE> informs it that the AIFF file has finished playing. To stop playback, use the following call:<P>
+<DL>
+<DD><CODE>int32 StopSoundFile( SoundFilePlayer *sfp )</CODE><BR>
+</DL>
+The call accepts a single argument: <CODE>*sfp</CODE>, which is a pointer to the <CODE>SoundFilePlayer</CODE> data structure controlling playback. When <CODE>StopSoundFile()</CODE> executes, it stops buffer playback so that no sample data is fed to the sampled sound instrument. As a consequence, no buffer signals are sent as each buffer finishes playback. <P>
+<CODE>StopSoundFile()</CODE> returns 0 if successful, or an error code (a negative value) if unsuccessful.<P>
+<H2>Rewinding a Sound File Player</H2>
+To rewind a sound file player so that it is ready to play its AIFF file from the beginning once again, use this call:<P>
+<DL>
+<DD><CODE>int32 RewindSoundFile( SoundFilePlayer *sfp )</CODE><BR>
+</DL>
+The call accepts a single argument: <CODE>*sfp</CODE>, which is a pointer to the <CODE>SoundFilePlayer</CODE> data structure controlling playback. When it executes, <CODE>RewindSoundFile()</CODE> resets all of the appropriate playback progress values in the <CODE>SoundFilePlayer</CODE> data structure to the beginning of the AIFF file. It also preloads the beginning of the file into the sound buffers. When playback is turned back on with a <CODE>StartSoundFile()</CODE> call, the AIFF sound file begins playback from its beginning.<P>
+<B>Note: </B>This call does not provide seamless looping.<P>
+<CODE>RewindSoundFile()</CODE> returns 0 if successful, or an error code (a negative value) if unsuccessful.<P>
+<H2>Cleaning Up After Playback</H2>
+Once a task finishes playing a sound file and no longer needs the sound file player, it should clean up by freeing any associated items such as the playback instrument, attachment, and output mixer. It should then delete the <CODE>SoundFilePlayer</CODE> data structure and any associated sound buffers.<P>
+To free associated items, use this call:<P>
+<DL>
+<DD><CODE>int32 UnloadSoundFile( SoundFilePlayer *sfp )</CODE><BR>
+</DL>
+It accepts a pointer to the <CODE>SoundFilePlayer</CODE> data structure that you want to clean up for. When it executes, the call closes the AIFF file used for spooling, deletes the <CODE>IOReq</CODE> item used to read the file, detaches the buffers from the sampled sound instrument by deleting the attachment items, and frees the sampled sound instrument. If the sound file player created a <CODE>directout.dsp</CODE> mixer for sampled sound playback, that mixer is freed as well. <CODE>UnloadSoundFile()</CODE> is, in essence, the reverse of the <CODE>LoadSoundFile()</CODE> with one exception: it does not clear the buffers of sample data, but leaves it in place.<P>
+<CODE>UnloadSoundFile()</CODE> returns 0 if successful, or an error code (a negative value) if unsuccessful.<P>
+Calling <CODE>UnloadSoundFile()</CODE> is necessary if you want to play a new AIFF file on an existing sound file player. The call cleans up the existing AIFF setup so that calling <CODE>LoadSoundFile()</CODE> arranges a new AIFF setup for playback.<P>
+To delete a <CODE>SoundFilePlayer</CODE> data structure when you're finished with it, use this call:<P>
+<DL>
+<DD><CODE>int32 DeleteSoundFilePlayer( SoundFilePlayer *sfp )</CODE><BR>
+</DL>
+The call accepts a pointer to the <CODE>SoundFilePlayer</CODE> data structure you want to delete. When it executes, it deletes the data structure and cleans up anything else created by <CODE>CreateSoundFilePlayer()</CODE>. If sound buffers were created automatically for the sound player, their <CODE>SoundFileBuffer</CODE> data structures are deleted, and the memory used for them is freed. If the buffers <I>were not</I> created automatically, then <CODE>DeleteSoundFilePlayer()</CODE> does not delete them; the task must delete them itself.<P>
+<CODE>DeleteSoundFilePlayer()</CODE> returns 0 if successful, or an error code (a negative value) if unsuccessful.<P>
+If you want to use a convenience call to combine <CODE>UnloadSoundFile()</CODE> and <CODE>DeleteSoundFilePlayer()</CODE>, use this call:<P>
+<DL>
+<DD><CODE>int32 CloseSoundFile( SoundFilePlayer *sfp )</CODE><BR>
+</DL>
+It accepts a pointer to the <CODE>SoundFilePlayer</CODE> data structure you want to delete. When executed, it calls <CODE>UnloadSoundFile()</CODE> to clean up any items associated with the player and then calls <CODE>DeleteSoundFilePlayer()</CODE> to delete the specified data structure.<P>
+<CODE>CloseSoundFile()</CODE> returns 0 if successful, or an error code (a negative value) if unsuccessful.<P>
+Note that <CODE>CloseSoundFilePlayer()</CODE> does <I>not </I>delete custom allocated buffers. You should not use it on a sound file player with custom buffers. If you do, you need to free those buffers yourself.<P>
+<H2>Typical Calling Sequences</H2>
+A single sound file player can play back a sound file once, play back a sound file repeatedly, or play back a series of sound files. To do so, it can use the following calling sequences for playback.<P>
+<H3>Playing a Sound File Once</H3>
+<CODE>
+<PRE>
+CreateSoundFilePlayer()
+LoadSoundFile()
+StartSoundFile()
+loop{
+    ServiceSoundFile()
+}is file finished?
+StopSoundFile()
+UnloadSoundFile()
+DeleteSoundFilePlayer()
+</CODE>
+</PRE>
+<H3>Playing a Sound File Repeatedly</H3>
+<CODE>
+<PRE>
+CreateSoundFilePlayer()
+LoadSoundFile()
+loop{
+    StartSoundFile()
+    loop{
+        ServiceSoundFile()
+    }is file finished?
+    StopSoundFile()
+    RewindSoundFile()
+}has file played specified number of times?
+UnloadSoundFile()
+DeleteSoundFilePlayer()
+</CODE>
+</PRE>
+<H3>Playing a Series of Sound Files Any Number of Times</H3>
+<CODE>
+<PRE>
+CreateSoundFilePlayer()
+loop{
+    LoadSoundFile()
+    loop{
+        StartSoundFile()
+        loop{
+            ServiceSoundFile()
+        }is file finished?
+        StopSoundFile()
+        RewindSoundFile()
+    }has file played specified number of times?
+    UnloadSoundFile()
+}is there another file to play?
+DeleteSoundFilePlayer()
+</CODE>
+</PRE>
+Note that in this calling sequence, the outer loop checks to see if there is another file to play. If there is, it specifies the new file's pathname when it reenters the loop.<P>
+<A NAME="XREF31061"></A>

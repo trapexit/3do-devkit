@@ -1,0 +1,60 @@
+<TITLE>The 3DO CelWriter dialog</TITLE>
+<H1><LINK NAME="XREF33933">The 3DO CelWriter dialog</LINK></H1><HR>
+When you choose Export &gt; 3DO CelWriter from the File menu, the 3DO 
+CelWriter dialog that lets you specify the characteristics of the cel. <P>
+
+<IMG SRC="Figures/PLU4.figs/CelWritDialog.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<I>3DO CelWriter dialog.</I><P>
+<H3>Type</H3>
+Cels can be coded or uncoded. <P>
+<UL>
+<LI>An uncoded cel contains RGB pixel data. A 16-bit uncoded cel also 
+supports a P-Mode bit per pixel.
+<p>
+<LI>A coded cel is associated with a color table. Each cel pixel contains, 
+among other things, an index into this table. 
+</UL><BR>
+<H3>Bits Per Pixel</H3>
+Uncoded cels can be 16 or 8 bits per pixel. Coded cels can be 16, 8, 6, 4, 
+2 bits or 1 bit per pixel. <P>
+<H3>P-Mode Settings</H3>
+P-Mode settings allow you to separate a cel into two or more pixel groups 
+for special effects. For example, you could create an opaque car with a 
+translucent windshield. <P>
+The P-Mode Settings box in the CelWriter dialog let you edit and delete an 
+existing P-Mode preset and create new P-Mode presets. <P>
+To edit or delete an existing P-Mode preset, select it as P-Mode 0 and 
+click Edit or Delete. To create a new P-Mode, choose New. Suppose you are 
+working with the example given earlier, the opaque car with a translucent 
+windshield. To make a cel with these characteristics, start with a car 
+image and create an extra channel that is white (On) where the windows are 
+and black (Off) for the car body. The extra channel becomes Channel 4 so 
+P-Mode 0 applies for every black pixel in Channel 4 and P-Mode 1 applies 
+for every non-black pixel in Channel 4. If you select Translucent for 
+P-Mode 1, the car's windshield will average with the background to produce 
+a translucent effect.<P>
+When the AV bits are used as the second source divider instead of an adder 
+value, the USEAV bit in the cel control block is set automatically. 
+Because the USEAV bit applies to <I>both</I> P-Mode 0 and 1, your cel may 
+not display as you expect. Recheck your P-Mode settings and make sure you 
+are not using the adder value.<P>
+<H3>Channel Assignments</H3>
+
+<IMG SRC="Figures/PLU4.figs/ChannelAssign.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<I>Channel Assignment Options.</>
+Whenever you export an RGB image from Photoshop, at least three channels 
+are sent to the 3DO CelWriter plug-in: red, green, and blue. You can add 
+extra channels to the image from Photoshop. The 3DO Export plug-in can 
+then use these extra channels to set the additional information. <P>
+If several extra channels are available for the currently selected cel 
+type and bits per pixel, you can change the default assignments by 
+selecting a different channel.<P>
+Not all cel configurations support all possible channel assignment 
+features. As you change the cel type and bits per pixel, the Channel 
+Assignments options change. For example, if a cel cannot support P-Mode, 
+the P-Mode channel is set to Not Allowed. <P>
+<P>

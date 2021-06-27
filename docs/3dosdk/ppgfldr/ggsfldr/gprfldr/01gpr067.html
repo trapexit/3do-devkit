@@ -1,0 +1,26 @@
+<Title>SetVDL </Title>
+<A NAME="XREF20050"><H1>SetVDL </A></H1>
+<A NAME="XREF42284"> Sets a screen to display a specific VDL.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err SetVDL (Item screenItem,Item vdlItem)</CODE><P>
+<H3>Description</H3>
+This call associates the VDL specified by the vdlItem argument with the screen specified by the screenItem argument. <P>
+Every screen has an associated VDL. After <CODE>SetVDL()</CODE>, when <CODE>DisplayScreen()</CODE> is called referring to the specified screen the new VDL is used to create the display. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screenItem
+<DD>Item number of a screen structure. 
+</DL>
+<DL>
+<DT>vdlItem
+<DD>Item number of the associated VDL. 
+</DL>
+<H3>Return Value</H3>
+This call returns the item number of the current VDL (the last one submitted) or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr019.html#XREF19909"><CODE>DisplayScreen</A>(), <A HREF="./01gpr070.html#XREF12966">SubmitVDL</A>(), <A HREF="./01gpr046.html#XREF39861">ModifyVDL</A>(), <A HREF="./01gpr014.html#XREF24670">DeleteVDL</A>() </CODE><P>
+</CODE>

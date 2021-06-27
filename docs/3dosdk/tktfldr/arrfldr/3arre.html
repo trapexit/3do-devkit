@@ -1,0 +1,86 @@
+<TITLE>The handling of relocation directives</TITLE>
+<H1><LINK NAME="XREF31016">The handling of relocation directives</LINK></H1><HR>
+The linker implements the relocation directives defined by ARM Object Format.  In this section you will read about their function, omitting the fine details given in <A HREF="../atsfldr/ats2frst.html#XREF16187">ARM Object Format</A>.<P>
+<H2>The subject field</H2>
+A relocation directive describes the relocation of a single <I>subject field</I>, the value of which may be:<P>
+<UL>
+<LI>a byte; 
+<LI>a half-word (2 bytes); 
+<LI>a word (4 bytes); 
+<LI>a value derived from a suitable sequence of instructions.
+</UL>
+The relocation of a word value cannot overflow. In the other three cases, overflow is detected and faulted by the linker. The relocation of sequences of instructions is discussed later in this section.<P>
+<A NAME="XREF14053"><H2>The relocation value</A></H2>
+A relocation directive either refers to the value of a symbol, or to the base address of an AOF area in the same object file as the AOF area containing the directive. This value is called the <I>relocation value</I>, and the subject field is modified by it, as described in the following subsections.<P>
+<H2>PC-relative relocation</H2>
+A PC-relative relocation directive requests the following modification of the subject field:<P>
+<CODE>
+<PRE>
+subject-field = subject-field + relocation-value
+                - base-of-area-containing (subject-field)
+</CODE>
+</PRE>
+A special case of PC-relative relocation occurs when the relocation value is specified to be the base of the area containing the subject field. In this case, the relocation value is not added and:<P>
+<CODE>
+<PRE>
+subject-field = subject-field - base-of-area-containing 
+    (subject-field)
+</CODE>
+</PRE>
+which caters for a PC-relative branch to a fixed location, for example.<P>
+<A NAME="XREF41042"><H2>Forcing use of an inter-link-unit entry point</A></H2>
+A second special case of PC-relative relocation (specified by REL_B being set in the rel_flags field - see <A HREF="../atsfldr/ats2frst.html#XREF16187">ARM Object Format</A> for details) applies when the relocation value is the value of a code symbol. It requests that the <I>inter</I>-link-unit value of the symbol be used, rather than the <I>intra</I>-link-unit value. Unless the symbol is marked with the SYM_LEAFAT attribute (by a compiler or via the assembler's EXPORT directive), the <I>inter</I>-link-unit value will be 4 bytes beyond the <I>intra</I>-link-unit value.<P>
+This directive allows the tail-call optimisation to be performed on reentrant code.  For more information about tail call continuation see <A HREF="../atsfldr/4atsc.html#XREF29579">Function entry-Introduction</A>.<P>
+<H2>Additive relocation</H2>
+A plain additive relocation directive requests that the subject field be modified as follows:<P>
+<CODE>
+<PRE>
+subject-field = subject-field + relocation-value
+</CODE>
+</PRE>
+<A NAME="XREF36445"><H2>Based area relocation</A></H2>
+A based area relocation directive relocates a subject field by the offset of the relocation value within the consolidated area containing it:<P>
+<CODE>
+<PRE>
+subject-field = subject-field + relocation-value
+            - base-of-area-group-containing (relocation-value)
+</CODE>
+</PRE>
+For example, when compiling reentrant code, the C compiler places address constants in an <I>adcon</I>   area called sb$$adcons based on register <I>sb</I>, and generates code to load them using <I>sb</I>-relative LDRs. At link time, separate adcon areas are merged, so <I>sb</I> no longer points where presumed at compile time (except for the first area in the consolidated group). The offset field of each LDR (other than those in the first area) must be modified by the offset of the base of the appropriate adcon area in the consolidated group:<P>
+<CODE>
+<PRE>
+LDR-offset = LDR-offset + base-of-my-sb$$adcons-area
+                - sb$$adcons$$Base
+</CODE>
+</PRE>
+<H2>The relocation of instruction sequences</H2>
+The linker recognises the following instruction sequences as defining a relocatable value:<P>
+<UL>
+<LI>a B or BL; 
+<LI>an LDR or STR; 
+<LI>1 to 3 ADD or SUB instructions, having a common destination register and a common intermediate source register, and optionally followed by an LDR or STR with that register as base.
+</UL>
+For example, the following is a relocatable instruction sequence:<P>
+<CODE>
+<PRE>
+ADD    Rb, rx, #V1
+ADD    Rb, Rb, #V2
+LDR    ry, [Rb, #V3]
+</CODE>
+</PRE>
+with value V = V1+V2+V3.<P>
+The length of sequence recognised may be further restricted to 1, 2 or 3 instructions only by the relocation directive itself (see <A HREF="../atsfldr/2atsd.html#XREF30764">Relocation directives</A>).<P>
+After relocation, the new value of V is split between the instructions as follows:<P>
+<UL>
+<LI>If the original offset in the LDR or STR can be preserved, it will be preserved. This is possible if the difference between the new value and the original LDR offset can be encoded in the available number of ADD/SUB instructions. This preservation allows a sequence of ADDs and SUBs to compute a common base address for several following LDRs or STRs.
+</UL>
+The remainder of the new value is split between the ADDs or SUBs as follows:<P>
+<UL>
+<LI>If the new value is negative, it is negated, ADDs are changed to SUBs (or vice versa) and LDR/STR <I>up</I> is changed to LDR/STR <I>down</I> (or vice versa).
+<p>
+<LI>Each ADD or SUB instruction, in turn, removes the most significant part of the (now positive) new value, which can be represented by an 8-bit constant, shifted left by an even number of bit positions (i.e. which can be represented by an ARM data-processing instruction's immediate value).
+</UL>
+If there is no following LDR or STR, and the value remaining is non-zero, then the relocation has overflowed.<P>
+If there is a following LDR or STR, then any value remaining is assigned to it as an immediate offset. If this value is greater than 4095, then the relocation has overflowed.<P>
+In the relocation of a B or BL instruction, word offsets are converted to and from byte offsets. A B or BL is always relocated by itself, never in conjunction with any other instruction.<P>
+<P>

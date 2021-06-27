@@ -1,0 +1,19 @@
+<TITLE>How Do I Make a Simple Sound?</TITLE>
+<H1>How Do I Make a Simple Sound?</H1><HR>
+To produce a sound, you need to do the following:<P>
+<OL>
+<LI>Load one or more digital signal processor (DSP) instruments by calling <CODE>LoadInstrument()</CODE>. 
+<p>
+<p>DSP instruments are programs that run on the DSP. They provide the functionality of oscillators, filters, envelopes, sample playback, and so on. 
+<p>
+<LI>Connect the inputs and outputs of the instruments by calling<CODE> ConnectInstruments().</CODE> 
+<p>This action is similar to patching a modular synthesizer. 
+<p>
+<LI>Connect to an instrument that can make the sound audible, such as <CODE>directout.dsp</CODE>. 
+<p>
+<LI>Call <CODE>StartInstrument()</CODE> to start executing the DSP instrument. 
+</OL>
+<H3>For More Information</H3>
+See <A HREF="./03mpg.html#XREF22719">Preparing Instruments</A>, and  <A HREF="./04mpg.html#XREF33207">Playing Instruments</A> for complete programming details. <P>
+See <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>, in the <B>3DO Music and Audio Programmer's Reference</B> for descriptions of the calls.<P>
+See <B>beep.c </B>in the Examples folder for a complete example of making a simple sound.<A NAME="XREF31307"></A><P>

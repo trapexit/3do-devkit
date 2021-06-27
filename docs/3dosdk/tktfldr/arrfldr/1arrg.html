@@ -1,0 +1,122 @@
+<TITLE>ANSI C vs K&amp;R C</TITLE>
+<H1><LINK NAME="XREF27664">ANSI C vs K&amp;R C</LINK></H1><HR>
+The ANSI C Standard has tightened the definition of many of the vague areas of K&amp;R C. This results in a much clearer definition of a correct C program. However, if programs have been written to exploit particular vague features of K&amp;R C (perhaps accidentally), then their authors may be surprised when porting to an ANSI C environment. In the following sections, we present a list of what we consider to be the major language differences between ANSI and K&amp;R C. We defer discussion of library differences until a later section. The order of presentation is approximately the order in which material is presented in the ANSI C standard.<P>
+<H2>Lexical elements </H2>
+In ANSI C, the ordering of phases of translation is well defined. Of special note is the preprocessor which is conceptually token-based (which does not yield the same results as might naively be expected from pure text manipulation, because the boundaries between juxtaposed tokens are visible).<P>
+A number of new keywords have been introduced into ANSI C:<P>
+<UL>
+<LI>The type qualifier <I>volatile</I> means that the qualified object may be modified in ways unknown to the implementation, or that access to it may have other unknown side effects. Examples of objects correctly described as volatile include device registers, semaphores and data shared with asynchronous signal handlers. In general, expressions involving volatile objects cannot be optimised by the compiler.
+<p>
+<LI>The type qualifier <I>const</I> indicates that an object's value will not be changed by the executing program (and in some contexts permits a language system to enforce this by allocating the object in read-only store).
+<p>
+<LI>The type specifier <I>void</I> indicates a non-existent value for an expression.
+<p>
+<LI>The type specifier <I>void *</I> describes a generic pointer to or from which any pointer value can be assigned, without loss of information.
+<p>
+<LI>The <I>signed</I> type specifier may be used wherever <I>unsigned</I> is valid (e.g. to specify signed char explicitly).
+<p>
+<LI>There is a new floating-point type: <I>long double</I>.
+<p>
+<LI>The K&amp;R C practice of using<I> long float</I> to denote <I>double</I> is outlawed in ANSI C.
+</UL>
+The following lexical changes have also been made:<P>
+<UL>
+<LI>Each struct and union has its own distinct name space for member names.
+<p>
+<LI>Suffixes U and L (or u and l), can be used to explicitly denote unsigned and long constants (e.g. 32L, 64U, 1024UL etc.). The U suffix is new to ANSI C.
+<p>
+<LI>The use of octal constants 8 and 9 (previously defined to be octal 10 and 11 respectively) is no longer supported.
+<p>
+<LI>Literal strings are considered read-only, and identical strings may be stored as one shared value (as indeed they are, by default, by the ARM C Compiler). For example, given:
+    <CODE>
+<PRE>
+char *p1 = "hello";
+    char *p2 = "hello";
+</CODE>
+</PRE>
+</UL>
+<UL>
+<LI>p1 and p2 will point at the same store location, where the string "hello" is held. Programs must not, therefore, modify literal strings, (beware of Unix's <I>tmpnam()</I> and similar functions, which do this).
+</UL>
+<UL>
+<LI>Variadic functions (those which take a variable number of actual arguments) are declared explicitly using an ellipsis (...). For example:
+    <CODE>
+<PRE>
+int printf(const char *fmt, ...);
+</CODE>
+</PRE>
+</UL>
+<UL>
+<LI>Empty comments /**/ are replaced by a single space, (use the preprocessor directive ## to do token-pasting if you previously used /**/ to do this). 
+</UL>
+<H2>Arithmetic</H2>
+ANSI C uses value-preserving rules for arithmetic conversions (whereas K&amp;R C implementations tend to use unsigned-preserving rules). Thus, for example:<P>
+<CODE>
+<PRE>
+int f(int x, unsigned char y)
+{
+    return (x+y)/2;
+}
+</CODE>
+</PRE>
+does signed division, where unsigned-preserving implementations would do unsigned division.<P>
+Aside from value-preserving rules, arithmetic conversions follow those of K&amp;R C, with additional rules for long double and unsigned long int. It is now also allowable to perform float arithmetic without widening to double, (the ARM C system does not yet do this).<P>
+Floating-point values truncate towards zero when they are converted to integral types.<P>
+It is illegal to assign function pointers to data pointers and vice versa. An explicit cast must be used. The only exception to this is for the value 0, as in:<P>
+<CODE>
+<PRE>
+int (*pfi)();
+pfi = 0;
+</CODE>
+</PRE>
+Assignment compatibility between structs and unions is now stricter. For example, consider the following:<P>
+<CODE>
+<PRE>
+struct {char a; int b;} v1;
+struct {char a; int b;} v2;
+v1 = v2;  /* illegal because v1 and v2 have different types */
+</CODE>
+</PRE>
+<H2>Expressions</H2>
+Structs and unions may be passed by value as arguments to functions.<P>
+Given a pointer to a function declared as e.g.<CODE> int (*pfi)</CODE><I>()</I>, the function to which it points can be called either by <CODE>pfi()</CODE>; or<I> </I><CODE>(*pfi)()</CODE>.<P>
+Because of the use of distinct name spaces for struct and union members, absolute machine addresses must be explicitly cast before being used as struct or union pointers. For example:<P>
+<CODE>
+<PRE>
+((struct io_space *)0x00ff)-&gt;io_buf;
+</CODE>
+</PRE>
+<H2>Declarations</H2>
+Perhaps the greatest impact on C of the ANSI Standard has been the adoption of function prototypes. A function prototype declares the return type and argument types of a function. For example:<P>
+<CODE>
+<PRE>
+int f(int, float);
+</CODE>
+</PRE>
+declares a function returning int with one int and one float argument.<P>
+This means that a function's argument types are part of the type of the function, giving the advantage of stricter type-checking, especially between separately-compiled source files.<P>
+A function definition (which is also a prototype) is similar except that identifiers must be given for the arguments, for example, <CODE>int f(int i, float f)</CODE>. It is still possible to use old-style function declarations and definitions, but it is advisable to convert to the new style. It is also possible to mix old and new styles of function declaration. If the function declaration which is in scope is an old style one, normal integral promotions are performed for integral arguments, and floats are converted to double. If the function declaration which is in scope is a new-style one, arguments are converted as in normal assignment statements.<P>
+Empty declarations are now illegal.<P>
+Arrays cannot be defined to have zero or negative size.<P>
+<H2>Statements</H2>
+ANSI has defined the minimum attributes of control statements (e.g. the minimum number of case limbs which must be supported by a compiler, the minimum nesting of control constructs, etc.). These minimum values are not particularly generous and may prove troublesome if ultra portable code is required.<P>
+In general, the only limit imposed by the ARM C compiler is that of available memory. A future release may support an option to warn if any of the ANSI-guaranteed limits are violated.<P>
+A value returned from <I>main()</I> is guaranteed to be used as the program's exit code.<P>
+Values used in the controlling statement and labels of a switch can be of any integral type.<P>
+<H2>Preprocessor</H2>
+Preprocessor directives cannot be redefined.<P>
+There is a new ## directive for token-pasting.<P>
+There is a <I>stringise</I> directive # which produces a string literal from its following characters. This is useful when you want to embed a macro argument in a string. <P>
+The order of phases of translation is well defined and is as follows for the preprocessing phases:<P>
+<UL>
+<LI>Map source file characters to the source character set (this includes replacing trigraphs).
+<p>
+<LI>Delete all newline characters which are immediately preceded by \.
+<p>
+<LI>Divide the source file into preprocessing tokens and sequences of white space characters (comments are replaced by a single space).
+<p>
+<LI>Execute preprocessing directives and expand macros.
+</UL>
+Any #include files are passed through steps 1-4 recursively.<P>
+The macro __STDC__ is predefined to 1 by ANSI-conforming compilers (and by the ARM C compiler).<P>
+<P>

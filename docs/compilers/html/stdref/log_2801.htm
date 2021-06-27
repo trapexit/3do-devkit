@@ -1,0 +1,55 @@
+<HTML><TITLE>logical_and</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>logical_and</H2>
+<HR><PRE>     Function Object</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Binary function object that returns <SAMP>true</SAMP> if both of its arguments are <SAMP>true</SAMP>.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface"><LI>Interface</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;functional></PRE>
+<PRE>
+template &#60;class T>
+struct <B>logical_and</B> : public binary_function&#60;T, T, bool>;
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P><B><I>logical_and</B></I> is a binary function object.  Its <SAMP>operator()</SAMP> returns <SAMP>true</SAMP> if both <SAMP>x</SAMP> and <SAMP>y</SAMP> are <SAMP>true</SAMP>.  You can pass a <B><I>logical_and</B></I> object to any algorithm that requires a binary function.  For example, the <A HREF="tra_4787.htm"><B><I>transform</B></I></A> algorithm applies a binary operation to corresponding values in two collections and stores the result of the function.  <B><I>logical_and</B></I> is used in that algorithm in the following manner:</P>
+<PRE>vector&#60;bool> vec1;</PRE>
+<PRE>vector&#60;bool> vec2;
+vector&#60;bool> vecResult;
+.
+.
+.
+transform(vec1.begin(), vec1.end(),
+          vec2.begin(),
+          vecResult.begin(), <B>logical_and&#60;bool>()</B>);
+</PRE><P>After this call to <A HREF="tra_4787.htm"><B><I>transform</B></I></A>, <SAMP>vecResult(n)</SAMP> will contain a "1" (<SAMP>true</SAMP>) if both <SAMP>vec1(n)</SAMP> and <SAMP>vec2(n)</SAMP> are <SAMP>true</SAMP> or a "0" (<SAMP>false</SAMP>) if either <SAMP>vec1(n)</SAMP> or <SAMP>vec2(n)</SAMP> is <SAMP>false</SAMP>.</P>
+<A NAME="Interface"><H3>Interface</H3></A>
+<PRE>template &#60;class T></PRE>
+<PRE>struct logical_and : binary_function&#60;T, T, bool> {
+  typedef typename binary_function&#60;T, T, bool>::second_argument_type 
+                                                second_argument_type;
+  typedef typename binary_function&#60;T, T, bool>::first_argument_type 
+                                                first_argument_type;
+  typedef typename binary_function&#60;T, T, bool>::result_type 
+                                                result_type;
+  bool operator() (const T&#38;, const T&#38;) const;
+};
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, you will need to always supply the <SAMP>Allocator</SAMP> template arguement.  For instance, you will have to write :</P>
+<P><SAMP>vector&#60;bool, allocator></SAMP></P>
+<P>instead of: </P>
+<P><SAMP>vector&#60;bool></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="bin_7851.htm"><B><I>binary_function</B></I></A>, <A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A></P>
+<HR>
+<A HREF="lis_3222.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="log_1866.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

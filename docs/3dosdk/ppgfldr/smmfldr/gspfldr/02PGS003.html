@@ -1,0 +1,85 @@
+<TITLE>Displaying Images and Cels</TITLE>
+<H1><LINK NAME="XREF11390">Displaying Images and Cels</LINK></H1><HR>
+To display a cel, the jsshowcel program does the following: <P>
+<UL>
+<LI>initializes the hardware and the operating system 
+<LI>loads a background image
+<LI>loads a single cel
+<LI>displays the cel superimposed on the background
+<LI>performs cleanup and exits 
+</UL>
+The jsshowcel program does the minimum to display graphics that reside on the Macintosh or a CD-ROM on the TV screen by means of the 3DO system.<P>
+The sample code below comes from jsshowcel.c. The <CODE>main()</CODE> function calls three functions to create the display: <P>
+<UL>
+<LI><CODE>DrawImage()</CODE> renders the background image into the display buffer
+<LI><CODE>DrawCels()</CODE> renders the foreground cel into the display buffer
+<LI><CODE>DisplayScreen()</CODE> shows the display buffer on the TV screen
+</UL>
+This section first lists the part of the <CODE>main()</CODE> function in the example below, then discusses the function calls in some detail. <P>
+<B>Example 1: </B><I>Displaying an image and a cel </I><P>
+<CODE>
+<PRE>
+int main(int argc, char** argv)
+{
+    printf("jsshowcel\n");
+    
+    /*    Initialize global resources */
+    if ( Initialize() &lt; 0 )
+        goto DONE;
+    
+    /*    Draw the background image to the current screen. */
+    DrawImage(gScreenContext-&gt;sc_Screens[gScreenContext-&gt;sc_curScreen], 
+gBackgroundImage, gScreenContext);
+
+    /*
+        Draw (project) the cel to the current bitmap.  If this cel
+        were linked to other cels, all of them would be drawn.
+    */
+    DrawCels(gScreenContext-&gt;sc_BitmapItems[gScreenContext-&gt;sc_curScreen], gUFO_CCB);
+
+    /*
+        DisplayScreen automatically waits for the next vertical blank,
+        then tells the hardware to use the specified screen as the
+        display buffer. The hardware will continue to show this buffer
+        on the TV each frame, until another call to DisplayScreen, specifying
+        a different block of memory, is made.
+    */
+    DisplayScreen(gScreenContext-&gt;sc_Screens[gScreenContext-&gt;sc_curScreen], 0);
+
+    /*    Give the user a little time to look at the screen. */
+    {
+        int nCountdown;
+        for (nCountdown = (10 * 30); nCountdown; nCountdown--)
+            WaitVBL( gVBLIOReq, 1 );
+    }
+
+DONE:
+    if ( gScreenContext )
+        FadeToBlack(gScreenContext, 60);
+
+    /*    Always clean up after ourselves */
+    Cleanup();
+    
+    printf("end of jsshowcel ( wasn't that special? )\n");
+
+    return 0;
+
+}
+</CODE>
+</PRE>
+The Lib3DO function <CODE>DrawImage()</CODE> has three arguments: <P>
+<UL>
+<LI>iScreen-Item for the screen into which to project the image. 
+<LI>pbImage-Pointer to a page-aligned buffer in VRAM containing a full-screen 16-bit image. 
+<LI>sc-Pointer to a screen context. 
+</UL>
+The example above uses double buffering. During initialization, two screens were allocated for the screen context. One of the screens can now be used for display, the other can be written to. Since this example uses only one cel, this is not actually required, however, in any program that uses several cels, it's crucial to avoid drawing to the on-screen buffer. <P>
+The image is block-copied into the frame buffer using direct memory access (DMA), which is very fast and happens in the background while the CPU continues execution. Drawing an image, even if only a blank one, is by far the most common method of clearing the buffer between frames, since DMA copy operations are several times faster than cel engine rendering. While images can be displayed very quickly, they lack flexibility and are therefore only useful for large, static backgrounds.<P>
+The graphics folio function <CODE>DrawCels()</CODE> sets up the cel engine according to parameters in the bitmapItem, and then submits the list of cels specified by the ccb argument. When the call returns, the cels have been rendered. The function has two arguments:<P>
+<UL>
+<LI>bitmapItem-Item number of a bitmap. 
+<LI>ccb-Pointer to the first of one or more CCB structures. 
+</UL>
+Like the screen item, the bitmap item is a field in the ScreenContext structure allocated by <CODE>OpenGraphics()</CODE>. All information about the cel, including XY location, rotation, and scaling, is stored in the CCB. To change any aspect of a cel, you only have to alter one of the fields of the CCB and then rerender the cel list to the screen. Those CCB fields are discussed in a later chapter; for now, the default values (including the default XY position of 0,0) are sufficient. <P>
+The graphics folio function <CODE>DisplayScreen()</CODE> displays the bitmap(s) of the specified screen (or screens). The hardware draws the active display to the TV screen 30 times a second for NTSC screens. The software is only responsible for telling the hardware what memory to use. There is no way to disable the hardware or shut off the display, so as long as the hardware is on, some piece of memory is being displayed on the TV. <P>
+Only one call to <CODE>DisplayScreen()</CODE> is necessary until you want to change to a different buffer. The jsshowcel program uses only one buffer, even though it allocates two. The animation example discussed in the following chapter uses two buffers, displaying one while drawing into the other.<P>

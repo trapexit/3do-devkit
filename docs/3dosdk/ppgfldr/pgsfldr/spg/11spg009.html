@@ -1,0 +1,507 @@
+<TITLE>Examples</TITLE>
+<H1><LINK NAME="XREF30524">Examples</LINK></H1><HR>
+This section provides code listings of programs that use the File folio and the file system. <P>
+<A NAME="XREF22691"><H2>Using NVRAM</A></H2>
+Example 1 is a program listing that demonstrates how to save data to a file in NVRAM or to any other writable device.<P>
+The <CODE>SaveDataFile()</CODE> function takes a name, a data pointer, and a size indicator, and creates a file with that name and size, containing the supplied data.<P>
+Writing data to a file requires a bit of finesse. Data can only be written in blocks, not bytes. So if the data being written out is not a multiple of the target device's block size, the last chunk of data must be copied to a buffer which is the size of a block, and the block can then be written out.<P>
+<B>Example 1: </B><I>Saving data to a file in NVRAM (nvram.c).</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "filesystem.h"
+#include "filefunctions.h"
+#include "io.h"
+#include "string.h"
+#include "mem.h"
+#include "stdio.h"
+#include "operror.h"
+
+
+/*****************************************************************************/
+
+
+Err SaveDataFile(const char *name, void *data, uint32 dataSize)
+{
+Item       fileItem;
+Item       ioReqItem;
+IOInfo     ioInfo;
+void      *temp;
+Err        result;
+uint32     numBlocks;
+uint32     blockSize;
+uint32     roundedSize;
+FileStatus status;
+
+    /* get rid of the file if it was already there */
+    DeleteFile((char *)name);
+
+    /* create the file again... */
+    result = CreateFile((char *)name);
+    if (result &gt;= 0)
+    {
+        /* open the file for access */
+        fileItem = OpenDiskFile((char *)name);
+        if (fileItem &gt;= 0)
+        {
+            /* create an IOReq to communicate with the file */
+            ioReqItem = CreateIOReq(NULL, 0, fileItem, 0);
+            if (ioReqItem &gt;= 0)
+            {
+                /* get the block size of the file */
+                memset(&amp;ioInfo, 0, sizeof(IOInfo));
+                ioInfo.ioi_Command         = CMD_STATUS;
+                ioInfo.ioi_Recv.iob_Buffer = &amp;status;
+                ioInfo.ioi_Recv.iob_Len    = sizeof(FileStatus);
+                result = DoIO(ioReqItem, &amp;ioInfo);
+                if (result &gt;= 0)
+                {
+                    blockSize = status.fs.ds_DeviceBlockSize;
+                    numBlocks = (dataSize + blockSize - 1) / blockSize;
+
+                    /* allocate the blocks we need for this file */
+                    ioInfo.ioi_Command         = FILECMD_ALLOCBLOCKS;
+                    ioInfo.ioi_Recv.iob_Buffer = NULL;
+                    ioInfo.ioi_Recv.iob_Len    = 0;
+                    ioInfo.ioi_Offset          = numBlocks;
+                    result = DoIO(ioReqItem, &amp;ioInfo);
+                    if (result &gt;= 0)
+                    {
+                        /* tell the system how many bytes for this file */
+                        memset(&amp;ioInfo,0,sizeof(IOInfo));
+                        ioInfo.ioi_Command         = FILECMD_SETEOF;
+                        ioInfo.ioi_Offset          = dataSize;
+                        result = DoIO(ioReqItem, &amp;ioInfo);
+                        if (result &gt;= 0)
+                        {
+                            roundedSize = 0;
+                            if (dataSize &gt;= blockSize)
+                            {
+                                /* If we have more than one block's worth of
+                                 * data, write as much of it as possible.
+                                 */
+
+                                roundedSize = (dataSize / blockSize) * blockSize;
+                                ioInfo.ioi_Command         = CMD_WRITE;
+                                ioInfo.ioi_Send.iob_Buffer = (void *)data;
+                                ioInfo.ioi_Send.iob_Len    = roundedSize;
+                                ioInfo.ioi_Offset          = 0;
+                                result = DoIO(ioReqItem, &amp;ioInfo);
+
+                                data      = (void *)((uint32)data + roundedSize);
+                                dataSize -= roundedSize;
+                            }
+
+                            if ((result &gt;= 0) &amp;&amp; dataSize)
+                            {
+                                /* If the amount of data left isn't as large
+                                 * as a whole block, we must allocate a memory
+                                 * buffer of the size of the block, copy the
+                                 * rest of the data into it, and write the
+                                 * buffer to disk.
+                                 */
+
+                                temp = AllocMem(blockSize,MEMTYPE_DMA | 
+
+                                              MEMTYPE_FILL);
+                                if (temp)
+                                {
+                                    memcpy(temp,data,dataSize);
+                                    ioInfo.ioi_Command         = CMD_WRITE;
+                                    ioInfo.ioi_Send.iob_Buffer = temp;
+                                    ioInfo.ioi_Send.iob_Len    = blockSize;
+                                    ioInfo.ioi_Offset          = roundedSize;
+                                    result = DoIO(ioReqItem, &amp;ioInfo);
+
+                                    FreeMem(temp,blockSize);
+                                }
+                                else
+                                {
+                                    result = NOMEM;
+                                }
+                            }
+                        }
+                    }
+                }
+                DeleteIOReq(ioReqItem);
+            }
+            else
+            {
+                result = ioReqItem;
+            }
+            CloseDiskFile(fileItem);
+        }
+        else
+        {
+            result = fileItem;
+        }
+
+        /* don't leave a potentially corrupt file around... */
+        if (result &lt; 0)
+            DeleteFile((char *)name);
+    }
+
+    return (result);
+}
+
+
+/*****************************************************************************/
+
+
+static char testData[] = "This is some test data to save out";
+
+int main(int32 argc, char **argv)
+{
+Err err;
+
+    err = SaveDataFile("/NVRAM/test",testData,sizeof(testData));
+    if (err &lt; 0)
+    {
+        printf("Could not save data: ");
+        PrintfSysErr(err);
+    }
+}
+</CODE>
+</PRE>
+<H2>Displaying Contents of a File</H2>
+Example 2 is a program listing that demonstrates how to read a file using the  byte stream calls, and output its contents to the debugging terminal.<P>
+<B>Example 2: </B><I>Displaying the contents of a 3DO file (type.c)</I><P>
+
+<CODE>
+<PRE>
+#include "types.h"
+#include "stdio.h"
+#include "filestream.h"
+#include "filestreamfunctions.h"
+
+
+/*****************************************************************************/
+
+
+#define MAXLINE 1024
+
+static void Type(const char *path)
+{
+Stream *stream;
+char    c;
+char    line[MAXLINE];
+int32   linelen;
+int32   lines;
+int32   endOfLine, endOfFile;
+
+    /* Open the file as a byte-stream. A buffer size of zero is
+     * specified, which permits the File folio to choose an appropriate
+     * amount of buffer space based on the file's actual block size.
+     */
+
+    stream = OpenDiskStream((char *)path, 0);
+    if (!stream)
+    {
+        printf("File '%s' could not be opened\n", path);
+        return;
+    }
+
+    lines     = 0;
+    linelen   = 0;
+    endOfLine = FALSE;
+    endOfFile = FALSE;
+
+    /* Spin through a loop, grabbing one byte each time.
+     *
+     * A more efficient implementation would grab bytes
+     * in larger batches (e.g. 128 bytes at a time) and parse them in a
+     * more reasonable fashion.
+     */
+
+    while (!endOfFile)
+    {
+        if (ReadDiskStream(stream, &amp;c, 1) &lt; 1)
+        {
+            endOfFile = TRUE;
+            endOfLine = TRUE;
+            line[linelen] = '\0';
+        }
+        else if (c == '\r' || c == '\n')
+        {
+            endOfLine = TRUE;
+            line[linelen] = '\0';
+        }
+        else if (linelen &lt; MAXLINE-1)
+        {
+            line[linelen++] = c;
+        }
+
+        if (endOfLine)
+        {
+            printf("%s\n", line);
+            linelen = 0;
+            lines++;
+            endOfLine = FALSE;
+        }
+    }
+
+    printf("\n%d lines processed\n\n", lines);
+
+    /* close the file */
+    CloseDiskStream(stream);
+}
+
+
+/*****************************************************************************/
+
+
+int main(int32 argc, char **argv)
+{
+int32 i;
+
+    if (argc &lt; 2)
+    {
+        printf("Usage: type file1 [file2] [file3] [...]\n");
+    }
+    else
+    {
+        /* go through all the arguments */
+        for (i = 1; i &lt; argc; i++)
+            Type(argv[i]);
+    }
+
+    return 0;
+}
+</CODE>
+</PRE>
+<H2>Scanning the File System</H2>
+Example 3 is a program listing of an application that scans the file system.<P>
+<B>Example 3: </B><I>Scanning the file system (Walker.c).</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "io.h"
+#include "stdio.h"
+#include "operror.h"
+#include "filesystem.h"
+#include "directory.h"
+#include "directoryfunctions.h"
+#include "filefunctions.h"
+
+
+/*****************************************************************************/
+
+
+static void TraverseDirectory(Item dirItem)
+{
+Directory      *dir;
+DirectoryEntry  de;
+Item            subDirItem;
+int32           entry;
+
+    dir = OpenDirectoryItem(dirItem);
+    if (dir)
+    {
+        entry = 1;
+        while (ReadDirectory(dir, &amp;de) &gt;= 0)
+        {
+            printf("Entry #%d:\n", entry);
+            printf("  file '%s', type 0x%lx, ID 0x%lx",
+                    de.de_FileName, de.de_Type,
+                    de.de_UniqueIdentifier);
+            printf(", flags 0x%lx\n", de.de_Flags);
+            printf("  %d bytes, %d block(s) of %d byte(s) each\n",
+                    de.de_ByteCount,
+                    de.de_BlockCount, de.de_BlockSize);
+            printf("  %d avatar(s)", de.de_AvatarCount);
+            printf("\n\n");
+
+            if (de.de_Flags &amp; FILE_IS_DIRECTORY)
+            {
+                subDirItem = OpenDiskFileInDir(dirItem, de.de_FileName);
+                if (subDirItem &gt;= 0)
+                {
+                    printf("********** RECURSE **********\n\n");
+                    TraverseDirectory(subDirItem);
+                    printf("******* END RECURSION *******\n\n");
+                }
+                else
+                {
+                    printf("***  RECURSION FAILED  ***\n\n");
+                }
+            }
+            entry++;
+        }
+        CloseDirectory(dir);
+    }
+    else
+    {
+        printf("OpenDirectoryItem() failed\n");
+        CloseDiskFile(dirItem);
+    }
+}
+
+
+/*****************************************************************************/
+
+
+static Err Walk(const char *path)
+{
+Item startItem;
+
+    startItem = OpenDiskFile((char *)path);
+    if (startItem &gt;= 0)
+    {
+        printf("\nRecursive directory scan from %s\n\n", path);
+        TraverseDirectory(startItem);
+        printf("End of %s has been reached\n\n", path);
+        return 0;
+    }
+    else
+    {
+        printf("OpenDiskFile(\"%s\") failed: ",path);
+        PrintfSysErr(startItem);
+        return startItem;
+    }
+}
+
+
+/*****************************************************************************/
+
+
+int main(int32 argc, char **argv)
+{
+int i;
+
+    if (argc &lt;= 1)
+    {
+        /* if no directory name was given, scan the current directory */
+        Walk(".");
+    }
+    else
+    {
+        for (i = 1; i &lt; argc; i++)
+            Walk(argv[i]);
+    }
+
+    return 0;
+}
+
+</CODE>
+</PRE>
+<H2>Listing the Contents of a Directory</H2>
+Example 4 is a code listing that list the contents of a directory.<P>
+<B>Example 4: </B><I>Listing a directory (ls.c)</I><P>
+<CODE>
+<PRE>
+**/
+
+#include "types.h"
+#include "stdio.h"
+#include "string.h"
+#include "io.h"
+#include "operror.h"
+#include "filesystem.h"
+#include "filefunctions.h"
+#include "directory.h"
+#include "directoryfunctions.h"
+
+
+/*****************************************************************************/
+
+
+static void ListDirectory(const char *path)
+{
+Directory      *dir;
+DirectoryEntry  de;
+Item            ioReqItem;
+int32           entry;
+int32           err;
+char            fullPath[FILESYSTEM_MAX_PATH_LEN];
+IOInfo          ioInfo;
+Item            dirItem;
+
+    /* open the directory for access */
+    dirItem = OpenDiskFile((char *)path);
+    if (dirItem &gt;= 0)
+    {
+        /* create an IOReq for the directory */
+        ioReqItem = CreateIOReq(NULL, 0, dirItem, 0);
+        if (ioReqItem &gt;= 0)
+        {
+            /* Ask the directory its full name. This will expand any aliases
+             * given on the command-line into fully qualified pathnames.
+             */
+            memset(&amp;ioInfo, 0, sizeof(ioInfo));
+            ioInfo.ioi_Command         = FILECMD_GETPATH;
+            ioInfo.ioi_Recv.iob_Buffer = fullPath;
+            ioInfo.ioi_Recv.iob_Len    = sizeof(fullPath);
+            err = DoIO(ioReqItem, &amp;ioInfo);
+            if (err &gt;= 0)
+            {
+                /* now open the directory for scanning */
+                dir = OpenDirectoryPath((char *)path);
+                if (dir)
+                {
+                    printf("\nContents of directory %s:\n\n", fullPath);
+                    entry = 1;
+                    while (ReadDirectory(dir, &amp;de) &gt;= 0)
+                    {
+                        printf("%5s", (char *) &amp;de.de_Type);
+                        printf(" %8d", de.de_ByteCount);
+                        printf(" %4d*%4d", de.de_BlockCount, de.de_BlockSize);
+                        printf(" %3d", de.de_AvatarCount);
+                        printf(" %8x", de.de_Flags);
+                        printf(" %s\n", de.de_FileName);
+                        entry++;
+                    }
+                    CloseDirectory(dir);
+
+                    printf("\nEnd of directory\n\n");
+                }
+                else
+                {
+                    printf("OpenDirectory(\"%s\") failed\n",fullPath);
+                }
+            }
+            else
+            {
+                printf("Unable to get full path name for '%s': ",path);
+                PrintfSysErr(err);
+            }
+            DeleteIOReq(ioReqItem);
+        }
+        else
+        {
+            printf("CreateIOReq() failed: ");
+            PrintfSysErr(ioReqItem);
+        }
+        CloseDiskFile(dirItem);
+    }
+    else
+    {
+        printf("OpenDiskFile(\"%s\") failed: ",path);
+        PrintfSysErr(dirItem);
+    }
+}
+
+
+/*****************************************************************************/
+
+
+int main(int32 argc, char **argv)
+{
+int32 i;
+
+    if (argc &lt;= 1)
+    {
+        /* if no directory name was given, scan the current directory */
+        ListDirectory(".");
+    }
+    else
+    {
+        /* go through all the arguments */
+        for (i = 1; i &lt; argc; i++)
+            ListDirectory(argv[i]);
+    }
+
+    return 0;
+}
+
+</CODE>
+</PRE>

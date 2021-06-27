@@ -1,0 +1,18 @@
+<Title>SetTextCelSpacingAdjust</Title>
+<A NAME="XREF17984"><H1>SetTextCelSpacingAdjust </A></H1>
+ Sets spacing adjustment for text in text cel.<P>
+<H3>Synopsis</H3>
+<CODE>void SetTextCelSpacingAdjust(TextCel *tCel, int32 adjustSpacing)</CODE><P>
+<H3>Description</H3>
+Sets a spacing adjustment for text rendered in the cel. Spacing is the extra horizontal space between characters in the text. The base spacing value comes from the FontDescriptor attached to the cel. The value you specify in this call is a signed adjustment to the spacing. Negative values render characters in the text closer together; positive values render characters farther apart. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>adjustSpacing
+<DD>Value (in pixels) to add to the base spacing value for the font. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

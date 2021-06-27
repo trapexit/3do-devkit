@@ -1,0 +1,76 @@
+<TITLE>The SPORT Device </TITLE>
+<H1>The SPORT Device </H1><HR>
+The 3DO hardware includes a minimum of 1 MB of VRAM. VRAM is a special type of memory that offers a very wide interface bus, which allows for efficient implementation of display buffers.<P>
+SPORT stands for Serial PORT, and refers specifically to the VRAM's serial port, not to an external RS-232 serial port. VRAM has special hardware that lets you copy pages of memory, clear pages of memory, and replicate pages of memory at an amazing rate. The SPORT device provides access to these capabilities. It is ideal for clearing a display to a specific color, or setting a display to a static background picture.<P>
+<H2>Working With the SPORT Device</H2>
+The SPORT device always operates on pages of VRAM. The size of VRAM pages is returned by the <CODE>GetPageSize(MEMTYPE_VRAM)</CODE> function call. All operations performed by the SPORT device must start on an even page boundary and be a multiple of the page size length. The current VRAM page size is 2 KB, but you must not rely on this fact. Always use the <CODE>GetPageSize()</CODE> function to get the actual page size.<P>
+Communicating with the SPORT device is done with the standard Portfolio I/O commands. The SPORT device only has a single unit, unit 0. To send commands to the SPORT device, you must complete the following steps:<P>
+<OL>
+<LI>Open the SPORT device using the <CODE>OpenNamedDevice()</CODE> function.
+
+<LI>Create an IOReq structure by calling the <CODE>CreateIOReq()</CODE> function.
+<LI>Initialize an IOInfo structure that specifies the command and parameters of the command.
+<LI>Send the command to the SPORT device using either <CODE>DoIO()</CODE> or <CODE>SendIO().
+</OL>
+<H2>Copying VRAM Pages</H2>
+The </CODE><CODE>SPORTCMD_COPY</CODE> command copies pages of VRAM to other pages of VRAM. The copy operation always occurs during vertical blanking because the serial port on the VRAM is always in use when video is displayed. When vertical blanking occurs, the serial port becomes available for other duties such as copying and cloning pages.<P>
+To use <CODE>SPORTCMD_COPY</CODE>, initialize an IOInfo structure such as:<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                        = SPORTCMD_COPY;
+ioInfo.ioi_Offset                               = mask;
+ioInfo.ioi_Send.iob_Buffer                        = sourceAddress;
+ioInfo.ioi_Send.iob_Len                        = numBytes;
+ioInfo.ioi_Recv.iob_Buffer                        = destinationAddress;
+ioInfo.ioi_Recv.iob_Len                        = numBytes;
+</CODE>
+</PRE>
+The <CODE>sourceAddress</CODE> field points to the source data to be copied, while the <CODE>destinationAddress</CODE> field points to the address where the data is copied. Both of these addresses must be in VRAM, and both must fall on even VRAM page boundaries. <CODE>numBytes</CODE> indicates the number of bytes to copy. This value must be an even multiple of the VRAM page size. Finally, <CODE>mask</CODE> is a 32-bit value that determines which bits of each word of data are copied. Every on bit indicates a bit that will be copied to the destination. Every off bit indicates that the corresponding bit in the destination will remain unchanged.<P>
+Don't use a mask value other than 0xffffffff because future hardware implementations may impose serious performance penalties for using masks with other values.<P>
+<H2>Replicating VRAM Pages</H2>
+The <CODE>SPORTCMD_CLONE</CODE> command replicates a page of VRAM to a series of other pages. This is useful when creating wallpaper backgrounds. The cloning operation always occurs during vertical blanking because the serial port on the VRAM is always in use when video is being displayed. When vertical blanking occurs, the serial port becomes available for other duties such as copying and cloning pages.<P>
+To use <CODE>SPORTCMD_CLONE</CODE>, you must initialize an IOInfo structure such as:<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                        = SPORTCMD_CLONE;
+ioInfo.ioi_Offset                             = mask;
+ioInfo.ioi_Send.iob_Buffer                        = sourcePageAddress;
+ioInfo.ioi_Send.iob_Len                        = pageSize;
+ioInfo.ioi_Recv.iob_Buffer                        = destinationAddress;
+
+ioInfo.ioi_Recv.iob_Len                        = numBytes;
+</CODE>
+</PRE>
+The <CODE>sourcePageAddress</CODE> points to the source page to be replicated, while the <CODE>destinationAddress</CODE> field points to the address where the data is copied. Both of these addresses must be in VRAM, and both must fall on even VRAM page boundaries. <CODE>pageSize</CODE> is the size of a single VRAM page, as returned by <CODE>GetPageSize(MEMTYPE_VRAM)</CODE>. <CODE>numBytes</CODE> indicates the number of bytes to replicate. This value is typically calculated as (<CODE>numPages * pageSize</CODE>). This value must be an even multiple of the VRAM page size. Finally, <CODE>mask</CODE> is a 32-bit value that determines which bits of each word of data are put on the destination pages. Every on bit indicates a bit that will be copied to the destination. Every off bit indicates that the corresponding bit in the destination will remain unchanged.<P>
+Don't use a mask value other than 0xffffffff because future hardware implementations may impose serious performance penalties for using masks with other values.<P>
+<H2>Setting VRAM Pages to a Fixed Value</H2>
+The <CODE>FLASHWRITE_CMD</CODE> command sets the value of a range of VRAM pages. Unlike the copy and clone operations described above, this command does not operate in the vertical blank area and occurs immediately.<P>
+To use <CODE>FLASHWRITE_CMD</CODE>, you must initialize an IOInfo structure such as:<P>
+<CODE>
+<PRE>
+IOInfo ioInfo;
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+memset(&amp;ioInfo,0,sizeof(ioInfo));
+ioInfo.ioi_Command                        = FLASHCMD_WRITE;
+ioInfo.ioi_CmdOptions    = mask;
+ioInfo.ioi_Offset       = value; 
+ioInfo.ioi_Send.iob_Buffer                        = pageAddress;
+ioInfo.ioi_Send.iob_Len                        = numBytes;
+ioInfo.ioi_Recv.iob_Buffer                        = pageAddress;
+ioInfo.ioi_Recv.iob_Len                        = numBytes;
+</CODE>
+</PRE>
+The <CODE>pageAddress</CODE> field points to the pages of VRAM to be set to a fixed value. This address must be in VRAM, and must fall on an even VRAM page boundary. The <CODE>numBytes</CODE> field indicates the number of bytes to affect. This value must be an even multiple of the VRAM page size. <CODE>value</CODE> is the value to which the words of data within the pages should be set. Finally, <CODE>mask</CODE> is a 32-bit value that determines which bits of each word of data are affected. Every on bit indicates a bit that will be affected. Every off bit indicates that the corresponding bit will remain unchanged.<P>
+Don't use a mask value other than 0xffffffff because future hardware implementations may impose serious performance penalties for using masks with other values.<P>

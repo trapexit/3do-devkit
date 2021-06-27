@@ -1,0 +1,24 @@
+<TITLE>General options</TITLE>
+<H1><LINK NAME="XREF36537">General options</LINK></H1><HR>
+<H3>-Help</H3>
+Print a screen of help text summarising the linker's options and exit with a good return code.<P>
+<CODE>-Output &lt;</CODE>name&gt;<P>
+Name the linker's final output; often, this is the name of the image file.<P>
+<H3>-Debug</H3>
+Include ARM Symbolic Debugger tables in the output image for use by armsd.  -Debug causes <I>armlink</I> to include in the output image all high-level debugging areas present in the input object files, and to generate low-level symbolic debugging data for the whole image.<P>
+If the output image type is AIF and any input object file contains high-level debugging data then -Debug is implied. <P>
+<CODE>-LIST &lt;file</CODE>&gt;<P>
+Re-direct the standard output stream to file. This is especially useful in conjunction with -MAP, -Xref and -Symbols -.<P>
+<CODE>-ERRORS &lt;file&gt;</CODE><P>
+Re-direct the standard error stream to file (diagnostics will be filed there). This is especially useful under DOS.<P>
+<CODE><A NAME="XREF42629">-VIA &lt;file&gt;</A></CODE><P>
+Read a further list of input file names and linker options from file. There may be no more than 64 words on each line of a VIA file, and an option may not be split across more than one line. Conventionally, each file name and option is given on a separate line. There may be multiple -VIA options, and -VIA options may be nested.<P>
+<CODE>-Verbose</CODE><P>
+Print messages indicating progress of the link operation. Giving the option twice makes it even more verbose (this may be abbreviated to -VV).<P>
+<CODE>-MAP</CODE><P>
+Create a map of the base and size of each area in the output image. This option is most useful in conjunction with the -SHL and -OVerlay options. The map output is produced on the standard output stream (from where it can be re-directed to a file using the host's stream re-direction facilities or the -LIST option).<P>
+<CODE>-Xref</CODE><P>
+List references between input areas (most useful with the -OVerlay option). The cross-reference list is produced on the standard output stream (from where it can be re-directed to a file using the host's stream re-direction facilities or the -LIST option).<P>
+<CODE>-Symbols &lt;file&gt;</CODE><P>
+List each symbol used in the link step (including linker-generated symbols) and its value, to <I>file</I>. A file name of - (minus) names the standard output stream.<P>
+<P>

@@ -1,0 +1,22 @@
+<Title>GetTextCelSize</Title>
+<A NAME="XREF37691"><H1>GetTextCelSize </A></H1>
+ Retrieves text cel's current size.<P>
+<H3>Synopsis</H3>
+<CODE>void GetTextCelSize (TextCel *tCel, int32 *width, int32 *height)</CODE><P>
+<H3>Description</H3>
+Retrieves the current size for the text cel. You can also obtain the current size of a cel by reading the ccb_Width and ccb_Height fields in the cel's CCB. Note that this retrieves the onscreen size of the cel, not the size of the text currently in the cel. (The text currently in the cel may not fill the complete width or height of the cel.) <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure. 
+</DL>
+<DL>
+<DT>width
+<DD>Pointer to a variable to receive the cel's width. 
+</DL>
+<DL>
+<DT>height
+<DD>Pointer to a variable to receive the cel's height. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>

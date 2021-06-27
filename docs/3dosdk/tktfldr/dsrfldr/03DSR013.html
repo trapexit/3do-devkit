@@ -1,0 +1,66 @@
+<Title>SAudioTool</Title>
+<A NAME="XREF15143"><H1>SAudioTool</A></H1>
+<A NAME="XREF19365"></A>Prints or modifies .saudio files.<P>
+<H3>Synopsis</H3>
+<CODE>saudiotool [options] -i &lt;infile&gt;</CODE><P>
+<H3>Description</H3>
+SAudioTool is an MPW tool that performs two functions: Prints formatted 
+output for <I>.saudio</I> header data and modifies the header and data 
+chunks.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>-dh
+<DD>Dump header data to screen.
+</DL>
+<DL>
+<DT>-l &lt;chan&gt;
+<DD>New logical channel.
+</DL>
+<DL>
+<DT>-nb &lt;<num&gt;
+<DD>Number of audio folio buffers to use.
+</DL>
+<DL>
+<DT>-ia &lt;amp&gt;
+<DD>Initial amplitude (in hex).
+</DL>
+<DL>
+<DT>-ip &lt;pan&gt;
+<DD>Initial pan (in hex).
+</DL>
+<DL>
+<DT>-i &lt;infile&gt;
+<DD>Input filename.
+</DL>
+<H3>Examples</H3>
+Here is a typical command line to print the header information:<P>
+<CODE>
+<PRE>
+SAudioTool -dh -i bach_44K_16B_M.saudio
+</CODE>
+</PRE>
+This prints the following header information of the input file called 
+<CODE>bach_44K_16B_M.saudio:</CODE><P>
+<UL>
+<LI>logical channel
+<LI>number of audio folio buffers
+<LI>initial amplitude
+<LI>initial pan
+<LI>sample size
+<LI>sample rate
+<LI>number of channels
+<LI>compression type
+<LI>compression ratio
+<LI>total number of samples
+</UL>
+<H3>Examples</H3>
+Here is a typical command line to modify the header information:<P>
+<CODE>
+<PRE>
+SAudioTool -lc 1 -ia 0x4000 -i bach_44K_16B_M.saudio
+</CODE>
+</PRE>
+Modifies the input file's (<CODE>bach_44K_16B_M.saudio</CODE>) header 
+information to the new data specified by the options. The <CODE>-lc</CODE> 
+option modifies the logical channel number to 1 and the <CODE>-ia</CODE> 
+option modifies the initial amplitude to 0x4000(hex).<P>

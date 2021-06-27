@@ -1,0 +1,39 @@
+<TITLE>ReplySmallMsg</TITLE>
+<A NAME="XREF39369"><H1>ReplySmallMsg </A></H1>
+<A NAME="XREF10139"></A>Sends a reply to a small message.<P>
+<H3>Synopsis</H3>
+<CODE>Err ReplySmallMsg( Item msg, int32 result, uint32 val1, uint32val2)</CODE><P>
+<H3>Description</H3>
+This procedure sends a reply to a small message. (To reply to a standard or buffered message, use <CODE>ReplyMsg()</CODE>.) <P>
+This procedure is identical to <CODE>ReplyMsg()</CODE> except that arguments are cast as (uint32) instead of (void *) and (int32). A small message can return only eight bytes of data: four that you provide in the val1 argument, and four that you provide in the val2 argument. <P>
+When replying to a message, send back the same message item you received. (Think of this as sending a reply in the same envelope as the original letter.) You can include an optional result code (which you provide in the result argument). Note that no standard result codes are currently defined; the result code must be a value whose meaning is agreed upon by the sending and receiving tasks. For consistency, use negative numbers for errors. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>msg
+<DD>The item number of the message. Note: The reply message item must be same message item that was received. 
+</DL>
+<DL>
+<DT>result
+<DD>A result code. This code is placed in the msg_Result field of the message data structure before the reply is sent. 
+</DL>
+<DL>
+<DT>val1
+<DD>The first four bytes of data for the reply. This data is put into the msg_DataPtr field of the message structure. 
+</DL>
+<DL>
+<DT>val2
+<DD>The last four bytes of data for the reply. This data is put into the msg_DataSize field of the message structure. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the reply was sent successfully or an error code if there was an error. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr075.html#XREF37256"><CODE>GetMsg</A>(), <A HREF="./01spr083.html#XREF31956">GetThisMsg</A>(), <A HREF="./01spr113.html#XREF31623">ReplyMsg</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>(), <A HREF="./01spr124.html#XREF40209">SendSmallMsg</A>(), <A HREF="./01spr132.html#XREF19568">WaitPort</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF39369"></LINK></H1><HR>

@@ -1,0 +1,25 @@
+<TITLE>FindMsgPort</TITLE>
+<A NAME="XREF23701"><H1>FindMsgPort </A></H1>
+<A NAME="XREF17657"></A>Finds a message port by name.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindMsgPort( const char *name )</CODE><P>
+<H3>Description</H3>
+This macro finds a message port with the specified name. The search is not case-sensitive (that is, the kernel does not distinguish uppercase and lowercase letters in message port names). You can use this macro in place of <CODE>FindNamedItem()</CODE> to find a message port. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the message port to find. 
+</DL>
+<H3>Return Value</H3>
+The macro returns the item number of the message port that was found or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in msgport.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr025.html#XREF19499"><CODE>CreateMsgPort</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF23701"></LINK></H1><HR>

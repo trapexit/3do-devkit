@@ -1,0 +1,310 @@
+<TITLE>Display windows</TITLE>
+<H1><LINK NAME="XREF23497">Display windows</LINK></H1><HR>
+The 3DO Debugger offers three types of display windows:<P>
+<UL>
+<LI>Source windows for examining source code
+<LI>Disassembly windows for examining and editing opcodes
+<LI>Data windows for examining and editing memory
+</UL>
+To create a new display window and display the selection in the active 
+window in it, hold down the Shift key while using the View menu command or 
+keyboard shortcut.<P>
+Instead of creating a new window, you can also change the display from one 
+type of data to another using the display window pop-up menu).<P>
+
+<IMG SRC="Figures/002.Ch2Pics/Source2-2.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Display pop-up menu (Source window). </I><P>
+<B>Note: </B>If you change the window type, all option settings are lost. 
+You may prefer creating a new window to changing the window type if you 
+spent some time on window setup. <P>
+<A NAME="XREF42047"><H2>The Source window</A></H2>
+The Source window displays the source code associated with the current 
+program. It allows source stepping and highlights the source line that 
+represents the current PC. You can type one of the expressions listed in 
+<A HREF="./Adbg.html#XREF20176">Examine Field Expression Syntax</A> into 
+the Examine field of the Source window. <P>
+<B>Note: </B>You can only examine source code if you have used a makefile 
+that created a symbols file and if you have set up directories 
+appropriately, as discussed in the section <A 
+HREF="./1dbgb.html#XREF33691">Preparing for launch</A>.<P>
+
+<IMG SRC="Figures/002.Ch2Pics/Source1.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Source window. </I><P>
+The figure above illustrates the main parts of the Source window:<P>
+<UL>
+<LI>Display pop-up-Lets you change to another type of display window
+<LI>Executable code-Marked by a pound sign (#)
+<LI>Stack crawl-Lets you look up the stack using a pop-up menu.
+<LI>Breakpoint-Marked by a bullet. Click on a pound sign to set a 
+breakpoint. 
+</UL>
+<H3>Working with the Source window</H3>
+The following table gives an overview of basic activities for the Source 
+window<P>
+<PRE>
+<B>Table 1: </B><I>  Working with the Source window.</I>
+--------------------------------------------------------
+To...          |Do this...                              
+--------------------------------------------------------
+Open the window|From the View menu, select New Window,  
+               |then Source from the submenu.           
+               |(Command-K)                             
+--------------------------------------------------------
+Set a          |Click the # character in the column to  
+breakpoint     |the left of the instruction at which you
+               |want to break. A red bullet () replaces 
+               |the # character. For information on     
+               |conditional breakpoints, see the next   
+               |section.                                
+--------------------------------------------------------
+Clear a        |Click the red bullet () in the column to
+breakpoint     |the left of the source line from which  
+               |you want to remove the breakpoint. A    
+               |black # replaces the red bullet ().For  
+               |information on conditional breakpoints, 
+               |see the next section.                   
+--------------------------------------------------------
+Execute up to a|If you are stopped at a breakpoint and  
+specified place|want to execute up to a specific place, 
+               |hold down the Option key and click to   
+               |the left of the last line you want to   
+               |execute.The system sets a temporary     
+               |breakpoint at the location you chose,   
+               |executes up to that breakpoint, then    
+               |removes the breakpoint. If there are    
+               |intermediate breakpoints, the program   
+               |stops there first. None of the program  
+               |instructions are executed, so this is a 
+               |convenient way of skipping over program 
+               |code.                                   
+--------------------------------------------------------
+Set the PC     |To move to a particular line of code in 
+               |the program, set the PC to it:          
+               |Command-Shift-click on the # character  
+               |in the column to the left of the        
+               |instruction to which you want to set the
+               |PC. The source line becomes highlighted 
+               |to signify the PC.                      
+--------------------------------------------------------
+Get detailed   |To get detailed information, you can    
+information    |* Shift-click on a function to open     
+               |another Source window at that location. 
+               |* Select a variable by double-clicking  
+               |on it, then press Command-D to view it  
+               |in a Variables window.                  
+--------------------------------------------------------
+View a stack   |To view a stack crawl, do the following:
+crawl          |* While the program is not execution,   
+               |click in the Stack Crawl pop-up menu    
+               |area in the bottom left of the Source   
+               |window.                                 
+               |* Select any of the menu commands to    
+               |display that function.                  
+--------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF38594"><H2>Using conditional breakpoints from the Source 
+window</A></H2>
+If you want to stop your program only when certain conditions are met, you 
+can set (or edit) a conditional breakpoint. For example, you can set a 
+counter and break after a certain number of iterations through the loop, 
+or you can specify to break when a certain variable has a certain value.<P>
+You can set and edit conditional breakpoints in both the Source window and 
+the Disassembly window.<P>
+<H3>Setting a conditional breakpoint</H3>
+To set a conditional breakpoint, follow these steps:<P>
+<OL>
+<LI>In the BreakPoints window, select a breakpoint and click on the 
+Condition button.
+<p>
+<LI>Enter the condition in the Condition window (see Figure 3).
+<p>
+<LI>Use the trigger count to specify how many times the Debugger can hit 
+the breakpoint without stopping execution. 1 means stop at the first 
+occurrence and is the default. 
+<p>
+<p><B>Note: </B>Having several conditional breakpoints can severely slow 
+down your program. Use them with discretion.<BR>
+<p>
+
+<IMG SRC="Figures/002.Ch2Pics/ConditionBreak.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>Breakpoint Condition window. </I><P>
+</OL>
+<H3>Editing the condition for a conditional breakpoint</H3>
+To edit the condition for a conditional breakpoint, follow these steps: <P>
+<OL>
+<LI>Double-click on the breakpoint in the BreakPoints window or 
+Command-click on the bullet in the Source or Disassembly window to bring 
+up the Condition window. 
+<p>
+<LI>Edit the condition, reset the current count, or disable the breakpoint 
+by unchecking the Enabled box. 
+</OL>
+When a breakpoint is disabled, it no longer has a bullet () next to it in 
+the BreakPoints window. In the Source and Disassembly windows, the 
+breakpoint indicator bullet changes to a blue triangle.<P>
+A disabled breakpoint no longer interrupts the program.<P>
+<H3>Deleting a conditional breakpoint</H3>
+You can delete a conditional breakpoint like any other breakpoint by 
+clicking on the breakpoint symbol.<P>
+<A NAME="XREF36381"><H2>The Data window</A></H2>
+Data windows let you display and edit target machine memory as bytes, 
+half-words (16 bits), and words (32 bits). The data can be presented in 
+hexadecimal, decimal, ASCII, or binary format.<P>
+This section first provides an overview of all operations, then lists the 
+Data window Options menu commands. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/Data1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 4: </B><I>Data window. </I><P>
+<H3>Working with the Data window</H3>
+The table below lists all major operations you can perform in the Data 
+window. <P>
+<PRE>
+<B>Table 2: </B><I>  Working with the Data window.</I>
+--------------------------------------------------------
+To...          |Do this...                              
+--------------------------------------------------------
+Open the window|From the View menu, select New Window,  
+               |then Data from the submenu (or press    
+               |Command-B).Double-click on an item in   
+               |another window, then press Command-B to 
+               |view that item in a Data window.        
+--------------------------------------------------------
+Change         |Once data is highlighted, use the arrow 
+selections     |keys (up, down, left, and right) to     
+               |quickly move the highlighted selection  
+               |around in the window.                   
+--------------------------------------------------------
+Edit ASCII data|To edit ASCII data, follow these steps: 
+               |* Click on the character you wish to    
+               |edit.                                   
+               |* Type the new character. You don't have
+               |to press the Tab, Return, or Enter keys.
+               |                                        
+--------------------------------------------------------
+Edit non-ASCII |To edit non-ASCII data, follow these    
+data           |steps:                                  
+               |* Click on the data you want to edit;   
+               |this highlights a selection and allows  
+               |standard Macintosh editing.             
+               |* Type the new value, which can be an   
+               |expression, to replace the selection.   
+               |* Press the Return or Enter keys to     
+               |write the new data to the program       
+               |running on the 3DO Station.             
+               |The Return key moves the highlighting to
+               |the next field, scrolling the window if 
+               |necessary. The Enter key writes the new 
+               |data but does not move the highlighting.
+               |                                        
+--------------------------------------------------------
+</PRE>
+<P>
+<H3>The Data window Options menu </H3>
+The Data window Options menu lets you determine how data are displayed in 
+the window. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/DataOptions.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 5: </B><I>Data window options. </I><P>
+<H3>Auto Update</H3>
+Allows the window to refresh on every target access. Deselecting Auto 
+Update keeps the window from refreshing automatically. You can then use 
+the information in the "frozen" window for later reference.<P>
+<H3>Hide ASCII</H3>
+Hides the ASCII data display; deselecting Hide ASCII shows the ASCII data 
+display.<P>
+<H3>Hot</H3>
+Informs the Debugger to redisplay all windows on any edit. This allows 
+changes in one window to be reflected in all other relevant windows. 
+Deselecting the command prohibits other windows from redisplaying when 
+data in this window is edited.<P>
+<H3>Address</H3>
+Displays data addresses as 32-bit hex values.<P>
+<H3>Offset</H3>
+Displays data addresses as 32-bit offsets from the Examine address.<P>
+<H3>Byte</H3>
+Displays data as bytes. This option has no effect when you view ASCII 
+data, since it is character based.<P>
+<H3>Half Word</H3>
+Displays data as 16-bit words. This option has no effect when you view 
+ASCII data, since it is character based.<P>
+<H3>Word</H3>
+Displays data as 32-bit long words. This option has no effect when you 
+view ASCII data since it is character based.<P>
+<H3>Hex</H3>
+Displays data in hexadecimal format.<P>
+<H3>Decimal</H3>
+Displays data in decimal format.<P>
+<H3>ASCII</H3>
+Displays data in character format.<P>
+<H3>Binary</H3>
+Displays data in binary format.<P>
+<A NAME="XREF10392"><H2>The Disassembly window</A></H2>
+Disassembly windows let you to display and edit disassembled ARM object 
+code. <P>
+This section provides an overview of working with Disassembly windows, 
+then lists the pop-up menu commands which determine how information is 
+displayed. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/DisAsm1.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 6: </B><I>Disassembly window. </I><P>
+<H3>Working with the Disassembly window</H3>
+The table below lists all major operations you can perform in the 
+Disassembly window.<P>
+<PRE>
+<B>Table 3: </B><I>  Working with the Disassembly window. </I>
+-------------------------------------------------------
+To...           |Do this...                            
+-------------------------------------------------------
+Open the window |From the View menu, select New Window,
+                |then DisAsm from the submenu, or press
+                |Command-J.                            
+-------------------------------------------------------
+Set breakpoints |Click in the column to the left of the
+                |instruction at which you want to set  
+                |the breakpoint.                       
+-------------------------------------------------------
+Clear           |Click the breakpoint symbol () for the
+breakpoints     |breakpoint you want to remove.        
+-------------------------------------------------------
+Set the program |While the program is not executing,   
+counter (PC)    |hold down the Shift key and click to  
+                |the left of the dotted line. The      
+                |Debugger marks the PC address with a  
+                |red asterix (*) and displays the new  
+                |PC address in the Registers window.   
+-------------------------------------------------------
+</PRE>
+<P>
+<H3>The Disassembly window Options menu</H3>
+The Disassembly window Options menu lets you determine how information in 
+the window is displayed. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/DisAsmOptions.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 7: </B><I>Disassembly window Options menu. </I><P>
+<H3>Auto Update</H3>
+Updates the window on every target access. If deselected (no check next to 
+option), the window won't update automatically. You can use information 
+from a "frozen" window for later reference. <P>
+<H3>Hide ASCII</H3>
+Hides the ASCII-equivalent data display. Deselecting this option shows the 
+ASCII-equivalent data display.<P>
+<H3>Address</H3>
+Displays data addresses as 32-bit hex values.<P>
+<H3>Offset</H3>
+Displays data addresses as 32-bit offsets from the Examine address.<P>
+The window displays the instruction without the  character. <P>
+<P>

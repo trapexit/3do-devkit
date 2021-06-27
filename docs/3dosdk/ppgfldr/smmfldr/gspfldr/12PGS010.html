@@ -1,0 +1,111 @@
+<Title>bs_example</Title>
+<A NAME="XREF23122"><H1>bs_example</A></H1>
+<A NAME="XREF35880"></A>Peripheral example program.<P>
+<H3>Synopsis</H3>
+<CODE>bs_example</CODE><P>
+<H3>Description</H3>
+This demonstration program lets you move a cel (a cloud) around the screen 
+with a joystick and leave an image of it on the screen when you press the 
+trigger. You can also distort the cel and clear the screen. The program 
+supports control pad, joystick, and mouse interaction.<P>
+This example illustrates how to use the broker shell peripheral 
+interaction utilities. <P>
+The connection/configuration/disconnection routines can be used as-is in 
+final code. <P>
+The data interaction/processing is less efficient than it could be for the 
+sake of modularity, comprehensibility, and flexibility. If you unpack 
+the<CODE> BS_NiceWaitEvent()</CODE> and <CODE>BS_ProcessXxxData()</CODE> 
+routines and perform that processing in a more direct way performance will 
+improve. You should also eliminate any debouncing checks that you don't 
+use. <P>
+Joystick controls <P>
+<DL>
+<DT>Stick
+<DD>move in x and y
+</DL>
+<DL>
+<DT>Z 
+<DD>zoom in/out U/D/
+</DL>
+<DL>
+<DT>L/R switch
+<DD>deform cel 
+</DL>
+<DL>
+<DT>Trigger
+<DD>leave copy of cel on screen 
+</DL>
+<DL>
+<DT>A
+<DD>clear screen 
+</DL>
+<DL>
+<DT>B 
+<DD>recalibrate stick (to recalibrate, hit B with stick in neutral 
+position and move the stick and z throttle to the limits of travel) 
+</DL>
+<DL>
+<DT>C
+<DD>quit 
+</DL>
+<DL>
+<DT>RightShift
+<DD>switch to mouse 
+</DL>
+Mouse controls <P>
+<DL>
+<DT>LeftButton
+<DD>leave copy of cel on screen 
+</DL>
+<DL>
+<DT>MiddleButton
+<DD>clear screen 
+</DL>
+<DL>
+<DT>Movement
+<DD>move cel in x and y 
+</DL>
+Pad 1 controls (used with mouse): <P>
+<DL>
+<DT>RightButton
+<DD>switch to joystick 
+</DL>
+<DL>
+<DT>D Pad
+<DD>distort cel 
+</DL>
+<DL>
+<DT>C Button
+<DD>quit 
+</DL>
+<DL>
+<DT>RightShift
+<DD>toggle mouse edge conditions between bound &amp; wrap 
+</DL>
+Pad 2 controls (only if there are 2 pads and no mouse): <P>
+<DL>
+<DT>D Pad
+<DD>move cel 
+</DL>
+<DL>
+<DT>A Button
+<DD>leave copy of cel on screen 
+</DL>
+<DL>
+<DT>B Button
+<DD>clear screen 
+</DL>
+<DL>
+<DT>C Button
+<DD>switch to joystick control 
+</DL>
+<DL>
+<DT>RightShift
+<DD>toggle movement speed between high &amp; low 
+</DL>
+<H3>Caveats</H3>
+Lightgun support is not yet included in this example. <P>
+<H3>Associated Files</H3>
+cloud.cel<P>
+<H3>Location</H3>
+examples/EventBroker/Control_Port_Peripherals<P>

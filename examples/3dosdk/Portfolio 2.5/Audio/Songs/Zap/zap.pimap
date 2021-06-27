@@ -1,0 +1,10 @@
+; Associate Program Numbers and Instruments
+; Phil Burk (c) 3DO 1993
+1 $samples/PitchedL/ElectricPiano/ElectricPiano.C3LM22k.aiff
+2 $samples/PitchedL/Harpsichord/Harpsichord.C3LM44k.aiff
+3 $samples/PitchedL/Harpsichord/Harpsichord.C5LM44k.aiff
+4 $samples/GMPercussion22k/KickDrum1.M22k.aiff
+5 $samples/GMPercussion22k/Handclap.M22k.aiff -f
+; Comment in the middle
+6 $samples/GMPercussion22k/GuiroFast.M22k.aiff -f
+7 $samples/GMPercussion22k/LowTom3.M22k.aiff

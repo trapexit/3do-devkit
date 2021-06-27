@@ -1,0 +1,50 @@
+<TITLE>CD-ROM Basics</TITLE>
+<H1><LINK NAME="XREF20854">CD-ROM Basics</LINK></H1><HR>
+This section provides some background information, including the following topics: <P>
+
+<UL>
+<LI><A HREF="#XREF39306">Constant Linear Velocity</A>
+<LI><A HREF="#XREF16592">3DO Drive Specifications</A>
+<LI><A HREF="#XREF25165">Data Rate Issues</A>
+<LI><A HREF="#XREF23785">Error Detection and Correction</A>
+</UL>
+<A NAME="XREF39306"><H2>Constant Linear Velocity</A></H2>
+Unlike magnetic disk storage mediums that rotate with constant angular (or, rotational) velocity (CAV), the CD-ROM disc rotates at constant linear velocity (CLV).<P>
+Linear velocity is related to angular velocity as follows:<P>
+<CODE>
+<PRE>
+Linear velocity = angular speed * distance from center of disc
+v = w * r
+</CODE>
+</PRE>
+In CLV, <I>v</I> is held constant. As <I>r</I> increases, <I>w</I> must decrease, and vice versa.<P>
+Double-speed CD-ROM drives must spin at roughly 1000 rpm at the center of the disc, and 400 rpm at the outer edge. <P>
+<A NAME="XREF16592"><H2>3DO Drive Specifications</A></H2>
+3DO CD-ROM hardware licensees must meet the following specifications when producing drives for 3DO:<P>
+<PRE>
+<B>Table 1: </B><I>  3DO Drive Specifications</I>
+--------------------------------------------------------
+Average sequential throughput     |300 KB data/s        
+                                  |transfer rate        
+--------------------------------------------------------
+Buffer memory size                |32KB                 
+--------------------------------------------------------
+Average access time including     |500ms                
+latency (1/3 stroke)              |                     
+--------------------------------------------------------
+Worst case access time including  |800ms                
+latency (full stroke)             |                     
+--------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF25165"><H2>Data Rate Issues</A></H2>
+Some developers make the assumption that, since the 3DO CD-ROM drive is double-speed, they will always get 300 KB/s of data streaming off the disc.<P>
+In reality, however, you almost <I>never</I> get 300 KB/s of data (although you may come close). The following factors cause performance hits in data delivery:<P>
+<H3>Disc Seeks</H3>
+Each time a title needs to seek for a file on a CD-ROM, there is a delay. Every seek (from one file or directory to another) costs at least 100 msec. Some seeks are up to 1000 msec.<P>
+Seek times on the disc in a CLV system are dependent on the distance that the read head must move, the amount of increase or decrease in rotational velocity that is required to read the data at the new position, and the drive mechanism itself. Be aware that since different 3DO hardware manufacturers are producing their own versions of CD-ROM drives, the disc seeking profiles vary.<P>
+<H3>Rotational Latency</H3>
+Once the head has seeked to a specific track, it needs to find the appropriate sector on that track. The disc needs to rotate to the sector. This latency may be as long as 150 milliseconds.<P>
+<A NAME="XREF23785"><H2>Error Detection and Correction</A></H2>
+CD-ROM disc read errors can have many different causes. There can be dust, scratches, or fingerprints on the surface of the disc. There can also be bubbles or contaminants in the substrate of the disc. Errors might also occur when there are tracking or focusing problems.<P>
+Error detection and correction algorithms are complex and beyond the scope of this document. Suffice it to say that read error problems <I>can</I> have significant negative effects on the data transfer rate; however, the majority of errors are recoverable in a manner transparent to the developer's code.<P>

@@ -1,0 +1,14 @@
+<TITLE>Controlling Pixel Interpolation</TITLE>
+<H1><LINK NAME="XREF13296">Controlling Pixel Interpolation</LINK></H1><HR>
+In its default state, the display generator practices full pixel interpolation for all 320-by-240 pixels it receives from a screen. If you'd like to turn off interpolation for that "crispy pixels" look within a screen, use these two calls:<P>
+<CODE><DL>
+<DD><CODE>int32 DisableHAVG( Item screenItem )<BR>
+</CODE><CODE>int32 DisableVAVG( Item screenItem )</CODE><BR>
+</DL>
+</CODE>The first call disables horizontal interpolation for the specified screen; the second call disables vertical interpolation for the specified screen. If either call is successful, it returns a zero. If unsuccessful, it returns a negative number (an error code).<P>
+To turn interpolation back on, use these two calls:<P>
+<CODE><DL>
+<DD><CODE>int32 EnableHAVG( Item screenItem )<BR>
+</CODE><CODE>int32 EnableVAVG( Item screenItem )</CODE><BR>
+</DL>
+</CODE>The first call enables horizontal interpolation for the specified screen; the second call enables vertical interpolation for the specified screen. If either call is successful, it returns a 0. If unsuccessful, it returns a negative number (an error code).<P>

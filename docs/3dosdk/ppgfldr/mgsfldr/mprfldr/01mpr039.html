@@ -1,0 +1,22 @@
+<Title>GetAudioCyclesUsed</Title>
+<A NAME="XREF34810"><H1>GetAudioCyclesUsed </A></H1>
+<A NAME="XREF12169"></A> Poll current number of DSP cycles.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetAudioCyclesUsed (void)</CODE><P>
+<H3>Description</H3>
+Polls the current number of DSP cycles executed in the last frame.  This can vary significantly from frame to frame but should always be less than the number of cyles allocated.<P>
+This call is typically used for diagnostic purposes.  It should not be used in a released title.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>None
+<DD> 
+</DL>
+<H3>Return Value</H3>
+Number of cycles.<P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V24. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr042.html#XREF29526"><CODE>GetAudioFrameCount</A>() </CODE><P>
+</CODE>

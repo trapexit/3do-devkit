@@ -1,0 +1,23 @@
+<Title>ta_attach</Title>
+<A NAME="XREF29292"><H1>ta_attach </A></H1>
+<A NAME="XREF26279">Experiments with sample attachments.</A><P>
+<H3>Synopsis</H3>
+<CODE>ta_attach</CODE><P>
+<H3>Description</H3>
+Creates a pair of software-generated samples and attaches them to a sample 
+player instrument. The attachments are then linked to one another using 
+<CODE>LinkAttachment()</CODE> such that they play in a loop. <P>
+This demonstrates how multiple attachments can be linked together to form 
+a queue of sample buffers to play and how a client can receive 
+notification of when each sample buffer has finished playing. This is the 
+technique that the Sound Spooler uses to queue sound buffers for playback. 
+<P>
+<H3>Associated Files</H3>
+ta_attach.c<P>
+<H3>Location</H3>
+examples/Audio <P>
+<H3>See Also</H3>
+<CODE><A HREF="./12PGS059.html#XREF29007">ta_spool</A>, 
+<A HREF="../../mgsfldr/mprfldr/02mpr098.html#XREF39302">ssplCreateSoundSpooler</A>, 
+<A HREF="../../mgsfldr/mprfldr/01mpr050.html#XREF32325">LinkAttachments</A><P>
+</CODE>

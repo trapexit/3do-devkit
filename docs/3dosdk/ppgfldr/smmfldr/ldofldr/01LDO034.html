@@ -1,0 +1,36 @@
+<Title>ChainCelsAtHead </Title>
+<A NAME="XREF31485"><H1>ChainCelsAtHead </A></H1>
+ Chains together lists of cels.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * ChainCelsAtHead (CCB *existingCels, CCB *newCels)</CODE><P>
+<H3>Description</H3>
+Chains together two lists of cels, putting the new list ahead of the existing cels. The return value is a pointer to the first cel in the resulting list. Either pointer can be NULL, eliminating the need for special-case code when iteratively building a list of cels. <P>
+For example, the following code will work: <P>
+<CODE>
+<PRE>
+CCB *list = NULL; 
+CCB *cels; 
+do {     cels = get_next_antialiased_cel(); 
+    list = ChainCelsAtHead(list, cels); } 
+while (cels != NULL); 
+</CODE>
+</PRE>
+This function works properly with anti-aliased cels and similar constructs where a list of related cels makes up a single logical entity. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>existingCels
+<DD>Pointer to the existing list of cels; may be NULL. 
+</DL>
+<DL>
+<DT>newCels
+<DD>Pointer to the new list of cels to be added ahead of the existing list; may be NULL. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the head of the resulting list of cels. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO035.html#XREF15053"><CODE>ChainCelsAtTail</A> </CODE><P>
+</CODE>

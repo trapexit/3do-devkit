@@ -1,0 +1,21 @@
+<Title>UnloadPIMap</Title>
+<A NAME="XREF11195"><H1>UnloadPIMap </A></H1>
+<A NAME="XREF14686"></A> Unloads instrument templates loaded previously with PIMapfile.<P>
+<H3>Synopsis</H3>
+<CODE>Err UnloadPIMap( ScoreContext *scon )</CODE><P>
+<H3>Description</H3>
+This function is the inverse of LoadPIMap; it unloads any instrument templates specified in the score context's PIMap.  Any instruments created using those templates are freed when the templates are unloaded. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>Pointer to a ScoreContext data structure. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr034.html#XREF17989"><CODE>LoadPIMap</A>(), <A HREF="./02mpr044.html#XREF35488">SetPIMapEntry</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,19 @@
+<Title>CenterRectCelInDisplay </Title>
+<A NAME="XREF21704"><H1>CenterRectCelInDisplay </A></H1>
+ Center a cel in the display.<P>
+<H3>Synopsis</H3>
+<CODE>void CenterRectCelInDisplay(CCB *cel)</CODE><P>
+<H3>Description</H3>
+This function centers a single cel over or within the display. The display is assumed to be 320 x 240. <P>
+The ccb_XPos and ccb_YPos fields are modified. Other CCB fields are not modified. The centering is based on the cel's projected size, not its source data size. If the cel is projected to a non-rectangular shape, the result is invalid. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to the cel to be centered. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO017.html#XREF29595"><CODE>CenterRectAACelInDisplay</A>, <A HREF="./01LDO025.html#XREF40261">CenterRectCelListInDisplay</A> </CODE><P>

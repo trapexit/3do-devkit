@@ -1,0 +1,33 @@
+<Title>LoadSample</Title>
+<A NAME="XREF16726"><H1>LoadSample </A></H1>
+<A NAME="XREF35485"></A> Loads an AIFF or AIFC sample from file.<P>
+<H3>Synopsis</H3>
+<CODE>Item LoadSample( char *Name )</CODE><P>
+<H3>Description</H3>
+This function allocates task memory and creates a sample item there that contains the digital-audio recording from the specified file.  The file must be either an AIFF file or an AIFC file.  These can be created using almost any sound development tool including AudioMedia, Alchemy, CSound, and SoundHack. <P>
+AIFC files contain compressed audio data.  These can be created from an AIFF file using the SquashSound MPW  tool from The 3DO Company. <P>
+A single loop is supported for sustained repetitive waveforms. <P>
+When you finish with the sample, you should call <CODE>UnloadSample()</CODE> to deallocate the resources. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Name
+<DD>The name of the AIFF or AIFC file. 
+</DL>
+<H3>Return Value</H3>
+The function returns an item number if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<A HREF="./01mpr007.html#XREF30972"><CODE>AttachSample</A><CODE>(), 
+<A HREF="./01mpr033.html#XREF38686">DetachSample</A>(), 
+<A HREF="./01mpr067.html#XREF20838">SetAudioItemInfo</A>(), 
+<A HREF="./01mpr083.html#XREF21317">UnloadSample</A>(), 
+<A HREF="./01mpr023.html#XREF37204">DebugSample</A>(), 
+<A HREF="./01mpr021.html#XREF16321">CreateSample</A>(), 
+<A HREF="./01mpr065.html#XREF29290">ScanSample</A>(), 
+<A HREF="./01mpr043.html#XREF15941">GetAudioItemInfo</A>(), 
+<A HREF="./01mpr054.html#XREF41997">LoadSampleHere</A>
+() </CODE><P>
+</CODE>

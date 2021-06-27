@@ -1,0 +1,26 @@
+<TITLE>FindTagArg</TITLE>
+<A NAME="XREF34043"><H1>FindTagArg </A></H1>
+<A NAME="XREF18448"></A>Looks through a tag list for a specific tag.<P>
+<H3>Synopsis</H3>
+<CODE>TagArg *FindTagArg( const TagArg *tagList, uint32 tag );</CODE><P>
+<H3>Description</H3>
+This function scans a tag list looking for a TagArg structure with a ta_Tag field equal to the tag parameter. The function always returns the last TagArg structure in the list which matches the tag. Finally, this function deals with the various control tags such as TAG_JUMP and TAG_NOP.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>tagList
+<DD>The list of tags to scan. 
+</DL>
+<DL>
+<DT>tag
+<DD>The value to look for. 
+</DL>
+<H3>Return Value</H3>
+This function returns a pointer to a TagArg structure with a value of ta_Tag that matches the tag parameter, or NULL if no match can be found. The function always returns the last tag in the list which matches. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V24. <P>
+<H3>Associated Files</H3>
+tags.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr103.html#XREF28387"><CODE>NextTagArg</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF34043"></LINK></H1><HR>

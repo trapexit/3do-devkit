@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>Iterator Operations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Iterator Operations</H2>
+<P>The standard library provides two functions that can be used to manipulate iterators.  The function <SAMP>advance()</SAMP> takes an iterator and a numeric value as argument, and modifies the iterator by moving the given amount.</P>
+<PRE>void advance (InputIterator &#38; iter, Distance &#38; n);
+</PRE>
+<P>For random access iterators this is the same as<SAMP> iter + n;</SAMP> however, the function is useful because it is designed to operate with all forms of iterator.  For forward iterators the numeric distance must be positive, whereas for bidirectional or random access iterators the value can be either positive or negative.  The operation is efficient (constant time) only for random access iterators.  In all other cases it is implemented as a loop that invokes either the operators <SAMP>++</SAMP> or <SAMP>--</SAMP> on the iterator, and therefore takes time proportional to the distance traveled.  The <SAMP>advance()</SAMP> function does not check to ensure the validity of the operations on the underlying iterator.</P>
+<P>The second function, <SAMP>distance(),</SAMP> returns the number of iterator operations necessary to move from one element in a sequence to another.  The description of this function is as follows:</P>
+<PRE>void distance (InputIterator first, InputIterator last,
+               Distance &#38;n);
+</PRE>
+<P>The result is returned in the third argument, which is passed by reference.  Distance will <I>increment </I>this value by the number of times the operator <SAMP>++</SAMP> must be executed to move from <SAMP>first</SAMP> to <SAMP>last</SAMP>.  Always be sure that the variable passed through this argument is properly initialized before invoking the function. </P>
+
+<HR>
+<A HREF="ins_0332.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="fun_1852.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

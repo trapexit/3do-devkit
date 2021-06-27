@@ -1,0 +1,35 @@
+<Title>CreateMemPool</Title>
+<A NAME="XREF27957"><H1>CreateMemPool</A></H1>
+<A NAME="XREF28843"></A> Creates memory pools.<P>
+<H3>Synopsis</H3>
+<CODE>MemPoolPtr CreateMemPool (long numToPreallocate, long sizeOfEntry)</CODE><P>
+<H3>Description</H3>
+Creates memory pools used by the DataStreamer. An acquisition thread calls <CODE>CreateMemPool()</CODE> to create the memory pool in which data chunks are stored. The DataStreamer kernel thread calls <CODE>CreateMemPool()</CODE> to create the memory pool allocated to subscriber and data messages that are used to pass the data chunks out to various subscribers.<P>
+Each memory pool is a <CODE>MemPool</CODE> data structure containing pool entry-table information and memory buffer entries. <CODE>CreateMemPool()</CODE> creates a new memory pool with the specified number and size of entries. <P>
+<CODE>CreateMemPool()</CODE> creates each memory pool by calling <CODE>malloc()</CODE> directly. Memory pools must be sized in multiples of four bytes (a full data word).<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>numToPreallocate</CODE>
+<DD>Number of entries in the memory pool.
+</DL>
+<DL>
+<DT><CODE>sizeOfEntry</CODE>
+<DD>Size of each entry, in bytes. Values will be rounded up to the nearest 4-byte multiple.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+</DL>
+<DL>
+<DT>(Pointer to the memory pool)
+<DD>None
+</DL>
+<DL>
+<DT>NULL
+<DD>Could not allocate memory for pool
+</DL>
+<H3>Associated Files</H3>
+MemPool.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR012.html#XREF28049"><CODE>DeleteMemPool</A>, <A HREF="./01DSR044.html#XREF19399">InitDataAcq</A>, <A HREF="./01DSR045.html#XREF14373">InitDataStreaming</A></CODE><P>

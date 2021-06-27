@@ -1,0 +1,19 @@
+<Title>CleanupMSEvents </Title>
+<A NAME="XREF31382"><H1>CleanupMSEvents </A></H1>
+ Releases resources acquired by SetupMSEvents.<P>
+<H3>Synopsis</H3>
+<CODE>void CleanupMSEvents (MSEventHandle mseHandle)</CODE><P>
+<H3>Description</H3>
+Releases all resources acquired internally by <CODE>SetupMSEvents()</CODE>. Any ports or signals which were allocated by <CODE>SetupMSEvents()</CODE> are deleted. If mseHandle is less than or equal to zero, this function quietly returns without doing anything. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>mseHandle
+<DD>MSEventHandle returned by SetupMSEvents(). 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, msgutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO166.html#XREF24816"><CODE>SetupMSEvents</A>, <A HREF="./01LDO060.html#XREF38141">DispatchMSEvents</A> </CODE><P>
+</CODE>

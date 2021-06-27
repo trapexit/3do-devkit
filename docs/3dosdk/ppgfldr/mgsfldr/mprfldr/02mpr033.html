@@ -1,0 +1,35 @@
+<Title>InterpretMIDIMessage</Title>
+<A NAME="XREF12999"><H1>InterpretMIDIMessage </A></H1>
+<A NAME="XREF22002"></A> Executes a MIDI message.<P>
+<H3>Synopsis</H3>
+<CODE>Err InterpretMIDIMessage( ScoreContext *ScoreCon,char *MIDIMsg, int32 IfMute )</CODE><P>
+<H3>Description</H3>
+This function executes a MIDI message by calling another Music library function appropriate to that message, and passing the message's data to that function.  The called function uses Audio folio functions for playback based on the settings of a ScoreContext data structure. <P>
+<CODE>InterpretMIDIMessage()</CODE> is called by <CODE>InterpretMIDIEvent()</CODE>, which extracts MIDI messages from Juggler sequences containing MIDI events.  Although this function is used most often as an internal call of the Music library, tasks may call it directly to execute a supplied MIDI message. The message should be stored in the first byte (first character) of the MIDIMsg string, followed by data bytes (if present) in subsequent bytes of the string. <P>
+Whenever the IfMute argument is set to TRUE, this function does not process Note On messages with velocity values greater than zero.  In other words, it doesn't start new notes, but it does release existing notes and process all other recognized MIDI messages.  When IfMute is set to FALSE, this function processes all recognizable messages, including Note On messages. <P>
+Note that <CODE>InterpretMIDIEvent()</CODE> reads a Juggler sequence's mute flag and, if true, passes that true setting on to <CODE>InterpretMIDIMessage()</CODE> so that the sequence stops playing notes.  It likewise passes a false setting on to <CODE>InterpretMIDIMessage()</CODE> so that the sequence can play notes. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ScoreCon
+<DD>Pointer to a ScoreContext data structure. 
+</DL>
+<DL>
+<DT>MIDIMsg
+<DD>Pointer to a character string containing the MIDI
+<DD>message. 
+</DL>
+<DL>
+<DT>IfMute
+<DD>A flag that turns muting on or off.  TRUE is on, FALSE is off. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>Caveats</H3>
+This function only handles Note On, Note Off, Change Program, Change Control (values 7 and 10), and Pitchbend MIDI messages.  It does not support running status. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr032.html#XREF11636"><CODE>InterpretMIDIEvent</A>()</CODE><P>
+</CODE>

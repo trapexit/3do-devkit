@@ -1,0 +1,30 @@
+<Title>ssplReset</Title>
+<A NAME="XREF41034"><H1>ssplReset </A></H1>
+<A NAME="XREF29522"></A> Reset Sound Spooler.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplReset ( SoundSpooler *sspl, void (*UserBufferProcessor) ( SoundSpooler *, SoundBufferNode * ) )</CODE><P>
+<H3>Description</H3>
+This function removes all SoundBufferNodes from the active queue and clears their associated signal bits.  <CODE>ssplAbort()</CODE> calls this function to clear the active queue after stopping the sound spooler. <P>
+If a SoundBufferFunc is installed, a SSPL_SBMSG_ABORT message is sent to it with each SoundBufferNode removed from the active queue.  If UserBufferProcessor is non-NULL, each SoundBufferNode removed from the active queue is passed to it.  If both a SoundBufferFunc and UserBufferProcessor are supplied, <CODE>ssplReset()</CODE> fails and returns ML_ERR_BAD_ARG. <P>
+If SoundBufferFunc fails, <CODE>ssplReset()</CODE> fails immediately and returns the error code returned by SoundBufferFunc without removing the rest of the buffers from the active queue.  Calling <CODE>ssplReset()</CODE> again safely picks up where it left off. <P>
+Clears SSPL_STATUS_F_ACTIVE. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>SoundSpooler to reset. 
+</DL>
+<DL>
+<DT>UserBufferProcessor
+<DD>Pointer to a function to call with each SoundBufferNode removed from the active queue, or NULL. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Note</H3>
+This function does not disturb the sample player instrument.  If the spooler has not been stopped, any data that has already been queued up will continue to play, even though the associated SoundBufferNodes have been removed from the active queue.  It is generally a good idea to call this function only after stopping the sound spooler, or use <CODE>ssplAbort()</CODE>  instead. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr096.html#XREF40388"><CODE>ssplAbort</A>(), <A HREF="./02mpr095.html#XREF25499">SoundBufferFunc</A>(), <A HREF="./02mpr123.html#XREF33469">UserBufferProcessor</A>(), <A HREF="./02mpr105.html#XREF10988">ssplGetSpoolerStatus</A>() </CODE><P>
+</CODE>

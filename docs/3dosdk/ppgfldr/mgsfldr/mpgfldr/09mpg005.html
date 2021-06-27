@@ -1,0 +1,151 @@
+<TITLE>Creating a MIDI Environment</TITLE>
+<H1>Creating a MIDI Environment</H1><HR>
+Creating a MIDI environment is something like designing a synthesizer. A task defines how many voices it uses, how many programs it supports, and what instrument templates it uses for different program numbers. It then sets up data structures to manage its voices and programs.<P>
+<H2>Setting Voice and Program Limits</H2>
+When a task is set up to play a MIDI score, it should put upper limits on the number of voices it needs and the number of programs it responds to. These limits should be as low as possible to save system resources.<P>
+Each program supported requires an instrument template, which can take up quite a bit of RAM, especially if it is a sampled sound instrument template. Therefore, the fewer programs supported, the better. To reduce the memory required for the PIMap, the original MIDI score should be created to use the lowest possible program number for its program changes. For example, if a score uses nine programs, they should have program numbers 0 to 8, not numbers scattered throughout the range of 0 to 127. The original score should not use program numbers that are higher than the maximum number of programs, because there is no PIMap entry to support a number that high.<P>
+Each voice supported requires DSP resources to play a note, a <CODE>NoteTracker</CODE> data structure to keep track of its status, and a mixer input. So reducing the number of voices supported is important to conserve system resources. The most likely limiting factor is DSP resources, which are used up by the number and type of instruments playing. If all instruments are simple and use few DSP resources, then the DSP can support many voices. If instruments are complex, use many DSP resources, and many of them play at once, then the DSP cannot support as many voices.<P>
+A task should support no more than the maximum number of voices required by the original MIDI score. The original score should be created with careful consideration of the type of instruments used to play its notes. If the instruments are complex, the score may have to use fewer voices so that it does not overtax DSP resources.<P>
+A task can define its maximum voice and program support in constants that are used in later Music library calls. For example,<P>
+<CODE>
+<PRE>
+#define  MAX_NUM_PROGRAMS  (9)
+#define  MAX_NUM_VOICES    (8)
+</CODE>
+</PRE>
+These values can be used later to set program and voice limits. The call <CODE>
+CreateScoreContext()</CODE> sets the maximum number of programs, and the call <CODE>InitScoreMixer()</CODE> or <CODE>InitScoreDynamics()</CODE> sets the maximum number of voices.<P>
+<H2>Creating a Score Context</H2>
+After you have decided on limits for program and voice support, you can proceed to create a score context using this call:<P>
+<DL>
+<DD><CODE>ScoreContext *CreateScoreContext( int32 MaxNumPrograms )</CODE><BR>
+</DL>
+The call accepts a single argument, <CODE>MaxNumPrograms</CODE>, which sets the number of programs supported by the score context. This number can be no greater than 128. If the task defined this limit earlier with a constant, it can supply that constant as the argument.<P>
+When <CODE>CreateScoreContext()</CODE> executes, it creates a <CODE>ScoreContext</CODE> data structure and sets its elements to default settings. That data structure includes an array of <CODE>ScoreChannel</CODE> data structures to control channels. <CODE>CreateScoreContext()</CODE> also creates a <CODE>PIMap</CODE> array with as many elements as it needs to accommodate the number of programs specified. The <CODE>ScoreContext</CODE> data structure includes a pointer to that array. It also includes a pointer to an array of <CODE>NoteTrackers</CODE>, which is set later when the <CODE>NoteTrackers</CODE> are created with the <CODE>InitScoreDynamics()</CODE> call.<P>
+<CODE>CreateScoreContext()</CODE> returns a pointer to the created <CODE>ScoreContext</CODE> data structure if successful. If unsuccessful, it returns a negative value (an error code).<P>
+<A NAME="XREF34181"><H2>Setting PIMap Entries</A></H2>
+After you have created a score context and the PIMap that goes with it, you must set the entries in the PIMap to show which instrument template is designated for each program number. You can do this in one of two ways:  you can first load the instrument templates you need and then directly set each of the PIMap's entries using the <CODE>SetPIMapEntry()</CODE> call. Or you can specify instrument templates and program numbers in a text file and use the <CODE>LoadPIMap()</CODE> call to read the file, load the appropriate instrument templates, and make the appropriate PIMap entries. The second method is the simpler of the two.<P>
+<H3>Directly Setting PIMap Entries</H3>
+If you want to directly set a score context's PIMap entries, you must first load the instrument templates you want to specify in the entries and store the item number for each loaded template. You then use this call:<P>
+<DL>
+<DD><CODE>int32 SetPIMapEntry( ScoreContext *scon, int32 ProgramNum,  Item InsTemplate, int32 MaxVoices, int32 Priority )</CODE><BR>
+</DL>
+The call accepts five arguments: The first,<CODE> *scon</CODE>, is a pointer to the score context that owns the PIMap. The second, <CODE>ProgramNum</CODE>, is a value from 0 to 127 that specifies which PIMap entry to set. The third, <CODE>InsTemplate</CODE>, is the item number of an instrument template to be assigned to the specified PIMap entry. The fourth is the maximum number of voices that can be played simultaneously with this program. And the fifth is the priority number, from 0 to 200, for this program.<P>
+There are some important considerations for these arguments. First, you should note that program numbers in MIDI sometimes range from 1 to 128, and at other times range from 0 to 127, depending on a manufacturer's or publisher's whimsy. In general, user interfaces that are designed for musicians rather than programmers number programs from 1 to 128. User interfaces designed for programmers instead of musicians number programs from 0 to 127. When you set the <CODE>ProgramNum</CODE> argument for this call, keep this discrepancy in mind if you are trying to match the program number in the original score.<P>
+You should also note that the maximum number of voices set by MaxVoices is <I>not</I> the maximum number of voices available to the full score context. It is the maximum number of voices for that program alone. It should be a number equal to or less than the maximum number of voices available to the score. This value allows you to limit the number of voices played using a complex instrument template that takes up DSP resources. For example, you may wish to limit a program using a complex lead instrument to two voices so that it does not overload the DSP by playing too many notes simultaneously.<P>
+The <CODE>Priority</CODE> argument sets a program to use a low-priority instrument (set with a lower value) or a high-priority instrument (using a higher value). When voices are allocated to notes, the Music library is more likely to steal a voice from a low priority program than it is to steal a voice from a high priority program. Set this argument to a low value if the program is not likely to be used for conspicuous notes, for example, a chorus instrument. Set it to a high value if the instrument is used for solo work. Set all PIMap entries to the same priority (100, for example) if you do not want any program to have priority over another.<P>
+When <CODE>SetPIMapEntry()</CODE> executes, it finds the PIMap associated with the specified score context, finds the specified entry, and then writes the instrument template item number, maximum voice value, and priority value to that entry. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<H3>Creating a PIMap File</H3>
+A simpler way to set up a PIMap is to define it in a text file (strict ASCII) using the PIMap file format. You can then ask <CODE>LoadPIMap()</CODE> to read the file, load the appropriate instrument templates, and set the appropriate PIMap entries. The file format for a PIMap file is simple:<P>
+<UL>
+<LI>A file consists of a line of text for each program-to-instrument description. Each line is separated from the next by a carriage return (0x0D).
+<p>
+<LI>Each line starts with a MIDI program number in the range 1 to 128.
+<p>
+<LI>The program number is followed by the name of an instrument template or the name of a sample to be played by an instrument.
+<p>
+<LI>The name is followed by options and option values if desired. These are the options currently available:
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>-f, which follows a sample name and specifies that the sample's pitch remains fixed and not variable, a useful feature for percussion instruments. Fixed pitch instruments are also more efficient and do not use as many DSP resources.
+<p>
+<LI>-d, which detunes an instrument by a specified number of cents. It is followed by a cent value, which can range from -50 to +50.
+<p>
+<LI>-m, which is the maximum number of voices that can play for this program. The default is 1.
+<p>
+<LI>-l, which sets the low note for a sample. It is followed by a MIDI pitch value from 0 to 127.
+<p>
+<LI>-b, which sets the base note for a sample. It is followed by a MIDI pitch value from 0 to 127.
+<p>
+<LI>-h, which sets the high note for a sample. It is followed by a MIDI pitch value from 0 to 127.
+<p>
+<LI>-p, which sets the priority for an instrument template. It is followed by a value from 0 to 200. The default is 100.
+<p>
+<LI>-r N, which allows one to specify the rate at which a DSP instrument 
+executes. N can be 1 or 2. Default is 1. If N is 2, the execution rate is 
+divided by 2, and the instrument only uses half the number of DSP ticks. 
+This is useful if you are using an instrument that consumes more ticks than 
+code words, such as <CODE>sampler.dsp</CODE> or <CODE>varmono8_s.dsp</CODE>. 
+The sample rate is cut in half so the maximum pitch is reduced by a factor of 
+two. The instrument also plays with less fidelity since the output is not 
+interpolated up to 44 Khz. See the description of the AF_TAG_CALCRATE_DIVIDE 
+tag in the 
+<A HREF="../mprfldr/00mpr1.html">3DO Music and Audio Programmer's Reference</A>
+</UL><BR>
+</DL>
+<UL>
+<LI>Elements within a line are separated by one or more spaces. <I>Do not</I> use tabs.
+<p>
+<LI>A comment line starts with a semicolon (;) in the first column.
+</UL>
+Each line of a PIMap file describes a single PIMap entry, starting with the 
+program number, followed by an instrument template name or sample name to be 
+used for that program number. The optional flags prescribe changes for the 
+instrument template when used.<P>
+The Music library in general cleaves to the programmer's model of numbering 
+programs from 0 to 127; the one exception is the PIMap file, which numbers 
+programs from 1 to 128.<P>
+<H3>Setting Up Multisamples in a PIMap File</H3>
+One important feature of a PIMap file is that you do not have to use the name of sampled sound instrument for a PIMap entry, you can use the name of the sample you wish to play instead. If the PIMap entry already has a sampled sound instrument template assigned to it, then the sample you specify for that entry is attached to that template. If the PIMap entry does not have a sampled sound instrument template assigned to it, then <CODE>LoadPIMap()</CODE> finds and loads the sampled sound instrument most appropriate for the sample.<P>
+Note that if you specify several different samples for the same PIMap entry, they are all attached to the sampled sound instrument template for that entry. This allows you to specify multisamples in the PIMap file for more realistic sounding sampled instruments or for varied timbres in one instrument, such as a drum kit. To create a multisample, simply list all of the samples required, one sample per line, and assign each sample to the same program number. The high and low ranges in the AIFF sample file can set the ranges of each sample in the multisample, or you can use the <CODE>-l</CODE>, <CODE>-b</CODE>, <CODE>-h</CODE>, and <CODE>-d</CODE> options to override those ranges and set new ones.<P>
+The instrument first specified for a program number is the instrument used to play all samples later assigned to that program number, so it is important to make sure that later samples match the program's instrument. If they do not match, chaos can follow. For example, if you first specify a 16-bit sample for program 4, <CODE>LoadPIMap()</CODE> loads a 16-bit sampled-sound instrument to play that sample. If you then assign an 8-bit sample to program 4, the 8-bit sample is played using the 16-bit sampled-sound instrument, a guaranteed muddle.<P>
+As a PIMap file example, consider the text file shown in Example 1. Notice several things: the gong is fixed in pitch; the clarinet is set up as a multisample with octave spacing; the organ has a maximum voice option set to four, which allows it to play chords of up to four voices; and the sample <I>bell.aiff</I> is guaranteed to be played by the instrument <CODE>varmono16.dsp</CODE> because the instrument is specified before the sample is specified. This technique is often used with ARIA instruments.<P>
+<B>Example 1: </B><I>PIMap file example.</I><P>
+<CODE>
+<PRE>
+; comments are allowed after a semicolon
+; define multisample for clarinet
+1 clarinet1.aiff -l 30 -b 48 -h 53
+1 clarinet2.aiff -l 54 -b 60 -h 66
+1 clarinet3.aiff -l 67 -b 72 -h 84
+2 gong.aiff -f
+3 bass.aiff -p 150
+4 organ.aiff -m 4
+; play bell using explicit instrument
+5 varmono16.dsp
+5 bell.aiff
+6 sawenv.dsp
+</CODE>
+</PRE>
+<H3>Loading a PIMap File</H3>
+After you have created a PIMap file, you can load it using this call:<P>
+<DL>
+<DD><CODE>int32 LoadPIMap( ScoreContext *scon, char *Filename )</CODE><BR>
+</DL>
+It accepts two arguments: <CODE>*scon</CODE>, a pointer to the score context whose PIMap you want to reset; and <CODE>*Filename</CODE>, a pointer to a character string containing the filename of the PIMap file.<P>
+When it executes, <CODE>LoadPIMap()</CODE> reads the PIMap file and imports the specified instrument templates and sampled sounds. If an entry in the file specifies a sampled sound (it ends in .AIF, .AIFF, or .AIFC), <CODE>LoadPIMap()</CODE> attaches the sampled sound to a sampled sound instrument template if the entry already has one assigned. If the entry does not have a template assigned, <CODE>LoadPIMap()</CODE> determines the appropriate sampled sound instrument to play the sampled sound, assigns it to the entry, and attaches the sampled sound. The call then revises all effected PIMap entries in the score context's PIMap.<P>
+<CODE>LoadPIMap()</CODE> returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+The highest program number in your PIMap file should not exceed the number of entries in the score context's PIMap.<P>
+<H2>Setting Up a Mixer</H2>
+After instrument templates have been loaded and the PIMap is set, you should load an appropriate mixer instrument template and create a mixer instrument. This mixer handles the note output from voices as they play a MIDI score, combining them and sending them through stereo outputs to the digital-to-analog converter (DAC). As the MIDI playback functions play notes, they create new instruments, when appropriate, to play the notes. Each new instrument is connected to a mixer input, where the instrument can be panned from left to right in the mixer's stereo output. (The panning, initially set to center, is under the control of MIDI pan control messages.)  When an instrument is freed, it is detached from the mixer so the mixer output is available for another instrument.<P>
+There can never be more instruments playing score notes than there are maximum voices set in the score context. For example, if there are a maximum of seven voices for the score context, there can never be more than seven instruments connected to the mixer at one time. This makes it easy to choose an appropriate mixer for a score: choose the one with the smallest number of inputs able to accommodate the maximum number of voices. The choices are <CODE>mixer2x2.dsp</CODE>, with two inputs; <CODE>mixer4x2.dsp</CODE>, with four inputs; <CODE>mixer8x2.dsp</CODE>, with eight inputs; and <CODE>mixer12x2.dsp</CODE>, with twelve inputs. The best choice for a seven-voice maximum score would be <CODE>mixer8x2.dsp</CODE>.<P>
+To create and initialize a mixer instrument for MIDI score playback, use this call:<P>
+<DL>
+<DD><CODE>int32 InitScoreMixer( ScoreContext *scon, char *MixerName,  int32 MaxNumVoices, int32 Amplitude )</CODE><BR>
+</DL>
+The call accepts four arguments: <CODE>*scon</CODE> is a pointer to the score context for which the mixer is used. <CODE>*MixerName</CODE> is a pointer to a character string containing the name of the mixer template used to create the mixer. <CODE>MaxNumVoices</CODE> is an integer value that sets the maximum number of voices available for score playback. (You may want to use a maximum voice number constant defined earlier.)  And <CODE>Amplitude</CODE> is a value that sets the maximum amplitude possible for each instrument connected to the mixer.<P>
+When executed, <CODE>InitScoreMixer()</CODE> first loads the specified mixer template and then creates a mixer instrument using that template. It writes the mixer's item number into the score context so that the MIDI calls know where to find the mixer. It also writes the maximum amplitude per instrument value into the score context so that each note plays at amplitudes no higher than that value. <CODE>InitScoreMixer()</CODE> then calls <CODE>InitScoreDynamics()</CODE> and passes <CODE>*scon</CODE> and <CODE>MaxNumVoices</CODE> as arguments.<P>
+<CODE>InitScoreDynamics()</CODE> creates an array of <CODE>NoteTracker</CODE> data structures, one for each possible voice. It then writes a pointer to the array into the score context so MIDI calls know where to find the note trackers.<P>
+<CODE>InitScoreMixer()</CODE> returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<H3>Setting an Amplitude Value</H3>
+When you supply an amplitude value for <CODE>InitScoreMixer()</CODE>, you can be assured that you never overload the DAC if you take the maximum available system amplitude, divide it by the maximum number of voices used, and take the resulting value as the maximum voice amplitude. This means that if all voices sound simultaneously at maximum amplitude and all panned to one side, the combined signal will not exceed the maximum system amplitude. In practice, it is an extremely rare occurrence for this to occur, so you may want to increase the maximum voice amplitude by 200 or 300 percent to give the resulting audio signal a boost. There is a slim chance that you may clip the signal, but in most cases it is highly unlikely. If you hear clipping, reduce the amplitude.<P>
+Example 2 shows an example of <CODE>InitScoreMixer()</CODE> being used to set the maximum voice amplitude to the absolutely safe level. It divides the maximum system amplitude by the number of voices.<P>
+<B>Example 2: </B><I>Maximizing voice amplitude.</I><P>
+<CODE>
+<PRE>
+maxsysamplitude = AllocAmplitude( 0x7FFF );
+Result = InitScoreMixer( scon, "mixer8x2.dsp", MAX_NUM_VOICES,
+                         (maxsysamplitude/MAX_NUM_VOICES) );
+</CODE>
+</PRE>
+Note that, in this example, MAX_NUM_VOICES is a constant defined earlier in the program. <CODE>maxsysamplitude</CODE> is a variable that contains the maximum system amplitude returned by the <CODE>AllocAmplitude()</CODE> call. (Amplitude allocation is discussed in <A HREF="./03mpg.html#XREF22719">Preparing Instruments</A>.")  When you are finished with the task, free the allocated system amplitude so that other tasks can use it.<P>
+<A NAME="XREF24337"><H3>Setting Up Mixerless MIDI Playback</A></H3>
+In future Portfolio releases, you may be able to use instruments that are not DSP instruments, for example, instruments that are attached hardware synthesizer voices. If so, you may want to set up for score playback using entirely non-DSP instruments, in which case you do not need a mixer. You still need to allocate note trackers, but you do not want to use the <CODE>InitScoreMixer()</CODE> call, which creates a mixer in addition to allocating note trackers. You would instead use this call directly:<P>
+<DL>
+<DD><CODE>int32 InitScoreDynamics( ScoreContext *ScoreCon,  int32 MaxNumVoices )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>*ScoreCon</CODE>, a pointer to the score context to which you want to associate note trackers; and <CODE>MaxNumVoices</CODE>, an integer value that sets the maximum number of voices available for score playback.<P>
+When executed, <CODE>InitScoreDynamics()</CODE> creates an array of <CODE>NoteTracker</CODE> data structures, one for each of the maximum possible voices. It then writes a pointer to the array into the specified score context. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<A NAME="XREF25985"></A>

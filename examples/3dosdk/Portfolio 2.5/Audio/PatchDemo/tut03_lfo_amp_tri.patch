@@ -1,0 +1,29 @@
+
+;******************************************************************************
+;*
+;*  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+;*  This material contains confidential information that is the property of The 3DO Company.
+;*  Any unauthorized duplication, disclosure or use is prohibited.
+;*  $Id: tut03_lfo_amp_tri.patch,v 1.2 1994/10/26 21:36:42 peabody Exp $
+;*
+;*  Tutorial 3: square lfo modulating the amplitude of a square wave
+;*
+;******************************************************************************
+
+LoadInstrument lfo pulse_lfo.dsp
+LoadInstrument osc square.dsp
+LoadInstrument mod timesplus.dsp
+LoadInstrument out directout.dsp
+
+Tweak  lfo Frequency 1000      ; modulation rate
+Tweak  lfo PulseWidth -20000   ; duty cycle
+Tweak  osc Frequency  136      ; pitch
+
+; modulation set to turn on and off, 0=16-16, 32=16+16
+Tweak  mod InputB 16000        ; modulation depth
+Tweak  mod InputC 16000        ; amplitude offset
+
+Connect   lfo  Output       mod  InputA
+Connect   mod  Output       osc  Amplitude   ; modulation destination
+Connect   osc  Output       out  InputLeft
+Connect   osc  Output       out  InputRight

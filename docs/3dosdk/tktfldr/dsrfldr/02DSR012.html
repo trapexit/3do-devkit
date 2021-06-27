@@ -1,0 +1,22 @@
+<Title>DSSubscriber</Title>
+<A NAME="XREF42689"><H1>DSSubscriber</A></H1>
+<A NAME="XREF20551">Data subscriber structure.</A><P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct DSSubscriber {
+   DSDataType dataType;
+   int32 subscriberPort;
+} DSSubscriber, *DSSubscriberPtr</CODE></pre><P>
+<H3>Description</H3>
+This data structure describes a generic subscriber. The <CODE>dataType</CODE> field is used to match logical data chunks in incoming data blocks in the stream. Each matching data block is delivered to the registered subscriber for that type of data. When the subscriber is finished with the data, it calls the buffer release procedure, which eventually frees the whole data block when all subscribers are finished with their individual logical data chunks.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>dataType</CODE>
+<DD>Type of data owned by subscriber.
+</DL>
+<DL>
+<DT><CODE>subscriberPort</CODE>
+<DD>Pointer to data subscriber procedure.
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

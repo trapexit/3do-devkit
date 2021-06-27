@@ -1,0 +1,31 @@
+<Title>DefineClass</Title>
+<A NAME="XREF20394"><H1>DefineClass </A></H1>
+<A NAME="XREF10029"></A> Defines a class of objects.<P>
+<H3>Synopsis</H3>
+<CODE>int32 DefineClass( COBClass *Class, COBClass *SuperClass,int32 DataSize )</CODE><P>
+<H3>Description</H3>
+Currently, this call is for internal use only, and not available to user tasks. <P>
+This function is part of the Juggler object-oriented toolbox that supports the various classes of Juggler objects.  This function defines a new class of objects with the given size.  All methods for this class are inherited from the specified SuperClass.  New methods are added to the class by setting function pointers in the Class structure. <P>
+See the chapter "Playing Juggler Objects" in the Portfolio Programmer's Guide for more information about object-oriented programming and the data structures necessary for this function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Class
+<DD>A pointer to the COBClass data structure for the class. 
+</DL>
+<DL>
+<DT>SuperClass
+<DD>A pointer to the COBClass data structure for the superclass. 
+</DL>
+<DL>
+<DT>DataSize
+<DD>A value indicating the size of the new class. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+cobj.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr007.html#XREF24520"><CODE>CreateObject</A>(), <A HREF="./02mpr009.html#XREF42157">DestroyObject</A>(), <A HREF="./02mpr020.html#XREF12026">ValidateObject</A>() </CODE><P>
+</CODE>

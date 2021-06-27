@@ -1,0 +1,100 @@
+bad_string_idx:<bad string index>
+bad_symbol_number:<bad symbol number>
+err_file_notopen:File %s doesn't exist?
+err_out_of_memory:Not enough memory to process %s (need %lu bytes)
+err_failed_to_load:Failed to load %s
+err_not_axf:%s is not a valid AXF file
+err_bad_option:unrecognised flag option %s (ignored)
+err_b_overrides:-b overrides other options (which have been ignored)
+err_missing_files:missing file argument(s)
+err_nothing_after:the '-%s' option needs a parameter
+msg_symb_none:** No symbol table **\n\n
+msg_symb:\n\
+Low-level Symbol Table\n\
+-----------------------\n\n
+msg_strings_none:** No string table **\n\n
+msg_strings:** String Table (file %s):-\n\n
+msg_aif_compressed:Compressed, 
+msg_aif_has_relocs:Relocatable, 
+msg_aif_aif:%s: AIF image: 
+msg_aif_nonexec:Non-executable, 
+msg_aif_exec:Executable, 
+msg_aif_bits:%lu-bit\n
+msg_aif_ro:    Read Only Section at:  0x%.8lx, size = %6lu (0x%.6lx)\n
+msg_aif_rw:    Read Write Section at: 0x%.8lx, size = %6lu (0x%.6lx)\n
+msg_aif_zi:    Zero Init Section at:  0x%.8lx, size = %6lu (0x%.6lx)\n
+msg_aif_debug:    Debug size = 0x%.8lx
+msg_aif_llinfo:: low-level debugging information
+msg_aif_hlinfo:: source-level debugging information
+msg_aif_llhlinfo:: low-level and source-level debugging information
+msg_aif_llsize:: ll info size 0x%lx
+msg_aif_fragment:    Fragment %s: file offset %#lx, size %#lx: load address %#lx\n
+msg_aif_relocs:    %ld relocations.\n
+msg_aif_one_reloc:    %ld relocation.\n
+msg_aif_reloc_leader:      
+msg_aif_reloc:0x%08lx
+msg_area_at:      Area %s at 0x%.8lx, size = %6lu (0x%.6lx)\n
+err_aif_dbgsize:%s: inconsistency: dbgtype != 0 but dbgsize == 0
+err_aif_fragheader:%s: fragment header outside image file at %#lx
+err_aif_fragment:%s: fragment extends beyond image file (end %#lx, file size %#lx)
+err_aif_debug:%s: debug info extends beyond image file (end %#lx, file size %#lx)
+err_cant_dump_exec_relocs:%s: sorry, don't know how to dump relocations from an executable image
+err_bad_bin_reloc:%s: relocations are in an unexpected place (at = %#lx; expected = %#lx)
+err_aif_reloc_count:%s: relocation count extends beyond image file (end %#lx, file size %#lx)
+err_aif_relocs:%s: relocation list extends beyond image file (end %#lx, file size %#lx)
+err_elf_isnt_64:%s isn't a 64-bit ELF file
+err_elf_isnt_32:%s isn't a 32-bit ELF file
+err_elf_out_of_memory:Insufficient memory to process ELF file
+msg_file:file %s\n
+msg_bigend:Big-endian, 
+msg_litend:Little-endian, 
+msg_entry:Entry point at offset 0x%.4lx in area \"%s\"\n
+msg_sym_external:External reference
+msg_sym_external_common:External common reference
+msg_sym_local:Local,  
+msg_sym_global:Global, 
+msg_sym_data:Data, 
+msg_sym_thumb:, 16-bit code
+msg_sym_fpreg:, FPRegArgs
+msg_sym_thumb2:16-bit code, 
+msg_sym_fpreg2:FPRegArgs, 
+msg_sym_nocase:, No-case
+msg_sym_weak:, Weak
+msg_sym_common:, size = 0x%.4lx
+msg_sym_usessb:Sb, 
+msg_sym_leaf:Leaf, 
+msg_sym_absolute:Absolute, 
+msg_sym_relative:Relative, 
+msg_sym_strong:Strong, 
+msg_sym_value:value 0x%.4lx
+msg_sym_offset:offset 0x%.4lx in area \"%s\"
+msg_base_addr:\
+        Base address 0x%.6lx\n
+msg_string_offset:\
+Offset  String-name\n\
+-------------------\n
+help_banner:\
+\n%s Version %s [%s]\n       - %s\n\
+\n%s [options] file [file...]\n
+help_options1:\n\
+Options:-\n\
+-c   disassemble code\n\
+-g   print debug areas\n\
+-s   print symbol table\n
+help_options2:\n\
+ELF files only:-\n\
+-t   print string table\n\
+-d   display data section contents\n\
+-r   display relocation information\n
+help_examples:\n\
+Examples:-\n\
+     %s -gst my_elf.axf\n\
+     %s -c test1.axf test2.axf test3.axf\n
+msg_i_am:AXF Decoder
+msg_i_do:decodes an ARM Executable Format (AXF) file
+err_asd_format:*** Format Error: Section expected at AREA offset %d\n
+msg_asd_name:\n%s:\n
+msg_asd_default_name:\nASD debug area:\n
+err_no_output_filename:no filename given for '-o'
+err_bad_option_2:unrecognized flag option '-%c'
+err_try_help:Try '%s -help' for more information.

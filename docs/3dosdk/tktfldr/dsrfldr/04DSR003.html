@@ -1,0 +1,17 @@
+<Title>enableaudiomask</Title>
+<A NAME="XREF37603"><H1>enableaudiomask</A></H1>
+<A NAME="XREF42234"></A> Specifies mask of audio channels to be enabled.<P>
+<H3>Synopsis</H3>
+<CODE>enableaudiomask &lt;bit_mask&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>Enableaudiomask</CODE> specifies the channels to be enabled for the stream that is generated. You specify a bit mask in which channels are enabled. This mask is expressed in hexadecimal; for example, 0x3 to enable channel 0 and 1).<P>
+This information is put into the stream header, so <CODE>writestreamheader has to be included in the script. </CODE><P>
+<H3>Arguments</H3>
+<DL>
+<DT>bit_mask
+<DD>Bit mask of audio channels in hex (32-bit maximum).
+</DL>
+<H3>Caveats</H3>
+None.<P>
+<H3>See Also</H3>
+<A HREF="./04DSR018.html#XREF15454">writestreamheader</A><P>

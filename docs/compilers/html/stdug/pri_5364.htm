@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>The priority queue Data Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The priority queue Data Abstraction</H2>
+<P>A<B><I> priority queue</I></B> is a data structure useful in problems where you need to rapidly and repeatedly find and remove the largest element from a collection of values.  An everyday example of a priority queue is the "to do" list of tasks waiting to be performed that most of us maintain to keep ourselves organized.  Some jobs, such as "clean desktop," are not imperative and can be postponed arbitrarily.  Other tasks, such as "finish report by Monday" or "buy flowers for anniversary," are time-crucial and must be addressed more rapidly.  Thus, we sort the tasks waiting to be accomplished in order of their importance (or perhaps based on a combination of their critical importance, their long term benefit, and the fun we will have doing them) and choose the most pressing.</P>
+<A HREF="sidebar.htm#sidebar40"><IMG SRC="images/note.gif" BORDER=0> <STRONG>A Queue That is Not a Queue</STRONG></A>
+
+<P>A more computer-related example of a priority queue is that used by an operating system to maintain a list of pending processes, where the value associated with each element is the priority of the job.  For example, it may be necessary to respond rapidly to a key pressed at a terminal, before the data is lost when the next key is pressed.  On the other hand, the process of copying a listing to a queue of output waiting to be handled by a printer is something that can be postponed for a short period, as long as it is handled eventually.  By maintaining processes in a priority queue, those jobs with urgent priority will be executed prior to any jobs with less urgent requirements.</P>
+<P>Simulation programs use a priority queue of "future events."  The simulation maintains a virtual "clock," and each event has an associated time when the event will take place.  In such a collection, the element with the smallest time value is the next event that should be simulated.  These are only a few instances of the types of problems for which a priority queue is a useful tool.  You probably have, or will, encounter others.</P>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>Programs that use the priority queue data abstraction should include the file <SAMP>queue</SAMP>, as well as the include file for the container type (e.g., <SAMP>vector</SAMP>).</P>
+<PRE>   # include &#60;queue>
+   # include &#60;vector></PRE>
+
+<HR>
+<A HREF="pri_2327.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="pri_0581.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

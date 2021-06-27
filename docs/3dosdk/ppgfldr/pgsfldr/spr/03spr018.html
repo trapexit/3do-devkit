@@ -1,0 +1,21 @@
+<Title>Convert32_F16</Title>
+<A NAME="XREF10836"><H1>Convert32_F16 </A></H1>
+<A NAME="XREF22534"></A> Converts a 32-bit integer to a 16.16 fraction.<P>
+<H3>Synopsis</H3>
+<CODE>frac16 Convert32_F16( int32 x )</CODE><P>
+<H3>Description</H3>
+This macro converts a 32-bit integer into a 16.16 fraction. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>x
+<DD>The 32-bit integer to be converted. 
+</DL>
+<H3>Return Value</H3>
+The function returns the 16.16 result of the conversion. The fractional 1-  bits of the result are zero, and the upper 16-bits of the argument are lost. <P>
+<H3>Implementation</H3>
+Macro implemented in operamath.h V20. <P>
+<H3>Associated Files</H3>
+operamath.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr020.html#XREF20470"><CODE>ConvertF14_F16</A>(), <A HREF="./03spr022.html#XREF38073">ConvertF16_F14</A>(), <A HREF="./03spr023.html#XREF41341">ConvertF16_F30</A>(), <A HREF="./03spr024.html#XREF20475">ConvertF30_F16</A>(), <A HREF="./03spr019.html#XREF42145">Convert32_F32</A>(), <A HREF="./03spr021.html#XREF38935">ConvertF16_32</A>(), <A HREF="./03spr025.html#XREF10484">ConvertF32_F16</A>(), <A HREF="./03spr026.html#XREF38205">ConvertS32_64</A>(), <A HREF="./03spr027.html#XREF22707">ConvertSF16_F32</A>(), <A HREF="./03spr028.html#XREF35474">ConvertU32_64</A>(), <A HREF="./03spr029.html#XREF33475">ConvertUF16_F32</A>() </CODE><P>
+</CODE>

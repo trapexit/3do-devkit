@@ -1,0 +1,25 @@
+<Title>spFindMarkerName</Title>
+<A NAME="XREF37325"><H1>spFindMarkerName </A></H1>
+<A NAME="XREF15140"></A> Return pointer an SPMarker by looking up its name.<P>
+<H3>Synopsis</H3>
+<CODE>SPMarker *spFindMarkerName (const SPSound *sound, const char *markerName)</CODE><P>
+<H3>Description</H3>
+Locates the specified marker name in the specified sound. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to SPSound to search for marker. 
+</DL>
+<DL>
+<DT>markerName
+<DD>Name of marker in sound to find. 
+</DL>
+<H3>Return Value</H3>
+Pointer to matched SPMarker on success; NULL on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr061.html#XREF17185"><CODE>spAddMarker</A>(), <A HREF="./02mpr083.html#XREF25941">spRemoveMarker</A>(), <A HREF="./02mpr069.html#XREF41344">SPDecisionFunction</A> </CODE><P>
+</CODE>

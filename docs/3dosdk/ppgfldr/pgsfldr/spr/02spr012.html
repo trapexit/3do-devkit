@@ -1,0 +1,24 @@
+<Title>LoadProgram</Title>
+<A NAME="XREF40015"><H1>LoadProgram </A></H1>
+<A NAME="XREF29765"></A> Loads a binary image and spawns it as a task.<P>
+<H3>Synopsis</H3>
+<CODE>Item LoadProgram(char *cmdLine);</CODE><P>
+<H3>Description</H3>
+This function loads an executable file from disk and launches a new task to execute the code. <P>
+You give this function a command line to interpret. The first component of the command line is taken as the name of the file to load. The entirety of the command line is passed to the new task as argc and argv in the <CODE>main()</CODE> function. The filename component of the command line specifies either a fully qualified pathname, or a pathname relative to the current directory. <P>
+The priority of the new task is identical to the priority of the current task. If you wish the task to have a different priority, you must use the <CODE>LoadProgramPrio()</CODE> function instead. <P>
+If a priority was given to the executable being launched using the modbin utility, then the priority that was specified to modbin will be used for the new task, and not the current priority. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cmdLine
+<DD>A NULL-terminated string indicating the file to load as a task. The string may also contain arguments for the task being started. 
+</DL>
+<H3>Return Value</H3>
+The Item number of the newly created task, or a negative error code if the task could not be created. <P>
+<H3>Implementation</H3>
+Folio call implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+filefunctions.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr013.html#XREF40203"><CODE>LoadProgramPrio</A>(), <A HREF="./02spr011.html#XREF35386">LoadCode</A>(), <A HREF="./02spr009.html#XREF27642">ExecuteAsThread</A>() </CODE><P>
+</CODE>

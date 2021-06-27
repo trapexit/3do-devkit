@@ -1,0 +1,210 @@
+Access Lib Routines
+Created 8/17/93 - Jay London
+---------------------------------------------------------------------------------------------
+
+	There are four new library routines called "Answer", "StdLoadFile", and "StdSaveFile"
+which will connect application developers with the wonderful world of the Access Manager.
+
+int32	Answer(int32 dialogType, Item screenItem, char *title, char *text,... );
+int32	StdLoadFile(char *title, char **buf, Item screenItem);
+int32	StdSaveFile(char *title, char *buf, int32 bufSize, Item screenItem, char *defaultFileName);
+int32	StdDeleteFile(char *title, Item screenItem);
+int32	SetAccessColors(RGB555 foreColor, RGB555 backColor, RGB555 hiliteColor, RGB555 shadowColor);
+			   
+
+Answer
+---------------------------------------------------------------------------------------------
+int32	Answer(int32 dialogType, Item screenItem, char *title, char *text,... );
+
+	Answer is a variable length parameter function.  It accepts four parameters
+	for all Access Manager requests and a variable number of parameters depending
+	on which Access Manager request the application developer wishes.  It allows
+	application programmers to display text have the user respond by hitting one or
+	two buttons.
+
+The two standard parameters are
+	int32	dialogType  - 	this specifies which Access Manager dialog the
+						  	application developer is requesting.  The choices
+						  	are:
+						  
+						  	OK_DIALOG 	- a dialog with a title and message
+						  				  and just an OK button.
+										  
+						  	OK_CANCEL_DIALOG - a dialog with a title and message
+						  				  and an OK and a Cancel button
+										  
+						  	ONE_BUTTON_DIALOG - a dialog with a title and message
+						  				  and just 1 button with a name specified
+										  by the application developer.
+										  
+						  	TWO_BUTTON_DIALOG - a dialog with a title and message
+						  				  and 2 buttons with names specified 
+										  by the application developer.
+									
+										  
+										  
+	Item	screenItem - 	The item referring to a screen in which the Access Manager should
+						 	display the dialogs.
+						 
+	char	*title - 		The title put on the first line of the dialog box.
+	char	*text - 		The message put in the middle of the dialog box.
+						
+The variable parameters for each dialog type are as follows:
+
+OK_DIALOG			No additional parameters
+OK_CANCEL_DIALOG 	No additional parameters
+									
+ONE_BUTTON_DIALOG	char	*btn1Text	- a null-terminated string which will serve as the
+									name of the button
+									
+									
+TWO_BUTTON_DIALOG	char	*btn1Text	- a null-terminated string which will serve as the
+									name of the left-most button in the dialog
+									
+					char	*btn2Text	- a null-terminated string which will serve as the
+									name of the right-most button in the dialog
+
+
+
+Return values for Answer
+
+0 - indicates successful execution for all types of Access Manager dialogs.
+	In addition, for OK_CANCEL and TWO_BUTTON, 0 indicates the left-most button (OK) was
+	chosen.
+	
+1 - For OK_CANCEL and TWO_BUTTON, indicates successful execution of Access Manager
+	call and the right-most (CANCEL) button was chosen.
+	
+<0 - An error in communicating with the Access Manager occurred.
+
+
+
+
+StdLoadFile
+---------------------------------------------------------------------------------------------
+int32	StdLoadFile(char *title, char **buf, Item screenItem);
+
+	StdLoadFile is a function which prompts the user to choose a file name and then
+	reads the file into the buffer, buf, provided by the call.  If the buffer has not
+	been allocated, StdLoadFile will allocate the buffer for you.
+	
+	The parameters are:
+	
+	char	*title		- 	A null-terminated string which will serve as the
+							title for the dialog.  The title is used in the phrase
+							"Load <title>".
+									
+	char	**buf		- 	A pointer to a pointer to a block of memory in which the file
+							is to be read.  This buffer need not be pre-allocated before
+							calling StdLoadFile.
+	
+	Item	screenItem	- 	The item referring to a screen in which the Access Manager should
+						 	display the dialogs.
+
+
+
+StdSaveFile
+---------------------------------------------------------------------------------------------
+int32	StdSaveFile(char *title, char *buf, int32 bufSize, Item screenItem, char *fileName);
+
+	StdSaveFile is a function which prompts the user to enter a file name and then
+	saves the data in buffer, buf, of size, bufSize, into the file specified.  StdSaveFile
+	will open an existing file OR create a new file.
+	
+	The parameters are:
+	
+	char	*title		- 	A null-terminated string which will serve as the
+							title for the dialog.
+									
+	char	*buf		- 	A pointer to a block of memory in which the data to be written
+							exists.  
+	
+	int32	bufSize		-	The size of the buffer to be written.
+	
+	Item	screenItem	- 	The item referring to a screen in which the Access Manager should
+						 	display the dialogs.
+
+	char	*fileName - 	The file name which first appears in the save dialog.  The user
+							can change this.  If NULL, a blank name will first appear and the user's
+							name will not be returned.  If non-NULL, the name provided will first
+							appear and the name the user saves will be returned.  This string should
+							be 256 characters.
+
+StdDeleteFile
+---------------------------------------------------------------------------------------------
+int32	StdDeleteFile(char *title, Item screenItem);
+
+	StdSaveFile is a function which prompts the user to enter a file name and then
+	deletes the file.
+	
+	The parameters are:
+	
+	char	*title		- 	A null-terminated string which will serve as the
+							title for the dialog.  The title is used in the phrase
+							"Delete <title>".
+										
+	Item	screenItem	- 	The item referring to a screen in which the Access Manager should
+						 	display the dialogs.
+
+
+
+
+
+
+
+SetAccessColors
+---------------------------------------------------------------------------------------------
+int32	SetAccessColors(RGB555 foreColor, RGB555 backColor, RGB555 hiliteColor, RGB555 shadowColor);
+
+
+	SetAccessColors allows programmers to specify the foreground color, background color,
+	shadow color, and hilite color of access manager dialogs.  Each parameter is in the form
+	RGB555.  A value of -1 (COLOR_SAME) in any value leaves the color as it currently exists,
+	-2 (COLOR_DEFAULT) returns to default color.
+	
+	COLOR_SAME			-1
+	COLOR_DEFAULT		-2
+	
+	
+	
+	
+Examples of using the Access Library Calls
+---------------------------------------------------------------------------------------------
+
+	ScreenContext	sc;
+	int32	firstButton, bufSize = 26;
+	char	fName[256];
+	char	saveBuf[256] = "abcdefghijklmnopqrstuvwxyz";
+	char	*loadBuf;
+	
+	if (Answer(OK_DIALOG, sc.sc_Screens[sc.sc_curScreen], "Title","Other Text") < 0)
+		printf("Error in Answer.\n");
+
+	if (Answer(OK_CANCEL_DIALOG, sc.sc_Screens[sc.sc_curScreen], "Title","Other Text",&firstButton) < 0)
+		printf("Error in Answer.\n");
+
+	if (Answer(ONE_BUTTON_DIALOG, sc.sc_Screens[sc.sc_curScreen], "Title","Other Text","Button 1") < 0)
+		printf("Error in Answer.\n");
+
+	if (Answer(TWO_BUTTON_DIALOG, sc.sc_Screens[sc.sc_curScreen], "Title","Other Text","Button 1","Button 2",&firstButton) < 0)
+		printf("Error in Answer.\n");
+
+	if (StdSaveFile("Save game as...",saveBuf,bufSize,sc.sc_Screens[sc.sc_curScreen]))
+		printf("Error in save file.\n");
+
+	if (StdLoadFile("game...",(char**)&readBuf,sc.sc_Screens[sc.sc_curScreen]))
+		printf("Error in load file.\n");
+
+	if (StdDeleteFile("game...",sc.sc_Screens[sc.sc_curScreen]))
+		printf("Error in delete file.\n");
+
+	SetAccessColors((RGB555)MakeRGB15(0x1F,0,0x1F),(RGB555)COLOR_SAME,(RGB555)MakeRGB15(0,0,0x1F),(RGB555)COLOR_DEFAULT);
+	
+	
+Result codes
+---------------------------------------------------------------------------------------------
+ACCESS_LIB_OUT_OF_MEM		-5001
+ACCESS_LIB_BAD_FILESIZE		-5002
+ACCESS_LIB_BAD_MSGITEM		-5003
+ACCESS_LIB_BAD_ACCESSPORT	-5004
+ACCESS_LIB_BAD_SCREENITEM	-5005

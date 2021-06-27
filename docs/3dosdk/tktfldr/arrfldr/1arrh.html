@@ -1,0 +1,95 @@
+<TITLE>PCC compatibility mode </TITLE>
+<H1><LINK NAME="XREF40632">PCC compatibility mode</LINK> </H1><HR>
+This section discusses the differences apparent when the compiler is used in PCC mode. When given the -pcc command line flag, the C compiler will accept (Berkeley) Unix-compatible C, as defined by the implementation of the Portable C Compiler and subject to the restrictions which are noted below.<P>
+In essence, PCC-style C is K&amp;R C, as defined by B. Kernighan and D. Ritchie in their book <I>The C Programming Language</I>, together with a small number of extensions, and some clarifications of language features that the book leaves undefined.<P>
+<H2>Language and preprocessor compatibility </H2>
+In -pcc mode, the ARM C compiler accepts K&amp;R C, but it does not accept many of pcc's old-style compatibility features, the use of which has been deprecated and warned against for years. The differences are:<P>
+<UL>
+<LI>Compound assignment operators where the = sign comes first are accepted (with a warning) by some PCCs. An example is =+ instead of +=. ARM C does not allow this ordering of the characters in the token. 
+<p>
+<LI>The = sign before a static initialiser was not required by some very old C compilers. ARM C does not support this idiom.
+<p>
+<LI>The following very peculiar usage is found in some Unix tools pre-dating Unix Version 7:
+<PRE>
+<CODE>struct {int a, b;};</CODE>
+<CODE>double d;</CODE>
+<CODE>d.a = 0; d.b = 0x....; </CODE></CODE>
+</PRE>
+</UL>
+<p>
+<p>This is accepted by some Unix PCCs and may cause problems when porting old (and badly written) code:</CODE><P>
+<p>
+<UL>
+<LI>Enums are less strongly typed than is usual under PCCs. Enum is an extension to K&amp;R C which has been standardised by ANSI somewhat differently from the BSD PCC implementation.
+<LI>Chars are signed by default in -pcc mode (unsigned in ANSI mode).
+<LI>In -pcc mode, the compiler permits the use of the ANSI ... notation which signifies that a variable number of formal arguments follow.
+<LI>In order to cater for PCC-style use of variadic functions, a version of the PCC header file varargs.h is supplied with the release.
+</UL>
+With the exception of enums, the compiler's type checking is generally stricter than PCC, much more akin to lint's, in fact. In writing the ARM C compiler, we have attempted to strike a balance between giving too many warnings when compiling known, working code, and warning of poor or non portable programming practices. Many PCCs silently compile code which has no chance of executing in just a slightly different environment. We have tried to be helpful to those who need to port C among machines in which the following varies:<P>
+<UL>
+<LI>the order of bytes within a word (e.g. little-endian ARM, VAX, Intel versus big-endian Motorola, IBM370);
+<p>
+<LI>the default size of int (four bytes versus two bytes in many PC implementations);
+<p>
+<LI>the default size of pointers (not always the same as int);
+<p>
+<LI>whether values of type char default to signed or unsigned char;
+<p>
+<LI>the default handling of undefined and implementation-defined aspects of the C language.
+</UL>
+<p>The compiler's preprocessor is believed to be equivalent to a BSD Unix cpp except for the points listed below. Unfortunately, cpp is only defined by its implementation, and although equivalence has been tested over a large body of Unix source code, completely identical behaviour cannot be guaranteed. Some of the points listed below only apply when the -E option is used with the cc command:<P>
+<p>
+<UL>
+<LI>There is a different treatment of white space sequences (benign).
+<p>
+<LI>Newline is processed by cc -E, but passed by cpp (making lines longer than expected; (cc -E only).
+<p>
+<LI>Cpp breaks long lines at a token boundary; cc -E does not. This may break line-size constraints when the source is later consumed by another program (cc -E only).
+<p>
+<LI>The handling of unrecognised directives is different (this is mostly benign).
+</UL>
+<H2>Standard headers and libraries</H2>
+Use of the compiler in -pcc mode precludes neither the use of the standard ANSI headers built in to the compiler nor the use of the run-time library supplied with the C compiler. Of course, the ANSI library does not contain the whole of the Unix C library, but it does contain many commonly used functions. However, look out for functions with different names, or a slightly different definition, or those in different standard places. Unless the user directs otherwise using -j, the C compiler will attempt to satisfy references to, say, <I>stdio.h</I> from its built-in filing system.<P>
+Listed below are a number of differences between the ANSI C Library, and the BSD Unix library. They are placed under headings corresponding to the ANSI header files:<P>
+<H3>ctype.h</H3>
+There are no<I> isascii()</I> and <I>toascii()</I> functions, since ANSI C is not character-set specific.<P>
+<H3>errno.h</H3>
+On BSD systems <I>sys_nerr</I> and <I>sys_errlist()</I> are defined to give error messages corresponding to error numbers. ANSI C does not have these, but provides similar functionality via <I>perror(const char *s)</I>, which displays the string pointed to by <I>s </I>followed by a system error message corresponding to the current value of <I>errno</I>.<P>
+There is also <CODE>char *strerror(int errnum)</CODE> which, when given a purported value of <I>errno</I>, returns its textual equivalent.<P>
+<H3>math.h</H3>
+The #defined value HUGE, found in BSD libraries, is called HUGE_VAL in ANSI C. ANSI C does not have <I>asinh()</I>, <I>acosh()</I> or <I>atanh()</I>.<P>
+<H3>signal.h</H3>
+In ANSI C the <I>signal()</I> function's prototype is:<P>
+<CODE>
+<PRE>
+extern void (*signal(int, void(*func)(int)))(int);
+</CODE>
+</PRE>
+<CODE>signal()</CODE> therefore expects its second argument to be a pointer to a function returning void with one int argument. In BSD-style programs it is common to use a function returning int as a signal handler. The PCC-style function definitions shown below will therefore produce a compiler warning about an implicit cast between different function pointers (since <CODE>f()</CODE> defaults to<CODE> int f()</CODE>). This is just a warning, and correct code will be generated anyway.<P>
+<CODE>
+<PRE>
+f(signo)
+int signo;
+...
+main()
+{   extern f();
+    signal(SIGINT, f);
+...
+</CODE>
+</PRE>
+<H3>stdio.h</H3>
+<CODE>sprintf()</CODE> returns the number of characters printed (following Unix System V), whereas the BSD's <CODE>sprintf()</CODE> returns a pointer to the start of the character buffer.<P>
+The BSD functions <CODE>ecvt()</CODE>, <CODE>fcvt()</CODE> and <CODE>gcvt()</CODE> are not included in ANSI C, since their functionality is provided by <CODE>sprintf().</CODE><P>
+<H3>string.h</H3>
+On BSD systems, string manipulation functions are found in <I>strings.h</I> whereas ANSI C places them in <I>string.h</I>. The ARM C Compiler also recognises <I>strings.h</I>, for PCC-compatibility.<P>
+The BSD functions <CODE>index()</CODE> and <CODE>rindex()</CODE> are replaced by the ANSI functions<I> </I><CODE>strchr()</CODE> and<CODE> strrchr()</CODE> respectively.<P>
+Functions which refer to string lengths (and other sizes) now use the ANSI type <I>size_t</I>, which in our implementation is <I>unsigned int</I>.<P>
+<H3>stdlib.h</H3>
+<CODE>malloc()</CODE> has type void *, rather than the char * of the BSD <CODE>malloc()</CODE>.<P>
+<H3>float.h</H3>
+A new header added by ANSI giving details of floating point precision etc.<P>
+<H3>limits.h</H3>
+A new header added by ANSI to give maximum and minimum limit values for integer data types.<P>
+<H3>locale.h</H3>
+A new header added by ANSI to provide local environment-specific features.<P>
+<P>

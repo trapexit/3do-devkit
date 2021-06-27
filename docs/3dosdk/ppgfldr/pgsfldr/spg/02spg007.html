@@ -1,0 +1,50 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF20207">Function Calls</LINK></H1><HR>
+The following calls control tasks and threads. See <A HREF="../spr/01spr.html#XREF17318">Kernel Folio Calls</A>, for more information on these calls.<P>
+<H2>Starting Tasks</H2>
+The following calls start tasks:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr022.html#XREF15505">CreateItem</A>() </CODE>Creates an item.
+<LI><CODE><A HREF="../spr/02spr012.html#XREF40015">LoadProgram</A>() </CODE>Launches a program.
+<LI><CODE><A HREF="../spr/02spr013.html#XREF40203">LoadProgramPrio</A>() </CODE>Launches a program and gives it a priority.
+</UL>
+<H2>Ending Tasks</H2>
+The following calls delete or exit a task:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr032.html#XREF18938">DeleteItem</A>() </CODE>Deletes an item.
+<LI><CODE><A HREF="../spr/01spr042.html#XREF40201">exit</A>() </CODE>Exits from a task or thread.
+</UL>
+<H2>Loading and Unloading Code</H2>
+The following calls load or unload code:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/02spr011.html#XREF35386">LoadCode</A>() </CODE>Loads a binary image into memory, and obtains a handle to it.
+<LI><CODE><A HREF="../spr/02spr022.html#XREF19343">UnloadCode</A>() </CODE>Unloads a binary image previously loaded with <CODE>LoadCode()</CODE>.
+</UL>
+<H2>Starting Threads</H2>
+The following calls create a thread:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr028.html#XREF27054">CreateThread</A>() </CODE>Creates a thread.
+<LI><CODE><A HREF="../spr/02spr009.html#XREF27642">ExecuteAsThread</A>() </CODE>Executes previously loaded code as a thread.
+</UL>
+<H2>Ending Threads</H2>
+The following calls delete and exit from a thread:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr037.html#XREF28597">DeleteThread</A>() </CODE>Deletes a thread.
+<LI><CODE><A HREF="../spr/01spr042.html#XREF40201">exit</A>() </CODE>Exits from a task or thread.
+</UL>
+<H2>Controlling Tasks</H2>
+The following calls control tasks and threads.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr123.html#XREF40028">SendSignal</A>() </CODE>Sends one or more signals to another task.
+<LI><CODE><A HREF="../spr/01spr125.html#XREF39158">SetItemOwner</A>() </CODE>Changes the owner of an item.
+<LI><CODE><A HREF="../spr/01spr126.html#XREF17657">SetItemPri</A>() </CODE>Changes the priority of an item.
+<LI><CODE><A HREF="../spr/01spr133.html#XREF12306">WaitSignal</A>() </CODE>Waits until a signal is sent.
+<LI><CODE><A HREF="../spr/01spr134.html#XREF31359">Yield</A>() </CODE>Gives up the CPU to a task of equal priority.
+</UL>
+<P>

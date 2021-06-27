@@ -1,0 +1,35 @@
+<TITLE>NextNode</TITLE>
+<A NAME="XREF12754"><H1>NextNode </A></H1>
+<A NAME="XREF42132"></A>Gets the next node in a list.<P>
+<H3>Synopsis</H3>
+<CODE>Node *NextNode( const Node *n )</CODE><P>
+<H3>Description</H3>
+This macro gets a pointer to the next node in a list. If the current node is the last node in the list, the result is a pointer to the tail (end-of-list) anchor. To determine if the return value is an actual node rather than the tail anchor, call the <CODE>IsNode()</CODE> procedure. <P>
+<B>Example 1: </B><I>Use of NextNode in forward list traversal </I><P>
+<CODE>
+<PRE>
+for (n = FirstNode( l ); IsNode( l, n ); n = NextNode( n )) 
+{   . . .   }; 
+</CODE>
+</PRE>
+<H3>Arguments</H3>
+<DL>
+<DT>n
+<DD>Pointer to the current node. 
+</DL>
+<H3>Return Value</H3>
+The macro returns a pointer to the next node in the list or, if the current node is the last node in the list, to the tail (end-of-list) anchor. <P>
+<H3>Implementation</H3>
+Macro implemented in list.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Macro definition 
+</DL>
+<H3>Caveats</H3>
+Assumes that n is a node in a list. If not, watch out. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr062.html#XREF11960"><CODE>FirstNode</A>(), <A HREF="./01spr091.html#XREF32439">IsListEmpty</A>(), <A HREF="./01spr094.html#XREF37857">IsNode</A>(), <A HREF="./01spr095.html#XREF36617">IsNodeB</A>(), <A HREF="./01spr096.html#XREF19159">LastNode</A>(), <A HREF="./01spr106.html#XREF31070">PrevNode</A>(), <A HREF="./01spr118.html#XREF16633">ScanList</A>() <BR>
+</CODE><CODE></CODE><P>
+</CODE>
+<H1><LINK NAME="XREF12754"></LINK></H1><HR>

@@ -1,0 +1,25 @@
+<Title>spClearMarkerDecisionFunction</Title>
+<A NAME="XREF39335"><H1>spClearMarkerDecisionFunction </A></H1>
+<A NAME="XREF16137"></A> Clears a marker decision function.<P>
+<H3>Synopsis</H3>
+<CODE>Err spClearMarkerDecisionFunction (SPSound *sound, const char *markerName)</CODE><P>
+<H3>Description</H3>
+Removes a marker decision function installed by <CODE>spSetMarkerDecisionFunction()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound
+<DD>Pointer to SPSound containing marker from which to remove decision function. 
+</DL>
+<DL>
+<DT>markerName
+<DD>Name of marker in sound from which to remove decision function. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Implementation</H3>
+Macro implemented in soundplayer.h V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr089.html#XREF13040"><CODE>spSetMarkerDecisionFunction</A>() </CODE><P>
+</CODE>

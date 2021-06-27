@@ -1,0 +1,27 @@
+<Title>ModifyVDL </Title>
+<A NAME="XREF39861"><H1>ModifyVDL </A></H1>
+<A NAME="XREF15749"> Changes one or more attributes of a VDL.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err ModifyVDL (Item vdlItem,TagArg *vdlTags)<BR>
+Err ModifyVDLVA (Item vdlItem,uint32 vdlTags,...)</CODE><P>
+<H3>Description</H3>
+This call changes one or more attributes of a VDL. When executed, it looks through each entry of the VDL for opcodes, and then changes the specified attributes in each opcode (if they need changing). This means that <CODE>ModifyVDL()</CODE> affects the entire VDL, regardless of its type. It works equally well on simple VDLs and custom VDLs. <P>
+This is a preliminary implementation of <CODE>ModifyVDL()</CODE>. Future implementations will include the ability to modify individual VDL entries. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>vdlItem
+<DD>Item number of the VDL to be modified. 
+</DL>
+<DL>
+<DT>vdlTags
+<DD>Pointer to the array of TagArgs used to specify the modifications to the VDL. 
+</DL>
+<H3>Return Value</H3>
+The call returns a 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V21. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr070.html#XREF12966"><CODE>SubmitVDL</A>(), <A HREF="./01gpr067.html#XREF20050">SetVDL</A>(), <A HREF="./01gpr014.html#XREF24670">DeleteVDL</A>() </CODE><P>
+</CODE>

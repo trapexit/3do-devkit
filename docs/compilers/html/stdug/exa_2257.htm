@@ -1,0 +1,44 @@
+<HTML><HEAD><TITLE>Example Program: - A Spelling Checker</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Example Program: - A Spelling Checker</H2>
+<A HREF="sidebar.htm#sidebar28"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>A simple example program that uses a set is a spelling checker.  The checker takes as arguments two input streams; the first representing a stream of correctly spelled words (that is, a dictionary), and the second a text file.  First, the dictionary is read into a set.  This is performed using a <SAMP>copy()</SAMP> and an input stream iterator, copying the values into an inserter for the dictionary.  Next, words from the text are examined one by one, to see if they are in the dictionary.  If they are not, then they are added to a set of misspelled words.  After the entire text has been examined, the program outputs the list of misspelled words.</P>
+<PRE>void spellCheck (istream &#38; dictionary, istream &#38; text)
+{
+   typedef set &#60;string, less&#60;string> > stringset;
+   stringset words, misspellings;
+   string word;
+   istream_iterator&#60;string, ptrdiff_t> dstream(dictionary), eof;
+
+   // first read the dictionary
+   copy (dstream, eof, inserter(words, words.begin())); 
+
+   // next read the text
+   while (text >> word)
+      if (! words.count(word))
+         misspellings.insert(word);
+
+   // finally, output all misspellings
+   cout &#60;&#60; "Misspelled words:" &#60;&#60; endl;
+   copy (misspellings.begin(), misspellings.end(),
+      ostream_iterator&#60;string>(cout, "\n"));
+}
+</PRE>
+<P>An improvement would be to suggest alternative words for each misspelling.  There are various heuristics that can be used to discover alternatives.  The technique we will use here is to simply exchange adjacent letters.  To find these, a call on the following function is inserted into the loop that displays the misspellings.</P>
+<PRE>void findMisspell(stringset &#38; words, string &#38; word)
+{
+   for (int i = 1; i &#60; word.length(); i++) {
+      swap(word[i-1], word[i]);
+      if (words.count(word)) 
+         cout &#60;&#60; "Suggestion: " &#60;&#60; word &#60;&#60; endl;
+      // put word back as before
+      swap(word[i-1], word[i]);
+      }
+}</PRE>
+
+<HR>
+<A HREF="set_1754.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="bit_2576.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

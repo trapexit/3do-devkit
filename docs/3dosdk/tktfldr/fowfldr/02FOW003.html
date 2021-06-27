@@ -1,0 +1,85 @@
+<TITLE>The Character Edit window</TITLE>
+<H1><LINK NAME="XREF35286">The Character Edit window</LINK></H1><HR>
+After the 3DO FontWriter  builds a font from one in the <I>System</I> folder's <I>Font</I> folder, the Character Edit window appears:<P>
+
+<IMG SRC="PICTS/FWCharEditWin.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>FontWriter Character Edit window.</I><P>
+<H2>Choosing a character</H2>
+You can choose a character to edit by:<P>
+<UL>
+<LI>Typing the character,  which appears in the edit region. 
+<LI>Using the scroll bar below the edit region. 
+<LI>Selecting a character from the Character Map window. 
+</UL>
+<H2>Using Character Edit window drawing tools</H2>
+
+<IMG SRC="PICTS/FWDrawTools.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Character Edit window drawing tools.</I><P>
+The drawing tools let you make changes to the font, as illustrated in the table below:<P>
+<P>
+<PRE>
+<B>Table 1: </B><I> FontWriter drawing tools.</I>
+--------------------------------------------------------
+Tool           |Function                                
+--------------------------------------------------------
+Marquee        |Selects a region to edit as follows:Cut,
+               |copy, or paste using the standard       
+               |editing commands.Shift the selected     
+               |region by one pixel using the Transform 
+               |menu.Flip the selected region vertically
+               |or horizontally using the Transform     
+               |menu.                                   
+--------------------------------------------------------
+Pencil         |Draws individual pixels in the currently
+               |selected color.                         
+--------------------------------------------------------
+Eraser         |Erases individual pixels to black.      
+               |Double-clicking on it completely erases 
+               |the current character.                  
+--------------------------------------------------------
+Paint bucket   |Selects a paint color, then the paint   
+               |bucket. Click on a pixel in the edit    
+               |region and the paint bucket fills all   
+               |adjacent pixels to match the color of   
+               |the selected pixel in the paint bucket  
+               |color.                                  
+--------------------------------------------------------
+Eye dropper    |Changes the color selector to the color 
+               |of the pixel clicked in the edit region.
+--------------------------------------------------------
+Line tool      |Draws lines in the currently selected   
+               |color.                                  
+--------------------------------------------------------
+Filled shape   |Draws filled shapes in the selected     
+               |color.                                  
+--------------------------------------------------------
+Outline shape  |Draws outline shapes in the selected    
+               |color.                                  
+--------------------------------------------------------
+Color selector |Selects the shade of gray to use for    
+               |drawing. To preview the font in color,  
+               |use the Preview window.                 
+--------------------------------------------------------
+</PRE>
+<P>
+<H3>Switching to the Eye Dropper tool</H3>
+If the current tool is the Pencil, Paint Bucket, Line tool, or one of the shape or outline tools, you can hold down the Option key to switch to the Eye Dropper tool. <P>
+<H2>Changing character width and baseline</H2>
+You can change both character width and character baseline for individual characters from the Character Edit window. <P>
+<UL>
+<LI><B>Character width-</B>The small arrow at the bottom of the edit region lets you change the character width. For any font, the 3DO FontWriter stores only the pixels delineated by the actual character width for each character, not the area determined by Max Width and Max Height. If you set the width of a character to zero, that character isn't stored in the 3DO font file you save.
+<p>
+<LI><B>Character baseline</B>-A small arrow to the right of the Character Edit window lets you move a horizontal line to specify the character's ascent and descent, and, in effect, the baseline. 
+</UL>
+<DL>
+<DD><B>Note: </B>To change character width and height globally, reload the font and specify a different height and width.<BR>
+</DL>
+<H2>Choosing between a character and its shadow or outline</H2>
+If you're editing a font containing a separate shadow or outline image for each character, you can choose between editing either the character or the other image using the buttons in the bottom-left corner of the window. At start-up, the actual character is displayed. <P>
+
+<IMG SRC="PICTS/FWCEWinL.gif" ALT="Graphic cannot be displayed">
+<P>
+<P>
+<B>Figure 3: </B><I>A character only display (left) and character and outline (right).</I><P>

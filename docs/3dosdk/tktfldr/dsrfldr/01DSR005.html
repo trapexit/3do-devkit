@@ -1,0 +1,18 @@
+<Title>CloseDataAcq</Title>
+<A NAME="XREF10461"><H1>CloseDataAcq</A></H1>
+<A NAME="XREF12925"></A>Cancels an acquisition thread.<P>
+<H3>Synopsis</H3>
+<CODE>int32 CloseDataAcq (void)</CODE><P>
+<H3>Description</H3>
+Sends an exit message to an acquisition thread. <CODE>DisposeDataAcq()</CODE> also releases the memory allocated to the acquisition thread.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>ctx</CODE>
+<DD>Pointer to the context of the acquisition thread.
+</DL>
+<H3>Return Value</H3>
+None<P>
+<H3>Associated Files</H3>
+DataAcq.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR048.html#XREF21532"><CODE>NewDataAcq</A></CODE><P>

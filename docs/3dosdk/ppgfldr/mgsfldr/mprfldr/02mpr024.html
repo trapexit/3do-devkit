@@ -1,0 +1,32 @@
+<Title>ConvertPitchBend</Title>
+<A NAME="XREF30500"><H1>ConvertPitchBend </A></H1>
+<A NAME="XREF23322"></A> Converts a MIDI pitch bend value into frequency multiplier.<P>
+<H3>Synopsis</H3>
+<CODE>Err ConvertPitchBend( int32 Bend, int32 SemitoneRange,frac16 *BendFractionPtr )</CODE><P>
+<H3>Description</H3>
+This function accepts a MIDI pitch bend value from 0x0 to 0x3FFF.  It also accepts a pitch bend range in semitones (half steps).  The range value measures the distance from normal pitch to the farthest bent pitch. For example, a pitch bend range of 12 semitones means that an instrument can be bent up in pitch by 12 semitones, and down in pitch by 12 semitones for a total range of 24 semitones (two octaves). <P>
+The pitch bend value operates within the pitch bend range: 0x0 means bend pitch all the way to the bottom of the range; 0x2000 means don't bend pitch; and 0x3FFF means bend pitch all the way to the top of the range. <P>
+<CODE>ConvertPitchBend()</CODE> uses the pitch bend range and the pitch bend value to calculate an internal pitch bend valuea value used to multiply the output of an instrument, bending the instrument's pitch up or down.  The internal pitch bend value is written into the variable "BendFractionPtr." This bend value is the same as the bend value used for the Audio folio call <CODE>BendInstrumentPitch()</CODE>. <P>
+Note that DSP sampled sound instruments won't bend any more than 12 semitones, so don't set the pitch bend range to a value greater than 12. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Bend
+<DD>A MIDI pitch bend value from 0x0 to 0x3FFF. 
+</DL>
+<DL>
+<DT>SemitoneRange
+<DD>A pitch bend range value from 1 to 12, measured in semitones away from normal pitch. 
+</DL>
+<DL>
+<DT>BendFractionPtr
+<DD>A pointer to a frac16 variable in which to store the returned frequency multiplier. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr022.html#XREF24439"><CODE>ChangeScorePitchBend</A>(), <A HREF="./02mpr029.html#XREF32740">GetScoreBendRange</A>(), <A HREF="./02mpr045.html#XREF21010">SetScoreBendRange</A>() </CODE><P>
+</CODE>

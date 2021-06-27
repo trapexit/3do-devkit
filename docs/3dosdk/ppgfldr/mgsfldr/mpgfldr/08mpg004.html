@@ -1,0 +1,191 @@
+<TITLE>Creating Sequences and Collections</TITLE>
+<H1>Creating Sequences and Collections</H1><HR>
+To create a sequence or collection, a task must do the following:<P>
+<UL>
+<LI>Create auxiliary components if they do not exist: an event list and interpreter procedure for a sequence, subsidiary sequences and collections for a collection.
+<p>
+<LI>Create an instance of a sequence or a collection.
+<p>
+<LI>Create a list of tag arguments to set object variable values.
+<p>
+<LI>Apply the tag argument list to the sequence or collection. This step is required for sequences; pointers to the event list and interpreter procedure must be set. This step is not always required for collections.
+<p>
+<LI>Add objects to a collection's object list.
+</UL>
+This remainder of this section describes the steps for creating a sequence and a collection. It also lists the tag arguments used to set variables for each object type.<P>
+<H2>Creating a Sequence</H2>
+Before creating a sequence, a task should create an event list that contains the event data. The task should also create an interpreter procedure appropriate for event list.<P>
+<H3>Creating an Event List</H3>
+An event list is an array of event data structures. The event data structure contains a time value as its first element, followed by as many data elements as the interpreter procedure requires. For example, the data structure shown in Example 1 defines a simple event consisting of a time and a single data value.<P>
+<B>Example 1: </B><I>Simple event structure.</I><P>
+<CODE>
+<PRE>
+typedef struct
+{
+     Time    te_TimeStamp;
+     uint32  te_Data;
+} SimpleEvent;
+</CODE>
+</PRE>
+Example 2 shows an array of simple event structures:<P>
+<B>Example 2: </B><I>Array of simple event structures.</I><P>
+<CODE>
+<PRE>
+SimpleEvent  TimeData[] =
+{
+     {   0, 56 },
+     { 120, 58 },
+     { 480, 54 }
+};
+</CODE>
+</PRE>
+Example 3 shows a more complex event structure that could be used for graphics events.<P>
+<B>Example 3: </B><I>Example of a custom graphics event.</I><P>
+<CODE>
+<PRE>
+typedef struct CustomGraphicsEvent
+{
+      uint32  cge_Time;
+      int32    cge_XPos;    /* Where to draw CCB */
+      int32    cge_YPos;
+      CCB     *cge_CCB;
+} CustomGraphicsEvent;
+</CODE>
+</PRE>
+<H3>Creating the Interpreter Procedure</H3>
+When the Juggler plays a sequence, the sequence sends each event to be played to the interpreter procedure. The interpreter procedure receives two pointers for each event: a pointer to the sequence object sending the event and a pointer to the event data structure. The interpreter procedure can examine the sequence object's variables or the data in the event data structure before playing the event.<P>
+Example 4 shows a simple interpreter procedure. This procedure prints the sequence's address, the timestamp stored in the event, and the single data value stored in the event.<P>
+<B>Example 4: </B><I>Simple interpreter procedure.</I><P>
+<CODE>
+<PRE>
+int32 UserInterpFunc ( Jugglee *Self, SimpleEvent *se )
+{
+     PRT(("TestEvent: Self = 0x%x, Time = %d, Data = %d\n", Self,
+          se-&gt;se_TimeStamp, se-&gt;se_Data));
+     return 0;
+}
+</CODE>
+</PRE>
+Not all interpreter procedures play audio events. The interpreter procedure in Example 4 plays print events.<P>
+<H3>Creating an Instance of a Sequence</H3>
+ create an instance of a sequence, the task uses the <CODE>CreateObject()</CODE> function. In Example 5, the task supplies a pointer to the sequence class, and stores the return value, a pointer to the newly created sequence, in the variable <CODE>seq1</CODE>.<P>
+<B>Example 5: </B><I>Creating an instance of a sequence.</I><P>
+<CODE>
+<PRE>
+seq1 = (Sequence *) CreateObject( &amp;SequenceClass );
+</CODE>
+</PRE>
+Note that <CODE>SequenceClass</CODE> is defined in the <I>juggler.h</I> header file. You must include <I>juggler.h</I> in code that creates a sequence.<P>
+<H3>Setting Sequence Variables With a Tag Argument List</H3>
+When a sequence is created with <CODE>CreateObject()</CODE>, its object variables are set to default values. A task can change those values by creating a tag argument list and applying the list to the object. <P>
+A task <I>must</I> set the sequence variables that point to or describe the event list or the sequence cannot be played.<P>
+A task must set the following tag argument values for a sequence:<P>
+<UL>
+<LI>JGLR_TAG_EVENTS is a pointer to the array containing the event list. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_EVENT_SIZE is an integer specifying the size in bytes of a single event in the event list. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_MAX is an integer specifying the maximum number of events that can be stored in the event list. This number is usually determined by the amount of memory allocated for the event list. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_MANY is an integer specifying the current number of events stored in the event list. The current number of events can be less than the maximum number of events. The task should change this value if the task changes the number of events in the list. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_INTERPRETER_FUNCTION is a pointer to the interpreter procedure. The default setting for this tag is NULL.
+</UL>
+Sequence variables can also be set using the following tag arguments:<P>
+<UL>
+<LI>JGLR_TAG_START_FUNCTION is a pointer to a function that executes when the sequence is started. This function is useful for setting up conditions for the sequence-for example, a function that clears the screen for a cel-drawing sequence. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_REPEAT_FUNCTION is a pointer to a function that executes immediately before a sequence is repeated. This function is useful for resetting conditions for the sequence. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_STOP_FUNCTION is a pointer to a function that executes immediately after a sequence stops. This function is useful for restoring conditions after a sequence is played. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_START_DELAY is an integer that stores the number of ticks the sequence should wait after playback begins before it starts playing its events. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_REPEAT_DELAY is an integer that stores the number of ticks the sequence should wait before repeating playback (useful if the sequence is to be repeated several times). The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_MUTE is a flag used for MIDI score playback. If the flag is TRUE, then no MIDI Note On messages in the sequence are played. If the flag is FALSE, then MIDI Note On messages are played. The default setting for this tag is FALSE.
+<p>
+<LI>JGLR_TAG_CONTEXT is a pointer to an optional user context. The user context is a data structure that contains information about the context within which the sequence plays. The pointer to the user context can be used by the interpreter procedure. A user context is employed by the MIDI interpretation tools described in <A HREF="./09mpg.html#XREF20742">Playing MIDI Scores</A>, but is not typically used by tasks creating sequences. The default setting for this tag is NULL.
+</UL>
+The task that created a sequence creates a tag argument list for the sequence using an array of the TagArg elements (the same data type used for item tag arguments). Example 6 shows an example of code to create a tag argument list.<P>
+<B>Example 6: </B><I>Creating a tag argument list.</I><P>
+<CODE>
+<PRE>
+TagArg tags[NTAGS];
+
+tags[0].ta_Tag = JGLR_TAG_CONTEXT;
+tags[0].ta_Arg = (TagData)scorecontext;
+tags[1].ta_Tag = JGLR_TAG_MUTE;
+tags[1].ta_Arg = (TagData)FALSE;
+tags[2].ta_Tag = TAG_END;
+</CODE>
+</PRE>
+<H3>Applying Tag Argument Values to a Sequence</H3>
+After creating a tag argument list, the task applies them to the sequence by calling the sequence's <CODE>SetInfo</CODE> method. The following macro calls the SetInfo method:<P>
+<DL>
+<DD><CODE>int32 SetObjectInfo( CObject *obj, TagArg *tags )</CODE><BR>
+</DL>
+See <A HREF="./08mpg005.html#XREF15210">SetInfo</A> for details on the SetInfo method.<P>
+<H3>Reading Tag Argument Values</H3>
+To find out what the object variable values for an object are, a task creates a tag argument list with each tag argument value set to NULL. It then uses the following macro, which calls an object's GetInfo method to obtain the variable values:<P>
+<DL>
+<DD><CODE>int32 GetObjectInfo( CObject *obj, TagArg *tags )</CODE><BR>
+</DL>
+See <A HREF="./08mpg005.html#XREF28726">GetInfo</A> for details on the GetInfo method.<P>
+<H2>Creating a Collection</H2>
+Creating a collection is similar to creating a sequence, but a collection creates an assembly of Juggler objects in its object list instead of a sequence of events in an event list. The object list is part of the collection object. A sequence's event list, which is a data structure outside a sequence object, can be manipulated directly by a task. A collection's object list is created using collection method calls.<P>
+<H3>Creating Objects for the Collection</H3>
+A collection must have Juggler objects to include in its object list. Therefore,  a task must first create some sequences before it can create a collection. After a task has created one or more collections, it can create new collections that include existing collections.<P>
+<H3>Creating an Instance of a Collection</H3>
+To create an instance of the collection class, the task uses the <CODE>CreateObject()</CODE> function. The task supplies a pointer to the collection class, and stores the pointer to the newly created collection as shown in this example:<P>
+<DL>
+<DD><CODE>col1 = (Collection *) CreateObject( &amp;CollectionClass );</CODE><BR>
+</DL>
+Note that <CODE>CollectionClass</CODE> is defined in the <I>juggler.h</I> header file. You must include <I>juggler.h</I> in code which creates a sequence.<P>
+<H3>Setting Collection Variables With Tag Argument Values</H3>
+A collection's object variables can be changed using a list of tag argument values. However, most collections can use the default values. Collections accept the following tag arguments:<P>
+<UL>
+<LI>JGLR_START_FUNCTION is a pointer to a function that executes when the collection is started. The function is useful for setting conditions before the collection starts playback. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_REPEAT_FUNCTION is a pointer to a function that executes immediately before a collection is repeated. This function is useful for resetting conditions for the collection. It ca also be used to chain music together by calling <CODE>StartObject()</CODE> for another object. See the example file <I>MFLoopTest.c</I>. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_STOP_FUNCTION is a pointer to a function that executes immediately after a collection stops. This function is useful for restoring conditions after collection playback. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_START_DELAY is an integer that stores the number of ticks the collection should wait before it starts playing back its events. The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_REPEAT_DELAY<B> </B>is an integer that stores the number of ticks the collection should wait before repeating playback (useful if the collection is asked to repeat playback several times). The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_STOP_DELAY is an integer that stores the number of ticks the collection should wait after it stops playback (useful if the collection is one of several collections stored one after another within another collection). The default setting for this tag is NULL.
+<p>
+<LI>JGLR_TAG_CONTEXT is a pointer to an optional user context. The user context is a data structure that contains information about the context within which the collection plays. It can be used by the interpreter procedure. The default setting for this tag is NULL.
+</UL>
+After a task has created tag argument values for a collection, it applies them with the<CODE> SetObjectInfo()</CODE> macro. To obtain current object variable values from a collection, a task uses the <CODE>GetObjectInfo()</CODE> macro.<P>
+<A NAME="XREF26704"><H3>Adding Objects to the Collection</A></H3>
+After a task creates a collection and (if necessary) sets object variables with a tag argument list, it can then add objects to the collection using the collection's Add method. No macro currently exists for the Add method; it must be called directly by using its pointer within the collection, as follows:<P>
+<DL>
+<DD><CODE>*obj-&gt;Class-&gt;Add( Collection *Self, Jugglee *Child, int32 NumRepeats)</CODE><BR>
+</DL>
+To call the method, <CODE>*obj</CODE> must be a pointer to the collection. The call accepts three arguments: <CODE>*Self</CODE>, a pointer to the collection accepting the object; <CODE>*Child</CODE>,  a pointer to the object to be added to the collection; and <CODE>NumRepeats</CODE>, an integer specifying the number of times the added object should be repeated in playback.<P>
+When the Add method is executed, it adds the specified object to the end of the collection's object list and writes the number of repeats into the object's placeholder. The Add method returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+The following example adds a sequence with the pointer <CODE>sequencex</CODE> to the object list of a collection specified by the pointer <CODE>collectionx</CODE>. The sequence is repeated three times during collection playback.<P>
+<DL>
+<DD><CODE>Result = collectionx-&gt;Class-&gt;Add( collectionx, sequencex, 3 );</CODE><BR>
+</DL>
+<A NAME="XREF37353"><H3>Removing Objects From a Collection</A></H3>
+To remove an object from a collection, a task uses the collection's <CODE>RemoveNthFrom</CODE> method, which is called using this macro:<P>
+<DL>
+<DD><CODE>int32 RemoveNthFromObject( CObject *obj, int32 N )</CODE><BR>
+</DL>
+The call accepts two arguments: <CODE>*obj</CODE>, a pointer to the collection from which the object should be removed; and <CODE>N</CODE>, an integer that specifies the placeholder in the object list that points to the object to be removed. The first object in the placeholder list is object number 0. For example, the placeholder for the fifth object in an object list is 4.<P>
+When <CODE>RemoveNthFromObject()</CODE> executes, it removes the specified placeholder from the object list. It does <I>not</I> do anything to the object itself.<P>
+If successful,<CODE> RemoveNthFromObject()</CODE> returns 0. If unsuccessful, it returns a negative value (an error code).<P>
+<A NAME="XREF26998"><H3>Examining a Collection's Object List</A></H3>
+To see what objects are included in a collection's object list, a task uses the collection's GetNthFrom method, which is called by this macro:<P>
+<DL>
+<DD><CODE>int32 GetNthFromObject( CObject *obj, int32 N, (void**) NthThing )</CODE><BR>
+</DL>
+The call accepts three arguments: <CODE>*obj</CODE>, a pointer to the collection whose list is to be checked; <CODE>N</CODE>, the number of the placeholder to read in the object list; and <CODE>NthThing</CODE>, a pointer to a variable in which to store a pointer.<P>
+When it executes, the call looks at the Nth placeholder in the specified collection's object list. It finds the pointer stored in the placeholder and writes the pointer to the <CODE>NthThing</CODE> variable.<P>
+<CODE>GetNthFromObject()</CODE> returns 0 if successful. If unsuccessful, it returns a negative value (an error code).<P>
+The first object in the placeholder list is object number 0, the second is 1, and so on.<P>
+<P>

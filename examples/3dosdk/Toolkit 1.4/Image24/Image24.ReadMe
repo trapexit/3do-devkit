@@ -1,0 +1,215 @@
+
+
+Release 1.1 Updates:
+
+June 1994
+
+Support for PAL (European TV Standard).
+Slideshow24 now fully supports all image modes
+in a PAL display (384x288 pixels).
+
+The default file name for the file containing the
+list of images to display is:
+ "imagelist"   if running in a NTSC environment.
+ "imagelistPAL" if running in an PAL environment.
+ 
+ Slideshow24 will currently give an eror if you try to
+ display an NTSC image in PAL mode or a PAL image in
+ NTSC mode.
+ 
+
+ 
+ 
+ This is a release of a set of tools and example code
+to display 24 bit images on the 3DO.  The technique
+uses a custom VDL.  As a result this type of 24
+image display is most useful for static displays.
+Cels would have to be reformatted in a double high 24 bit
+mode to draw into a 24 bit frame buffer.  Even if the cels
+were reformatted they would NOT scale or rotate properly 
+in a 24 bit frame buffer.   Therefore you should use this
+technique for static displays where you need high quality
+images, but do not need cels or animation over the images.
+
+The 24 bit technique actually stores the images in a 32 bit format.
+The images thus require DOUBLE size frame buffers (306k).
+
+Contents of the release:
+	SlideShow 24 bit:
+		A folder containing source code for a new version
+		of the SlideShow program: SlideShow24. 
+		This program takes a list of images and displays
+		them in a slideshow. It supports 16 bit images,
+		16 bit images with custom VDLS, and 24 bit images.
+		Right and left arrows move forward and backward 
+		in the list of images.  
+		The A Button shows current memory usage.
+		The B button swaps between the two images held in memory.
+		The C button toggles the auto-advance function for a free
+		running slide show.
+		Right Shift toggles vertical interpolation.
+		Left Shift toggles horizontal interpolation.
+		This version of Slideshow does not support PAL sized 
+		images.
+		
+		useage:
+		
+		slideshow24 [options] [filelistname]
+		
+		[options]:
+		  -a  nsec  -> autoshow mode  cycle through all the images
+		  			   pausing nsec seconds between images.
+					   default pause time is 3 seconds
+	 	fileslistname  name of an ASCII file containing the list of
+						images to display.  Defaults to "imagelist"
+						on NTSC systems, and "imagelistPAL" on 
+						PAL systems.
+						
+		
+		
+	ppmto3DO
+		Source code for ppmto3DO with a new switch for
+		creating 24 bit images.
+		Use the -z switch to create a 24 bit image from
+		a 320x240 24 bit ppm file.
+		(You can use picttoppm to convert PhotoShop (tm)
+		files into ppm files).
+		This version of ppmto3do also supports 16 bit images
+		with one custom VDL, and 16 bit images with a VDL
+		per scan line.
+		A new version of picttoppm to remove some extraneous
+		warning messages.
+		
+	ExampleData
+	
+		NOTE:  The folder SlideShow24ExampleData which contains 
+		the exmple data can be found inside of the Apps & Data folder 
+		at the root of the CD.
+		
+		folder, PICT,  containing a sample pict files.
+		A script "ConvertOne" for converting a Pict into
+		a sequence of 3DO image files.
+		A folder, Images, of sample 3DO images.
+		A text file, imagelist, used a scriptfile for slideshow24.
+		A Script "ConvertSome" to generate the sample images.
+		A Script "ConvertAll" to convert all 32 sample PICT
+		files into images.  WARNING running this will generate 
+		68 image files and consume about 24 MB of disk space
+		
+		
+
+Instructions to try the examples:
+	Copy the top level folder "Image24Beta" to your hard disk.
+	
+	Copy the Images folder and the Imagelist text file to
+	your remote directory.
+	
+	Copy the SlideShow24 executable file from the SlideShow24 bit
+	folder into your remote directory.
+	
+	Start up the debugger, start up the target machine, and
+	launch slideshow24 by tying "slideshow24" in the terminal
+	window and hitting enter.
+	
+	The program will now parse the imagelist text file and
+	display the images specified.
+	
+	Right arrow goes to the next slide, left arrow goes to the
+	previous slide.  B toggles between the two images in memory.
+	C will put the program in auto-show mode. 
+	
+	The type of image being displayed will be described in the
+	terminal window of the debugger on the Mac.
+	
+Creating your own images
+	First create a 320x240 by 32 bit image in PhotoShop. 
+	Use the PhotoShop Plug-in "ImageWriter" to create 16 bit images.
+	You can create Standard CLUT images (a single default CLUT) or
+	create images with Custom CLUTs by selecting the Custom VDL
+	button on the VDL type dialog.  There are several algorithms to
+	choose from for creating the Custom VDL's. Experiment with them.
+	I find that "BoxPopLength Sort" usually works well.
+	If you choose a "Dynamic VDL" then a VDL is created which
+	changes the CLUT (Color Lookup Tables) on each scan line.
+	These are the lookup tables that the display hardware uses
+	to translate from 555 RGB to 888 RGB for display.
+	Thus with a Dynamic Custom CLUT you can get 32K different colors
+	on each scan line  (You are still limitid to 32 shades of a single
+	color, for example 32 gray levels).  If this still causes banding
+	in your image then you can use 24 bit images.
+	
+	To create 24 bit images save the file in PICT format and use
+	picttoppm and ppmto3DO to create a 24 bit image file.
+	If you have and image file "test.pict" the following command lines
+	could be used to create a 24 bit image.
+	
+	echo "Converting pict file to ppm format"
+	picttoppm < test.pict > test.ppm
+	echo "Converting ppm file to 24 bit image format"
+	ppmto3do -z test.ppm test.img24
+	
+	You can now copy the images to your remote folder and add the
+	appropriate lines to the "imagelist" script and then use
+	slideshow24 to view the images.
+	
+	Additional images types can be created as follows:
+	
+	To create a standard 555 RGB image with default CLUT use:
+	ppmto3do test.ppm test.img  
+	
+	To create a standard 555 RGB image with one custom CLUT use:
+	ppmto3do -f test.ppm test.img1vdl 
+	
+	To create a 555 RGB image with one custom CLUT per scan line use:
+	ppmto3do -d test.ppm test.imgxvdl 
+
+	To create a 555 RGB image with one custom CLUT per scan line use:
+	ppmto3do -z test.ppm test.img24
+	
+	Note:  The file name extensions are for convenience only.  The 
+		image file descriptions are contained in the data files and
+		are independent of any naming conventions.
+	
+Technical notes:
+
+	The images are stored in a 320x480 16 bit format.
+	The 8 bit R G and B components are split into adjacent
+	scan lines.  The VDL is then set up average the scan line to produce
+	one 320x240 24 bit image.  This requires a 306K frame buffer.
+	
+	Standard Cels will not display properly. Even cels reformatted
+	to this mode will not rotate or scale properly so you will find
+	24 bit images useful only for static displays.
+	
+	The program actually creates four separate screens.  They each
+	share the same double sized frame buffer.  Each screen has its own
+	VDL.  Custom CLUT VDL's are stored with the image in a VDL chunk
+	and read from the file and merged and enable when the image is
+	displayed.
+	
+	24 Bit VDLS are not stored with the image but rather generated by
+	the slide show program.  This is because this VDL is the same for
+	all 24 bit images.  The program installs these VDLS into screens
+	2 and 3 and uses these screens together to display 24 bit images.
+	
+Futures:
+
+	In the near future we will add 24 bit image support to the PhotoShop
+	Plug-in ImageReader and ImageWriter.
+	
+	We may also provide other methods for achieving 24 bit displays.
+	
+Restrictions and Limitations:
+
+	Support for PAL sized images is not yet included.
+	The PhotoShop Plug-in "ImageReader" does not yet handle importing
+	24 images.
+	The PhotoShop Plug-in "ImageReader" does not yet handle importing
+	images with one custom CLUT.
+	
+	
+	
+	
+
+	
+		

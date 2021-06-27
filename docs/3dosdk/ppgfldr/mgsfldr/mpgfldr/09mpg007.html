@@ -1,0 +1,21 @@
+<TITLE>Setting the Tempo</TITLE>
+<H1>Setting the Tempo</H1><HR>
+Before using the Juggler to play back a MIDI object, you should set the playback tempo to match the imported MIDI score's original tempo. To do so, you can either reset the audio clock rate or scale the timestamps stored with each MIDI message.<P>
+<H2>Setting the Audio Clock Rate</H2>
+To set the playback tempo by setting the audio clock rate, your task should first take ownership of the audio clock and store the clock's current rate so it can be restored later. It should then set the clock rate to match the score's MIDI clock rate. The task can change the clock rate at any time during playback to change the playback tempo of the score.<P>
+The functions for handling the audio clock are discussed in the audio chapter <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>.  The one piece of new information you need is where to get the score's MIDI clock rate. It is stored in the <CODE>MIDIFileParser</CODE> data structure used to import the MIDI score, in the <CODE>mfp_Rate</CODE> element after executing <CODE>MFLoadCollection()</CODE>.<P>
+The code fragment in Example 4 shows how a task resets the audio clock rate. <CODE>MFParser</CODE> is a pointer to the <CODE>MIDIFileParser</CODE> data structure used to import the MIDI score.<P>
+<B>Example 1: </B><I>Resetting the audio clock rate.</I><P>
+<CODE>
+<PRE>
+Owner = OwnAudioClock();
+OriginalRate = GetAudioRate();
+SetAudioRate(Owner, MFParser.mfp_Rate);
+</CODE>
+</PRE>
+Note that the audio clock is often used by other tasks such as audio and video streaming tasks, so changing the audio clock rate can sometimes wreak great havoc on those other tasks. Be sure that your task gets ownership of the clock before it changes the rate. That way, if it screws up other tasks, your task did the right thing by inquiring about ownership first.<P>
+<H2>Scaling MIDI Time Stamps</H2>
+Your task may not be able to change the audio clock rate (the task may not be able to take clock ownership, for example), or your task may not want to change the clock rate so that other clock-using tasks do not suffer. If so, it can set playback tempo by scaling the MIDI timestamps stored with each MIDI event in the MIDI score.<P>
+A timestamp is the number of MIDI ticks that have passed between the beginning of the score and the beginning of the MIDI event associated with the timestamp. If you look at the tempo stored with the score and compare it with the current clock rate (usually set to 240 ticks per minute), you can create a scalar that you can use to simply multiply each timestamp value. The result is a score that plays at the appropriate tempo.<P>
+For example, consider a MIDI score set to play at 120 ticks per minute. To play it back with an audio clock rate of 240 ticks per minute, you create a scalar of 2 (double the MIDI tick rate). You then multiply each timestamp by the scalar, which doubles the value of each stamp. When you play the score using the audio clock, it comes out at the original tempo because the doubled time values are played back with a clock that plays twice as fast.<P>
+The example program <I>playmf.c</I> shown at the end of this chapter contains a function designed to scale MIDI timestamps.<P>

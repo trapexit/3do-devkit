@@ -1,0 +1,29 @@
+<Title>DrawText8 </Title>
+<A NAME="XREF32730"><H1>DrawText8 </A></H1>
+<A NAME="XREF26155"> Draws a text character to the display window.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err DrawText8 (GrafCon *gcon,Item bitmapItem,uint8 *text)</CODE><P>
+<H3>Description</H3>
+This call plots the specified text string to the window of the display. It accepts an 8-bit null-terminated text string and calls <CODE>DrawChar()</CODE> to plot each text character. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>gcon
+<DD>A pointer to a GrafCon structure for pen position information. 
+</DL>
+<DL>
+<DT>bitmapItem
+<DD>An item number for the bitmap to receive the rendering. 
+</DL>
+<DL>
+<DT>text
+<DD>An 8-bit null-terminated text string to be printed to the display's window.
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr021.html#XREF10604"><CODE>DrawChar</A>(), <A HREF="./01gpr023.html#XREF38420">DrawText16</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,54 @@
+<TITLE>Connect</TITLE>
+<H1><LINK NAME="XREF18932">Connect</LINK></H1><HR>
+<A NAME="XREF25230"><H1>Connect</A></H1>
+<A NAME="XREF35955">Connects an output from one instrument to an input or </A>knob of another instrument<P>
+<H3>Synopsis</H3>
+<CODE>Connect &lt;source instrument&gt; &lt;source output&gt; &lt;dest instrument&gt; &lt;dest input&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>Connect</CODE> can be used to connect audio or control signals from one instrument to another. A single output can be connected to multiple inputs.<P>
+When a knob has been connected to the output of another instrument, that knob can no longer be tweaked.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>&lt;source instrument&gt;
+<DD>Symbol name of the source instrument.
+</DL>
+<DL>
+<DT>&lt;source output&gt;
+<DD>Name of an output from the source instrument.
+</DL>
+<DL>
+<DT>&lt;dest instrument&gt;
+<DD>Symbol name of the destination instrument.
+</DL>
+<DL>
+<DT>&lt;dest output&gt;
+<DD>Name of an input or knob in the destination 
+<DD>
+<DD>
+<DD>instrument to receive signal from &lt;source 
+<DD>
+<DD>
+<DD>output&gt;.
+</DL>
+<H3>Examples</H3>
+The following example shows a patch file that uses <CODE>Connect</CODE>.<P>
+<CODE>
+<PRE>
+LoadInstrument osc sawtooth.dsp
+LoadInstrument mixer mixer4x2.dsp
+Connect osc Output mixer Input0                                    ; hooks oscillator output to 
+                                        ; mixer input.
+LoadInstrument osc pulse.dsp
+LoadInstrument lfo triangle.dsp
+Connect lfo Output osc PulseWidth                                        ; hooks lfo output to 
+                                    ; oscillator 
+                                    ; pulse width knob.
+Tweak osc PulseWidth 400                                        ; error; this knob has been 
+
+                                        ; connected to another
+                                    ; instrument.
+Tweak osc Frequency 122                                        ; OK 
+</CODE>
+</PRE>
+<H3>See Also</H3>
+<CODE>LoadInstrument, Tweak</CODE><P>

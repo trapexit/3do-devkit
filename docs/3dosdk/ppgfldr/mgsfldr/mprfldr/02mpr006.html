@@ -1,0 +1,34 @@
+<Title>BumpJuggler</Title>
+<A NAME="XREF21967"><H1>BumpJuggler </A></H1>
+<A NAME="XREF33281"></A> Bumps the Juggler data-structure index.<P>
+<H3>Synopsis</H3>
+<CODE>int32 BumpJuggler( Time CurrentTime, Time *NextTime,int32 CurrentSignals, int32 *NextSignals )</CODE><P>
+<H3>Description</H3>
+This function provides the Juggler with a current time value.  The Juggler checks unexecuted events in any currently active sequences or jobs to see if their time value is less than or equal to the current time value.  If so, it executes the event.  The Juggler also checks all unexecuted events in all currently active sequences or jobs to see which event should be executed next.  It writes the time of that event into the NextTime variable so the calling task can wait until that time to bump the Juggler once again.  The time value supplied is an arbitrary value in ticks and must be supplied from an external source.  Typically, the time value comes from the audio clock. <P>
+See the example program "playmf.c" to see how <CODE>BumpJuggler()</CODE> is used. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>CurrentTime
+<DD>Value indicating the current time that the function is called. 
+</DL>
+<DL>
+<DT>NextTime
+<DD>Pointer to a value where this function writes the time that it should be called again. 
+</DL>
+<DL>
+<DT>CurrentSignals
+<DD>The current signal mask. 
+</DL>
+<DL>
+<DT>NextSignals
+<DD>Pointer to a signal mask where this function writes the signal bits for which the task should wait before making this call again. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs.  If everything is finished or there are no active objects, this function returns 1. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+juggler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr013.html#XREF10647"><CODE>InitJuggler</A>(), <A HREF="./02mpr019.html#XREF25568">TermJuggler</A>() </CODE><P>
+</CODE>

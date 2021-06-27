@@ -1,0 +1,18 @@
+<Title>adpcmhalfmono.dsp</Title>
+<A NAME="XREF24864"><H1>adpcmhalfmono.dsp </A></H1>
+<A NAME="XREF13334"></A> Play a compressed4 bit Intel/DVI format sample at half rate.<P>
+<H3>Function</H3>
+This instrument plays a sample that has been previously compressed to a 4 bit Intel/DVI format.  Run the SoundHack program to compress a sound sample from 16 bits to 4 bits (Intel/DVI format).  This instrument uses the decodeadpcm.dsp library routine which must be loaded as an instrument prior to using this instrument.  This instrument plays a sample that was recorded at 22050 Hertz, playing it back at 44100 Hertz with interpolated values between samples to keep the sampled sound's original pitch and duration. <P>
+<H3>Knobs</H3>
+Amplitude  - 0  =&gt;  $7FFF <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+InFIFO <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resources</H3>
+Ticks=103 <P>
+N memory = 71 words <P>

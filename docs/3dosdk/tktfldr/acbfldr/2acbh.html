@@ -1,0 +1,83 @@
+<TITLE>Pseudo random number generation</TITLE>
+<H1><LINK NAME="XREF34499">Pseudo </LINK>random number generation</H1><HR>
+<H2>About this recipe</H2>
+This recipe describes a 32-bit pseudo random number generator implemented 
+efficiently in ARM Assembly Language.<P>
+<H2>The details</H2>
+It is often necessary to generate pseudo random numbers, and the most 
+efficient algorithms are based on shift generators with exclusive-or 
+feedback (rather like a cyclic redundancy check generator).  Unfortunately 
+the sequence of a 32-bit generator needs more than one feedback tap to be 
+maximal length (ie. 2^32-1 cycles before repetition), so this example uses 
+a 33 bit register with taps at bits 33 and 20.<P>
+The basic algorithm is newbit:=bit33 EOR bit20, shift left the 33 bit 
+number and put in newbit at the bottom;  this operation is performed for 
+all the newbits needed (ie. 32 bits).  The entire operation can be coded 
+compactly by making maximal use of the ARM's barrel shifter:<P>
+<CODE>
+<PRE>
+; enter with seed in R0 (32 bits), R1 (1 bit in least significant bit)
+; R2 is used as a temporary register.
+; on exit the new seed is in R0 and R1 as before
+; Note that a seed of 0 will always produce a new seed of 0.
+; All other values produce a maximal length sequence.
+;
+    TST    R1, R1, LSR #1                       ; top bit into Carry
+    MOVS   R2, R0, RRX                          ; 33 bit rotate right
+    ADC    R1, R1, R1                           ; carry into lsb of R1
+    EOR    R2, R2, R0, LSL #12                  ; (involved!)
+    EOR    R0, R2, R2, LSR #20                  ; (similarly involved!)
+</CODE>
+</PRE>
+<H2>Using this example</H2>
+This random number generation code is provided as <I>random.s</I> in the 
+<I>examples</I> directory.  It is provided as ARM Assembly Language source 
+which can be assembled and then linked with C modules (see recipes in  <A 
+HREF="./acb3frst.html#XREF41444">Interfacing Assembly Language and C</A> 
+for more information).<P>
+The C test program <I>randtest.c</I> (also in the <I>examples</I> 
+directory) can be used to demonstrate this.  First set the <I>examples</I> 
+directory to be your current directory, and execute the following commands 
+to build an executable suitable for <I>armsd</I>:<P>
+<CODE>
+<PRE>
+armasm random.s -o random.o -li
+armcc -c randtest.c -li -apcs 3/32bit
+armlink randtest.o random.o -o randtest 
+</CODE>
+</PRE>
+Where <I>somewhere</I> is the path to the <I>lib</I> directory of the ARM 
+Software Development Toolkit release.<P>
+Note that in both the above commands, and the <I>armsd</I> command below, 
+<I>-li</I> indicates that the target ARM is little endian, and <I>-apcs 
+3/32bit</I> specifies that the 32 bit variant of the ARM Procedure Call 
+Standard should be used.  These options can be omitted if the tools have 
+already been configured appropriately.<P>
+<I>armsd</I> can be used to run this program as follows:<P>
+<CODE>
+<PRE>
+&gt; armsd -li randtest
+A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
+endian.
+Object program file randtest
+armsd: go
+randomnumber() returned 0b3a9965
+randomnumber() returned ac0b1672
+randomnumber() returned 6762ad4f
+randomnumber() returned 1965a731
+randomnumber() returned d6c1cef4
+randomnumber() returned f78fa802
+randomnumber() returned 8147fc15
+randomnumber() returned 3f62adfc
+randomnumber() returned b56e9da8
+randomnumber() returned b36dc5e2
+Program terminated normally at PC = 0x000082c8
+      0x000082c8: 0xef000011 .... : &gt;  swi     0x11
+armsd: quit
+Quitting
+&gt;
+</CODE>
+</PRE>
+<H2>Related topics</H2>
+Please refer to the index for other topics of interest.<P>

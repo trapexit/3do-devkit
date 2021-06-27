@@ -1,0 +1,21 @@
+<Title>spGetPlayerSignalMask</Title>
+<A NAME="XREF26745"><H1>spGetPlayerSignalMask </A></H1>
+<A NAME="XREF31032"></A> Get set of signals player will send to client.<P>
+<H3>Synopsis</H3>
+<CODE>int32 spGetPlayerSignalMask (const SPPlayer *player)</CODE><P>
+<H3>Description</H3>
+Returns the set of signals that the player will send to the client. The client must wait on this signal set between calls to <CODE>spService()</CODE>. This signal set is constant for the life of the SPPlayer. This function cannot fail. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>player
+<DD>Pointer to SPPlayer. 
+</DL>
+<H3>Return Value</H3>
+Set of signals suitable for passing to <CODE>WaitSignal()</CODE>. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr068.html#XREF24761"><CODE>spCreatePlayer</A>(), <A HREF="./02mpr086.html#XREF41970">spService</A>() </CODE><P>
+</CODE>

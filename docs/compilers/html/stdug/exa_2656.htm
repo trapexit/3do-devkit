@@ -1,0 +1,27 @@
+<HTML><HEAD><TITLE>Example Program - Roots of a Polynomial</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Example Program - Roots of a Polynomial</H2>
+<A HREF="sidebar.htm#sidebar77"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>The roots of a polynomial <SAMP>a x2 + b x + c = 0</SAMP> are given by the formula:</P>
+<P><SAMP>x = (-b _ sqrt(b2 - 4ac))/2a</SAMP></P>
+<P>The following program takes as input three double precision numbers, and returns the complex roots as a pair of values.</P>
+<PRE>typedef complex&#60;double> dcomplex;
+
+pair&#60;dcomplex, dcomplex> quadratic
+      (dcomplex a, dcomplex b, dcomplex c)
+         // return the roots of a quadratic equation
+{
+   dcomplex root = sqrt(b * b - 4.0 * a * c);
+   a *= 2.0;
+   return make_pair(
+      (-b + root)/a, 
+      (-b - root)/a);
+}
+</PRE>
+
+<HR>
+<A HREF="cre_7274.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="num_8453.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

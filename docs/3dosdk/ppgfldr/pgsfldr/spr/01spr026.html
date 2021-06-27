@@ -1,0 +1,37 @@
+<Title>CreateSemaphore</Title>
+<A NAME="XREF34382"><H1>CreateSemaphore </A></H1>
+<A NAME="XREF11977"></A>Creates a semaphore.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateSemaphore( const char *name, uint8 pri )</CODE><P>
+<H3>Description</H3>
+This convenience procedure creates a semaphore item with the specified name and priority. You can use this procedure in place of <CODE>CreateItem()</CODE> to create the semaphore. <P>
+For information about semaphores, which are used to control access to shared resources, see the Sharing System Resources chapter in the 3DO Portfolio Programmer's Guide.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the semaphore (see "Notes").
+</DL>
+<DL>
+<DT>pri
+<DD>The priority of the semaphore; use 0 for now. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the semaphore or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>semaphore.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+When you no longer need a semaphore, use <CODE>DeleteSemaphore()</CODE> to delete it. <P>
+You can use <CODE>FindSemaphore()</CODE> to find a semaphore by name. When creating semaphores, you should assign unique names whenever possible. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr036.html#XREF16912"><CODE>DeleteSemaphore</A>(), <A HREF="./01spr098.html#XREF18240">LockSemaphore</A>(), <A HREF="./01spr130.html#XREF20743">UnlockSemaphore</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF34382"></LINK></H1><HR>

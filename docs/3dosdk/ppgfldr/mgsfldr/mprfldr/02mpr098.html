@@ -1,0 +1,28 @@
+<Title>ssplCreateSoundSpooler</Title>
+<A NAME="XREF39302"><H1>ssplCreateSoundSpooler </A></H1>
+<A NAME="XREF31257"></A> Create a SoundSpooler.<P>
+<H3>Synopsis</H3>
+<CODE>SoundSpooler *ssplCreateSoundSpooler ( int32 NumBuffers, Item SamplerIns )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplCreateSoundSpooler()</CODE> creates a SoundSpooler data structure and initializes it.  Call <CODE>ssplCreateSoundSpooler()</CODE> first to create a SoundSpooler data structure. <P>
+This function allocates the requested number of SoundBufferNodes for the SoundSpooler.  SoundBufferNodes simply carry pointers to sample data; they do not have any embedded sample data.  The pointer and length of each sample buffer is stored into a SoundBufferNode with <CODE>ssplSetBufferAddressLength()</CODE>  prior to enqueuing it with <CODE>ssplSendBuffer()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>NumBuffers
+<DD>Specifies the number of buffers.  For double buffering of audio data, use NumBuffers=2. The more buffers you use, the less chance you will have of running out of data. A safe number to use is 4-8. 
+</DL>
+<DL>
+<DT>SamplerIns
+<DD>The DSP instrument that will play the data.  For  example, you could use a fixedstereosample.dsp  instrument to play a 44.1 kHz, 16-bit, stereo soundfile.  You can call <CODE>ScanSample()</CODE> and <CODE>SelectSamplePlayer()</CODE> to determine the best instrument to use for a given sample format.  You will need to connect this instrument to a mixer or a direct out.dsp to hear the sound. This setting can be changed after creation by using <CODE>ssplAttachInstrument()</CODE>.  Also, this can be 0, if you call <CODE>ssplAttachInstrument</CODE>() before actually starting the spooler. 
+</DL>
+<H3>Return Value</H3>
+Pointer to new SoundSpooler on success, or NULL on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Caveats</H3>
+If this function fails, it messes up subsequent sequence numbering. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr099.html#XREF13890"><CODE>ssplDeleteSoundSpooler</A>(), <A HREF="./02mpr119.html#XREF23431">ssplStartSpooler</A>(), <A HREF="./02mpr114.html#XREF34520">ssplSendBuffer</A>(), <A HREF="./02mpr110.html#XREF20300">ssplProcessSignals</A>() </CODE><P>
+</CODE>

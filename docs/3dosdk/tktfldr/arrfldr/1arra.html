@@ -1,0 +1,34 @@
+<TITLE>About the ARM C compiler</TITLE>
+<H1><LINK NAME="XREF31195">About the ARM C compiler</LINK></H1><HR>
+The ARM C compiler is a mature, industrial-strength compiler, based on Codemist Limited's multi-target, multi-language compiler suite (also known as the <I>NorCroft</I> C compiler). Derived compilers are used by, or distributed by, amongst others: <P>
+<UL>
+<LI>Advanced RISC Machines (for the ARM processor);
+<LI>Acorn Computers (for their ARM-based personal workstations); 
+<LI>INMOS (for the Transputer); 
+<LI>Hitachi (internal use on IBM 370 compatibles); 
+<LI>Perihelion Software (for their<I> </I><I>Helios</I> portable operating system).
+</UL>
+By default, the ARM C Compiler compiles ANSI C as defined by <I>American National Standard for Information Systems - Programming Language C</I>, X3J11/90-013, Feb 14, 1990.<P>
+The compiler also has a <I>pcc</I> mode, which accepts the dialect of C used by Berkeley Unix. In this mode, the compiler has been used to build a complete ARM-based BSD Unix system (the RISCiX system, marketed by Acorn Computers Limited, which has also achieved X/Open branding).<P>
+Pcc mode is selectable from the compiler's command line.<P>
+In its ANSI mode, the ARM C compiler has been tested against release 2.00 of the Plum-Hall C Validation Suite (CVS), which is widely considered to be the toughest C test suite available, and has been adopted by the British Standards Institute for C compiler Validation in Europe. In the language conformance sections of the CVS, it fails in only two trivial ways, both failures to produce required diagnostics:<P>
+<UL>
+<LI>An empty initialiser for an aggregate of complete type is not 
+diagnosed, e.g.<p>
+
+    <CODE>
+<PRE>
+int x[3] = {};
+</CODE>
+</PRE>
+<p>
+<LI>Signed integer constant overflow is not diagnosed, but merely warned of, e.g.
+
+    <CODE>
+<PRE>
+case INT_MAX+1: ...
+</CODE>
+</PRE>
+</UL>
+Wherever possible, the ARM C compiler adopts widely used command-line options which should be familiar to users of both Unix and DOS.<P>
+<P>

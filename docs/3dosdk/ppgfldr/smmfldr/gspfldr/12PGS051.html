@@ -1,0 +1,47 @@
+<Title>slideshow24</Title>
+<A NAME="XREF36295"><H1>slideshow24</A></H1>
+<A NAME="XREF36937"></A>Version of slideshow that supports displays of 24-bit 
+3DO images.<P>
+<H3>Synopsis</H3>
+<CODE>slideshow24 &lt;imagelist&gt; [-a &lt;n&gt;]</CODE><P>
+<H3>Description</H3>
+Loads and displays image files which may contain custom VDLs. This version 
+has been modified to support 24-bit images. These modifications are 
+preceded by **** 24-BIT ***** comments. <P>
+Outline of functionality: <P>
+<UL>
+<LI>Read a list of image filenames
+<LI>Load a pair of buffers with the first two images in the list
+<LI>Show the first image in the list
+<LI>Respond to control pad input
+</UL>
+<DL>
+<DD>
+<UL>
+<LI>Right and down arrows mean show next image in list
+<LI>Left and up arrows mean show previous image in list
+<LI>Start button means quit the program
+<LI>B button means show the other buffer
+<LI>C button means toggle automatic display mode 
+</UL><BR>
+</DL>
+This program is designed to demonstrate image quality differences between 
+standard CLUT images, custom CLUT images, and 24-bit images. The program 
+determines the image type and submits any custom VDLs. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>imagelist
+<DD>Name of file listing 24-bit image names, one name per line. 
+</DL>
+<DL>
+<DT>-a                    
+<DD>Set auto-show mode, displaying each image for n seconds 
+</DL>
+<H3>Caveats</H3>
+Current implementation causes the screen to flash as you switch between 
+16-bit and 24-bit images. <P>
+<H3>Associated Files</H3>
+slideshow24.c, slideshow24.make, slideshow24.h, loadfile24.h, 
+loadfile24.c, vdl24util.c,vdl24util.h <P>
+<H3>Location</H3>
+examples/Graphics/Slideshow_24bit<P>

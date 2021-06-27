@@ -1,0 +1,91 @@
+<TITLE>Using tracing to understand data flow</TITLE>
+<H1><LINK NAME="XREF30162">Using tracing to understand data flow</LINK></H1><HR>
+A real-time application like the 3DO DataStreamer is difficult to debug with the 3DO Debugger since stopping interferes with the running clock. A solution to this problem is to use a trace that lists events and the time at which they occur. This makes it possible to follow the event flow without stopping the application. <P>
+This section first provides a conceptual overview of how tracing is implemented, then steps you through using tracing as part of your application. <P>
+<H3>Examples</H3>
+Tracing is fully supported for the SAudioSubscriber and the ProtoSubscriber, and the SCel subscriber. It can easily be added to other subscribers. <P>
+<H2>How tracing is implemented</H2>
+Tracing relies on trace codes that are linked to events in the streaming application. If you turn on certain flags in the makefile, information about an event is collected to a trace buffer each time the event is triggered. The trace buffer information is then written to a file when you stop the application or an error occurs.<P>
+<B>Example 1: </B><I>Some trace codes from ProtoTraceCodes.h</I><P>
+<CODE>
+<PRE>
+enum {
+    kTraceInitSubscriber                             = 1000,        
+    kTraceCloseSubscriber                            = 1001,
+    kTraceNewSubscriber                            = 1002,
+    kTraceDisposeSubscriber                            = 1003,    
+    kTraceWaitingOnSignal                            = 1004,
+    kTraceGotSignal                            = 1005,
+    kTraceDataMsg                            = 1006,
+    kTraceGetChanMsg                            = 1007,
+    kTraceSetChanMsg                            = 1008,
+    kTraceControlMsg                            = 1009,    
+</CODE>
+</PRE>
+Information collected by tracing includes both a simple list of events that were triggered and statistics about the events. You can then import the list or the statistical information into a spread sheet of your choice and organize it according to your needs. Some templates for the InControl spreadsheet are included. <P>
+<B>Note: </B>To successfully use the files created during tracing, you have to replace all linefeeds with carriage returns. The MPW Canon tool can do that for you. <P>
+<H2>Using tracing in your application</H2>
+This section looks at the steps you need to go through to use tracing with your application. They looks include: <P>
+
+<UL>
+<LI><A HREF="#XREF28658">Setting tracing switches in your makefile</A>
+<LI><A HREF="#XREF35354">Preparing tracecodes</A>
+<LI><A HREF="#XREF22234">Looking at the tracing information</A>
+</UL>
+<A NAME="XREF28658"><H3>Setting tracing switches in your makefile</A></H3>
+Tracing is included if you turn on tracing switches in the makefile for the application. Currently, tracing is included in the makefile for the SCEL subscriber, the SAudio subscriber, and the Protosubscriber (see the example below). You can copy the switches into makefiles for other subscribers-including your own-as needed. <P>
+<B>Example 2: </B><I>Trace switches from the Protosubscriber makefile. </I><P>
+<CODE>
+<PRE>
+#####################################
+# Trace switches, to help with real time debugging.
+#
+# XXXXX_TRACE_MAIN causes the given subscriber to leave timestamped trace data in a 
+# circular buffer which can be examined using the debugger, or dumped with
+# XXXXX_DUMP_TRACE_ON_STREAM_CLOSE - which dumps the buffer whenever a StreamClosing
+# message is received.
+#
+# Don't forget link with the trace code utilities if you want to use them.
+#
+#####################################
+ 
+ProtoTraceSwitches  = -dPROTO_TRACE_MAIN=1 -dPROTO_TRACE_CHANNELS=1 \xb6 
+                    -dPROTO_DUMP_TRACE_ON_STREAM_CLOSE=1 \xb6 
+                    -dPROTO_DUMP_TRACE_ON_STREAM_ABORT=1
+</CODE>
+</PRE>
+<A NAME="XREF35354"><H3>Preparing tracecodes</A></H3>
+The trace codes match events with code numbers. Trace codes are included with the SCEL subscriber, the SAudio subscriber, and the Proto subscriber. If you want to add tracing to other subscribers, you have to remove codes that are application specific, then add codes for events you want to monitor in your own application. <P>
+<A NAME="XREF22234"><H3>Looking at the tracing information</A></H3>
+When you run an application that was built with tracing on in the makefile, two files are written to the <I>/remote</I> folder: one is a raw trace, and the other contains statistics about the events you decided to monitor. <P>
+<B>Note: </B>After you've turned on tracing, you should run your application only for a few seconds or the file will be corrupted: The tracing information is written to a buffer that wraps and overwrites early information if you're not careful.<P>
+To look at one of the trace files written to <I>/remote</I>, go through these steps: <P>
+<OL>
+<LI>Convert linefeeds to carriage returns. You can do that by opening the file with a text editor that works with both file types-for example Alpha-and saving the file in Mac format. 
+<p>
+<IMG SRC="Figures/RawAlphaDump.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Raw trace example.</I><P>
+<p>
+<LI>Convert the trace codes to text. You can do this with the MPW Canon tool, as follows: 
+<p>
+<DL>
+<DD><CODE>Canon <I>dictionary</I> &lt; rawtrace &gt; macrawtrace</CODE><BR>
+</DL>
+<p>
+<p>A sample dictionary is provided as part of the SAudio subscriber. 
+<p>
+
+<IMG SRC="Figures/CanonizedMPW.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Raw Trace after Canon tool has been used. </I><P>
+
+<LI>Finally, open the files in a spreadsheet of your choice to analyze the data. 
+<p>
+<p>If you own the InControl application, you can copy and paste the trace dump into the template provided inside the ProtoSubscriber folder. This makes viewing much easier. For example, you can look a the time a signal was received; at the time a certain signal was used; or any other event information. The figure below shows an example of a trace inside the InControl application.
+<p>
+
+<IMG SRC="Figures/InControl.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 3: </B><I>Looking a a raw trace with a spreadsheet application. </I><P>
+</OL>

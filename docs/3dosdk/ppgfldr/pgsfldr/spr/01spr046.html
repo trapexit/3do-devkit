@@ -1,0 +1,32 @@
+<Title>FindAndOpenItem</Title>
+<A NAME="XREF40895"><H1>FindAndOpenItem </A></H1>
+<A NAME="XREF20651"></A>Finds an item by type and tags and opens it.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindAndOpenItem( int32 cType, TagArg *tp )<BR>
+Item FindAndOpenItemVA( int32 cType, uint32 tags, ... );</CODE><P>
+<H3>Description</H3>
+This procedure finds an item of the specified type whose tag arguments match those pointed to by the tp argument. If more than one item of the specified type has matching tag arguments, the procedure returns the item number for the first matching item. When an item is found, it is automatically opened and prepared for use. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cType
+<DD>Specifies the type of the item to find. Use MkNodeID() to create this value. 
+</DL>
+<DL>
+<DT>tp
+<DD>A pointer to an array of tag arguments. The tag arguments can be in any order. The array can contain some, all, or none of the possible tag arguments for an item of the specified type; to make the search more specific, include more tag arguments. The last element of the array must be the value TAG_END. If there are no tag arguments, this argument must be NULL. For a list of tag arguments for each item type, see the Portfolio Item's chapter.
+</DL>
+<H3>Return Value</H3>
+The procedure returns the number of the first item that matches or an error code if it can't find the item or if an error occurs.The returned item is already opened, so there is no need to call <CODE>OpenItem()</CODE> on it. You should call <CODE>CloseItem()</CODE> on the supplied item when you are done with it. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Notes</H3>
+To close an opened item, use <CODE>CloseItem()</CODE>. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr014.html#XREF21994"><CODE>CheckItem</A>(), <A HREF="./01spr054.html#XREF34211">FindNamedItem</A>(), <A HREF="./01spr061.html#XREF25874">FindVersionedItem</A>(), <A HREF="./01spr099.html#XREF27851">LookupItem</A>(), <A HREF="./01spr101.html#XREF23056">MkNodeID</A>(), <A HREF="./01spr104.html#XREF35423">OpenItem</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF40895"></LINK></H1><HR>

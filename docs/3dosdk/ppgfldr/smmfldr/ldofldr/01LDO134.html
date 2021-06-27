@@ -1,0 +1,18 @@
+<Title>MSEC_TO_USEC</Title>
+<A NAME="XREF10173"><H1>MSEC_TO_USEC </A></H1>
+ Converts milliseconds to microseconds.<P>
+<H3>Synopsis</H3>
+<CODE>int32 MSEC_TO_USEC (value)</CODE><P>
+<H3>Description</H3>
+This macro converts a number of milliseconds to the equivalent number of microseconds. True floating point constant values are legal, for example MSEC_TO_USEC(2730.52). The compiler resolves the constant at compile time without needing runtime floating point support. Values up to 2,147,000 milliseconds (about 35 minutes) can be expressed without overflowing an int32. The macro is usable in expression context and only evaluates its argument once. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>value
+<DD>An integer constant or variable, or a floating point constant to be converted to microseconds. 
+</DL>
+<H3>Return Value</H3>
+The number of microseconds. <P>
+<H3>Implementation</H3>
+Macro <P>
+<H3>Associated Files</H3>
+lib3do.lib, timerutils.h<P>

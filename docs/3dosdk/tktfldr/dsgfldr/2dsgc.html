@@ -1,0 +1,127 @@
+<TITLE>Generating and converting data</TITLE>
+<H1><LINK NAME="XREF30826">Generating and converting data</LINK></H1><HR>
+This section gives guidelines on how to generate and convert your data for optimal results and which tools are available. The process consists of four steps:<P>
+
+<UL>
+<LI><A HREF="#XREF15875">Guidelines for data generation</A>
+<LI><A HREF="#XREF12972">Converting data to 3DO format</A>
+<LI><A HREF="#XREF38695">Compressing data</A>
+<LI><A HREF="#XREF15442">Creating chunk files</A>
+</UL>
+<A NAME="XREF15875"><H2>Guidelines for data generation</A></H2>
+Click one of the following topics for guidelines for data generation: <P>
+
+<UL>
+<LI><A HREF="#XREF38398">Video</A>
+<LI><A HREF="#XREF35809">Artwork</A>
+<LI><A HREF="#XREF20780">Audio</A>
+</UL>
+<A NAME="XREF38398"><H3>Video</A></H3>
+Sample video at the highest possible quality and then compress it. Make sure you don't use a tool that compresses video while digitizing-compressing video twice is always unsatisfactory, even if it's uncompressed as an intermediate step. If video was generated from a movie with the Telecine process, use the 3-2 Pulldown tool to remove superfluous frames.<P>
+<A NAME="XREF35809"><H3>Artwork</A></H3>
+Start artwork at a high resolution and then convert it. Remove NTSC hot colors. In some cases, you may need to use anti-aliased cels which you can generate with the Anti-Alias CelWriter plug-in. <P>
+<A NAME="XREF20780"><H3>Audio</A></H3>
+<A NAME="XREF15333">Sample audio at 44 kHz and convert it to lower sample rates as appropriate. </A>Deciding on the optimal compression may require some experimentation. Here's some information to help you decide on compression rate:<P>
+CD quality stereo requires 176 KB/s.<P>
+The lowest quality sound currently offered(22 K Mono 4:1) is acceptable for voice in most cases. <P>
+Most music can use 22 K 16-bit stereo 2:1 compressed (44KB/s data rate). High frequencies are attenuated, but not usually too much. <P>
+Most audio sounds better at 2:1 compression than at 4:1. 22 KB 2:1 sounds better than 44 KB 4:1-and they have the same data rate.<P>
+<H3>For more information</H3>
+Data generation issues are discussed in more detail in, for example, Chapter 1 of the  3DO Tools for Sound Designers volume and the <I>Introduction to 3DO Graphics</I>  and <I>Video Processing Guide </I>in the 3DO Tools for Art Production volume.<P>
+<A NAME="XREF12972"><H2>Converting data to 3DO format</A></H2>
+Before you can create chunk files from data, you have to convert them to 3DO format and compress them where appropriate. The 3DO Toolkit CD-ROM offers a variety of tools for converting still art, video, and audio. The related documentation provides detailed information on using those tools. <P>
+Click on one of the following topics for more information: <P>
+
+<UL>
+<LI><A HREF="#XREF16522">Still photo</A>
+<LI><A HREF="#XREF31009">Video and animation</A>
+<LI><A HREF="#XREF28804">Audio</A>
+</UL>
+<A NAME="XREF16522"><H3>Still photo</A></H3>
+Convert to cel of your choice using one of the following:<P>
+3DO custom plug-ins <P>
+3DO CCM for DeBabelizer (batch process)<P>
+3DO ppm utilities<P>
+3DO Animator or 3DO PostPro (see <I>3DO Release Notes</I>) <P>
+<A NAME="XREF31009"><H3>Video and animation</A></H3>
+Convert a video or animation to a series of cels using the 3DO CCM for Debabelizer or 3DO Animator. <P>
+Convert a video or animation to a compressed movie using the following tools from 3DO Toolkit 1.4 or later:<P>
+MovieEdit to fine-tune the movie<P>
+3:2 Pulldown if the movie was based on a film<P>
+MovieCompress to compress<P>
+Convert Macromedia Director animations using Director Extractor. <P>
+<A NAME="XREF28804"><H3>Audio</A></H3>
+Use 3DO SoundHack to converts files to 22.5 kHz AIFF (and compress if desired).<P>
+Use Adobe Premier to extract an AIFF file from a movie. <P>
+If you work with a Macintosh sound resource, you may need to resample to generate a 22.05 kHz AIFF file. <P>
+<A NAME="XREF38695"><H2>Compressing data</A></H2>
+Compression can usually be done as part of the data conversion process. For example, when you convert sound to 3DO format using the SoundHack tool, you can choose between 2:1 and 4:1 compression. The following table illustrates the choices you have.<P>
+<PRE>
+<B>Table 1: </B><I> Compression tools.</I>
+--------------------------------------------------------
+Data    |Tool                                           
+type    |                                               
+--------------------------------------------------------
+Cel     |Many cel types with different resolutions are  
+        |available.The Introduction to 3DO Graphics     
+        |manual in the 3DO Tools for Art Production     
+        |volume discusses different cel types and their 
+        |use in some detail.                            
+--------------------------------------------------------
+Video   |MovieCompress compresses movies. Currently,    
+        |only Cinepak compression produces a file you   
+        |can play on the 3DO system.                    
+--------------------------------------------------------
+Audio   |The 3DO SoundHack tool offers 2:1 compression  
+        |and 4:1 ADPCM compression.The squashsnd MPW    
+        |tool performs the same 2:1 compression as      
+        |SoundHack.                                     
+--------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF15442"><H2>Creating chunk files</A></H2>
+After data have been converted to 3DO format, they need to be converted to chunk files. The tools shown in the following table convert data to chunked, timestamped files that the Weaver tool can then weave into a stream.<P>
+<PRE>
+<B>Table 2: </B><I> Data conversion tools.</I>
+--------------------------------------------------------
+Tool          |Description                              
+--------------------------------------------------------
+MovieToStream |Converts QuickTime movie compressed with 
+              |MovieCompress into a stream compatible   
+              |with CPakSubscriber.c. Note that         
+              |MovieToStream only deals with the video  
+              |data; you must extract and process audio 
+              |data separately.                         
+--------------------------------------------------------
+SFToStream    |Converts AIFF/AIFC data into a stream    
+              |compatible with SAudioSubscriber.c.      
+--------------------------------------------------------
+Chunkify      |Takes any kind of input data, and breaks 
+              |it up into stream blocks so that the Join
+              |subscriber can load the data into RAM    
+              |over time.  The Join subscriber is found 
+              |in JoinSubscriber.c.                     
+--------------------------------------------------------
+SANMMaker     |Generates a file you can play back with  
+              |SANMSubscriber.c. Note that in most      
+              |cases, StreamMaker, which can be found in
+              |the Attic folder, produces better        
+              |results.                                 
+--------------------------------------------------------
+CtlMaker      |Generates chunk data for the Control     
+              |subscriber.                              
+--------------------------------------------------------
+StreamMaker   |Accepts a script that describes how to   
+              |combine cels into frames and how to      
+              |combine other different chunks of data   
+              |into a stream. You can combine Cel chunks
+              |as well as Join, Cinepak, Audio, Score,  
+              |Text, and SANM chunks. The resulting file
+              |can be submitted to the Weaver tool.     
+--------------------------------------------------------
+</PRE>
+<P>
+<A NAME="XREF35030"><B>Note: </B>The ARIA tool makes it possible to read a MIDI file and write a score file. A tool that converts </A>the score file to a score chunk file will be available in the near future. <P>
+<H3>For more information</H3>
+<A HREF="../DataStreamRefF/cDSR.3.StreaminTools.html#XREF30669">Data Streaming Tools</A> in the <I>DataStreamer Programmer's Reference </I>provides manpages for each DataStreamer tool.<P>
+<P>

@@ -1,0 +1,13 @@
+<TITLE>Invoking armcc</TITLE>
+<H1><LINK NAME="XREF21667">Invoking armcc</LINK></H1><HR>
+The general form of the command for invoking the ARM C compiler is:<P>
+<CODE>
+<PRE>
+armcc
+</CODE>
+</PRE>
+By default, the C compiler looks for source files, and creates object, assembler and listing files, in the current directory.<P>
+Many aspects of the compiler's operation can be controlled via command-line options. All options are prefixed by a minus sign.<P>
+There are two classes of option: keywords and flags. Keywords are recognised in upper case or lower case. A flag is a single letter, the case of which is sometimes important to the ARM C compiler.<P>
+Because some systems (such as Unix) are very case sensitive, the case of flags is most important when you are building portable <I>makefiles</I>. By using the conventions common to many C compilers, you can move a makefile between different environments at minimum cost.<P>
+<P>

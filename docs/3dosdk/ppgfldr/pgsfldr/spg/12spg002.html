@@ -1,0 +1,149 @@
+<TITLE>Sending Messages Between Tasks and the Event Broker</TITLE>
+<H1><LINK NAME="XREF22421">Sending Messages Between Tasks and the Event Broker</LINK></H1><HR>
+All communication between the event broker and connected listener tasks is through messages (a process discussed in earlier kernel chapters). These messages, which pass from listener to event broker or from event broker to listener, are called <I>event broker messages. </I>Before programming with the event broker, you should understand how these messages work.<P>
+<H2>Message Flavors</H2>
+Each event broker message comes in a <I>flavor</I> that identifies the purpose of the message. The flavor of the message determines the type (or types) of data structures contained in the data block, and specifies how the message recipient should handle the message. The data structure EventBrokerHeader is always the first field of the first data structure within a message data block. Its definition is shown below:<P>
+<CODE>
+<PRE>
+typedef struct EventBrokerHeader
+{
+   enum EventBrokerFlavor ebh_Flavor;
+}  EventBrokerHeader;
+</CODE>
+</PRE>
+EventBrokerHeader indicates the flavor of the message. Table 1 shows the available flavors.<P>
+<PRE>
+<B>Table 1: </B><I> Event broker message flavors. </I>
+--------------------------------------------------------
+Event Broker Flavor   |Operation Requested              
+--------------------------------------------------------
+EB_NoOp               |No operation requested.          
+--------------------------------------------------------
+EB_Configure          |(Task to EB) Connect this task to
+                      |the event broker and register its
+                      |configuration.                   
+--------------------------------------------------------
+EB_ConfigureReply     |Event broker reply to            
+                      |EB_Configure.                    
+--------------------------------------------------------
+EB_EventRecord        |(EB to task) The events listed in
+                      |the data block occurred in this  
+                      |field and are events in which the
+                      |task is interested.              
+--------------------------------------------------------
+EB_EventReply         |A listener's reply to            
+                      |EB_EventRecord.                  
+--------------------------------------------------------
+EB_SendEvent          |(Task to EB) An event has        
+                      |happened within a task. This     
+                      |command is not currently         
+                      |implemented.                     
+--------------------------------------------------------
+EB_SendEventReply     |Event broker reply to            
+                      |EB_SendEvent.                    
+--------------------------------------------------------
+EB_Command            |This operation is not currently  
+                      |determined.                      
+--------------------------------------------------------
+EB_CommandReply       |Event broker reply to EB_Command.
+--------------------------------------------------------
+EB_RegisterEvent      |(Task to EB) Register this custom
+                      |event name and assign an event   
+                      |number to that name. This command
+                      |is not currently implemented.    
+--------------------------------------------------------
+EB_RegisterEventReply |Event broker reply to            
+                      |EB_RegisterEvent.                
+--------------------------------------------------------
+EB_GetListeners       |(Task to EB) Tell the requesting 
+                      |task which tasks are connected to
+                      |the EB.                          
+--------------------------------------------------------
+EB_GetListenersReply  |Event broker reply to            
+                      |EB_GetListeners.                 
+--------------------------------------------------------
+EB_SetFocus           |(Task to EB) Assign the input    
+                      |focus to a specified task.       
+--------------------------------------------------------
+EB_SetFocusReply      |Event broker reply to            
+                      |EB_SetFocus.                     
+--------------------------------------------------------
+EB_GetFocus           |(Task to EB) Tell the requesting 
+                      |task which task has the current  
+                      |input focus.                     
+--------------------------------------------------------
+EB_GetFocusReply      |Event broker reply to            
+                      |EB_GetFocus.                     
+--------------------------------------------------------
+EB_ReadPodData        |(Task to EB) Send requesting task
+                      |data from the specified pod. This
+                      |command is not currently         
+                      |implemented.                     
+--------------------------------------------------------
+EB_ReadPodDataReply   |Event broker reply to            
+                      |EB_ReadPodData.                  
+--------------------------------------------------------
+EB_WritePodData       |(Task to EB) Write the enclosed  
+                      |data to the specified pod. This  
+                      |command is not currently         
+                      |implemented.                     
+--------------------------------------------------------
+EB_WritePodDataReply  |Event broker reply to            
+                      |EB_WritePodData.                 
+--------------------------------------------------------
+EB_LockPod            |(Task to EB) Lock the specified  
+                      |pod so only the requesting task  
+                      |can issue commands or write data 
+                      |to it. This command is not       
+                      |currently implemented.           
+--------------------------------------------------------
+EB_LockPodReply       |Event broker reply to EB_LockPod.
+--------------------------------------------------------
+EB_UnlockPod          |(Task to EB) Unlock the specified
+                      |pod so that other tasks can issue
+                      |commands or write data to it.    
+                      |This command is not currently    
+                      |implemented.                     
+--------------------------------------------------------
+EB_UnlockPodReply     |Event broker reply to            
+                      |EB_UnlockPod.                    
+--------------------------------------------------------
+EB_IssuePodCmd        |(Task to EB) Issue this generic  
+                      |command to the specified pod.    
+--------------------------------------------------------
+EB_IssuePodCmdReply   |Event broker reply to            
+                      |EB_IssuePodCmd.                  
+--------------------------------------------------------
+EB_DescribePods       |(Task to EB) Describe pods       
+                      |attached to the control port.    
+--------------------------------------------------------
+EB_DescribePodsReply  |Event broker reply to            
+                      |EB_DescribePods.                 
+--------------------------------------------------------
+EB_MakeTable          |(Task to EB) Create a pod table  
+                      |and return a pointer to it.      
+--------------------------------------------------------
+EB_MakeTableReply     |Event broker reply to            
+                      |EB_MakeTable                     
+--------------------------------------------------------
+</PRE>
+<P>
+With the exception of <CODE>EB_NoOp</CODE>, event broker messages come in pairs; every event broker operation request is answered with a reply from either the event broker or the receiving task. The reply confirms an operation's execution (or failure to execute). A reply message can carry information requested in the operation request.<P>
+All operation requests are sent from a listener task to the event broker with one exception: <CODE>EB_EventRecord</CODE>, which the event broker sends to a listener to tell it what specified events happened during a field. <P>
+<H2>Message Types </H2>
+Portfolio supports three types of messages:<P>
+<UL>
+<LI>Standard
+<LI>Small
+<LI>Buffered
+</UL>
+To communicate with the event broker, a listener task can use either standard or buffered messages; small messages do not work.<P>
+Whenever a listener task asks the event broker for information, it uses a buffered message. For example, if the <CODE>EB_DescribePods</CODE> command is sent, the event broker puts the pod information in the buffer associated with the message and returns the message to the listener task.<P>
+If the listener task is giving information to the event broker, for example using an <CODE>EB_WritePodData</CODE> command, the task can use either a standard (pass by reference) or buffered (pass by value) message. The event broker reads the data from the data block, but does not modify it.<P>
+When a task replies to event broker messages, such as returning an <CODE>EB_EventRecord</CODE> message, it should use the <CODE>ReplyMsg()</CODE> function. Always provide NULL for the data pointer, and 0 for the data size arguments to <CODE>ReplyMsg()</CODE>.<P>
+<H2>Flavor-Specific Message Requirements</H2>
+Each message flavor requires a specific data structure (or set of data structures) to accompany it. The data structures are defined in the include file <I>event.h</I> (see <A HREF="./12spg005.html#XREF36674">Reading Event Data</A>). The data structures are also discussed in the sections of this chapter that describe different event broker operations.<P>
+Operation requests and replies are sent with the same message. The event broker or receiving task fills in the appropriate reply data, and returns the message. <P>
+When requesting data from the event broker, a listener task must use a buffered message to hold the response. Because the reply data from an operation can be extensive, the message should have a large enough data block for the event broker to fill in data. If the data block is not large enough, the event broker puts no data in the buffer and returns an error.<P>
+Note that a reply message cannot copy useful data to the data blocks if the reply does not require large amounts of data. For example, a listener task can use an <CODE>EB_GetFocus</CODE> message to ask the event broker to report which task has the input focus . The event broker only needs to store the item number of the task with focus in the error field of the <CODE>EB_GetFocus</CODE> message and return the message without copying any data to the data block. In such a case, a task can use a standard message to request information instead of a buffered message because the buffer is not used.<P>
+<P>

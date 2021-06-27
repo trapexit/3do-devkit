@@ -1,0 +1,78 @@
+<HTML><TITLE>includes</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>includes</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Basic set operation for sorted sequences.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings "><LI>Warnings </LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class InputIterator1, class InputIterator2>
+ bool <B>includes</B> (InputIterator1 first1, InputIterator1 last1,
+                InputIterator2 first2, InputIterator2 last2);
+template &#60;class InputIterator1, class InputIterator2, class Compare>
+ bool <B>includes</B> (InputIterator1 first1, InputIterator1 last1,
+                InputIterator2 first2, InputIterator2 last2, 
+                Compare comp);</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>includes</B></I> algorithm compares two sorted sequences and returns <SAMP>true</SAMP> if every element in the range <SAMP>[first2, last2)</SAMP> is contained in the range <SAMP>[first1, last1)</SAMP>.  It returns <SAMP>false</SAMP> otherwise. <B><I>includes</B></I> assumes that the sequences are sorted using the default comparison operator less than (<SAMP>&#60;</SAMP>), unless an alternative comparison operator (<SAMP>comp</SAMP>) is provided.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>At most <SAMP>((last1 - first1) + (last2 - first2)) * 2 -1</SAMP>  comparisons are performed.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// includes.cpp 
+//
+ #include &#60;algorithm>
+ #include &#60;set>
+ #include &#60;iostream.h>
+ int main()
+ {
+   //Initialize some sets
+   int a1[10] = {1,2,3,4,5,6,7,8,9,10};
+   int a2[6]  = {2,4,6,8,10,12};
+   int a3[4]  = {3,5,7,8};
+   set&#60;int, less&#60;int> > all(a1, a1+10), even(a2, a2+6), 
+                         small(a3,a3+4);
+  //Demonstrate includes
+  cout &#60;&#60; "The set: ";
+  copy(all.begin(),all.end(),
+        ostream_iterator&#60;int>(cout," "));
+  bool answer = includes(all.begin(), all.end(), 
+                small.begin(), small.end());
+  cout &#60;&#60; endl 
+       &#60;&#60; (answer ? "INCLUDES " : "DOES NOT INCLUDE ");
+  copy(small.begin(),small.end(),
+        ostream_iterator&#60;int>(cout," "));
+  answer = includes(all.begin(), all.end(), 
+                    even.begin(), even.end());
+  cout &#60;&#60; ", and" &#60;&#60; endl 
+       &#60;&#60; (answer ? "INCLUDES" : "DOES NOT INCLUDE ");
+  copy(even.begin(),even.end(),
+        ostream_iterator&#60;int>(cout," "));
+  cout &#60;&#60; endl &#60;&#60; endl;
+  return 0;
+ }
+Output :
+The set: 1 2 3 4 5 6 7 8 9 10
+INCLUDES 3 5 7 8 , and
+DOES NOT INCLUDE 2 4 6 8 10 12</PRE>
+<A NAME="Warnings "><H3>Warnings </H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you'll have to write :</P>
+<P><SAMP>set&#60;int, less&#60;int>, allocator></SAMP></P>
+<P>instead of </P>
+<P><SAMP>set&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="set_1649.htm"><B><I>set</B></I></A>, <A HREF="set_6462.htm"><B><I>set_union</B></I></A>, <A HREF="set_9182.htm"><B><I>set_intersection</B></I></A>, <A HREF="set_0972.htm"><B><I>set_difference</B></I></A>, <A HREF="set_1735.htm"><B><I>set_symmetric_difference</B></I></A></P>
+<HR>
+<A HREF="Hea_4928.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="inn_8576.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,23 @@
+<Title>DisableMSEvent</Title>
+<A NAME="XREF22950"><H1>DisableMSEvent </A></H1>
+ Halts dispatching for one event.<P>
+<H3>Synopsis</H3>
+<CODE>void DisableMSEvent(MSEventData *theEvent, int32 reserved)</CODE><P>
+<H3>Description</H3>
+This function temporarily disables dispatching of the specified event. If a message or signal is pending at the time this function is called that fact is remembered and the event will be dispatched after it is re-enabled. You can safely call this from within the handler for the event being disabled, or from a handler for another event being controlled by the same MSEventData array. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>theEvent
+<DD>Pointer to the element of the MSEventData array that describes the event to disable. 
+</DL>
+<DL>
+<DT>reserved
+<DD>Reserved for future expansion; pass zero. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, msgutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO065.html#XREF13048"><CODE>EnableMSEvent</A> </CODE><P>
+</CODE>

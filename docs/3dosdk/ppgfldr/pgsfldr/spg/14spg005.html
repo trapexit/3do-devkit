@@ -1,0 +1,6 @@
+<TITLE>Convenience Calls</TITLE>
+<H1>Convenience Calls</H1><HR>
+There are two function calls supplied in <I>compression.lib</I> that provide a simple interface to the lower-level functions of the Compression folio. The two functions implement the most common uses for the folio functions.<P>
+The <CODE>Compress()</CODE> function compresses data from one memory buffer into another memory buffer. You give it a source buffer pointer, the size of the source buffer, a destination buffer pointer, and the size of the destination buffer. <CODE>Compress()</CODE> then compresses the data and deposits the compressed result in the destination buffer. This function returns the number of words of data copied into the destination buffer, or a negative error if something went wrong, such as a lack of memory or a lack of space in the destination buffer.<P>
+The <CODE>Decompress()</CODE> function decompresses in much the same way as the <CODE>Compress()</CODE> function compresses data. This time, the source buffer contains the compressed data, and the destination buffer gets filled with decompressed data. This function returns the number of words of decompressed data that were put in the destination buffer, or a negative error code if something went wrong.<P>
+<A NAME="XREF13591"></A>

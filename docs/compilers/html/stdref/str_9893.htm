@@ -1,0 +1,103 @@
+<HTML><TITLE>string_char_traits </TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>string_char_traits </H2>
+<A NAME="Summary "><H3>Summary </H3></A>
+<P>A traits class providing types and operations to the <A HREF="bas_0007.htm"><B><I>basic_string</B></I></A> container.</P>
+<PRE></PRE>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Summary "><LI>Summary </LI></A>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Interface "><LI>Interface </LI></A>
+<A HREF="#Type"><LI>Type</LI></A>
+<A HREF="#Operations"><LI>Operations</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;string></PRE>
+<PRE>template &#60;class charT> struct string_char_traits
+struct string_char_traits&#60;char>; .
+struct string_char_traits&#60;wchar_t>;
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>string_char_traits</B></I> struct provides elementary operations to instantiations of <A HREF="bas_0007.htm"><B><I>basic_string</B></I></A>.  As with all traits classes, <B><I>string_char_traits</B></I> is used to specialize the behavior of a template.  In this case, the traits class provides functions based on character type to the <B><I>basic_string</B></I> template.  </P>
+<P>Specializations of <B><I>string_char_traits</B></I> are provided for <SAMP>char</SAMP> and <SAMP>wchar_t</SAMP>.  These are used to define, respectively, <SAMP>string</SAMP> and <SAMP>wstring</SAMP>.</P>
+<A NAME="Interface "><H3>Interface </H3></A>
+<PRE>template &#60;class charT> struct string_char_traits .
+{  
+typedef charT                    char_type;
+static void assign (char_type&#38;, const char_type&#38;); .
+static char_type* assign (char_type*, size_t, const char_type&#38;);
+static bool eq (const char_type&#38;, const char_type&#38;); .
+static bool ne (const char_type&#38;, const char_type&#38;); .
+static bool lt (const char_type&#38;, const char_type&#38;); .
+static char_type eos ();  .
+static int compare (const char_type*, const char_type*, size_t);
+.
+static size_t length (const char_type * s); .
+static char_type* copy (char_type*,  const char_type*, size_t);
+.
+static char_type* move (char_type*,  const char_type*, size_t);
+.
+static const char_type*  .
+find (const char_type*, int, const char_type&#38;);
+};
+</PRE>
+<A NAME="Type"><H3>Type</H3></A>
+<PRE>char_type</PRE>
+<UL><P>The basic character type. Same as the template parameter.</P>
+</UL>
+<A NAME="Operations"><H3>Operations</H3></A>
+<PRE>static 
+void <B>assign</B> (char_type&#38; c1, const char_type&#38; c2) </PRE>
+<UL><P>Assign one character value to another.  The value of <SAMP>c2</SAMP> is assigned to <SAMP>c1</SAMP>.</P>
+</UL>
+<PRE>static 
+char_type* <B>assign</B> (char_type* s, size_t n, const char_type&#38; a)</PRE>
+<UL><P>Assign one character value to <SAMP>n</SAMP> elements of a character array. The value of <SAMP>a</SAMP> is assigned to <SAMP>n</SAMP> elements of <SAMP>s</SAMP>.</P>
+</UL>
+<PRE>static 
+bool <B>eq</B> (const char_type&#38; c1, const char_type&#38; c2)</PRE>
+<UL><P>Return <SAMP>true</SAMP> if <SAMP>c1</SAMP> equals <SAMP>c2</SAMP>.</P>
+</UL>
+<PRE>static 
+bool <B>ne</B> (const char_type&#38; c1, const char_type&#38; c2)</PRE>
+<UL><P>Return <SAMP>true</SAMP> if <SAMP>c1</SAMP> does not equal <SAMP>c2</SAMP>.</P>
+</UL>
+<PRE>static 
+bool <B>lt</B> (const char_type&#38; c1, const char_type&#38; c2)</PRE>
+<UL><P>Return <SAMP>true</SAMP> if <SAMP>c1</SAMP> is less than <SAMP>c2</SAMP>.</P>
+</UL>
+<PRE>static 
+char_type <B>eos</B> ()</PRE>
+<UL><P>Return the end of string value for the the character type. Typically <SAMP>char_type()</SAMP>.</P>
+</UL>
+<PRE>static 
+int <B>compare</B> (const char_type* s1, const char_type* s2, 
+             size_t n)</PRE>
+<UL><P>Compare <SAMP>n</SAMP> values from <SAMP>s1</SAMP> with <SAMP>n</SAMP> values from <SAMP>s2</SAMP>.  Return 1 if <SAMP>s1</SAMP> is greater than <SAMP>s2</SAMP>, -1 if s1 is less than <SAMP>s2</SAMP>, or 0 if they are equal.</P>
+</UL>
+<PRE>static 
+size_t <B>length</B> (const char_type * s)</PRE>
+<UL><P>Return the length of the null terminated character array<SAMP> s</SAMP>.  The <SAMP>eos</SAMP> terminator is not counted.</P>
+</UL>
+<PRE>static 
+char_type* <B>copy</B> (char_type* s1, const char_type* s2, size_t n)</PRE>
+<UL><P>Copy <SAMP>n</SAMP> values from <SAMP>s1</SAMP> to <SAMP>s2</SAMP>. The ranges of <SAMP>(s1,s1+n) </SAMP>and <SAMP>(s2,s2+n)</SAMP> may not overlap.</P>
+</UL>
+<PRE>static
+char_type* <B>move</B> (char_type* s1, const char_type* s2, size_t n)</PRE>
+<UL><P>Move <SAMP>n</SAMP> values from <SAMP>s1</SAMP> to <SAMP>s2</SAMP>.  The ranges of <SAMP>(s1,s1+n) </SAMP>and <SAMP>(s2,s2+n)</SAMP> may overlap.</P>
+</UL>
+<PRE>static 
+const char_type* <B>find</B> (const char_type* s, int n, 
+       const char_type&#38; a)</PRE>
+<UL><P>Look for the value of <SAMP>a</SAMP> in <SAMP>s</SAMP>.  Only <SAMP>n</SAMP> elements of <SAMP>s</SAMP> are examined.  Returns a pointer to the matched element if one is found.  Otherwise returns <SAMP>s + n</SAMP>.</P>
+</UL>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="bas_0007.htm"><B><I>basic_string</B></I></A></P>
+<HR>
+<A HREF="str_8586.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="swa_4514.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

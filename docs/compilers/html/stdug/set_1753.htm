@@ -1,0 +1,51 @@
+<HTML><HEAD><TITLE>Set Operations</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Set Operations</H2>
+<P>The operations of set union, set intersection, and set difference were all described in <a href="bit_2576.htm#setoperations">Chapter 7 (<i>Set Operations</i>)</a> when we discussed the <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> container class. However, the algorithms that implement these operations are generic, and applicable to any ordered data structure.  The algorithms assume the input ranges are ordered collections that represent <A HREF="../stdref/mul_0958.htm"><B><I>multiset</I></B></A>s; that is, elements can be repeated.  However, if the inputs represent <B><I>set</I></B>s, then the result will always be a <B><I>set</I></B>.  That is, unlike the <SAMP>merge()</SAMP> algorithm, none of the set algorithms will produce repeated elements in the output that were not present in the input sets.</P>
+<P>The set operations all have the same format.  The two input sets are specified by pairs of input iterators.  The output set is specified by an input iterator, and the end of this range is returned as the result value.  An optional comparison operator is the final argument.  In all cases it is required that the output sequence not overlap in any manner with either of the input sequences.</P>
+<PRE>OutputIterator set_union 
+   (InputIterator first1, InputIterator last1,
+   InputIterator first2, InputIterator last2,
+   OutputIterator result [, Compare ] );
+</PRE>
+<P>The example program illustrates the use of the four set algorithms, <A HREF="../stdref/set_6462.htm"><B><I>set_union</I></B></A>,<A HREF="../stdref/set_9182.htm"><B><I> set_intersection</I></B></A>, <A HREF="../stdref/set_0972.htm"><B><I>set_difference</I></B></A> and <A HREF="../stdref/set_1735.htm"><B><I>set_symmetric_difference</I></B></A>. It also shows a call on <SAMP>merge()</SAMP> in order to contrast the merge and the set union operations. The algorithm <SAMP>includes()</SAMP> is slightly different.  Again the two input sets are specified by pairs of input iterators, and the comparison operator is an optional fifth argument.  The return value for the algorithm is <SAMP>true</SAMP> if the first set is entirely included in the second, and <SAMP>false</SAMP> otherwise.</P>
+<PRE>void set_example ()
+   // illustrate the use of the generic set algorithms
+{
+   ostream_iterator&#60;int> intOut (cout, " ");
+
+      // make a couple of ordered lists
+   list&#60;int> listOne, listTwo;
+   generate_n (inserter(listOne, listOne.begin()), 5, iotaGen(1));
+   generate_n (inserter(listTwo, listTwo.begin()), 5, iotaGen(3));
+
+      // now do the set operations
+      // union - 1 2 3 4 5 6 7
+   set_union (listOne.begin(), listOne.end(),
+      listTwo.begin(), listTwo.end(), intOut), cout &#60;&#60; endl;
+      // merge - 1 2 3 3 4 4 5 5 6 7
+   merge (listOne.begin(), listOne.end(),
+      listTwo.begin(), listTwo.end(), intOut), cout &#60;&#60; endl;
+      // intersection - 3 4 5
+   set_intersection (listOne.begin(), listOne.end(),
+      listTwo.begin(), listTwo.end(), intOut), cout &#60;&#60; endl;
+      // difference - 1 2
+   set_difference (listOne.begin(), listOne.end(),
+      listTwo.begin(), listTwo.end(), intOut), cout &#60;&#60; endl;
+      // symmetric difference - 1 2 6 7
+   set_symmetric_difference (listOne.begin(), listOne.end(),
+      listTwo.begin(), listTwo.end(), intOut), cout &#60;&#60; endl;
+
+   if (includes (listOne.begin(), listOne.end(),
+      listTwo.begin(), listTwo.end()))
+         cout &#60;&#60; "set is subset" &#60;&#60; endl;
+   else
+      cout &#60;&#60; "set is not subset" &#60;&#60; endl;
+}
+</PRE>
+
+<HR>
+<A HREF="mer_3553.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="hea_8081.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,27 @@
+<Title>SubTimes</Title>
+<A NAME="XREF31407"><H1>SubTimes </A></H1>
+<A NAME="XREF26762"></A> Subtracts one time value from another.<P>
+<H3>Synopsis</H3>
+<CODE>void SubTimes(const TimeVal *tv1, const TimeVal *tv2,TimeVal *result);</CODE><P>
+<H3>Description</H3>
+Subtracts two time values, yielding the difference in time between the two. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tv1
+<DD>The first time value. 
+</DL>
+<DL>
+<DT>tv2
+<DD>The second time value. 
+</DL>
+<DL>
+<DT>result
+<DD>A pointer to the location where the resulting time value will be stored. This pointer can match either of tv1 or tv2. The value stored corresponds to (tv2 - tv1). 
+</DL>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V24. <P>
+<H3>Associated Files</H3>
+time.h, clib.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./05spr001.html#XREF17030"><CODE>AddTimes</A>(), <A HREF="./05spr002.html#XREF39340">CompareTimes</A>() </CODE><P>
+</CODE>

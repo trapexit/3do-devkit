@@ -1,0 +1,29 @@
+<Title>CountBits</Title>
+<A NAME="XREF15206"><H1>CountBits</A></H1>
+<A NAME="XREF36645"></A>Counts the number of bits set in a word.<P>
+<H3>Synopsis</H3>
+<CODE>int CountBits(uint32 mask);</CODE><P>
+<H3>Description</H3>
+CountBits examines the longword passed in as a parameter and returns the number of bits that are turned on in the word, using an algorithm derived from a note in MIT's HAKMEM.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>mask
+<DD>The data word to count the bits of. 
+</DL>
+<H3>Return Value</H3>
+The number of bits that were turned on in the supplied value. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V21. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>string.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr052.html#XREF26766"><CODE>FindMSB</A>(), <A HREF="./01spr051.html#XREF19357">FindLSB</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF15206"></LINK></H1><HR>

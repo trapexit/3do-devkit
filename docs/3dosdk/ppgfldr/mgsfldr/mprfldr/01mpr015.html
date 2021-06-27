@@ -1,0 +1,29 @@
+<Title>CreateCue</Title>
+<A NAME="XREF24403"><H1>CreateCue </A></H1>
+<A NAME="XREF19025"></A> Creates an audio cue.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateCue (TagArg *tagList)</CODE><P>
+<H3>Description</H3>
+This macro calls <CODE>CreateItem()</CODE> to create an audio cue, which is an item associated with a system signal. A task can get the signal mask of the cue's signal using the <CODE>GetCueSignal()</CODE> call. <P>
+When a task uses an audio timing call such as <CODE>SignalAtTime()</CODE>, it passes the item number of the audio cue to the function. The task then calls <CODE>WaitSignal()</CODE>  to enter wait state, where it waits for the cue's signal at the specified time. <P>
+Since each task has its own set signals, Cues cannot be shared among tasks. <P>
+Call <CODE>DeleteCue()</CODE> to dispose of a Cue item. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>None
+<DD> 
+</DL>
+<H3>Tags</H3>
+<DL>
+<DT>None
+<DD> 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of the cue (a positive value) or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in the audio.h V21. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr026.html#XREF10734"><CODE>DeleteCue</A>(), <A HREF="./01mpr046.html#XREF11073">GetCueSignal</A>(), </CODE><A HREF="./01mpr056.html#XREF24049">MonitorAttachment</A><CODE>(), <A HREF="./01mpr069.html#XREF10773">SignalAtTime</A>(), <A HREF="./01mpr071.html#XREF19984">SleepUntilTime</A>() </CODE><P>
+</CODE>

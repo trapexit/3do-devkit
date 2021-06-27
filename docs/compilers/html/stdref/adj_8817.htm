@@ -1,0 +1,75 @@
+<HTML><TITLE>adjacent_find</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>adjacent_find</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Find the first adjacent pair of elements in a sequence that are equivalent.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class ForwardIterator>
+  ForwardIterator
+  adjacent_find(ForwardIterator first, ForwardIterator last);
+template &#60;class ForwardIterator, class BinaryPredicate>
+ ForwardIterator
+  adjacent_find(ForwardIterator first, ForwardIterator last,
+                BinaryPredicate pred);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>There are two versions of the <B><I>adjacent_find</B></I> algorithm.  The first finds equal adjacent elements in the sequence defined by iterators <SAMP>first</SAMP> and <SAMP>last</SAMP> and returns an iterator <SAMP>i</SAMP> pointing to the first of the equal elements.  The second version lets you specify your own binary function to test for a condition.  It returns an iterator <SAMP>i</SAMP> pointing to the first of the pair of elements that meet the conditions of the binary function.  In other words, <B><I>adjacent_find</B></I> returns the first iterator <SAMP>i</SAMP> such that both <SAMP>i</SAMP> and  <SAMP>i + 1</SAMP> are in the range <SAMP>[first, last)</SAMP> for which one of the following conditions holds:</P>
+<PRE>  *i  ==  *(i  +  1)</PRE>
+<PRE></PRE><P>or</P>
+<PRE>pred(*i,*(i  +  1))  == true</PRE>
+<PRE></PRE><P>If <B><I>adjacent_find</B></I> does not find a match, it returns <SAMP>last</SAMP>.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P><B><I>adjacent_find</B></I> performs exactly <SAMP>find(first,last,value) - first</SAMP> applications of  the corresponding predicate.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// find.cpp
+//
+#include &#60;vector>
+#include &#60;algorithm>
+#include &#60;iostream.h>
+ int main()
+ {
+   typedef vector&#60;int>::iterator iterator;
+   int d1[10] = {0,1,2,2,3,4,2,2,6,7}; 
+   // Set up a vector
+   vector&#60;int> v1(d1,d1 + 10);
+   // Try find  
+   iterator it1 = find(v1.begin(),v1.end(),3);
+   // Try find_if
+   iterator it2 = 
+      find_if(v1.begin(),v1.end(),bind1st(equal_to&#60;int>(),3));
+  <B> // Try both adjacent_find variants</B>
+<B>   iterator it3 = adjacent_find(v1.begin(),v1.end());</B>
+<B>   iterator it4 = </B>
+<B>      adjacent_find(v1.begin(),v1.end(),equal_to&#60;int>());</B>
+   // Output results
+   cout &#60;&#60; *it1 &#60;&#60; " " &#60;&#60; *it2 &#60;&#60; " " &#60;&#60; *it3 &#60;&#60; " " 
+        &#60;&#60; *it4 &#60;&#60; endl;
+   return 0;
+ }
+Output :
+3 3 2 2</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance you'll have to write:</P>
+<PRE>vector&#60;int,allocator></PRE>
+<P>instead of:</P>
+<PRE>vector&#60;int></PRE>
+<PRE></PRE>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="fin_7988.htm"><B><I>find</B></I></A></P>
+<HR>
+<A HREF="adj_9476.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="adv_9283.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

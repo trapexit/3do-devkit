@@ -1,0 +1,21 @@
+<Title>CheckAsyncLoadFile </Title>
+<H1>CheckAsyncLoadFile </H1>
+ Checks for completion of an async file load operation.<P>
+<H3>Synopsis</H3>
+<CODE>Err CheckAsyncLoadFile (LoadFileInfo *lf)</CODE><P>
+<H3>Description</H3>
+Checks the status of an <CODE>AsyncLoadFile()</CODE> started earlier. A zero return value means I/O is still in progress. A negative return value indicates error, and a positive return value indicates successful completion. <P>
+You must call <CODE>FinishAsyncLoadFile()</CODE> after receiving a non-zero status from this function. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>lf
+<DD>Pointer to the LoadFileInfo structure for the load operation. 
+</DL>
+<H3>Return Value</H3>
+Returns zero if I/O is still in progress, negative if the I/O failed, or positive if the has I/O completed successfully. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, blockfile.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO002.html#XREF32442"><CODE>AsyncLoadFile</A></CODE><P>

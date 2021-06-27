@@ -1,0 +1,29 @@
+<Title>ReadSoundFile</Title>
+<A NAME="XREF26293"><H1>ReadSoundFile </A></H1>
+<A NAME="XREF10870"></A> Reads a sound file.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ReadSoundFile( SoundFilePlayer *sfp, int32 Cursor,int32 BufIndex )</CODE><P>
+<H3>Description</H3>
+This function is used internally to read part of the sound file into a buffer. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sfp
+<DD>A pointer to the SoundFilePlayer. 
+</DL>
+<DL>
+<DT>Cursor
+<DD>A value indicating where in the sound file the function is reading from. 
+</DL>
+<DL>
+<DT>BufIndex
+<DD>A value indicating which of the audio data buffers the function is reading from. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+soundfile.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr057.html#XREF11879"><CODE>ServiceSoundFile</A>() </CODE><P>
+</CODE>

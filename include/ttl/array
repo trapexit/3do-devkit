@@ -1,0 +1,145 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_ARRAY_INCLUDED
+#define TTL_ARRAY_INCLUDED
+
+#include "memory"
+
+template<class T,unsigned int N>
+struct array_impl
+{
+public:
+  typedef T             value_type;
+  typedef value_type   *pointer;
+  typedef unsigned int  size_type;
+
+public:
+  array_impl(void)
+  {
+    for(size_type i = 0; i < N; i++)
+      __construct(&_data[i]);
+  }
+
+  ~array_impl(void)
+  {
+    for(size_type i = 0; i < N; i++)
+      __destruct(&_data[i]);
+  }
+
+public:
+  inline
+  T&
+  operator[](const size_type pos_)
+  {
+    return _data[pos_];
+  }
+
+  inline
+  const
+  T&
+  operator[](const size_type pos_) const
+  {
+    return _data[pos_];
+  }
+
+  inline
+  T&
+  front(void)
+  {
+    return _data[0];
+  }
+
+  inline
+  const
+  T&
+  front(void) const
+  {
+    return _data[0];
+  }
+
+  inline
+  T&
+  back(void)
+  {
+    return _data[N-1];
+  }
+
+  inline
+  const
+  T&
+  back(void) const
+  {
+    return _data[N-1];
+  }
+
+  inline
+  T*
+  data(void)
+  {
+    return _data;
+  }
+
+  inline
+  const
+  T*
+  data(void) const
+  {
+    return _data;
+  }
+
+public:
+  inline
+  bool
+  empty(void) const
+  {
+    return (N == 0);
+  }
+
+  inline
+  size_type
+  size(void) const
+  {
+    return N;
+  }
+
+  inline
+  size_type
+  max_size(void) const
+  {
+    return N;
+  }
+
+public:
+  void
+  fill(const T &val_)
+  {
+    for(size_type i = 0; i < N; i++)
+      _data[i] = val_;
+  }
+
+private:
+  T _data[N];
+};
+
+template<typename T,unsigned int N>
+class array : public ::array_impl<T,N>
+{
+};
+
+#endif

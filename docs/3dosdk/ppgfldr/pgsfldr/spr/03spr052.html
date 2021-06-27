@@ -1,0 +1,23 @@
+<Title>MulMat44Mat44_F16</Title>
+<A NAME="XREF27574"><H1>MulMat44Mat44_F16 </A></H1>
+<A NAME="XREF29664"></A>Computes the product of two 4x4 matrices of 16.16 values.<P>
+<H3>Synopsis</H3>
+<CODE>void MulMat44Mat44_F16( mat44f16 dest, mat44f16 src1,mat44f16 src2 )</CODE><P>
+<H3>Description</H3>
+This function multiplies two 4x4 matrices of 16.16 fractions together. The results of the product are deposited in the matrix dest. Note that incorrect results may occur if the destination matrix is the same matrix as one of the source matrices. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dest
+<DD>The destination matrix to store the results. 
+</DL>
+<DL>
+<DT>src1, src2                   
+<DD>The source matrices to be multiplied together. 
+</DL>
+<H3>Implementation</H3>
+SWI implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr067.html#XREF19174"><CODE>MulVec3Mat33_F16</A>(), <A HREF="./03spr069.html#XREF17410">MulVec4Mat44_F16</A>(), <A HREF="./03spr051.html#XREF31530">MulMat33Mat33_F16</A>() </CODE><P>
+</CODE>

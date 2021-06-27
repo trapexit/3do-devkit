@@ -1,0 +1,19 @@
+<Title>CEL_PRE0WORD </Title>
+<A NAME="XREF42565"><H1>CEL_PRE0WORD </A></H1>
+ Gets the Preamble Word 0 value from a cel.<P>
+<H3>Synopsis</H3>
+<CODE>uint32 CEL_PRE0WORD(ccb)</CODE><P>
+<H3>Description</H3>
+This macro evaluates to the Preamble Word 0 value for the cel. It takes the CCB_CCBPRE flag into account and retrieves the preamble word from the CCB or the cel data buffer as appropriate. <P>
+This macro evaluates its argument more than once; be careful of side effects. It is usable in expression context. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ccb
+<DD>Pointer to a cel. 
+</DL>
+<H3>Return Value</H3>
+The cel's preamble word0 value, a uint32 type.<P>
+<H3>Implementation</H3>
+Macro <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>

@@ -1,0 +1,29 @@
+<Title>ssplSendBuffer</Title>
+<A NAME="XREF34520"><H1>ssplSendBuffer </A></H1>
+<A NAME="XREF24637"></A> Send a buffer full of data.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ssplSendBuffer ( SoundSpooler *sspl, SoundBufferNode *sbn )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplSendBuffer()</CODE>  submits a SoundBufferNode ready for playback to the active queue. If the spooler has already been started, playback of this buffer will begin immediately if there are no other buffers in the active queue. In this case if a SoundBufferFunc in installed, a SSPL_SBMSG_STARVATION_START message is sent with sbn. <P>
+The SoundBufferNode is posted into the active buffer queue on success, or the free buffer list on failure.  In either case, you are not permitted to modify the SoundBufferNode passed to this function after calling it. <P>
+When successful, sets SSPL_STATUS_F_ACTIVE. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<DL>
+<DT>sbn
+<DD>Pointer to a SoundBufferNode to send (returned from <CODE>ssplRequestBuffer()</CODE>). 
+</DL>
+<H3>Return Value</H3>
+Positive value on success indicating the signal to be sent when the buffer finishes playing, or negative 3DO error code on failure.  Never returns zero. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Caveats</H3>
+In the case where <CODE>ssplStartSpooler()</CODE> is called with an empty active queue and <CODE>ssplSendBuffer()</CODE> actually starts the spooler, <CODE>ssplSendBuffer()</CODE> calls SoundBufferFunc(SSPL_SBMSG_STARVATION_START) instead of SoundBufferFunc(SSPL_SBMSG_INITIAL_START).  This isn't truly a starvation case, it's merely a difference in order of calls, but <CODE>ssplSendBuffer()</CODE> can't tell the difference. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr122.html#XREF21344"><CODE>ssplUnrequestBuffer</A>(), ssplUnrequestBuffer(), <A HREF="./02mpr115.html#XREF33138">ssplSetBufferAddressLength</A>(), <A HREF="./02mpr118.html#XREF33759">ssplSpoolData</A>(), <A HREF="./02mpr105.html#XREF10988">ssplGetSpoolerStatus</A>() </CODE><P>
+</CODE>

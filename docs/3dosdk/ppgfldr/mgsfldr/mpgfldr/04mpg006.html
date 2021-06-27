@@ -1,0 +1,42 @@
+<TITLE>Function Calls</TITLE>
+<H1><LINK NAME="XREF38006">Function Calls</LINK></H1><HR>
+The following Audio folio calls use instruments, play attachments, and control audio timing.<P>
+<H2>Using Instruments</H2>
+The following calls are used to start, stop, and release an instrument:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr062.html#XREF38726">ReleaseInstrument</A>() </CODE>Allows an instrument to finish (Note Off).
+<LI><CODE><A HREF="../mprfldr/01mpr073.html#XREF13758">StartInstrument</A>() </CODE>Begins playing an instrument (Note On).
+<LI><CODE><A HREF="../mprfldr/01mpr075.html#XREF37581">StopInstrument</A>() </CODE>Abruptly stops an instrument.
+</UL>
+<H2>Playing Attachments</H2>
+The following calls are used to start, stop, and release an attachment:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr072.html#XREF15765">StartAttachment</A>() </CODE>Starts an attachment.
+<LI><CODE><A HREF="../mprfldr/01mpr074.html#XREF33554">StopAttachment</A>() </CODE>Stops an attachment.
+<LI><CODE><A HREF="../mprfldr/01mpr061.html#XREF21219">ReleaseAttachment</A>() </CODE>Releases an attachment.
+</UL>
+<H2>Timing Audio Events</H2>
+The following calls handle timing audio events:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr045.html#XREF42201">GetAudioTime</A>() </CODE>Queries current time.
+<LI><CODE><A HREF="../mprfldr/01mpr046.html#XREF11073">GetCueSignal</A>() </CODE>Returns a signal mask for a cue.
+<LI><CODE><A HREF="../mprfldr/01mpr056.html#XREF24049">MonitorAttachment</A>() </CODE>Monitors an attachment, sends a cue at a specified point.
+<LI><CODE><A HREF="../mprfldr/01mpr069.html#XREF10773">SignalAtTime</A>() </CODE>Requests a wake-up call at a given time.
+<LI><CODE><A HREF="../mprfldr/01mpr070.html#XREF21175">SleepAudioTicks</A>() </CODE>Enters wait state for a number of audio ticks.
+<LI><CODE><A HREF="../mprfldr/01mpr071.html#XREF19984">SleepUntilTime</A>() </CODE>Enters wait state until a specified audio time.
+<LI><CODE><A HREF="../mprfldr/01mpr084.html#XREF16016">WhereAttachment</A>() </CODE>Returns the byte offset of the sample currently playing.
+</UL>
+<H2>Audio Clock Control</H2>
+The following calls control the audio clock:<P>
+
+<UL>
+<LI><CODE><A HREF="../mprfldr/01mpr035.html#XREF33453">DisownAudioClock</A>() </CODE>Gives up ownership of the audio clock.
+<LI><CODE><A HREF="../mprfldr/01mpr040.html#XREF42227">GetAudioDuration</A></CODE>() Asks for the current duration of an audio clock tick.
+<LI><CODE><A HREF="../mprfldr/01mpr044.html#XREF20819">GetAudioRate</A></CODE>() Asks for current audio clock rate.
+<LI><CODE><A HREF="../mprfldr/01mpr058.html#XREF22869">OwnAudioClock</A></CODE>() Takes ownership of clock.
+<LI><CODE><A HREF="../mprfldr/01mpr066.html#XREF21496">SetAudioDuration</A></CODE>() Changes duration of audio clock tick.
+<LI><CODE><A HREF="../mprfldr/01mpr068.html#XREF24398">SetAudioRate</A></CODE>() Changes the rate of the audio clock.
+</UL>

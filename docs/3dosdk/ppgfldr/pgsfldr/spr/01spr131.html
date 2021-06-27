@@ -1,0 +1,43 @@
+<TITLE>WaitIO</TITLE>
+<A NAME="XREF35365"><H1>WaitIO </A></H1>
+<A NAME="XREF34573"></A>Waits for an I/O request to complete.<P>
+<H3>Synopsis</H3>
+<CODE>Err WaitIO( Item ior )</CODE><P>
+<H3>Description</H3>
+The procedure puts the calling task into wait state until the specified I/O request completes. When a task is in wait state, it uses no CPU time. <P>
+<B>Note: </B> If the I/O request has already completed, the procedure returns immediately. If the I/O request never completes and it is not aborted, the procedure never returns. <P>
+Starting with kernel folio V24, this function will automatically sample the io_Error field of the IO request, and return this to you. It is, therefore, no longer necessary to have code such as: <P>
+<CODE>
+<PRE>
+err = WaitIO(iorItem); 
+if (err &gt; = 0)
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+err = ior-&gt;io_Error;
+</CODE>
+</PRE>
+You can now just look at the return value of <CODE>WaitIO()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ior
+<DD>The item number of the I/O request to wait for. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a value greater than or equal to 0 if the I/O request was successful or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. Became a SWI in kernel folio V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>io.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr001.html#XREF20829"><CODE>AbortIO</A>(), <A HREF="./01spr013.html#XREF25810">CheckIO</A>(), <A HREF="./01spr038.html#XREF37111">DoIO</A>(), <A HREF="./01spr121.html#XREF16419">SendIO</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF35365"></LINK></H1><HR>

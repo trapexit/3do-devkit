@@ -1,0 +1,356 @@
+<TITLE><LINK NAME="XREF27096">ARM shared libraries</LINK></TITLE>
+<H1>ARM shared libraries</H1><HR>
+<H2>About this recipe</H2>
+In this recipe you will learn:<P>
+<UL>
+<LI>what an ARM shared library is;
+<LI>how the shared library mechanism works;
+<LI>how to instruct the ARM linker to make a shared library;
+<LI>how to make a toy shared library from the string section of the ANSI C 
+library.
+</UL>
+<H2>About ARM shared libraries</H2>
+ARM <B>shared libraries</B> support the sharing of utility, service or 
+library functions between several concurrently executing <B>client</B> 
+applications in a single address space. Such shared code is necessarily 
+<B>reentrant</B>.<P>
+If a function is reentrant, each of its concurrently active clients must 
+have a separate copy of the data it manipulates for them. The data cannot 
+be associated with the code itself unless the data is read-only. In the 
+ARM shared library architecture, a dedicated register (called <B>sb</B>) 
+is used to address (indirectly) the static data associated with a 
+client.<P>
+An ARM shared library is read only, reentrant and usually position 
+independent. A shared library made exclusively from object code compiled 
+by the ARM C compiler will have all three of these attributes. Library 
+components implemented in ARM Assembly Language need not be reentrant and 
+position independent, but in practice, only position independence is 
+inessential.<P>
+A library with all three of these attributes in an ideal candidate for 
+packing into a system ROM.<P>
+Some shared library mechanisms associate a shared library's data with the 
+library itself and put only a place holder in the stub. At run time, a 
+copy of the library's initialised static data is copied into the client's 
+place holder by the dynamic linker or by library initialisation code.<P>
+The ARM shared library mechanism supports these ways of working provided 
+the data is free of values which require link-time (or run time) 
+relocation. In other words, it can be supported provided the input data 
+areas are free of relocation directives.<P>
+<H2>How ARM shared libraries work</H2>
+<H3>Stubs and proxy functions</H3>
+When a client application is linked with a shared library, it is linked 
+not with the library itself but with a <I>stub object</I> containing:<P>
+<UL>
+<LI>an <B>entry vector</B>;
+<LI>a copy of the library's static data or a place holder for it.
+</UL>
+Each member of the entry vector is a <B>proxy</B> for a function in the 
+matching shared library.<P>
+When a client <B>first</B> calls a <B>proxy</B> function, the call is 
+directed to a <B>dynamic linker</B>. This is a small function (typically 
+about 50-60 ARM instructions) which:<P>
+<UL>
+<LI>locates the matching shared library;
+<LI>if required, copies an initial image of the library's static data from 
+the library to the place holding area in the stub;
+<LI>patches the entry vector so each proxy function points at the 
+corresponding library function;
+<LI>resumes the call.
+</UL>
+Once an entry vector has been patched, all future proxy calls proceed 
+directly to the target library function with only minimal indirection 
+delay and no intervention by the dynamic linker.<P>
+Of course, making an <B>inter-link-unit</B> call like this <B>is</B> more 
+expensive than making a straightforward local procedure call, but not a 
+lot so. It is also the only supported way to call a function more than 
+32MBytes away.<P>
+<H2>Locating a library which matches the stub</H2>
+Locating a matching shared library is specific to a target system and you 
+must provide code to do the location, but the remainder of the dynamic 
+linking process is generic to all target systems. Consequently, in order 
+to use ARM shared libraries, you have to design and implement a library 
+location mechanism and adapt the dynamic linker to it. In practice, this 
+is quite straightforward:<P>
+<UL>
+<LI>the ARM Linker provides support for parameterising a location 
+mechanism;
+<LI>a basic dynamic linker with neither location nor failure reporting 
+mechanisms is a mere 42 ARM instructions.
+</UL>
+Please refer to <A HREF="../arrfldr/3arrj.html#XREF31382">ARM shared 
+library format</A> for a full explanation of parameter blocks.<P>
+<A NAME="XREF28894"><H3>How the dynamic linker works</A></H3>
+The dynamic linker is entered via a proxy call with r0 pointing at the 
+dynamic linker's 16-byte entry stub. Following this stub code is a copy of 
+the parameter block for the shared library.<P>
+Stored in the parameter block is the identity of the library - perhaps a  
+32-bit unique identifier or perhaps a string name. Either way, it can be 
+passed to the library location mechanism. You have to decide how to 
+identify your shared libraries and, hence, what to put in their parameter 
+blocks.<P>
+The library location function is required to return the address of the 
+start of the library's offset table.<P>
+A primitive location mechanism might be to search a ROM for a matching 
+string. This would identify the start of the parameter block of the 
+matching shared library. Immediately preceding it will be negative offsets 
+to library entry points and a non-negative count word containing the 
+number of entry points. By working backwards through memory and counting, 
+you can be sure you have found the entry vector and can return the address 
+of its count word to the dynamic linker.<P>
+More sophisticated location schemes are possible, for example:<P>
+<UL>
+<LI>You might include in your library a header containing code to execute 
+when the library is first loaded (into RAM) or initialised (in ROM) which 
+registers the library's name with a library manager. Obviously, the 
+library manager has to be locatable without using the library manager, so 
+either it's address has to be known or its function has to be supported by 
+an underlying system call.<P>
+<LI>Acorn's RISC OS operating system supports a <B>module</B> mechanism 
+which is sometimes used to implement shared libraries. A RISC OS module 
+may, by declaring so in its module header, be called when software 
+interrupts (SWIs) in a declared range occur. When such a module is loaded, 
+it extends the range of SWIs interpreted by RISC OS. We can use this 
+mechanism to locate a shared library by storing the identity of a library 
+location SWI in the library's parameter block and by implementing this SWI 
+in the library module's header.
+</UL>
+<H2>Instructing the linker to make a shared library</H2>
+<H3>Prerequisites</H3>
+A shared library can be made from any number of object files, including 
+<B>reentrant stubs</B> of other shared libraries, but two simple rules 
+must be followed:<P>
+<UL>
+<LI>each object file must conform to a reentrant version of the ARM 
+Procedure Call Standard and each code area must have the REENTRANT 
+attribute;<P>
+<LI>there may be no unresolved references resulting from linking together 
+the component objects.
+</UL>
+An immediate consequence of the second rule is that it is impossible to 
+make two shared libraries which refer to one another: to make the second 
+library and its stub would require the stub of the first, but to make the 
+first and its stub would require the stub of the second.<P>
+The first rule is not 100% necessary and is difficult to enforce. The ARM 
+Linker warns you if it finds a non-reentrant code area in the list of 
+objects to be linked into a shared library but it will build the library 
+and its matching stub anyway. You have to decide whether the warning is 
+real, or merely a formality.<P>
+<H3>Linker outputs</H3>
+The ARM linker generates a shared library as two files:<P>
+<UL>
+<LI>a plain binary file containing the read-only, reentrant, usually 
+position independent, shared code;
+<LI>an AOF format <B>stub</B> file with which client applications can be 
+linked.
+</UL>
+The linker can also generate a reentrant stub suitable for inclusion in 
+another shared library.<P>
+The library image file contains, in order:<P>
+<UL>
+<LI>read only code sections from your input objects;
+<LI>if so requested, a read only copy of the initialised static data from 
+the input objects;
+<LI>a table of (negative) offsets from the end of the library to its entry 
+points;
+<LI>if so requested, the size and offset of the static data image;
+<LI>a copy of the library's <B>parameter block</B>.
+</UL>
+You request a copy of the initialised static data to be included in a 
+library when you describe to the linker how to make a shared library. If 
+you request this, the linker writes the length and offset of the data 
+image immediately after the entry vector. During linking, <B>armlink</B> 
+defines symbols SHL$$data$$Size and SHL$$data$$Base to have these values; 
+components of your library may refer to these symbols. Instead of 
+including the static data in the stub <B>armlink</B> includes a zero 
+initialised place holding area of the same size. It also writes the length 
+and (relocatable) address of this place holding, zero initialised stub 
+data area immediately after the dynamic linker's entry veneer, giving the 
+dynamic linker sufficient information to initialise the place holder at 
+run time. During linking, the linker symbols SHL$$data$$Size and $$0$$Base 
+describe this length and relocatable address.<P>
+Obviously, any data included in your shared library must be free of 
+relocation directives. Please refer to <A 
+HREF="../arrfldr/3arrj.html#XREF31382">ARM shared library format</A> for a 
+full explanation of what kind of data can be included in a shared 
+library.<P>
+You specify a parameter block when you describe to the linker how to make 
+a shared library. You might, for example, include the name of the library 
+in its parameter block, to aid its location. An identical copy of the 
+parameter block is included in the library's entry vector in the stub 
+file.<P>
+<A NAME="XREF42202"><H3>Describing a shared library to the linker</A></H3>
+To describe a shared library to the linker you have to prepare a file 
+which describes:<P>
+<UL>
+<LI>the name of the library;
+<LI>the library parameter block;
+<LI>what data areas to include;
+<LI>what entry points to export.
+</UL>
+For precise details of how to do this, please refer to <A 
+HREF="../arrfldr/3arrj.html#XREF31382">ARM shared library format</A>. 
+Below is an intuitive example you can work with and adapt:<P>
+<CODE>
+<PRE>
+; First, give the name of the file to contain the library -
+; strlib - and its parameter block - the single word 0x40000...
+&gt; strlib \
+  0x40000
+; ...then include all suitable data areas...
++ ()
+; ... finally export all the entry points...
+; ... mostly omitted here for brevity of exposition.
+memcpy
+...
+strtok
+</CODE>
+</PRE>
+The name of this file is passed to <B>armlink</B> as the argument to the 
+-SHL command line option (please refer to the chapter <A 
+HREF="../augfldr/aug3frst.html#XREF21025">The ARM Linker (armlink)</A> for 
+further details).<P>
+<H2>Making a toy string library</H2>
+This section refers to the files collected in the <B>strlib</B> 
+subdirectory of the <B>examples</B> directory of the release.<P>
+The header files <B>config.h</B> and <B>interns.h</B> let you compile 
+cl/string.c locally. Little-endian code is assumed. If you want to make a 
+big-endian string library you should edit config.h. Similarly, if you want 
+to alter which functions are included or whether static data is 
+initialised by copying from the library, then you should edit config.h. 
+You do not need to edit interns.h. If you use config.h unchanged you will 
+build a little-endian library which includes a data image and which 
+exports all of its functions.<P>
+<H3>Compiling the string library</H3>
+To compile string.c, use the following command:<P>
+<CODE>
+<PRE>
+armcc -li -apcs /reent -zps1 -c -I. ../../cl/string.c
+</CODE>
+</PRE>
+The <B>-li</B> flag tells <B>armcc</B> to compile for a little-endian 
+ARM.<P>
+The <B>-apcs /reent</B> flag tells <B>armcc</B> to compile reentrant 
+code.<P>
+The <B>-zps1</B> flag turns off software stack limit checking and allows 
+the string library to be independent of all other objects and libraries. 
+With software stack limit checking turned on, the library would depend on 
+the stack limit checking functions which, in turn, depend on other 
+sections of the C run time library. While such dependencies do not much 
+obstruct the construction of full scale, production quality shared 
+libraries, they are major impediments to a simple demonstration of the 
+underlying mechanisms.<P>
+The<B> -I.</B> flag tells <B>armcc</B> to look for needed header files in 
+the current directory.<P>
+<H3>Linking the string library</H3>
+To make a shared library and matching stub from string.o, use the 
+following linker command:<P>
+<CODE>
+<PRE>
+armlink -o strstub.o -shl strshl -s syms string.o
+</CODE>
+</PRE>
+<B>strlib</B>'s stub will be put in <B>strstub.o</B> as directed by the -o 
+option.<P>
+The file <B>strshl</B> contains instructions for making a shared library 
+called <B>strlib</B>. A shortened version of it was shown in the earlier 
+section "<A HREF="#XREF42202">Describing a shared library to the 
+linker</A>."<P>
+The option <B>-s syms</B> asks for a listing of symbol values in a file 
+called <B>syms</B>. You may later need to look up the value of EFT$$Offset 
+(it will be 0xA38 if you have changed nothing). As supplied, the dynamic 
+linker expects a library's extenal function table (EFT) to be at the 
+address 0x40000. So, unless you extend the dynamic linker with a library 
+location mechanism (please refer to the discussion in the earlier section 
+<A HREF="#XREF28894">How the dynamic linker works</A>), you will have to 
+load <B>strlib</B> at the address 0x40000-EFT$$Offset.<P>
+<H3>Making the test program and dynamic linker</H3>
+Now you should assemble the dynamic linker and compile the test code:<P>
+<CODE>
+<PRE>
+armasm -li dynlink.s dynlink.o
+armcc -li -c strtest.c
+</CODE>
+</PRE>
+You can extend the test code to probe lots of string functions, but this 
+is left as an exercise to help you understand what is going on.<P>
+To make the test program you must link together the test code, the dynamic 
+linker, the string library stub and the appropriate ARM C library (so that 
+references to library members other than the string functions can be 
+resolved):<P>
+    armlink -d -o strtest strtest.o dynlink.o strstub.o 
+../../lib/armlib.32l<P>
+<H3>Running the test program with the shared string library</H3>
+Now you are ready to try everything under the control of command-line 
+armsd:<P>
+<CODE>
+<PRE>
+A.R.M. Source-level Debugger version ...
+ARMulator V1.30, 4 Gb memory, MMU present, Demon 1.1,...
+Object program file strtest
+armsd: getfile strlib 0x40000-0xa38
+armsd: go
+
+strerror(42) returns unknown shared string-library error 0x0000002A
+
+Program terminated normally at PC = 0x00008354 (__rt_exit + 0x24)
++0024 0x00008354: 0xef000011 .... :    swi      0x11
+armsd: q
+Quitting
+</CODE>
+</PRE>
+Before starting <B>strtest</B> you must load the shared string library by 
+using:<P>
+<CODE>
+<PRE>
+getfile strlib 0x40000-0xa38
+</CODE>
+</PRE>
+<B>strlib</B> is the name of the file containing the library; 0x40000 is 
+the hard wired address at which the dynamic linker expects to find the 
+external function table; and 0xa38 is the value of EFT$$Offset, the offset 
+of the external function table from the start of the library.<P>
+When <B>strtest</B> runs, it calls <B>strerror(42)</B> which causes the 
+dynamic linker to be entered, the static data to be copied, the stub 
+vector to be patched and the call to be resumed. You can watch this is 
+more detail by setting a breakpoint on __rt_dynlink and single stepping.<P>
+<H2>Suggested further exercises</H2>
+<H3>Library location mechanisms</H3>
+Locating a library's EFT at 0x40000 is not very satisfactory, so an 
+obvious exercise is to extend the dynamic linker to locate a library by 
+looking for it. Try, for example, adding a header to the start of the 
+library which contains:<P>
+<UL>
+<LI>offset to the next loaded library or 0
+<LI>the total length of the library
+<LI>the offset to the external function table
+<LI>the string name of the library
+</UL>
+Hint: when you link this area with the other library contents you have to 
+ensure that it wil precede all other areas in the library. Please refer to 
+<A HREF="../arrfldr/3arrc.html#XREF13307">Area placement and sorting 
+rules</A> for further details.<P>
+Your dynamic linker could now search a list of libraries loaded at 0x40000 
+onwards.<P>
+<H3>Self-loading libraries</H3>
+You could extend the header mechanism described in the previous subsection 
+so that a library could copy itself to the next free location above 
+0x40000. This would allow libraries to be loaded at 0x8000 and 'executed' 
+there. Of course, you would want your header to begin with a branch to the 
+code which will copy the library from 0x8000 to its destination above 
+0x40000.<P>
+<H3>Multiple shared libraries</H3>
+Once you have built location and loading mechanisms, you can build more 
+than one shared library. Try making one of your own and linking a test 
+program with the stubs of two or more libraries.<P>
+<H3>Inter-library calls</H3>
+Once you have multiple libraries working, you can try making one library 
+call functions in another (but remember that if library A refers to 
+library B then library B <B>may not</B> refer to library A). To do this 
+you will have to make a reentrant stub for the library you wish to refer 
+to and link this into the library making the reference.<P>
+<H2>Related topics</H2>
+
+<UL>
+<LI><A HREF="./3acba.html#XREF36909">Register usage under the ARM 
+procedure call standard</A>
+</UL>

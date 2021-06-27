@@ -1,0 +1,19 @@
+<TITLE>SampleSystemTime</TITLE>
+<A NAME="XREF33004"><H1>SampleSystemTime </A></H1>
+<A NAME="XREF30853"></A>Samples the system time with very low overhead.<P>
+<H3>Synopsis</H3>
+<CODE>uint32 SampleSystemTime( void )</CODE><P>
+<H3>Description</H3>
+This function samples the current system time, and returns it to you. The primary return value is the seconds count of the system clock. A secondary value available in the r1 register on ARM processors is the microseconds count of the system clock. For a C-friendly version of this call, see <CODE>SampleSystemTimeTV()</CODE>. <P>
+This function has very low overhead and is meant for high-accuracy timings. <P>
+The time value returned by this function corresponds to the time maintained by the TIMERUNIT_USEC unit of the timer device. <P>
+<H3>Return Value</H3>
+This function returns the seconds count of the system clock. It also returns the microseconds count in the r1 ARM processor register. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V24. <P>
+<H3>Associated Files</H3>
+time.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr116.html#XREF27088"><CODE>SampleSystemTimeTV</A>()                      ANSI C Prototype </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF33004"></LINK></H1><HR>

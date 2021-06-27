@@ -1,0 +1,873 @@
+// -*- C++ -*-
+#ifndef __STD_TREE__
+#define __STD_TREE__
+
+/***************************************************************************
+ *
+ * tree - Declarations for the Standard Library tree classes
+ *
+ * $Id: tree@#/main/sl1main/7  09/25/97 15:15:21  smithey (SL122REL_UNIX)
+ *
+ ***************************************************************************
+ *
+ * Copyright (c) 1994
+ * Hewlett-Packard Company
+ *
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.  Hewlett-Packard Company makes no
+ * representations about the suitability of this software for any
+ * purpose.  It is provided "as is" without express or implied warranty.
+ *
+ *
+ ***************************************************************************
+ *
+ * (c) Copyright 1994-1997 Rogue Wave Software, Inc.
+ * ALL RIGHTS RESERVED
+ *
+ * The software and information contained herein are proprietary to, and
+ * comprise valuable trade secrets of, Rogue Wave Software, Inc., which
+ * intends to preserve as trade secrets such software and information.
+ * This software is furnished pursuant to a written license agreement and
+ * may be used, copied, transmitted, and stored only in accordance with
+ * the terms of such license and with the inclusion of the above copyright
+ * notice.  This software and information or any other copies thereof may
+ * not be provided or otherwise made available to any other person.
+ *
+ * Notwithstanding any other lease or license that may pertain to, or
+ * accompany the delivery of, this computer software and information, the
+ * rights of the Government regarding its use, reproduction and disclosure
+ * are as set forth in Section 52.227-19 of the FARS Computer
+ * Software-Restricted Rights clause.
+ * 
+ * Use, duplication, or disclosure by the Government is subject to
+ * restrictions as set forth in subparagraph (c)(1)(ii) of the Rights in
+ * Technical Data and Computer Software clause at DFARS 252.227-7013.
+ * Contractor/Manufacturer is Rogue Wave Software, Inc.,
+ * P.O. Box 2328, Corvallis, Oregon 97339.
+ *
+ * This computer software and information is distributed with "restricted
+ * rights."  Use, duplication or disclosure is subject to restrictions as
+ * set forth in NASA FAR SUP 18-52.227-79 (April 1985) "Commercial
+ * Computer Software-Restricted Rights (April 1985)."  If the Clause at
+ * 18-52.227-74 "Rights in Data General" is specified in the contract,
+ * then the "Alternate III" clause applies.
+ *
+ **************************************************************************/
+
+
+/*
+**
+** Red-black tree class, designed for use in implementing STL
+** associative containers (set, multiset, map, and multimap). The
+** insertion and deletion algorithms are based on those in Cormen,
+** Leiserson, and Rivest, Introduction to Algorithms (MIT Press, 1990),
+** except that:
+** 
+** (1) the header cell is maintained with links not only to the root
+** but also to the leftmost node of the tree, to enable constant time
+** begin(), and to the rightmost node of the tree, to enable linear time
+** performance when used with the generic set algorithms (set_union,
+** etc.);
+** 
+** (2) when a node being deleted has two children its successor node is
+** relinked into its place, rather than copied, so that the only
+** iterators invalidated are those referring to the deleted node.
+** 
+*/
+
+#include <stdcomp.h>
+
+#include <algorithm>
+#include <iterator>
+#include <functional>
+
+#ifndef RWSTD_NO_NAMESPACE
+namespace std {
+#endif
+
+#ifndef rb_tree 
+#define rb_tree rb_tree
+#endif
+
+  template <class Key, class Value, class KeyOfValue, 
+  class Compare, class Allocator>
+  class rb_tree
+  {
+  protected:
+
+    enum color_type { rb_red, rb_black };
+
+#ifdef RWSTD_ALLOCATOR
+    typedef Allocator::types<void>::pointer  void_pointer;
+#else
+    typedef typename allocator_interface<Allocator,void>::pointer  void_pointer;
+#endif
+
+    struct rb_tree_node;
+    friend struct rb_tree_node;
+
+    struct rb_tree_node
+    {
+      ~rb_tree_node() { ; }
+      color_type   color_field; 
+      void_pointer parent_link;
+      void_pointer left_link;
+      void_pointer right_link;
+      Value        value_field;
+    };
+
+#ifdef RWSTD_ALLOCATOR    
+    typedef typename Allocator::types<Value>::pointer          pointer;
+    typedef typename Allocator::types<Value>::const_pointer    const_pointer;
+    typedef typename Allocator::types<Key>::const_reference    const_key_reference;
+#else
+#ifndef RWSTD_NO_COMPLICATED_TYPEDEF
+    typedef typename allocator_interface<Allocator,Value>::pointer  pointer;
+    typedef typename
+    allocator_interface<Allocator,Value>::const_pointer const_pointer;
+#else
+    typedef Value*                     pointer;
+    typedef const Value*               const_pointer;
+#endif  // RWSTD_NO_COMPLICATED_TYPEDEF
+    typedef typename allocator_interface<Allocator,Key>::const_reference   const_key_reference;
+    allocator_interface<Allocator,Value>                    value_allocator;
+#endif
+
+  public:
+
+    typedef Key                              key_type;
+    typedef Value                            value_type;
+    typedef Allocator                        allocator_type;
+#ifndef RWSTD_NO_COMPLICATED_TYPEDEF
+    typedef typename RWSTD_ALLOC_SIZE_TYPE            size_type;
+    typedef typename RWSTD_ALLOC_DIFF_TYPE            difference_type;
+#else
+    typedef size_t                               size_type;
+    typedef ptrdiff_t                            difference_type;
+#endif  //RWSTD_NO_COMPLICATED_TYPEDEF
+
+#ifdef RWSTD_ALLOCATOR
+    typedef typename allocator_type::types<Value>::reference        reference;
+    typedef typename allocator_type::types<Value>::const_reference  const_reference;
+    typedef typename allocator_type::types<rb_tree_node>::pointer  link_type;
+#else
+#ifndef RWSTD_NO_COMPLICATED_TYPEDEF
+    typedef typename allocator_interface<Allocator,Value>::reference  reference;
+    typedef typename allocator_interface<Allocator,Value>::const_reference  const_reference;
+#else
+    typedef Value&                     reference;
+    typedef const Value&               const_reference;
+#endif  // RWSTD_NO_COMPLICATED_TYPEDEF
+    typedef typename allocator_interface<Allocator,rb_tree_node>::pointer  link_type;
+#endif  // RWSTD_ALLOCATOR
+
+    allocator_type the_allocator;
+
+  protected:
+
+    size_type buffer_size;
+    
+    struct rb_tree_node_buffer;
+    friend struct rb_tree_node_buffer;
+
+    struct rb_tree_node_buffer
+    {
+      ~rb_tree_node_buffer() { ; }
+      void_pointer next_buffer;
+      link_type buffer;
+    };
+
+
+    static bool isNil(const link_type& l) 
+    { return l == NULL; }
+
+  public:
+
+#ifdef RWSTD_ALLOCATOR
+    typedef allocator_type::types<rb_tree_node_buffer>::pointer buffer_pointer;
+#define RWSTD_TREE_VALUE_ALLOCATOR the_allocator
+#define RWSTD_TREE_BUFFER_ALLOCATOR the_allocator
+#define RWSTD_TREE_NODE_ALLOCATOR the_allocator
+#else
+    typedef typename allocator_interface<Allocator,rb_tree_node_buffer>::pointer buffer_pointer; 
+    allocator_interface<Allocator,rb_tree_node> rb_tree_node_allocator;
+#define RWSTD_TREE_VALUE_ALLOCATOR value_allocator
+#define RWSTD_TREE_BUFFER_ALLOCATOR buffer_allocator
+#define RWSTD_TREE_NODE_ALLOCATOR rb_tree_node_allocator
+#endif
+
+  protected:
+#ifndef RWSTD_ALLOCATOR
+    allocator_interface<Allocator,rb_tree_node_buffer> buffer_allocator;
+#endif
+    buffer_pointer                 buffer_list;
+    link_type                      free_list;
+    link_type                      next_avail;
+    link_type                      last;
+
+    void add_new_buffer ()
+    {
+      buffer_pointer tmp = RWSTD_TREE_BUFFER_ALLOCATOR.allocate(RWSTD_STATIC_CAST(size_type,1),buffer_list);
+      tmp->buffer        = RWSTD_TREE_NODE_ALLOCATOR.allocate(buffer_size,last);
+      tmp->next_buffer   = buffer_list;
+      buffer_list        = tmp;
+      next_avail         = buffer_list->buffer;
+      last               = next_avail + buffer_size;
+    }
+    void deallocate_buffers ();
+
+    link_type get_link()
+    {
+      link_type tmp = free_list;
+      link_type tmp2 = free_list ? 
+      (free_list = RWSTD_STATIC_CAST(link_type,(free_list->right_link)), tmp) 
+      : (next_avail == last ? (add_new_buffer(), next_avail++) 
+         : next_avail++);
+      tmp2->parent_link = __nil();
+      tmp2->left_link = __nil();
+      tmp2->right_link = __nil();
+      tmp2->color_field = rb_red;
+      return tmp2; 
+    }
+
+    link_type get_node (const Value& v)
+    {
+      link_type tmp2 = get_link(); 
+      RWSTD_TREE_VALUE_ALLOCATOR.construct(
+          RWSTD_TREE_VALUE_ALLOCATOR.address(value(tmp2)),v);
+      return tmp2;
+    }
+
+    link_type get_node ()
+    {
+      return get_link(); 
+    }
+
+    void put_node (link_type p, bool do_destroy = true) 
+    { 
+      p->right_link = free_list; 
+      if (do_destroy)
+      {  
+        RWSTD_TREE_VALUE_ALLOCATOR.destroy(
+            RWSTD_TREE_VALUE_ALLOCATOR.address(value(p)));
+      }
+      free_list = p; 
+    }
+
+  protected:
+
+    link_type  header;  
+    link_type& root      ()       { return parent(header); }
+    link_type& root      () const { return parent(header); }
+    link_type& leftmost  ()       { return left(header);   }
+    link_type& leftmost  () const { return left(header);   }
+    link_type& rightmost ()       { return right(header);  }
+    link_type& rightmost () const { return right(header);  }
+
+    size_type  node_count;    // Keeps track of size of tree.
+    bool       insert_always; // Controls whether an element already in the
+    // tree is inserted again.
+    Compare   key_compare;
+ 
+    static link_type __nil() { return NULL; }
+
+    static link_type& left (link_type x)
+    {
+      return RWSTD_REINTERPRET_CAST(link_type&,((*x).left_link));
+    }
+    static link_type& right (link_type x)
+    {
+      return RWSTD_REINTERPRET_CAST(link_type&,((*x).right_link));
+    }
+    static link_type& parent (link_type x)
+    {
+      return RWSTD_REINTERPRET_CAST(link_type&,((*x).parent_link));
+    }
+    static reference value (link_type x) { return (*x).value_field; }
+    static const_key_reference key (link_type x)
+    {
+      return KeyOfValue()(value(x));
+    }
+    static color_type& color (link_type x)
+    {
+      return RWSTD_STATIC_CAST(color_type&,(*x).color_field);
+    }
+    static link_type minimum (link_type x)
+    {
+      while (!isNil(left(x))) x = left(x);
+      return x;
+    }
+    static link_type maximum (link_type x)
+    {
+      while (!isNil(right(x))) x = right(x);
+      return x;
+    }
+
+  public:
+
+    class  iterator;
+    friend class iterator;
+    class  const_iterator;
+    friend class const_iterator;
+
+    class iterator : public bidirectional_iterator<Value, difference_type>
+    {
+      friend class rb_tree<Key, Value, KeyOfValue, Compare, Allocator>;
+      friend class const_iterator;
+
+    protected:
+
+      link_type node;
+      iterator (link_type x) : node(x) {}        
+
+    public:
+
+      iterator () {}
+      bool operator== (const iterator& y) const { return node == y.node; }
+      reference operator* () const { return value(node); }
+      iterator& operator++ ()
+      {
+        if (!isNil(right(node)))
+        {
+          node = right(node);
+          while (!isNil(left(node))) node = left(node);
+        }
+        else
+        {
+          link_type y = parent(node);
+          while (node == right(y))
+          {
+            node = y; y = parent(y);
+          }
+          if (right(node) != y) // Necessary because of rightmost.
+            node = y;
+        }
+        return *this;
+      }
+      iterator operator++ (int)
+      {
+        iterator tmp = *this; ++*this; return tmp;
+      }
+      iterator& operator-- ()
+      {
+        if (color(node) == rb_red && parent(parent(node)) == node)  
+          //
+          // Check for header.
+          //
+          node = right(node);   // Return rightmost.
+        else if (!isNil(left(node)))
+        {
+          link_type y = left(node);
+          while (!isNil(right(y))) y = right(y);
+          node = y;
+        }
+        else
+        {
+          link_type y = parent(node);
+          while (node == left(y))
+          {
+            node = y; y = parent(y);
+          }
+          node = y;
+        }
+        return *this;
+      }
+      iterator operator-- (int)
+      {
+        iterator tmp = *this; --*this; return tmp;
+      }
+    };  // End of definition of iterator.
+
+    class const_iterator
+      : public bidirectional_iterator<Value,difference_type>
+    {
+      friend class rb_tree<Key, Value, KeyOfValue, Compare, Allocator>;
+      friend class iterator;
+
+    protected:
+
+      link_type node;
+      const_iterator (link_type x) : node(x) {}
+
+    public:
+
+      const_iterator () {}
+      const_iterator (const iterator& x) : node(x.node) {}
+      bool operator== (const const_iterator& y) const
+      { 
+        return node == y.node; 
+      }
+      bool operator!= (const const_iterator& y) const
+      { 
+        return node != y.node; 
+      }
+      const_reference operator* () const { return value(node); }
+      const_iterator& operator++ ()
+      {
+        if (!isNil(right(node)))
+        {
+          node = right(node);
+          while (!isNil(left(node))) node = left(node);
+        }
+        else
+        {
+          link_type y = parent(node);
+          while (node == right(y))
+          {
+            node = y; y = parent(y);
+          }
+          if (right(node) != y) // Necessary because of rightmost.
+            node = y;
+        }
+        return *this;
+      }
+      const_iterator operator++ (int)
+      {
+        const_iterator tmp = *this; ++*this; return tmp;
+      }
+      const_iterator& operator-- ()
+      {
+        if (color(node) == rb_red && parent(parent(node)) == node)  
+          //
+          // Check for header.
+          //
+          node = right(node);   // return rightmost
+        else if (!isNil(left(node)))
+        {
+          link_type y = left(node);
+          while (!isNil(right(y))) y = right(y);
+          node = y;
+        }
+        else
+        {
+          link_type y = parent(node);
+          while (node == left(y))
+          {
+            node = y; y = parent(y);
+          }
+          node = y;
+        }
+        return *this;
+      }
+      const_iterator operator-- (int)
+      {
+        const_iterator tmp = *this; --*this; return tmp;
+      }
+    };  // End of definition of const_iterator.
+
+    typedef reverse_bidirectional_iterator<iterator, value_type, reference,
+    pointer, difference_type>
+    reverse_iterator; 
+    typedef reverse_bidirectional_iterator<const_iterator, value_type,
+    const_reference, const_pointer, difference_type>
+    const_reverse_iterator;
+
+  private:
+
+    iterator  __insert (link_type x, link_type y, const value_type& v);
+    link_type __copy   (link_type x, link_type p);
+    void      __erase  (link_type x);
+    void      __erase_leaf  (link_type x);
+    void init ()
+    {
+#ifndef RWSTD_ALLOCATOR
+      value_allocator.alloc(&the_allocator);
+      buffer_allocator.alloc(&the_allocator);
+      rb_tree_node_allocator.alloc(&the_allocator);
+#endif
+
+      buffer_size = 1;
+      buffer_list = 0;
+      free_list = next_avail = last = 0;
+      header        = get_node();
+      root()      = __nil();
+      leftmost()  = header;
+      rightmost() = header; 
+      buffer_size   = 
+      max((size_type)1,__RWSTD::__rw_allocation_size((value_type*)0,(size_type)0));
+    }
+
+  public:
+
+    rb_tree (const Compare& RWSTD_COMP RWSTD_DEFAULT_ARG(Compare()), bool always RWSTD_DEFAULT_ARG(true),
+             const Allocator& alloc RWSTD_DEFAULT_ARG(Allocator())) 
+      : the_allocator(alloc), node_count(0),
+	insert_always(always), key_compare(RWSTD_COMP)
+    {
+      init();
+    }
+
+#ifdef RWSTD_NO_DEFAULT_TEMPLATE_ARGS
+    rb_tree (void) 
+      : the_allocator(Allocator()), node_count(0),
+        insert_always(true), key_compare(Compare())
+    {
+      init();
+    }
+
+    rb_tree (const Compare& RWSTD_COMP) 
+      : the_allocator(Allocator()), node_count(0),
+	insert_always(true), key_compare(RWSTD_COMP)
+        
+    {
+      init();
+    }
+
+    rb_tree (const Compare& RWSTD_COMP , bool always = true)
+      : the_allocator(Allocator()), node_count(0),
+	insert_always(always), key_compare(RWSTD_COMP)
+    {
+      init();
+    }
+#endif
+
+#ifndef RWSTD_NO_MEMBER_TEMPLATES
+    template<class InputIterator>
+    rb_tree (InputIterator _first, InputIterator _last,
+             const Compare& comp = Compare(), bool always = true,
+             const Allocator& alloc = Allocator())
+      : the_allocator(alloc), node_count(0),
+        insert_always(always), key_compare(comp)
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+#else
+    rb_tree (const value_type* _first, const value_type* _last, 
+             const Compare& RWSTD_COMP RWSTD_DEFAULT_ARG(Compare()), bool always RWSTD_DEFAULT_ARG(true),
+             const Allocator& alloc RWSTD_DEFAULT_ARG(Allocator()))
+      : the_allocator(alloc), node_count(0),
+	insert_always(always), key_compare(RWSTD_COMP)
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+    rb_tree (const_iterator _first, const_iterator _last, 
+             const Compare& RWSTD_COMP RWSTD_DEFAULT_ARG(Compare()), bool always RWSTD_DEFAULT_ARG(true),
+             const Allocator& alloc RWSTD_DEFAULT_ARG(Allocator()))
+      : the_allocator(alloc), node_count(0),
+	insert_always(always), key_compare(RWSTD_COMP)
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+   
+#ifdef RWSTD_NO_DEFAULT_TEMPLATE_ARGS
+    rb_tree (const value_type* _first, const value_type* _last, 
+             const Compare& RWSTD_COMP RWSTD_DEFAULT_ARG(Compare()))
+      : the_allocator(Allocator()), node_count(0),
+	insert_always(true), key_compare(RWSTD_COMP)
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+
+    rb_tree (const value_type* _first, const value_type* _last, 
+             const Compare& RWSTD_COMP RWSTD_DEFAULT_ARG(Compare()), bool always RWSTD_DEFAULT_ARG(true))
+      : the_allocator(Allocator()), node_count(0),
+	insert_always(always), key_compare(RWSTD_COMP)
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+
+    rb_tree (const_iterator _first, const_iterator _last, 
+             const Compare& RWSTD_COMP RWSTD_DEFAULT_ARG(Compare()))
+      : the_allocator(Allocator()), node_count(0),
+	insert_always(true), key_compare(RWSTD_COMP)
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+
+    rb_tree (const_iterator _first, const_iterator _last,
+             const Compare& RWSTD_COMP RWSTD_DEFAULT_ARG(Compare()), bool always RWSTD_DEFAULT_ARG(true))
+      : the_allocator(Allocator()), node_count(0),
+	insert_always(always), key_compare(RWSTD_COMP)
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+#endif
+   
+#ifdef RWSTD_NO_DEFAULT_TEMPLATE_ARGS    
+    rb_tree (const value_type* _first, const value_type* _last) 
+      : the_allocator(Allocator()), node_count(0),
+	insert_always(true), key_compare(Compare())
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+
+    rb_tree (const_iterator _first, const_iterator _last) 
+      : the_allocator(Allocator()), node_count(0),
+	insert_always(true), key_compare(Compare()), 
+    { 
+      init(); 
+      insert(_first, _last);
+    }
+
+#endif
+#endif
+
+    rb_tree (const rb_tree<Key,Value,KeyOfValue,Compare,Allocator>& x,
+             bool always = true)
+      : node_count(x.node_count), insert_always(always), key_compare(x.key_compare)
+    { 
+      the_allocator = x.get_allocator();
+#ifndef RWSTD_ALLOCATOR
+      value_allocator.alloc(&the_allocator);
+      buffer_allocator.alloc(&the_allocator);
+      rb_tree_node_allocator.alloc(&the_allocator);
+#endif        
+
+      buffer_size   = 1;
+      buffer_list   = 0;
+      free_list     = next_avail = last = 0;
+      header        = get_node();
+      buffer_size   = 
+      max((size_type)1,__RWSTD::__rw_allocation_size((value_type*)0,(size_type)0));
+      root()        = __copy(x.root(), header);
+      if (isNil(root()))
+      {
+        leftmost() = header; rightmost() = header;
+      }
+      else
+      {
+        leftmost() = minimum(root()); rightmost() = maximum(root());
+      }
+    }
+    ~rb_tree ()
+    {
+      erase(begin(), end());
+      put_node(header,false);
+      deallocate_buffers();
+    }
+
+    rb_tree<Key, Value, KeyOfValue, Compare, Allocator>& 
+    operator= (const rb_tree<Key, Value, KeyOfValue, Compare, Allocator>& x);
+
+    Compare     key_comp () const { return key_compare; }
+    allocator_type get_allocator() const
+    {
+      return the_allocator;
+    }
+
+    iterator       begin ()       { return leftmost(); }
+    const_iterator begin () const { return leftmost(); }
+    iterator       end   ()       { return header;     }
+    const_iterator end   () const { return header;     }
+
+    reverse_iterator rbegin ()
+    { 
+      reverse_iterator tmp(end()); return tmp;
+    }
+    const_reverse_iterator rbegin () const
+    { 
+      const_reverse_iterator tmp(end()); return tmp;
+    }
+    reverse_iterator rend ()
+    { 
+      reverse_iterator tmp(begin()); return tmp;
+    }
+    const_reverse_iterator rend () const
+    { 
+      const_reverse_iterator tmp(begin()); return tmp;
+    } 
+
+    bool      empty    () const { return node_count == 0; }
+    size_type size     () const { return node_count;      }
+    size_type max_size () const
+    { 
+      return rb_tree_node_allocator.max_size(); 
+    }
+    void swap (rb_tree<Key, Value, KeyOfValue, Compare, Allocator>& t)
+    {
+      if(the_allocator==t.the_allocator)
+      {
+#ifndef RWSTD_NO_NAMESPACE
+        std::swap(buffer_list, t.buffer_list);
+        std::swap(free_list, t.free_list);
+        std::swap(next_avail, t.next_avail);
+        std::swap(last, t.last);
+        std::swap(header, t.header);
+        std::swap(node_count, t.node_count);
+        std::swap(insert_always, t.insert_always);
+        std::swap(key_compare, t.key_compare);
+#else
+        ::swap(buffer_list, t.buffer_list);
+        ::swap(free_list, t.free_list);
+        ::swap(next_avail, t.next_avail);
+        ::swap(last, t.last);
+        ::swap(header, t.header);
+        ::swap(node_count, t.node_count);
+        ::swap(insert_always, t.insert_always);
+        ::swap(key_compare, t.key_compare);
+#endif
+      }
+      else
+      {
+        rb_tree<Key, Value, KeyOfValue, Compare, Allocator> _t = *this;
+        *this= t;
+        t=_t;
+      }
+    }
+
+    typedef  pair<iterator, bool> pair_iterator_bool;
+    //
+    // typedef done to get around compiler bug.
+    //
+
+#ifndef RWSTD_NO_RET_TEMPLATE
+    pair<iterator,bool> insert (const value_type& x);
+#else
+    pair_iterator_bool  insert (const value_type& x);
+#endif
+
+    iterator  insert (iterator position, const value_type& x);
+
+#ifndef RWSTD_NO_MEMBER_TEMPLATES
+    template<class Iterator>
+    void      insert (Iterator first, Iterator last);
+#else
+    void      insert (const_iterator first, const_iterator last);
+    void      insert (const value_type* first, const value_type* last);
+#endif
+
+    iterator  erase  (iterator position);
+    size_type erase  (const key_type& x);
+    iterator  erase  (iterator first, iterator last);
+    void      erase  (const key_type* first, const key_type* last);
+
+    iterator       find        (const key_type& x);
+    const_iterator find        (const key_type& x) const;
+    size_type      count       (const key_type& x) const;
+    iterator       lower_bound (const key_type& x);
+    const_iterator lower_bound (const key_type& x) const;
+    iterator       upper_bound (const key_type& x);
+    const_iterator upper_bound (const key_type& x) const;
+
+    typedef  pair<iterator, iterator> pair_iterator_iterator; 
+    //
+    // typedef done to get around compiler bug.
+    //
+#ifndef RWSTD_NO_RET_TEMPLATE
+    pair<iterator,iterator> equal_range (const key_type& x);
+#else
+    pair_iterator_iterator equal_range (const key_type& x);
+#endif
+
+    typedef  pair<const_iterator, const_iterator> pair_citerator_citerator; 
+#ifndef RWSTD_NO_RET_TEMPLATE
+    pair<const_iterator, const_iterator> equal_range (const key_type& x) const;
+#else
+    pair_citerator_citerator equal_range (const key_type& x) const;
+#endif
+    inline void rotate_left  (link_type x);
+    inline void rotate_right (link_type x);
+
+    // Query and set the allocation size
+    size_type allocation_size() { return buffer_size; }
+    size_type allocation_size(size_type new_size) 
+    { 
+      size_type tmp = buffer_size; 
+      buffer_size = max((size_type)1,new_size);
+      return tmp;
+    }
+  };
+
+
+
+  template <class Key, class Value, class KeyOfValue, 
+  class Compare, class Allocator>
+  inline bool operator== (const rb_tree<Key, Value, KeyOfValue, Compare, Allocator>& x, 
+                          const rb_tree<Key, Value, KeyOfValue, Compare, Allocator>& y)
+  {
+    return x.size() == y.size() && equal(x.begin(), x.end(), y.begin());
+  }
+
+  template <class Key, class Value, class KeyOfValue, 
+  class Compare, class Allocator>
+  inline bool operator< (const rb_tree<Key, Value, KeyOfValue, Compare, Allocator>& x, 
+                         const rb_tree<Key, Value, KeyOfValue, Compare, Allocator>& y)
+  {
+    return lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+  }
+
+  template <class Key,class Value,class KeyOfValue,class Compare,class Allocator>
+  inline  void   
+  rb_tree<Key, Value, KeyOfValue, Compare, Allocator>::__erase_leaf (link_type x)
+  {
+    // Remove a leaf node from the tree
+    link_type y = parent(x);
+    if (y == header)
+    {
+      leftmost() = rightmost() = y;
+      root() = __nil();
+    }
+    else if (left(y) == x)
+    {
+      left(y) = __nil();
+      if (leftmost() == x)
+        leftmost() = y;
+    }
+    else
+    {
+      right(y) = __nil();
+      if (rightmost() == x)
+        rightmost() = y;
+    }
+  }
+
+
+  template <class Key, class Value, class KeyOfValue, class Compare, class Allocator>
+  inline void 
+  rb_tree<Key, Value, KeyOfValue, Compare, Allocator>::rotate_left (link_type x)
+  {
+    link_type y = right(x);
+    right(x) = left(y);
+    if (!isNil(left(y)))
+      parent(left(y)) = x;
+    parent(y) = parent(x);
+    if (x == root())
+      root() = y;
+    else if (x == left(parent(x)))
+      left(parent(x)) = y;
+    else
+      right(parent(x)) = y;
+    left(y) = x;
+    parent(x) = y;
+  }
+
+  template <class Key, class Value, class KeyOfValue, 
+  class Compare, class Allocator>
+  inline void 
+  rb_tree<Key, Value, KeyOfValue, Compare, Allocator>::rotate_right (link_type x)
+  {
+    link_type y = left(x);
+    left(x) = right(y);
+    if (!isNil(right(y)))
+      parent(right(y)) = x;
+    parent(y) = parent(x);
+    if (x == root())
+      root() = y;
+    else if (x == right(parent(x)))
+      right(parent(x)) = y;
+    else
+      left(parent(x)) = y;
+    right(y) = x;
+    parent(x) = y;
+  }
+
+#ifndef RWSTD_NO_NAMESPACE
+}
+#endif
+
+#ifdef RWSTD_COMPILE_INSTANTIATE
+#include <tree.cc>
+#endif
+
+#endif

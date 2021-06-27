@@ -1,0 +1,314 @@
+<TITLE>The Anim menu</TITLE>
+<H1><LINK NAME="XREF26900"></LINK><LINK NAME="XREF35871">The Anim menu</LINK></H1><HR>
+This document discusses the Anim menu shown in Figure 1.<P>
+
+<IMG SRC="Figures/ANICh5/AnimMenu.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Anim menu.</I><P>
+<H2>Anim menu commands discussed in this section</H2>
+All commands listed on the Anim menu are specific to 3DO Animator and are 
+not discussed in the Studio/32 manual. <P>
+<H2>Set # of Frames command</H2>
+When you select Set # of Frames, 3DO Animator displays the Set # of Frames 
+dialog. <P>
+
+<IMG SRC="Figures/ANICh5/SetNoFrames.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Set # of Frames dialog.</I><P>
+The table below discussed the options available in the dialog. <P>
+<PRE>
+<B>Table 1: </B><I> Set # of Frames dialog options.</I>
+--------------------------------------------------------
+Option         |Description                             
+--------------------------------------------------------
+Enter The      |Specifies the number of frames for the  
+Number of      |animation. The maximum allowed in a     
+Frames         |single animation is 999.                
+--------------------------------------------------------
+Make Number... |Specifies a different first frame than  
+The First Frame|frame 1. 3DO Animator reshuffles the    
+               |frames to renumber them. This is useful 
+               |when you are combining animations.      
+--------------------------------------------------------
+Duplicate last |If the Duplicate last frame box is      
+frame          |checked, 3DO Animator makes every frame 
+               |you entered in the top box an exact copy
+               |of the last frame of the animation. This
+               |is useful when you want a single picture
+               |to be the background for a range of     
+               |frames, or even for the whole animation.
+               |Open the picture and set the number of  
+               |frames, and check the "Duplicate last   
+               |frame" box. 3DO Animator creates the    
+               |number of frames you specified, each a  
+               |duplicate of the picture.               
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Show/Hide Control Panel command</H2>
+When you select Show/Hide Control Panel, 3DO Animator displays (or hides) 
+the Anim control panel.<P>
+
+<IMG SRC="Figures/ANICh5/AnimControl.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>Anim control panel. </I><P>
+The control panel presents frame counter and speed adjustment scroll bars, 
+a dynamic display of current memory, Pause and Sound options, range 
+buttons, and five control buttons for working through and playing your 
+animation.<P>
+<H3>Keyboard Shortcuts</H3>
+For a summary of the keyboard shortcuts you can use with these controls, 
+see the quick refererence card that is part of you documentation set.<P>
+<H2>Anim control Panel options</H2>
+<H3>Disk space indicator</H3>
+The disk space indicator in the upper-left corner of the panel displays 
+the amount of disk space still available and gives an estimate of the disk 
+space needed to save the animation.<P>
+<H3>Frame counter</H3>
+Displays the current frame's number and the total number of frames in the 
+animation. To move to a specific frame, drag the scroll bar or click the 
+Next Frame or Previous Frame button. <P>
+If you are working with key frames and the current frame is a key frame, a 
+small key is displayed between the number and the scroll bar. In that 
+case, you can advance from one key frame to the next by using 
+Option-clicks. <P>
+<H3>Speed adjustment bar</H3>
+Displays the speed at which the current animation will play in frames per 
+second (fps). The default setting is 30 fps. The default range is between 
+1 and 60 fps. To change the playback speed of an animation (while the 
+animation is <I>not </I>playing), drag the slider to the left (decrease) 
+or to the right (increase). <P>
+To set the fastest possible playback speed for your animation, drag the 
+sliding control to the far right so that black fills the scroll bar. This 
+sets the playback speed at infinity. <P>
+To change the playback speed of the animation while it is running, press 
+the + or - key on the numeric keypad to increase or decrease the speed of 
+the animation by one frame per second each time you press the key. Hold 
+either key down for continuous change in that direction.<P>
+<H3>Pause button</H3>
+Lets you adjust the length of time a selected frame is on screen as your 
+animation plays. Settings made through the Pause control override settings 
+in the Speed control. <P>
+Move to the frame you want to pause on, and click the Pause button. In the 
+Pause On Frame dialog, enter the number of seconds you want that frame to 
+appear on the screen and Click OK. The number you entered appears in the 
+control panel next to the Pause button.<P>
+You can set a pause on as many frames as you like, but you must set it one 
+frame at a time. <P>
+<H3>Sound button</H3>
+Lets you add sounds to an animation. Sound is linked to a specific frame 
+and plays as the frame plays. You can add sounds one at a time to as many 
+frames as you like (one sound per frame), however, many sounds slow down 
+the playback speed. <P>
+Sounds with a short play period (large files) work best. Sustained sounds, 
+or sounds on several consecutive frames, tend to get clipped and distorted 
+when played back. <P>
+<H3>Range buttons</H3>
+If you click one of the Range buttons, 3DO Animator displays the Set Frame 
+Range dialog. A range can be any contiguous number of frames. Enter 
+starting and ending frame numbers when you want to work on just a range of 
+frames or when you want to save a range of frames (see the description of 
+the Save Range command later in this chapter).<P>
+When you enter a range of frames, all animation playback commands in the 
+Anim control panel are affected. Play Once, Play Continuously, and Play 
+Ping Pong will work only on the range of frames entered in the boxes.<P>
+<H3>Previous frame button (Command-2)</H3>
+Click to move backward one frame. If the current frame is the first frame 
+in the sequence, this button moves the animation to the last frame. <P>
+<H3>Next frame button (Command - 3)</H3>
+Click to move forward one frame. If the current frame is the last frame in 
+the sequence, this button moves the animation to the first frame. <P>
+<H3>Play once button (Command - 4)</H3>
+Click to play through an animation sequence one time (at the speed set in 
+the frame counter), from frame 1 to the last frame. Option-click takes key 
+frames into account-that is, it tries to complete a sequence in the 
+specified time by skipping from one key frame to the next if possible.<P>
+<H3>Play Continuously button (Command - 5)</H3>
+Click to play an animation sequence continuously at the speed set in the 
+frame counter. Press any key or the mouse button to stop.<P>
+<H3>Play Ping Pong button (Command - 6)</H3>
+Click to play an animation sequence continuously, but the button plays the 
+sequence forward, then backward, then forward, and so on. Press any key or 
+the mouse button to stop.<P>
+<H2>Go to Frame command</H2>
+Prompts you for the frame you want to reach. <P>
+<H2>Key Frames command</H2>
+When an artist creates an animation, only the key frames contain full 
+information about the picture. Other frames only know about the 
+differences. <P>
+The submenu of the Key Frames command allows you to access key frames 
+directly without going through intermediate frames.The following commands 
+are available.<P>
+<H3>Set Current As Key Frame</H3>
+Saves the full image for the current frame and defines it as a key 
+frame.<P>
+<H3>Set Key Frames</H3>
+Sets key frames at regular intervals in the animation.<P>
+<H3>Cancel Current Key Frame</H3>
+If you select this command, the current frame won't be saved as a full 
+image any more.<P>
+<H3>Cancel All Key Frames</H3>
+Removes all key frame markings.<P>
+<H2>Append command</H2>
+When you select Append, 3DO Animator displays the standard file selection 
+dialog, with a Picture Preview window for PICT or VDAN files.<P>
+Choose a file and click Open to add that file to the end (after the final 
+frame) of the current animation. You can only append a PICT or VDAN file, 
+and it must be the same size as or smaller (in total horizontal or 
+vertical dimensions) than the file you're appending it to. If you try to 
+add a larger file, an error message is displayed. <P>
+<H2>Save Range command</H2>
+When you select Save Range, 3DO Animator lets you cut large animations 
+into smaller pieces and use the pieces in other animations. It displays 
+the standard Save As dialog but saves only the current range of frames 
+from the current animation. <P>
+Before choosing this command, you must set the range using the Set Frame 
+Range dialog, which appears when you click one of the range buttons in the 
+Anim control panel.<P>
+<H2>Delete command</H2>
+When you select Save Range, 3DO Animator displays a submenu for deleting 
+frames from your animation. <P>
+<B>Caution: </B>You can't choose Undo after using one of the Delete 
+commands. Before you choose one of these options, make sure that you want 
+to delete-that is, remove a frame or frames from the animation. <P>
+The following commands are available:<P>
+<H3>Current Frame</H3>
+Deletes the current frame and makes the following frame the current frame 
+unless you're at the last frame. <P>
+<H3>Frames...</H3>
+Displays the Delete Frame dialog, which lets you specify the range of 
+frames you want to delete. Click OK to delete the specified frames from 
+the sequence.<P>
+<H3>All Frames</H3>
+Deletes all the frames in the animation sequence and leaves the current 
+frame as your document.<P>
+<H2>Insert command</H2>
+<H3>One Frame</H3>
+Adds a frame after the current frame and copies the contents of the 
+current frame to it.<P>
+<H3>Frames...</H3>
+Displays the Insert Frame dialog. Enter the number of frames you want to 
+add to the animation sequence (after the current frame), and click OK.<P>
+Check the Duplicate Current Frame option if you want the frames you're 
+inserting to be copies of the current frame. 3DO Animator inserts blank 
+frames otherwise.<P>
+<H2>Clear command</H2>
+When you select Clear, 3DO Animator presents a submenu for clearing frames 
+and filling them with the background color.<P>
+<B>Caution: </B>You can't choose Undo after using one of the Clear 
+commands. Before you choose one of these options, make sure that you want 
+to clear. <P>
+The following commands are available:<P>
+<H3>Current Frame</H3>
+Clears the current frame.<P>
+<H3>Frames...</H3>
+Displays the Clear Frames dialog, which lets you enter the range of frames 
+you want to Clear. Click OK to clear those frames from your document.<P>
+<H3>All Frames</H3>
+Clears all the frames in the current document.<P>
+<H2>Light Table command</H2>
+Provides a draft page with additional functionality for each frame. When 
+you select Show The Light Table Document, the light table dialog appears. 
+<P>
+
+<IMG SRC="Figures/ANICh5/LightTable1.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 4: </B><I>Light Table dialog with light table on top.</I><P>
+The options available in the Light Table dialog when the light table is on 
+top (the default) are listed in below.<P>
+The following commands are available when the light table is on top:<P>
+<H3>Light Table on Top</H3>
+Brings the light table to the top.<P>
+<H3>Document on Top</H3>
+Brings the source document to the top.<P>
+<H3>Transparency</H3>
+Makes the background of the light table transparent. As a result, the 
+document is always fully visible even if the light table is on top. <P>
+<H3>Filter</H3>
+Makes the background color translucent, like colored glass. This makes it 
+easy to distinguish what you draw from the art underneath.<P>
+<H3>Spare Page</H3>
+Lets you copy information from the light table onto one draft page. <P>
+<H3>Link to Another Document</H3>
+Lets you create an empty animation that contains exactly what you draw on 
+the light table and then save it as an animation sequence. Also allows you 
+to use an opened animation and sync the frames to another document.<P>
+With the document on top, you have a number of additional options, shown 
+in Figure 5.<P>
+
+<IMG SRC="Figures/ANICh5/LightTable2.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 5: </B><I>Light table dialog options (document) table on 
+top).</I><P>
+The additional options available in the Light Table dialog when the 
+document is on top are listed below.<P>
+<H3>Background </H3>
+Prompts for a PICT file to be used as the background for the light table. 
+The PICT file is scaled to fit the document and remapped to use the colors 
+of the document. You can then draw on top of that background image.<P>
+<H3>Previous Frame</H3>
+Goes to the specified frame in the light table.<P>
+<H3>Fix Frame</H3>
+Prompts for a frame number and goes to that frame.<P>
+<H3>Merge in All Frames</H3>
+Option for the Merge button.<P>
+<H3>Release the Light Table</H3>
+Discards all information in the light table.<P>
+<H2>Grid Distortion command</H2>
+When you select Grid Distortion, 3DO Animator presents a submenu that lets 
+you create an animation by distorting a selected shape over a specified 
+number of frames.The following commands are available in the submenu.<P>
+<H3>Start the Grid Distortion</H3>
+Starts the transformation process.<P>
+<H3>Abort the Grid Distortion</H3>
+Terminates the transformation process<P>
+<H3>Show/Hide the Grid Distortion Options</H3>
+Displays the control panel for the distortion options if it's hidden; 
+hides it if it's showing.<P>
+<H2>Anim Selection command</H2>
+When you select Anim Selection, 3DO Animator presents a submenu which 
+offers the following options:<P>
+<H3>Anim Template</H3>
+Not supported in this release.<P>
+<H3>Anim Distortion</H3>
+Lets you distort an animated selection.<P>
+For an example, see <A HREF="./4anib.html#XREF20517">Animated 
+distortion</A>.<P>
+<H3>Anim Effect</H3>
+Lets you add transition effects to an animation. The effect you choose 
+takes place in a selected area between a starting frame and an ending 
+frame, which you specify in the Transition Effects dialog. An effect can 
+be added to a stationary selection as well as to a selection you have 
+moved with Anim Move or Anim 3D. You can transform any selection or 
+selected area of the screen with a transition effect.<P>
+For an example, see <A HREF="./4ania.html#XREF30372">Transition 
+effects</A>.<P>
+<H3>Anim Move (Command-0)</H3>
+Gives you a simple way to create horizontal and/or vertical movements for 
+the objects you create. You set a beginning point and an end point for the 
+object you want to move. 3DO Animator draws the movement of the object as 
+a straight line between the two points over the number of frames you set. 
+<P>
+For an example, see <A HREF="./2anic.html#XREF28890">Using Anim 
+Move</A>.<P>
+<H3>Anim 3D</H3>
+Not currently implemented<P>
+<H3>Pickup selection</H3>
+Lets you pick up part or all of an animation. You can save an animated 
+selection (using the Save As Selection command) and use your creation as 
+animated clip art in other animations. <P>
+Use one of the Selection tools to surround the selection before choosing 
+this command. If the selection changes location during the animation, 
+surround the entire animated area with the selection Marquee.<P>
+For an example, see <A HREF="./3anid.html#XREF21692">Saving an animated 
+selection</A>.<P>
+<H2>Process command</H2>
+When you select Process, 3DO Animator displays a submenu lets you choose 
+the Edge Detection command. This command starts an edge detection process 
+on all frames in an animation. As a result, you will have a document that, 
+in general, contains clean outlines. The command is only valid for 8-bit 
+documents. You can't undo the results of the command. <P>

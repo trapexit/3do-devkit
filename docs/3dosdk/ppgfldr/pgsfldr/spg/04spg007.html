@@ -1,0 +1,57 @@
+<TITLE>Traversing a List</TITLE>
+<H1>Traversing a List</H1><HR>
+You can traverse a list equally quickly from front to back or from back to front. The following sections explain how.<P>
+<H2>Traversing a List From Front to Back</H2>
+To traverse a list from front to back, use <CODE>ScanList()</CODE>. It iterates through all of the elements in the list.<P>
+<B>Example 1: </B><I>Traversing a list front to back.</I><P>
+<CODE>
+<PRE>
+ScanList(list,n,DataType)
+{
+    /* here you can dereference "n" */
+}
+</CODE>
+</PRE>
+<CODE>ScanList()</CODE> is a macro made up of the simpler macros <CODE>FirstNode()</CODE>, <CODE>IsNode()</CODE>, and <CODE>NextNode()</CODE>.<P>
+Use <CODE>FirstNode()</CODE> to get the first node in a list:<P>
+<DL>
+<DD><CODE>Node *FirstNode( const List *l )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list the node is in. The macro returns a pointer to the first node in the list or, if the list is empty, a pointer to the tail anchor.<P>
+To check to see if a node is an actual node rather than the tail anchor, use <CODE>IsNode():</CODE><P>
+<DL>
+<DD><CODE>bool IsNode( const List *l, const Node *n )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list containing the node; the <CODE>n</CODE> argument is a pointer to the node to check. The macro returns FALSE if it is the tail anchor or TRUE for any other node. (<CODE>IsNode()</CODE>returns TRUE for any node that is not the tail anchor, no matter if the node is in the specified list.)<P>
+To go from one node to its successor in the same list, use <CODE>NextNode()</CODE>:<P>
+<DL>
+<DD><CODE>Node *NextNode( const Node *n )</CODE><BR>
+</DL>
+The <CODE>n</CODE> argument is a pointer to the current node. (This node must be in a list.) The macro returns a pointer to the next node in the list or, if the current node is the last node in the list, to the tail anchor.<P>
+<H2>Traversing a List From Back to Front</H2>
+To traverse a list from front to back, use the <CODE>ScanListB()</CODE> macro. It iterates through all the elements in the list.<P>
+<B>Example 2: </B><I>Traversing a list back to front.</I><P>
+<CODE>
+<PRE>
+ScanListB(list,n,DataType)
+{
+    /* here you can dereference "n" */
+}
+</CODE>
+</PRE>
+<CODE>ScanListB()</CODE> is a macro made up of the simpler macros <CODE>LastNode()</CODE>, <CODE>IsNodeB()</CODE>, and <CODE>PrevNode()</CODE>.<P>
+Use <CODE>LastNode()</CODE> to get the last node in a list:<P>
+<DL>
+<DD><CODE>Node *LastNode( const List *l )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list the node is in. The macro returns a pointer to the last node in the list or, if the list is empty, a pointer to the head anchor.<P>
+To check to see if a node is an actual node rather than the head anchor, use <CODE>IsNodeB():</CODE><P>
+<DL>
+<DD><CODE>bool IsNodeB( const List *l, const Node *n )</CODE><BR>
+</DL>
+The <CODE>l</CODE> argument is a pointer to the list containing the node to check; the <CODE>n</CODE> argument is a pointer to the node to check. The macro returns FALSE if it is the head anchor or TRUE for any other node. (The macro returns TRUE for any node that is not the head anchor, whether or not the node is in the specified list.)<P>
+To go from one node to its predeccessor in the list, use the <CODE>PrevNode()</CODE> macro:<P>
+<DL>
+<DD><CODE>Node *PrevNode( const Node *n )</CODE><BR>
+</DL>
+The <CODE>n</CODE> argument is a pointer to the current node. (This node must be in a list.) The macro returns a pointer to the previous node in the list or, if the current node is the first node in the list, to the head anchor.<P>

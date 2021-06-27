@@ -1,0 +1,33 @@
+<TITLE>FindNamedItem</TITLE>
+<A NAME="XREF34211"><H1>FindNamedItem </A></H1>
+<A NAME="XREF27359"></A>Finds an item by name.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindNamedItem( int32 ctype, const char *name )</CODE><P>
+<H3>Description</H3>
+This procedure finds an item of the specified type whose name matches the name argument. The search is not case-sensitive (that is, the kernel does not distinguish uppercase and lowercase letters in item names). <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ctype
+<DD>The type of the item to find. Use MkNodeID() to create this value. 
+</DL>
+<DL>
+<DT>name
+<DD>The name of the item to find. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the number of the item that was found. It returns an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr050.html#XREF25448"><CODE>FindItem</A>(), <A HREF="./01spr061.html#XREF25874">FindVersionedItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF34211"></LINK></H1><HR>

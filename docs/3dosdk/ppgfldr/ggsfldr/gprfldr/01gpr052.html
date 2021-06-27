@@ -1,0 +1,22 @@
+<Title>RemoveScreenGroup </Title>
+<A NAME="XREF35655"><H1>RemoveScreenGroup </A></H1>
+<A NAME="XREF16640"> Removes a screen group from the display.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err RemoveScreenGroup (Item screenGroup)</CODE><P>
+<H3>Description</H3>
+The call removes the specified screenGroup from the Graphics folio display mechanism. After this call, none of the screens in the specified group can be made visible. <P>
+If one of the screens in the group is visible when this call is made, the screen is removed from the display. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screenGroup
+<DD>Item number of the screenGroup to be removed. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr001.html#XREF27310"><CODE>AddScreenGroup</A>() </CODE><P>
+</CODE>

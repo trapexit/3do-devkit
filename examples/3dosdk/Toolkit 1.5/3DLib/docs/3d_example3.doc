@@ -1,0 +1,30 @@
+3dlib example3 documentation :
+
+	The example3 of the 3dlib was created to demonstrate the
+use of the basic 3dlib calls. A single world is created. At the
+origin is placed a tumbling cube. Orbiting around the  cube is a pyramid,
+with another cube and 3 other pyramids doing strange and exotic
+things. The eyepoint is a always centered on the closest cube.
+
+This also demonstrates CloneObject() and LookAt().
+
+The joypad will control several elements of the demo:
+
+Button A will modify the CCB on the fly and will toggle Doloresizing.
+
+Button B will cause the camera to roll CW.
+
+Button C will freeze the animation.
+
+The up/down positions on the pad will move the camera up and
+down. Left/right will move it side to side along the x-axis.
+Pressing the pad once will start the motion, pressing it a second
+time will stop it.  
+
+Exit the example by using the "enter" button.
+
+This also gives an example of how to use the eventbroker for 
+joystick operations.
+
+
+

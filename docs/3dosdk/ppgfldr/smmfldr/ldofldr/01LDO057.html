@@ -1,0 +1,17 @@
+<Title>DeleteTextCel</Title>
+<A NAME="XREF39255"><H1>DeleteTextCel </A></H1>
+ Deletes a text cel and associated resources.<P>
+<H3>Synopsis</H3>
+<CODE>void DeleteTextCel (TextCel *tCel)</CODE><P>
+<H3>Description</H3>
+Deletes the specified text cel and all resources it acquired internally when it was created. If <CODE>SetTextCelFormatBuffer()</CODE>dynamically allocates a format buffer for the cel, that buffer is also released. <P>
+Text cels are also compatible with the Lib3DO <CODE>DeleteCel()</CODE> and <CODE>DeleteCelList()</CODE> functions. Those functions require a pointer to a CCB. When they receive a pointer to a CCB associated with a text cel, processing is automatically handed off to <CODE>DeleteTextCel()</CODE> internally. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tCel
+<DD>Pointer to a TextCel structure (okay to pass NULL). 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, textlib.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO040.html#XREF12893"><CODE>CloneTextCel</A>, <A HREF="./01LDO046.html#XREF36470">CreateTextCel</A> </CODE><P>

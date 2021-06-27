@@ -1,0 +1,28 @@
+<TITLE>Preparing a streaming application</TITLE>
+<H1><LINK NAME="XREF39068">Preparing a streaming application</LINK></H1><HR>
+Preparing a streaming application consists of several steps. The figure below gives an overview of the steps. <P>
+<center>
+<IMG SRC="Figures/1-1.Steps.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Steps in creating an application that uses data streaming.</I><P>
+</center>
+Here's a bit more detail about each step shown in the figure:<P>
+<UL>
+<LI>Analyze your data and plan how to stream them. Memory, I/O, and processor bandwidth limitations require trade-offs. For example, you can't play full-screen software-compressed video and CD-quality stereo audio at the same time. See <A HREF="./2dsgb.html#XREF34476">Analyzing data and making trade-offs</A>.
+<p>
+<LI>Convert source data to 3DO format and compress if appropriate. See <A HREF="./2dsgc.html#XREF12972">Converting data to 3DO format</A>.
+<p>
+<LI>Create chunk files using the DataStreamer tools. See <A HREF="./2dsgc.html#XREF15442">Creating chunk files</A>.
+<p>
+<LI>Merge all data into one stream file with the Weaver tool. See <A HREF="./2dsgd.html#XREF41137">Creating a stream file with the Weaver tool</A>.
+<p>
+<LI>Run the stream file using a playback application. See <A HREF="./2dsge.html#XREF10721">Playing back a simple stream</A>.
+</UL>
+After initial verification of your data, you may want to modify streaming according to your needs. This can include the following:<P>
+<UL>
+<LI>Optimize the stream file and the application, making trade-offs where needed. Use tools for examining stream files and the tracing facilities for optimum use of bandwidth and other resources. See <A HREF="./dsg5frst.html#XREF33525">Debugging and Optimization</A>.
+<p>
+<LI>Add branching and user input capabilities (start, stop, and so on). See <A HREF="./dsg4frst.html#XREF15951">Inside Streaming: Control</A>.
+<p>
+<LI>Modify a subscriber or create your own for a special data type. See <A HREF="./dsg6frst.html#XREF30599">Creating New Subscribers</A>.
+</UL>

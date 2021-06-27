@@ -1,0 +1,51 @@
+<HTML><HEAD><TITLE>Example Program</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Example Program</H2>
+<A HREF="sidebar.htm#sidebar74"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program.</STRONG></A>
+
+<P>This following example program demonstrates the use of exceptions.</P>
+<PRE>#include &#60;stdexcept>
+#include &#60;string>
+
+static void f() { throw runtime_error("a runtime error"); }
+
+int main ()
+{
+  string s;
+  
+  // First we'll try to incite then catch an exception from
+  // the standard library string class.
+  // We'll try to replace at a position that is non-existent.
+  //
+  // By wrapping the body of main in a try-catch block we can be
+  // assured that we'll catch all exceptions in the exception
+  // hierarchy. You can simply catch exception as is done below,
+  // or you can catch each of the exceptions in which you have an 
+  // interest.
+  try
+  {
+    s.replace(100,1,1,'c');
+  }
+  catch (const exception&#38; e)
+  {
+    cout &#60;&#60; "Got an exception: " &#60;&#60; e.what() &#60;&#60; endl;
+  }
+
+  // Now we'll throw our own exception using the function 
+  // defined above.
+  try
+  {
+    f();
+  }
+  catch (const exception&#38; e)
+  {
+    cout &#60;&#60; "Got an exception: " &#60;&#60; e.what() &#60;&#60; endl;
+  }
+ 
+ return 0;
+}</PRE>
+<HR>
+<A HREF="usi_0332.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="aut_3512.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

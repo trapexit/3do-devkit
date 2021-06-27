@@ -1,0 +1,47 @@
+/*
+  ISC License
+
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#ifndef TTL_POD_INCLUDED
+#define TTL_POD_INCLUDED
+
+/*
+  Ideally sfinae would be used (ex std::enable_if) to manage
+  Plain Ol Data vs objects. type_traits somewhat works but wasn't able
+  to get enable_if working. Including armcpp segv'ing. This macro
+  helps creating specialized templates and functions.
+ */
+
+#define POD_TYPES_FUNC(FUNC) \
+  FUNC(void) \
+  FUNC(bool) \
+  FUNC(char) \
+  FUNC(signed char) \
+  FUNC(unsigned char) \
+  FUNC(signed short) \
+  FUNC(unsigned short) \
+  FUNC(signed int) \
+  FUNC(unsigned int) \
+  FUNC(signed long) \
+  FUNC(unsigned long) \
+  FUNC(signed long long) \
+  FUNC(unsigned long long) \
+  FUNC(float) \
+  FUNC(double) \
+  FUNC(long double)
+
+#endif

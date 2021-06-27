@@ -1,0 +1,29 @@
+<HTML><HEAD><TITLE>An Example Function - Split a Line into Words</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>An Example Function - Split a Line into Words</H2>
+<A HREF="sidebar.htm#sidebar50"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Obtaining the Sample Program</STRONG></A>
+
+<P>In this section we will illustrate the use of some of the string functions by defining a function to split a line of text into individual words.  We have already made use of this function in the concordance example program in <A href="exa_7078.htm#aconcordance">Chapter 9</a>.</P>
+<P>There are three arguments to the function.  The first two are strings, describing the line of text and the separators to be used to differentiate words, respectively.  The third argument is a list of strings, used to return the individual words in the line.</P>
+<PRE>void split 
+   (string &#38; text, string &#38; separators, list&#60;string> &#38; words)
+{
+   int n = text.length();
+   int start, stop;
+
+   start = text.find_first_not_of(separators);
+   while ((start >= 0) &#38;&#38; (start &#60; n)) {
+      stop = text.find_first_of(separators, start);
+      if ((stop &#60; 0) || (stop > n)) stop = n;
+      words.push_back(text.substr(start, stop - start));
+      start = text.find_first_not_of(separators, stop+1);
+      }
+}
+</PRE>
+<P>The program begins by finding the first character that is not a separator.  The loop then looks for the next following character that is a separator, or uses the end of the string if no such value is found.  The difference between these two is then a word, and is copied out of the text using a substring operation and inserted into the list of words.  A search is then made to discover the start of the next word, and the loop continues.  When the index value exceeds the limits of the string, execution stops.</P>
+
+<HR>
+<A HREF="str_7474.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="gen_9895.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

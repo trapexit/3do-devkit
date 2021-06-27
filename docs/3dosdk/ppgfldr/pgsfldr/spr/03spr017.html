@@ -1,0 +1,23 @@
+<Title>CompareUF60</Title>
+<A NAME="XREF26027"><H1>CompareUF60 </A></H1>
+<A NAME="XREF40295"> Compares two unsigned 4.60-format fractions.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 CompareUF60( ufrac60 *s1, ufrac60 *s2 )</CODE><P>
+<H3>Description</H3>
+This function compares two unsigned 4.60-format fractions. This function is actually the same function as <CODE>CompareU64()</CODE> and <CODE>CompareUF32()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>s1, s2                       Pointers to unsigned 4.60 fractions. 
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>The function returns 1 if s1 &gt; s2, zero if s1 == s2, or -1 if s1 &lt; s2.
+<DD> 
+</DL>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr012.html#XREF27069"><CODE>CompareS64</A>(), <A HREF="./03spr013.html#XREF37222">CompareSF32</A>(), <A HREF="./03spr015.html#XREF35891">CompareU64</A>(), <A HREF="./03spr016.html#XREF33265">CompareUF32</A>(), <A HREF="./03spr014.html#XREF36592">CompareSF60</A>() </CODE><P>
+</CODE>

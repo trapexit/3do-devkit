@@ -1,0 +1,35 @@
+<Title>GetAudioFolioInfo</Title>
+<A NAME="XREF22415"><H1>GetAudioFolioInfo </A></H1>
+<A NAME="XREF29101"></a> Get system-wide audio settings.<P>
+<H3>Synopsis</H3>
+<CODE>Err GetAudioFolioInfo (TagArg *tagList)</CODE><P>
+<H3>Description</H3>
+Queries Audio folio for certain system-wide settings. It takes a tag list with the ta_Tag fields set to parameters to query and fills in the  ta_Arg field of each TagArg with the parameter requested by that TagArg. <P>
+For normal multiplayers, these settings are set to the described normal values during startup. Other kinds of hardware or execution environments (e.g. cable) may have different settings. <P>
+None of these parameters can be set directly by an application. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>tagList
+<DD>Pointer to tag list containing AF_TAG_ tags to query. The ta_Arg fields of each matched tag is filled in with the corresponding setting from the Audio folio. 
+</DL>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_SAMPLE_RATE
+<DD>(frac16) Returns the DSP's sample rate in samples/second expressed as a 16.16 value. Normally this is 44,100 samples/second. For certain cable applications this can be 48,000 samples/second. When the sample rate is something other than 44,100, substitute this to everywhere in the audio documentation that specifies the sample rate as 44,100 samples/second. If your application needs to cope with variable DSP sample rate and you have need the sample rate for something, then you should read this value from here rather than hardcoding 44,100, or any other sample rate, into your code. 
+</DL>
+<DL>
+<DT>AF_TAG_AMPLITUDE
+<DD>(uint32) Returns the Audio folio's master volume level. Normally this is 0x7fff. 
+</DL>
+<H3>Return Value</H3>
+The function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+Returns AF_ERR_BADTAG if this function is passed any tag that is not listed above. <P>
+<H3>Additional Results </H3>
+Fills in the ta_Arg field of each matched TagArg in tagList with the corresponding setting from the Audio folio. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V24. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr043.html#XREF15941"><CODE>GetAudioItemInfo</A>() </CODE><P>
+</CODE>

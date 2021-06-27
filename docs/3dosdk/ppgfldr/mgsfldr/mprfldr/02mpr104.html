@@ -1,0 +1,25 @@
+<Title>ssplGetSequenceNum</Title>
+<A NAME="XREF11072"><H1>ssplGetSequenceNum </A></H1>
+<A NAME="XREF14796"></A> Get Sequence Number of a SoundBufferNode.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ssplGetSequenceNum ( SoundSpooler *sspl, SoundBufferNode *sbn )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplGetSequenceNum()</CODE> returns the "sequence number" of the specified SoundBufferNode.  This is an integer that indicates the allocation sequence of the SoundBufferNode. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sspl
+<DD>Pointer to a SoundSpooler structure. 
+</DL>
+<DL>
+<DT>sbn
+<DD>Pointer to a sound buffer node. 
+</DL>
+<H3>Return Value</H3>
+An integer that is the index of the buffer as allocated by <CODE>ssplCreateSoundSpooler()</CODE>. It goes from zero to NumBuffers-1. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr098.html#XREF39302"><CODE>ssplCreateSoundSpooler</A></CODE><P>
+</CODE>

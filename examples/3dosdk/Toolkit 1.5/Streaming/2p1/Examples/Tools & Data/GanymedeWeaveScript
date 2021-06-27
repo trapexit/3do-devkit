@@ -1,0 +1,13 @@
+# Weaver script for CPakTestStream. If you wish to loop
+# the streamed movie, first MovieToStream Ganymede.cv.MooV using
+# -l option and write a CTRL-ALRM chunk to the end of the stream:
+# file ALRM_Chunk 10 2936
+
+streamblocksize 32768
+streamstarttime 0
+
+file Ganymede22.saudio 1 0
+file Ganymede.cv.MooV.FILM 10 0
+
+# markertime 7200
+

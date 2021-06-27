@@ -1,0 +1,72 @@
+<Title>DSHeaderChunk</Title>
+<A NAME="XREF11569"><H1>DSHeaderChunk</A></H1>
+<A NAME="XREF33444"></A>Stream header structure.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct DSHeaderChunk {
+   SUBS_CHUNK_COMMON
+   long headerVersion;
+   long streamBlockSize;
+   long streamBuffers;
+   long streamerDeltaPri;
+   long dataAcqDeltaPri;
+   long numSubsMsgs;
+   long audioClockChan;
+   long enableAudioChan;
+   long preloadInstList[DS_HDR_MAX_PRELOADINST];
+   DSHeaderSubs   subscriberList[DS_HDR_MAX_SUBSCRIBER];
+} DSHeaderChunk,  *DSHeaderChunkPtr;</CODE></pre><P>
+<H3>Description</H3>
+The basic data buffer structure managed by the stream parser. Each buffer 
+is obtained from the stream's data acquisition component. The first part 
+of every physical data buffer must contain the header information 
+described by this structure. The actual data component of a 
+<CODE>DSDataBuf</CODE> can be a different length for each stream. However, 
+buffer sizes are fixed within a given stream. <P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>SUBS_CHUNK_COMMON</CODE>
+<DD>From SubscriberUtils.h
+</DL>
+<DL>
+<DT><CODE>headerVersion</CODE>
+<DD>Version of header data.
+</DL>
+<DL>
+<DT><CODE>streamBlockSize</CODE>
+<DD>Size of stream buffers in this stream.
+</DL>
+<DL>
+<DT><CODE>streamBuffers</CODE>
+<DD>Suggested number of stream buffers to use.
+</DL>
+<DL>
+<DT><CODE>streamerDeltaPri</CODE>
+<DD>Delta priority for streamer thread.
+</DL>
+<DL>
+<DT><CODE>dataAcqDeltaPri</CODE>
+<DD>Delta priority for data acquisition thread.
+</DL>
+<DL>
+<DT><CODE>numSubsMsgs</CODE>
+<DD>Number of subscriber messages to allocate. 
+</DL>
+<DL>
+<DT><CODE>audioClockChan</CODE>
+<DD>Logical channel number of audio clock channel.
+</DL>
+<DL>
+<DT><CODE>enableAudioChan</CODE>
+<DD>Mask of audio channels to enable.
+</DL>
+<DL>
+<DT><CODE>preloadInstList[DS_HDR_MAX_PRELOADINST]</CODE>
+<DD>
+</DL>
+<DL>
+<DT><CODE>subscriberList[DS_HDR_MAX_SUBSCRIBER]</CODE>
+<DD>
+</DL>
+<H3>Associated Files</H3>
+DSStreamHeader.h<P>

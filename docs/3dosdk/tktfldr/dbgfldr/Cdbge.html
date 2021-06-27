@@ -1,0 +1,120 @@
+<TITLE>lmadm</TITLE>
+<H1><LINK NAME="XREF40448">lmadm</LINK></H1><HR><P>
+<A NAME="XREF29091"></A>Performs linked filesystem administration.<P>
+<H3>Synopsis </H3>
+<CODE>lmadm -acdmtuvyz dev_name unit offset mount_dir</CODE><P>
+<H3>Description</H3>
+Performs administrative tasks on a Linked Memory filesystems. lmadm is 
+designed to perform a variety of tasks. It checks and repairs (-c), 
+defragments (-d), mounts (-m),unmounts (-u), and auto-maintains (-a) the 
+filesystem.<P>
+<H3>Options</H3>
+<DL>
+<DT>-a
+<DD>Auto-maintains the filesystem: Unmounts the filesystem, 
+checks/repairs, defragments, and remounts the filesystem. In case of a 
+failure in the consistency check/repair or defragmentation process, the 
+filesystem is formatted. This option is used mainly at system startup. 
+This option is mutually exclusive with all other options except for -v and 
+-y. This option implies -y.
+</DL>
+<DL>
+<DT>-c
+<DD> Consistency check and repair. Consistency check is performed in 
+multiple passes and all repairs are reported. This option is mutually 
+exclusive with -a, -m, and -u.
+</DL>
+<DL>
+<DT> -d
+<DD>Defragments the filesystem. As a result of adding and deleting files, 
+filesystems become fragmented and free extents become scattered. The 
+defragmentation process gathers all scattered free extents and combines 
+them into a single contiguous extent. This process not only improves 
+system performance, but it also enables the filesystem to succeed in 
+allocating storage for larger files. This option is mutually exclusive 
+with -a, -m, and -u.
+</DL>
+<DL>
+<DT>-m
+<DD>Mounts the filesystem. It only mounts the filesystem on the specified 
+device, if the filesystem is not already mounted. This option is mutually 
+exclusive with all other options except -v and -y.
+</DL>
+<DL>
+<DT>-t
+<DD>Displays output on the TV monitor as well.
+</DL>
+<DL>
+<DT>-u
+<DD>Unmounts the filesystem. It only unmounts the filesystem, if the 
+filesystem is mounted. This option is mutually exclusive with all other 
+options except -v and -y. 
+</DL>
+<DL>
+<DT>-v
+<DD>Signifies verbose.
+</DL>
+<DL>
+<DT>-y
+<DD>Performs all major/minor repairs needed to bring the filesystem to a 
+consistent state.
+</DL>
+<DL>
+<DT>-z
+<DD>Removes all zero-sized files. This is performed during the 
+defragmentation process, therefore it is to be used in conjunction with 
+the -a or -d options. 
+</DL>
+<H3>Arguments</H3>
+<DL>
+<DT>dev_name
+<DD>Name of the device on which the filesystem resides.
+</DL>
+<DL>
+<DT>unit
+<DD>Device unit number.
+</DL>
+<DL>
+<DT>offset
+<DD>Offset within the device where the filesystem   resides.
+</DL>
+<DL>
+<DT>mount_dir
+<DD>Name of the directory on which the filesystem is mounted. 
+</DL>
+<H3>Examples</H3>
+The following line maintains the nvram filesystem for operation, this is 
+mainly invoked at system startup:<P>
+<CODE>
+<PRE>
+$boot/system/Programs/lmadm -a ram 3 0 nvram
+</CODE>
+</PRE>
+The following line performs consistency check and an automatic repair:<P>
+<CODE>
+<PRE>
+$c/lmadm -cy ram 3 0 nvram 
+</CODE>
+</PRE>
+The following line verbosely performs a defragmentation process on the 
+nvram filesystem:<P>
+<CODE>
+<PRE>
+$c/lmadm -dv ram 3 0 nvram 
+</CODE>
+</PRE>
+The following line mounts the nvram filesystem<P>
+<CODE>$c/lmadm -m ram 3 0 nvram</CODE><P>
+<H3>Caveats</H3>
+Don't run the defragmentation process unless you have a clean 
+filesystem.<P>
+Always check/repair the filesystem first, before the defragmentation 
+process is started. If you use both -d and -c, the filesystem is first 
+checked and repaired and then defragmented. The result of defragmenting a 
+corrupted filesystem is unpredictable. If you use -a, and the check/repair 
+process fails, the filesystem is automatically formatted. All existing 
+data on the filesystem is cleared. <P>
+<H3>Implementation </H3>
+Command implemented in V21. <P>
+<H3>Associated Files</H3>
+$c/lmadm<P>

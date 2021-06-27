@@ -1,0 +1,29 @@
+<Title>AllocPoolItem</Title>
+<A NAME="XREF38866"><H1>AllocPoolItem</A></H1>
+<A NAME="XREF39652"></A>Allocates an item from an item pool.<P>
+<H3>Synopsis</H3>
+<CODE>Item AllocPoolItem (ItemPoolPtr itemPool)</CODE><P>
+<H3>Description</H3>
+Allocates an item from the specified item pool. An item pool must be created with <CODE>CreateItemPool()</CODE> before <CODE>AllocPoolItem()</CODE> can allocate items from it.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>itemPool</CODE>
+<DD>Pool of items from which an item is allocated.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+</DL>
+<DL>
+<DT>(The first available item)
+<DD>None
+</DL>
+<DL>
+<DT>0
+<DD>No items available in pool
+</DL>
+<H3>Associated Files</H3>
+ItemPool.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR008.html#XREF36441"><CODE>CreateItemPool</A>, <A HREF="./01DSR060.html#XREF29008">ReturnPoolItem</A></CODE><P>

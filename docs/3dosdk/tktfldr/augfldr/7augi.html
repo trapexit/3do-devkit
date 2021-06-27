@@ -1,0 +1,14 @@
+<TITLE>Repetitive assembly </TITLE>
+<H1><LINK NAME="XREF10886">Repetitive assembly </LINK></H1><HR>
+The conditional looping statement, useful for generating repetitive tables, is provided in the assembler by the WHILE...WEND directives. This produces an assembly-time loop, not a run-time loop. Because the test for the WHILE condition is made at the top of the loop, it is possible that no code will be generated during assembly; lines are listed as for conditional assembly. The syntax is:<P>
+<CODE>
+<PRE>
+WHILE
+</CODE>
+</PRE>
+<CODE>
+<PRE>
+...code...
+WEND
+</CODE>
+</PRE>

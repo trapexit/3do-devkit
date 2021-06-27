@@ -1,0 +1,28 @@
+<Title>NewTextSubscriber</Title>
+<A NAME="XREF35522"></A><A NAME="XREF40995"><H1>NewTextSubscriber</A></H1>
+<A NAME="XREF26505"></A>Create Text subscriber thread.<P>
+<H3>Synopsis</H3>
+<CODE>int32 NewTextSubscriber (TextContextPtr *pCtx, DSStreamCBPtr streamCBPtr, int32 deltaPriority)</CODE><P>
+<H3>Description</H3>
+Creates and initializes a SCel subscriber thread for the calling task. Returns a pointer to a context structure, which the client application uses when making calls to the SCel subscriber.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>pContext
+<DD>Address where pointer to Text context structure is returned.
+</DL>
+<DL>
+<DT>streamCBPtr
+<DD>Pointer to control block for data stream.
+</DL>
+<DL>
+<DT>deltaPriority 
+<DD>Relative execution priority of new Text subscriber thread.
+</DL>
+<H3>Return Value</H3>
+Returns an error code, or zero if there was no error.<P>
+<H3>Caveat</H3>
+This function is part of the <I>Subscriber.lib</I> library file that can currently (Toolkit1.5) be found in <I>Attic:Streaming:2p1:DataStream:Subscribers:Subscriber.lib</I>. It will later be integrated into the main Streaming tree. <P>
+<H3>Associated Files</H3>
+TextSubscriber.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR017.html#XREF13284"><CODE>DisposeTextSubscriber</A></CODE><P>

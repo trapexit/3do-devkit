@@ -1,0 +1,8 @@
+<TITLE>Relying on Side Effects of Multitasking</TITLE>
+<H1><LINK NAME="XREF29562">Relying on Side Effects of Multitasking</LINK></H1><HR>
+<H3>What is it:</H3>
+A program relies on tasks running in a certain order without assigning priorities<P>
+<H3>Why it's bad:</H3>
+If a program relies on the order of tasks without setting priorities, the order may be different when running via the Macintosh than when running off a CD-ROM. It's even more likely that the order is different in a future operating system.<P>
+<H3>What to do</H3>
+Use priorities. Don't change timing inside the code, since this may not reliably work in a future operating system.<P>

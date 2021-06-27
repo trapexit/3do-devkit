@@ -1,0 +1,21 @@
+<Title>luckie</Title>
+<A NAME="XREF13672"><H1>luckie </A></H1>
+<A NAME="XREF18096"> </A>Uses the event broker to read events from the first 
+control pad.<P>
+<H3>Synopsis</H3>
+<CODE>luckie [anything]</CODE><P>
+<H3>Description</H3>
+Uses the event broker to monitor and report activity for the first control 
+pad plugged in to the control port. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>anything
+<DD>If you supply no arguments to this program, it asks GetControlPad() to 
+put the task to sleep when waiting for an event. If you supply an 
+argument, GetControlPad() will not put the task to sleep, and the program 
+will poll the control pad. 
+</DL>
+<H3>Associated Files</H3>
+luckie.c<P>
+<H3>Location</H3>
+examples/EventBroker/Event_Broker_Tests <P>

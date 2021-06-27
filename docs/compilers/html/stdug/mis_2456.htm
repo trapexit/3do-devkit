@@ -1,0 +1,42 @@
+<HTML><HEAD><TITLE>Miscellaneous Algorithms</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Miscellaneous Algorithms</H2>
+<P>In the final section we describe the remaining algorithms found in the standard library.</P>
+<A NAME="applyafunctiontoallelementsinacollection"><H3>Apply a Function to All Elements in a Collection</H3></A>
+<P>The algorithm <SAMP>for_each()</SAMP> takes three arguments.  The first two provide the iterators that describe the sequence to be evaluated.  The third is a one-argument function.  The <SAMP>for_each()</SAMP> algorithm applies the function to each value of the sequence, passing the value as an argument.</P>
+<PRE>Function for_each 
+   (InputIterator first, InputIterator last, Function);
+</PRE>
+<P>For example, the following code fragment, which uses the <SAMP>print_if_leap()</SAMP> function, will print a list of the  leap years that occur between 1900 and 1997: </P>
+<PRE>   cout &#60;&#60; "leap years between 1990 and 1997 are: ";
+   for_each (1990, 1997, print_if_leap);
+   cout &#60;&#60; endl;
+</PRE>
+
+<A HREF="sidebar.htm#sidebar70"><IMG SRC="images/note.gif" BORDER=0> <STRONG>Results Produced by Side Effect</STRONG></A>
+
+<P>The argument function is guaranteed to be invoked only once for each element in the sequence.  The <SAMP>for_each()</SAMP> algorithm itself returns the value of the third argument, although this, too, is usually ignored.</P>
+<P>The following example searches an array of integer values representing dates, to determine which vintage wine years were also leap years:</P>
+<PRE>   int vintageYears[] = {1947, 1955, 1960, 1967, 1994};
+   ...
+
+   cout &#60;&#60; "vintage years which were also leap years are: ";
+   for_each (vintageYears, vintageYears + 5, print_if_leap);
+   cout &#60;&#60; endl;
+</PRE>
+<P>Side effects need not be restricted to printing.  Assume we have a function <SAMP>countCaps()</SAMP> that counts the occurrence of capital letters:</P>
+<PRE>int capCount = 0;
+
+void countCaps(char c)  { if (isupper(c)) capCount++; }
+</PRE>
+<P>The following example counts the number of capital letters in a string value:</P>
+<PRE>   string advice = "Never Trust Anybody Over 30!";
+   for_each(advice.begin(), advice.end(),countCaps);
+   cout &#60;&#60; "upper-case letter count is " &#60;&#60; capCount &#60;&#60; endl;
+</PRE>
+
+<HR>
+<A HREF="seq_4302.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="ord_1635.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

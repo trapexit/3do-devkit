@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>The Standard Exception Hierarchy</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The Standard Exception Hierarchy</H2>
+<P>The library implements the two-category error model described above with a set of classes.  These classes are defined in the <SAMP>stdexcept</SAMP> header file.  They can be used to catch exceptions thrown by the library and to throw exceptions from your own code.</P>
+<P>The classes are related through inheritance. The inheritance hierarchy looks like this:</P>
+<PRE><A HREF="../stdref/exc_9785.htm"><B><I>exception</I></B></A>
+    <B><I>logic_error</I></B>
+       <B><I>domain_error</I></B>
+      <B><I>invalid_argument</I></B>
+      <B><I>length_error</I></B>
+      <B><I>out_of_range</I></B>
+   <B><I>runtime_error</I></B>
+      <B><I>range_error</I></B>
+      <B><I>overflow_error  </I></B></PRE>
+<P>Classes <B><I>logic_error</I></B> and <B><I>runtime_error </I></B>inherit from class <A HREF="../stdref/exc_9785.htm"><B><I>exception</I></B></A>.  All other exception classes inherit from either <B><I>logic_error</I></B> or <B><I>runtime_error</I></B>.</P>
+<HR>
+<A HREF="ove_3018.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="usi_0332.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

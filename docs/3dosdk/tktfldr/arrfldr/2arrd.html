@@ -1,0 +1,202 @@
+<TITLE>Details of target-dependent code</TITLE>
+<H1><LINK NAME="XREF35200">Details of target-dependent code</LINK></H1><HR>
+<H2>ANSI library functions</H2>
+The following ANSI standard functions necessarily have an implementation completely dependent on the target operating system. No functions are used internally by the library (so if any are unimplemented, only clients which directly call the functions will fail).<P>
+<CODE>
+<PRE>
+clock_t clock(void)
+</CODE>
+</PRE>
+(The compiler is expected to predefine __CLK_TCK if the units of clock_t differ from the default of centiseconds. If this is not done, time.h must be adjusted to define appropriate values for CLK_TCK and CLOCKS_PER_SEC).<P>
+<CODE>
+<PRE>
+void _clock_init(void) (declared weak)
+</CODE>
+</PRE>
+Clock_init() (if you provide it) is called from the library's initialisation code, (clock() needs initialising if a read-only timer is all it has to work with).<P>
+<CODE>
+<PRE>
+time_t time(time_t *timer)
+int remove(const char *pathname)
+int rename(const char *old, const char *new)
+int system(const char *string)
+char *getenv(const char *name)
+void getenv_init(void) (declared weak)
+</CODE>
+</PRE>
+Getenv_init() is called from the library's initialisation code if you provide an implementation of it.<P>
+<H2>I/O support</H2>
+If any I/O function is to be used hostsys.h must define the type FILEHANDLE, values of which identify an open file to the host system. There must be at least one distinguished value of this type, defined by the macro NONHANDLE, used to distinguish a failed call to _sys_open.<P>
+For an unaltered __rt_lib_init, the macro TTYFILENAME must be defined to a string to be used in opening a file to terminal.<P>
+The macro HOSTOS_NEEDSENSURE should be defined if the host OS requires an ensure operation to flush OS file buffers to disc if an OS write is followed by an OS read which requires a seek, (the flush happens before the seek). The RISC OS targetting needs this macro to be defined, thanks to an OS file-buffering bug; it is unlikely to be wanted in any retargetting.<P>
+<CODE>
+<PRE>
+FILEHANDLE _sys_open(const char *name, int openmode)
+</CODE>
+</PRE>
+<I>Openmode</I> is a bitmap, whose bits mostly correspond directly to the ANSI mode specification: for details, see <I>hostsys.h</I> in <A HREF="./2arra.html#XREF16954">Source organisation</A> (target-dependent extensions are possible in which case freopen() must be extended too). The function _sys_open() is needed by fopen() and freopen(), which in turn are required if any I/O function is to be used.<P>
+<CODE>
+<PRE>
+int _sys_iserror(int status)
+</CODE>
+</PRE>
+A _sys_iserror() function, or a _sys_iserror() macro, is required if any of the following int-returning functions is provided (to determine whether the return value indicates an error).<P>
+<CODE>
+<PRE>
+int _sys_close(FILEHANDLE fh)
+</CODE>
+</PRE>
+The return value is 0 or an error indication. It must be defined if any I/O function is to be used.<P>
+<CODE>
+<PRE>
+int _sys_write(
+    FILEHANDLE fh, const unsigned char *buf, 
+            unsigned len, int mode)
+</CODE>
+</PRE>
+The mode argument is a bitmap describing the state of the FILE connected to fh. (See the _IOxxx constants in ioguts.h for the its meaning: only a few of these bits are expected to be needed by _sys_write). The return value is the number of characters NOT written (i.e. non-0 denotes a failure of some sort), or an error indicator. This function must be defined if any output function or sprintf variant is to be used.<P>
+<CODE>
+<PRE>
+int _sys_read(FILEHANDLE fh, unsigned char *buf, unsigned len, i
+            nt mode)
+</CODE>
+</PRE>
+The mode argument is a bitmap describing the state of the FILE connected to fh, as for _sys_write. The return value is the number of characters NOT read (i.e. len - result <I>were</I> read), or an error indication, or an EOF indicator. The target-independent code is capable of handling either early EOF (the last read from a file returns some characters plus an EOF indicator), or late EOF (the last read returns just EOF). The EOF indication involves the setting of 0x80000000 in the normal result. The function _sys_read() must be defined if any input function or sscanf variant is to be used.<P>
+<CODE>
+<PRE>
+int _sys_seek(FILEHANDLE fh, long pos)
+</CODE>
+</PRE>
+This function positions the file pointer at offset <I>pos</I> from the beginning of the file. The result is &gt;= 0 if OK, negative for an error. The function must be defined if any input or output function is to be used.<P>
+<CODE>
+<PRE>
+int _sys_ensure(FILEHANDLE fh);
+</CODE>
+</PRE>
+A call to _sys_ensure() flushes any buffers associated with fh, and ensures that the file is up to date on the backing store medium. The result is &gt;= 0 if OK, negative for an error. This function is only required if you define HOSTOS_NEEDSENSURE (see above).<P>
+<CODE>
+<PRE>
+long _sys_flen(FILEHANDLE fh);
+</CODE>
+</PRE>
+The above function returns the current length of the file fh (or a negative error indicator). It is needed in order to convert fseek(, SEEK_END) into (, SEEK_SET) as required by _sys_seek. It must be defined if fseek() is to be used. (Note: it is possible to adopt a different model here if the underlying system directly supports seeking relative to the end of a file. In this case, _sys_flen() can be eliminated.)<P>
+<CODE>
+<PRE>
+void _ttywrch(int ch)
+</CODE>
+</PRE>
+This function writes a character, notionally to the console. Used (in the host-independent part of the library) in the last-ditch error reporter, when writing to stderr is believed to have failed or to be unsafe (e.g. in default SIGSTK handler). This function must be defined.<P>
+<CODE>
+<PRE>
+int _sys_istty(FILE *)
+</CODE>
+</PRE>
+This function returns non-0 if the argument file is connected to a terminal. It is used to provide default unbuffered behaviour (in the absence of a call to set(v)buf), and to disallow seeking. It must be defined if any output function (including sprintf variants) or fseek is to be used.<P>
+<CODE>
+<PRE>
+void _sys_tmpnam(char *name, int fileno);
+</CODE>
+</PRE>
+This function returns the name for temporary file number <I>fileno</I> in the buffer <I>name</I>. It must be defined if tmpnam() or tmpfil() are to be used.<P>
+<A NAME="XREF15198"><H2>Floating-point support</A></H2>
+
+<CODE>
+<PRE>
+int __fp_initialise(void)
+void __fp_finalise(void)
+</CODE>
+</PRE>
+If the variant fp_type == module is selected, and the target-dependent library kernel follows the pattern of the RISC OS example, these two functions must be supplied (though they need not do anything). The function __fp_initialise() returns 1 if floating-point instructions are available, otherwise 0.<P>
+<CODE>
+<PRE>
+bool __fp_address_in_module(void *)
+</CODE>
+</PRE>
+If the variant fp_type == module is selected and the supplied abort handlers are used, then the above function must be provided. It is intended to return 1 if the argument address falls within the code of the fp emulator, (to allow the abort handler to describe what is really an abort on a floating-point load or store as such, rather than somewhere within the emulator's code).<P>
+<H2>Kernel</H2>
+The Kernel handles the entry to, and exit from, an application linked with the library. It also exports some variables for use by other parts of the library. Details of what the kernel must do are strongly dependent on details of the target environment. It is suggested that the ARMulator version of this file (kernel.s in the<I> </I><I>semi </I>directory) be used as a prototype. The following are the main interfaces to the kernel:<P>
+<CODE>
+<PRE>
+__main()
+</CODE>
+</PRE>
+The entry point to the application. Must perform low-level library initialisation, then call _main. (What initialisation needs to be done is target environment dependent: it may include heap, stack, fp support, calling various osdep_xxx_init() functions if they exist). __rt_lib_init must be called to initialise the body of the library.<P>
+<CODE>
+<PRE>
+void __rt_exit(int);
+</CODE>
+</PRE>
+This function finalises the library (including calling <CODE>atexit()</CODE> handlers), then returns to the OS with its argument as a completion code. It must be provided.<P>
+<CODE>
+<PRE>
+char *__rt_command_string(void);
+</CODE>
+</PRE>
+This function returns the address of (maybe a copy of) the string used to invoke the program. It must be provided.<P>
+<CODE>
+<PRE>
+void __rt_trap(__rt_error *, __rt_registers *);
+</CODE>
+</PRE>
+__rt_trap() handles a fault (processor detected trap, enabled fp exception, or the like). The argument register set describes the processor state at the time of the fault, with the pc value addressing the faulting instruction (except perhaps in the case of imprecise floating-point exceptions). This function must be provided. The implementation in the ARMulator kernel will usually be adequate.<P>
+<CODE>
+<PRE>
+unsigned __rt_alloc(unsigned minwords, void **block);
+</CODE>
+</PRE>
+__rt_alloc() is the low-level memory allocator underlying malloc(). (malloc() allocates only memory between HeapBase and HeapTop; a call to __rt_alloc() attempts to move HeapTop: cf Unix sbrk()). __rt_alloc should try to allocate a block of sensible size &gt;= minwords. If this is not available, and if __osdep_heapsupport_extend is defined, it should call that to attempt to move HeapLimit. Otherwise (or if the call fails) it should allocate the largest possible block of sensible size. The return value is the size of block allocated, and *block is set to point to the start of the allocated block (the return may be 0 if no sensibly sized block can be allocated). Allocations are rounded up to a suitable size to avoid an excessive number of calls to __rt_alloc.<P>
+<CODE>
+<PRE>
+void *(*__rt_malloc)(size_t)
+</CODE>
+</PRE>
+This is a function pointer, which the kernel should initialise to some primitive memory allocation function. The library itself contains no calls to malloc(), (other than those from functions of the malloc family, such as calloc()), instead the function pointed to by __rt_malloc is called. __rt_malloc is set to malloc during initialisation (if malloc is linked into the image). The use of __rt_malloc ensures that allocations made before malloc is initialised succeed, and prevents malloc from being necessarily linked into an image, even when unused.<P>
+<CODE>
+<PRE>
+extern void (*__rt_free)(void *);
+</CODE>
+</PRE>
+This is a function pointer, which the kernel should initialise to some primitive memory-freeing function. (see __rt_malloc above).<P>
+<A NAME="XREF36286"><H2>Miscellaneous</A></H2>
+<CODE>
+<PRE>
+void __osdep_traphandlers_init(void)
+</CODE>
+</PRE>
+This arranges to catch processor aborts (and pass them to __rt_trap).<P>
+<CODE>
+<PRE>
+void __osdep_traphandlers_finalise(void)
+</CODE>
+</PRE>
+This removes the processor abort handlers installed by ..._init().<P>
+<CODE>
+<PRE>
+void __osdep_heapsupport_init(HeapDescriptor *)
+</CODE>
+</PRE>
+This function must be provided, but may be null.<P>
+<CODE>
+<PRE>
+void __osdep_heapsupport_finalise(void)
+</CODE>
+</PRE>
+This function must be provided, but may be null.<P>
+<CODE>
+<PRE>
+{ int, void *} __osdep_heapsupport_extend(int size, HeapDescriptor *)
+</CODE>
+</PRE>
+This function requests extension of the heap by at least size bytes. The return values are number of bytes acquired, and base address of the new acquisition. This function must be provided, (but a null version just returning 0 will suffice if heap extension is not needed).<P>
+<CODE>
+<PRE>
+char *_hostos_error_string(int no, char *buf);
+</CODE>
+</PRE>
+This function is called to return a string describing an error outside the set ERRxxx defined in errno.h. (It may generate the message into the supplied buf if it needs to do so). It must be defined if perror() or strerror() is to be used.<P>
+<CODE>
+<PRE>
+char *_hostos_signal_string(int no)
+</CODE>
+</PRE>
+This function is called to return a string describing a signal whose number is outside the set SIGxxx defined in signal.h.<P>

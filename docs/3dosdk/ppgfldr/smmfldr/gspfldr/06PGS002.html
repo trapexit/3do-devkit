@@ -1,0 +1,38 @@
+<TITLE>Making Assumptions About Memory Types</TITLE>
+<H1><LINK NAME="XREF29562">Making Assumptions About Memory Types</LINK></H1><HR>
+<H3>What is it:</H3>
+Assuming that DMA structures can be declared as globals or can be declared on the stack.<P>
+<H3>Why it's bad:</H3>
+In future hardware, the DMA engine may not have access to the memory used to hold globals and the stack.<P>
+<H3>What to do</H3>
+Always allocate structures from the appropriate kind of memory.<P>
+<H2>Example and Discussion</H2>
+There will probably come a day when stack space, globals, and code reside in CPU-only memory, providing vastly improved performance. This memory will probably not be given DMA access, which will cause problems for objects that need this service. Particularly at risk are CCBs and audio buffers. Always allocate the memory for these structures by using <CODE>AllocMem()</CODE> with the appropriate MemType.<P>
+Avoid declarations of the following type:<P>
+<CODE>
+<PRE>
+MyRoutine ()
+{
+    CCB    myCel;
+        .
+        .
+        .
+}
+</CODE>
+</PRE>
+Instead, follow this example:<P>
+<CODE>
+<PRE>
+MyRoutine ()
+{
+    CCB    *myCel;
+
+    myCel = AllocMem (sizeof (CCB), MEMTYPE_CEL);
+        .
+        .
+        .
+    if (myCel) FreeMem (myCel, sizeof (CCB));
+}
+</CODE>
+</PRE>
+It is especially important that you modify your code to anticipate this. The penalty for trying to DMA from non-DMA memory is having your task terminated.<P>

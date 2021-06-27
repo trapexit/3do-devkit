@@ -1,0 +1,34 @@
+<TITLE>IsMemReadable</TITLE>
+<A NAME="XREF19527"><H1>IsMemReadable </A></H1>
+<A NAME="XREF25545"></A>Determines whether a region of memory is fully readable by the current task.<P>
+<H3>Synopsis</H3>
+<CODE>bool IsMemReadable( const void *p, int32 size )</CODE><P>
+<H3>Description</H3>
+This function considers the described block of the address space in relation to the known locations of RAM in the system, and returns TRUE if the block is entirely contained within RAM, and FALSE otherwise. <P>
+The low 512 (0x200) bytes of the address space have been declared to be "not memory" for all reasonable purposes; this function will therefore return FALSE for any block of memory that uses any portion of low memory. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>p
+<DD>A pointer to the start of the block.
+</DL>
+<DL>
+<DT>size
+<DD>The number of bytes in the block.
+</DL>
+<H3>Return Value</H3>
+This function returns TRUE if the block is entirely readable by the current task, or FALSE if any part of the block is not. <P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V24. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr093.html#XREF22189"><CODE>IsMemWritable</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF19527"></LINK></H1><HR>

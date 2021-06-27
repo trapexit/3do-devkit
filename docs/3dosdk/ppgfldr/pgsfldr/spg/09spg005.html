@@ -1,0 +1,166 @@
+<TITLE>Examples</TITLE>
+<H1><LINK NAME="XREF32739">Examples</LINK></H1><HR>
+The following two examples show how to use the timer device to read the current system time and make it wait a certain amount of time. See <A HREF="./10spg.html#XREF33355">Portfolio Devices</A>, for a complete description of the timer device.<P>
+<H2>Reading the System Time</H2>
+Example 1 demonstrates how to use the timer device to read the current system time. The example does the following:<P>
+<UL>
+<LI>Opens the timer device
+<LI>Creates an IOReq
+<LI>Initializes an IOInfo structure
+<LI>Calls <CODE>DoIO()</CODE> to perform the read operation
+<LI>Prints out the current time
+<LI>Cleans up
+</UL>
+Portfolio provides convenience calls that make using the timer device easier, for example, <CODE>CreateTimerIOReq()</CODE> and <CODE>DeleteTimerIOReq()</CODE>. This example shows how to communicate with devices in the Portfolio environment. Note that the <CODE>SampleSystemTime()</CODE> and <CODE>SampleSystemTimeTV()</CODE> calls provide a more accurate reading of the system time than the calls used in this example.<P>
+<B>Example 1: </B><I>Reading the current time (timerread.c).</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "string.h"
+#include "io.h"
+#include "device.h"
+#include "item.h"
+#include "time.h"
+#include "stdio.h"
+#include "operror.h"
+
+int main(int32 argc, char **argv)
+{
+Item    deviceItem;
+Item    ioreqItem;
+IOReq  *ior;
+IOInfo  ioInfo;
+TimeVal tv;
+Err     err;
+
+    deviceItem = OpenNamedDevice("timer",0);
+    if (deviceItem &gt;= 0)
+    {
+        ioreqItem = CreateIOReq(0,0,deviceItem,0);
+        if (ioreqItem &gt;= 0)
+        {
+            ior = (IOReq *)LookupItem(ioreqItem);
+
+            memset(&amp;ioInfo,0,sizeof(ioInfo));
+            ioInfo.ioi_Command         = CMD_READ;
+            ioInfo.ioi_Unit            = TIMER_UNIT_USEC;
+            ioInfo.ioi_Recv.iob_Buffer = &amp;tv;
+            ioInfo.ioi_Recv.iob_Len    = sizeof(tv);
+
+            err = DoIO(ioreqItem,&amp;ioInfo);
+            if (err &gt;= 0)
+            {
+                printf("Seconds %u, microseconds 
+
+                      %u\n",tv.tv_Seconds,tv.tv_Microseconds);
+            }
+            else
+            {
+                printf("DoIO() failed: ");
+                PrintfSysErr(err);
+            }
+            DeleteIOReq(ioreqItem);
+        }
+        else
+        {
+            printf("CreateIOReq() failed: ");
+            PrintfSysErr(ioreqItem);
+        }
+        CloseNamedDevice(deviceItem);
+    }
+    else
+    {
+        printf("OpenNamedDevice() failed: ");
+        PrintfSysErr(deviceItem);
+    }
+
+    return 0;
+}
+</CODE>
+</PRE>
+<H2>Using the Timer Device to Wait</H2>
+Example 2 demonstrates how to use the timer device to wait a certain amount of time. The program does the following:<P>
+<UL>
+<LI>Parses the command-line arguments
+<LI>Opens the timer device
+<LI>Creates an IOReq
+<LI>Initializes an IOInfo structure
+<LI>Calls <CODE>DoIO()</CODE> to perform the wait operation
+<LI>Cleans up
+</UL>
+Note that Portfolio provides convenience calls to make using the timer device easier, for example, <CODE>CreateTimerIOReq()</CODE>, <CODE>DeleteTimerIOReq()</CODE>, and <CODE>WaitTime()</CODE>. This example shows how to communicate with devices in the Portfolio environment. <P>
+<B>Example 2: </B><I>Waiting for a specified time (timersleep.c).</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "string.h"
+#include "io.h"
+#include "device.h"
+#include "item.h"
+#include "time.h"
+#include "stdio.h"
+#include "operror.h"
+
+
+int main(int32 argc, char **argv)
+{
+Item    deviceItem;
+Item    ioreqItem;
+IOReq  *ior;
+IOInfo  ioInfo;
+TimeVal tv;
+Err     err;
+
+    if (argc == 3)
+    {
+        tv.tv_Seconds      = strtoul(argv[1],0,0);
+        tv.tv_Microseconds = strtoul(argv[2],0,0);
+
+        deviceItem = OpenNamedDevice("timer",0);
+        if (deviceItem &gt;= 0)
+        {
+            ioreqItem = CreateIOReq(0,0,deviceItem,0);
+            if (ioreqItem &gt;= 0)
+            {
+                ior = (IOReq *)LookupItem(ioreqItem);
+
+                memset(&amp;ioInfo,0,sizeof(ioInfo));
+                ioInfo.ioi_Command         = TIMERCMD_DELAY;
+                ioInfo.ioi_Unit            = TIMER_UNIT_USEC;
+                ioInfo.ioi_Send.iob_Buffer = &amp;tv;
+                ioInfo.ioi_Send.iob_Len    = sizeof(tv);
+
+                err = DoIO(ioreqItem,&amp;ioInfo);
+                if (err &gt;= 0)
+                {
+                    printf("slept\n");
+                }
+                else
+                {
+                    printf("DoIO() failed: ");
+                    PrintfSysErr(err);
+                }
+                DeleteIOReq(ioreqItem);
+            }
+            else
+            {
+                printf("CreateIOReq() failed: ");
+                PrintfSysErr(ioreqItem);
+            }
+            CloseNamedDevice(deviceItem);
+        }
+        else
+        {
+            printf("OpenNamedDevice() failed: ");
+            PrintfSysErr(deviceItem);
+        }
+    }
+    else
+    {
+        printf("Usage: timersleep &lt;num seconds&gt; &lt;num microseconds&gt;\n");
+    }
+
+    return 0;
+}
+</CODE>
+</PRE>

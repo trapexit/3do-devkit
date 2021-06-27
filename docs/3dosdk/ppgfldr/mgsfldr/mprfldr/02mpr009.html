@@ -1,0 +1,20 @@
+<Title>DestroyObject</Title>
+<A NAME="XREF42157"><H1>DestroyObject </A></H1>
+<A NAME="XREF38790"></A> Destroys an object.<P>
+<H3>Synopsis</H3>
+<CODE>int32 DestroyObject( COBObject *Object )</CODE><P>
+<H3>Description</H3>
+This function is part of the Juggler object-oriented toolbox that supports the various classes of Juggler objects.  This function gets rid of an object.  Execute the object's <CODE>Term()</CODE> method to close the object, then use this call to get rid of the object by deleting its COBObject data structure and freeing the memory used to store it. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Object
+<DD>A pointer to the COBObject data structure for the object. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+cobj.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr007.html#XREF24520"><CODE>CreateObject</A>(), <A HREF="./02mpr008.html#XREF20394">DefineClass</A>(), <A HREF="./02mpr020.html#XREF12026">ValidateObject</A>() </CODE></CODE><P>

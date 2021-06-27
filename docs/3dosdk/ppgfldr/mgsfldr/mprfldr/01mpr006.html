@@ -1,0 +1,35 @@
+<Title>AttachEnvelope</Title>
+<A NAME="XREF15951"><H1>AttachEnvelope </A></H1>
+<A NAME="XREF40379"></A>Attaches an envelope to an instrument and creates an attachment item.<P>
+<H3>Synopsis</H3>
+<CODE>Item AttachEnvelope (Item Instrument, Item Envelope, char *EnvName)</CODE><P>
+<H3>Description</H3>
+This function attaches the specified envelope to the specified instrument and creates an attachment item. The attachment point (the hook) must be specified by name, as instruments may have multiple places where envelopes can be attached. <P>
+An instrument may, for example, have an amplitude envelope and a filter envelope, which may be called AmpEnv and FilterEnv respectively. The simple <P>
+envelope.dsp instrument has a hook name of Env. You'll find hook names in the Instrument Templates chapter of this book. Note that if EnvName is set to NULL, the Audio folio will look for "Env" as a default. <P>
+You may use the same envelope for several instruments. The envelope data may be edited at any time, but be aware that it is read by a high priority task in the Audio folio. Thus you should not leave it in a potentially "goofy" state if it is actively used. <P>
+When you finish, you should call <CODE>DetachEnvelope()</CODE> to delete the attachment and free its resources. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>The item number of the instrument to which to attach the Envelope. 
+</DL>
+<DL>
+<DT>Envelope
+<DD>The item number of the envelope to be attached. 
+</DL>
+<DL>
+<DT>EnvName
+<DD>The name of the attachment point (hook). Can be NULL, in which case an Envelope Hook named "Env" is used. 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of the Attachment created (a positive value) or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>Caveat</H3>
+Prior to V24, EnvName == NULL was not supported. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr032.html#XREF27420"><CODE>DetachEnvelope</A>(), <A HREF="./01mpr017.html#XREF13206">CreateEnvelope</A>(), <A HREF="./03mpr018.html#XREF22664">envelope.dsp</A> </CODE><P>
+</CODE>

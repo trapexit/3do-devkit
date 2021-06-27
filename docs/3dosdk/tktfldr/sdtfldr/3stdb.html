@@ -1,0 +1,133 @@
+<TITLE>Creating your 
+first patch</TITLE>
+<H1><LINK NAME="XREF35120"></LINK><LINK NAME="XREF23755">Creating your first patch</LINK></H1><HR>
+This section steps you through constructing a simple patch by creating and 
+connecting several blocks and then compiling your design and saving it as 
+a file. The following procedures are covered: <P>
+
+<UL>
+<LI><A HREF="#XREF28011">Creating a simple wave form</A>.
+<LI><A HREF="#XREF35833">Creating frequency and amplitude knobs</A>.
+<LI><A HREF="#XREF34597">Connecting and disconnecting blocks</A>.
+<LI><A HREF="#XREF27321">Creating an output block</A>.
+</UL>
+<A NAME="XREF28011"><H2>Creating a simple wave form </A></H2>
+To create a simple wave form as the first element of the patch, follow 
+these steps: <P>
+<OL>
+<LI>Move the mouse cursor over the synthetic wave block in the block 
+palette. 
+<p>
+<LI>Press and hold the mouse button and move the cursor into the patch 
+document. Place the rectangle outline in the center of the document and 
+release the mouse button. 
+<p>
+<p>A synthetic wave block has been placed in the middle of the document. 
+<p>
+
+<LI>Use the pop-up menu to change the block type to Sawtooth (see Figure 
+1). 
+</OL>
+
+<IMG SRC="Figures/Ch3figs/SimpleSawtooth.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Sawtooth wave in the patch document.</I><P>
+<A NAME="XREF35833"><H2>Creating frequency and amplitude knobs</A></H2>
+To actually hear the wave, you need to attach frequency and amplitude 
+knobs and send it to an output.<P>
+Attaching the knobs consists of two steps: <P>
+<UL>
+<LI>Creating knobs.
+<LI>Connecting the knobs to other blocks.
+</UL>
+<B>Note: </B>If you don't connect a knob directly to a synthetic wave form 
+or a sample, but have intervening blocks, you also need to edit the knob. 
+This is discussed in the section <A HREF="#XREF24297">Editing knobs</A>.<P>
+<H3>Adding knobs to your patch</H3>
+To create knobs for manipulating a waveform or other elements, follow 
+these steps: <P>
+<OL>
+<LI>Move the cursor over each of the knob block ports-the small 
+triangles-to the left of the waveform block you just created, and click.
+<p>
+<p>When the cursor is over a block port, the status panel in the 
+bottom-left corner of the patch document indicates what kind of port it 
+is. The status panel should read Frequency for the top block port and 
+Amplitude for the bottom block port. 
+<p>
+<p>
+<p>Select the knob tool and create a knob by dragging the block to the 
+left and above the wave. 
+<p>Move a second knob to the left and below the wave.
+</OL>
+
+<IMG SRC="Figures/Ch3figs/Saw2knobs.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Patch with knobs.</I><P>
+<A NAME="XREF34597"><H2>Connecting and disconnecting blocks</A></H2>
+You can use the ARIA tool's user interface to connect and disconnect 
+knobs, wave forms, and other elements just as you would connect the 
+elements on a digital synthesizer.<P>
+<PRE>
+<B>Table 1: </B><I> Connecting and disconnecting blocks.</I>
+-------------------------------------------------------
+To connect      |* Move the cursor onto the block port 
+blocks:         |to the right of the topmost knob.     
+                |* Hold down the mouse button and drag 
+                |the line that appears to the top block
+                |port on the left of the wave.         
+                |If you connect a knob block, it       
+                |changes its name and type in an       
+                |appropriate way.                      
+-------------------------------------------------------
+To disconnect   |* Move the cursor near (but not over) 
+blocks:         |the connection, press and hold the    
+                |Option key and the mouse button. A    
+                |knife cursor appears.                 
+                |* Drag the knife cursor across the    
+                |connection to cut it.                 
+-------------------------------------------------------
+</PRE>
+<P>
+Figure 3 shows a patch after knobs have been connected 
+to the frequency and amplitude block ports. <P>
+
+<IMG SRC="Figures/Ch3figs/2Knobsconnect.gif" ALT="Graphic cannot 
+be displayed">
+<P>
+<B>Figure 3: </B><I>Knobs with changed characteristics connection. </I><P>
+<A NAME="XREF24297"><H2>Editing knobs</A></H2>
+When you connect a knob to a synthetic waveform or a sample, ARIA 
+automatically sets characteristics depending on the block you've chosen. 
+This includes the type of knob, name of knob, default value, maximum and 
+minimum, and format (integer or fractional value). <P>
+You can override the name and default value by clicking and editing, and 
+change the type by using the pop-up. <P>
+To change the maximum or minimum, follow these steps: <P>
+<OL>
+<LI>Select the knob.
+
+<LI>From the Patch menu, choose Knob Info or type Command-I.
+<p>
+<p>The knob with its default settings appears. 
+<p>
+
+<LI>Change the maximum or minimum as desired. 
+</OL>
+<A NAME="XREF27321"><H2>Creating an output block</A></H2>
+Every patch you create with ARIA must have at least one output block at 
+the end. To create an Output block:<P>
+<OL>
+<LI>Drag an Output block from the block palette to a position to the right 
+of the waveform and rename it if you like. 
+<p>
+<LI>Connect the Sawtooth generator to the Output block the same way you 
+connected knobs to the waveform.
+</OL>
+
+<IMG SRC="Figures/Ch3figs/Sawtooth2knobsOutput.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 4: </B><I>Complete patch with output block.</I><P>

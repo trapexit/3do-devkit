@@ -1,0 +1,25 @@
+<Title>InsetSRect</Title>
+<A NAME="XREF21641"><H1>InsetSRect </A></H1>
+ Shrinks or enlarges an SRect.<P>
+<H3>Synopsis</H3>
+<CODE>SRect * InsetSRect (SRect *dst, IPoint *delta)</CODE><P>
+<H3>Description</H3>
+This function shrinks or enlarges the amount of area described by the dst rectangle. Positive delta values shrink the area, negative values enlarge the area. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to the SRect to manipulate. 
+</DL>
+<DL>
+<DT>delta
+<DD>Pointer to the delta values to apply to dst. 
+</DL>
+<H3>Return Value</H3>
+The input parameter dst. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO102.html#XREF37506"><CODE>InsetCRect</A></CODE><P>
+</CODE>

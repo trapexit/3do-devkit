@@ -1,0 +1,21 @@
+<Title>OpenDirectoryPath</Title>
+<A NAME="XREF15336"><H1>OpenDirectoryPath </A></H1>
+<A NAME="XREF17794"></A> Opens a directory specified by a pathname.<P>
+<H3>Synopsis</H3>
+<CODE>Directory *OpenDirectoryPath( char *thePath )</CODE><P>
+<H3>Description</H3>
+This function opens a directory. It allocates a new directory structure, opens the directory, and prepares for a traversal of the contents of the directory. Unlike <CODE>OpenDirectoryItem()</CODE>, you specify the file for the directory by its pathname rather than by its item number. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>thePath
+<DD>An absolute or relative pathname (a null- terminated text string) for the file to use for the directory, or an alias for the pathname. 
+</DL>
+<H3>Return Value</H3>
+The function returns a pointer to a directory structure that is created or NULL if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in file folio V20. <P>
+<H3>Associated Files</H3>
+directoryfunctions.h, filesystem.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02spr016.html#XREF10715"><CODE>OpenDiskFile</A>(), <A HREF="./02spr017.html#XREF22921">OpenDiskFileInDir</A>(), <A HREF="./02spr014.html#XREF16957">OpenDirectoryItem</A>(), <A HREF="./02spr002.html#XREF38614">CloseDirectory</A>() </CODE><P>
+</CODE>

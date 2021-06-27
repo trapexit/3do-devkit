@@ -1,0 +1,28 @@
+<Title>GetFontCharInfo</Title>
+<A NAME="XREF37606"><H1>GetFontCharInfo </A></H1>
+ Retrieves character information.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetFontCharInfo (FontDescriptor *fDesc,int32 character, void **blitInfo)</CODE><P>
+<H3>Description</H3>
+Returns information about the specified character. The return value is the width of the character (not including inter-character spacing). The void pointer at *blitInfo will contain a special value to speed up processing within <CODE>BlitFontChar()</CODE>. <P>
+<CODE>GetFontCharInfo()</CODE> supports the internals of the text library; it should never be necessary to call this function directly from an application program. If you are implementing your own replacement text library, use <CODE>GetFontcharInfo()</CODE> to obtain information about font character pixels before blitting them into your own memory buffer. You can use the standard text library source code as a guide in creating your own text library. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>fDesc
+<DD>Pointer to a FontDescriptor structure. 
+</DL>
+<DL>
+<DT>character
+<DD>The specific character you're looking for.
+</DL>
+<DL>
+<DT>blitInfo
+<DD>A void pointer updated by this call and then passed to the <CODE>BlitFontChar()</CODE> call. 
+</DL>
+<H3>Return Value</H3>
+Width of the character; zero if the character is not present in the font. <P>
+<H3>Associated Files</H3>
+lib3do.lib, fontlib.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO003.html#XREF20398"><CODE>BlitFontChar</A><CODE>, <A HREF="./01LDO080.html#XREF36747">GetFontCharWidth</A> </CODE><P>
+</CODE>

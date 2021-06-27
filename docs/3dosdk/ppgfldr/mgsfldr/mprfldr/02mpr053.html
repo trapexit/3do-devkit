@@ -1,0 +1,28 @@
+<Title>LoadSoundFile</Title>
+<A NAME="XREF30905"><H1>LoadSoundFile </A></H1>
+<A NAME="XREF36618"></A> Preloads the first part of a sound file.<P>
+<H3>Synopsis</H3>
+<CODE>Err LoadSoundFile( SoundFilePlayer *sfp, char *FileName )</CODE><P>
+<H3>Description</H3>
+This function preloads the first part of a sound file to be played.  The file should be an AIFF file.  The appropriate DSP instrument to play this sound file is loaded for you at the same time. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sfp
+<DD>A pointer to the SoundFilePlayer. 
+</DL>
+<DL>
+<DT>FileName
+<DD>A pointer to the sound file. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Caveats</H3>
+Prior to V24 this function failed to check the file's block size. It always assumed that it was 2048 bytes. As of V24 it does check. However, there has always been an implicit requirement that buffer size be a multiple of block size. Not having buffers be a multiple of block size could result in memory overruns. The sound file player now checks buffer size against block size and returns an error if the buffer size is not a multiple of block size. <P>
+This means that an application using 10K buffers will work fine on a 2K block file  and will simply fail on a 4K block file system. To prevent this choose a buffer size that is a multiple of all of the block sizes that your application is expected to support. <P>
+If this restriction is too severe, use the advanced sound player instead. <P>
+<H3>Associated Files</H3>
+soundfile.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr054.html#XREF26861"><CODE>OpenSoundFile</A>(),<A HREF="./02mpr050.html#XREF25761">CloseSoundFile</A>(), <A HREF="./02mpr052.html#XREF37655">DeleteSoundFilePlayer</A>(),  <A HREF="./02mpr055.html#XREF26293">ReadSoundFile</A>(), <A HREF="./02mpr056.html#XREF37577">RewindSoundFile</A>(), <A HREF="./02mpr057.html#XREF11879">ServiceSoundFile</A>(), <A HREF="./02mpr058.html#XREF32478">StartSoundFile</A>(), <A HREF="./02mpr059.html#XREF24025">StopSoundFile</A>(), <A HREF="./02mpr060.html#XREF41161">UnloadSoundFile</A>() <A HREF="./02mpr051.html#XREF42166">CreateSoundFilePlayer</A>() </CODE></CODE><P>

@@ -1,0 +1,34 @@
+<Title>MakeCCBRelative </Title>
+<A NAME="XREF15984"><H1>MakeCCBRelative </A></H1>
+<A NAME="XREF25442"> Creates a CCB relative address.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 MakeCCBRelative (field, linkObject)</CODE><P>
+<H3>Description</H3>
+MakeCCBRelativ<CODE>e()</CODE> allows you to turn the absolute address of an object into the sort of relative address needed by the cel engine. The first argument is a pointer to the field to receive the relative address and the second argument is a pointer to the object to be referenced. This macro does the math required to create a correct relative offset, which is not simply the difference between the two addresses. For example, to create a relative pointer to a "next cel" you would use these arguments: <P>
+<CODE>
+<PRE>
+ cel-&gt;ccb_Next Ptr=(CCB*)CCB_Relative(&amp;cel-&gt;ccb_Next Ptr,&amp;Next Cel();
+</CODE>
+</PRE>
+To make sure the cel indicates it has a relative pointer to the next cel, explicitly clear the control flag: <P>
+<CODE>
+<PRE>
+ Clear Flag(cel-&gt;ccb_Flags,CCB_NPABS);
+</CODE>
+</PRE>
+This macro is required because the cel engine uses pipelined prefetch techniques that keep the cel engine's internal addressing ahead of the internal logic that processes the addresses and data in the cel control block. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>field
+<DD>The address of the object that receives the relative link to the other object. The object can be the next CCB, cel data, or the PLUT. This argument is any value that can be coerced to an int32. 
+</DL>
+<DL>
+<DT>linkObject
+<DD>The address to the object that will be linked. The object can be the next CCB, cel data, or the PLUT. This argument is any value that can be coerced to an int32. 
+</DL>
+<H3>Return Value</H3>
+The macro returns an int32 value that is the relative offset between the two addresses corrected (offset) as required by the cel engine. <P>
+<H3>Implementation</H3>
+Macro implemented in graphics.h V20. <P>
+<H3>Associated File</H3>
+graphics.h<P>

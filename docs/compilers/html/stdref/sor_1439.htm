@@ -1,0 +1,115 @@
+<HTML><TITLE>sort</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>sort</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Templated algorithm for sorting collections of entities.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class RandomAccessIterator>
+void <B>sort</B> (RandomAccessIterator first, 
+           RandomAccessIterator last);
+template &#60;class RandomAccessIterator, class Compare>
+void <B>sort</B> (RandomAccessIterator first, 
+           RandomAccessIterator last, Compare comp);</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>sort</B></I> algorithm sorts the elements in the range <SAMP>[first, last)</SAMP> using either the less than (<SAMP>&#60;</SAMP>) operator or the comparison operator <SAMP>comp</SAMP>.  If the worst case behavior is important <A HREF="sta_5767.htm"><B><I>stable_sort </B></I></A>or <A HREF="par_4963.htm"><B><I>partial_sort</B></I></A> should be used.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P><B><I>sort</B></I> performs approximately <SAMP>NlogN</SAMP>, where <SAMP>N</SAMP> equals l<SAMP>ast -  first</SAMP>, comparisons on the average.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// sort.cpp
+//
+ #include &#60;vector>
+ #include &#60;algorithm>
+ #include &#60;functional>
+ #include &#60;iostream.h>
+ struct associate
+ {
+   int num;
+   char chr;
+   associate(int n, char c) : num(n), chr(c){};
+   associate() : num(0), chr('\0'){};
+ };
+ bool operator&#60;(const associate &#38;x, const associate &#38;y)
+ {
+   return x.num &#60; y.num;
+ }
+ ostream&#38; operator&#60;&#60;(ostream &#38;s, const associate &#38;x)
+ {
+   return s &#60;&#60; "&#60;" &#60;&#60; x.num &#60;&#60; ";" &#60;&#60; x.chr &#60;&#60; ">";
+ }
+ int main ()
+ {
+   vector&#60;associate>::iterator i, j, k;
+   associate arr[20] = 
+        {associate(-4, ' '), associate(16, ' '),
+         associate(17, ' '), associate(-3, 's'),
+         associate(14, ' '), associate(-6, ' '),
+         associate(-1, ' '), associate(-3, 't'),
+         associate(23, ' '), associate(-3, 'a'),
+         associate(-2, ' '), associate(-7, ' '),
+         associate(-3, 'b'), associate(-8, ' '),
+         associate(11, ' '), associate(-3, 'l'),
+         associate(15, ' '), associate(-5, ' '),
+         associate(-3, 'e'), associate(15, ' ')};
+   // Set up vectors
+   vector&#60;associate> v(arr, arr+20), v1((size_t)20), 
+                 v2((size_t)20);
+   // Copy original vector to vectors #1 and #2
+   copy(v.begin(), v.end(), v1.begin());
+   copy(v.begin(), v.end(), v2.begin());
+<B>   </B>// Sort vector #1
+   <B>sort</B>(v1.begin(), v1.end());
+   // Stable sort vector #2
+   stable_sort(v2.begin(), v2.end());
+   // Display the results
+   cout &#60;&#60; "Original    sort      stable_sort" &#60;&#60; endl;
+   for(i = v.begin(), j = v1.begin(), k = v2.begin();
+       i != v.end(); i++, j++, k++)
+   cout &#60;&#60; *i &#60;&#60; "     " &#60;&#60; *j &#60;&#60; "     " &#60;&#60; *k &#60;&#60; endl;
+   return 0;
+ }
+Output :
+Original    sort      stable_sort
+&#60;-4; >     &#60;-8; >     &#60;-8; >
+&#60;16; >     &#60;-7; >     &#60;-7; >
+&#60;17; >     &#60;-6; >     &#60;-6; >
+&#60;-3;s>     &#60;-5; >     &#60;-5; >
+&#60;14; >     &#60;-4; >     &#60;-4; >
+&#60;-6; >     &#60;-3;e>     &#60;-3;s>
+&#60;-1; >     &#60;-3;s>     &#60;-3;t>
+&#60;-3;t>     &#60;-3;l>     &#60;-3;a>
+&#60;23; >     &#60;-3;t>     &#60;-3;b>
+&#60;-3;a>     &#60;-3;b>     &#60;-3;l>
+&#60;-2; >     &#60;-3;a>     &#60;-3;e>
+&#60;-7; >     &#60;-2; >     &#60;-2; >
+&#60;-3;b>     &#60;-1; >     &#60;-1; >
+&#60;-8; >     &#60;11; >     &#60;11; >
+&#60;11; >     &#60;14; >     &#60;14; >
+&#60;-3;l>     &#60;15; >     &#60;15; >
+&#60;15; >     &#60;15; >     &#60;15; >
+&#60;-5; >     &#60;16; >     &#60;16; >
+&#60;-3;e>     &#60;17; >     &#60;17; >
+&#60;15; >     &#60;23; >     &#60;23; ></PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument. For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="sta_5767.htm"><B><I>stable_sort</B></I></A>, <A HREF="par_4963.htm"><B><I>partial_sort</B></I></A>,  <A HREF="par_1563.htm"><B><I>partial_sort_copy</B></I></A></P>
+<HR>
+<A HREF="set_6462.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="sor_3899.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

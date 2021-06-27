@@ -1,0 +1,22 @@
+; $Id: sample.patch,v 1.2 1994/05/02 19:05:04 peabody Exp $
+; simple sample player patch
+
+LoadInstrument  output  directout.dsp
+
+LoadInstrument  lfo     triangle.dsp
+	Tweak	lfo	Frequency	0
+
+LoadInstrument  player  samplermod.dsp
+LoadSample      sample  sinewave.aiff	; <- put your sample here
+AttachSample    attachment player sample ; InFIFO
+	Tweak	player	moddepth	1000
+
+LoadInstrument  filter  svfilter.dsp
+
+Connect         lfo     output      player  modinput
+
+Connect  	player  output	    filter  input
+
+Connect         filter  output      output  InputLeft
+Connect         filter  output      output  InputRight
+

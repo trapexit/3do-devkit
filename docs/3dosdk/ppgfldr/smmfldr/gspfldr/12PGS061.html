@@ -1,0 +1,20 @@
+<Title>ta_timer</Title>
+<A NAME="XREF21851"><H1>ta_timer </A></H1>
+<A NAME="XREF19217"> </A>Demonstrates use of the audio timer.<P>
+<H3>Synopsis</H3>
+<CODE>ta_timer</CODE><P>
+<H3>Description</H3>
+This program shows how to examine and change the rate of the audio clock. 
+It demonstrates use of cues to signal your task at a specific time. It 
+also demonstrates how the audio folio deals with bad audio rate values. <P>
+Pressing A from the main menu runs the audio clock at successively faster 
+rates, using <CODE>SleepAudioTime()</CODE>. <P>
+Pressing B from the main menu uses <CODE>SignalAtTime()</CODE> in 
+conjunction with cues to wait. While using this method, you can press A or 
+B to abort one of two cues prematurely. <P>
+Pressing C from the main menu feeds illegal values to 
+<CODE>SetAudioRate()</CODE>. <P>
+<H3>Associated Files</H3>
+ta_timer.c<P>
+<H3>Location</H3>
+examples/Audio <P>

@@ -1,0 +1,33 @@
+<TITLE>Object-Oriented Programming Concepts</TITLE>
+<H1><LINK NAME="XREF22305">Object-Oriented Programming Concepts</LINK></H1><HR>
+This section provides a brief description of object-oriented programming concepts. If you are familiar with object-oriented programming, you may want to skip to .<P>
+<H2>Objects</H2>
+An <I>object</I> is a data structure with associated functions. A task can create an object and then work with it as a self-contained operating entity, similar to a machine whose inner workings are concealed. The task sends a message to the object, which interprets the message using one of its functions. The function performs the desired action and can change variables stored within the object to keep track of what it has done.<P>
+<H2>Methods and Messages</H2>
+Each function associated with an object is called a <I>method. </I>An object can have one or more methods. A task sends a <I>message</I> to an object that indicates which method to execute. A message contains arguments that determine how the method performs.<P>
+A task must supply the proper arguments with the message in order for the method to execute. When an object receives a message with its accompanying arguments, it takes over operation, executing the method and dealing with the results of execution.<P>
+<H2>Object Variables</H2>
+An object can also have variables associated with it that describe the state of the object. When a method executes, the object variables can be used to determine what actions to perform. A method can also modify object variables to reflect changes it has made to the object.<P>
+Object variables are internal to the object, and should not be touched directly by a task working with an object.<P>
+<H2>Classes and Instances</H2>
+A <I>class</I> defines an object. A class specifies an object's variables and methods and defines how those methods affect the object variables. When a task creates an object, it specifies which class to use for the object's definition. The class is used to create an <I>instance</I> of the class. An instance is a single implementation of the class (i.e. an object defined by the class).<P>
+Each instance of a class has its own data space and variables that record the state of the instance. The instance also contains pointers to the methods defined by the class. When an object receives a message, the object calls one of the class methods which executes using the calling object's variables.<P>
+For example, consider a class that defines an employee object. The object has several variables which record the employee's name, date of hire,  date of termination, and salary or hourly rate. The object has one method which accepts a <I>Pay Rate</I> message. When the method executes, it prints the employee's rate of pay or the termination date if the employee has left the company. <P>
+If a program creates two employee objects that have the following variable values:<P>
+<PRE>
+<B>Table 1: </B><I> Employee object variable values.</I>
+--------------------------------------------
+employee1            |employee2             
+--------------------------------------------
+John Smith           |Jane Doe              
+--------------------------------------------
+10/21/90             |2/23/92               
+--------------------------------------------
+$20/hr               |$40,000/yr            
+--------------------------------------------
+3/3/94               |null                  
+--------------------------------------------
+</PRE>
+<P>
+If a <I>Pay Rate</I> message is sent to each object, the employee1 object prints the date that John Smith left the company. The employee2 object prints the annual salary for Jane Doe. Identical messages to objects of the same class can produce different results when the state of the object variables is different.<P>
+<A NAME="XREF12388"></A>

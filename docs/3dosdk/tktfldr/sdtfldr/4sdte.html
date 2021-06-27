@@ -1,0 +1,23 @@
+<TITLE>Tips and tricks</TITLE>
+<H1><LINK NAME="XREF14925">Tips and tricks</LINK></H1><HR>
+This section first provides some additional hints on working with the MIDI project interface, then some more general advice. <P>
+<H2>MIDI project interface tips</H2>
+<UL>
+<LI>Default MIDI Channel Program Numbers-If you don't have changes in the MIDI stream, ARIA uses the default. You can assign a channel (top row) to a program (bottom row) by replacing the program number with a channel.
+<p>
+<LI>ANO<B>-</B>Turns off hanging notes after you stop a MIDI file. 
+<p>
+<LI>Error-This button is dimmed if no errors occur, but flashes if there is an error. You can then click it to view the error information in a dialog box.
+</UL>
+<H2>MIDI tricks</H2>
+<UL>
+<LI>Playing a patch via real-time MIDI produces drastically different volume levels depending on whether the patch window or the MIDI project window is selected. 
+<p>
+<LI>When the program number for an instrument in a PIMap is interpreted, it is decremented by 1 to make the range 0-127 instead of 1-128. When using a sequencer to prepare a MIDI file to use with the PIMap, be sure to set its program number range accordingly, or offset the program numbers in the PIMap by one. 
+<p>
+<LI>When setting up one or more instruments on a particular MIDI channel in the PIMap, make sure that the note ranges are set up so that all notes on that channel can trigger something, even if only a small note range is to be utilized. If a note-on instruction is broadcast on a channel that does not actually trigger a note for the instrument, no further notes will be heard until the debugger and ARIA are relaunched. MIDI information is still being received in this state; it is possible to have it displayed in the Debugger Terminal window, but it does not generate any events that can be heard. MIDI files already loaded in the MIDI project window, however, will still play after this state is reached. 
+<p>
+<LI>ARIA allows 12-note polyphony for real-time playback. Levels are set to three times the safe level (one-twelfth of maximum on each channel). This causes clipping if more than four voices play at maximum amplitude at exactly the same time. 
+</UL>
+<TITLE></TITLE>
+<H1></H1><HR>

@@ -1,0 +1,27 @@
+<Title>ParseCel</Title>
+<A NAME="XREF18211"><H1>ParseCel </A></H1>
+ Parses a cel file image in memory.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * ParseCel (void *inBuf, long inBufSize)</CODE><P>
+<H3>Description</H3>
+This function parses cel(s) in a memory buffer. It is useful when you have loaded a cel file using some method other than <CODE>LoadCel()</CODE> and you need to parse the cels in the buffer. <P>
+If the buffer contains more than one cel, the CCBs are strung together via their ccb_NextPtr fields in the same order as they are encountered in the buffer. This allows you to store a group of related cels in one file, and treat them as a single logical entity using the other CelUtils library functions that work with lists of cels. <P>
+This function also contains special handling for anti-aliased cels. AACels are two cels stored together in the same file, but the CCBs are stored in reverse order of the way they must be drawn. AACels are recognized by a characteristic signature (exactly two cels, one is 4-bit coded the other 16-bit uncoded, same size and coordinates, etc.), and when detected the CCB links are automatically reversed so the return value is a list of two cels linked in the proper order for drawing. One drawback to the signature-detection logic is that it prevents the storage of multiple related anti-aliased cels in the same file. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>inBuf
+<DD>Pointer to a buffer containing the cel file image. 
+</DL>
+<DL>
+<DT>inBufSize
+<DD>Size of cel file image in the buffer. 
+</DL>
+<H3>Return Value</H3>
+Pointer to the list of cels parsed from the buffer. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO114.html#XREF15438"><CODE>LoadCel</A> </CODE><P>
+</CODE>

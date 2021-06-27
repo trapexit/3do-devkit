@@ -1,0 +1,21 @@
+<Title>ValidateObject</Title>
+<A NAME="XREF12026"><H1>ValidateObject </A></H1>
+<A NAME="XREF18185"></A> Validates an object.<P>
+<H3>Synopsis</H3>
+<CODE>int32 ValidateObject( COBObject *cob )</CODE><P>
+<H3>Description</H3>
+This function is part of the Juggler object-oriented toolbox that supports the various classes of Juggler objects.  This function returns an error code if the object is not a valid object that is, if the COBObject data structure element dedicated to object validity doesn't confirm validity. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cob
+<DD>A pointer to the COBObject data structure for the object. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if the object is valid or an error code (a negative value) if the object isn't valid. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+cobj.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr007.html#XREF24520"><CODE>CreateObject</A>(), <A HREF="./02mpr008.html#XREF20394">DefineClass</A>(), <A HREF="./02mpr009.html#XREF42157">DestroyObject</A>() </CODE><P>
+</CODE>

@@ -1,0 +1,179 @@
+<HTML><HEAD><TITLE>Sidebars</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Sidebars</H2>
+<BR>
+<A NAME="sidebar1"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Iterators</STRONG>
+<P><I>Iterators</I> are pointer-like objects, used to cycle through the elements stored in a container.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar2"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Range</STRONG>
+<P>A <I>range</I> is a sequence of values held in a container.  The range is described by a pair of iterators, which define the beginning and end of the sequence.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar3"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Iterator Ranges</STRONG>
+<P>When iterators are used to describe a range of values in a container, it is assumed (but not verified) that the second iterator is reachable from the first.  Errors will occur if this is not true.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar4"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Ordinary Pointers as Iterators</STRONG>
+<P>Because ordinary pointers have the same functionality as random access iterators, most of the generic algorithms in the standard library can be used with conventional C++ arrays, as well as with the containers provided by the standard library.</P>
+
+<BR><BR><BR><BR><BR><A NAME="sidebar5"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Parallel Sequences</STRONG>
+<P>A number of the generic algorithms manipulate two parallel sequences.  Frequently the second sequence is described using only a beginning iterator, rather than an iterator pair.  It is assumed, but not checked, that the second sequence has at least as many elements as the first.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar6"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> randomInteger()</STRONG>
+<P>The function <SAMP>randomInteger</SAMP> described here is used in a number of the example programs presented in later sections.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar7"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Stream Iterators</STRONG>
+<P>An input stream iterator permits an input stream to be read using iterator operations.  An output stream iterator similarly writes to an output stream when iterator operations are executed.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar8"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Location of the Class Definitions</STRONG>
+<P>The class definitions for unary_function and binary_function can be incorporated by #including <SAMP>functional</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar9"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Using Function Objects to Store References</STRONG>
+<P>A more complex illustration of the use of a function object occurs in the radix sorting example program given as an illustration of the use of the list data type in <a href="exa_6226.htm">Chapter 7</a>.  In this program references are initialized in the function object, so that during the sequence of invocations the function object can access and modify local values in the calling program.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar10"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> A Hot Idea</STRONG>
+<P>The idea described here by the term binder is in other contexts often described by the term <I>curry</I>.  This is not, as some people think, because it is a hot idea.  Instead, it is named after the computer scientist Haskell P. Curry, who used the concept extensively in an influential book on the theory of computation in the 1930's.  Curry himself attributed the idea to Moses Sch_nfinkel, leaving one to wonder why we don't instead refer to binders as "Sch_nfinkels."</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar11"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Requirements of an Element Type</STRONG>
+<P>Elements that are held by a vector must define a default constructor (constructor with no arguments), as well as a copy constructor.  Although not used by functions in the vector class, some of the generic algorithms also require vector elements to recognize either the equivalence operator (operator <SAMP>==</SAMP>) or the relational less-than operator (operator <SAMP>&#60;)</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar12"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Constructors and Iterators</STRONG>
+<P>Because it requires the ability to define a method with a template argument different from the class template, some compilers may not yet support the initialization of containers using iterators.  In the mean time, while compiler technology catches up with the standard library definition, the Rogue Wave version of the standard library will support conventional pointers and vector iterators in this manner.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar13"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Memory Management</STRONG>
+<P>A vector stores values in a single large block of memory.  A deque, on the other hand, employs a number of smaller blocks.  This difference may be important on machines that limit the size of any single block of memory, because in such cases a deque will be able to hold much larger collections than are possible with a vector.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar14"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Costly Insertions</STRONG>
+<P>Even adding a single element to a vector can, in the worst case, require time proportional to the number of elements in the vector, as each element is moved to a new location.  If insertions are a prominent feature of your current problem, then you should explore the possibility of using containers, such as lists or sets, which are optimized for insert operations.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar15"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Iterator Invalidation</STRONG>
+<P>Once more, it is important to remember that should reallocation occur as a result of an insertion, all references, pointers, and iterators that denoted a location in the now-deleted memory block that held the values before reallocation become invalid.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar16"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Initializing Count</STRONG>
+<P>Note that count() returns its result through an argument that is passed by reference.  It is important that this value be properly initialized before invoking this function.</P>
+
+<BR><BR><BR><BR><BR><A NAME="sidebar17"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Source</STRONG>
+<P>Source for this program is found in the file <SAMP>sieve.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar18"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Memory Management</STRONG>
+<P>Note that if you declare a container as holding pointers, you are responsible for managing the memory for the objects pointed to.  The container classes will not, for example, automatically free memory for these objects when an item is erased from the container.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar19"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Iteration Invalidation</STRONG>
+<P>Unlike a <B><I>vector</I></B> or <B><I>deque</I></B>, insertions or removals from the middle of a <B><I>list</I></B> will not invalidate references or pointers to other elements in the container. This property can be important if two or more iterators are being used to refer to the same container.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar20"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Verify Search Results</STRONG>
+<P>The searching algorithms in the standard library will always return the end of range iterator if no element matching the search condition is found.  Unless the result is guaranteed to be valid, it is a good idea to check for the end of range condition.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar21"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>The executable version of the widget works program is contained in file <SAMP>widwork.cpp</SAMP> on the distribution disk.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar22"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>The complete radix sort program is found in the file <SAMP>radix.cpp</SAMP> in the tutorial distribution disk.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar23"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Sets, Ordered and Not</STRONG>
+<P>Although the abstract concept of a set does not necessarily imply an ordered collection, the <A HREF="../stdref/set_1649.htm"><B><I>set</I></B></A> data type is always ordered.  If necessary, a collection of values that cannot be ordered can be maintained in, for example, a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar24"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Sets and Bags</STRONG>
+<P>In other programming languages, a multiset is sometimes referred to as a <I>bag</I>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar25"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Initializing Sets with Iterators</STRONG>
+<P>As we noted in the earlier discussion on vectors and lists, the initialization of containers using a pair of iterators requires a mechanism that is still not widely supported by compilers.  If not provided, the equivalent effect can be produced by declaring an empty set and then using the <SAMP>copy()</SAMP> generic algorithm to copy values into the set. </P>
+<BR><BR><BR><BR><BR><A NAME="sidebar26"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> The Pair Data Type</STRONG>
+<P>If you want to use the <B>pair</B> data type without using maps, you should include the header file named <SAMP>utility</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar27"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> No Iterator Invalidation</STRONG>
+<P>Unlike a vector or deque, the insertion or removal of values from a set does not invalidate iterators or references to other elements in the collection.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar28"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>This program can be found in the file <SAMP>spell.cpp</SAMP> in the tutorial distribution.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar29"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Other Names for Maps</STRONG>
+<P>In other programming languages, a map-like data structure is sometimes referred to as a <I>dictionary</I>, a <I>table</I>, or an <I>associative</I> <I>array</I>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar30"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Pairs</STRONG>
+<P>See the discussion of insertion in <a href="set_3455.htm">Chapter 8</a> for a description of the pair data type.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar31"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> No Iterator Invalidation</STRONG>
+<P>Unlike a vector or deque, the insertion or removal of elements from a map does not invalidate iterators which may be referencing other portions of the container.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar32"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>The complete example program is included in the file tutorial <SAMP>tele.cpp</SAMP> in the distribution.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar33"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>The executable version of this program is found in the file <SAMP>graph.cpp</SAMP> on the tutorial distribution disk.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar34"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>An executable version of the concordance program is found on the tutorial distribution file under the name <SAMP>concord.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar35"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> LIFO and FIFO</STRONG>
+<P>A stack is sometimes referred to as a LIFO structure, and a queue is called a FIFO structure.  The abbreviation LIFO stands for Last In, First Out.  This means the first entry removed from a stack is the last entry that was inserted.  The term FIFO, on the other hand, is short for First In, First Out.  This means the first element removed from a queue is the first element that was inserted into the queue.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar36"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Right Angle Brackets</STRONG>
+<P>Note that on most compilers it is important to leave a space between the two right angle brackets in the declaration of a stack; otherwise they are interpreted by the compiler as a right shift operator.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar37"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>This program is found in the file <SAMP>calc.cpp</SAMP> in the distribution package.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar38"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Defensive Programming</STRONG>
+<P>A more robust program would check to see if the stack was empty before attempting to perform the <SAMP>pop()</SAMP> operation.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar39"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>The complete version of the bank teller simulation program is found in file <SAMP>teller.cpp</SAMP> on the distribution disk.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar40"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> A Queue That is Not a Queue</STRONG>
+<P>The term priority <I>queue</I> is a misnomer, in that the data structure is not a queue, in the sense that we used the term in <a href="sta_2474.htm">Chapter 10</a>, since it does not return elements in a strict first-in, first-out sequence.  Nevertheless, the name is now firmly associated with this particular data type.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar41"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Initializing Queues from other containers</STRONG>
+<P>As we noted in earlier sections, support for initializing containers using a pair of iterators requires a feature that is not yet widely supported by compilers.  While we document this form of constructor, it may not yet be available on your system.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar42"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG>Information on ...</STRONG>
+<P><B>Information on Heaps.</B>  Details of the algorithms used in manipulating heaps will not be discussed here, however such information is readily available in almost any textbook on data structures.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar43"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Finding Smallest Elements</STRONG>
+<P>We describe the priority queue as a structure for quickly discovering the <I>largest </I>element in a sequence.  If, instead, your problem requires the discovery of the <I>smallest</I> element, there are various possibilities.  One is to supply the inverse operator as either a template argument or the optional comparison function argument to the constructor.  If you are defining the comparison argument as a function, as in the example problem, another solution is to simply invert the comparison test.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar44"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Storing Pointers versus Storing Values</STRONG>
+<P>Other example programs in this tutorial have all used containers to store values.  In this example the container will maintain pointers to values, not the values them-selves.  Note that a consequence of this is that the programmer is then responsible for managing the memory for the objects being manipulated.</P>
+
+<BR><BR><BR><BR><BR><A NAME="sidebar45"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the sample program</STRONG>
+<P>The complete event simulation is found in the file <SAMP>icecream.cpp</SAMP> on the distribution disk.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar46"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Strings and Wide Strings</STRONG>
+<P>In the remainder of this section we will refer to the string data type, however all the operations we will introduce are equally applicable to wide strings.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar47"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Initializing from Iterators</STRONG>
+<P>Remember, the ability to initialize a container using a pair of iterators requires the ability to declare a template member function using template arguments independent of those used to declare the container.  At present not all compilers support this feature.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar48"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Invalidating Iterators</STRONG>
+<P>Note that the contents of an iterator are not guaranteed to be valid after any operation that might force a reallocation of the internal string buffer, such as an append or an insertion.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar49"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Comparing Strings</STRONG>
+<P>Although the function is accessible, users will seldom invoke the member function <SAMP>compare() </SAMP>directly.  Instead, comparisons of strings are usually performed using the conventional comparison operators, which in turn make use of the function <SAMP>compare()</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar50"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>The split function can be found in the concordance program in file <SAMP>concord.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar51"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the source</STRONG>
+<P>The sample programs described in this section can be found in the file <SAMP>alg1.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar52"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Different Initialization Algorithms</STRONG>
+<P>The initialization algorithms all overwrite every element in a container.  The difference between the algorithms is the source for the values used in initialization.  The <SAMP>fill()</SAMP> algorithm repeats a single value, the <SAMP>copy()</SAMP> algorithm reads values from a second container, and the <SAMP>generate()</SAMP> algorithm invokes a function for each new value.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar53"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Appending Several Copies</STRONG>
+<P>The result returned by the <SAMP>copy()</SAMP> function is a pointer to the end of the copied sequence.  To make a <I>catenation</I> of values, the result of one <SAMP>copy() </SAMP>operation can be used as a starting iterator in a subsequent <SAMP>copy().</SAMP></P>
+<BR><BR><BR><BR><BR><A NAME="sidebar54"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> copy_backwards</STRONG>
+<P>In the copy_backwards algorithm, note that it is the order of transfer, and not the elements themselves that is "backwards"; the relative placement of moved values in the target is the same as in the source.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar55"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Parallel Sequences</STRONG>
+<P>A number of algorithms operate on two parallel sequences.  In most cases the second sequence is identified using only a starting iterator, not a starting and ending iterator pair.  It is assumed, but never verified, that the second sequence is at least as large as the first.  Errors will occur if this condition is not satisfied.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar56"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Source</STRONG>
+<P>The example functions described in this section can be found in the file <SAMP>alg2.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar57"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Check Search Results</STRONG>
+<P>The searching algorithms in the standard library all return the end-of-sequence iterator if no value is found that matches the search condition.  As it is generally illegal to dereference the end-of-sequence value, it is important to check for this condition before proceeding to use the result of a search.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar58"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Searching Sets and Maps</STRONG>
+<P>These algorithms perform a linear sequential search through the associated structures.  The <B><I>set</I></B> and <B><I>map</I></B> data structures, which are ordered, provide their own <SAMP>find()</SAMP> member functions, which are more efficient.  Because of this, the generic <SAMP>find()</SAMP> algorithm should not be used with <B><I>set</I></B> and <B><I>map.</I></B></P>
+<BR><BR><BR><BR><BR><A NAME="sidebar59"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Speed of Search</STRONG>
+<P>In the worst case, the number of comparisons performed by the algorithm <SAMP>search()</SAMP> is the product of the number of elements in the two sequences.  Except in rare cases, however, this worst case behavior is highly unlikely.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar60"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Largest and Smallest Elements of a Set</STRONG>
+<P>The maximum and minimum algorithms can be used with all the data types provided by the standard library.  However, for the ordered data types, <B><I>set</I></B> and <B><I>map</I></B>, the maximum or minimum values are more easily accessed as the first or last elements in the structure.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar61"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Source</STRONG>
+<P>The example functions described in this section can be found in the file <SAMP>alg3.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar62"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Partitions</STRONG>
+<P>While there is a unique <SAMP>stable_ partition()</SAMP> for any sequence, the <SAMP>partition()</SAMP> algorithm can return any number of values.  The following, for example, are all legal partitions of the example problem. </P>
+<P>2 4 6 8 10 1 3 5 7 9</P>
+<P>10 8 6 4 2 5 7 9 3 1</P>
+<P>2 6 4 8 10 3 5 7 9 1</P>
+<P>6 4 2 10 8 5 3 7 9 1.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar63"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Ordering Permutations</STRONG>
+<P>Permutations can be ordered, with the smallest permutation being the one in which values are listed smallest to largest, and the largest being the sequence that lists values largest to smallest.  Consider, for example, the permutations of the integers 1 2 3.  The six permutations of these values are, in order: </P>
+<P>1 2 3</P>
+<P>1 3 2</P>
+<P>2 1 3</P>
+<P>2 3 1</P>
+<P>3 1 2</P>
+<P>3 2 1</P>
+<P>Notice that in the first permutation the values are all ascending, while in the last permutation they are all descending.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar64"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> What is a Name?</STRONG>
+<P>The algorithms in this section set up a sequence so that the desired elements are moved to the front.  The remaining values are not actually removed, but the starting location for these values is returned, making it possible to remove these values by means of a subsequent call on <SAMP>erase()</SAMP>.  <I>Remember</I>, the remove algorithms do not actually remove the unwanted elements.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar65"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Source</STRONG>
+<P>The example functions described in this section can be found in the file <SAMP>alg4.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar66"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Source</STRONG>
+<P>The example functions described in this section can be found in the file <SAMP>alg5.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar67"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> The Resulting Count</STRONG>
+<P>Note that the <SAMP>count()</SAMP> algorithms do not return the sum as a function result, but instead simply add to the last argument in their parameter list, which is passed by reference.  This means successive calls on these functions can be used to produce a cumulative sum.  This also means that you must initialize the variable passed to this last argument location prior to calling one of these algorithms.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar68"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Equal and Mismatch</STRONG>
+<P>By substituting another function for the binary predicate, the equal and mismatch algorithms can be put to a variety of different uses.  Use the <SAMP>equal()</SAMP> algorithm if you want a pairwise test that returns a <I>boolean </I>result.  Use the <SAMP>mismatch()</SAMP> algorithm if you want to discover the <I>location</I> of elements that fail the test.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar69"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Source</STRONG>
+<P>The example functions described in this section can be found in the file <SAMP>alg6.cpp</SAMP>.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar70"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Results Produced by Side Effect</STRONG>
+<P>The function passed as the third argument is not permitted to make any modifications to the sequence, so it can only achieve any result by means of a side effect, such as printing, assigning a value to a global or static variable, or invoking another function that produces a side effect.  If the argument function returns any result, it is ignored.  </P>
+<BR><BR><BR><BR><BR><A NAME="sidebar71"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Programs</STRONG>
+<P>The example programs described in this section have been combined and are included in the file <SAMP>alg7.cpp</SAMP> in the tutorial distribution.  As we did in <a href="gen_9895.htm">Chapter 13</a>, we will generally omit output statements from the descriptions of the programs provided here, although they are included in the executable versions.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar72"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> More Sorts</STRONG>
+<P>Yet another sorting algorithm is provided by the heap operations, to be described in <a href="hea_8081.htm">Chapter 14 (<i>Heap Operations</i></a>).</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar73"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Heaps and Ordered Collections</STRONG>
+<P>Note that an ordered collection is a heap, but a heap need not necessarily be an ordered collection.  In fact, a heap can be constructed in a sequence much more quickly than the sequence  can be sorted.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar74"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program.</STRONG>
+<P>This program can be found in the file<SAMP> exceptn.cpp</SAMP> in your code distribution.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar75"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program.</STRONG>
+<P>You can find this program in the file autoptr.cpp in the turorial distribution.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar76"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Functions and Member Functions</STRONG>
+<P>Note that, with the exception of the member functions <SAMP>real()</SAMP> and <SAMP>imag(),</SAMP> most operations on complex numbers are performed using ordinary functions, not member functions.</P>
+
+<BR><BR><BR><BR><BR><A NAME="sidebar77"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Obtaining the Sample Program</STRONG>
+<P>This program is found in the file <SAMP>complx.cpp</SAMP> in the distribution.</P>
+<BR><BR><BR><BR><BR><A NAME="sidebar78"><IMG SRC="images/sail_bar.gif"></A> <BR><IMG SRC="images/note.gif"><STRONG> Two Mechanisms, One Purpose</STRONG>
+<P>For reasons of compatibility, the numeric_limits mechanism is used as an addition to the symbolic constants used in older C++ libraries, rather than a strict replacement.  Thus both mechanisms will, for the present, exist in parallel.  However, as the numeric_limits technique is more uniform and extensible, it should be expected that over time the older symbolic constants will become outmoded.</P>
+<BR><BR><BR><BR><BR></BODY></HTML>

@@ -1,0 +1,31 @@
+<Title>DS_MSG_HEADER</Title>
+<A NAME="XREF39372"><H1>DS_MSG_HEADER</A></H1>
+<A NAME="XREF30780">Message header.</A><P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>#define DS_MSG_HEADER
+long whatToDo;
+Item msgItem;
+void* privatePtr;
+void* link;</CODE></pre><P>
+<H3>Description</H3>
+A standard set of fields appearing at the beginning of messages sent from the streamer to subscribers. The fields enable a couple of utility routines to perform general operations on lists.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>whatToDo</CODE>
+<DD>Opcode determining message contents.
+</DL>
+<DL>
+<DT><CODE>msgItem</CODE>
+<DD>Message item for sending this buffer.
+</DL>
+<DL>
+<DT><CODE>privatePtr</CODE>
+<DD>Pointer to sender's private data.
+</DL>
+<DL>
+<DT><CODE>link</CODE>
+<DD>User defined - for linking message into lists.
+</DL>
+<H3>Associated Files</H3>
+DSStreamHeader.h<P>

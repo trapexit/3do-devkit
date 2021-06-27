@@ -1,0 +1,22 @@
+<HTML><HEAD><TITLE>Declaration and Initialization of Auto Pointers</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Declaration and Initialization of Auto Pointers</H2>
+<P>You attach an <A HREF="../stdref/aut_3512.htm"><B><I>auto_ptr</I></B></A> object to a pointer either by using one of the constructors for <B><I>auto_ptr</I></B>, by assigning one <B><I>auto_ptr</I></B> object to another, or by using the reset member function.  Only one <B><I>auto_ptr</I></B>  "owns" a particular pointer at any one time, except for the NULL pointer (which all <B><I>auto_ptr</I></B>s own by default).  Any use of <B><I>auto_ptr</I></B>'s copy constructor or assignment operator transfers ownership from one <B><I>auto_ptr</I></B> object to another.  For instance, suppose we create <B><I>auto_ptr</I></B> <SAMP>a</SAMP> like this:</P>
+<PRE>auto_ptr&#60;string> a(new string);
+</PRE>
+<P>The <A HREF="../stdref/aut_3512.htm"><B><I>auto_ptr</I></B></A> object <SAMP>a</SAMP> now "owns" the newly created pointer.  When <SAMP>a</SAMP> is destroyed (such as when it goes out of scope) the pointer will be deleted.  But, if we assign <SAMP>a</SAMP> to <SAMP>b</SAMP>, using the assignment operator:</P>
+<PRE>auto_ptr&#60;string> b = a;
+</PRE>
+<P><SAMP>b</SAMP> now owns the pointer.  Use of the assignment operator causes <SAMP>a</SAMP> to release ownership of the pointer.  Now if <SAMP>a</SAMP> goes out of scope the pointer will not be affected.  However, the pointer <I>will</I> be deleted when <SAMP>b</SAMP> goes out of scope.</P>
+<P>The use of <SAMP>new</SAMP> within the constructor for <SAMP>a</SAMP> may seem a little odd.  Normally we avoid constructs like this since it puts the responsibility for deletion on a different entity than the one responsible for allocation.  But in this case, the <A HREF="../stdref/aut_3512.htm"><B><I>auto_ptr</I></B></A>'s sole responsibility  is to manage the deletion.  This syntax is actually preferable since it prevents us from accidentally deleting the pointer ourselves.  </P>
+<P>Use <SAMP>operator*</SAMP>, <SAMP>operator-></SAMP>,  or the member function<SAMP> get()</SAMP> to access the pointer held by an <A HREF="../stdref/aut_3512.htm"><B><I>auto_ptr</I></B></A>.  For instance, we can use any of the three following statements to assign "What's up Doc" to the string now pointed to by the <B><I>auto_ptr</I></B> <SAMP>b</SAMP>.</P>
+<PRE>*b = "What's up Doc";
+*(b.get()) = "What's up Doc";
+ b->assign("What's up Doc");
+</PRE>
+<P><A HREF="../stdref/aut_3512.htm"><B><I>auto_ptr </I></B></A>also provides a release member function that releases ownership of a pointer.  Any <A HREF="../stdref/aut_3512.htm"><B><I>auto_ptr</I></B></A> that does not own a specific pointer is assumed to point to the NULL pointer, so calling release on an <B><I>auto_ptr </I></B>will set it to the NULL pointer.  In the example above, when <SAMP>a</SAMP> is assigned to <SAMP>b</SAMP>, the pointer held by <SAMP>a</SAMP> is released and <SAMP>a</SAMP> is set to the NULL pointer.</P>
+<HR>
+<A HREF="ove_3674.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="exa_5786.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,33 @@
+<Title>StartObject</Title>
+<A NAME="XREF20324"><H1>StartObject </A></H1>
+<A NAME="XREF38446"></A> Starts an object so the Juggler will play it.<P>
+<H3>Synopsis</H3>
+<CODE>Err StartObject( CObject *obj, uint32 time, int32 nrep,CObject *par )</CODE><P>
+<H3>Description</H3>
+This is a method macro that is part of the Juggler object-oriented toolbox.  An object's method can be called explicitly through the class structure function pointer or with one of the defined method macros. <P>
+This method macro starts an object at the given time.  Once an object is started, it's added to the active object list so that the Juggler will play it when the Juggler is bumped.  The "nrep" argument sets an object to be played a set number of repetitions. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>obj
+<DD>A pointer to the CObject data structure for the object. 
+</DL>
+<DL>
+<DT>time
+<DD>A value indicating the time in audio clock ticks to start the object. 
+</DL>
+<DL>
+<DT>nrep
+<DD>A value indicating the number of occurrences of the object. 
+</DL>
+<DL>
+<DT>par
+<DD>A pointer to the CObject data structure that is the parent of this object. 
+</DL>
+<H3>Return Value</H3>
+This macro returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Macro implemented in cobj.h V20. <P>
+<H3>Associated Files</H3>
+cobj.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr016.html#XREF30718"><CODE>SetObjectInfo</A>(), <A HREF="./02mpr012.html#XREF21127">GetObjectInfo</A>(), <A HREF="./02mpr018.html#XREF26053">StopObject</A>(), <A HREF="./02mpr005.html#XREF31433">AllocObject</A>(), <A HREF="./02mpr010.html#XREF17884">FreeObject</A>(), <A HREF="./02mpr011.html#XREF36448">GetNthFromObject</A>(), <A HREF="./02mpr015.html#XREF30804">RemoveNthFromObject</A>(), <A HREF="./02mpr014.html#XREF34902">PrintObject</A>() </CODE></CODE><P>

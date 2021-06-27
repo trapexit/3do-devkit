@@ -1,0 +1,18 @@
+<TITLE>What Is Internationalization?</TITLE>
+<H1><LINK NAME="XREF16333">What Is Internationalization?</LINK></H1><HR>
+<I>Internationalization</I> is the process by which software is developed and modified so it transparently adapts to multiple cultural environments. <I>Localization</I> is the process of preparing specialized software, or special versions of existing software, targeted to individual cultural environments. <P>
+Internationalization of software has the following advantages:<P>
+<UL>
+<LI>It lets you maintain a single set of source code for each title, instead of slightly different source code for each target culture. A single set of source considerably reduces the testing burden and increases confidence in code product reliability.
+<p>
+<LI>It potentially lets both you and The 3DO Company deal with fewer master CD-ROMs than would otherwise be required. Instead of producing a different CD-ROM for each target culture, a single CD-ROM can support all cultures.
+</UL>
+The International folio provides a structure and calls that behave in an expected manner to create a title for international environments. For example, using the 3DO International folio, your application can determine the current language and country codes, display dates, currency, and numeric values that are consistent with the current language and country codes of a target culture. The International folio also works with a separate folio, JString, to convert character sets from one format to another. <P>
+The International folio uses UniCode as its base character set. The functions and structures within the folio use the unichar data type, which is a 16-bit version of the standard char type.<P>
+UniCode is a standard defining a 16-bit character set, which is an international version of ASCII. UniCode specifies enough glyphs to represent all languages currently spoken around the world.<P>
+Although UniCode is the standard character set the International folio uses, it must support other character sets. For example, the Western computer world currently relies extensively on ASCII, and Japan relies on JIS and shift JIS. The International folio provides tools to convert strings from one character set to another, such as enabling applications to convert ASCII text into UniCode. The following books provide additional information on the UniCode standard:<P>
+<UL>
+<LI><I>The UniCode Standard Worldwide Character Encoding</I> Version 1.0, Volume 1 ISBN 0-201-56788-1
+<p>
+<LI><I>The UniCode Standard Worldwide Character Encoding</I> Version 1.0, Volume 2 ISBN 0-201-60845-6
+</UL>

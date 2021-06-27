@@ -1,0 +1,31 @@
+; $Id: filternoise.patch,v 1.1 1994/03/19 00:26:44 peabody Exp $
+; play w/ svfilter.dsp outputs
+
+LoadInstrument  filter  svfilter.dsp
+LoadInstrument  mixer   submixer4x2.dsp
+
+LoadInstrument  src     noise.dsp               ; using white noise here.  can substitute any other sound source here.
+LoadInstrument  out     directout.dsp
+
+    ; connect source to filter
+Connect src Output filter Input
+
+    ; connect filter to submixer
+    ; . these filter outputs appear to be pre-Amplitude stage
+    ;   (i.e. they are not affected by the svfilter.dsp's Amplitude knob)
+    ; . using left mixer channel only to provide simpler control of volume
+    ;   of each stage.  ignore input 3 and all right channel settings.
+Connect filter LowPass  mixer Input0
+Connect filter BandPass mixer Input1
+Connect filter HighPass mixer Input2
+
+    ; connect submixer to output
+Connect mixer LeftOutput  out InputLeft
+Connect mixer RightOutput out InputRight
+
+    ; preset some knobs
+Tweak mixer LeftGain0 10000             ; LowPass volume
+Tweak mixer LeftGain1 0                 ; BandPass volume
+Tweak mixer LeftGain2 0                 ; HighPass volume
+
+Tweak filter Resonance 32767

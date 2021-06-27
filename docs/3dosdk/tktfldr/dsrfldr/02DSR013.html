@@ -1,0 +1,32 @@
+<Title>GenericMsg</Title>
+<A NAME="XREF38200"><H1>GenericMsg</A></H1>
+<A NAME="XREF11941"></A>Generic message structure.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef struct GenericMsg {
+   DS_MSG_HEADER
+ } GenericMsg, *GenericMsgPtr</CODE></pre><P>
+<H3>Description</H3>
+The simplest message sent from the streamer to subscribers, composed only of a DS_MSG_HEADER.<P>
+<H3>Fields</H3>
+<CODE>DS_MSG_HEADER</CODE> can be one of the following types:<P>
+<DL>
+<DT><CODE>long whatToDo</CODE>
+<DD>Opcode determining message contents.
+</DL>
+<DL>
+<DT><CODE>Item msgItemmessage</CODE>
+<DD>Item for sending this buffer. 
+</DL>
+<DL>
+<DT><CODE>void* privatePtr</CODE>
+<DD>Pointer to send private data. 
+</DL>
+<DL>
+<DT><CODE>void* link</CODE>
+<DD>User defined, for linking message into lists. 
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR048.html#XREF21532"><CODE>NewDataAcq</A></CODE><P>

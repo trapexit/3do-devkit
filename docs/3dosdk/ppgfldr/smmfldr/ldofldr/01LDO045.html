@@ -1,0 +1,33 @@
+<Title>CreateSubrectCel</Title>
+<A NAME="XREF16000"><H1>CreateSubrectCel </A></H1>
+ Creates a cel that projects a sub-rectangle of another cel's pixels.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * CreateSubrectCel (CCB *dst, CCB *src, SRect *subRect)</CODE><P>
+<H3>Description</H3>
+Creates a cel from a portion of another cel's data.The newcel projects a subrectangle of the src cel's pixels.<P>
+If the dst pointer is NULL this function allocates a new cel by calling <CODE>CloneCel(src, CLONECEL_CCB_ONLY)</CODE>. The CCB_CCBPRE flag is forced on in the new cel so that preamble word changes can be done without affecting the source cel. The new cel's preamble words and ccb_SourcePtr are modified to access the specified subrectangle of the source cel's pixels. The pixels are not copied, the dst cel's ccb_SourcePtr points into the source cel's data buffer. <P>
+If the source cel is CODED, the destination cels ccb_PLUTPtr points to the source cel's PLUT, but you are free to change ccb_PLUTPtr in the destination cel if you want. You are also free to change the destination cel's Flags, PIXC word, and in general any CCB values.   Be careful about changing the preamble word values that describe the subrectangle of the src cel's data.<P>
+If the dst pointer is non-NULL, the allocation of a new cel is bypassed, and only the preamble and ccb_SourcePtr calculations are done. This option provides improved performance; you can allocate the subrect cel just once, then continually call this function to have that cel access different portions of the source cel's pixels.<P>
+Using a non-NULL dst pointer is an implicit request for high performance, so this function does no error or sanity checking. In particular, it is your responsibility to ensure that the destination cel you supply is compatible with the source cel you want to extract data from, in terms of bit depth and other CCB parameters. The recommended method is to use this function with a NULL destination pointer once to create a subrect cel for a given source cel, then only reuse that destination pointer in association with that source cel. <P>
+This function works with all types of cels of any bit depth, except that you cannot extract a subrectangle from a PACKED source cel due to way packed data is stored. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to a cel created earlier by this function, or NULL to create a new cel. 
+</DL>
+<DL>
+<DT>src
+<DD>Pointer to an existing cel; NULL is not allowed. 
+</DL>
+<DL>
+<DT>subRect
+<DD>Pointer to an SRect describing the sub- rectangle to be extracted from the src cel; NULL is not allowed. 
+</DL>
+<H3>Return Value</H3>
+The input parameter dst, if dst was non-NULL on input. Pointer to the newly created cel or NULL if there is not enough memory to create the cel, if dst was NULL on input. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO044.html#XREF15268"><CODE>CreateLRFormCel</A>, <A HREF="./01LDO055.html#XREF42213">DeleteCel</A> </CODE><P>

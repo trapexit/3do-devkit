@@ -1,0 +1,48 @@
+<TITLE>Troubleshooting</TITLE>
+<H1>Troubleshooting</H1><HR>
+<H2>High Frequency Noise</H2>
+<B>Q: </B>  Every once in a while I get a high frequency noise when I'm playing my samples. Why?<P>
+<B>A:  </B> Occasional very high frequency noise in a title is usually  due to a failure to call DisconnectInstruments() before calling UnloadInstrument(). For example, suppose you connect a <CODE>sampler.dsp</CODE> to a mixer. It causes the mixer to read data from the sampler's output variable. Now suppose you unload the sampler and allocate another instrument. The mixer is now reading from where the sampler's output was but is no longer. The location may now be an internal variable of another instrument that may be changing rapidly which could cause a high frequency sound to go to the mixer. When unloading an instrument, besides calling DisconnectInstrument(),you may want to turn down the mixer gain on the channel to which that the instrument is connected.<P>
+<H2>ADPCM Error</H2>
+<B>Q: </B> When I try to do the following:<P>
+<CODE>
+<PRE>
+LoadInstrument("adpcmmono.dsp", 0, 100);
+</CODE>
+</PRE>
+LoadInstrument replies:<P>
+<CODE>
+<PRE>
+DSPPImportResource: Could not find external = DecodeADPCM
+</CODE>
+</PRE>
+If I try to use <CODE>adpcmhalfmono.dsp</CODE>, I get the same answer. What am I doing wrong?<P>
+<B>A: </B>  The ADPCM instruments require another instrument, <CODE>decodeadpcm.dsp</CODE>, to be loaded to work. I load it at the beginning of a program and never free it, because it is used throughout the duration of the game. You can either do that, or just load it and free it at the same times as <CODE>adpcmmono.dsp</CODE>.<P>
+<H2>22 kHz Sound Files Play at 44 kHz</H2>
+<B>Q: </B>  I recorded sounds at 22 kHz. When I play them, they are playing at 44 kHz, thus moving the sounds up one octave. I prefer to do the sampling at 22 kHz because I'm running low on memory. <P>
+<B>A:  </B> If you are using 8-bit samples, you should use <CODE>halfmono8.dsp</CODE> or <CODE>halfstereo8.dsp</CODE> instruments. There is a function in the Music library called <CODE>SelectSamplePlayer()</CODE> that returns the name of a template suitable for playing a given sample.<P>
+For 16-bit samples, use <CODE>halfmonosample.dsp</CODE>, or use <CODE>sampler.dsp</CODE> and set the AF_TAG_RATE tag  to 0x4000 when calling <CODE>StartInstrument()</CODE>. <P>
+<B>Q:  </B> My 22 kHz AIFF files are not recognized by <CODE>SFtoStream()</CODE>.<P>
+<B>A:</B>   Use SoundHack to make sure that the sample rate is actually 22.05 kHz. If it is not, use the ModifyHeader command to fix the sound. SoundHack automatically updates dependent parameters such as length when you do this.<P>
+<H2>SleepAudioTicks() and Application Slowdown</H2>
+If an application makes repeated calls to <CODE>SleepAudioTicks()</CODE>, it starts to run slower and slower and eventually fails because it is unable to create cue items. <P>
+The application creates a cue item, then deletes it every time it is called. This causes the item table in the kernel to get rather full. This, in turn, slows down the allocation of new item numbers which degrades performance. Eventually no more item numbers are available. If an application needs to sleep repeatedly, it should create a single cue, then use it in repeated calls to <CODE>SleepUntilTime()</CODE>, as shown in the following example:<P>
+<CODE>
+<PRE>
+MyCue = CreateItem ( MKNODEID(AUDIONODE,AUDIO_CUE_NODE), NULL );
+    CHECKRESULT(MyCue, "CreateItem Cue");
+    
+/* Use the same Cue repeatedly. */
+    for (i=0; i&lt;20)
+    {
+        printf("Sleep for 500 ticks.\n");
+        Result = SleepUntilTime( MyCue, 500 + GetAudioTime() );
+    }
+    
+    DeleteItem (MyCue);
+</CODE>
+</PRE>
+<H2>Timing Problems When Spooling</H2>
+<B>Q:</B>   When I run the sound spooler with my game there is a periodic jerk in the game while the spooler loads. How can this be fixed so that the game runs smoothly and at full speed?<P>
+<B>A:  </B> Are you running your data off the Macintosh, either from the /remote folder or from a cdrom.image file? If you are, the timing results you observe are inaccurate. The problem is that communication with the Macintosh is done in software, via the optical link, whereas access to an actual CD-ROM is done via DMA. Macintosh communication therefore takes ARM CPU cycles for the data transfers, cycles that go away when you move your application to CD-ROM.<P>
+You may want to play your sound files in a separate thread so that it cannot block the execution of the game.<P>

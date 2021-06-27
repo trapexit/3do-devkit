@@ -1,0 +1,25 @@
+<Title>DrawImage</Title>
+<A NAME="XREF29969"><H1>DrawImage </A></H1>
+ Uses CopyVRAMPages() to draw an image.<P>
+<H3>Synopsis</H3>
+<CODE>bool DrawImage (Item iScreen, ubyte *pbImage, ScreenContext *sc)</CODE><P>
+<H3>Description</H3>
+Uses the fast SPORT mechanism, <CODE>CopyVRAMPages()</CODE>, to project an image into a frame buffer. The image must be stored in page aligned VRAM. The function executes during a vertical blank. <P>
+Note that this function creates and deletes an IOReq item to communicate with the SPORT device every single time it is called. This is not efficient and decreases performance. It is better to allocate the IOReq once at the beginning of a program, and reuse it throughout. Therefore, you're better off not using <CODE>DrawImage()</CODE>, and just call <CODE>CopyVRAMPages()</CODE> yourself. This function is useful only in a do-it-just-once type of situation. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>iScreen
+<DD>Item for the screen into which to project the image. 
+</DL>
+<DL>
+<DT>pbImage
+<DD>Pointer to a page-aligned buffer in VRAM containing a full-screen 16-bit image. 
+</DL>
+<DL>
+<DT>sc
+<DD>Pointer to a screen context. 
+</DL>
+<H3>Return Value</H3>
+ TRUE if successful, FALSE if not. <P>
+<H3>Associated Files</H3>
+lib3do.lib, displayutils.h<P>

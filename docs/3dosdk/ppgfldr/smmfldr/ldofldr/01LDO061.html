@@ -1,0 +1,43 @@
+<Title>DrawAnimCel</Title>
+<A NAME="XREF16402"><H1>DrawAnimCel </A></H1>
+ Draws a cel in an animation and give it a hotspot<P>
+<H3>Synopsis</H3>
+<CODE>void DrawAnimCel (ANIM *pAnim, Item bitmapItem, long xPos, long 
+yPos, frac16 frameIncrement, long hotSpot)</CODE><P>
+<H3>Description</H3>
+Determines the next cel to draw in the animation specified by pAnim and 
+draws it. Lets you draw a hotspot on that frame. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>pAnim
+<DD>Pointer to an ANIM structure (defined in animutils.h) returned by LoadAnim(). 
+<DT>bitmapItem
+<DD>Item describing the bitmap into which the cel will be drawn. 
+</DL>
+<DL>
+<DT>xPos
+<DD>X (horizontal) position for a hotspot in the cel. 
+</DL>
+<DL>
+<DT>YPos
+<DD>Y (vertical) position for a hotspot in the cel. 
+</DL>
+<DL>
+<DT>frameIncrement
+<DD>Frac16, 16.16 fixed point number to add to the current frame count. 
+This is rounded to an integer to determine the next frame in the 
+animation. If frameIncrement increments the current frame past the end of 
+the animation, cur_Frame is reset to the beginning. Note that this works 
+backwards as well. 
+</DL>
+<DL>
+<DT>hotSpot
+<DD>Integer (enum) equal to one of the following (defined in utils3do.h). 
+</DL>
+The cel is positioned with the hotspot at xPos, YPos. <P>
+<H3>Associated Files</H3>
+lib3do.lib, animutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO074.html#XREF10102"><CODE>GetAnimCel</A>, <A 
+HREF="./01LDO113.html#XREF27243">LoadAnim</A> </CODE><P>
+</CODE>

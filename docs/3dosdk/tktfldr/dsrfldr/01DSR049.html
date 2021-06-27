@@ -1,0 +1,67 @@
+<Title>NewDataStream</Title>
+<A NAME="XREF16651"><H1>NewDataStream</A></H1>
+<A NAME="XREF26393"></A>Creates a data stream.<P>
+<H3>Synopsis</H3>
+<CODE>int32 NewDataStream (DSStreamCBPtr *pCtx, void* bufferListPtr, long bufferSize, long deltaPriority, long numSubsMsgs)</CODE><P>
+<H3>Description</H3>
+Creates a new stream thread. The DataStreamer environment must be initialized with <CODE>InitDataStreaming()</CODE> before a new stream thread can be created.<P>
+The task priority of the stream thread is calculated in relation to the priority of its parent task. If <CODE>deltaPriority</CODE> is set to zero, the thread has the same priority as its parent task.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>pCtx</CODE>
+<DD>Pointer to the location to which the new stream context pointer should be returned.
+</DL>
+<DL>
+<DT><CODE>bufferListPtr</CODE>
+<DD>Pointer to a list of buffers the data stream process should use.
+</DL>
+<DL>
+<DT><CODE>bufferSize</CODE>
+<DD>Size of each buffer in the list.
+</DL>
+<DL>
+<DT><CODE>deltaPriority</CODE>
+<DD>Increase or decrease in task priority of the stream thread.
+</DL>
+<DL>
+<DT><CODE>numSubsMsgs</CODE>
+<DD>Number of subscriber messages allocated for the new stream thread.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT>(Value of <CODE>creatorStatus</CODE> field in context block of new stream thread)
+</DL>
+<DL>
+<DT>0
+<DD>Could not allocate stack memory for new stream thread
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoMemErr</CODE> 
+<DD>Could not allocate memory for the stream context
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSNoSignalErr</CODE> 
+<DD>Could not allocate signal for thread initialization
+<DD>
+</DL>
+<DL>
+<DT><CODE>kDSSignalErr</CODE> 
+<DD>Received incorrect initialization signal
+<DD>
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>CreateItem()</CODE> failed to create an item for the new stream thread
+<DD>
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR045.html#XREF14373"><CODE>InitDataStreaming</A></CODE><P>

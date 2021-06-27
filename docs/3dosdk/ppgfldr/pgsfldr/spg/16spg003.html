@@ -1,0 +1,270 @@
+<TITLE>Example</TITLE>
+<H1><LINK NAME="XREF38125">Example</LINK></H1><HR>
+Example 1 uses Access to display eight different transaction boxes, one for each type of transaction. Tag argument's supply explanatory text and two labeled choice buttons for transaction boxes that need them. The task enters the wait state after it requests each transaction and awaits the user choice in a reply message from Access. When the task receives the reply, it leaves the wait state.<P>
+<B>Example 1: </B><I>Using Access to put up transaction boxes.</I><P>
+<CODE>
+<PRE>
+#include "types.h"
+#include "mem.h"
+#include "msgport.h"
+#include "graphics.h"
+#include "access.h"
+#include "stdio.h"
+#include "string.h"
+
+
+
+/****************************************************************************/
+
+#define ERROR(x,y)  {printf(x); PrintfSysErr(y); result = y;}
+#define NUM_SCREENS 1
+
+
+/****************************************************************************/
+
+
+static Item  accessPortItem;
+static Item  accessItem;
+static Item  replyPortItem;
+static Item  msgItem;
+static Msg  *msg;
+static Item  screenGroupItem;
+static Item  screenItems[NUM_SCREENS];
+
+
+/****************************************************************************/
+
+
+static void ClearScreenPages(Item *screenItems)
+{
+uint32  i;
+Screen *screen;
+Bitmap *bitmap;
+uint32  numBytes;
+Item    sport;
+uint32  vramPageSize;
+
+    /* If this call fails, SetVRAMPages() will also fail, and nothing bad
+     * will happen. So we don't bother to check the error return.
+     */
+    sport = GetVRAMIOReq();
+
+    for (i = 0; i &lt; NUM_SCREENS; i++)
+    {
+        screen   = (Screen *)LookupItem(screenItems[i]);
+        bitmap   = screen-&gt;scr_TempBitmap;
+        numBytes = bitmap-&gt;bm_Width * bitmap-&gt;bm_Height * 2;
+
+        vramPageSize = GetPageSize(MEMTYPE_VRAM);
+
+        SetVRAMPages(sport,bitmap-&gt;bm_Buffer, 0,(numBytes + vramPageSize - 1) / 
+
+            vramPageSize,-1);
+    }
+
+    DeleteItem(sport);
+}
+
+
+/****************************************************************************/
+
+static void TransferScreenPages(Item *screenItems, bool toAccess)
+{
+uint32  i;
+Screen *screen;
+Bitmap *bitmap;
+uint32  numBytes;
+
+    for (i = 0; i &lt; NUM_SCREENS; i++)
+    {
+        screen   = (Screen *)LookupItem(screenItems[i]);
+        bitmap   = screen-&gt;scr_TempBitmap;
+    numBytes = bitmap-&gt;bm_Width * bitmap-&gt;bm_Height * 2;
+
+        if (toAccess)
+            ControlMem((void *)bitmap-&gt;bm_Buffer,numBytes,MEMC_OKWRITE,accessItem);
+        else
+            ControlMem((void *)bitmap-&gt;bm_Buffer,numBytes,MEMC_NOWRITE,accessItem);
+    }
+}
+
+/****************************************************************************/
+
+static void SendAccessMsg(uint32 callNumber, char *buffer,
+                          uint32 tags, ...)
+{
+Err err;
+
+    err = SendMsg(accessPortItem, msgItem, &amp;tags, 0);
+
+    if (err &gt;= 0)
+    {
+        WaitPort(replyPortItem,0);
+        printf("Call #%ld returned %ld, buffer = '%s'\n",callNumber,msg-
+&gt;msg_Result,buffer);
+    }
+    else
+    {
+        printf("SendAccessMsg() #%ld failed with %ld\n",callNumber,err);
+    }
+
+    ClearScreenPages(screenItems);
+}
+
+
+/****************************************************************************/
+
+
+static void CallThemAll(void)
+{
+char buf[256];
+
+    buf[0] = 0;
+
+    SendAccessMsg(1, buf, ACCTAG_REQUEST,          ACCREQ_ONEBUTTON,
+                          ACCTAG_SCREEN,         screenItems[0],
+                          ACCTAG_TITLE,          "Hi ho",
+                          ACCTAG_TEXT,           "Isn't this a great example?",
+                          ACCTAG_BUTTON_ONE,     "I agree",
+                          ACCTAG_FG_PEN,         0x7000,
+                          TAG_END);
+
+    SendAccessMsg(2, buf, ACCTAG_REQUEST,          ACCREQ_TWOBUTTON,
+                          ACCTAG_SCREEN,         screenItems[0],
+                          ACCTAG_TITLE,          "Space Zappers",
+                          ACCTAG_TEXT,           "Wanna play more Space Zappers?",
+                          ACCTAG_BUTTON_ONE,     "Yep",
+                          ACCTAG_BUTTON_TWO,     "Nope",
+                          ACCTAG_FG_PEN,         0x0700,
+                          TAG_END);
+
+    ControlMem(buf,sizeof(buf),MEMC_OKWRITE,accessItem);
+
+    strcpy(buf,"Gee");
+    SendAccessMsg(3, buf, ACCTAG_REQUEST,           ACCREQ_LOAD,
+                          ACCTAG_SCREEN,         screenItems[0],
+                          ACCTAG_TITLE,          "Space Zappers",
+                          ACCTAG_STRINGBUF,      buf,
+                          ACCTAG_STRINGBUF_SIZE, sizeof(buf),
+                          TAG_END);
+
+    strcpy(buf,"Wow");
+    SendAccessMsg(4, buf, ACCTAG_REQUEST,           ACCREQ_SAVE,
+                          ACCTAG_SCREEN,         screenItems[0],
+                          ACCTAG_TITLE,          "Space Zappers",
+                          ACCTAG_STRINGBUF,      buf,
+                          ACCTAG_STRINGBUF_SIZE, sizeof(buf),
+                          TAG_END);
+
+    strcpy(buf,"Zawee");
+    SendAccessMsg(5, buf, ACCTAG_REQUEST,           ACCREQ_DELETE,
+                          ACCTAG_SCREEN,         screenItems[0],
+                          ACCTAG_TITLE,          "Space Zappers",
+                          ACCTAG_STRINGBUF,      buf,
+                          ACCTAG_STRINGBUF_SIZE, sizeof(buf),
+                          TAG_END);
+
+    ControlMem(buf,sizeof(buf),MEMC_NOWRITE,accessItem);
+}
+
+
+/****************************************************************************/
+
+int main(uint32 argc, char *argv[])
+{
+MsgPort *accessPort;
+Err      result;
+Err      err;
+
+    err = OpenGraphicsFolio();
+    if (err &gt;= 0)
+    {
+        screenGroupItem = CreateScreenGroupVA(screenItems,
+                      CSG_TAG_SCREENCOUNT, (void *)NUM_SCREENS,
+                                              CSG_TAG_DONE);
+        if (screenGroupItem &gt;= 0)
+        {
+            ClearScreenPages(screenItems);
+            AddScreenGroup(screenGroupItem, NULL);
+
+            err = DisplayScreen(screenItems[0], 0);
+            if (err &gt;= 0)
+            {
+                accessPortItem = FindMsgPort("access");
+                if (accessPortItem &gt;= 0)
+                {
+                    accessPort = (MsgPort *)LookupItem(accessPortItem);
+                    if (accessPort)
+                    {
+                        accessItem = accessPort-&gt;mp.n_Owner;
+
+                        replyPortItem = CreateMsgPort("accessexample",0,0);
+                        if (replyPortItem &gt;= 0)
+                        {
+                            msgItem = CreateMsg("accessmsg",0,replyPortItem);
+                            if (msgItem &gt;= 0)
+                            {
+                                msg = (Msg *)LookupItem(msgItem);
+                                if (msg)
+                                {
+                                    TransferScreenPages(screenItems, TRUE);
+
+                                    CallThemAll();
+                                    result = 0;
+
+                                    TransferScreenPages(screenItems, FALSE);
+                                }
+                                else
+                                {
+                                    ERROR("Could not lookup message\n",0);
+                                }
+                                DeleteItem(msgItem);
+                            }
+                            else
+                            {
+                                ERROR("Could not create message\n",msgItem);
+                            }
+                            DeleteMsgPort(replyPortItem);
+                        }
+                        else
+                        {
+                            ERROR("Could not create reply message 
+
+                              port\n",replyPortItem);
+                        }
+                    }
+                    else
+                    {
+                        ERROR("Could not lookup the Access message port\n",-1);
+                    }
+                }
+                else
+                {
+                    ERROR("Could not find the Access message 
+
+                      port\n",accessPortItem);
+                }
+                RemoveScreenGroup(screenGroupItem);
+            }
+            else
+            {
+                ERROR("Could not display screen group\n",err);
+            }
+            DeleteScreenGroup(screenGroupItem);
+        }
+        else
+        {
+            ERROR("Couldn't create screen group\n",screenGroupItem);
+        }
+    CloseGraphicsFolio();
+    }
+    else
+    {
+        ERROR("Could not open the graphics folio\n",err);
+    }
+
+    return ((int)result);
+}
+</CODE>
+</PRE>
+<A NAME="XREF30476"></A>

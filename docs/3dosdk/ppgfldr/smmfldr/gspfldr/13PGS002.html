@@ -1,0 +1,33 @@
+<A NAME="XREF22018"><H1>InitControlPad </A></H1>
+<A NAME="XREF14139"></A>Connects a task to the event broker for control 
+pad interaction.<P>
+<H3>Synopsis</H3>
+<CODE>int32 InitControlPad (int32 nPads)</CODE><P>
+<H3>Description</H3>
+Initializes global static resources needed for interfacing with the event 
+broker. Uses some high-level convenience functions rather than opting for 
+the low-level method of communicating with the event broker. See other 
+source files for examples of that level of programming. <P>
+The function creates an array in which to keep the past states of all the 
+control pads. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>nPads
+<DD>Number of control pads to monitor. 
+</DL>
+<H3>Return Value</H3>
+Returns 0 if successful or a negative error code if an error occurs. <P>
+<H3>Caveats</H3>
+This function is neither multi-thread or multi-task capable or safe. You 
+should call this function ONCE AND ONLY ONCE as an initialization routine, 
+before calling <CODE>DoControlPad()</CODE>. Doing otherwise could cause 
+undesirable effects. <P>
+The main task needs to call <CODE>KillControlPad()</CODE> prior to 
+exiting. <P>
+<H3>Associated Files</H3>
+controlpad.c, controlpad.h<P>
+<H3>Location</H3>
+examples/ExamplesLib <P>
+<H3>See Also</H3>
+<A HREF="./13PGS001.html#XREF25274"><CODE>DoControlPad</A>, <A 
+HREF="./13PGS003.html#XREF23856">KillControlPad</A> </CODE><P>

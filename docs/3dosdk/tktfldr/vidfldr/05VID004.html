@@ -1,0 +1,209 @@
+<TITLE>MovieCompress</TITLE>
+<H1>MovieCompress</H1><HR>
+<H2>Movie Compression Settings dialog options</H2>
+<p>
+MovieCompress compresses movies using any of the Apple QuickTime codecs. 
+It lets you specify frame rate, key frame rate, data rate, depth, and 
+codec. This section provides a table of relevant information for each option 
+available during compression. A tutorial-style example follows. <P>
+<H3>Compression algorithm</H3>
+The compression algorithm pop-up lets you choose how your source will be 
+compressed.<P>
+<B>Animation</B>-The Animation compressor has the following 
+characteristics:<P>
+<PRE>
+<B>Table 1: </B><I> Animation compressor characteristics.</I>
+--------------------------------------------------------
+Characteristic  |Discussion                             
+--------------------------------------------------------
+Description     |Works well at all pixel depths. It     
+                |stores images in run-length encoding   
+                |format and works in lossy or lossless  
+                |mode.                                  
+--------------------------------------------------------
+Recommended     |Animation and computer-generated video 
+Sources         |content.                               
+--------------------------------------------------------
+Quality         |Performance depends on the type of     
+                |image in a scene. Clean images         
+                |generated synthetically generally yield
+                |good results.Images captured from      
+                |videotape may be problematic if there  
+                |is visual noise.                       
+--------------------------------------------------------
+</PRE>
+<P>
+<B>Cinepak</B>-The Cinepak compressor has the following characteristics:<P>
+<PRE>
+<B>Table 2: </B><I> Cinepak compressor characteristics. </I>
+--------------------------------------------------------
+Characteristic  |Discussion                             
+--------------------------------------------------------
+Description     |Lossy algorithm that takes much longer 
+                |to compress than to decompress.Can     
+                |constrain data rates to user-definable 
+                |levels. This is important when         
+                |compressing material for playback from 
+                |CD-ROM discs.                          
+--------------------------------------------------------
+Recommended     |16-bit and 24-bit video sequences.     
+Sources         |                                       
+--------------------------------------------------------
+Quality         |Higher compression rates, better image 
+                |quality and faster playback speeds than
+                |the Video compressor.                  
+--------------------------------------------------------
+Hints & Tips    |For best results, use on raw source    
+                |data that has not already been         
+                |compressed with a lossy compressor.    
+--------------------------------------------------------
+</PRE><B>Graphics</B>-The Graphics compressor has the following characteristics:<P>
+<PRE>
+<B>Table 3: </B><I> Graphics compressor characteristics.</I>
+--------------------------------------------------------
+Characteristic  |Discussion                             
+--------------------------------------------------------
+Description     |Generates an image one-half the size of
+                |the same image compressed with         
+                |Animation compressor. Good alternative 
+                |to Animation compressor if compression 
+                |ratio is more important than           
+                |decompression speed.                   
+--------------------------------------------------------
+Recommended     |8-bit still images and image sequences 
+Sources         |if compression ratio is more important 
+                |than decompression speed.              
+--------------------------------------------------------
+Hints &amp; Tips|Use this compressor with relatively    
+                |slow storage devices such as CD-ROM    
+                |discs. In that case, the Graphics      
+                |compressor has enough time to          
+                |decompress the image or image sequence.
+                |                                       
+--------------------------------------------------------
+</PRE>
+<P>
+<B>Photo/JPEG</B>-The Photo/JPEG compressor has the following characteristics:<P>
+<PRE>
+<B>Table 4: </B><I> Photo/JPEG compressor characteristics.</I>
+--------------------------------------------------------
+Characteristic  |Discussion                             
+--------------------------------------------------------
+Description     |Joint Photographic Experts Group       
+                |algorithm for image compression.       
+                |Compresses each frame in the movie     
+                |separately.                            
+--------------------------------------------------------
+Recommended     |Images that vary smoothly, that is, no 
+Sources         |sharp edges or detail; nonsynthetic    
+                |images.                                
+--------------------------------------------------------
+Quality         |Compression ratios depend on source    
+                |image. General range is 5:1 to 50:1 for
+                |24-bit sources. Good picture quality   
+                |results at 10:1 to 20:1.               
+--------------------------------------------------------
+</PRE>
+<P>
+<B>Video</B>-The Video compressor has the following characteristics: <P>
+<PRE>
+<B>Table 5: </B><I> Video compressor characteristics. </I>
+--------------------------------------------------------
+Characteristic  |Discussion                             
+--------------------------------------------------------
+Description     |Permits fast decompression while       
+                |maintaining acceptable picture quality.
+                |Allows applications to display color   
+                |images or drawings at interactive      
+                |speed. Supports both spatial and       
+                |temporal compression.                  
+--------------------------------------------------------
+Recommended     |Sequences of video data. Better suited 
+Sources         |for digitized video content than       
+                |synthetically generated images.        
+--------------------------------------------------------
+Quality         |Spatial compression-only ratios from 5:1
+                |to 8:1 at acceptable quality for 24-bit
+                |sources.Spatial and temporal           
+                |compression ratios from 5:1 to 25:1 for 
+                |24-bit sources.                        
+--------------------------------------------------------
+</PRE>
+<H3>Color Quality Selection</H3>
+The Color Quality Selection pop-up differs depending on the compression 
+algorithm you choose. Use it to choose between color and grayscale or to 
+select the color depth to be used. <P>
+<H3>Compression quality</H3>
+The Quality slider lets you choose between high-quality slow compression 
+and low-quality fast compression. <P>
+<H3>Frames per second</H3>
+The<I> </I>Frames per second pop-up lets you select a frame rate. You can 
+also type in the desired frame rate. Whatever your source frame rate 
+setting is, your destination rate remains the same. That is, if your 
+source is at 30 fps, your destination is also 30 fps.<P>
+<B>Note: </B>For smooth displays, pick a frame rate that's divisible by 
+two, because you must eliminate every other frame to end up with smooth 
+transitions between frames. For example, if the original rate was 24, pick 
+12; if the original rate was 30, pick 15. <P>
+<H3>Key frame settings</H3>
+The Key frame settings option lets you specify how many key frames should 
+be preserved during compression. Choose a high number if there's a lot of 
+motion in the movie, a lower rate if not. <P>
+<H3>Data rate limitation </H3>
+This section lets you specify at what data rate the compressed movie will 
+be played.<P>
+<A NAME="XREF37277"><H2>Example for using the MovieCompress Tool </A></H2>
+This section illustrates the compression of a sample movie with Cinepak. 
+The settings used in this example are listed below: <P>
+<UL>
+<LI>Compression: Cinepak, color 
+<LI>Quality: Normal
+<LI>Motion: 
+<UL>
+<LI>Frames per second: Best
+<LI>Key frame every 24 frames
+<LI>Limit data rate to 210 K/second 
+</UL><BR>
+</UL>
+<H3>How to compress a movie</H3>
+To compress a movie, follow these steps:<P>
+<OL>
+<LI>Drag your source movie on top of the MovieCompress icon. 
+<p>
+<p>The Compression Settings dialog appears. 
+<p>
+
+<IMG SRC="Figures/VID5.figs/VID.Settings.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Compression Settings dialog.</I><P>
+
+<LI>From compression algorithm pop-up- set to Video by default- choose 
+Cinepak. 
+<p>
+<LI>Select color. 
+<p>
+<LI>Leave the Quality slider at normal. 
+<p>
+<LI>In the Motion section, leave Frames per second at Best (the default 
+setting). 
+<p>
+<p>If you choose Best, MovieCompress keeps the original movie's number of 
+frames per second. 
+<p>
+
+<LI>Set key frame every 24 frames. 
+<p>
+<LI>Limit the data rate to 210 K/second. 
+<p>
+<p>This leaves 90 K/Second for the stereo audio track. 
+<p>
+
+<LI>Click OK and a second dialog appears, prompting you for a destination 
+file.
+<p>
+<LI>Specify the destination file and you're done.
+<p>
+<p>A progress dialog is visible as compression takes place. 
+<p>
+</OL>

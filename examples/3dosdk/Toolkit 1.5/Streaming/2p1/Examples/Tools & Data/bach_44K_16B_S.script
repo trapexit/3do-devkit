@@ -1,0 +1,27 @@
+#
+# weavescript for bach_44K_16B_S
+#
+
+mediablocksize 2048
+
+streamblocksize 32768
+streambuffers 4
+streamstarttime 0
+
+streamerdeltapri 6
+dataacqdeltapri 8
+
+subscriber SNDS 10
+subscriber CTRL 11
+
+audioclockchan 0
+enableaudiomask 0x1
+
+preloadinstrument SA_44K_16B_S
+
+writestreamheader
+
+
+file bach_44K_16B_S.saudio 1 0
+
+

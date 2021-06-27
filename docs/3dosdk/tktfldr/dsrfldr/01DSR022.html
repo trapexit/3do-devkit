@@ -1,0 +1,88 @@
+<Title>DSGetChannel</Title>
+<A NAME="XREF11105"><H1>DSGetChannel</A></H1>
+<A NAME="XREF15906"></A> Requests the status of a channel.<P>
+<H3>Synopsis</H3>
+<CODE>int32 DSGetChannel (Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr, DSDataType streamType, long channelNumber, long* channelStatusPtr)</CODE><P>
+<H3>Description</H3>
+Requests the status of the specified stream channel from the DataStreamer. <CODE>DSGetChannel()</CODE> writes the status of the channel to the variable pointed to by <CODE>channelStatusPtr</CODE>. <P>
+<CODE>DSGetChannel()</CODE> sets the members of the message data structure required to request the status of the channel. (The message is the <CODE>DSRequestMsg</CODE> identified by <CODE>reqMsg</CODE>). If a message is specified, <CODE>DSGetChannel()</CODE> sends the message and returns immediately. If no message is specified (if <CODE>reqMsg</CODE> is <CODE>NULL</CODE>), <CODE>DSGetChannel()</CODE> creates a message, sends it to the DataStreamer, and waits until the message has been received before returning. <P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>msgItem</CODE>
+<DD>Item of the message.
+</DL>
+<DL>
+<DT><CODE>reqMsg</CODE>
+<DD>Pointer to the <CODE>DSRequestMsg</CODE> message that is formatted and sent to the DataStreamer. A value of <CODE>NULL</CODE> forces creation of an internal <CODE>DSRequestMsg</CODE> message and synchronous operation.
+</DL>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Pointer to the stream context block.
+</DL>
+<DL>
+<DT><CODE>streamType</CODE>
+<DD>Type of stream to which the request applies.
+</DL>
+<DL>
+<DT><CODE>channelNumber</CODE>
+<DD>Number of the logical channel whose status is being requested.
+</DL>
+<DL>
+<DT><CODE>channelStatusPtr</CODE>
+<DD>Pointer to the channel status word (where the result will be returned).
+</DL>
+<H3>Messages</H3>
+The members of <CODE>reqMsg</CODE> are set to the following values:<P>
+<DL>
+<DT><CODE>whatToDo
+<DD>kDSOpGetChannel
+</DL>
+<DL>
+<DT><CODE>msg.getChannel.streamType
+<DD></CODE>
+</DL>
+<DL>
+<DT><CODE>msg.getChannel.channelNumber
+<DD></CODE>
+</DL>
+<DL>
+<DT><CODE>msg.getChannel.channelStatusPtr</CODE>
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT>0
+<DD>None
+<DD>
+</DL>
+These values are returned if the DataStreamer encounters an error while processing the message request:<P>
+<DL>
+<DT>kDSInvalidDSRequest
+<DD>Invalid message (whatToDo set to invalid value)
+<DD>
+</DL>
+<DL>
+<DT>kDSNoReplyPortErr 
+<DD>Could not locate item of the reply port
+<DD>
+</DL>
+<DL>
+<DT>-1
+<DD>Could not locate pointer to msgItem
+<DD>
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>SendMsg()</CODE> or <CODE>WaitPort()</CODE> failed
+<DD>
+</DL>
+The DataStreamer checks the validity of messages only if message checking is enabled when the DataStreamer is compiled (if the <CODE>VALIDATE_REQUEST_CODE</CODE> symbol is enabled).<P>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a listing of error messages returned by <CODE>SendMsg()</CODE> and <CODE>WaitPort()</CODE>.<P>
+<H3>Associated Files</H3>
+DataStreamLib.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR027.html#XREF23198"><CODE>DSSetChannel</A></CODE><P>

@@ -1,0 +1,64 @@
+<TITLE>Function Calls</TITLE>
+<H1>Function Calls</H1><HR>
+The following list contains the memory calls. See 
+<A HREF="../spr/01spr.html#XREF17318">Kernel Folio Calls</A> in the <I>3DO System Programmer's Reference</I> for more information on these calls.<P>
+<H2>Allocating Memory</H2>
+The following calls allocate memory:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr004.html#XREF40501">AllocMem</A>() </CODE>Allocates a specified memory block.
+<LI><CODE><A HREF="../spr/01spr100.html#XREF14880">malloc</A>() </CODE>Allocates memory.
+</UL>
+<H2>Freeing Memory</H2>
+The following calls free memory:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr064.html#XREF31542">FreeMem</A>() </CODE>Frees memory allocated with <CODE>AllocMem()</CODE>.
+<LI><CODE><A HREF="../spr/01spr063.html#XREF19159">free</A>() </CODE>Frees memory allocated with <CODE>malloc()</CODE>.
+</UL>
+<H2>Getting Information About Memory</H2>
+The following calls get information about available memory:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr010.html#XREF22823">AvailMem</A>() </CODE>Gets information about available memory.
+<LI><CODE><A HREF="../spr/01spr069.html#XREF12605">GetBankBits</A>() </CODE>Finds out which VRAM bank contains a memory location.
+<LI><CODE><A HREF="../spr/01spr074.html#XREF40631">GetMemType</A>() </CODE>Gets the type of the specified memory.
+<LI><CODE><A HREF="../spr/01spr079.html#XREF32894">GetPageSize</A>() </CODE>Gets the number of bytes in a memory page.
+</UL>
+<H2>Reclaiming Unused Memory</H2>
+The following call reclaims unused memory:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr120.html#XREF32080">ScavengeMem</A>() </CODE>Returns a task's unused memory pages to the system-wide memory pool.
+</UL>
+<H2>Changing the Control Status of Memory</H2>
+The following call changes the status of memory:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr018.html#XREF21673">ControlMem</A>() </CODE>Grants or revokes write permission to memory, or gives memory to another task.
+</UL>
+<H2>Using Private Memory Lists</H2>
+The following calls deal with private lists:<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr006.html#XREF20160">AllocMemFromMemList</A>() </CODE>Allocates memory from a private memory pool.
+<LI><CODE><A HREF="../spr/01spr065.html#XREF12757">FreeMemList</A>() </CODE>Frees a memory list.
+<LI><CODE><A HREF="../spr/01spr066.html#XREF14037">FreeMemToMemList</A>() </CODE>Frees a private block of memory.
+</UL>
+<H2>Using Memory Pools</H2>
+The following calls allocate and free memory pools.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr005.html#XREF36147">AllocMemBlocks</A>() </CODE>Transfers pages of memory from the system-wide free memory pool.
+<LI><CODE><A HREF="../spr/01spr007.html#XREF42660">AllocMemFromMemLists</A>() </CODE>Allocates a memory block from a list of memory lists.
+<LI><CODE><A HREF="../spr/01spr067.html#XREF28914">FreeMemToMemLists</A>() </CODE>Returns a block of memory to a free memory pool.
+</UL>
+<H2>Debugging Memory Problems</H2>
+The following calls find problems with memory.<P>
+
+<UL>
+<LI><CODE><A HREF="../spr/01spr023.html#XREF16511">CreateMemDebug</A>() </CODE>Initializes memory debugging package
+<LI><CODE><A HREF="../spr/01spr033.html#XREF10232">DeleteMemDebug</A>() </CODE>Releases memory debugging resources
+<LI><CODE><A HREF="../spr/01spr039.html#XREF34554">DumpMemDebug</A>()</CODE>Dumps memory allocation debugging information
+<LI><CODE><A HREF="../spr/01spr117.html#XREF22887">SanityCheckMemDebug</A>()</CODE>Checks all current memory allocations to make sure all of the allocation cookies are intact
+</UL>

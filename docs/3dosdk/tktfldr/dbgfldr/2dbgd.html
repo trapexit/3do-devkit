@@ -1,0 +1,115 @@
+<TITLE>The Variables window</TITLE>
+<H1><LINK NAME="XREF27985">The Variables window</LINK></H1><HR>
+The Variables window displays user-selected variables and current values. 
+<P>
+A Variables window is most useful for examining variables or data 
+structures or for dereferencing pointers. It is also capable of parsing 
+C-style expressions. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/Var1.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Variables window. </I><P>
+<H2>Using multiple Variables windows</H2>
+You can open Variables windows as needed. Each window has a number as part 
+of the window name. At any given time, only one Variables window receives 
+data. You can select that window by choosing Receive Data in its Options 
+menu. The system automatically turns off all other Variables windows. <P>
+When you send a variable from another window to the Variables window, the 
+window receiving data comes to the front. <P>
+<B>Note: </B>If there is only one Variables window, it is always the 
+window that receives variable data.<P>
+<H2>Working with Variables windows</H2>
+In <A HREF="dbg1frst.html#XREF37307">3DO Debugger Quick Start</A> you are stepped through a small 
+example of using the Variables window. The following table describes all major 
+operations you can perform in the Variables window.<P>
+<PRE>
+<B>Table 1: </B><I>  Working with the Variables window.</I>
+--------------------------------------------------------
+To...          |Do this...                              
+--------------------------------------------------------
+Open a window  |Press Command-M or select Variables from
+               |the View menu.                          
+--------------------------------------------------------
+Add a variable |* Enter the variable you want to display
+or other       |into the text edit field at the top of  
+expression to  |the window. Any standard C expression is
+the display    |allowed.                                
+               |* Press Return or click the Evaluate    
+               |button.                                 
+               |This enters the selection into the      
+               |window and displays the current value.  
+--------------------------------------------------------
+Examine a      |Select a variable in any window by      
+variable from  |double-clicking on it, then press       
+any window     |Command-Shift-M to examine that variable
+               |in the Variables window.                
+--------------------------------------------------------
+Delete a       |* Click on the variable you want to     
+variable       |delete.The variable name is displayed in
+               |the text field at the top of the window 
+               |and the Clear button is enabled.        
+               |* Click on the Clear button or press the
+               |Clear key on the Macintosh keyboard (you
+               |may need to do this twice if the        
+               |variable is not editable).              
+--------------------------------------------------------
+Change variable|* Click on the variable.The variable    
+values         |name is displayed in the text field at  
+interactively  |the top of the window. When you select  
+               |the variable, its current value is      
+               |displayed in the Value field.           
+               |* Type the new value into the Value     
+               |field and press Return or Enter to      
+               |change the value.                       
+               |Note: You cannot edit constant values,  
+               |expressions, or the base of a C         
+               |structure. In that case, Not Editable is
+               |displayed in the Current Value field.   
+--------------------------------------------------------
+Dereference a  |Commanddouble-click on the pointer. A   
+pointer        |new line representing the dereferenced  
+               |pointer is added to the variables list. 
+               |If the field cannot be dereferenced, you
+               |hear an alert sound.                    
+--------------------------------------------------------
+Select a window|Choose Receive Data from the Options    
+for receiving  |menu of the desired Variables window. To
+data           |compare the values of variables at      
+               |different states in the program, you can
+               |create several Variables windows and    
+               |select a different one for receiving    
+               |data at any state that's of importance. 
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Variables window options</H2>
+The Variables window Options menu lets you determine how data is displayed 
+in the Variables window. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/VarOptions.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 2: </B><I>Variables window Options menu.</I><P>
+<H3>Auto Update</H3>
+Automatically refreshes the window during stepping operations or when the 
+program executing on the target hits a breakpoint. This slows the general 
+operation of the Debugger, but provides a more current and accurate 
+display.<P>
+<H3>Receive Data</H3>
+If you choose Send Variable Data to work with an expression, the Debugger 
+directs it to the Variables window for which Receive Data is selected. 
+Selecting Receive Data in a window deselects it in any other window. <P>
+<H3>Decimal / Hex / char / C string / Pascal string</H3>
+Allows you to select the format of the displayed variable. If the field 
+cannot be displayed in the selected format, nothing happens. If a C string 
+is longer than 256 characters, it is truncated to about 250 characters. <P>
+<H3>Frac16-16 / UFrac16-16 / Frac12-20 / UFrac12-20 </H3>
+Select one of these options to display fixed point numbers or their 
+unsigned counterparts. The number is displayed as <CODE>int.frac</CODE>. 
+For example, Frac16 x = 0x00018000 is displayed as 1.5. <P>
+You can also enter a new value using this format. No conversion is 
+performed if you use no decimal point. For example, if you type 1.0, the 
+new value is 0x00010000, but if you type 1, the new value is 
+0x00000001.Frac16 numbers-which use the Frac16 type defined by the 
+operating system-are automatically displayed in Frac16-16 format. <P>
+<P>

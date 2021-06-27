@@ -1,0 +1,92 @@
+<TITLE>Using the ARM C compiler</TITLE>
+<H1><LINK NAME="XREF24095">Using the ARM C compiler</LINK></H1><HR>
+For a description of how to invoke the ARM C Compiler and full details of <I>armcc</I> command line options, see <A HREF="../augfldr/aug1frst.html#XREF20531">The ARM C Compiler</A>.<P>
+<A NAME="XREF39126"><H2>File naming conventions </A></H2>
+The ARM C system uses suffix naming conventions to identify the classes of file involved in the compilation and linking processes:<P>
+<PRE>
+--------------------------------------------------------
+Suffix  |Usage                                          
+--------------------------------------------------------
+.c      |C source file                                  
+--------------------------------------------------------
+.h      |C header file                                  
+--------------------------------------------------------
+.o      |ARM object file                                
+--------------------------------------------------------
+.s      |ARM assembly language                          
+--------------------------------------------------------
+.lst    |compiler listing file                          
+--------------------------------------------------------
+</PRE>
+<P>
+For example, <I>something.c</I> names the C source of <I>something</I>.<P>
+Many host systems support suffix file naming conventions (Unix, MS-DOS, and the Macintosh under MPW all do), so the names used by the C system on the command line, and as arguments to the C preprocessor directive #include, map directly to host file names.<P>
+Some host systems have no file name extensions and no extension convention. On such systems, files may be stored in folders (sub-directories) named c, h, o and s. However, the compiler still understands the <I>something.c</I> notation, both on its command line and when processing the names of #include files, and it translates names written in standard form to host system file names. For example, under Acorn's RISC OS system the source <I>sonething.c</I> is actually stored in the file called <I>something</I> in subdirectory <I>c</I> .  Note, however, that under RISC OS listing files are by default created in an <I>l</I> directory, not a <I>lst</I> directory as might be expected.<P>
+Portability is an increasingly important issue in the C world, especially since the standardisation of C. To this end, the ARM C system provides support for the use of multiple file-naming conventions on one host.<P>
+In each environment the ARM C system supports:<P>
+<UL>
+<LI>native file names;
+<LI>pseudo Unix file names;
+<LI>Unix file names.
+</UL>
+A pseudo Unix file name is one in the format:<P>
+<CODE>
+<PRE>
+host-volume-name:/rest-of-unix-file-name
+</CODE>
+</PRE>
+Determining how to parse a name is done heuristically.  Heuristics are applied as follows:<P>
+<UL>
+<LI>A name starting with <I>volume-name</I>:/ is a pseudo Unix file name;
+<LI>Under RISC OS, a name starting with: [<I>filing-system</I>:]:<I>mount</I>, $ or &amp; is a RISC OS file name;
+<LI>A name containing a '/' is a unix file name;
+</UL>
+Otherwise the name is a host name.<P>
+Of course, such file name interpretation only has a chance of success if certain rules are adhered to by program authors. For example, under DOS, a name may not exceed 8 characters in length and character case is not significant. In general, portability is best served if the name of a file or directory is restricted to a maximum of 8 lower-case letters and digits, beginning with a letter; extensions should be no longer than 3 letters and digits long; and embedded path names should be relative, rather than absolutely rooted.<P>
+<H2>Filename validity </H2>
+The compiler does not check whether the file names given are acceptable to the host's filing system. If the file name is not acceptable the compiler will report that it could not be opened, but will give no further diagnosis.<P>
+<H2>Object files </H2>
+By default, the object file(s) created by the compiler are stored in the current directory.<P>
+A C source file (<I>something.c</I>) is compiled into an object file (usually called <I>something.o</I>) written in ARM Object Format (AOF). AOF is defined in <A HREF="../atsfldr/ats2frst.html#XREF16187">ARM Object Format</A>.<P>
+<A NAME="XREF17731"><H2>Included files </A></H2>
+During a compilation, the compiler may read included header files, conventionally given a '.h' suffix, or included C source files, usually given a '.c' suffix like the initial C source file.<P>
+A special feature of the ARM C system is that the ANSI library headers are built into the C compiler (in a special, textually-compressed, in-memory filing system) and are used from there by default. By placing a file name in angle brackets, you indicate that the included file is a system file and ensure that the compiler looks first in its built-in filing system. For example:<P>
+<CODE>
+<PRE>
+#include &lt;stdio.h&gt;
+</CODE>
+</PRE>
+By default, the ARM C compiler <I>does not</I> look for system files in the current directory.<P>
+By enclosing a file name in double quotes in its #include directive, you indicate that it is not a system file. For example:<P>
+<CODE>
+<PRE>
+#include "myfile.h"
+</CODE>
+</PRE>
+By default, the ARM C compiler <I>does</I> look for non-system files in the current directory.<P>
+The way the compiler looks for included files depends on three factors:<P>
+<UL>
+<LI>whether the file name is rooted (ie. it is an absolute file name, rather than a relative file name);
+<LI>whether the file name in the #include directive is between angle brackets or double quotes;
+<LI>use of the -I and -j flags and the special file name :mem.
+</UL>
+<A NAME="XREF23159"><H3>The search path </A></H3>
+The order of directories on the search path is as follows:<P>
+<UL>
+<LI>the compiler's own in-memory filing system (for filenames enclosed in angle brackets, but only if the -j flag is not used);
+<p>
+<LI>the current place (see <A HREF="#XREF34382">The current place</A>) (not for filenames enclosed in angle brackets);
+<p>
+<LI>arguments to -I flags, if used (for filenames enclosed in angle brackets or double quotes);
+<p>
+<LI>arguments to the -j flag, if used (for filenames enclosed in angle brackets or double quotes);
+<p>
+<LI>the compiler's own in-memory filing system (for filenames enclosed in angle brackets, but only if the -j flag is used).
+</UL>
+Note that the in-memory filing system can be specified explicitly by -I or -j by using the directory name <I>:mem</I>.<P>
+<A NAME="XREF34382"><H3>The current place </A></H3>
+The current place is the directory containing the source file (C source or #include header) currently being processed by the compiler. Often, this will be the current directory.<P>
+When a file is found relative to an element of the search path, the name of the directory containing that file becomes the new current place. When the compiler has finished processing that file it restores the old current place. At each instant, there is a stack of current places corresponding to the stack of nested #include's.<P>
+For example, suppose the current place is /me/include and the compiler is seeking the #include file "sys/defs.h". Now suppose this is found as /me/include/sys/defs.h. Then the new current place is /me/include/sys and any file #include by defs.h whose name is not rooted, will be sought relative to /me/include/sys.<P>
+This is the search rule used by BSD Unix systems. If required, the stacking of current places using the compiler option -fK can be disabled, to get the search rule described originally by Kernighan and Ritchie in <I>The C Programming Language.</I> Then all non-rooted user includes are sought relative to the directory containing the source file being compiled.<P>
+<P>

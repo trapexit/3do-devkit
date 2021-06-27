@@ -1,0 +1,23 @@
+<Title>AbortAsyncLoadFile </Title>
+<A NAME="XREF33055"><H1>AbortAsyncLoadFile </A></H1>
+Aborts an asynchronous file load operation in progress.<P>
+<H3>Synopsis</H3>
+<CODE>Err AbortAsyncLoadFile (LoadFileInfo *lf)</CODE><P>
+<H3>Description</H3>
+Aborts an asynchronous load operation in progress, even if the operation has already completed. <P>
+If the call to <CODE>AsyncLoadFile()</CODE> requested allocation of a buffer, this function frees the buffer. If the call to <CODE>AsyncLoadFile()</CODE> specified an ioDonePort, you will <I>not</I> receive notification at that port after calling <CODE>AbortAsyncLoadFile()</CODE>. <P>
+Do not call <CODE>FinishAsyncLoadFile()</CODE> after calling <CODE>AbortAsyncLoadFile()</CODE>; it performs the actions internally. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>lf
+<DD>Pointer to the LoadFileInfo structure for the load operation. 
+</DL>
+<H3>Return Value</H3>
+Returns ABORTED. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, blockfile.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO002.html#XREF32442"><CODE>AsyncLoadFile</A></CODE><P>
+</CODE>

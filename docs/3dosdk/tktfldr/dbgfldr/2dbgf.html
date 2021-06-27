@@ -1,0 +1,38 @@
+<TITLE>The Stack window</TITLE>
+<H1><LINK NAME="XREF37567">The Stack window</LINK></H1><HR>
+The Stack window displays the current contents of the stack. Optionally, it lets you view the Svc, User, FIRQ, IRQ, Abort, or Undefined stacks in byte, half-word (16-bit), or word (32-bit) format. The current value of the current stack pointer is marked by a down arrow (<B>&gt;</B>) to the right of the associated address. <P>
+
+<IMG SRC="Figures/002.Ch2Pics/Stackwindow.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Stack window.</I><P>
+<H2>Working with the Stack window</H2>
+The following table describes important activities for the Stack window. <P>
+<PRE>
+<B>Table 1: </B><I> Working with the Stack window.</I>
+--------------------------------------------------------
+To...           |Do this...                             
+--------------------------------------------------------
+Open the window |Press Command-E, or select Stacks from 
+                |the View menu.                         
+--------------------------------------------------------
+Edit a stack    |* Click on the value you want to change
+value           |to select it.                          
+                |* Enter the new value and press Return 
+                |to write the new value to the target.  
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Stack View options</H2>
+
+<IMG SRC="Figures/002.Ch2Pics/StackOptions.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Stack view options.</I><P>
+<H3>Byte</H3>
+Checking Byte displays data as bytes. This has no effect when you view ASCII data since they are character based.<P>
+<H3>Half Word</H3>
+Selecting Half Word displays data as 16-bit words. This has no effect when you view ASCII data since they are character based. <P>
+<H3>Word</H3>
+Checking Word displays data as 32-bit long words. This has no effect when you view ASCII data since they are character based.<P>
+<H3>Svc / User / FIRQ / IRQ / Abort / Undef / Current</H3>
+To display a specific operating mode's stack (Svc, User, FIRQ, IRQ, Abort, or Undefined), select the desired operating mode from the pop-up menu. To always display the stack of the current operating mode, select Current.<P>
+<P>

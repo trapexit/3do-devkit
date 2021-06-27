@@ -1,0 +1,30 @@
+<HTML><TITLE>unary_function</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>unary_function</H2>
+<HR><PRE>     Function Object</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Base class for creating unary function objects.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;functional></PRE>
+<PRE>
+template &#60;class Arg, class Result>
+struct <B>unary_function</B>{
+  typedef Arg argument_type;
+  typedef Result result_type;
+};
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>Function objects are objects with an <SAMP>operator()</SAMP> defined.  They are important for the effective use of the standard library's generic algorithms, because the interface for each algorithmic template can accept either an object with an <SAMP>operator()</SAMP> defined or a pointer to a function.  The standard library provides both a standard set of function objects, and a pair of classes that you can use as the base for creating your own function objects.</P>
+<P>Function objects that take one argument are called <I>unary function objects.</I>  Unary function objects are required to provide the typedefs <SAMP>argument_type</SAMP> and <SAMP>result_type</SAMP>.  The <B><I>unary_function</B></I> class makes the task of creating templated unary function objects easier by providing the necessary typedefs for a unary function object.  You can create your own unary function objects by inheriting from <B><I>unary_function</B></I>.</P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="Fun_7437.htm"><B><I>Function Objects</B></I></A>, and Function Objects Section in User's Guide.</P>
+<HR>
+<A HREF="tra_4787.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="una_8062.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,112 @@
+<TITLE>Overlays</TITLE>
+<H1><LINK NAME="XREF39598">Overlays</LINK></H1><HR>
+The linker supports both static and dynamic overlays.<P>
+<H2>Static overlays</H2>
+In the static case, a simple 2-dimensional overlay scheme is supported. There is one root segment, and as many memory partitions as specified by the user (called, for example, 1_, 2_, etc.). Within each partition, some number of overlay segments (called, for example, 1_1, 1_2, ...) share the same area of memory. The user specifies the contents of each overlay segment and the linker calculates the size of each partition, allowing sufficient space for the largest segment in it. All addresses are calculated at link time so statically overlaid programs are not relocatable. A hypothetical example of the memory map for a statically overlaid program might be:<P>
+<PRE>
+-----------------------------------------------------------
+2_1        |2_2       |2_3       |          |high address  
+-----------------------------------------------------------
+1_1        |1_2       |1_3       |1_4       |              
+-----------------------------------------------------------
+segment                          |root      |low address   
+-----------------------------------------------------------
+</PRE>
+<P>
+Segments 1_1, 1_2, 1_3 and 1_4 share the same area of memory. Only one of these segments can be loaded at any given instant; the remainder must be on backing store.<P>
+Similarly, segments 2_1, 2_2 and 2_3 share the 2_ area of memory, but this is entirely separate from the 1_ partition.<P>
+It is a current restriction that an overlay segment name is of the form <I>partition_segment</I> and contains 10 or fewer characters. However, it is <I>not</I> required that <I>partition</I> and <I>segment</I>  be numeric as shown here in the example: any alphanumeric characters are acceptable.<P>
+<H2>Dynamic overlays </H2>
+A dynamic or relocatable overlay scheme is obtained by specifying the -Relocatable command line option. In this case:<P>
+<UL>
+<LI>the root segment is a (load-time) relocatable AIF image; 
+<LI>each overlay segment is a plain binary image with relocation directives appended.
+</UL>
+When using relocatable overlays, it is expected that:<P>
+<UL>
+<LI>the overlay manager will allocate memory for a segment when it is first referenced; 
+<p>
+<LI> a segment will be unloaded, and the memory it occupies freed, by an explicit call to the overlay manager.
+</UL>
+In this case, it suffices to give each overlay segment a simple name (no embedded underscore), and let the linker link each as if it were in its own partition (which is dynamically allocated by the overlay manager).<P>
+Nevertheless, if a 2-dimensional naming scheme is used, the linker will generate segment clash tables (see below), and segments can be unloaded implicitly by the overlay manager when a clashing segment is loaded. In effect, this supports the classification of dynamic overlay segments into disjoint sets of <I>not co-resident</I> objects.<P>
+A dynamic overlay segment (including a root segment) is followed by a sequence of relocation directives. The sequence is terminated by a word containing -1. Each directive is a 28-bit byte offset of a word or instruction to be relocated, together with a flag nibble in the most significant 4 bits of the word. Flag nibbles have the following meanings:<P>
+<PRE>
+--------------------------------------------------------
+0:  |relocate a word in the root segment by the         
+    |difference between the address at which the root   
+    |was loaded and the address at which it was linked; 
+--------------------------------------------------------
+1:  |relocate a word in an overlay segment by the       
+    |address of the root;                               
+--------------------------------------------------------
+2:  |relocate a word in an overlay segment by the       
+    |address of the segment;                            
+--------------------------------------------------------
+3:  |relocate a B or BL from an overlay segment to the  
+    |root segment, by the difference (in words) between 
+    |the segments address and the roots address;        
+--------------------------------------------------------
+7:  |relocate a B or BL from the root segment to an     
+    |overlay segment, by the difference (in words)      
+    |between the root's address and the segment's       
+    |address, (such relocation directives always refer  
+    |to a PCIT entry in an overlay segment, which is    
+    |used to initialise a PCIT section in the root when 
+    |the overlay segment is loaded).                    
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Assignment of AREAs to overlay segments </H2>
+The linker assigns AOF AREAs to overlay segments under user control (see below). Usually, a compiler produces one code AREA and one data AREA for each source file (called C$$code and C$$data when generated by the C compiler). The C compiler option -ZO allows each separate function to be compiled into a separate code AREA, allowing finer control of the assignment of functions to overlay segments, (but at the cost of slightly enlarged code and enlarged object files). The user controls the overlay structure by describing the assignment of certain AREAs to overlay segments. For each remaining AREA in the link list, the linker will act as follows:<P>
+<UL>
+<LI>if all references to the AREA are from the same overlay segment, the AREA is included in that segment; otherwise,
+<p>
+<LI>the AREA is included in the root segment.
+</UL>
+This strategy can never make an overlaid program use more memory than if the linker put all remaining AREAs in the root, but it can sometimes make it smaller.<P>
+By default, only code AREAs are included in overlay segments. Data AREAs can be forcibly included, but it is the user's responsibility to ensure that doing so is meaningful and safe.<P>
+On disc, an overlaid program is organised as a directory containing a root image and a collection of overlay segments. The name of the directory is specified to the Linker as the argument to its -Output flag. The linker creates the following components within the application directory:<P>
+<CODE>
+<PRE>
+root
+</CODE>
+</PRE>
+the root segment, which is an AIF image, and (for example):<P>
+<CODE>
+<PRE>
+1_1
+1_2
+...
+2_1
+...
+</CODE>
+</PRE>
+overlay segments, which are plain binary image fragments.<P>
+<H2>Describing an overlay structure to the linker</H2>
+The overlay file, named as argument to the -OVerlay option, describes the required overlay structure. It is a sequence of <I>logical lines</I>:<P>
+<UL>
+<LI>a '' immediately before the end of a physical line continues the logical line on the next physical line;
+<p>
+<LI>any text from a ';' to end of the logical line inclusive is a comment (for documentation purposes) which is ignored by the linker.
+</UL>
+Each logical line has the following structure:<P>
+<CODE>
+<PRE>
+segment-name                module-name                    [ "(" list-of-AREA-names ")" ]
+                module-name                    ...
+</CODE>
+</PRE>
+For example:<P>
+<CODE>
+<PRE>
+1_1    edit1 edit2 editdata(C$$code,C$$data) sort
+</CODE>
+</PRE>
+<I>list-of-AREA-names</I> is a comma-separated list. If omitted, all AREAs with the CODE attribute are included.<P>
+<I>module-name</I> is either the name of an object file (with all leading pathname components and file name extensions removed), or the name of a library member (again, with all leading pathname components and file name extensions removed).<P>
+In the example above, sort would match the C library module of the same name.<P>
+Note that these rules require that, within a link list, modules have unique names. For example, it is not possible to overlay a program made up from <I>test/thing.o</I> and <I>thing.o</I> (two modules called <I>thing</I>). This is a restriction on overlaid programs only.<P>
+To help partition a program between overlay segments the linker can generate a list of inter-AREA references. This is requested by using the -Xref option. In general, if area A refers to area B, for example because <I>fx</I> in area A calls <I>fy</I> in area B, then A and B should not share the same area of memory. Otherwise, every time <I>fx</I> calls <I>fy</I>, or <I>fy</I> returns to <I>fx</I>, there will be an overlay segment swap.<P>
+The -MAP option requests the linker to print the base address and size of every AREA in the output program. Although not restricted to use with overlaid programs, -MAP is most useful with them, as it shows how AREAs might be packed more efficiently into overlay segments.<P>
+<P>

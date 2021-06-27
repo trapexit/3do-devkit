@@ -1,0 +1,163 @@
+<TITLE>Modifying sound with envelopes</TITLE>
+<H1><LINK NAME="XREF31632"></LINK><LINK NAME="XREF29411"></LINK><LINK 
+NAME="XREF20674">Modifying sound with envelopes</LINK></H1><HR>
+An envelope sets the shape of an audio parameter plotted over time. An 
+envelope typically controls one of an instrument's attributes such as its 
+amplitude, timbre, or frequency. <P>
+The ARIA tool lets you set sustain loops, release loops, release points, 
+and other attributes for the envelope simply by editing its graphic 
+representation. <P>
+The section below shows you how to add an envelope to a simple patch. A 
+tips and tricks section gives some advice from our developers. <P>
+<H2>Preparing a patch with an envelope</H2>
+Preparing a patch with an envelope consists of two parts:<P>
+
+<UL>
+<LI><A HREF="#XREF34375">Adding an envelope to a patch</A>
+<LI><A HREF="#XREF32322">Editing an envelope</A>
+</UL>
+<A NAME="XREF34375"><H3>Adding an envelope to a patch</A></H3>
+To add an envelope to an existing patch, follow these steps:<P>
+<OL>
+<LI>Select the envelope block in the Tool bar and drag an envelope block 
+in front of the item (waveform or sampler) you want to modify and after 
+the attribute you want to modify (see Figure 1 below for a complete patch 
+with an envelope). 
+<p>
+<LI>Cut the wire connecting the waveform or sample and its knob by 
+Option-dragging, as explained under "<A 
+HREF="./3stdb.html#XREF34597">Connecting and disconnecting blocks</A>." 
+<p>
+<LI>Connect the knob, the envelope, and the waveform or sampler by 
+dragging the lines from the output of one to the input of the other. 
+</OL>
+
+<IMG SRC="Figures/Ch3figs/PatchwithEnvelope.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 1: </B><I>Patch using an envelope. </I><P>
+<H3>Envelope editor overview</H3>
+Editing an envelope is done from the Envelope Editor window, shown in 
+Figure 2 below. <P>
+
+<IMG SRC="Figures/Ch3figs/Envelope.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 2: </B><I>Envelope Editor.</I><P>
+The Envelope Editor window has several tools available. They are, from 
+left to right: <P>
+<UL>
+<LI>Magnifying glass to zoom in/zoom out.
+<p>
+<LI>Tool to set/clear sustain or release loops and set loop back time.
+<p>
+<LI>Tool to set/clear a release jump point, that is, a point where the 
+sound will continue if you jump out of a loop.
+<LI>Checkbox for the FLS (Fat Lady Sings) bit, which clears all memory 
+allocated to the patch after the system exits it.
+</UL>
+<A NAME="XREF32322"><H3>Editing an envelope</A></H3>
+To edit an envelope, follow these steps: <P>
+<OL>
+<LI>Click on the envelope's Edit button. 
+<p>
+<LI>Move the start point in the top-left corner further down as desired. 
+<p>
+<p><B>Note: </B> The start point is initially invisible. Just grab the 
+top-left corner and you will find you can move the point. <BR>
+<p>
+
+<LI>Add more points by holding the Option button and clicking or dragging 
+the line. 
+<p>
+<LI>To set a sustain loop, drag out a marquee by holding the Shift key and 
+select all points over which you want the loop, then click Set and type in 
+the loop- back time-if you don't provide one, you'll hear a click. Sustain 
+loops are indicated by bright red lines. 
+<p>
+<p>The same technique can be used for release loops. Just click the Rel 
+radio button instead of the Sus radio button. 
+<p>
+<p><B>Note: </B> To delete a point, Option-click it. <BR>
+<p>
+
+<LI>To set a Release Jump Point, select a point and click on the Set box 
+in the RJP area. The letters "rp" next to the point indicate you have set 
+it. Note that the point will not go away when you clear the RJP, but the 
+letters disappear. 
+<p>
+<LI>In most cases, you will also want to set the FLS bit. 
+<p>When an envelope or sample finishes, if the FLS bit is set, then the 
+instrument is considered finished and it will be stopped. Once stopped, 
+the instrument is more eligible to be used by other voices. For example, 
+if you have three envelopes on one instrument: pitch, filter, and 
+amplitude, the sound is considered over only when the amplitude goes to 
+zero. You should therefore set the FLS bit in the amplitude envelope but 
+not in the others.
+<p>
+</OL>
+
+<IMG SRC="Figures/Ch3figs/ComplexEnvelope.gif" ALT="Graphic cannot be 
+displayed">
+<P>
+<B>Figure 3: </B><I>Example of a complex envelope. </I><P>
+<H2>Tips and tricks for working with envelopes</H2>
+This section contains tips and tricks for working with samples. These tips 
+were provided by 3DO developers who worked with ARIA during its Beta 
+period. <P>
+<UL>
+<H3>Sustain and release loop points</H3>
+The aiff file format supports two loops: sustain loops and release loops. The audio folio takes 
+advantage of this by interpreting the first set of loop points as the 
+sustain loops and the second set as the release loop. These loop points 
+can be set to be the same, cover separate data, or mark overlapping data 
+in the sound file.<BR>
+Most audio applications support the first set of loop points but not 
+the second. You can, however, use SoundDesigner to edit the sound file and 
+set loops. SoundDesigner does not support sustain loops and release loops 
+explicitly, but if you use "loop 1" as the sustain loop and "loop 2" as 
+the release loop, things will work. The loop points show up in SoundHack 
+if you want to adjust them further.
+<H3>Heuristics for using loop points</H3>
+Remember that loop points have to be set on 
+even-numbered samples for the audio folio to play them back correctly. <BR>
+When preparing loop samples, keep the 
+loops short and set both the sustain and release loops to the same point. 
+This results in a relatively small sample file. Remember that if a release 
+loop is set in the sample, you probably have to use an ARIA instrument 
+with an envelope that contains a release jump point to play back the 
+sample correctly. 
+<H3>Samples and dsp ticks</H3>
+In some cases, the DSP may not have 
+enough ticks available to handle all the notes with envelopes it is asked 
+to play. To remedy this, the following trade-off can be made: First, 
+substitute sampler.dsp instruments (the default) for ARIA instruments 
+where feasible. Doing this means removing release loop points in the 
+affected aiff files-these are identical to the sustain loops-and then 
+adding release data to the sample after the sustain loop data occurs. The 
+release is generally a few iterations of the data found in the sustain 
+loop that are faded out quickly. This means that the compiled instruments' 
+data take up more memory (because of the extra release data) but save on 
+ticks due to the lack of an envelope generator in the instrument. Since 
+this solution requires more memory, it is not optimal, but it does cut 
+down the number of ticks used fairly well.
+
+<H3>Building an envelope for a patch</H3>
+<p>There is currently no rate-scaling for envelopes built into the audio 
+folio or into ARIA. The shape and duration of an envelope therefore always 
+stays fixed, no matter how far a sample played into it gets transposed up 
+or down from its original pitch. This is not quite how instrumental sounds 
+behave in the real world. 
+<p>There is not necessarily any correlation between the loop points set 
+in the aiff sample file and the sustain loop set in the envelope. They are 
+set independently and are not compared during compilation; it is up to you 
+to make sure that the two sets of points work together in a useful manner.
+<p>In an envelope, the Release Jump Point is jumped to when a Note-Off 
+command is received, but in an aiff file with a sustain loop, the data in 
+the loop is played to the end when a Note-Off is received before going on 
+to play any data beyond the loop. Therefore, in playing an instrument that 
+contains both an envelope with a sustain loop and an aiff file with loop 
+points set in it (particularly if the loop is long), it is possible that 
+an envelope could close down a note before any release data is played or 
+even before the current iteration of the data in the sustain loops 
+finishes playing. 
+</UL>

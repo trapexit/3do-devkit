@@ -1,0 +1,97 @@
+<HTML><TITLE>partition</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>partition</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Places all of the entities that satisfy the given predicate before all of the entities that do not.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class BidirectionalIterator, class Predicate>
+BidirectionalIterator
+<B>partition</B> (BidirectionalIterator first,
+           BidirectionalIterator last,
+           Predicate pred);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>partition</B></I> algorithm places all the elements in the range <SAMP>[first, last)</SAMP> that satisfy <SAMP>pred</SAMP> before all the elements that do not satisfy <SAMP>pred</SAMP>.  It returns an iterator that is one past the end of the group of elements that satisfy <SAMP>pred</SAMP>.  In other words, <B><I>partition</B></I> returns <SAMP>i</SAMP> such that for any iterator <SAMP>j</SAMP> in the range<SAMP>[first, i)</SAMP>, <SAMP>pred(*j) == true</SAMP>, and, for any iterator <SAMP>k</SAMP> in the range <SAMP>[i, last)</SAMP>, <SAMP>pred(*j) == false</SAMP>.</P>
+<P>Note that <B><I>partition</B></I> does not necessarily maintain the relative order of the elements that match and elements that do not match the predicate.  Use the algorithm <A HREF="sta_4791.htm"><B><I>stable_partition</B></I></A> if relative order is important.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>The <B><I>partition</B></I> algorithm does at most <SAMP>(last - first)/2 </SAMP>swaps, and applies the predicate exactly <SAMP>last - first </SAMP>times. </P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// prtition.cpp
+//
+ #include &#60;functional>
+ #include &#60;deque>
+ #include &#60;algorithm>
+ #include &#60;iostream.h>
+ //
+ // Create a new predicate from unary_function.
+ //
+ template&#60;class Arg>
+ class is_even : public unary_function&#60;Arg, bool>
+ {
+   public:
+   bool operator()(const Arg&#38; arg1) { return (arg1 % 2) == 0; } 
+ };
+ int main ()
+ {
+   //
+   // Initialize a deque with an array of integers.
+   //
+   int init[10] = { 1,2,3,4,5,6,7,8,9,10 };
+   deque&#60;int> d1(init+0, init+10);
+   deque&#60;int> d2(init+0, init+10);
+   //
+   // Print out the original values.
+   //
+   cout &#60;&#60; "Unpartitioned values: " &#60;&#60; "\t\t";
+   copy(d1.begin(), d1.end(), ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl;
+   //
+   // A partition of the deque according to even/oddness.
+   //
+   <B>partition</B>(d2.begin(), d2.end(), is_even&#60;int>());
+   //
+   // Output result of partition.
+   //
+   cout &#60;&#60; "Partitioned values: " &#60;&#60; "\t\t";
+   copy(d2.begin(), d2.end(), ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl;
+<B>   </B>//
+   // A stable partition of the deque according to even/oddness.
+   //
+   stable_partition(d1.begin(), d1.end(), is_even&#60;int>());
+   //
+   // Output result of partition.
+   //
+   cout &#60;&#60; "Stable partitioned values: " &#60;&#60; "\t";
+   copy(d1.begin(), d1.end(), ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl;
+   return 0;
+ }
+Output :
+Unpartitioned values:           1 2 3 4 5 6 7 8 9 10
+Partitioned values:             10 2 8 4 6 5 7 3 9 1
+Stable partitioned values:      2 4 6 8 10 1 3 5 7 9</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you need to write :</P>
+<P><SAMP>deque&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>deque&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="sta_4791.htm"><B><I>stable_partition</B></I></A></P>
+<HR>
+<A HREF="par_6923.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="per_9476.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

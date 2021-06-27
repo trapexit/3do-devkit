@@ -1,0 +1,111 @@
+<HTML><TITLE>prev_permutation</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>prev_permutation</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Generate successive permutations of a sequence based on an ordering function. </P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class BidirectionalIterator>
+bool <B>prev_permutation</B> (BidirectionalIterator first,
+                       BidirectionalIterator last);
+template &#60;class BidirectionalIterator, class Compare>
+bool <B>prev_permutation</B> (BidirectionalIterator first, 
+                       BidirectionalIterator last, Compare comp);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The permutation-generating algorithms (<A HREF="nex_1756.htm"><B><I>next_permutation</B></I></A> and <B><I>prev_permutation</B></I>) assume that the set of all permutions of the elements in a sequence is lexicographically sorted with respect to <SAMP>operator&#60;</SAMP> or <SAMP>comp</SAMP>.  So, for example, if a sequence includes the integers 1 2 3, that sequence has six permutations, which, in order from first to last, are:  1 2 3 , 1 3 2, 2 1 3, 2 3 1, 3 1 2, and 3 2 1.  </P>
+<P>The <B><I>prev_permutation</B></I> algorithm takes a sequence defined by the range <SAMP>[first, last)</SAMP> and transforms it into its previous permutation, if possible.  If such a permutation does exist, the algorithm completes the transformation and returns <SAMP>true</SAMP>.  If the permutation does not exist, <B><I>prev_permutation</B></I> returns <SAMP>false</SAMP>, and transforms the permutation into its "last" permutation (according to the lexicographical ordering defined by either <SAMP>operator &#60;</SAMP>, the default used in the first version of the algorithm,or <SAMP>comp</SAMP>, which is user-supplied in the second version of the algorithm.)  </P>
+<P>For example, if the sequence defined by <SAMP>[first, last)</SAMP> contains the integers 1 2 3 (in that order), there is <I>not</I> a "previous permutation."  Therefore, the algorithm transforms the sequence into its last permutation (3 2 1) and returns <SAMP>false</SAMP>.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>At most<SAMP> (last - first)/2 </SAMP>swaps are performed.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// permute.cpp
+//
+ #include &#60;numeric>    //for accumulate
+ #include &#60;vector>        //for vector
+ #include &#60;functional> //for less
+ #include &#60;iostream.h>
+ 
+ int main()
+ {
+   //Initialize a vector using an array of ints
+   int  a1[] = {0,0,0,0,1,0,0,0,0,0};
+   char a2[] = "abcdefghji";
+   //Create the initial set and copies for permuting
+   vector&#60;int>  m1(a1, a1+10); 
+   vector&#60;int>  prev_m1((size_t)10), next_m1((size_t)10);
+   vector&#60;char> m2(a2, a2+10);
+   vector&#60;char> prev_m2((size_t)10), next_m2((size_t)10);
+   copy(m1.begin(), m1.end(), prev_m1.begin());
+   copy(m1.begin(), m1.end(), next_m1.begin());
+   copy(m2.begin(), m2.end(), prev_m2.begin());
+   copy(m2.begin(), m2.end(), next_m2.begin());
+   //Create permutations
+  <B> prev_permutation</B>(prev_m1.begin(), 
+                    prev_m1.end(),less&#60;int>());
+   next_permutation(next_m1.begin(), 
+                    next_m1.end(),less&#60;int>());
+ <B>  prev_permutation</B>(prev_m2.begin(), 
+                    prev_m2.end(),less&#60;int>());
+   next_permutation(next_m2.begin(), 
+                    next_m2.end(),less&#60;int>());</PRE><PRE>   //Output results
+   cout &#60;&#60; "Example 1: " &#60;&#60; endl &#60;&#60; "     ";
+   cout &#60;&#60; "Original values:      ";
+   copy(m1.begin(),m1.end(),
+        ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; "     ";
+   cout &#60;&#60; "Previous permutation: ";
+   copy(prev_m1.begin(),prev_m1.end(),
+        ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl&#60;&#60; "     ";
+   cout &#60;&#60; "Next Permutation:     ";
+   copy(next_m1.begin(),next_m1.end(),
+        ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; endl;
+   cout &#60;&#60; "Example 2: " &#60;&#60; endl &#60;&#60; "     ";
+   cout &#60;&#60; "Original values: ";
+   copy(m2.begin(),m2.end(),
+        ostream_iterator&#60;char>(cout," "));     
+   cout &#60;&#60; endl &#60;&#60; "     ";
+   cout &#60;&#60; "Previous Permutation: ";
+   copy(prev_m2.begin(),prev_m2.end(),
+        ostream_iterator&#60;char>(cout," "));
+   cout &#60;&#60; endl &#60;&#60; "     ";
+   cout &#60;&#60; "Next Permutation:     ";
+   copy(next_m2.begin(),next_m2.end(),
+        ostream_iterator&#60;char>(cout," "));  
+   cout &#60;&#60; endl &#60;&#60; endl;
+   return 0;
+ }
+Output :
+Example 1:
+     Original values:      0 0 0 0 1 0 0 0 0 0
+     Previous permutation: 0 0 0 0 0 1 0 0 0 0
+     Next Permutation:     0 0 0 1 0 0 0 0 0 0
+Example 2:
+     Original values: a b c d e f g h j i
+     Previous Permutation: a b c d e f g h i j
+     Next Permutation:     a b c d e f g i h j</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you will need to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of :</P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="nex_1756.htm"><B><I>next_permutation</B></I></A></P>
+<HR>
+<A HREF="Pre_1511.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="pri_2327.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

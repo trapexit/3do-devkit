@@ -1,0 +1,32 @@
+<TITLE>free</TITLE>
+<A NAME="XREF19159"><H1>free </A></H1>
+<A NAME="XREF22763"></A>Frees memory from malloc().<P>
+<H3>Synopsis</H3>
+<CODE>void free( void *p )</CODE><P>
+<H3>Description</H3>
+The procedure frees a memory block that was allocated by a call to <CODE>malloc()</CODE>. It is identical to the <CODE>free()</CODE> procedure in standard C library. The freed memory is automatically returned to the memory list from which it was allocated. <P>
+<B>Note: </B> You should only use <CODE>malloc()</CODE> and <CODE>free()</CODE> when porting existing C programs to Portfolio. If you are writing programs specifically for Portfolio, use <CODE>AllocMem()</CODE> and <CODE>FreeMem()</CODE>, which allow you to specify the type of memory to allocate, such as VRAM or memory that begins on a page boundary. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>p
+<DD>A pointer to the memory to be freed. This pointer may be NULL, in which case this function just returns. 
+</DL>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>stdlib.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+You can enable memory debugging in your application by compiling your entire project with the MEMDEBUG value defined on the compiler's command-line. Refer to the <CODE>CreateMemDebug()</CODE> function for more details. <P>
+<H3>Caveats</H3>
+Trusts that p is a result of a previous <CODE>malloc()</CODE> call. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr064.html#XREF31542"><CODE>FreeMem</A>(), <A HREF="./01spr066.html#XREF14037">FreeMemToMemList</A>(), <A HREF="./01spr067.html#XREF28914">FreeMemToMemLists</A>(), <A HREF="./01spr100.html#XREF14880">malloc</A>()</CODE><P>
+</CODE>
+<H1><LINK NAME="XREF19159"></LINK></H1><HR>

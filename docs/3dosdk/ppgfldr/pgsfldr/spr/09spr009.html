@@ -1,0 +1,98 @@
+<Title>Instrument </Title>
+<A NAME="XREF16655"></A><A NAME="XREF28793"><H1>Instrument </A></H1>
+<A NAME="XREF18706"> DSP Instrument Item.</A><P>
+<H3>Description</H3>
+Instrument items are created from Template items. They correspond to actual instances of DSP code running on the DSP. Several Instruments can be connected together to create a patch. Instruments can be played (by starting them), and controlled (by tweaking knobs). An Instrument is monophonic in the sense that it corresponds to a single voice. Multiple voices require creating an Instrument per voice. <P>
+<H3>Folio</H3>
+audio <P>
+<H3>Item Type</H3>
+AUDIO_INSTRUMENT_NODE <P>
+<H3>Create</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr005.html#XREF27095">AllocInstrument</A>()</CODE>  <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr019.html#XREF12062">CreateInstrument</A>()</CODE>  (new for V24) <P>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr052.html#XREF40571">LoadInstrument</A>()  </CODE><P>
+<H3>Delete</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr029.html#XREF39688">DeleteInstrument</A>()</CODE>  (new for V24) <P>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr038.html#XREF13380">FreeInstrument</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr082.html#XREF16084">UnloadInstrument</A>() </CODE> <P>
+<H3>Query</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr043.html#XREF15941">GetAudioItemInfo</A>()  </CODE><P>
+<H3>Modify</H3>
+None <P>
+<H3>Use</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr001.html#XREF13566">AbandonInstrument</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr006.html#XREF15951">AttachEnvelope</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr007.html#XREF30972">AttachSample</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr010.html#XREF37396">BendInstrumentPitch</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr013.html#XREF38027">ConnectInstruments</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr020.html#XREF38964">CreateProbe</A>()</CODE>  (new for V24) <P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr034.html#XREF31453">DisconnectInstruments</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr047.html#XREF16856">GetKnobName</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr048.html#XREF24622">GetNumKnobs</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr049.html#XREF29402">GrabKnob</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr059.html#XREF14745">PauseInstrument</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr062.html#XREF38726">ReleaseInstrument</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr064.html#XREF15774">ResumeInstrument</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr073.html#XREF13758">StartInstrument</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr075.html#XREF37581">StopInstrument</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr078.html#XREF33775">TuneInstrument</A>()  </CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_AMPLITUDE
+<DD>(uint32) Start. Value to set instrument's Amplitude knob to before starting instrument (for instruments that have an Amplitude knob). Valid range is 0..0x7fff. Has no effect if Amplitude knob is connected to the output from another instrument. This tag is mutually exclusive with AF_TAG_VELOCITY. 
+</DL>
+<DL>
+<DT>AF_TAG_CALCRATE_DIVIDE
+<DD>(uint32) (new tag for V24) Create. Specifies the the denominator of the fraction of the total DSP cycles on which this instrument is to run. The only valid settings at this time are 1 to run on all DSP cycles (i.e. e and 2 to run on only 1/2 of the DSP cycles (i.e. execute at 22,050 cycles/sec). Defaults to 1.
+</DL>
+<DL>
+<DT>AF_TAG_FREQUENCY
+<DD>(ufrac16) Start. Value to set Frequency knob to in 16.16 Hertz (for instruments that have a Frequency knob). Has no effect if Frequency knob is connected to the output from another instrument. This tag is mutually exclusive with AF_TAG_PITCH and AF_TAG_RATE. 
+</DL>
+<DL>
+<DT>AF_TAG_PITCH
+<DD>(uint32) Start. Value to set Frequency knob (for instruments that have a Frequency knob) expressed as a MIDI note number. The range is 0 to 127; 60 is middle C. For multisample instruments, picks the sample associated with the MIDI pitch number. This tag is mutually exclusive with AF_TAG_FREQUENCY and AF_TAG_RATE. 
+</DL>
+<DL>
+<DT>AF_TAG_PRIORITY
+<DD>(uint32) Create, Query. The priority of execution in DSP in the range of 0..255, where 255 is the highest priority. Defaults to 100 on creation. 
+</DL>
+<DL>
+<DT>AF_TAG_RATE
+<DD>(uint32) Start. Value to set Frequency knob to in instrument-specific frequency units (e.g. phase increment, proportion of original sample rate) for instruments that have a Frequency knob. Has no effect if Frequency knob is connected to the output from another instrument. This tag is mutually exclusive with AF_TAG_FREQUENCY and AF_TAG_PITCH. 
+</DL>
+<DL>
+<DT>AF_TAG_SET_FLAGS
+<DD>(uint32) Create. AF_INSF_ flags to set at creation time. Defaults to all cleared. 
+</DL>
+<DL>
+<DT>AF_TAG_START_TIME
+<DD>(AudioTime) Query. Returns the AudioTime value of when the instrument was last started. 
+</DL>
+<DL>
+<DT>AF_TAG_STATUS
+<DD>(uint32) Query. Returns the current instrument status: AF_STARTED, AF_RELEASED, AF_STOPPED, or AF_ABANDONED. 
+</DL>
+<DL>
+<DT>AF_TAG_TEMPLATE
+<DD>(Item) Create. DSP Template Item used from which to create instrument. Note: this tag cannot be used with <CODE>CreateInstrument()</CODE>. 
+</DL>
+<DL>
+<DT>AF_TAG_TIME_SCALE
+<DD>(ufrac16) Start, Release. Scale times for all Envelopes attached to this Instrument. Original value is derived from the AF_TAG_TIME_SCALE
+<DD>provided when the Envelope Attachment was made. This value remains in effect until another AF_TAG_TIME_SCALE is passed to <CODE>StartInstrument()</CODE> or <CODE>ReleaseInstrument()</CODE>. 
+</DL>
+<DL>
+<DT>AF_TAG_VELOCITY
+<DD>(uint32) Start. MIDI note velocity indicating the value to set instrument's Amplitude knob to before starting instrument (for instruments that have an Amplitude knob). Valid range is 0..127. Has no effect if Amplitude knob is connected to the output from another instrument. This tag is mutually exclusive with AF_TAG_AMPLITUDE. 
+</DL>
+<H3>Flags</H3>
+<DL>
+<DT>AF_INSF_AUTOABANDON
+<DD>When set, causes instrument to automatically go to the AF_ABANDONED state when stopped (either automatically because of an AF_ATTF_FATLADYSINGS flag, or manually because of a <CODE>StopInstrument()</CODE> call). Otherwise, the instrument goes to the AF_STOPPED state when stopped. Note that regardless of the state of this flag, instruments are created in the AF_STOPPED state. 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./09spr020.html#XREF24399"><CODE>Template</A>, <A HREF="./09spr001.html#XREF27996">Attachment</A>, <A HREF="./09spr011.html#XREF23454">Knob</A>, <A HREF="./09spr015.html#XREF40705">Probe</A> </CODE><P>
+</CODE>

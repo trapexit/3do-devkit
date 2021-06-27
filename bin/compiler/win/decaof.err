@@ -1,0 +1,290 @@
+bad_string_idx:<bad string index>
+bad_symbol_number:<bad symbol number>
+bad_area_index:<bad AREA index>
+err_symb_anomaly:anomaly: symbol table size %ld != OBJ_SYMT chunk size %ld
+err_string_anomaly:anomaly: string table size %lx != OBJ_STRT chunk size %lx\n
+err_bad_file1:%s is corrupt: maxchunks(%d) < numchunks(%d)
+err_bad_file2:%s is corrupt: header for maxchunks(%d) exceeds file size
+err_bad_file3:%s is corrupt: chunk %d(%s) extends over end of file (%lx + %lx, %lx)
+err_file_notopen:File %s doesn't exist?
+err_out_of_memory:Not enough memory to process %s (need %lu bytes)
+err_failed_to_load:Failed to load %s
+err_not_chunk_file:%s isn't a chunk file
+err_not_aof_aif:%s is neither a chunk file nor an AIF file
+err_not_aof:%s isn't an AOF file
+err_no_obj_area:** No OBJ_AREA Chunk **\n\n
+err_bad_option:unrecognised flag option %s (ignored)
+err_b_overrides:-b overrides other options (which have been ignored)
+err_q_only:-q is not valid with any other options
+err_z_only:-z is not valid with any other options
+err_missing_files:missing file argument(s)
+err_format:*** Format Error: Section expected at AREA offset %d\n
+err_nothing_after:the '-%s' option needs a parameter
+err_cant_find_symbol:'%s' is neither an area name nor a symbol in an area
+msg_ident:\n** Identification (file %s)\n\n
+msg_ident_offset:\n** Identification (file %s, offset 0x%x)\n\n
+msg_header:\n** Header (file %s)\n\n
+msg_header_offset:\n** Header (file %s, offset 0x%x)\n\n
+msg_area:** Area %d %s, Alignment %u, Size %u (0x%.4x), %lu relocations\n
+msg_area_offset:** Area %d %s (offset 0x%x), Alignment %u, Size %u (0x%.4x), %lu relocations\n
+msg_symbols_in_area:\n** Symbols in area %d %s\n\n
+msg_reloc:\n** Relocation table for area %d %s\n\n
+msg_reloc_offset:\n** Relocation table for area %d %s (offset 0x%x)\n\n
+msg_symb_none:** No symbol table **\n\n
+msg_symb:** Symbol Table (file %s):-\n\n
+msg_symb_offset:** Symbol Table (file %s, offset 0x%x):-\n\n
+msg_strings_none:** No string table **\n\n
+msg_strings:** String Table (file %s):-\n\n
+msg_strings_offset:** String Table (file %s, offset 0x%x):-\n\n
+msg_aif_compressed:Compressed, 
+msg_aif_has_relocs:Relocatable, 
+msg_aif_aif:%s: AIF image: 
+msg_aif_nonexec:Non-executable, 
+msg_aif_exec:Executable, 
+msg_aif_bits:%lu-bit\n
+msg_aif_ro:    Read Only Section at:  0x%.8lx, size = %6lu (0x%.6lx)\n
+msg_aif_rw:    Read Write Section at: 0x%.8lx, size = %6lu (0x%.6lx)\n
+msg_aif_zi:    Zero Init Section at:  0x%.8lx, size = %6lu (0x%.6lx)\n
+msg_aif_debug:    Debug size = 0x%.8lx
+msg_aif_llinfo:: low-level debugging information
+msg_aif_hlinfo:: source-level debugging information
+msg_aif_llhlinfo:: low-level and source-level debugging information
+msg_aif_llsize:: ll info size 0x%lx
+msg_aif_fragment:    Fragment %s: file offset %#lx, size %#lx: load address %#lx\n
+msg_aif_relocs:    %ld relocations.\n
+msg_aif_one_reloc:    %ld relocation.\n
+msg_aif_reloc_leader:      
+msg_aif_reloc:0x%08lx
+err_aif_dbgsize:%s: inconsistency: dbgtype != 0 but dbgsize == 0
+err_aif_fragheader:%s: fragment header outside image file at %#lx
+err_aif_fragment:%s: fragment extends beyond image file (end %#lx, file size %#lx)
+err_aif_debug:%s: debug info extends beyond image file (end %#lx, file size %#lx)
+err_cant_dump_exec_relocs:%s: sorry, don't know how to dump relocations from an execuatable image
+err_bad_bin_reloc:%s: relocations are in an unexpected place (at = %#lx; expected = %#lx)
+err_aif_reloc_count:%s: relocation count extends beyond image file (end %#lx, file size %#lx)
+err_aif_relocs:%s: relocation list extends beyond image file (end %#lx, file size %#lx)
+msg_file:file %s\n
+msgaof_type:AOF file type: 
+msg_bigend:Big-endian, 
+msg_litend:Little-endian, 
+msgaof_reloc:Relocatable object code\n
+msgaof_obsolete:Obsolete Image type (%s)\n
+msgaof_obsolete_contig:contiguous RO and RW areas
+msgaof_obsolete_page1:page-aligned RW area
+msgaof_obsolete_page2:page-aligned RW area/block-aligned RO area
+msgaof_unknown:Unknown type %.8lx\n
+msgaof_version:\
+AOF Version:   %3ld\n
+msgaof_nareas:\
+No of areas:   %3ld\n
+msgaof_nsyms:\
+No of symbols: %3ld\n\n
+msg_entry_null:Entry point at offset 0x%.4lx in area %ld\n
+msg_entry:Entry point at offset 0x%.4lx in area \"%s\"\n
+msg_at:At %.6lx: %s
+msg_nonreloc_to:Non-relocating reference to 
+msg_sym_ref:symbol %s\n
+msg_area_ref:area %s\n
+msg_tailcall_sym: tailcall to symbol %s\n
+msg_tailcall_boa: tailcall to base of area %s\n
+msg_pc_relative_sym: PC-relative to symbol %s\n
+msg_pc_relative_boa: PC-relative to base of area %s\n
+msg_base_relative_sym: base-relative to symbol %s\n
+msg_base_relative_boa: base-relative to base of area %s\n
+msg_displaced_by_sym: displaced by symbol %s\n
+msg_displaced_by_boa: displaced by base of area %s (%d)\n
+msg_attrib:\
+        Attributes
+msg_attrib_abs:: Absolute
+msg_attrib_code:: Code
+msg_attrib_pic:: Position-independent
+msg_attrib_data:: Data
+msg_attrib_shldata:: Stub data
+msg_attrib_based:: Based r%lu
+msg_attrib_comdef:: Common definition
+msg_attrib_comref:: Common
+msg_attrib_0init:: Zero initialised
+msg_attrib_ronly:: Read only
+msg_attrib_wonly:: Read Write
+msg_attrib_debug:: Debugging tables
+msg_pcs_32bit:%c32bit
+msg_pcs_reent:%creentrant
+msg_pcs_fp3:%cFPIS3
+msg_pcs_noswst:%cNoSWStackCheck
+msg_pcs_thumb:%cTHUMB
+msg_pcs_halfw:%cARM-Halfword
+msg_pcs_interw:%cARM/THUMB-Interworking
+msg_base_addr:\
+        Base address 0x%.6lx\n
+msg_sym_external:External reference
+msg_sym_external_common:External common reference
+msg_sym_local:Local,  
+msg_sym_global:Global, 
+msg_sym_data:Data, 
+msg_sym_thumb:, 16-bit code
+msg_sym_fpreg:, FPRegArgs
+msg_sym_thumb2:16-bit code, 
+msg_sym_fpreg2:FPRegArgs, 
+msg_sym_nocase:, No-case
+msg_sym_weak:, Weak
+msg_sym_common:, size = 0x%.4lx
+msg_sym_usessb:Sb, 
+msg_sym_leaf:Leaf, 
+msg_sym_absolute:Absolute, 
+msg_sym_relative:Relative, 
+msg_sym_strong:Strong, 
+msg_sym_value:value 0x%.4lx
+msg_sym_offset:offset 0x%.4lx in area \"%s\"
+msg_sym_offset_only:offset 0x%.4lx
+msg_aifsym_absolute:Absolute
+msg_aifsym_thumb:16-bit, 
+msg_aifsym_text:Code
+msg_aifsym_data:Data
+msg_aifsym_zinit:Zero-Init
+msg_string_offset:\
+Offset  String-name\n\
+-------------------\n
+help_banner:\
+\n%s Version %s [%s]\n       - %s\n\
+\n%s [options] file [file...]\n
+help_options1:\n\
+Options:-\n\
+-b   (brief) print only the area declarations\n\
+-a   print area contents in hex (=> -d)\n\
+-d   print area declarations\n\
+-r   print relocation directives (=> -d)\n\
+-c   disassemble code areas (=> -d)\n\
+-only xxx   process only area named or containing symbol xxx\n
+help_options_piccolo:\
+-p   force disassembly of code areas as Piccolo (=> -d)\n
+help_options2:\
+-g   print debug areas formatted readably\n\
+-m   display mangled symbols\n\
+-s   print symbol table\n\
+-t   print string table\n\
+-q   print area size summary\n\
+-z   print code and data size summary\n
+help_examples_riscos:\n\
+Examples:-\n\
+     %s -agst o.myprog\n\
+     %s -b o.test1 o.test2 o.test3\n
+help_examples:\n\
+Examples:-\n\
+     %s -agst myprog.o\n\
+     %s -b test1.o test2.o test3.o\n
+msg_i_am:AOF Decoder
+msg_i_do:decodes an ARM Object Format (AOF) file
+msg_typeno:type {%.6lx}
+msg_linepos:%s at %ld
+msg_linepos_char:%s at %ld,%ld
+msg_section:Section: length %ld\n
+msg_linker_debug:\
+*** Low level (linker generated) debugging tables in AOF file\n
+lang_c:    Language: C\n
+lang_pascal:    Language: Pascal\n
+lang_fortran:    Language: Fortran\n
+lang_asm:    Language: Assembler\n
+lang_unk:    Language: Unknown (%d)\n
+msg_flag:    Flags: 
+msg_flag_none:none
+msg_flag_lines:line number info
+msg_flag_vars:variable info
+msg_flag_vars_more:, variable info
+msg_flag_fpmap:fp map
+msg_flag_fpmap_more:, fp map
+msg_debug_version:    Debugging table version: %d\n
+msg_code_addr:    Code: address
+msg_data_addr:    Data: address
+msg_size:, size = 0x%lx\n
+msg_fileinfo_offset:    File info offset = 0x%.6lx\n
+msg_section_size:    Section size = %ld\n
+msg_section_name:    Section name: \"%.*s\"\n
+msg_section_codeaddr:Code address
+msg_itemlength0:*** Item length = 0\n
+msg_misplaced_section:*** Misplaced section\n
+msg_proc:Proc
+msg_proc_name:: name %.*s:
+msg_proc_args:: %ld arguments\n
+msg_proc_start:    Start address
+msg_proc_body:, body
+msg_proc_end0:    Endproc = 0 => Label\n
+msg_proc_end:    Endproc 0x%.6lx\n
+msg_proc_file:    File 0x%.6lx\n
+msg_endproc:Endproc
+msg_endproc_limit:: limit
+msg_endproc_file:    File 0x%.6lx\n
+msg_endproc_returnpt:    return point %ld
+msg_endproc_blankrpt:                 %ld
+msg_endproc_blank:
+msg_endproc_scopes_open:*** scopes still open at endproc\n
+msg_var:Var
+msg_var_name:: name %.*s: 
+msg_var_at: at
+msg_var_var:: Argument by reference (Pascal VAR argument) 
+msg_var_fpoffset:FP offset %ld\n
+msg_var_reg_odd:*** ? register %ld\n
+msg_var_fcarg:: Fortran character argument
+msg_var_farg:: Fortran argument
+msg_var_fortran_offset: Argument list offset %ld\n
+msg_var_odd:: *** ? storage class %ld: 
+msg_var_odd1:Offset / address = 0x%.6lx\n
+msg_var_extern:: extern
+msg_var_static:: static
+msg_var_auto:: auto
+msg_var_register:: register 
+msg_type:Type %.*s 
+msg_type_union:Union
+msg_type_struct:Struct
+msg_type_class:Class
+msg_type_data:%s: %ld fields, size 0x%lx\n
+msg_type_data1:    field %ld offset 0x%lx: name %.*s: 
+msg_enumd:EnumD: 
+msg_enum_members: %ld members\n
+msg_enum_member:    value 0x%lx: name %.*s\n
+msg_enumc:EnumC: 
+msg_array:Array: element size = %ld: 
+msg_array_flags_odd: *** ? flags 0x%lx\n
+msg_array_lbound_var:          %sVariable lower bound: var %ld\n
+msg_array_lbound_fpoffset:          %sVariable lower bound: FP offset %ld\n
+msg_array_ubound_var:          %sVariable upper bound: var %ld\n
+msg_array_ubound_fpoffset:          %sVariable upper bound: FP offset %ld\n
+msg_subr:Subrange\n
+msg_subr_bytesize:Byte size = %ld
+msg_subr_bytesize_odd:    *** Format error: Illegal byte size\n
+msg_subr_type:    Type = 
+msg_subr_lbound:    Lowerbound = %ld\n
+msg_subr_ubound:    Upperbound = %ld\n
+msg_set:Set: size %ld\n
+msg_bitfield:Bitfield: 
+msg_bitfield_container: container: 
+msg_bitfield_offset: offset %ld size %ld\n
+msg_scope_begin:Begin scope at
+msg_scope_end:End scope at
+msg_undef:File 0x%.6lx line %ld #undef %.*s\n
+msg_define:File 0x%.6lx line %ld #define %.*s
+msg_fileinfo:File Info: length %ld\n
+msg_fileinfo_entry_len:Entry length = %ld
+msg_fileinfo_entry_eof: => end of file info\n
+msg_fileinfo_date:date 0x%.8lx 
+msg_fileinfo_fragment:%ld fragments\n
+msg_fileinfo_fragment_info:Fragment %ld (size %ld): lines %ld to %ld\n
+msg_fileinfo_codeaddr:Code address
+msg_fileinfo_size:, size 0x%lx\n
+msg_fileinfo_lineinfo4:0x%.6lx line %ld/%1ld:%-2ld
+msg_fileinfo_lineinfo3:0x%.6lx line %ld/%1ld   
+msg_fileinfo_lineinfo2:0x%.6lx line %ld  :%-2ld
+msg_fileinfo_lineinfo1:0x%.6lx line %ld     
+msg_fpmap:fp map fragment: length %ld,
+msg_fpmap_size: size 0x%lx
+msg_fpmap_base: base
+msg_fpmap_save: save
+msg_fpmap_offset:0x%.6lx offset %ld
+msg_debugobj_unk:*** ? debugging item %ld\n
+msg_size_banner:\n%-24s   code-size    literals   constdata   data-size  0init-size   debug-size\n
+msg_size_sizes:%-24s%12lu%12lu%12lu%12lu%12lu%12lu\n
+msg_size_data1:%32s----------------------------%8s----------------------------\n
+msg_size_data2:%36s%12lu%24s%12lu\n
+msg_size_object_file:object file
+msg_size_total:Total (of all files):
+msg_asd_name:\n%s:\n
+msg_asd_default_name:\nASD debug area:\n

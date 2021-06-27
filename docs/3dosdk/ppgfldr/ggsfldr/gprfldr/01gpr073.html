@@ -1,0 +1,33 @@
+<Title>WritePixel </Title>
+<A NAME="XREF26683"><H1>WritePixel </A></H1>
+<A NAME="XREF20920"> Writes a pixel to a bitmap in a GrafCon's foreground </A>color.<P>
+<H3>Synopsis</H3>
+<CODE>Err WritePixel (Item bitmapItem,GrafCon *gc,Coord x, Coord y)</CODE><P>
+<H3>Description</H3>
+This call writes a pixel to the display of the specified bitmap. The pixel is rendered in the foreground color of the GrafCon structure. It is rendered on the column and row specified by the x and y arguments respectively. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>Item number of a bitmap structure. 
+</DL>
+<DL>
+<DT>gc
+<DD>Pointer to a GrafCon structure. 
+</DL>
+<DL>
+<DT>x
+<DD>Column where the pixel is to be written. 
+</DL>
+<DL>
+<DT>y
+<DD>Row where the pixel is to be written. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+GRAFERR_COORDRANGE is returned if the specified location is outside the bitmap boundaries. <P>
+<H3>Notes</H3>
+The current implementation of this routine is very slow. This will change in future releases. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>

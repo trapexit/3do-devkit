@@ -1,0 +1,130 @@
+<TITLE>Overview</TITLE>
+<H1><LINK NAME="XREF10889">Overview</LINK></H1><HR>
+<H2>General</H2>
+Instruction mnemonics and register names may be written in upper or lower case (but not mixed case). Directives must be written in upper case.<P>
+<H2>Input lines</H2>
+The general form of assembler input lines is:<P>
+<CODE>
+<PRE>
+{label} {instruction} {;comment}
+</CODE>
+</PRE>
+A space or tab should separate the label, where one is used, and the instruction. If no label is used, the line must begin with a space or tab. Any combination of these three items will produce a valid line; empty lines are also accepted by the assembler and can be used to improve the clarity of source code.<P>
+Assembler source lines are allowed to be up to 255 characters long.  To make source files easier to read, a long line of source can be split onto several lines by placing a backslash character, `', at the end of a line.  The backslash must not be followed by any other characters (including spaces or tabs).  The backslash + end of line sequence is treated by <I>armasm</I> as white space.  Note that the backslash + end of line sequence should not be used within quoted strings.<P>
+<H2>AREAs</H2>
+AREAs are the independent, named, indivisible chunks of code and data manipulated by the Linker. The Linker places each AREA in a program image according to the AREA placement rules (ie. not necessarily adjacent to the AREAs with which it was assembled or compiled).<P>
+Conventionally, an assembly, or the output of a compilation, consists of two AREAs, one for the code (usually marked read-only), and one for the data which may be written to. A reentrant object will generally have a third AREA marked BASED sb (see below), which will contain relocatable address constants. This allows the code area to be read-only, position-independent and reentrant, making it easily ROM-able.<P>
+In ARM assembly language, each AREA begins with an AREA directive. If the AREA directive is missing the assembler will generate an AREA with an unlikely name (|$$$$$$$|) and produce a diagnostic message to this effect. This will limit the number of spurious errors caused by the missing directive, but will not lead to a successful assembly. <P>
+The syntax of the AREA directive is:<P>
+<CODE>
+<PRE>
+AREA name
+</CODE>
+</PRE>
+You may choose any name for your AREAs, but certain choices are conventional. For example, |C$$code| is used for code AREAs produced by the C compiler, or for code AREAs otherwise associated with the C library.<P>
+AREA Attributes are as follows:<P>
+<PRE>
+--------------------------------------------------------
+Attribute     |Description                              
+--------------------------------------------------------
+ABS           |Absolute: rooted at a fixed address.     
+--------------------------------------------------------
+REL           |Relocatable: may be relocated by the     
+              |Linker (the default).                    
+--------------------------------------------------------
+PIC           |Position Independent Code: will execute  
+              |where loaded without modification.       
+--------------------------------------------------------
+CODE          |Contains machine instructions.           
+--------------------------------------------------------
+DATA          |Contains data, not instructions.         
+--------------------------------------------------------
+READONLY      |This area will not be written to.        
+--------------------------------------------------------
+COMDEF        |Common area definition.                  
+--------------------------------------------------------
+COMMON        |Common area.                             
+--------------------------------------------------------
+NOINIT        |Data AREA initialised to zero: contains  
+              |only space reservation directives, with  
+              |no initialised values.                   
+--------------------------------------------------------
+REENTRANT     |The code AREA is reentrant.              
+--------------------------------------------------------
+BASED Rn      |Static base data AREA containing tables  
+              |of address constants locating static data
+              |items. Rn is a register, conventionally  
+              |R9. Any label defined within this AREA   
+              |becomes a register-relative expression   
+              |which can be used with LDR and STR       
+              |instructions.                            
+--------------------------------------------------------
+ALIGN=expressi|The ALIGN sub-directive forces the start 
+on            |of the area to be aligned on a           
+              |power-of-two byte-address boundary. By   
+              |default AREAs are aligned on a 4-byte    
+              |word boundary, but the expression can    
+              |have any value between 2 and 12          
+              |inclusive.                               
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>ORG and ABS</H2>
+<CODE>
+<PRE>
+ORG
+</CODE>
+</PRE>
+The ORG (origin) directive is used to set the base address and the ABS (absolute) attribute of the containing AREA, or of the following AREA if there is no containing AREA. In some circumstances this will create objects which cannot be linked. In general it only makes sense to use ORG in programs consisting of one AREA, which need to map fixed hardware addresses such as trap vector locations. Otherwise ORG should be avoided.<P>
+<H2>Symbols</H2>
+Numbers, logical values, string values and addresses may be represented by symbols. Symbols representing numbers or addresses, logical values and strings are declared using the GBL and LCL directives, and values are assigned immediately by SETA, SETL and SETS directives respectively (see <A HREF="./7augf.html#XREF42681">Local and global variables - GBL, LCL and SET</A>). Addresses are assigned by the Assembler as assembly proceeds, some remaining in symbolic, relocatable form until link time.<P>
+Symbols must start with a letter in either upper or lower case; the assembler is case-sensitive and treats the two forms as distinct. Numeric characters and the underscore character may be part of the symbol name. All characters are significant.<P>
+Symbols should not use the same name as instruction mnemonics or directives. While the assembler can distinguish between the uses of the term through their relative positions in the input line, a programmer may not always be able to do so.<P>
+Symbol length is limited by the 255 character line length limit.<P>
+If there is a need to use a wider range of characters in symbols, for instance when working with other compilers, use enclosing bars to delimit the symbol name; for example,<CODE> |C$$code|</CODE>. The bars are not part of the symbol.<P>
+<H2>Labels</H2>
+Labels are a special form of symbol, distinguished by their position at the start of lines. The address represented by a label is not explicitly stated but is calculated during assembly.<P>
+<H2>Local labels</H2>
+The local label, a subclass of label, begins with a number in the range 0-99. Local labels work in conjunction with the ROUT directive and are most useful for solving the problem of macro-generated labels. Unlike global labels, a local label may be defined many times; the assembler uses the definition closest to the point of reference. To begin a local label area use:<P>
+<CODE>
+<PRE>
+{label}
+</CODE>
+</PRE>
+The label area will start with the next line of source, and will end with the next ROUT directive or the end of the program.<P>
+Local labels are defined as: <P>
+<CODE>
+<PRE>
+number{routinename}
+</CODE>
+</PRE>
+although <I>routinename</I> need not be used; if omitted, it is assumed to match the label of the last ROUT directive. It is an error to give a routine name when no label has been attached to the preceding ROUT directive.<P>
+A reference to a local label has the following syntax:<P>
+<CODE>
+<PRE>
+%{x}{y}n{routinename}
+</CODE>
+</PRE>
+% introduces the reference and may be used anywhere where an ordinary label reference is valid.<P>
+<I>x</I> tells the assembler where to search for the label; use <I>B</I> for backward or <I>F</I> for forward. If no direction is specified the assembler looks both forward and backward. However searches will never go outside the local label area (i.e. beyond the nearest ROUT directives).<P>
+<I>y</I> provides the following options: <I>A</I> to look at all macro levels, <I>T</I> to look only at this macro level, or, if <I>y</I> is absent, to look at all macro from the current level to the top level.<P>
+<I>n</I> is the number of the local label.<P>
+<I>routinename</I> is optional, but if present it will be checked against the enclosing ROUT's label.<P>
+<H2>Comments</H2>
+The first semi-colon on a line marks the beginning of a comment, except where the semi-colon appears inside a string constant. A comment alone is a valid line. All comments are ignored by the assembler.<P>
+<H2>Constants</H2>
+<H3>Numbers</H3>
+Numeric constants are accepted in three forms: decimal (e.g. 123), hexadecimal (e.g. &amp;7B), and n_xxx, where n is a base between 2 and 9 and xxx is a number in that base.<P>
+<H3>Strings</H3>
+Strings consist of opening and closing double quotes, enclosing characters and spaces. If double quotes or dollar signs are used within a string as literal text characters, they should be represented by a pair of the appropriate character; e.g. $$ for $.<P>
+<H3>Boolean</H3>
+The Boolean constants `true' and `false' should be written as {TRUE} and {FALSE}.<P>
+<H2>The END directive</H2>
+Every assembly language source must end with:<P>
+<CODE>
+<PRE>
+END
+</CODE>
+</PRE>
+on a line by itself.<P>
+<P>

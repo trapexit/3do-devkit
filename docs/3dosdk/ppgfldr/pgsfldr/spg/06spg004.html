@@ -1,0 +1,9 @@
+<TITLE>Deleting an Item</TITLE>
+<H1><LINK NAME="XREF32068">Deleting an Item</LINK></H1><HR>
+When a task finishes with an item it owns, it should delete the item from the system to free resources for other uses. The task can use this call:<P>
+<DL>
+<DD><CODE>Err DeleteItem( Item i )</CODE><BR>
+</DL>
+<CODE>DeleteItem()</CODE> accepts the item number of the item to delete. It returns 0 if successful, or an error code (a negative value) if an error occurs.<P>
+Only use <CODE>DeleteItem()</CODE> to delete items created with <CODE>CreateItem(). </CODE>If you've used a convenience call to create an item, you must use the corresponding deletion routine. A task must own an item to delete it.<P>
+Once an item is deleted, the kernel does not reuse the item number when it creates new items, to maintain the integrity of items. When a task tries to use an item number for a deleted item, the kernel informs the task that the item no longer exists.<A NAME="XREF22495"></A><P>

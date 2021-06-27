@@ -1,0 +1,28 @@
+<TITLE>Filters</TITLE>
+<H1><LINK NAME="XREF32098">Filters</LINK></H1><HR>
+<H2>Setting Cutoff Frequency</H2>
+<B>Q:</B>   When setting the frequency of a filter; for example, <CODE>svfilter.dsp</CODE> how do I convert from frequency in Hz to the value I need to set the filter?<P>
+<B>A:</B>  According to Hal Chamberlain's "Musical Applications of MicroProcessors":<P>
+<DL>
+<DD><CODE>F1 = 2sin(PI*Frequency/SampleRate)</CODE><BR>
+</DL>
+where<P>
+<UL>
+<LI>F1 is the frequency control parameter for the filter.
+<LI>Frequency is Frequency in Hertz
+<LI>SampleRate is 44100.0
+</UL>
+If Frequency/SampleRate is small, for example less than 1/5, you can use an approximation, as follows:<P>
+<DL>
+<DD><CODE>F1 = 2*PI*Frequency/SampleRate</CODE><BR>
+</DL>
+To calculate a fixed point value suitable for <CODE>TweakRawKnob( ItemNumber, FKnob)</CODE>, if F1 is expressed as a 16.16 fixed point value (frac16), then:<P>
+<DL>
+<DD><CODE>    FKnob = F1&gt;&gt;1;</CODE><BR>
+</DL>
+because FKnob is a 1.15 fixed point value.<P>
+<H2>Modulating Selected Frequency Ranges</H2>
+<B>Q:  </B> Is there a way to amplify a specific range of frequencies during the play of an instrument?  This is equivalent to the function of a graphic equalizer on a boom box. I am specifically interested in increasing the amplitude in the "bass" range.<P>
+<B>A: </B>  Yes. You can use the <CODE>svfilter.dsp</CODE>. In addition to the Output, which is a lowpass filter, it also has BandPass and HighPass outputs. You can use the BandPass output or the LowPass, optionally mixed with original signal, to boost bass response.<P>
+Another approach is to use the EQ or filter effects in Sound Designer to boost the bass in the sample before you play it.<P>
+<P>

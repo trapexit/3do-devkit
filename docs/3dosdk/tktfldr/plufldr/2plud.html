@@ -1,0 +1,107 @@
+<TITLE>Creating cels with the 3DO Coded-8 CelWriter</TITLE>
+<H1><LINK NAME="XREF42159">Creating cels with the 3DO Coded-8 CelWriter</LINK></H1><HR>
+This section first steps you through creating an 8-bit coded cel, then provides some background information. It discusses the following topics: <P>
+
+<UL>
+<LI><A HREF="#XREF24442">Creating a cel with an auto-generated 
+palette</A>.
+<LI><A HREF="#XREF20746">Using custom palettes with the Coded-8 CelWriter</A>
+<LI><A HREF="#XREF40257">3DO Coded-8 CelWriter-Background information</A>
+</UL>
+<A NAME="XREF24442"><H2>Creating a cel with an auto-generated palette</A></H2>
+To create an 8-bit coded cel with an auto-generated palette follow these steps:<P>
+<OL>
+<LI>Load a source art file into Photoshop.
+<P>
+<LI>From the File menu, choose Export, then 3DO Coded 8.
+<P>
+<LI>In the Save dialog that appears, specify the location for the output cel.
+<P>
+
+<P>The 3DO Coded-8 CelWriter dialog appears. 
+<P>
+
+<IMG SRC="Figures/PLU2.figs/Coded-8.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 4: </B><I>3DO Coded-8 CelWriter dialog.</I><P>
+
+<LI>Make sure that Make New Palette is selected in the Use Palette pop-up and that 8-bit Coded Opaque is used for both P-Modes, then choose OK and you're done.
+</OL>
+<H3>Suppressing and enabling the dialog</H3>
+If you're batch-processing several cels, or expect not to change the settings for a while, you can check the Suppress Dialog option. The Coded-8 CelWriter saves silently without prompting for more information. To re-enable the dialog, hold down the Control key or the Option key while choosing Export &gt; Coded-8 CelWriter. <P>
+<A NAME="XREF20746"><H2>Using custom palettes with the Coded-8 CelWriter</A></H2>
+The automatically generated palette may not be best for a particular piece of artwork. In this case, you can manually edit the palette and apply it to the cel. Note that you can apply the same custom palette to any number of cels, which can be very useful when working with an animation. <P>
+<H3>3DO palettes versus Photoshop palettes</H3>
+The Coded-8 CelWriter recognizes two types of palettes: <P>
+<UL>
+<LI>A single 3DO PLUT chunk that 3DO Animator saves when you save a palette.
+<LI>A palette such as Photoshop and DeBabelizer use with 32 RGB values. 
+</UL>
+<B>Caution: </B>If you are using a Photoshop or DeBabelizer palette with more than 32 colors, the Coded-8 CelWriter only reads the first 32.<P>
+<H3>How to edit a palette</H3>
+To edit a palette for better results, you have to use 3DO Animator. If you have experienced questionable dependability using 3DO Animator in the past, keep in mind that you will only use 3DO Animator as a <I>palette</I> <I>editing tool</I>. <P>
+To edit a palette, go through these steps:<P>
+<OL>
+<LI>Create an 8-bit coded cel using an auto-generated palette, as described in "
+<A HREF="#XREF24442">Creating a cel with an auto-generated palette</A>."
+<P>
+<LI>Open the cel-<I>not </I>the original source art-in 3DO Animator. 
+<P>
+<LI>From the 3DO Options menu, choose Show 3DO Palette. You may also want to open your original artwork to see the colors you're trying to accentuate. The colors in your cel appear in the palette. 
+<P>
+<LI>Edit the palette colors as needed. 
+<P>
+<UL>
+<LI>You can only change the 32 palette entries; the color bar across the top of the palette. A ramp of colors derived from the 8-color base palette is shown in the column beneath.
+<P>
+<LI>Editing the palette is described in the section "Customizing a Palette" in the <I>3DO Animator User's Guide</I>, which is part of this volume. 
+</UL>
+<P>
+<LI>Save the palette.
+</OL>
+<H3>How to apply a custom palette to a cel</H3>
+To apply a custom palette to an 8-bit coded cel: <P>
+<OL>
+<LI>Open the Coded-8 CelWriter and reload your original image (<I>not </I>the cel).
+<P>
+<LI>From the File menu, choose Coded-8 CelWriter.
+<P>
+<LI>Click on the New button in the upper-right corner of the window. 
+<P>
+<LI>From the dialog that appears, load the palette you want to use.
+<P>
+<P>
+<P>The palette now becomes available in the Use Palette pop-up menu. For example, in the figure below, a palette called FlowerPalette was previously loaded and can now be used for any artwork it seems suitable for.
+<p>
+
+<IMG SRC="Figures/PLU2.figs/FlowerPalette.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 5: </B><I>Dialog for specifying a palette.</I><P>
+<P>
+
+<LI>Select the newly created palette from the Use Palette menu.
+<P>
+<LI>Set Options if desired, then choose OK to accept the cel with the newly edited palette.
+<P>
+<LI>Display the cel on a TV monitor to check your results. Repeat the steps in this section until you attain the desired results.
+</OL>
+<A NAME="XREF40257"><H2>3DO Coded-8 CelWriter</A></H2>
+The 3DO Coded-8 CelWriter allows an artist to convert source art with thousands (16-bit) or millions (24-bit) of colors to a 3DO 8-bit coded cel with an extended 32- color palette.<P>
+The Coded-8 CelWriter automatically generates a palette for an 8-bit coded cel. Artists can also generate a custom palette and then apply that palette from within the Coded-8 CelWriter for better visual quality. The better the palette, the better the final cel art. <P>
+<H3>Why 8-Bit Coded Cels?</H3>
+An 8-bit coded cel is unique in that its graphic representation format uses five bits for a palette of 32 colors and three bits as an alternate multiplier value (AMV). This allows for an extra seven colors per palette color.<P>
+To get the different shades, the RGB value can be multiplied with one of the multiplier factors (1-8), then divided by one of the divider factors (2, 4, 8, or 16). <P>
+<B>Note: </B>An 8-bit coded cel does not provide the same color breadth and quality as a 16-bit uncoded cel. However, it provides acceptable visual quality for many situations, especially considering the memory savings and increased performance.<P>
+Using 8-bit coded cels instead of 16-bit cels yields good visual quality and provides the following advantages:<P>
+<UL>
+<LI>Lower memory requirements 
+<LI>Better frame rate
+<LI>Less load on the bus
+</UL>
+<H3>Auto-Generated versus edited palettes</H3>
+The Coded-8 CelWriter generates a palette that gives good color representation for most source art. There are certain types of artwork, however, for which the Coded-8 CelWriter generates a palette that's less than acceptable. This includes source art with high color coverage (lots of primary colors), and artwork that contains lots of gradients (different color clouds, mists, etc.). Two special cases are 3-D rendered objects and flesh tones:<P>
+<UL>
+<LI>3-D rendered art provides a particular problem for the Coded-8 CelWriter. The program has a hard time telling which smoothly shaded object to highlight and where the banding should be minimized. For these types of artwork, the artist should edit the palette by hand before remapping. This ensures the best possible output for the artwork. 
+<P>
+<LI>Flesh tones occupy only a small portion of the color space and the human eye is very sensitive to it. It's difficult for the Coded-8 CelWriter to decide what colors are "flesh" and handle them appropriately. For example if you're trying to reduce a video character to an 8-bit coded cel, you may need to edit the palette by hand using 3DO Animator to allocate a larger number of color entries for the flesh tones than the Coded-8 CelWriter generated. This is discussed in "<A HREF="#XREF20746">Using custom palettes with the Coded-8 CelWriter</A>."
+</UL>

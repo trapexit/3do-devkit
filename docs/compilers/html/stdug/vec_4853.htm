@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>The vector Data Abstraction</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>The vector Data Abstraction</H2>
+<P>The <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> container class generalizes the concept of an ordinary C array.  Like an array, a vector is an indexed data structure, with index values that range from 0 to one less than the number of elements contained in the structure.  Also like an array, values are most commonly assigned to and extracted from the vector using the <SAMP>subscript</SAMP> operator.  However, the vector differs from an array in the following important respects:</P>
+<UL>
+<LI>A vector has more "self-knowledge" than an ordinary array.  In particular, a vector can be queried about its size, about the number of elements it can potentially hold (which may be different from its current size), and so on.</P>
+<LI>The size of the vector can change dynamically.  New elements can be inserted on to the end of a vector, or into the middle.  Storage management is handled efficiently and automatically.  It is important to note, however, that while these abilities are provided, insertion into the middle of a vector is not as efficient as insertion into the middle of a <A HREF="../stdref/lis_3222.htm"><B><I>list</I></B></A> (<a href="lis_8858.htm#placingelementsintoalist">Chapter 6: <i>Placing Elements into a List</i></a>).  If many insertion operations are to be performed, the <B><I>list</I></B> container should be used instead of the <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> data type.</P>
+</UL>
+<P>The <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A> container class in the standard library should be compared and contrasted to the <A HREF="../stdref/deq_4164.htm"><B><I>deque</I></B></A> container class we will describe in more detail in <a href="deq_4164.htm">Chapter 7</a>.  Like a vector, a deque (pronounced "deck") is an indexed data structure.  The major difference between the two is that a deque provides efficient insertion at either the beginning or the end of the container, while a vector provides efficient insertion only at the end.  In many situations, either structure can be used.  Use of a vector generally results in a smaller executable file, while, depending upon the particular set of operations being performed, use of a deque may result in a slightly faster program.</P>
+<A NAME="includefiles"><H3>Include Files</H3></A>
+<P>Whenever you use a <A HREF="../stdref/vec_0251.htm"><B><I>vector</I></B></A>, you must include the <SAMP>vector</SAMP> header file.</P>
+<PRE>   # include &#60;vector></PRE>
+
+<HR>
+<A HREF="vec_1893.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="vec_8233.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

@@ -1,0 +1,6 @@
+<TITLE>What Is a Task?</TITLE>
+<H1><LINK NAME="XREF17777">What Is a Task?</LINK></H1><HR>
+Tasks can be viewed as independent programs, with their own unique memory space. Tasks can spawn other tasks. These spawned tasks (child tasks) quit when the spawning task (parent task) quits, unless the parent task explicitly transfers ownership of the child task to another task before it quits. Although parent and child tasks are tied together when it's time to quit, they don't share memory. They can't share common data structures, and the child task must allocate its own memory pages, which, if its memory requirements are small, can be wasteful.<P>
+Threads are a different kind of spawned or child task, which is more tightly bound to the parent task than a standard child task. A thread shares the parent task's memory. The ownership of a thread cannot be transferred to a task that is outside the parent's task family. When the parent dies, each of its threads dies with it because the threads are considered resources of the parent task.<P>
+The calls described in this chapter handle both tasks and threads. To use them, include the task.h header file in your application. This file contains the definitions for the tag arguments and data structures, plus the prototypes, for task-related functions.<P>
+<P>

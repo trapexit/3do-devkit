@@ -1,0 +1,39 @@
+<TITLE>How to Use the Sound Spooler</TITLE>
+<H1><LINK NAME="XREF15360">How to Use the Sound Spooler</LINK></H1><HR>
+In order to use the sound spooler, your application must do the following:<P>
+<OL>
+<LI>Load a sample player instrument and connect it to a mixer or directout.dsp.
+<p>
+<p>See <A HREF="./03mpg.html#XREF22719">Preparing Instruments</A>, <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>, and <A HREF="./05mpg.html#XREF38583">Playing Sound Files</A>, for information on loading a player and instrument. Do not forget to start other instruments. You do not need to start sampler instruments as <CODE>ssplStartSpooler()</CODE> starts this instrument.
+<p>
+<DL>
+<DD><CODE>SoundSpooler *ssplCreateSoundSpooler(int32 NumBuffers,   Item SamplerIns)</CODE><BR>
+</DL>
+<DL>
+<DD><CODE>int32 ssplSpoolData(SoundSpooler *sspl, char *Data, int32  NumBytes, void *UserData)</CODE><BR>
+</DL>
+<DL>
+<DD><CODE>Err ssplStartSpooler(SoundSpooler *sspl, int32 Amplitude)</CODE><BR>
+</DL>
+<p>
+<p>If you are using the sound spooler in a loop, you must monitor the signals returned by ssplSpoolData(), and inform the spooler that the buffers are complete by calling ssplProcessSignals():
+<p>
+<DL>
+<DD><CODE>int32 ssplProcessSignals(SoundSpooler *sspl, int32  SignalMask, void  (*UserBufferProcessor)(SoundSpooler  *sspl, SoundBufferNode *sbn))</CODE><BR>
+</DL>
+<p>
+<p>You must also read more sound data and keep calling ssplSpoolData() until you run out of data.
+<p>
+<LI>Stop the sound spooler by calling ssplStopSpooler():
+<p>
+<DL>
+<DD><CODE>Err ssplStopSpooler(SoundSpooler *sspl)</CODE><BR>
+</DL>
+<p>
+
+<LI>Clean up by the spooling process by calling ssplDeleteSoundSpooler():
+<p>
+<DL>
+<DD><CODE>Err ssplDeleteSoundSpooler(SoundSpooler *sspl)</CODE><BR>
+</DL>
+</OL>

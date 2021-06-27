@@ -1,0 +1,98 @@
+<Title>VDL </Title>
+<A NAME="XREF28283"><H1>VDL </A></H1>
+<A NAME="XREF12585"> A display control object.</A><P>
+<H3>Description</H3>
+A VDL is a collection of hardware control values which are used to manipulate the display characteristics in strange and bizarre ways. VDLs tell the display hardware where the frame buffer is, its geometry, what colors to use, and other characteristics. <P>
+Because of their dependency on specific underlying hardware, whose quirks may change from manufacturer to manufacturer, the use of custom VDLs is discouraged at this time. <P>
+<H3>Folio</H3>
+graphics <P>
+<H3>Item Type</H3>
+VDLNODE <P>
+<H3>Create</H3></CODE>
+<p><CODE>CreateVDL() </CODE>
+<p><CODE>CreateVDLVA() </CODE>
+<p><CODE>CreateItem() </CODE>
+<p><CODE>SubmitVDL() </CODE>
+
+<H3>Delete</H3>
+<p><CODE>DeleteItem() </CODE>
+<p><CODE>DeleteVDL() </CODE>
+<p><CODE>DeleteItem() </CODE>
+
+<H3>Query</H3>
+None <P>
+<H3>Modify</H3>
+<p><CODE>ModifyVDL() </CODE>
+<p><CODE>ModifyVDLVA() </CODE>
+
+<H3>Use</H3>
+<p><CODE>SetVDL() </CODE>
+
+<H3>Tags</H3>
+The following tags are only valid when creating a VDL item: <P>
+CREATEVDL_TAG_VDLTYPE(int32)
+The type of VDL you wish to create. The currently supported types are:  <P>
+
+<UL>
+<LI>VDLTYPE_FULL: Contains complete description of all display characteristics. 
+<p>
+<LI>CREATEVDL_TAG_DISPLAYTYPE(int32)  The type of display for which this VDL is intended.  This is one of the  DI_TYPE_ values in graphics.h. 
+<p>
+<LI>CREATEVDL_TAG_LENGTH(int32)  The length of the submitted VDL, in 32-bit words.
+<p>
+<LI>CREATEVDL_TAG_HEIGHT(int32)  The number of display lines this VDL will affect. 
+</UL>
+CREATEVDL_TAG_DATAPTR(void *)
+Pointer to array of VDL instructions you wish to be validated and converted to a 
+VDL item.
+<p>
+The following tags may be used to create or modify a VDL item:
+<p>
+<DL>
+<DT>CREATEVDL_TAG_SLIPSTREAM(Boolean)  
+<DD>Enables/disables slipstream (non-zero == enable).  When enabled, all pixels in the display buffer with a value of 000 are made transparent. 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_HAVG(Boolean)
+<DD>Enables/disables horizontal interpolation (non-zero == enable). 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_VAVG(Boolean)
+<DD>Enables/disables vertical interpolation (non-zero == enable). 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_HSUB(int32)
+<DD>Sets the source for horizontal subpositioning bits as follows: 0:Force to zero. 1:Force to one. 2:Take from display buffer. 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_VSUB(int32)
+<DD>Sets the source for vertical subpositioning bits as follows: 0:Force to zero. 1:Force to one. 2:Take from display buffer. 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_SWAPHV(Boolean)
+<DD> Enables/disables swapping of the horizontal and vertical subpositioning bits: 0:Bit 0 == HSub; bit 15 == VSub (default) non-0:Bit 0 == VSub; bit 15 == HSub 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_CLUTBYPASS(Boolean) 
+<DD>Enables/disables the availability of CLUT bypass mode for pixels where bit 15 is set (non-zero == enable). 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_WINHAVG(Boolean)
+<DD>Enables/disables horizontal interpolation for pixels making use of CLUT bypass mode (non-zero == enable). 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_WINVAVG(Boolean)
+<DD>Enables/disables vertical interpolation for pixels making use of CLUT bypass mode (non-zero == enable). 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_WINHSUB(int32)
+<DD>Sets the source for horizontal subpositioning bits for pixels making use of CLUT	bypass mode as follows: 0:Force to zero. 1:Force to one. 2:Take from display buffer. 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_WINVSUB(int32)
+<DD>Sets the source for vertical subpositioning bits for pixels making use of CLUT	bypass mode as follows: 0:Force to zero. 1:Force to one. 2:Take from display buffer. 
+</DL>
+<DL>
+<DT>CREATEVDL_TAG_WINSWAPHV(Boolean) 
+<DD>Enables/disables swapping of the horizontal and vertical subpositioning bits for pixels making use of CLUT bypass mode: 0:Bit 0 == HSub; bit 15 == VSub (default) non-0:Bit 0 == VSub; bit 15 == HSub 
+</DL>

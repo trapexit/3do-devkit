@@ -1,0 +1,35 @@
+<Title>MFDefineCollection</Title>
+<A NAME="XREF13527"><H1>MFDefineCollection </A></H1>
+<A NAME="XREF14336"></A> Creates a Juggler collection from a MIDI file image in RAM.<P>
+<H3>Synopsis</H3>
+<CODE>Err MFDefineCollection( MIDIFileParser *mfpptr, char *Image, int32 NumBytes, Collection *ColPtr)</CODE><P>
+<H3>Description</H3>
+This function creates a Juggler collection from a MIDI file image imported into RAM as part of a data streaming process.  The MIDI file in the image may be a Format 0 or a Format 1 MIDI file.  To use this function, you must first create a Juggler collection using <CODE>CreateObject()</CODE>.  The function then creates an appropriate number of Juggler sequences to contain the sequences found in the MIDI file image. <P>
+The function translates the MIDI messages in each file sequence into MIDI events in an appropriate Juggler sequences within the collection.  To work, the function must have a MIDIFileParser data structure to keep track of the MIDI sequence's original settings. <P>
+Note that this function treats Format 0 MIDI files as one-track Format 1 MIDI files. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>mfpptr
+<DD>Pointer to a MIDIFileParser data structure. 
+</DL>
+<DL>
+<DT>Image
+<DD>Pointer to a MIDI file image in RAM (a string of bytes). 
+</DL>
+<DL>
+<DT>NumBytes
+<DD>The size of the MIDI file image in bytes. 
+</DL>
+<DL>
+<DT>ColPtr
+<DD>Pointer to a Juggler collection in which to store the converted MIDI sequences. 
+</DL>
+<H3>Return Value</H3>
+This function returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr007.html#XREF24520"><CODE>CreateObject</A>(), <A HREF="./02mpr036.html#XREF40622">MFLoadCollection</A>(), <A HREF="./02mpr037.html#XREF17171">MFLoadSequence</A>(), <A HREF="./02mpr038.html#XREF15596">MFUnloadCollection</A>()</CODE><P>
+</CODE>

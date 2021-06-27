@@ -1,0 +1,48 @@
+<TITLE>DataStreamer threads and data flow</TITLE>
+<H1><LINK NAME="XREF32484">DataStreamer threads and data flow</LINK></H1><HR>
+A thread is a task that is created and launched by another task. To achieve synchronized data delivery, the DataStreamer uses several threads that read data, queue them in buffers, and prepare them for playback. This section gives a conceptual overview of the architecture by looking at:<P>
+
+<UL>
+<LI><A HREF="#XREF36981">DataStreamer threads</A>
+<LI><A HREF="#XREF32709">Data flow overview</A>
+</UL>
+<A NAME="XREF36981"><H2>DataStreamer threads</A></H2>
+The following threads that are part of data streaming are discussed in this section. <P>
+
+<UL>
+<LI><A HREF="#XREF13833">Data acquisition thread</A>
+<LI><A HREF="#XREF27906">Streamer thread</A>
+<LI><A HREF="#XREF11153">Subscriber thread</A>
+</UL>
+<A NAME="XREF13833"><H3>Data acquisition thread</A></H3>
+A data acquisition thread supplies the streamer thread with data from a CD or a network. An arbitrary number of data acquisition threads can exist in the system, but only one can actually be connected to a streamer thread at any time. The DataStreamer library supports dynamic connections of new data acquisition threads to a stream.<P>
+<A NAME="XREF27906"><H3>Streamer thread</A></H3>
+The streamer thread accepts fixed-sized blocks of data from the acquisition thread and parses them into chunks that contain a single type of data. The streamer thread is responsible for data flow control at the block level. <P>
+<A NAME="XREF11153"><H3>Subscriber thread</A></H3>
+A subscriber thread works on the data that the streamer thread delivers. Each subscriber thread accepts and processes only one type of data, although it can accept multiple chunks of the same type (for example audio channels in English and French). The streamer sends data to the subscribers; the playback application interacts with the subscribers to get data. The number of subscribers depends on how many different types of data you want to play back. <P>
+The subscribers and the actual playback application are usually different programs. For example, the current implementation of the Cinepak subscriber cannot automatically draw directly to the screen in any practical way. Another thread-usually the playback application's main thread of execution-controls who owns the screen and when to draw into it. <P>
+The <I>Streaming</I> folder in the Toolkit1.5 release includes an example for a skeleton subscriber thread (ProtoSubscriber).<P>
+<A NAME="XREF12319"></A><A NAME="XREF32709"></A><A NAME="XREF16786"></A><A NAME="XREF32143"><H2>Data flow overview</A></H2>
+Data streaming cycles through the following steps (see Figure 1 below).<P>
+<OL>
+<LI>The data acquisition thread receives empty buffers, allocated by the playback application. 
+<p>
+<LI>The data acquisition thread fills the buffers with data. At this point, the different chunk types (audio, video, etc.) are interleaved and ordered based on timestamp and priority information. The data acquisition thread passes the data in the order received, to the streamer thread. 
+<p>
+<LI>The streamer thread parses each filled buffer according to chunk type and distributes each chunk to the subscriber thread that is registered for that chunk type.
+<p>
+<LI>When a subscriber thread has played or is otherwise finished with a data chunk, it returns the chunk to the streamer thread. 
+<p>
+<LI>After all chunks in a buffer have been returned to the streamer thread, the empty buffer returns to the data acquisition thread to be filled with more data (see step 2). 
+</OL>
+These steps repeat until the data acquisition thread indicates an end-of-file condition or the stream is stopped by the user.<P>
+Modifications to this basic flow are possible: <P>
+<UL>
+<LI>At any time in the procedure, the playback application can specify that the data acquisition thread should acquire data from a new position in a stream file. This is largely transparent to the streamer thread. 
+<p>
+<LI>The playback application can connect a different data acquisition thread to the stream file, supplying data from a completely different source. Note, however, that you can only be taking data from one stream file source per streamer thread.
+<p>
+<IMG SRC="Figures/3-1.Procedure.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>Data streaming procedure.</I><P>
+</UL>

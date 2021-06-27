@@ -1,0 +1,15 @@
+<Title>OpenDirectoryItem</Title>
+<H1>OpenDirectoryItem</H1>
+<A NAME="XREF27620"></A> Opens a directory specified by an item.<P>
+<CODE>Directory *OpenDirectoryItem( Item openFileItem )</CODE><P>
+This function opens a directory. It allocates a new directory structure, opens the directory, and prepares for a traversal of the contents of the directory. Unlike <CODE>OpenDirectoryPath()</CODE>, you specify the file for the directory by its item number rather than by its pathname. <P>
+<DL>
+<DT>openFileItem
+<DD>The item number of the open file to use for the directory. When you later call CloseDirectory(), this file item will automatically be deleted for you, you do not need to call CloseDiskFile(). 
+</DL>
+The function returns a pointer to the directory structure that is created or NULL if an error occurs. <P>
+Folio call implemented in file folio V20. <P>
+When you are done scanning the directory and call <CODE>CloseDirectory()</CODE>, the item you gave to <CODE>OpenDirectoryItem()</CODE> will automatically be closed for you. In essence, when you call <CODE>OpenDirectoryItem()</CODE>, you are giving away the File item to the file folio, which will dispose of it when the directory is closed. <P>
+directoryfunctions.h, filesystem.lib<P>
+<CODE><A HREF="./02spr016.html#XREF10715"><CODE>OpenDiskFile</A>(), <A HREF="./02spr017.html#XREF22921">OpenDiskFileInDir</A>(), <A HREF="./02spr015.html#XREF15336">OpenDirectoryPath</A>(), <A HREF="./02spr002.html#XREF38614">CloseDirectory</A>() </CODE><P>
+</CODE>

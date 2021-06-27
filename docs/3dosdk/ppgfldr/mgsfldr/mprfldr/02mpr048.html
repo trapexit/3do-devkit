@@ -1,0 +1,22 @@
+<Title>TermScoreMixer</Title>
+<A NAME="XREF31982"><H1>TermScoreMixer </A></H1>
+<A NAME="XREF31351"></A> Dispose of mixer created by <CODE>InitScoreMixer()</CODE>.<P>
+<H3>Synopsis</H3>
+<CODE>Err TermScoreMixer( ScoreContext *scon )</CODE><P>
+<H3>Description</H3>
+This function unloads the mixer loaded by <CODE>InitScoreMixer()</CODE>. This function is automatically called by <CODE>DeleteScorePlayer()</CODE>. <P>
+Calling this function multiple times has no harmful effect. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>scon
+<DD>Pointer to a ScoreContext data structure. The mixer need not have been successfully initialized. 
+</DL>
+<H3>Return Value</H3>
+This function returns a non-negative value if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V20. <P>
+<H3>Associated Files</H3>
+score.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr031.html#XREF21919"><CODE>InitScoreMixer</A>(), <A HREF="./02mpr026.html#XREF24437">DeleteScoreContext</A>() </CODE><P>
+</CODE>

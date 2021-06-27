@@ -1,0 +1,9 @@
+<TITLE>Using Self-Modifying Code</TITLE>
+<H1><LINK NAME="XREF19460">Using Self-Modifying Code</LINK></H1><HR>
+<H3>What is it:</H3>
+Trying to change your code while it is executing.<P>
+<H3>Why it's bad:</H3>
+Code may become read-only.<P>
+<H3>What to do</H3>
+Don't do it.<P>
+Many programming tricks depend on being able to change portions of your code while it is executing. Don't assume that you can write to your code. If your code resides in protected memory, trying to modify it will cause an abort, which in turn causes your task to abort. In addition, code can't modify itself in future systems with a CPU cache.<P>

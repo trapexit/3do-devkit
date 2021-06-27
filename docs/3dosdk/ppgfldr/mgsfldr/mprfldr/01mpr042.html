@@ -1,0 +1,35 @@
+<Title>GetAudioFrameCount</Title>
+<A NAME="XREF29526"><H1>GetAudioFrameCount </A></H1>
+<A NAME="XREF33863"></A> Gets count of frames executed.<P>
+<H3>Synopsis</H3>
+<CODE>uint16 GetAudioFrameCount (void)</CODE><P>
+<H3>Description</H3>
+Gets 16-bit value that is incremented on every sample frame, typically at 44100Hz.  This is only useful for determining relative elapsed frame counts. <P>
+It can be used as a measure of audio time more precise than <CODE>GetAudioTime()</CODE>.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>None
+<DD> 
+</DL>
+<H3>Return Value</H3>
+16-bit sample frame count.<P>
+<H3>Implementation</H3>
+SWI implemented in Audio folio V24. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>Example</H3>
+<B>Example 1: </B><I>GetAudioFrameCount example</I><P>
+<CODE>
+<PRE>
+NewFrameCount = GetAudioFrameCount();
+ElapsedFrames = (NewFrameCount - OldFrameCount) &amp; OxFFFF;
+OldFrameCount = NewFrameCount;
+</CODE>
+</PRE>
+<H3>Caveats</H3>
+<CODE>GetAudioFrameCount()</CODE> must be called at least once every 65536 
+(i.e. 2**16) 
+sample frames to avoid wrap around of the 16-bit value.  Call at least every second to be safe.<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr039.html#XREF34810"><CODE>GetAudioCyclesUsed</A>() </CODE><P>
+</CODE>

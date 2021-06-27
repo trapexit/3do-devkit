@@ -1,0 +1,32 @@
+<TITLE>FirstNode</TITLE>
+<A NAME="XREF11960"><H1>FirstNode </A></H1>
+<A NAME="XREF14535"></A>Gets the first node in a list.<P>
+<H3>Synopsis</H3>
+<CODE>Node *FirstNode( List *l )</CODE><P>
+<H3>Description</H3>
+This macro returns a pointer to the first node in the specified list. If the list is empty, the macro returns a pointer to the tail (end-of-list) anchor. To determine if the return value is an actual node rather than the tail anchor, call the <CODE>IsNode()</CODE> procedure. <P>
+<B>Example 1: </B><I>Use of FirstNode in forward list traversal </I><P>
+<CODE>
+<PRE>
+for (n = FirstNode(list); IsNode(list, n); n = NextNode( n )) 
+{    . . .    }; 
+</CODE>
+</PRE>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the list from which to get the first node. 
+</DL>
+<H3>Return Value</H3>
+The macro returns a pointer to first node in the list or, if the list is empty, a pointer to the tail (end-of-list) anchor. <P>
+<H3>Implementation</H3>
+Macro implemented in list.h V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>list.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr091.html#XREF32439"><CODE>IsListEmpty</A>(), <A HREF="./01spr094.html#XREF37857">IsNode</A>(), <A HREF="./01spr095.html#XREF36617">IsNodeB</A>(), <A HREF="./01spr096.html#XREF19159">LastNode</A>(), <A HREF="./01spr102.html#XREF12754">NextNode</A>(), <A HREF="./01spr106.html#XREF31070">PrevNode</A>(), <A HREF="./01spr118.html#XREF16633">ScanList</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF11960"></LINK></H1><HR>

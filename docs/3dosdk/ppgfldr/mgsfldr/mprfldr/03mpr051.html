@@ -1,0 +1,23 @@
+<Title>savemvsvfemv.dsp</Title>
+<A NAME="XREF16063"><H1>sawenvsvfenv.dsp </A></H1>
+<A NAME="XREF21672"></A> Sawtooth generator with amplitude and filter envelope.<P>
+<H3>Function</H3>
+This instrument is a simple sawtooth generator with two built-in envelopes to control amplitude and filter cutoff. It is a test instrument that we use to test the envelope code, but you may find it useful as a synthesizer voice. <P>
+<H3>Knobs</H3>
+Amplitude - 0  =&gt;  $7FFF, final amplitude of voice <P>
+CutoffFreq - 0 =&gt; $2000, default $100.  Currently nonlinear cutoff frequency of filter. <P>
+Frequency - If you call <CODE>TweakRawKnob()</CODE>, the units are phase increments, If you call <CODE>TweakKnob()</CODE>, the units are 16.16 fractional hertz. <P>
+Resonance - 1 / Q,  0 =&gt; $6000, default $1000 <P>
+SawAmp - 0  =&gt;  $4000, default $1000, amplitude of sawtooth feeding into filter <P>
+SVFEnvDepth - 0 =&gt; $7FFF, default $2000, Depth of filter envelope. <P>
+<H3>Inputs</H3>
+None <P>
+<H3>Outputs</H3>
+Output<P>
+<H3>Input FIFOs</H3>
+None <P>
+<H3>Output FIFOs</H3>
+None <P>
+<H3>Resource</H3>
+Ticks = 72 <P>
+N memory = 82 words <P>

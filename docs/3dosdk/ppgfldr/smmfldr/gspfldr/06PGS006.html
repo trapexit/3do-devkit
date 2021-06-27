@@ -1,0 +1,8 @@
+<TITLE>Using Fixed Pathnames</TITLE>
+<H1>Using Fixed Pathnames</H1><HR>
+<H3>What is it:</H3>
+Files have to exist in an absolute position or on a specific device.<P>
+<H3>Why it's bad:</H3>
+The application won't run on a device it doesn't know about, or if its position within a file system changes. This is an issue because you may not always run off CD-ROM; in the future, your application could be downloaded via modem, through a cable box, or from a mass storage device. Since you can't predict how these file systems will look, it pays to make as few assumptions as possible. Even now you have to handle the transition from development to production code gracefully. This involves moving your title from <I>/remote</I> to a final CD-ROM. Using relative pathnames makes the layout part of the transition effortless.<P>
+<H3>What to do</H3>
+As a rule, use relative pathnames. Use aliases in situations where that seems unavoidable. Never use fixed pathnames <P>

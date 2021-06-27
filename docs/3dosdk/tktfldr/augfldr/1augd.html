@@ -1,0 +1,178 @@
+<TITLE>Flag options</TITLE>
+<H1><LINK NAME="XREF35211">Flag options</LINK></H1><HR>
+The flag options are listed below. Some of these are followed by an argument. Whenever this is the case, the ARM C compiler allows white space to be inserted between the flag letter and the argument. However, this is not always true of other C compilers, so in the following subsections we only list the form that would be acceptable to a Unix C compiler. Similarly, we only use the case of the letter that would be accepted by a Unix C compiler.<P>
+The descriptions are divided into several subsections, so that flags controlling related aspects of the compiler's operation are grouped together.<P>
+<H2>Controlling the linker</H2>
+<H3>-c</H3>
+Do not perform the link step. This merely compiles the source program(s), 
+leaving the object file(s) in the current directory (or as directed by 
+the -o flag). This is different from the -C option 
+described in <A HREF="#XREF32665">Preprocessor flags</A>.<P>
+<A NAME="XREF32665"><H2>Preprocessor flags</A></H2>
+<CODE>-I</CODE><I>directory-name</I><P>
+This adds the specified directory to the list of places which are searched for included files (after the in-memory or source file directory, according to the type of include file). The directories are searched in the order in which they are given by multiple -I options. <P>
+<CODE>-j</CODE><I>directory-list</I><P>
+directory-list is a comma separated list of search directories. This option adds the list of directories specified to the end of the search path (ie. after all directories specified by -I options), but otherwise in the same way as -I. <P>
+However, it also has the side effect of stopping system include files being searched for in the in-memory filing system before all other searches.  Instead the in-memory filing system is searched for system include files only after all other searches have failed.<P>
+Note that the in-memory filing system can be specified in -I and -j options by <I>:mem</I>.<P>
+-j is an ARM-specific flag and is not portable to other C systems. There may be at most one -j option on a command line. <P>
+<CODE>-E</CODE><P>
+If this flag is specified, only the preprocessor phase of the compiler is executed. The output from the preprocessor is sent to the standard output stream. It can be redirected to a file using the stream redirection notations common to Unix and MS-DOS (e.g.<P>
+<CODE>
+<PRE>
+armcc -E something.c &gt; rawc
+</CODE>
+</PRE>
+By default, comments are stripped from the output, (but see<I> -C flag</I>, below).<P>
+<CODE>-C</CODE><P>
+When used in conjunction with -E above, -C retains comments in preprocessor output. It is different from the -c flag, which is used to suppress the link operation.<P>
+<CODE>-M</CODE><P>
+If this flag is specified, only the preprocessor phase of the compiler is executed (as with armcc -E) but the only output produced is a list, on the standard output stream, of <I>makefile</I> dependency lines suitable for use by a <I>make</I> utility. This can be redirected to a file using standard Unix/MS-DOS notation. For example:<P>
+<CODE>
+<PRE>
+armcc -M xxx.c &gt;&gt; Makefile.
+</CODE>
+</PRE>
+<CODE>-Dsymbol=value</CODE><P>
+Define <I>symbol</I> as a preprocessor macro, as if by a line <I>#define symbol value</I> at the head of the source file.<P>
+<CODE>-Dsymbol</CODE><P>
+Define <I>symbol</I> as a preprocessor macro, as if by a line <I>#define symbol</I> at the head of the source file.<P>
+<CODE>-Usymbol</CODE><P>
+Undefine <I>symbol</I>, as if by a line <I>#undef symbol</I> at the head of the source file.<P>
+<H2>Controlling code generation</H2>
+<CODE>-g</CODE><I>Letters</I><P>
+This flag is used to specify that debugging tables for use by the ARM Source Level Debugger (<I>armsd</I>) should be generated. It is followed by an optional set of letters which specify the level of information required. If no letters are present then all the information possible is generated. However, the tables can occupy large amounts of memory so it is sometimes useful to limit what is included as follows.<P>
+<CODE>-gf</CODE><P>
+Generate information on functions and top-level variables (those declared outside of functions) only.<P>
+<CODE>-gl</CODE><P>
+Generate information describing each line in the source file(s).<P>
+<CODE>-gv</CODE><P>
+Generate information describing all variables.<P>
+The last three modifiers may be specified in any combination, e.g. -gfv.<P>
+<CODE>-o file</CODE><P>
+The argument to the -o flag gives the name of the file which will hold the final output of the compilation step. In conjunction with -c, it gives the name of the object file; in conjunction with -S, it gives the name of the assembly language file. Otherwise, it names the final output of the link step.<P>
+<CODE>-Ospace</CODE><P>
+Perform optimisations to reduce image size at the expense of increased execution time.<P>
+<CODE>-Otime</CODE><P>
+Perform optimisations to reduce execution time at the expense of a larger image.<P>
+<CODE><A NAME="XREF11382">-p </A></CODE>and<CODE> -px</CODE><P>
+The -p flag makes the compiler generate code to count the number of times each function is executed. If -px is given, the compiler also generates code to count how often each basic block within each function is executed. The -px option is specific to ARM C, though -p is widely used by other C systems to request profiling.<P>
+At the end of a program run, the counts can be printed to stderr by calling the ARM C library function <I>_mapstore()</I>, or to a named file of your choice by calling <I>_fmapstore("filename")</I>.<P>
+The printed results are lists of <I>lineno</I>, <I>count</I> pairs. The <I>lineno</I> value is the number of a line in your source code, and count is the number of times it was executed. Note that lineno is ambiguous: it may refer to a line in an included file, but this is rare and usually causes no confusion.<P>
+Provided that the program wasn't compiled with the -ff option, blocks of counts will be interspersed with function names. In the simplest case the output is reduced to a list of line pairs like:<P>
+<CODE>
+<PRE>
+function-name
+    lineno: count
+</CODE>
+</PRE>
+where <I>count</I> is the number of times the function was executed.<P>
+If -px was used, the <I>lineno</I> values within each function relate to the start of each basic block. Sometimes, a statement (such as a <I>for</I> statement) may generate more than one basic block, so there can be two different counts for the same line.<P>
+Profiled programs run slowly. For example, when compiled -p, Dhrystone 1.1 runs at about 5/8 speed; when compiled -px it runs at only about 3/8 speed.<P>
+There is no direct way to relate these execution counts to the amount, or proportion, of execution time spent in each section of code. Nor is there yet any tool for annotating a source listing with profile counts. Future releases of ARM C may address these issues.<P>
+<CODE>-S</CODE><P>
+If the -S flag is specified, no object code is generated but a listing of the equivalent assembly language is written to a file. By default, the file is called <I>name.s</I> in the current directory (where <I>name.c</I> is the name of the source file stripped of any leading directory names). The default can be overridden using the -o flag (see above).<P>
+If this option is specified then <I>file</I> is opened and more <I>armcc</I> command line arguments are read in from it.  This is intended mainly for hostings (such as the PC) where command line length is severely limited.<P>
+<H2>Controlling warning messages</H2>
+<CODE>-W</CODE><I>Letters</I><P>
+The -W option controls the suppression of warning messages. Usually the compiler is very free with its warnings, as these tend to indicate potential portability problems or other hazards. However, too many warning messages can be a nuisance in the early stages of porting a program written in old-style C, so warnings can disabled.<P>
+<CODE>-W</CODE><P>
+If no modifier letters are given, then all warnings are suppressed. If one or more letters follow the flag, then only the warnings controlled by those letters are suppressed.<P>
+<CODE>-Wa</CODE><P>
+Give no "Use of = in a condition context" warning. This is given when the compiler encounters a statement such as:<P>
+<CODE>
+<PRE>
+if (a = b) {... 
+</CODE>
+</PRE>
+where it is quite possible that the author really did intend<P>
+<CODE>
+<PRE>
+if ((a = b) != 0) {...
+</CODE>
+</PRE>
+and also plausible that the author intended<P>
+<CODE>
+<PRE>
+if (a == b) {...
+</CODE>
+</PRE>
+but missed a key stroke. In new code, the deliberate use of the needlessly dangerous <I>if (a = b) ...</I>, should be avoided. This warning is also suppressed in -pcc mode.<P>
+<CODE>-Wd</CODE><P>
+Give no "Deprecated declaration foo() - give arg types" message, given when a declaration without argument types is encountered in ANSI mode (the warning is suppressed anyway in -pcc mode).<P>
+In ANSI C, declarations like this are deprecated and a future version of the C standard may ban them. They are already illegal in C++. However, it is sometimes useful to suppress this warning when porting old code.<P>
+<CODE>-Wf</CODE><P>
+Give no "Inventing extern int foo()" message, which may be useful when compiling old-style C in ANSI mode. This warning is suppressed in -pcc mode.<P>
+<CODE>-Wn</CODE><P>
+Give no "Implicit narrowing cast" warning. This warning is issued when the compiler detects the implicit narrowing of a long expression in an int or char context, or the implicit narrowing of a floating point expression in an integer or narrower floating point context. Such implicit narrowings are almost always a source of problems when moving code developed using a fully 32-bit system (such as ARM C) to a C system in which ints occupy 16 bits and longs 32 bits (as is common on the IBM PC, Apple Macintosh, etc.).<P>
+<CODE>-Wv</CODE><P>
+Give no "Implicit return in non-void context" warning. This is most often caused by a return from a function which was assumed to return int (because no other type was specified) but is in fact being used as a void function. Because the practice is widespread in old-style C, the warning is suppressed in -pcc mode.<P>
+<A NAME="XREF15924"><H2>Controlling additional compiler features</A></H2>
+<CODE>-zp</CODE><I>LetterDigit</I><P>
+This flag can be used to emulate #pragma directives. The letter and digit which follow it are the same characters that would follow the '-' of a #pragma directive. See the section in the Reference Manual for details.<P>
+<CODE>-zr</CODE><I>Number</I><P>
+This flag allows the size of (most) LDMs and (all) STMs to be controlled between the limits of 3 and 16 registers transferred.  This can be used to help control interrupt latency where this is critical.<P>
+<CODE>-f</CODE><I>Letters</I><P>
+The -f flag described in this section controls a variety of compiler features, including certain checks more rigorous than usual. Like the -W flag it is followed by a string of modifier letters. At least one letter is required, though several may be given at once, for example, -ffah.<P>
+<CODE>-fa</CODE><P>
+Check for certain types of data flow anomalies. The compiler performs data flow analysis as part of code generation. The checks enabled by this option indicate when an automatic variable could have been used before it has been assigned a value. The check is pessimistic and will sometimes report an anomaly where there is none, especially in code like the following:<P>
+<CODE>
+<PRE>
+int initialised = 0, value;
+...
+    if (initialised) { int v = value; ...
+    ...
+    value = ...;  initialised = 1;
+</CODE>
+</PRE>
+Here, we know that <I>value</I> is read if, and only if, <I>initialised</I> has been set (but in general, the argument may be delicate). As this is a semantic deduction, not a data flow implication, -fa will report an anomaly.<P>
+In general, it is useful to check all code using -fa at some stage during its development.<P>
+<CODE>-fc</CODE><P>
+Enable the "limited pcc" option, designed to support the use of pcc-style header files in an otherwise strict ANSI mode (e.g. when using libraries of functions implemented in old-style C from an application written in ANSI C). This allows characters after #else and #endif preprocessor directives (which are ignored).<P>
+The "limited pcc" option also supports system programming in ANSI mode by suppressing warnings about explicit casts of integers to function pointers, and permitting the dollar character in identifiers, (linker-generated symbols often contain "$$" and all external symbols containing "$$" are reserved to the linker).<P>
+<CODE>-fe</CODE><P>
+Check that external names used within the file are still unique when reduced to six case-insensitive characters. Some (now very old) linkers support as few as six significant characters in external symbol names. This can cause problems with clashes if a system uses two names such as <I>getExpr1</I> and <I>getExpr2</I>, which are only unique in the eighth character. The check can only be made within a single compilation unit (source file) so cannot catch all such problems. ARM C allows external names of up to 256 characters, so this is strictly a portability aid.<P>
+<CODE>-ff</CODE><P>
+Do not embed function names in the code area. The compiler does this to make the output produced by the stack backtrace run time support function and the <I>_mapstore()</I> function (see <A HREF="#XREF11382">-p and -px</A>) more readable. Removing the names from the compiler itself makes the code slightly smaller (about 5%). In general it is not useful to specify -ff with -p.<P>
+<CODE>-fh</CODE><P>
+Check that all external objects are declared before use and that all file scoped static objects are used. If external objects are only declared in included header files (never in-line in a C source file) then these checks directly support good modular programming practices.<P>
+<CODE>-fi</CODE><P>
+In the listing file list the lines from any files included with directives of the form:<P>
+<CODE>
+<PRE>
+#include "file"
+</CODE>
+</PRE>
+As above, but for files included by lines of the form:<P>
+<CODE>
+<PRE>
+#include &lt;file&gt;
+</CODE>
+</PRE>
+<CODE>-fk</CODE><P>
+Use K&amp;R search rules for locating included files (the current place is defined by the original source file and is not stacked; see the section of the Reference Manual for details).<P>
+<H3>-fm</H3>
+Report on preprocessor symbols defined but not used during the compilation.<P>
+<H3>-fp</H3>
+Report on explicit casts of integers into pointers, e.g.<P>
+<CODE>
+<PRE>
+char *cp = (char *) anInteger;
+</CODE>
+</PRE>
+(Implicit casts are reported anyway, unless suppressed by the -Wc option).<P>
+<H3>-fu</H3>
+By default, if -list is specified, the compiler lists the source text as seen by the compiler after preprocessing. If -fu is specified then the unexpanded source text, as written by the user, is listed. For example, consider the line:<P>
+<CODE>
+<PRE>
+p = NULL;            /* assume NULL #defined to be (0) */
+</CODE>
+</PRE>
+By default, this will be listed as p = (0); with -fu specified, as p = NULL;.<P>
+<H3>-fv</H3>
+Report on all unused declarations, including those from standard headers.<P>
+<CODE>-fw</CODE><P>
+Allow string literals to be writeable, as expected by some Unix code, by allocating them in the program's data area rather than the notionally read-only code area. Note that this also prevents the re-use by the compiler of a multiple, occurring string literal.<P>
+When writing high-quality production software, you are encouraged to use at least the -fah options in the later stages of program development (the extra diagnostics produced can be annoying in the earlier stages).<P>
+<P>
+<P>

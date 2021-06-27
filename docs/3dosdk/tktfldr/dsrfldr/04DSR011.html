@@ -1,0 +1,15 @@
+<Title>streamdeltapri</Title>
+<A NAME="XREF37581"><H1>streamdeltapri</A></H1>
+<A NAME="XREF31827"></A> Specifies the streamer thread delta priority.<P>
+<H3>Synopsis</H3>
+<CODE>streamdeltapri &lt;delta_priority&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>S</CODE>pecifies the streamer thread delta priority.<P>
+The delta_priority should be low because the task priority of the streamer thread is calculated in relation to the priority of its parent task<P>
+<H3>Arguments</H3>
+<DL>
+<DT>delta_priority
+<DD>Integer. If you add the priority of the application that uses the data acquisition thread and the delta priority, the number must not exceed 200. The higher the number, the higher the priority. 
+</DL>
+<H3>See Also</H3>
+<A HREF="./04DSR002.html#XREF26885"><CODE>dataacqdeltapri</A></CODE><P>

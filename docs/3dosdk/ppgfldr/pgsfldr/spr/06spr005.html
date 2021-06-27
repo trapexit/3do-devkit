@@ -1,0 +1,79 @@
+<Title>IntlFormatNumber </Title>
+<A NAME="XREF33471"><H1>IntlFormatNumber </A></H1>
+<A NAME="XREF35878"> Format a number in a localized manner.</A><P>
+<H3>Synopsis</H3>
+<CODE>int32 intlFormatNumber(Item locItem,const NumericSpec *spec,uint32 whole, uint32 frac,bool negative, bool doFrac,unichar *result, uint32 resultSize);</CODE><P>
+<H3>Description</H3>
+This function formats a number according to the rules contained in the NumericSpec structure. The NumericSpec structure is normally taken from a Locale structure. The Locale structure contains three initialized NumericSpec structures (loc_Numbers, loc_Currency, and loc_SmallCurrency) which let you format numbers in an appropriate manner for the current system. <P>
+You can create your own NumericSpec structure which lets you use <CODE>intlFormatNumber()</CODE> to handle custom formatting needs. The fields in the structure have the following meaning: <P>
+<UL>
+<LI>ns_PosGroups  =A GroupingDesc value defining how digits are grouped to the left of the decimal character. A GroupingDesc is simply a 32-bit bitfield. Every ON bit in the bitfield indicates that the separator sequence should be inserted after the associated digit. So if the third bit (bit #2) is ON, it means that the grouping separator should be inserted after the third digit of the formatted number. 
+<p>
+<LI>ns_PosGroupSep  =A string used to separate groups of digits to the left of the decimal character. 
+<p>
+<LI>ns_PosRadix  =A string used as a decimal character. 
+<p>
+<LI>ns_PosFractionalGroups 
+A GroupingDesc value defining how digits are grouped to the right of the decimal character. 
+<LI>ns_PosFractionalGroupSep = A string used to separate groups of digits to the right of the decimal character. 
+<p>
+<LI>ns_PosFormat =This field is used to do post-processing on a formatted number. This is typically used to add currency notation around a numeric value. The string in this field is used as a format string in a <CODE>sprintf()</CODE> function call, and the formatted numeric value is supplied as a parameter to the same <CODE>sprintf()</CODE> call. For example, if the ns_PosFormat field is defined as "$%s", and the formatted numeric value is "0.02", then the result of the post-processing will be "$0.02". When this field is NULL, no post-processing occurs. 
+<p>
+<LI>ns_PosMinFractionalDigits  =Specifies the minimum number of digits to display to the right of the decimal character. If there are not enough digits, then the string will be padded on the right with 0s. 
+<p>
+<LI>ns_PosMaxFractionalDigits=  Specifies the maximum number of digits to display to the right of the decimal character. Any excess digits are just removed. 
+<p>
+<LI>ns_NegGroups, ns_NegGroupSep, ns_NegRadix, ns_NegFractionalGroups, ns_NegFractionalGroupSep, ns_NegFormat, ns_NegMinFractionalDigits, ns_NegMaxFractionalDigits = These fields have the same function as the eight fields described above, except that they are used to process negative amounts, while the previous fields are used for positive amounts. 
+<p>
+<LI>ns_Zero  =If the number being processed is 0, then this string pointer us used as-is'andiscopieddirectlyintotheresultbuffer.'If this field is NULL, the number is formatted as if it were a positive number. 
+<p>
+<LI>ns_Flags =This is reserved for future use and must always be 0. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>locItem
+<DD>A Locale Item, as obtained from intlOpenLocale(). 
+</DL>
+<DL>
+<DT>spec
+<DD>The formatting template describing the number layout. This structure is typically taken from a Locale structure (loc_Numbers, loc_Currency, loc_SmallCurrency), but it can also be built up by the title for custom formatting. 
+</DL>
+<DL>
+<DT>whole
+<DD>The whole component of the number to format. (The part of the number to the left of the radix character.) 
+</DL>
+<DL>
+<DT>frac
+<DD>The decimal component of the number to format. (The part of the number to the right of the radix character.). This is specified in number of billionth. For example, to represent .5, you would use 500000000. To represent .0004, you would use 400000. 
+</DL>
+<DL>
+<DT>negative
+<DD>TRUE if the number is negative, and FALSE 
+<DD>if the number is positive. 
+</DL>
+<DL>
+<DT>doFrac
+<DD>TRUE if a complete number with a decimal mark and decimal digits is desired. FALSE if only the whole part of the number should be output. 
+</DL>
+<DL>
+<DT>result
+<DD>Where the result of the formatting is put. 
+</DL>
+<DL>
+<DT>resultSize
+<DD>The number of bytes available in the result buffer. This limits the number of bytes which are put into the buffer. 
+</DL>
+<H3>Return Value</H3>
+If positive, then the number of characters in the result buffer. If negative, then an error code. The string copied into the result buffer is guaranteed to be NULL-terminated. <P>
+greater than or equal to 0  Number of characters copied. <P>
+INTL_ERR_BADNUMERICSPEC - The pointer to the NumericSpec structure  was bad. <P>
+INTL_ERR_NORESULTBUFFER-  "result" was NULL. <P>
+INTL_ERR_BUFFERTOOSMALL - There was not enough room in the result buffer. <P>
+INTL_ERR_BADITEM loc- Item was not an existing Locale Item. <P>
+<H3>Implementation</H3>
+Folio call implemented in international folio V24. <P>
+<H3>Associated Files</H3>
+intl.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./06spr008.html#XREF34028"><CODE>intlOpenLocale</A>(), <A HREF="./06spr004.html#XREF13956">intlFormatDate</A>() </CODE><P>
+</CODE>

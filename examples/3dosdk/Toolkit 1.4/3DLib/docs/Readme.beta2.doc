@@ -1,0 +1,96 @@
+3Dlib-Beta 2 Release, June 25, 1993
+
+WARNING:
+
+Since you are receiving the source code you have authority to modify
+it as needed. But be forwarned that the code will be updated regularly.
+
+If you use our library as supplied you have our support. If you
+modify it, you're on your own.
+
+Installation :
+
+All deliverables go into the source directory, except for the 3 image 
+files, "backdrop.3do", "sw.cel", "alt.cel" which go into the directory
+used to execute the examples (probably "remote"), and 3d.lib
+which goes into the library folder. There is one sound, "Rumble.aiff", that
+needs to be put into "remote/aiff".
+
+Compiling this stuff:
+
+In order to compile the examples and library, merely set your MPW
+directory to the 3dlib directory. MPW should then search for
+"Makefile" and will add to the Build menu "3d_example1", "3d_example2",
+"3d_example3", "3d_example4", and "td". 
+
+Make sure that you have a directory called "objects" in each of the 
+folders.
+
+If you want to rebuild the library, you will need ARMlib.
+
+Beta2 release deliverables :
+
+    Background 3do file, two cel files:
+
+		backdrop.3do
+		sw.cel
+		alt.cel
+
+    the sound :
+ 
+        Rumble.aiff
+
+   	library :
+
+		3d.lib
+   		liblist       (list of object files for the library builder, "armlib")
+
+  	3dlib source code:
+
+        stack.i       (should be in the normal include files)
+        3dlib.i
+        3dlib.h
+        math.s
+        viewmatrix.s
+        userdefs3d.i
+        userdefs3d.h
+		math_3d.s
+		manage_3d.c
+		misc_3d.s
+		process_3d.c
+		misc_3d.c
+		render_3d.c
+        sound_3d.h
+
+    3dlib object modules  (sound_3d.c is proprietary)
+
+        sound_3d.o
+
+	example source code:
+
+        shapes.h
+        3d_examples.h
+        3d_example1.make
+		3d_exmaple1_core.c
+		3d_exmaple1_stuff.c
+        3d_example2.make
+		3d_example2_core.c
+		3d_example2_stuff.c
+        3d_example3.make
+        3d_example3_core.c
+        3d_example3_stuff.c
+        3d_example4.make
+		3d_exmaple4_core.c
+		3d_exmaple4_stuff.c
+
+    Documentation:
+
+	    This document (Readme.beta2)
+        coding standards
+		3d_exmaple1.doc
+		3d_exmaple2.doc
+		3d_exmaple3.doc
+		3d_exmaple4.doc
+
+
+   

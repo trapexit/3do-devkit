@@ -1,0 +1,35 @@
+<TITLE>Creating and editing a P-Mode preset</TITLE>
+<H1><LINK NAME="XREF22545">Creating and editing a P-Mode preset</LINK></H1><HR>
+When you save a cel with a P-Mode mask, the 3DO CelWriter offers several P-Mode presets in the P-Mode settings pop-up menu.<P>
+At times, the available P-Mode presets will not result in the effect you want. In that case, you can edit an existing P-Mode preset or create a new one.<P>
+This section helps you work with P-Mode presets and discusses:<P>
+
+<UL>
+<LI><A HREF="#XREF15451">How to create a P-Mode preset</A>
+<LI><A HREF="#XREF35227">Which cels allow P-Mode</A>
+</UL>
+<DL>
+<DD><B>Note: </B>For more information on which cels allow P-Mode, see "Tools for 3DO Art Production," in "Introduction to 3DO Graphics" in this manual.<BR>
+</DL>
+<A NAME="XREF15451"><H2>How to create a P-Mode preset</A></H2>
+To create a new P-Mode Preset follow these steps:<P>
+<OL>
+<LI>Start a save process to display the CelWriter dialog. 
+<p>
+
+<LI>Click New in the P-Mode Settings box in the bottom left of the dialog. 
+<p>
+<p>The P-Mode Preset dialog appears. 
+<p>
+
+<IMG SRC="Figures/PLU3.figs/CreatePreset.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>P-Mode Preset dialog.</I><P>
+
+<LI>Give the new P-Mode preset a name, then adjust the settings in the dialog that appears for the desired effect.
+</OL>
+<A NAME="XREF35227"><H2>Which cels allow P-Mode </A></H2>
+You can create a P-Mode channel for uncoded 16-bit cels and for coded 6-bit, 4-bit, 2-bit, and 1-bit cels. However, if there are a lot of colors where you place the mask in the original image, you may potentially lose a lot of color resolution since P-Mode for the listed coded cel types is effectively computed on a per-color basis. <P>
+For 8-bit coded cels, there is no special P-Mode bit. However, the P-Mode pop-up menus in the Coded-8 CelWriter are provided as a convenience for the programmer. The programmer may decide to flip between P-Mode 1 and P-Mode 0 for the whole cel as part of the program. For example, the program could alternate between an opaque ghost and a translucent ghost if the two P-Modes had previously been specified. <P>
+<H2>For more information </H2>
+For more detail on how the hardware uses two data sources and uses multipliers and dividers, see <I>Introduction to 3DO Graphics</I> in this volume. <P>

@@ -1,0 +1,24 @@
+<Title>SRectFromCel</Title>
+<A NAME="XREF24124"><H1>SRectFromCel </A></H1>
+ Returns SRect describing cel as currently projected.<P>
+<H3>Synopsis</H3>
+<CODE>SRect * SRectFromCel (SRect *dst, CCB *cel)</CODE><P>
+<H3>Description</H3>
+Calculates the rectangle occupied by a cel as projected and stores the results into *dst. If the cel is projected to a non-rectangular shape the results will be invalid. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>dst
+<DD>Pointer to an SRect where the results are to be stored. 
+</DL>
+<DL>
+<DT>cel
+<DD>Pointer to the cel. 
+</DL>
+<H3>Return Value</H3>
+The input parameter dst. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO048.html#XREF28764"><CODE>CRectFromCel</A> </CODE><P>

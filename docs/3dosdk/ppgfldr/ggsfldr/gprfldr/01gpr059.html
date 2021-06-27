@@ -1,0 +1,26 @@
+<Title>SetClipHeight </Title>
+<A NAME="XREF10063"><H1>SetClipHeight </A></H1>
+<A NAME="XREF33799"> Sets the clip height of a bitmap.</A><P>
+<H3>Synopsis</H3>
+<CODE>Err SetClipHeight (Item bitmapItem,int32 clipHeight)</CODE><P>
+<H3>Description</H3>
+This call uses the clipHeight argument to set the clip height of the bitmap specified by the bitmapItem argument. The clipHeight must be no greater than the height of the bitmap's buffer.<P>
+After setting the clip width and height, rendering to the bitmap (both with the rendering primitives and with calls to the cel engine) is clipped to stay within the clip rectangle. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>bitmapItem
+<DD>Item number of a bitmap structure. 
+</DL>
+<DL>
+<DT>clipHeight
+<DD>Value for the new clip height for the bitmap. 
+</DL>
+<H3>Return Value</H3>
+The call returns 0 if successful or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr061.html#XREF41634"><CODE>SetClipWidth</A>(), <A HREF="./01gpr060.html#XREF42733">SetClipOrigin</A>() </CODE><P>
+</CODE>

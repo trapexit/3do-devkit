@@ -1,0 +1,45 @@
+<TITLE>ReplyMsg</TITLE>
+<A NAME="XREF31623"><H1>ReplyMsg </A></H1>
+<A NAME="XREF28274"></A>Sends a reply to a message.<P>
+<H3>Synopsis</H3>
+<CODE>Err ReplyMsg( Item msg, int32 result, const void *dataptr,int32 datasize )</CODE><P>
+<H3>Description</H3>
+This procedure sends a reply to a message. <P>
+When replying to a message, send back the same message item you received. (Think of this as sending a reply in the same envelope as the original letter.) Note that you must include a result code (which you provide in the result argument). <P>
+The meanings of the dataptr and datasize arguments depend on the type of the original message. (You can find out what type of message it is by looking at its msg.n_Flags field. If it is a small message, the value of the field is MESSAGE_SMALL. If it is a buffered message, the value of the field is MESSAGE_PASS_BY_VALUE.) <P>
+<UL>
+<LI>If the original message was a small message, the dataptr and datasize are put in the corresponding fields of the message as eight bytes of data. 
+<LI>If the original message was a standard message, these refer to a data block that your task allocates for returning reply data. For standard messages, the sending task and the replying task must each allocate their own memory blocks for message data. If the message was also buffered, the data is copied into the internal buffer of the message. 
+</UL>
+<H3>Arguments</H3>
+<DL>
+<DT>msg
+<DD>The item number of the message. Note: The reply message item must be same message item that was received. 
+</DL>
+<DL>
+<DT>result
+<DD>A result code. This code is placed in the msg_Result field of the message data structure before the reply is sent. Note: There are no standard result codes currently defined; the code must be a value whose meaning is agreed upon by the calling and receiving tasks. In general, you should use negative values to specify errors and 0 to specify that no error occurred. 
+</DL>
+<DL>
+<DT>dataptr
+<DD>See the "Description" section above for a description of this argument. If the message is not buffered, set this to 0. 
+</DL>
+<DL>
+<DT>datasize
+<DD>See the "Description" section above for a description of this argument. If the message is not buffered, set this to 0. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the reply was sent successfully or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+SWI implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>msgport.h
+<DD>ANSI C Prototype
+</DL>
+<H3>Notes</H3>
+Most programs handle only one type of message per message port. Each type of message moves information in a different way; programs choose a particular message type to meet their specific needs. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr075.html#XREF37256"><CODE>GetMsg</A>(), <A HREF="./01spr083.html#XREF31956">GetThisMsg</A>(), <A HREF="./01spr114.html#XREF39369">ReplySmallMsg</A>(), <A HREF="./01spr122.html#XREF17036">SendMsg</A>(), <A HREF="./01spr124.html#XREF40209">SendSmallMsg</A>(), <A HREF="./01spr132.html#XREF19568">WaitPort</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF31623"></LINK></H1><HR>

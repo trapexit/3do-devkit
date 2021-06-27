@@ -1,0 +1,32 @@
+<Title>ReadFile</Title>
+<A NAME="XREF13085"><H1>ReadFile </A></H1>
+ Reads a file or a portion of one into memory<P>
+<H3>Synopsis</H3>
+<CODE>int ReadFile (char *filename, int32 size, long *buffer, long offset)</CODE><P>
+<H3>Description</H3>
+<CODE>ReadFile()</CODE> uses the file system to read a file or a portion of a file into memory. It performs up to four retries on each block read if the filesystem returns an error. <P>
+<CODE>ReadFile()</CODE> is useful for loading a portion of a file, optionally starting at some offset into the file. For loading an entire file starting at offset zero, the <CODE>LoadFile()</CODE> function is three to four times faster. <P>
+<CODE>ReadFile() </CODE>fills the buffer with size bytes, beginning at offset. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>filename
+<DD>Pointer to a string containing a valid pathname for a file in the currently mounted file system. 
+</DL>
+<DL>
+<DT>size
+<DD>Number of bytes to read. 
+</DL>
+<DL>
+<DT>buffer
+<DD>Pointer to a buffer into which the data will be read. Must be large enough to hold size bytes. 
+</DL>
+<DL>
+<DT>offset
+<DD>Offset from the beginning of the file at which the read begins. 
+</DL>
+<H3>Return Value</H3>
+The number of bytes read, or -1 if an error occurred. <P>
+<H3>Associated Files</H3>
+lib3do.lib, parse3do.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO115.html#XREF27218"><CODE>LoadFile</A> </CODE><P>

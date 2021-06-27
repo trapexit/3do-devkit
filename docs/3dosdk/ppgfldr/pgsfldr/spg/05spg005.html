@@ -1,0 +1,15 @@
+<TITLE>Allowing Other Tasks to Write to Your Memory</TITLE>
+<H1><LINK NAME="XREF35872">Allowing Other Tasks to Write to Your Memory</LINK></H1><HR>
+When a task owns memory, other tasks cannot write to that memory unless the task gives them permission. To give another task permission to write to one or more of your memory pages, or to revoke write permission that was previously granted, call <CODE>ControlMem():</CODE><P>
+<DL>
+<DD><CODE>Err ControlMem( void *p, int32 size, int32 cmd, Item task )</CODE><BR>
+</DL>
+Each page of memory has a control status that specifies which task owns the memory and which tasks can write to it. Calls to <CODE>ControlMem()</CODE> change the control status for entire pages. The <CODE>p</CODE> argument, a pointer to a memory location, and the <CODE>size</CODE> argument, the amount of the contiguous memory, in bytes, beginning at the memory location specified by the <CODE>p</CODE> argument, specify which memory control status to change. If p and size arguments specify any part of a page, changes are made to the entire page. The <CODE>task</CODE> argument specifies which task to change the control status for. You can make multiple calls to <CODE>ControlMem()</CODE> to change the control status for more than one task. The <CODE>cmd</CODE> argument is a constant that specifies the change to be made to the control status. The possible values are given below:<P>
+ <UL>
+<LI><B>MEMC_OKWRITE</B>. Grants permission to write to the memory of the task specified by the <CODE>task</CODE> argument. Currently, a task argument value of 0 is not supported for this operation.
+<p>
+<LI><B> MEMC_NOWRITE</B>. Revokes permission to write to the memory from the task specified by the task argument. A task argument value of 0 revokes the write permission for all tasks.
+</UL>
+(One other possible value, <CODE>MEMC_GIVE</CODE>, is described in the next section.)<P>
+For a task to change the control status of memory pages with <CODE>ControlMem()</CODE>, it must own that memory, with one exception: a task that has write access to memory it doesn't own can relinquish its write access using <CODE>MEMC_NOWRITE</CODE> as the value of the <CODE>cmd</CODE> argument.<P>
+A task can use <CODE>ControlMem()</CODE> to prevent itself from writing to memory that it owns, which is useful during debugging.<A NAME="XREF39785"></A><P>

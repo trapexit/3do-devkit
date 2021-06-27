@@ -1,0 +1,32 @@
+<HTML><HEAD><TITLE>What are the Effects of Non-Object-Oriented Design?</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>What are the Effects of Non-Object-Oriented Design?</H2>
+<P>The STL portion of the Standard C++ Library was purposely designed with an architecture that is not object-oriented.  This design has side effects, some advantageous, and some not, that developers must be aware of as they investigate how to most effectively use the library.  We'll discuss a few of them here.</P>
+<UL><LI><P><B>Smaller Source Code</B></P>
+</LI>
+<P>There are approximately fifty different algorithms in the STL, and about a dozen major data structures.  This separation has the effect of reducing the size of source code, and decreasing some of the risk that similar activities will have dissimilar interfaces.  Were it not for this separation, for example, each of the algorithms would have to be re-implemented in each of the different data structures, requiring several hundred more member functions than are found in the present scheme.</P>
+<LI><P><B>Flexibility</B></P>
+</LI>
+<P>One advantage of the separation of algorithms from data structures is that such algorithms can be used with conventional C++ pointers and arrays.  Because C++ arrays are not objects, algorithms encapsulated within a class hierarchy seldom have this ability.</P>
+<LI><P><B>Efficiency</B></P>
+</LI>
+<P>The STL in particular, and the  Standard C++ Library in general, provide a low-level, "nuts and bolts" approach to developing C++ applications.   This low-level approach can be useful when specific programs require an emphasis on efficient coding and speed of execution.</P>
+<LI><P><B>Iterators:  Mismatches and Invalidations</B></P>
+</LI>
+<P>The Standard C++ Library data structures use pointer-like objects called iterators to describe the contents of a container.  (These are described in detail in <a href="ite_2271.htm">Chapter 2</a>.)  Given the library's architecture, it is not possible to verify that these iterator elements are matched; i.e., that they are derived from the same container.  Using (either intentionally or by accident) a beginning iterator from one container with an ending iterator from another is a recipe for certain disaster.</P>
+<P>It is very important to know that iterators can become invalidated as a result of a subsequent insertion or deletion from the underlying container class.  This invalidation is not checked, and use of an invalid iterator can produce unexpected results.</P>
+<P>Familiarity with the Standard C++ Library will help reduce the number of errors related to iterators.</P>
+<LI><P><B>Templates:  Errors and "Code Bloat"</B></P>
+</LI>
+<P>The flexibility and power of templatized algorithms are, with most compilers, purchased at a loss of precision in diagnostics.  Errors in the parameter lists to generic algorithms will sometimes show up only as obscure compiler errors for internal functions that are defined many levels deep in template expansions.  Again, familiarity with the algorithms and their requirements is a key to successful use of the standard library. </P>
+<P>Because of its heavy reliance on templates, the STL can cause programs to grow larger than expected.  You can minimize this problem by learning to recognize the cost of instantiating a particular template class, and by making appropriate design decisions.  Be aware that as compilers become more and more fluent in templates, this will become less of a problem.</P>
+<LI><P><B>Multithreading Problems</B></P>
+</LI>
+<P>The Standard C++ Library must be used carefully in a multithreaded environment.  Iterators, because they exist independently of the containers they operate on, cannot be safely passed between threads.  Since iterators can be used to modify a non <SAMP>const</SAMP> container, there is no way to protect such a container if it spawns iterators in multiple threads.  Use "thread-safe" wrappers, such as those provided by <I>Tools.h++</I>, if you need to access a container from multiple threads.</P>
+</UL>
+<HR>
+<A HREF="doe_3822.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="how_0483.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>
+

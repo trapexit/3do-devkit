@@ -1,0 +1,45 @@
+<Title>MakeName</Title>
+<A NAME="XREF27891"><H1>MakeName</A></H1>
+<A NAME="XREF27096"></A>Creates a name string.<P>
+<H3>Synopsis</H3>
+<CODE>char* MakeName (char* outputNameBuf, int32 maxNameLen, char* baseNameString, int32 uniqueID)</CODE><P>
+<H3>Description</H3>
+Creates a name string from the specified prefix and unique identifier. <CODE>MakeName()</CODE> is used in the DataStreamer to create names for threads and semaphores.<P>
+<CODE>MakeName()</CODE> does not check whether the name it creates is actually unique. <P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>outputNameBuf</CODE>
+<DD>Pointer assigned to the unique name.
+</DL>
+<DL>
+<DT><CODE>maxNameLen</CODE>
+<DD>Length of the unique name.
+</DL>
+<DL>
+<DT><CODE>baseNameString</CODE>
+<DD>Character string used as a prefix to the unique name.
+</DL>
+<DL>
+<DT><CODE>uniqueID</CODE>
+<DD>Unique number.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+<DD>
+</DL>
+<DL>
+<DT>(Pointer to the name string)
+<DD>None
+<DD>
+</DL>
+<DL>
+<DT><CODE>NULL</CODE>
+<DD>Length of name exceeded maxNameLen
+<DD>
+</DL>
+<H3>Associated Files</H3>
+MakeName.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR052.html#XREF35522"><CODE>NewTextSubscriber</A></CODE><P>

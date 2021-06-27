@@ -1,0 +1,31 @@
+<TITLE>Building a target-specific library</TITLE>
+<H1><LINK NAME="XREF40283">Building a target-specific library</LINK></H1><HR>
+When the target-dependent files have been provided, construction of a library proceeds as follows:<P>
+<CODE>
+<PRE>
+cd util
+cc -o makemake makemake.c
+</CODE>
+</PRE>
+<CODE>(Since makemake is written portably in 'classic' C it should just compile and go. The options to C compilers vary, but most support this way of making an executable program call</CODE>ed <I>makemake</I> <CODE>from the source</CODE> <I>makemake.c</I>)<P>
+<CODE>
+<PRE>
+cd ..
+util\makemake targetdir [hostdir]
+</CODE>
+</PRE>
+<CODE>(</CODE><I>hostdir</I><CODE> is needed only if it is different from </CODE><I>targetdir</I><CODE>) (under DOS, use </CODE><I>util/makemake</I><CODE> ...)</CODE><P>
+<CODE>
+<PRE>
+cd hostdir
+make depend
+</CODE>
+</PRE>
+<CODE>(this augme</CODE>nts <I>Makefile</I>; as a si<CODE>de-effect it also makes the assembler-sourced objects.)</CODE><P>
+<CODE>
+<PRE>
+make
+</CODE>
+</PRE>
+<CODE>(this makes </CODE><I>armlib.o</I><CODE> ... if everything succeeds).</CODE><P>
+<P>

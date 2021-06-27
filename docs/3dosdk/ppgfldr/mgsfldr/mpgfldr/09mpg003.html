@@ -1,0 +1,42 @@
+<TITLE>An Overview of the MIDI Score-Playing Process</TITLE>
+<H1>An Overview of the MIDI Score-Playing Process</H1><HR>
+This section shows how a task uses the components of the MIDI environment to play back a MIDI score. A task typically follows these steps:<P>
+<OL>
+<LI>Open the Audio and Math folios and initialize the Juggler. This opens the Audio and Music folios so that the Music library can use instruments, the audio clock, and math functions. It also sets up the Juggler to handle MIDI playback.
+<p>
+<LI>Create a MIDI environment.
+<p>
+<UL>
+<LI>Set the maximum number of voices and programs available. This limits the number of instrument templates and DSP resources required.
+<p>
+<LI>Create a <CODE>ScoreContext</CODE> data structure. This step also includes creating attendant data structures such as <CODE>ScoreChannel</CODE> data structures.
+<p>
+<LI>Create a PIMap. This step imports the necessary instrument templates and then associates them with corresponding program numbers.
+<p>
+<LI>Create a mixer for connecting voice output to the D to A input. This step also creates the <CODE>NoteTracker</CODE> data structures necessary for allocating voices, and allocates system amplitude for the mixer.
+</UL><BR>
+<p>
+<LI>Import a MIDI score file.
+<p>
+<UL>
+<LI>Import a MIDI file from CD-ROM or other source. This translates MIDI messages and places them in a Juggler sequence or collection. It also sets up an interpreter procedure for the Juggler object that correctly interprets the MIDI messages in the object.
+<p>
+<LI>Specify a score context for the imported score. This sets a pointer in the Juggler object to the score context necessary for playback.
+</UL><BR>
+<p>
+<LI>Adjust score timing to match the MIDI song tempo. This step either sets the audio clock to an appropriate rate, or it scales MIDI timestamps for each score event.
+<p>
+<LI>Play the score in a <CODE>BumpJuggler()</CODE> loop.
+<p>
+<LI>Clean up.
+<p>
+<UL>
+<LI>Free allocated amplitude.
+<LI>Reset the audio clock.
+<LI>Delete all the instrument templates.
+<LI>Delete the score context and attendant data structures.
+<LI>Terminate the Juggler.
+<LI>Close the Math and Audio folios.
+</UL><BR>
+</OL>The following sections discuss the details for each of these steps.<P>
+<P>

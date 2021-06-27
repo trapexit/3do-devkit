@@ -1,0 +1,23 @@
+#
+#		The following script will convert a quick time movie into a 
+#		compact video stream file.
+#
+#		Parameters:
+#			First Parameter:  a sound file with no extension.  .AIFF is supplied by the script
+#			Second Parameter: a quick time movie file - the complete file name, including extension, is needed
+#		
+#		Output:
+#			a compact video movie file, ending with a .FILM extension
+#
+#
+set exit 0
+squashsnd -vb -if {1}.aiff -of {1}.aifc
+SFtoStream -cs 16384 -if {1}.aifc -of {1}.audio
+movietostream {2}	# quick time movie - must be compact video compressed, flattened
+echo "streamblocksize 32768" > {1}.WeaveScript
+echo "streamstarttime 0" >> {1}.WeaveScript
+echo "file {1}.audio 1 0" >> {1}.WeaveScript
+echo "file {2}.FILM 10 0" >> {1}.WeaveScript
+echo "markertime 7200" >> {1}.WeaveScript
+Weaver -v -o  {1}.Stream < {1}.WeaveScript
+set exit 1

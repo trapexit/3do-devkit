@@ -1,0 +1,23 @@
+<Title>MapCelListToCRect</Title>
+<A NAME="XREF32555"><H1>MapCelListToCRect </A></H1>
+ Maps a list of cels to a CRect.<P>
+<H3>Synopsis</H3>
+<CODE>void MapCelListToCRect (CCB *list, CRect *rect)</CODE><P>
+<H3>Description</H3>
+This function maps a list of cels to the specified rectangle. It is much faster than a standard <CODE>MapCel()</CODE> call because it only has to calculate a simple rectangular projection. It performs a <CODE>MapCelToCRect()</CODE> on the first cel in the list. It then adjusts the X/Y coordinates of the rest of the cels in the list such that all the cels maintain the same relative X/Y relationships to each other. It also copies the size and perspective fields from the first cel into all the rest of the cels in the list. The net effect is that the list of cels moves and scales as if it were a single unit. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>list
+<DD>Pointer to a list of one or more cels to be mapped. 
+</DL>
+<DL>
+<DT>rect
+<DD>Pointer to the CRect to which the cels are to be mapped. 
+</DL>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01LDO120.html#XREF38068"><CODE>MapAACelToCRect</A>, <A HREF="./01LDO130.html#XREF39397">MapCelToCRect</A> </CODE><P>
+</CODE>

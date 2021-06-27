@@ -1,0 +1,60 @@
+<Title>ScreenGroup</Title>
+<A NAME="XREF40854"><H1>ScreenGroup</A></H1>
+<A NAME="XREF25105"> A collection of one or more screens.</A><P>
+<H3>Description</H3>
+A screen group is a collection of one or more screens. <P>
+<H3>Folio</H3>
+graphics<P>
+<H3>Item Type</H3>
+SCREENGROUPNODE <P>
+<H3>Create</H3>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr008.html#XREF29335">CreateScreenGroup</A>()</CODE><P>
+<H3>Delete</H3>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr012.html#XREF42189"><CODE>DeleteScreenGroup</A>()</CODE><P>
+</CODE><H3>Use</H3>
+<CODE><A HREF="../../ggsfldr/gprfldr/01gpr001.html#XREF27310"><CODE>AddScreenGroup</A>(), <A HREF="../../ggsfldr/gprfldr/01gpr052.html#XREF35655">RemoveScreenGroup</A>()</CODE><P>
+</CODE><H3>Tags</H3>
+<DL>
+<DT>CSG_TAG_DISPLAYHEIGHT
+<DD>(uint32) Create. This optional tag lets you specify the visible height of each screen within the screen group. This determines the number of lines of the bitmaps that make up the screen will be visible at any one time. When this 
+</DL>
+<DL>
+<DT>CSG_TAG_SCREENCOUNT
+<DD>(uint32) Create. This optional tag lets you specify the number of screens to create within the screen group. If the tag is not supplied, then two screens is created.
+</DL>
+<DL>
+<DT>CSG_TAG_SCREENHEIGHT
+<DD>(uint32) Create. This optional tag lets you specify the number of lines that make up each screen within the screen group. When this tag is not supplied, the current default height is used.
+</DL>
+<DL>
+<DT>CSG_TAG_BITMAPCOUNT
+<DD>(uint32) Create. This optional tag lets you specify the number of bitmaps per screen. This tag should currently not be used.
+</DL>
+<DL>
+<DT>CSG_TAG_BITMAPWIDTH_ARRAY
+<DD>(uint32 *) Create. This optional tag provides a pointer to an array of width values, indicating the width of each bitmap. 
+</DL>
+<DL>
+<DT>CSG_TAG_BITMAPHEIGHT_ARRAY
+<DD>(uint32 *) Create. This optional tag provides a pointer to an array of height values, indicating the height of each bitmap.
+</DL>
+<DL>
+<DT>CSG_TAG_BITMAPBUF_ARRAY
+<DD>(void **) Create. This optional tag points to an array of pointers to memory buffers. This array must contain as many entries as the screen group has screens. The array points to the memory to use for bitmaps when creating the screen group. If this tag is not provided, the graphics folio will allocate memory for the bitmaps itself.
+</DL>
+<DL>
+<DT>CSG_TAG_VDLTYPE
+<DD>(uint32) Create. This optional tag specifies the type of VDL for each screen. 
+</DL>
+<DL>
+<DT>CSG_TAG_VDLPTR_ARRAY
+<DD>(uint32 **) Create. This tag maps the bitmaps to the video display lists. Each element of the array is a pointer to a VDL.
+</DL>
+<DL>
+<DT>CSG_TAG_VDLLENGTH_ARRAY
+<DD>(uint32 *) Create. This optional tag specifies the length in words for each custom VDL referenced by the CSG_TAG_VDLPTR_ARRAY.
+</DL>
+<DL>
+<DT>CSG_TAG_SPORTBITS
+<DD>(uint32) Create. Specifies the memory allocation bits to use when allocating memory for the screen group, which lets you control from which bank of VRAM an allocation comes from. If this tag is not supplied, the graphics folio will allocate the memory from any bank of VRAM. The values you supply to this tag are either <CODE>(MEMTYPE_BANKSELECT | MEMTYPE_BANK1)</CODE> or <CODE>(MEMTYPE_BANKSELECT | MEMTYPE_BANK2). 
+</DL>

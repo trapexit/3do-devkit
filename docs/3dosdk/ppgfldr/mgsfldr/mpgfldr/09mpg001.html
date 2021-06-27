@@ -1,0 +1,33 @@
+<TITLE>A Brief MIDI Review</TITLE>
+<H1><LINK NAME="XREF24854">A Brief MIDI Review</LINK></H1><HR>
+This section provides a review of MIDI basics as they apply to the Music library.<P>
+<H2>MIDI Channels</H2>
+Although MIDI was originally created to send musical events in live performance, it quickly evolved into a way to store timed musical events in a MIDI score. The simplest MIDI scores consist of a single sequence, an ordered list of consecutive MIDI messages that are sent out via MIDI cables to attached MIDI devices. Within that sequence, some MIDI messages can be transmitted to a specific <I>MIDI channel</I>.<P>
+MIDI channels (which range in number from 1 to 16) allow MIDI messages to be sent to specific devices within a MIDI network. Any connected MIDI device can be set to receive a specific channel; the device then responds only to MIDI messages specified for that channel. Other devices not set to that channel do not respond to those messages. For example, consider a synthesizer set to channel 5. It plays notes when it receives Note On messages for channel 5. It does not play notes when it receives Note On messages for channel 7 or any channels other than channel 5.<P>
+Today's synthesizers may combine the features of several polyphonic synthesizers into one device. As a result, one synthesizer can now listen to several MIDI channels simultaneously and devote many voices to each channel. The voices dedicated to a single channel all play using a single program, so they have the same timbre and sound like a single instrument. Each channel can be set to a different program, so the net result can be, on a single MIDI device, one instrument sound (a program) playing for each channel.<P>
+(The unfortunate MIDI term "program" seems designed to confuse, with different meanings for a programmer, who knows it as a piece of software, or for a classical musician, who knows it as a collection of musical pieces. In the world of MIDI, a  program is a preprogrammed sound design, the equivalent of an instrument template in the Audio folio. A  better word for program is "patch," but it is not commonly used in the world of MIDI, so "program" is used in this chapter.)<P>
+The Portfolio Music library sets up 3DO audio to act as a virtual MIDI device. This device is capable of receiving messages on many different MIDI channels, and can play using a different Audio folio instrument template (a different program) for the notes of each channel. It is useful to think of each channel specified within a sequence as a collection of notes to be played using a distinct instrument template. For example, channel 1 notes can be played using a sampled guitar template, while channel 2 notes can be played using a sawtooth wave template. The instrument template used by the channel can be changed at any time. For example, channel 1 can change from a sampled guitar template to a sampled piano template or to any other available instrument template.<P>
+<H2>Channel Messages</H2>
+MIDI channel messages (that is, MIDI messages that can be assigned to a specific channel) describe many common musical events. The most common messages include:<P>
+<UL>
+<LI><I>Note On</I> turns on a voice in a receiving instrument and sets the pitch and amplitude of the voice. The pitch ranges from 0 to 127, as does the amplitude.
+<p>
+<LI><I>Note Off</I> turns off a voice at a set pitch in a receiving instrument. The pitch specified can range from 0 to 127, and a second value from 0 to 127 can optionally set the release speed of the note.
+<p>
+<LI><I>Program Change</I> specifies a new program (numbered from 0 to 127) for all receiving instruments tuned to the channel.
+<p>
+<LI><I>Control Messages</I> specify a change to a real-time parameter such volume, panning, modulation, and so on. The score player presently only supports volume (controller 7), to set the overall volume of the channel,  and pan (controller 10), to pan the stereo location of the channel playback from left to right.
+<p>
+<LI><I>Pitch Bend Change</I> specifies an amount of pitch bend (from 0 to 16,383) to apply to all voices in a channel. A value of 8192 specifies no pitch bend. Values above specify bend above the original pitch, values below specify bend below the original pitch.
+</UL>
+There are many other types of MIDI messages, but the Music library is currently designed to respond only to the fundamental messages listed above. It ignores any other MIDI messages it receives during playback.<P>
+<H2>MIDI Score Playback</H2>
+The MIDI standard defines several different MIDI score formats. The Music library can work with two of these formats:<P>
+<UL>
+<LI>Format 0 contains a single sequence of MIDI events.
+<LI>Format 1 contains one or more sequences of MIDI events. Each sequence is called a <I>track.
+</UL>
+Within each track (sequence) contained in a score is a consecutive list of MIDI messages. Each track (sequence) can contain events for all 16 MIDI channels. Each message has a time value associated with it; the time is measured in relative units called </I><I>MIDI timing clocks</I>. MIDI traditionally defines a quarter note as equal to 24 clocks because 24 can be divided evenly by 2, 3, 4, 6, 8, and 12.<P>
+A MIDI score in playback is controlled by a series of MIDI timing clock messages sent to a sequencer that stores the score. The sequencer counts the MIDI clocks it receives and sends out the appropriate MIDI messages when it perceives the right amount of time has passed. For example, consider a sequence with a series of quarter notes. The sequencer plays the first quarter note when it receives the first MIDI timing clock message. Twenty-four timing clocks later, it plays the next quarter note. Twenty-four timing clocks after that, it plays the next quarter note. And so on, until there are no more notes left to play.<P>
+Because timing clocks are a completely relative time unit, the rate of the timing clocks sent to the sequencer controls the tempo of the score playback. Send clocks at a faster rate, and the score plays faster. Send clocks at a slower rate, and the score plays slower.<P>
+<A NAME="XREF13623"></A>

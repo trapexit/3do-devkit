@@ -1,0 +1,55 @@
+<Title>Template </Title>
+<H1><A NAME="XREF24399">Template </A></H1>
+ A description of an audio instrument.<P>
+<H3>Description</H3>
+A Template is the description of a DSP audio instrument (including the DSP code, resource requirements, parameter settings, etc.) from which Instrument items are created. A Template can either be a standard system instrument template (e.g. envelope.dsp, sampler.dsp, etc) or a custom template created by ARIA. <P>
+<H3>Folio</H3>
+audio <P>
+<H3>Item Type</H3>
+AUDIO_TEMPLATE_NODE <P>
+<H3>Create</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr018.html#XREF32118">CreateInsTemplate</A>()  </CODE><P>
+<CODE><A HREF="./01spr022.html#XREF15505">CreateItem</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr024.html#XREF26906">DefineInsTemplate</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr051.html#XREF12263">LoadInsTemplate</A>()  </CODE><P>
+ <P>
+<H3>Delete</H3>
+<CODE><A HREF="./01spr032.html#XREF18938">DeleteItem</A>()  </CODE><P>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr081.html#XREF38811">UnloadInsTemplate</A>()  </CODE><P> <P>
+<H3>Use</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/01mpr003.html#XREF24238">AdoptInstrument</A>()  </CODE><P>
+<H3>Tags</H3>
+<DL>
+<DT>AF_TAG_ALLOC_FUNCTION
+<DD>(void *(*)(uint32 memsize, uint32 memflags)) Create. Sets custom memory allocation function to be called during template creation for objects that can be created in user memory. Currently this only applies to samples embedded in ARIA instruments. Defaults to <CODE>AllocMem()</CODE>. If you supply a custom allocation function you must also provide a custom free function with AF_TAG_FREE_FUNCTION. 
+</DL>
+<DL>
+<DT>AF_TAG_DEVICE
+<DD>(Item) Create. Audio device Item for instrument template. 0 indicates the default audio device, the DSP, which is the only valid audio device item at the present time. 
+</DL>
+<DL>
+<DT>AF_TAG_FREE_FUNCTION
+<DD>(void (*)(void *memptr, uint32 memsize)) Create. Sets custom memory free function to be called during template deletion. Defaults to <CODE>FreeMem()</CODE>. If you supply a custom free function you must also provide a custom allocation function with AF_TAG_ALLOC_FUNCTION. 
+</DL>
+<DL>
+<DT>AF_TAG_IMAGE_ADDRESS
+<DD>(const char *) Create. Specifies a memory location containing a template file image. Must use in conjunction with AF_TAG_IMAGE_LENGTH. Mutually exclusive AF_TAG_NAME. 
+</DL>
+<DL>
+<DT>AF_TAG_IMAGE_LENGTH
+<DD>(uint32) Create. Specifies number of bytes in template file image pointed to by AF_TAG_IMAGE_ADDRESS. 
+</DL>
+<DL>
+<DT>AF_TAG_LEAVE_IN_PLACE
+<DD>(bool) Create. When TRUE and used in conjunction with AF_TAG_IMAGE_ADDRESS, causes any user memory objects read from the template file that would otherwise be copied into freshly allocated memory, to be used in-place (i.e. point to a part of the file image instead of allocating more memory). Currently this is only applies to samples embedded in an ARIA instrument. Mutually exclusive with AF_TAG_ALLOC_FUNCTION. See Sample Item and <CODE>CreateSample()</CODE> for more details and caveats. 
+</DL>
+<DL>
+<DT>Note that sample data may have to be moved down two bytes to align it properly for Portfolio DMA. This will destroy the sample image so that it cannot be reused. 
+</DL>
+<DL>
+<DT>AF_TAG_NAME
+<DD>(const char *) Create. Name of template file to load. Mutually exclusive with AF_TAG_IMAGE_ADDRESS. 
+</DL>
+<H3>See Also</H3>
+<CODE><A HREF="./09spr009.html#XREF16655"><CODE>Instrument</A>, <A HREF="./09spr001.html#XREF27996">Attachment</A> </CODE><P>
+</CODE>

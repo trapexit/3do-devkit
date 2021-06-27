@@ -1,0 +1,44 @@
+<TITLE>Controlling the Audio Clock</TITLE>
+<H1><LINK NAME="XREF25381">Controlling the Audio Clock</LINK></H1><HR>
+When a task uses the audio clock to time audio events, it expects a default audio clock frequency of about 239.674 Hz. At that frequency, each audio tick lasts 184 DSP sample frames (approximately 4.172 milliseconds).<P>
+If a task wants to change that frequency for speeding up or slowing down clock-defined audio events or for getting finer or coarser timing control, the task must ask first to own the clock. It can then change the frequency by directly stating a new frequency or by defining a new audio tick duration in DSP frames. As long as the task owns the clock, no other task can change the clock's frequency.<P>
+<H2>Owning the Audio Clock</H2>
+To make a task the owner of the audio clock, use this call:<P>
+<DL>
+<DD><CODE>Item OwnAudioClock( void )</CODE><BR>
+</DL>
+It accepts no arguments and, when it executes, assigns clock ownership to the calling task. <CODE>OwnAudioClock()</CODE> returns the item number of a semaphore used to claim clock ownership. If unsuccessful, <CODE>OwnAudioClock()</CODE> returns a negative value (an error code). Store the returned semaphore item number; you need it to be able to make clock-changing calls.<P>
+Once a task owns the audio clock, that task alone can change the frequency of the clock. You may want your task to take ownership of the audio clock even if you do not want to change the clock rate. As owner of the clock, you can be sure that no other tasks can unexpectedly change the clock rate, an important safeguard if a stable clock rate is essential to the task's timing.<P>
+When a task is no longer concerned with the audio clock rate, it should give up ownership of the clock so that other tasks can own the clock if necessary. To do so, use this call:<P>
+<DL>
+<DD><CODE>Err DisownAudioClock( Item Owner )</CODE><BR>
+</DL>
+The call accepts the item number of the clock semaphore. When executed, it takes back audio clock ownership from the calling task and makes clock ownership available to other tasks. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<H2>Setting the Audio Clock Rate</H2>
+Once a task owns the audio clock, it can change the clock's frequency by directly specifying a new frequency or by specifying the length of each audio tick. To directly specify a new frequency, use this call:<P>
+<DL>
+<DD><CODE>Err SetAudioRate( Item Owner, frac16 Rate )</CODE><BR>
+</DL>
+The call accepts two arguments: the item number of the clock semaphore and a frequency specified as a 16.16 value. The frequency must fall within the range of 60 to 1000 Hz.<P>
+When it executes, <CODE>SetAudioRate()</CODE> checks the semaphore number to be sure that it specifies clock ownership and, if so, the call changes the audio clock rate to the specified new frequency. If successful, <CODE>SetAudioRate()</CODE> returns 0; if unsuccessful, it returns a negative value (an error code).<P>
+If you set a high clock rate, the system performance can suffer. Try not to go much higher than 500 Hz.<P>
+A task that does not own the clock can successfully use this call as long as it has the proper semaphore item number. This means that the clock owning task can pass that number to a cooperating task (a thread or child task, for example) so that the second task can change the audio rate.<P>
+<H2>Setting Audio Tick Duration</H2>
+A task can also change the audio clock frequency by specifying the length of the audio tick duration in DSP frames. To do so, use this call:<P>
+<DL>
+<DD><CODE>Err SetAudioDuration( Item Owner, uint32 Frames )</CODE><BR>
+</DL>
+The call accepts the item number of the clock semaphore and the number of frames for which each audio tick should last. Tick duration can range from a minimum of 44 frames (which sets the frequency to approximately 1000 Hz) to a maximum of 735 frames (which sets the frequency to 60 Hz).<P>
+When it executes, <CODE>SetAudioDuration()</CODE> checks the semaphore number to be sure that it specifies clock ownership and, if so, changes the duration of the audio tick to the specified number of frames. If successful, the call returns 0; if unsuccessful, it returns a negative value (an error code).<P>
+<CODE>SetAudioDuration()</CODE> has the same setting limitations as <CODE>SetAudioRate()</CODE>. If you set a tick duration that's too short, the system performance can suffer. Note that <CODE>SetAudioDuration()</CODE> also accepts the correct ownership item from any task, so the clock owning task can pass that number to another cooperating task if it wishes.<P>
+<H2>Checking the Current Audio Clock Setting</H2>
+If you need to know the audio clock's current frequency, use this call:<P>
+<DL>
+<DD><CODE>frac16 GetAudioRate( void )</CODE><BR>
+</DL>
+The call accepts no arguments and returns the current frequency of the audio clock in Hertz as a 16.16 value.<P>
+To check the current duration of an audio tick, use this call:<P>
+<DL>
+<DD><CODE>uint32 GetAudioDuration( void )</CODE><BR>
+</DL>
+The call accepts no arguments and returns the current duration in DSP frames of an audio tick.<P>

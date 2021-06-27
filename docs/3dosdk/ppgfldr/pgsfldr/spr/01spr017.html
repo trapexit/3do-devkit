@@ -1,0 +1,33 @@
+<Title>CloseNamedDevice</Title>
+<A NAME="XREF21978"><H1>CloseNamedDevice </A></H1>
+<A NAME="XREF29005"></A>Closes a device previously opened with OpenNamedDevice().<P>
+<H3>Synopsis</H3>
+<CODE>Err CloseNamedDevice(Item devItem);</CODE><P>
+<H3>Description</H3>
+This macro closes a device that was previously opened via a call to <CODE>OpenNamedDevice()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>devItem
+<DD>The device's item, as returned by OpenNamedDevice().
+</DL>
+<H3>Return Value</H3>
+The procedure returns 0 if the item was closed successfully or an error code (a negative value) if an error occurs. Possible error codes include: <P>
+<DL>
+<DT>BADITEM
+<DD>The devItem argument is not an item. 
+</DL>
+<DL>
+<DT>ER_Kr_ItemNotOpen
+<DD>The devItem argument is not an opened item. 
+</DL>
+<H3>Implementation</H3>
+Macro implemented in device.h V22. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>device.h
+<DD>ANSI C Macro
+</DL>
+<H3>See Also</H3>
+<A HREF="./01spr104.html#XREF35423">OpenItem</A>(), <A HREF="./01spr016.html#XREF39128">CloseItem</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF21978"></LINK></H1><HR>

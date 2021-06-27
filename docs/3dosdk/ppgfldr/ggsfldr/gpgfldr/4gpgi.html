@@ -1,0 +1,21 @@
+<TITLE>Display Timing Calls</TITLE>
+<H1>Display Timing Calls</H1><HR>
+If you have other task activities that you want to coordinate with the frame display, you can use the timer device to inform the task when a vertical blank occurs. The task can enter a wait state until it receives notice of the vertical blank, or it can continue execution while it waits.<P>
+<H2>Getting a VBL IOReq</H2>
+To use VBL timing calls, a task must first have an IOReq to communicate with the timer. To get one, use this convenience call:<P>
+<CODE><DL>
+<DD><CODE>Item GetVBLIOReq( void )</CODE><BR>
+</DL>
+</CODE>It accepts no arguments, and when it executes, it creates an IOReq for the timer. It returns the item number of that IOReq if successful, or a negative value (an error code) if unsuccessful. Save the item number for use with the VBL timing calls.<P>
+<H2>Waiting for a VBL Frame</H2>
+Once a task has a VBL IOReq, it can call on the timer to wait for a vertical blank. To do so, it uses this call:<P>
+<CODE><DL>
+<DD><CODE>Err WaitVBL( Item ioreq, uint32 numfields )</CODE><BR>
+</DL>
+</CODE>It accepts the item number of the VBL IOReq and the number of vertical blank fields the task should wait for before becoming active again. It returns a zero if successful, and a negative value (an error code) if unsuccessful.<P>
+To allow a task to continue execution while the timer processes the IOReq sent to it, use this call:<P>
+<CODE><DL>
+<DD><CODE>Err WaitVBLDefer( Item ioreq, uint32 numfields )</CODE><BR>
+</DL>
+</CODE>It accepts the same arguments as <CODE>WaitVBL()</CODE>, but, when executed, allows the task to continue execution while the IOReq is outstanding. If the task wants to be notified of the timing call's completion, use the <CODE>WaitIO()</CODE> call.<P>
+<A NAME="XREF13296"></A>

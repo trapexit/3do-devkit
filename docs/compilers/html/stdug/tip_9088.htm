@@ -1,0 +1,57 @@
+<HTML><HEAD><TITLE>Tips and Techniques for Building Algorithms</TITLE></HEAD>
+<BODY>
+<A HREF="ug.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the user guide home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>Tips and Techniques for Building Algorithms</H2>
+<P>This sections describes some techniques that use features of iterators to increase the flexibility and efficiency of your algorithms.</P>
+<A NAME="theiterator_categoryprimitive"><H3>The iterator_category Primitive</H3></A>
+<P>Sometimes an algorithm that can be implemented most efficiently with a random access iterator can also work with less powerful iterators.  The Standard C++ Library includes primitives that allow a single algorithm to provide several different implementations, depending upon the power of the iterator passed into it.  The following example demonstrates the usual technique for setting up multiple versions of the same algorithm.</P>
+<PRE>
+// Note, this requires that the iterators be derived from 
+// Standard base types, unless the iterators are simple pointers.
+
+namespace my_namespace {
+
+template &#60;class Iterator>
+Iterator union(Iterator first1, Iterator last1,
+               Iterator first2, Iterator last2,
+               Iterator Result)
+{  
+  return union_aux(first1,last1,first2,last2,Result,
+                   iterator_category(first1));
+}
+
+template &#60;class Iterator>
+Iterator union_aux(Iterator first1, Iterator last1,
+               Iterator first2, Iterator last2,
+               Iterator Result, forward_iterator_tag)
+{
+  // General but less efficient implementation
+}
+
+template &#60;class Iterator>
+Iterator union_aux(Iterator first1, Iterator last1,
+               Iterator first2, Iterator last2,
+               Iterator Result,                     
+               random_access_iterator_tag)
+{
+  // More efficient implementation
+}
+
+} // End of my_namespace
+</PRE>
+<P>The iterator primitive <SAMP>iterator_category()</SAMP> returns a tag that selects and uses the best available implementation of the algorithm.  In order for <SAMP>iterator_category()</SAMP> to work, the iterator provided to the algorithm must be either a simple pointer type, or derived from one of the basic Standard C++ Library iterator types.  When you use the <SAMP>iterator_category()</SAMP> primitive, the default implementation of the algorithm should expect at most a forward iterator.  This default version will be used if the algorithm encounters an iterator that is not a simple pointer or derived from a basic standard iterator.  (Note that input and output iterators are less capable than forward iterators, but that the requirements of an algorithms generally mandate read/write capabilities.)</P>
+<A NAME="thedistanceandadvanceprimitives"><H3>The distance and advance Primitives</H3></A>
+<P>The <SAMP>value_type</SAMP> primitive lets you determine the type of value pointed to by an iterator.  Similarly, you can use the <SAMP>distance_type</SAMP> primitive to get a type that represents distances between iterators.</P>
+<P>In order to efficiently find the distance between two iterators, regardless of their capabilities, you can use the <SAMP>distance</SAMP> primitive.  The <SAMP>distance</SAMP> primitive uses the technique shown above to send a calling program to one of four different implementations.  This offers a considerable gain in efficiency, since an implementation for a forward iterator must step through the range defined by the two iterators:</P>
+<PRE>Distance d = 0;
+while (start++ != end)
+  d++;
+</PRE>
+<P>whereas an implementation for a random access iterator can simply subtract the start iterator from the end iterator:</P>
+<PRE>Distance d = end - start;
+</PRE>
+<P>Similar gains are available with the <SAMP>advance</SAMP> primitive, which allows you to step forward (or backward) an arbitrary number of steps as efficiently as possible for a particular iterator.</P>
+<HR>
+<A HREF="cre_5716.htm"><IMG SRC="images/prev.gif"></A> <A HREF="booktoc.htm"><IMG SRC="images/toc.gif"></A> <A HREF="the_5255.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

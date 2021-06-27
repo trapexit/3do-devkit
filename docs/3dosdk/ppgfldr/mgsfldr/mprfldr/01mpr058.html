@@ -1,0 +1,26 @@
+<Title>OwnAudioClock</Title>
+<A NAME="XREF22869"><H1>OwnAudioClock </A></H1>
+<A NAME="XREF26422"></A> Takes ownership of audio clock.<P>
+<H3>Synopsis</H3>
+<CODE>Item OwnAudioClock (void)</CODE><P>
+<H3>Description</H3>
+This function takes ownership of the audio clock so that it can change the rate or so that no other task can change the clock rate during ownership, or both. The audio clock rate is set to a default of around 240 Hz. Taking clock ownership without changing the rate ensures that no other task will change the rate, which assures a steady clock. <P>
+Note that a task can't change the clock rate without owning the clock. <P>
+Ownership can be relinquished with <CODE>DisownAudioClock()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>None.
+<DD> 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of a semaphore used to claim ownership of the clock if successful (a positive value). It returns an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Caveats</H3>
+Owning the audio clock and hanging onto the lock forever causes any other task trying to the same to fail. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr035.html#XREF33453"><CODE>DisownAudioClock</A>(), <A HREF="./01mpr068.html#XREF24398">SetAudioRate</A>(), <A HREF="./01mpr066.html#XREF21496">SetAudioDuration</A> <A HREF="./01mpr044.html#XREF20819">GetAudioRate</A>(), <A HREF="./01mpr040.html#XREF42227">GetAudioDuration</A>(), <A HREF="./01mpr069.html#XREF10773">SignalAtTime</A>(), <A HREF="./01mpr071.html#XREF19984">SleepUntilTime</A>(), <A HREF="./01mpr045.html#XREF42201">GetAudioTime</A>() <BR>
+</CODE><P>
+</CODE>

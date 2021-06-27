@@ -1,0 +1,30 @@
+<Title>DivRemSF16</Title>
+<A NAME="XREF40125"><H1>DivRemSF16 </A></H1>
+<A NAME="XREF42223"></A> Computes the quotient and remainder of a 16.16 division.<P>
+<H3>Synopsis</H3>
+<CODE>frac16 DivRemSF16( frac16 *rem, frac16 d1, frac16 d2 )</CODE><P>
+<H3>Description</H3>
+This function divides one signed 16.16 fraction by another and returns the quotient and remainder. This function returns a correct result if the arguments are int32 or frac30, as long as both d1 and d2 are the same type. <P>
+The remainder is not a 16.16 fraction; instead, it is a signed fraction in 0.32 format. The most-significant bit of the remainder is a sign bit, and this must be extended if the remainder is to be used in subsequent calculations. An overflow value is denoted by maximum positive return in both values. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>rem
+<DD>A pointer to the remainder of the division, a signed fraction in 0.32 format. 
+</DL>
+<DL>
+<DT>d1
+<DD>The dividend. 
+</DL>
+<DL>
+<DT>d2
+<DD>The divisor. 
+</DL>
+<H3>Return Value</H3>
+The function returns the quotient of the division. The remainder is deposited in the location pointed to by the rem argument. <P>
+<H3>Implementation</H3>
+Folio call implemented in operamath V20. <P>
+<H3>Associated Files</H3>
+operamath.h, operamath.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./03spr036.html#XREF23483"><CODE>DivRemU32</A>(), <A HREF="./03spr034.html#XREF29500">DivRemS32</A>(), <A HREF="./03spr040.html#XREF32762">DivU64</A>(), <A HREF="./03spr041.html#XREF19153">DivUF16</A>(), <A HREF="./03spr039.html#XREF27188">DivSF16</A>(), <A HREF="./03spr037.html#XREF21065">DivRemUF16</A>(), <A HREF="./03spr038.html#XREF40748">DivS64</A>() </CODE><P>
+</CODE>

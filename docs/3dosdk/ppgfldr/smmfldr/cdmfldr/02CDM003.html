@@ -1,0 +1,102 @@
+<TITLE>Checking for Low Memory Pointers</TITLE>
+<H1>Checking for Low Memory Pointers<LINK NAME="XREF33590"></LINK></H1><HR>
+Several titles submitted to The 3DO Company for encryption were accessing 
+the lower 512 bytes of memory, which are reserved for the operating 
+system. This often involved using the return value of a system or user 
+function as the base address for a structure without checking whether that 
+value was NULL.<P>
+To solve this problem, The 3DO Company offered each developer a hardware 
+upgrade to the 3DO development system that facilitates easy detection of 
+low memory pointers in 1994. <P>
+<H2>Why Avoiding Low Memory Access is Important</H2>
+Even if a title that accesses low memory runs without errors on the 
+current 3DO player, is not guaranteed to work on future hardware for two 
+reasons:<P>
+<UL>
+<LI>Different manufacturers' hardware returns different values when low 
+memory is accessed. 
+<LI>Future hardware or operating systems may not allow low memory access 
+at all.
+</UL>
+<B>Warning: </B>Titles must be low memory clean to receive a Right to 
+Manufacture.<P>
+<H2>How to Detect and Remove Low Memory Pointers</H2>
+To detect and remove low memory pointers, you need the following:<P>
+<UL>
+<LI>A version of your application. You can work with a development 
+version, a <I>cdrom.image</I> file, or a CD-ROM.
+<p>
+<LI>The symbols file for your program. You need this file to identify 
+where low memory pointers are used in your source code. 
+<p>
+<LI>The 3DO Debugger 1.9b5 or later.
+<p>
+<LI>The 3DO operating system 1.3.1 or later. 
+</UL>
+With all required files available, go through the following steps: <P>
+<OL>
+<LI>Run your application from the Debugger on a 3DO development system 
+that has a low memory detection board. 
+<p>
+<p>If you're not sure whether your Station has a low memory detection 
+board, run the example code in "<A HREF="#XREF11961">Checking for Low 
+Memory Boards</A>" below.
+<p>
+
+<LI>Make sure the following windows are open:
+
+<p>
+<UL>
+<LI>Terminal window
+<LI>Disassembly window
+<LI>Register window
+<LI>Source window
+</UL>
+<p>
+<LI>If you can test all parts of your application without problems, no 
+additional action is necessary. 
+<p>
+<LI>If the program accesses low memory, it aborts where the access occurs 
+displaying the following message: 
+<p>
+<DL>
+<DD><CODE>3DO Debug : Abort (Dat) = PC@address</CODE><BR>
+</DL>
+<p>
+<p>
+<p><CODE>address</CODE> is the point in the program where the problem 
+occurred. 
+<p>
+<p>
+<LI>If you look at the Disassembly window and the Register window, you are 
+likely to find that the program stopped when accessing an address lower 
+than 00x1FF. 
+<p>
+<LI>If you look at the Source window, you are likely to find an error 
+return value.
+<p>
+<p>In most cases, you have to modify your source code to check for NULL. 
+<p>
+
+<LI>Note the problem location for later correction.
+<p>
+<LI>Try to continue from the Debugger, repeating the process until you 
+have found all instances of low memory access. In some cases, for example, 
+if the access happens during a loop, you may have to fix one problem and 
+recompile your application before you can continue. 
+</OL>
+<A NAME="XREF11961"><H3>Checking for Low Memory Boards</A></H3>
+If you're not sure whether your 3DO Station has a low memory board 
+installed, compile and link the following program, then run it on the 3DO 
+Station. This program stops, as explained above. <P>
+<CODE>
+<PRE>
+int main()
+{
+    int *addr=0;
+    int i;
+    
+    i = *addr;
+}
+</CODE>
+</PRE>

@@ -1,0 +1,29 @@
+<TITLE>Projecting a Linked Group of Cels</TITLE>
+<H1><LINK NAME="XREF34279">Projecting a Linked Group of Cels</LINK></H1><HR>
+Once a cel is set up, cel projection is a simple matter of using a cel projection call. If you want to project a linked group of cels with a single call, you must set up appropriate pointers within the cels' CCBs.<P>
+<H2>Setting Pointer Values in the CCBs</H2>
+To link a group of cels, the <CODE>NEXTPTR</CODE> word of the first cel's CCB must point to the address (absolute or relative) of the CCB of the next cel. That cel's CCB must point (using <CODE>NEXTPTR</CODE>) to the CCB of the next cel. And that cel's CCB must point to the CCB of the following cel. This chain of pointers ends at the CCB of the last cel in the group, which must have the <CODE>LAST</CODE> flag of the <CODE>FLAGS</CODE> word set to 1. This tells the cel engine to stop projection after it reaches this cel. The <CODE>NEXTPTR</CODE> value of the last cel is ignored by the cel engine.<P>
+<H3>Using Absolute and Relative Addressing</H3>
+If a program creates CCBs on the fly so that it knows the exact address of each CCB, it is easy enough to plug in absolute <CODE>NEXTPTR</CODE> values in the CCBs for a linked group of cels. However, when prefabricated cels and their CCBs are loaded from CD-ROM files into RAM, it is impossible to know at their creation just where the set of CCBs will end up in RAM. In that case, it is best to use relative addressing for <CODE>NEXTPTR</CODE> values.<P>
+A relative address is figured as the offset from the current CCB's own address. This call returns a relative address:<P>
+<DL>
+<DD><CODE>long MakeCCBRelative( field, linkObject )</CODE><BR>
+</DL>
+The macro's first argument should be the field of the CCB in which you want the relative address stored (in this case, <CODE>NEXTPTR</CODE>). The second argument should be the current absolute address of the next instance of the linked object (in this case, a CCB). For example, the following call fills in <CODE>NEXTPTR</CODE> of one CCB with a relative address to the next CCB:<P>
+<DL>
+<DD><CODE>cel-&gt;ccb_NextPtr = (CCB *)MakeCCBRelative( &amp;cel-&gt; ccb_NextPtr, &amp;NextCel );</CODE><BR>
+</DL>
+Once the relative pointer is set, the <CODE>NPABS</CODE> control flag in the <CODE>FLAGS</CODE> word should be set to show that the address is relative.<P>
+<H2>Projecting Cels</H2>
+Two cel projection calls render cels into the frame buffer. The primary call is<P>
+<DL>
+<DD><CODE>int32 DrawCels( item bitmapItem, CCB *ccb)</CODE><BR>
+</DL>
+The first argument is the item number of the bitmap in the screen to which you want to draw. The second argument is a pointer to the CCB of the cel to which you want to project. If that CCB is part of a linked group of cels, the call projects all of the cels in the group in order, starting with the specified cel. The position of the cel (which is contained within the CCB) is determined in bitmap coordinates, that start with coordinate (0,0) at the top-left corner of the bitmap (not the top-left corner of the screen).<P>
+To render a cel across different bitmaps within a multibitmap screen (or within a single-bitmap screen), use this call:<P>
+<DL>
+<DD><CODE>int32 DrawScreenCels( Item screenItem, CCB *ccb )</CODE><BR>
+</DL>
+The first argument is the item number of the screen to which you want to draw. The second argument is a pointer to the CCB of the cel to which you want to project. The position of the cel (contained in the CCB) is determined from the screen origin (0,0), which is located in the upper-left corner of the screen. If the screen has multiple bitmaps, the screen origin is in the upper-left corner of the upper-leftmost bitmap, and the screen coordinates extend continuously through each of the contiguous bitmaps.<P>
+Once a cel is projected into the frame buffer, it remains written there until another cel is projected over it, primitive drawing commands draw over it, or the background is refreshed through the SPORT bus or other means.<P>
+<P>

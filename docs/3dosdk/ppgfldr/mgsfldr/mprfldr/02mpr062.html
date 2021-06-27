@@ -1,0 +1,51 @@
+<Title>spAddSample</Title>
+<A NAME="XREF39542"><H1>spAddSample </A></H1>
+<A NAME="XREF35767"></A> Create an SPSound for a Sample Item.<P>
+<H3>Synopsis</H3>
+<CODE>Err spAddSample (SPSound **resultSound, SPPlayer *player, Item sample)</CODE><P>
+<H3>Description</H3>
+Creates an SPSound for the specified Sample Item and adds it to the specified player. This is useful for playing back sounds that are already in memory. <P>
+This function queries the sample item for its properties (e.g. number of channels, size of frame, number of frames, loop points, etc.). The sound is checked for sample frame formatting compatibility with the other SPSounds in the SPPlayer and for buffer size compatibility. A mismatch causes an error to be returned. <P>
+Once that is done, the following special SPMarkers are created for the new  SPSound: <P>
+SP_MARKER_NAME_BEGIN - set to the beginning of the sample <P>
+SP_MARKER_NAME_END  - set to the end of the sample <P>
+SP_MARKER_NAME_SUSTAIN_BEGIN - set to the beginning of the sustain loop if the sample has a sustain loop. <P>
+SP_MARKER_NAME_SUSTAIN_END - set to the end of the sustain loop if the sample has a sustain loop. <P>
+SP_MARKER_NAME_RELEASE_BEGIN - set to the beginning of the release loop if the sample has a release loop. <P>
+SP_MARKER_NAME_RELEASE_END - set to the end of the release loop if the sample has a release loop. <P>
+Since a Sample Item has no provision for storing any markers other than the loop points, an SPSound created from a sample item returned by <CODE>LoadSample()</CODE>  will not have any of the markers from the AIFF file other than the ones listed above. <P>
+The length of the sample and all of its loop points must be DMA-aligned or else this function will return ML_ERR_BAD_SAMPLE_ALIGNMENT. <P>
+All SPSounds added to an SPPlayer are automatically disposed of when the SPPlayer is deleted with <CODE>spDeletePlayer()</CODE> (by calling <CODE>spRemoveSound()</CODE>). You can manually dispose of an SPSound with <CODE>spRemoveSound()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>resultSound
+<DD>Pointer to buffer to write resulting SPSound pointer. Must be supplied or else this function returns ML_ERR_BADPTR. 
+</DL>
+<DL>
+<DT>player
+<DD>Pointer to an SPPlayer. 
+</DL>
+<DL>
+<DT>sample
+<DD>Item number of a sample to add. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success; negative error code on failure. <P>
+<H3>Outputs</H3>
+A pointer to an allocated SPSound is written to the buffer pointed to by resultSound on success. NULL is written to this buffer on failure. <P>
+<H3>Notes</H3>
+Since all SPSounds belonging to an SPPlayer are played by the same sample player instrument, they must all have the same frame sample frame characteristics (width, number of channels, compression type, and compression ratio). <P>
+SPSound to SPSound cross verification is done: an error is returned if they don't match. However, there is no way to verify the correctness of  sample frame characteristics for the instrument supplied to <CODE>spCreatePlayer()</CODE>. <P>
+<H3>Caveats</H3>
+There is no restriction on adding Sample Item class SPSounds while the SPPlayer is playing, but removing them while playing can be dangerous. See the Caveats section of <CODE>spRemoveSound()</CODE> for more details on this. <P>
+Note that this only applies to Sample Item class SPSounds (the kind made with this function). There is no restriction on adding _or_ removing AIFF Sound File class SPSounds while playing. <P>
+The sound player will not work correctly unless the sample frame size for the sample follows these rules: <P>
+If frame size (in bytes) &lt; 4, then it must divide into 4 evenly. <P>
+If frame size (in bytes) &gt; 4, then it must be a multiple of 4. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V24. <P>
+<H3>Associated Files</H3>
+soundplayer.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr084.html#XREF24744"><CODE>spRemoveSound</A>(), <A HREF="./02mpr063.html#XREF36046">spAddSoundFile</A>() </CODE><P>
+</CODE>

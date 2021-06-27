@@ -1,0 +1,24 @@
+<Title>minmax_audio</Title>
+<A NAME="XREF25472"><H1>minmax_audio </A></H1>
+<A NAME="XREF11410"></A>Measures the maximum and minimum output from the 
+DSP.<P>
+<H3>Synopsis</H3>
+<CODE>minmax_audio</CODE><P>
+<H3>Description</H3>
+Samples the output of the DSP and returns its maximum and minimum output 
+values. You can use minmax_audio to check that your program outputs are 
+reasonable, non-clipping levels of audio. <P>
+The program creates instances of probes from the instruments minimum.dsp 
+and maximum.dsp. The probes are queried with <CODE>ReadProbe()</CODE> 
+every five seconds, or 5*240 audio ticks. <P>
+In Opera hardware, the DSP implementation is 16-bit; therefore, the output 
+for the left and right channels range from 32767 to -32768. <P>
+<H3>Caveats</H3>
+The loudness of audio is often subjective. Check the loudness of your 
+program by first playing a standard audio CD on a development station, and 
+adjusting the volume of your sound system to a reasonable level. The 3DO 
+program should then produce sounds at a similar volume. <P>
+<H3>Associated Files</H3>
+minmax_audio.c<P>
+<H3>Location</H3>
+examples/Audio <P>

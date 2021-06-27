@@ -1,0 +1,17 @@
+<Title>writestopchunk</Title>
+<A NAME="XREF20006"><H1>writestopchunk</A></H1>
+<A NAME="XREF28850"> </A>Writes a STOP control chunk. <P>
+<H3>Synopsis</H3>
+<CODE>writestopchunk &lt;stream_time&gt;</CODE><P>
+<H3>Description</H3>
+<CODE>Writestopchunk</CODE> writes a STOP control chunk to the output stream. The stream time specifies the time where the STOP control chunk is to be placed in this stream. <P>
+This command produces the same output as <CODE>CtrlMaker</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>stream_time 
+<DD>0 to 7FFFFFFF (hex)
+</DL>
+<H3>Caveats</H3>
+None.<P>
+<H3>See Also</H3>
+<A HREF="./04DSR005.html#XREF41285"><CODE>markertime</A>, <A HREF="./04DSR014.html#XREF40216">writegotochunk</A>, <A HREF="./04DSR015.html#XREF31024">writehaltchunk</A></CODE><P>

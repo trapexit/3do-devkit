@@ -1,0 +1,31 @@
+<Title>AttachSample</Title>
+<A NAME="XREF30972"><H1>AttachSample </A></H1>
+<A NAME="XREF14379"> </A>Connects sample to instrument's FIFO.<P>
+<H3>Synopsis</H3>
+<CODE>Item AttachSample( Item Instrument, Item Sample,  char *FIFOName )</CODE><P>
+<H3>Description</H3>
+This function connects a sample to a named input FIFO for an instrument. This sample will be played when the instrument is started.  See the instrument's documentation for the names of its FIFOs.  If the function is successful, it returns an attachment item number. <P>
+When you finish with the attachment between sample and instrument, you should call <CODE>DetachSample()</CODE> to detach and free the attachment's resources. <P>
+Multisamples:  If more than one sample is attached to a FIFO and the instrument is started with a specified pitch, then the list of samples is searched for the first sample whose range of notes and velocities matches the desired note index (pitch).  The LowNote and HighNote, and LowVelocity and HighVelocity are read from the AIFF file.  The values from the file can be overwritten using <CODE>SetAudioItemInfo()</CODE>. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>Instrument
+<DD>The item number of the instrument. 
+</DL>
+<DL>
+<DT>Sample
+<DD>The item number of the sample. 
+</DL>
+<DL>
+<DT>FIFOName
+<DD>Name of an input FIFO (set to NULL for the first or only FIFO). 
+</DL>
+<H3>Return Value</H3>
+The function returns the item number of the attachment or an error code (a negative value) if an error occurs. <P>
+<H3>Implementation</H3>
+Folio call implemented in Audio folio V20. <P>
+<H3>Associated Files</H3>
+audio.h<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01mpr033.html#XREF38686"><CODE>DetachSample</A>(), <A HREF="./01mpr067.html#XREF20838">SetAudioItemInfo</A>(), <A HREF="./01mpr053.html#XREF16726">LoadSample</A>(), <A HREF="./01mpr083.html#XREF21317">UnloadSample</A>(), <A HREF="./01mpr023.html#XREF37204">DebugSample</A>(), <A HREF="./01mpr021.html#XREF16321">CreateSample</A>(), <A HREF="./01mpr065.html#XREF29290">ScanSample</A>(), <A HREF="./01mpr043.html#XREF15941">GetAudioItemInfo</A>() </CODE><P>
+</CODE>

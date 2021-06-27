@@ -1,0 +1,133 @@
+<Title>AcqContext</Title>
+<A NAME="XREF41140"><H1>AcqContext</A></H1>
+<A NAME="XREF31197"></A>Acquisition context structure.<P>
+<H3>Synopsis</H3><PRE>
+<CODE>typedef struct AcqContext {
+ Item creatorTask;
+ uint32 creatorSignal;
+ int32 creatorStatus;
+ char* fileName;
+ ItemPoolPtr ioReqItemPoolPtr;
+ Item threadItem;
+ void* threadStackBlock;
+ Item requestPort;
+ uint32 requestPortSignal;
+ Item ioDoneReplyPort;
+ uint32 ioDoneReplyPortSignal;
+ DataAcqMsgPtr requestQueue;
+ DataAcqMsgPtr abortQueue;
+ DataAcqMsgPtr dataQueueHead;
+ DataAcqMsgPtr dataQueueTail;
+ Boolean fEOFWasSent;
+ long offset;
+ BlockFile blockFile;
+ Item dsReqReplyPort;
+ uint32 dsReqReplyPortSignal;
+ uint32 subscriberPortSignal;
+ Item subscriberPort;
+ DSStreamCBPtr streamCBPtr;
+ MarkerChunkPtr markerChunk;
+} AcqContext, *AcqContextPtr</CODE></PRE><P>
+<H3>Description</H3>
+The context block containing state and environment variables for a data acquisition thread.<P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>creatorTask</CODE>
+<DD>Item of the task that created the acquisition thread, usually the task to signal that the acquisition thread has been initialized.
+</DL>
+<DL>
+<DT><CODE>creatorSignal</CODE>
+<DD>Signal to send for synchronous completion.
+</DL>
+<DL>
+<DT><CODE>creatorStatus</CODE>
+<DD>Initialization status code of acquisition thread, usually returned to the creator task for error checking.
+</DL>
+<DL>
+<DT><CODE>fileName</CODE>
+<DD>Pointer to the character string that is the name of the file from which the task acquires data.
+</DL>
+<DL>
+<DT><CODE>ioReqItemPoolPtr</CODE>
+<DD>Pointer to the pool of <CODE>ioReqItem</CODE> items allocated by the data buffers for the thread. See <CODE>DSDataBuf{}</CODE> for more details.
+</DL>
+<DL>
+<DT><CODE>threadItem</CODE>
+<DD>Item of the acquisition thread.
+</DL>
+<DL>
+<DT><CODE>threadStackBlock</CODE>
+<DD>Pointer to the stack memory block allocated to the acquisition thread.
+</DL>
+<DL>
+<DT><CODE>requestPort</CODE>
+<DD>DataStreamer message port through which the thread receives acquisition requests.
+</DL>
+<DL>
+<DT><CODE>requestPortSignal</CODE>
+<DD>Signal associated with <CODE>requestPort.
+</DL>
+<DL>
+<DT></CODE><CODE>ioDoneReplyPort</CODE>
+<DD>Message port for I/O completion messages.
+</DL>
+<DL>
+<DT><CODE>ioDoneReplyPortSignal</CODE>
+<DD>Signal associated with ioDoneReplyPort.
+</DL>
+<DL>
+<DT><CODE>requestQueue</CODE>
+<DD>List of outstanding I/O request messages.
+</DL>
+<DL>
+<DT><CODE>abortQueue</CODE>
+<DD>List of outstanding I/O request messages that are considered `aborted'.
+</DL>
+<DL>
+<DT><CODE>dataQueueHead</CODE>
+<DD>Head of requests waiting for ioreqitems.
+</DL>
+<DL>
+<DT><CODE>dataQueueTail</CODE>
+<DD>Tail of requests waiting for ioreqitems.
+</DL>
+<DL>
+<DT><CODE>fEOFWasSent</CODE>
+<DD>Indicates whether an end of file character (<CODE>EOF</CODE>) has been sent to the acquisition thread: <CODE>TRUE</CODE> if one has been sent, <CODE>FALSE</CODE> if not.
+</DL>
+<DL>
+<DT><CODE>offset</CODE>
+<DD>Location in the block file at which the acquisition thread is currently reading blocks of data. The offset is calculated, in blocks, as an offset from the beginning of the file.
+</DL>
+<DL>
+<DT><CODE>blockFile</CODE>
+<DD>Block file from which the acquisition thread acquires blocks of data.
+</DL>
+<DL>
+<DT><CODE>dsReqReplyPort</CODE>
+<DD>Reply port for requests to streamer.
+</DL>
+<DL>
+<DT><CODE>dsReqReplyPortSignal</CODE>
+<DD>Signal for replies to streamer requests
+</DL>
+<DL>
+<DT><CODE>subscriberPortSignal</CODE>
+<DD>Signal for receipt of subscriber messages.
+</DL>
+<DL>
+<DT><CODE>subscriberPort</CODE>
+<DD>Message port for our data type.
+</DL>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Stream control block of connected stream.
+</DL>
+<DL>
+<DT><CODE>markerChunk</CODE>
+<DD>Pointer to copy of most recent translation table.
+</DL>
+<H3>Associated Files</H3>
+DataAcq.h<P>
+<H3>See Also</H3>
+<A HREF="./02DSR005.html#XREF16873"><CODE>DSDataBuf</A></CODE><P>

@@ -1,0 +1,45 @@
+<Title>CreateThread</Title>
+<A NAME="XREF27054"><H1>CreateThread </A></H1>
+<A NAME="XREF14562"></A>Creates a thread.<P>
+<H3>Synopsis</H3>
+<CODE>Item CreateThread( const char *name, uint8 pri, void (*code) (),int32 stacksize )</CODE><P>
+<H3>Description</H3>
+This procedure creates a thread. The resulting thread belongs to the calling task. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>name
+<DD>The name of the thread to be created (see "Notes").
+</DL>
+<DL>
+<DT>pri
+<DD>The priority of the thread. This can be a value from 11 to 199 (0 to 10 and 200 to 255 can only be assigned by system software). A larger number specifies a higher priority. For all tasks, including threads, the highest priority task - if there is only one task with that priority - is always the task that is executed. If more than one task in the ready queue has the highest priority, the kernel divides the available CPU time among the tasks by providing each task with a time quantum. 
+</DL>
+<DL>
+<DT>code
+<DD>A pointer to the code that the thread executes. 
+</DL>
+<DL>
+<DT>stacksize
+<DD>The size of the thread's stack, in bytes (see "Notes").
+</DL>
+<H3>Return Value</H3>
+The procedure returns the item number of the thread or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>task.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+There is no default size for a thread's stack. To avoid stack overflow errors, the stack must be large enough to handle any possible uses. One way to find the proper stack size for a thread is to start with a very large stack, reduce its size until a stack overflow occurs, and then double its size. <P>
+When you no longer need a thread, use <CODE>DeleteThread()</CODE> to delete it. Alternatively, the thread can return or call <CODE>exit()</CODE>. <P>
+You can use <CODE>FindTask()</CODE> to find a thread by name. When naming threads, you should assign unique names whenever possible. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr037.html#XREF28597"><CODE>DeleteThread</A>(), <A HREF="./01spr042.html#XREF40201">exit</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF27054"></LINK></H1><HR>

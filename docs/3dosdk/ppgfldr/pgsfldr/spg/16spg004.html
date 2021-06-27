@@ -1,0 +1,49 @@
+<TITLE>Access Message Tag Arguments</TITLE>
+<H1><LINK NAME="XREF30476">Access Message Tag Arguments</LINK></H1><HR>
+These tags define an Access transaction:<P>
+<UL>
+<LI><CODE>ACCTAG_REQUEST</CODE> requests a type of transaction. It takes as an argument one of the constants listed below:
+<p>
+
+<UL>
+<LI><CODE>ACCREQ_LOAD</CODE>
+<LI><CODE>ACCREQ_SAVE</CODE>
+<LI><CODE>ACCREQ_DELETE</CODE>
+<LI><CODE>ACCREQ_OK</CODE>
+<LI><CODE>ACCREQ_OKCANCEL</CODE>
+<LI><CODE>ACCREQ_ONEBUTTON</CODE>
+<LI><CODE>ACCREQ_TWOBUTTON
+</UL><BR>
+<p>
+</UL>
+<UL>
+<LI></CODE><CODE>ACCTAG_SCREEN</CODE> specifies a screen on which to display the transaction box. It takes the item number of an existing screen as an argument.
+<p>
+<LI><CODE>ACCTAG_BUFFER</CODE> is reserved for future use.
+<p>
+<LI><CODE>ACCTAG_BUFFERSIZE</CODE><B> </B>is reserved for future use.
+<p>
+<LI><CODE>ACCTAG_TITLE</CODE> takes as its argument a pointer to a NULL-terminated text string to be used as the transaction box for the title.
+<p>
+<LI><CODE>ACCTAG_TEXT</CODE> takes as its argument a pointer to a NULL-terminated text string to be used as the explanatory text for the transaction box.
+<p>
+<LI><CODE>ACCTAG_BUTTON_ONE</CODE> takes as its argument a pointer to a NULL-
+terminated text string to be used as the text for the left button in the transaction box.
+<p>
+<LI><CODE>ACCTAG_BUTTON_TWO</CODE> takes as its argument a pointer to a NULL-
+terminated text string to be used as the text for the right button in the transaction box.
+<p>
+<LI><CODE>ACCTAG_SAVE_BACK</CODE> specifies that pixels beneath the transaction box be saved and restored when the transaction box is closed. It takes zero as its argument. If this tag argument isn't used, background pixels aren't saved and restored.
+<p>
+<LI><CODE>ACCTAG_STRINGBUF</CODE> points to a string buffer that receives user input text from Access. It takes a pointer to a memory location as its argument.
+<p>
+<LI><CODE>ACCTAG_STRINGBUF_SIZE</CODE> gives the size of a string buffer that receives user input text from Access. It takes the size of the buffers in byte as its arguments.
+<p>
+<LI><CODE>ACCTAG_FG_PEN</CODE> provides the color used for text in the transaction box. It takes a pen color value as its argument.
+<p>
+<LI><CODE>ACCTAG_BG_PEN</CODE> provides the color used for the transaction box background. It takes a pen color value as its argument.
+<p>
+<LI><CODE>ACCTAG_HILITE_PEN</CODE> provides the color used for the background of a highlighted button in the transaction box. It takes a pen color value as its argument.
+<p>
+<LI><CODE>ACCTAG_SHADOW_PEN</CODE> provides the color used for the button outline in the transaction box. It takes a pen color value as its argument.
+</UL>

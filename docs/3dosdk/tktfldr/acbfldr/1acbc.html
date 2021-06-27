@@ -1,0 +1,136 @@
+<TITLE>Using the Barrel Shifter</TITLE>
+<H1>Using the Barrel Shifter</H1><HR>
+In this recipe you learn:<P>
+<UL>
+<LI>how to index into an array efficiently in ARM assembler.
+<LI>how to use the barrel shifter in the main ARM instruction classes;
+</UL>
+<H2>Addressing an entry in a table of words</H2>
+The following piece of code inefficiently calculates the address of an 
+entry in a table of words and then loads the desired word:<P>
+    <CODE>
+<PRE>
+; R0 holds the entry number [0,1,2,...]
+    LDR  R1, =StartOfTable
+    MOV  R3, #4
+    MLA  R1, R0, R3, R1
+    LDR  R2, [R1]
+    ...
+StartOfTable
+    DCD table data
+</CODE>
+</PRE>
+Loading the desired table entry is performed by first loading the start 
+address of the table, then moving the immediate constant "4" into a 
+register, using the multiply and add instruction to calculate the address, 
+and finally loading the entry.  However, this operation can be performed 
+by the barrel shifter more efficiently as follows:<P>
+    <CODE>
+<PRE>
+; R0 holds the entry number [0,1,2,...]
+    LDR  R1, =StartOfTable
+    LDR  R2, [R1, R0, LSL #2]
+    ...
+StartOfTable
+    DCD table data
+</CODE>
+</PRE>
+In this code the barrel shifter shifts R0 left 2 bits (ie. multiplying it 
+by 4), this intermediate value is then used as the index for the LDR 
+instruction.  Thus a single instruction is used to perform the whole 
+operation.  Such significant savings can frequently be made by making good 
+use of the barrel shifter.<P>
+<H2>The ARM's Barrel Shifter</H2>
+The ARM core contains a Barrel shifter which takes a value to be shifted 
+or rotated, an amount to shift or rotate by and the type of shift or 
+rotate. This can be used by various classes of ARM instructions to perform 
+comparatively complex operations in a single instruction.  On ARMs up to 
+and including the ARM6 family, instructions take no longer to execute by 
+making use of the barrel shifter, unless the amount to be shifted is 
+specified by a register, in which case the instruction will take an extra 
+cycle to complete.<P>
+The barrel shifter can perform the following types of operation:<P>
+<PRE>
+--------------------------------------------------------
+LSL  |shift left by n bits;                             
+--------------------------------------------------------
+LSR  |logical shift right by n bits;                    
+--------------------------------------------------------
+ASR  |arithmetic shift right by n bits (the bits fed    
+     |into the top end of the operand are copies of the 
+     |original top (or sign) bit);                      
+--------------------------------------------------------
+ROR  |rotate right by n bits;                           
+--------------------------------------------------------
+RRX  |rotate right extended by 1 bit.  This is a 33 bit 
+     |rotate, where the 33rd bit is the PSR C flag.     
+--------------------------------------------------------
+</PRE>
+<P>
+The barrel shifter can be used in several of the ARM's instruction 
+classes.  The options available in each case are described below.<P>
+<H2>LDR/STR</H2>
+The index can be a register shifted by any 5 bit constant.  It may also be 
+an unshifted 12 bit constant, for example:<P>
+<CODE>
+<PRE>
+STR  R7, [R0], #24                                 ;Post-indexed
+LDR  R2, [R0], R4, ASR #4                          ;Post-indexed
+STR  R3, [R0, R5, LSL #3]                          ;Pre-indexed
+LDR  R6, [R0, R1, ROR #6]!                         ;Pre-indexed + Writeback
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+In all of the above instructions R0 is the base register.<P>
+In the pre-indexed instructions the offset is calculated and added to the 
+base.  This address is used for the transfer.  If writeback is selected, 
+then the transfer address is written back into the base register.<P>
+In the post-indexed instructions the offset is calculated and added to the 
+base after the transfer.  The base register is always updated by 
+post-indexed instructions.<P>
+<H2>Data processing operations</H2>
+The last operand (the second for binary operations, and the first for 
+unary operations) may be:<P>
+<UL>
+<LI>an 8 bit constant rotated right through an even number of positions. 
+eg.
+</UL>
+    <CODE>
+<PRE>
+    ADD R0, R1, #&amp;C5, 10
+    MOV R5, #&amp;FC000003
+</CODE>
+</PRE>
+<UL>
+<LI>Note that in the second example the assembler is left to work out how 
+to split the constant &amp;FC000003 into an 8 bit constant and an even 
+shift (in this case "#&amp;FC000003" could be replaced by "#&amp;FF, 6").  
+See <A HREF="./1acbe.html#XREF21678">Loading constants into registers</A> 
+for more information.
+</UL>
+<UL>
+<LI>a register (optionally) shifted or rotated either by a 5-bit constant 
+or by another register. eg.
+</UL>
+    <CODE>
+<PRE>
+    ADD R0, R1, R2
+    SUB R0, R1, R2, LSR #10
+    CMP R1, R2, R1, ROR R5    
+    MVN R3, R2, RRX
+</CODE>
+</PRE>
+<H2>Program status register transfer instructions</H2>
+For the precise format of these instructions see the appropriate 
+datasheet. <P>
+<H2>Related topics</H2>
+For more examples which make good use of the barrel shifter see many of 
+the recipes in <A HREF="./acb2frst.html#XREF32584">Exploring ARM Assembly 
+Language</A>.<P>
+The following cover loading constants into registers, and explain how 
+<I>armasm</I> can help out the assembly language programmer:<P>
+
+<UL>
+<LI><A HREF="./1acbe.html#XREF35172">MOV / MVN</A>;
+<LI><A HREF="./1acbe.html#XREF17845">LDR Rd, =numeric constant</A>.
+</UL>

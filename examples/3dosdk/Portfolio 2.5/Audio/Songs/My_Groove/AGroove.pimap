@@ -1,0 +1,6 @@
+1 $samples/GMPercussion22k/KickDrum1.M22k.aiff -f -l 0 -b 47 -h 83 -m 4
+2 $samples/GMPercussion22k/Cowbell2.M22k.aiff -f -l 84 -b 85 -h 87 -m 4
+3 $samples/GMPercussion22k/CongaHiOpen.M22k.aiff -f -l 77 -b 89 -h 89 -m 4
+4 $samples/GMPercussion22k/CongaLowOpen.M22k.aiff -f -l 90 -b 90 -h 90 -m 4
+5 $samples/GMPercussion22k/CongaHiMute.M22k.aiff  -f -l 91 -b 91 -h 91 -m 4
+6 $samples/GMPercussion22k/CongaLowMute.M22k.aiff -f -l 92 -b 92 -h 127 -m 4

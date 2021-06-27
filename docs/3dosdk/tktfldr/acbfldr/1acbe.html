@@ -1,0 +1,265 @@
+<TITLE>Loading constants into registers</TITLE>
+<H1><LINK NAME="XREF21678">Loading constants into registers</LINK></H1><HR>
+<H2>About this recipe</H2>
+This recipe explains and demonstrates:<P>
+<UL>
+<LI>Why loading constants / addresses is an issue on the ARM;
+<LI>How to solve it using MOV / MVN;
+<LI>How to solve it using LDR Rd, =<B>expression</B>
+<LI>How to solve it using ADR and ADRL
+</UL>
+<H2>Why is loading constants an issue?</H2>
+Since all ARM instructions are precisely 32 bits long, and ARM 
+instructions do not use the instruction stream as data, there is no single 
+instruction which will load any 32 bit immediate constant into a register 
+without performing a data load from memory.<P>
+However, there are ways to load many commonly used constants into a 
+register without resorting to a data load from memory.  Of course, a data 
+load from memory allows any 32-bit value to be loaded into a register, but 
+the added expense of a data load can often be avoided.<P>
+The assembler provides several 'instruction extensions', and two pseudo 
+instructions to make the efficient loading of constants and addresses 
+non-painful.<P>
+<A NAME="XREF35172"><H2>MOV / MVN</A></H2>
+As described in the recipe <A HREF="./1acbc.html#XREF32971">Using the 
+Barrel Shifter</A>, the MOV and MVN instructions allow many constants to 
+be constructed.  The constants which these instructions can construct must 
+be eight bit constants rotated right through an even number of positions.  
+By using MVN the bitwise complement of such values can also be 
+constructed.<P>
+Having to convert a constant into this form is an onerous task no-one 
+wants to do.  Therefore <B>armasm</B> will do this automatically.  Either 
+MOV or MVN may be used with a constant which can be constructed using 
+either of these instructions.  <B>armasm</B> will choose the correct 
+instruction and construct the constant.  If it is impossible to construct 
+the desired constant <B>armasm</B> will report this as an error.<P>
+To illustrate this, look at the following MOV and MVN instructions.  The 
+instruction listed in the comment is the ARM instruction which is produced 
+by <B>armasm</B>.<P>
+<CODE>
+<PRE>
+MOV R0, #0                                 ; =&gt; MOV R0, #0
+MOV R1, #&amp;FF000000                         ; =&gt; MOV R1, #&amp;FF, 8 
+MOV R2, #&amp;FFFFFFFF                         ; =&gt; MVN R2, #0
+MVN R0, #1                                 ; =&gt; MVN R0, #1
+MOV R1, #&amp;FC000003                         ; =&gt; MOV R1, #&amp;FF, 6
+MOV R2, #&amp;03FFFFFC                         ; =&gt; MVN R2, #&amp;FF, 6
+MOV R3, #&amp;55555555                         ; Reports an error--cannot 
+be constructed
+</CODE>
+</PRE>
+<H2>Assembling the example</H2>
+The above code is available in <B>loadcon1.s</B> in the <B>examples</B> 
+directory.  To assemble it first set the current directory to 
+<B>examples</B> and then issue the command:<P>
+<CODE>
+<PRE>
+armasm loadcon1.s -o loadcon1.o -li
+</CODE>
+</PRE>
+To confirm that <B>armasm</B> produced the correct code, the code area can 
+be disassembled by looking at the output from:<P>
+<CODE>
+<PRE>
+decaof -c loadcon1.o
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+The -li argument can be omitted if the tools have been configured 
+appropriately. <P>
+<B>decaof</B> is the ARM Object Format decoder.  The -c option requests 
+that decaof dissassemble the code area.<P>
+<A NAME="XREF17845"><H2>LDR Rd, =numeric constant</A></H2>
+<B>armasm</B> provides a mechanism which unlike MOV and MVN can construct 
+any 32-bit numeric constant, but which may not result in a data processing 
+operation to do it.  This is the "LDR Rd, =" mechanism.<P>
+If the numeric constant can be constructed by using either MOV or MVN, 
+then this will be the instruction used to load the constant.  If this 
+cannot be done, however, <B>armasm</B> will produce an LDR instruction to 
+read the constant from a literal pool.<P>
+<H2>Literal pools</H2>
+A literal pool is a portion of memory set aside for constants.  By default 
+a literal pool is placed right at the end of the program.  However, for 
+large programs, this literal pool may not be accessible throughout the 
+program (due to the LDR offset being a 12 bit value), so further literal 
+pools can be placed using the LTORG directive.<P>
+When the "LDR, Rd, =" mechanism needs to access a literal in a literal 
+pool, <B>armasm</B> first checks previously encountered literal pools to 
+see if the desired constant is already available and addressable.  If it 
+is then this literal is addressed, otherwise <B>armasm</B> will attempt to 
+place the literal in the next available literal pool.  If this literal 
+pool is not addressable then an error will result, and an additional LTORG 
+should be placed close to  (but after) the failed "LDR Rd,=" 
+instruction.<P>
+Although this may sound somewhat complicated, in practice, it is simple to 
+use.  Consider the following example, which demonstrates how literal pools 
+and "LDR Rd,=" work.  The instruction listed in the comment is the ARM 
+instruction which gets produced by <B>armasm</B>.<P>
+<CODE>
+<PRE>
+  AREA Example, CODE, REL
+
+  LDR R0, =42                  ;=&gt; MOV R0, #42
+  LDR R1, =&amp;55555555           ;=&gt; LDR R1, [PC, #offset to Literal Pool 1]
+  LDR R2, =&amp;FFFFFFFF           ; =&gt; MVN R2, #0
+
+  LTORG                        ; Literal Pool 1 contains literal &amp;55555555
+
+  LDR R3, =&amp;55555555           ; =&gt; LDR R3, [PC, #offset to Literal Pool 1]
+; LDR R4, =&amp;66666666           ; If this is uncommented it fails, Literal
+                               ; Pool 2 is not accessible (out of reach)
+
+LargeTable2 % 4200
+
+  END                          ; Literal Pool 2 is empty
+</CODE>
+</PRE>
+<H2>Assembling the example</H2>
+The above code is available in <B>loadcon2.s</B> in the <B>examples</B> 
+directory.  To assemble it first set the current directory to 
+<B>examples</B> and then issue the command:<P>
+<CODE>
+<PRE>
+armasm loadcon2.s -o loadcon2.o -li
+</CODE>
+</PRE>
+To confirm that <B>armasm</B> produced the correct code, the code area can 
+be disassembled by looking at the output from:<P>
+<CODE>
+<PRE>
+decaof -c loadcon2.o
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+The -li argument can be omitted if the tools have been configured 
+appropriately. <P>
+<B>decaof</B> is the ARM Object Format decoder.  The -c option requests 
+that decaof dissassemble the code area.<P>
+<H2>LDR Rd, =PC relative expression</H2>
+As well as numeric constants, the "LDR Rd, =" mechanism can cope with PC 
+relative expressions, such as labels.<P>
+Even if a PC relative ADD or SUB could be constructed, an LDR will be 
+generated to load the PC relative expression.  Thus if a PC relative ADD 
+or SUB is desired then ADR should be used instead (see <A 
+HREF="#XREF22093">ADR and ADRL</A>).  If no suitable literal is already 
+available, then the literal placed into the next literal pool will be the 
+offset into the AREA, and an AREA relative relocation directive will be 
+added to ensure that the constant is appropriate wherever the containing 
+AREA gets located by the linker.  See <A 
+HREF="../arrfldr/3arre.html#XREF31016">The handling of relocation 
+directives</A> for more information about relocation directives.<P>
+As an example consider the code below.  The instruction listed in the 
+comment is the ARM instruction which gets produced by <B>armasm</B>.<P>
+<CODE>
+<PRE>
+  AREA Example, CODE, REL
+
+Start
+  LDR R0, =StartLiteral                  ;=&gt; LDR R0, [PC, #offset to Litpool 1
+  LDR R1, =DataArea + 12                 ; =&gt; LDR R1, [PC, #offset to Litpool 1
+  LDR R2, =DataArea + 6000               ; =&gt; LDR R2, [PC, #offset to Litpool 1
+
+  LTORG                                  ; Literal Pool 1 holds three literals
+
+  LDR R3, =DataArea + 6000               ; =&gt; LDR R2, [PC, #offset to Litpool 1
+                                         ; (sharing with previous literal)
+; LDR R4, =DataArea + 6004               ; If uncommented will produce an error
+                                         ; as Litpool 2 is out of range
+   
+DataArea % 8000
+
+  END                                    ; Literal Pool 2 is out of range of
+                                         ; the LDR instructions above
+</CODE>
+</PRE>
+<H2>Assembling the example</H2>
+The above code is available in <B>loadcon3.s</B> in the <B>examples</B> 
+directory.  To assemble it first set the current directory to 
+<B>examples</B> and then issue the command:<P>
+<CODE>
+<PRE>
+armasm loadcon3.s -o loadcon3.o -li
+</CODE>
+</PRE>
+To confirm that <B>armasm</B> produced the correct code, the code area can 
+be disassembled by looking at the output from:<P>
+<CODE>
+<PRE>
+decaof -c loadcon3.o
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+The -li argument can be omitted if the tools have been configured 
+appropriately. <P>
+<B>decaof</B> is the ARM Object Format decoder.  The -c option requests 
+that decaof dissassemble the code area.<P>
+<A NAME="XREF22093"><H2>ADR and ADRL</A></H2>
+Sometimes it is important for efficiency purposes that loading an address 
+does not perform a memory access.  The assembler provides two pseudo 
+instructions which make it easier to do this.<P>
+Whereas MOV and MVN only accept numeric constants, ADR and ADRL accept 
+numeric constants, PC relative expressions (labels within the same area) 
+and register relative expressions.<P>
+ADR will attempt to produce a single data processing instruction to load 
+an address into a register.  This instruction will be one of MOV, MVN, ADD 
+or SUB, in the same way as the "LDR Rd, =" mechanism produces 
+instructions. If the desired address cannot be constructed in a single 
+instruction an error will be produced.<P>
+ADRL will attempt to produce either two data processing instructions to 
+load an address into a register.  Even if it is possible to produce a 
+single data processing instruction to load the address into the register 
+then a second, redundant instruction will be produced (this is a 
+consequence of the strict two-pass nature of <B>armasm</B>) .  In cases 
+where it is not possible to construct the address using two data 
+processing instructions ADRL will produce an error - the LDR, = mechanism 
+is probably the best option in this case.<P>
+As an example consider the code below.  The instructions listed in the 
+comments are the ARM instruction which are produced by <B>armasm</B>.<P>
+<CODE>
+<PRE>
+  AREA Example, CODE, REL
+
+Start
+  ADR  R0, &amp;8000                      ; =&gt; MOV R0, #&amp;8000
+; ADR  R1, &amp;8001                      ; This would fail as it cannot be
+                                      ; constructed by a MOV or MVN
+  ADR  R2, Start                      ; =&gt; SUB R2, PC, #offset to Start
+  ADR  R3, DataArea                   ; =&gt; ADD R3, PC, #offset to DataArea
+; ADR  R4, DataArea+4300              ; This would fail as the offset cannot
+                                      ; be expressed by operand2 of an ADD
+  ADRL R5, DataArea+4300              ; =&gt; ADD R5, PC, #offset1
+                                      ;    ADD R5, R5, #offset2
+  ADRL R6, &amp;8001                      ; =&gt; MOV R6, #1
+                                      ;    ADD R6, R6, #&amp;8000
+; ADRL R7, &amp;55555555                  ; This would fail--the constant can't
+                                      ; be constructed by 2 data processing
+                                      ; instructions
+DataArea % 8000
+
+  END
+</CODE>
+</PRE>
+<H2>Assembling the example</H2>
+The above code is available in <B>loadcon4.s</B> in the <B>examples</B> 
+directory.  To assemble it first set the current directory to 
+<B>examples</B> and then issue the command:<P>
+<CODE>
+<PRE>
+armasm loadcon4.s -o loadcon4.o -li
+</CODE>
+</PRE>
+To confirm that <B>armasm</B> produced the correct code, the code area can 
+be disassembled by looking at the output from:<P>
+<CODE>
+<PRE>
+decaof -c loadcon4.o
+</CODE>
+</PRE>
+<H3>Explanation</H3>
+The -li argument can be omitted if the tools have been configured 
+appropriately. <P>
+<B>decaof</B> is the ARM Object Format decoder.  The -c option requests 
+that decaof dissassemble the code area.<P>
+<H2>Related topics</H2>
+For more information on the capabilities of the barrel shifter see <A 
+HREF="./1acbc.html#XREF32971">Using the Barrel Shifter</A>.<P>

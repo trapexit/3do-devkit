@@ -1,0 +1,19 @@
+<Title>GetCelBytesPerRow</Title>
+<A NAME="XREF28011"><H1>GetCelBytesPerRow </A></H1>
+ Returns a cel's bytes per row value.<P>
+<H3>Synopsis</H3>
+<CODE>int32 GetCelBytesPerRow (CCB *cel)</CODE><P>
+<H3>Description</H3>
+This function returns the bytes-per-row value for the cel, determined by examining the cel's preamble data. The calculations take into account the cel's bits per pixel and source width values, and padding for the cel engine's alignment, and look ahead requirements. <P>
+This function exists primarily to support library internals, but may be useful for applications as well. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to a cel. 
+</DL>
+<H3>Return Value</H3>
+Bytes per row. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>

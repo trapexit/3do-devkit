@@ -1,0 +1,29 @@
+<Title>AllocPoolMem</Title>
+<A NAME="XREF38866"><H1>AllocPoolMem</A></H1>
+<A NAME="XREF20314"></A>Allocates a memory pool entry.<P>
+<H3>Synopsis</H3>
+<CODE>void* AllocPoolMem (MemPoolPtr memPool)</CODE><P>
+<H3>Description</H3>
+Allocates a memory pool entry (memory buffer). An acquisition thread calls <CODE>AllocMemPool()</CODE> to allocate the entries in which data chunks are stored. The DataStreamer kernel thread calls <CODE>CreateMemPool()</CODE> to create the entries allocated to subscriber and data messages, which are used to pass out the data chunks to various subscribers.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>memPool</CODE>
+<DD>Memory pool from which <CODE>AllocPoolMem()</CODE> requests an entry.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+</DL>
+<DL>
+<DT>(First free entry in memory pool)
+<DD>None
+</DL>
+<DL>
+<DT>NULL
+<DD>No available entries
+</DL>
+<H3>Associated Files</H3>
+MemPool.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR009.html#XREF27957"><CODE>CreateMemPool</A>, <A HREF="#XREF38866">AllocPoolMem</A></CODE><P>

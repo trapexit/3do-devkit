@@ -1,0 +1,23 @@
+<Title>ssplStopSpooler</Title>
+<A NAME="XREF17770"><H1>ssplStopSpooler </A></H1>
+<A NAME="XREF16075"></A> Stop SoundSpooler.<P>
+<H3>Synopsis</H3>
+<CODE>Err ssplStopSpooler ( SoundSpooler *sspl )</CODE><P>
+<H3>Description</H3>
+<CODE>ssplStopSpooler()</CODE> stops the SoundSpooler's sample player instrument. Unlike <CODE>ssplPause()</CODE>, this call does not retain the current sample data position. Starting the spooler after stopping it will start sound playback from the beginning of the first buffer in the active queue. <P>
+This function merely stops the SoundSpooler's sample player instrument. It does not disturb the active queue. <P>
+This function clears SSPL_STATUS_F_STARTED and SSPL_STATUS_F_PAUSED. <P>
+<H3>Argument</H3>
+<DL>
+<DT>sspl
+<DD>pointer to a SoundSpooler structure. 
+</DL>
+<H3>Return Value</H3>
+Non-negative value on success, or negative 3DO error code on failure. <P>
+<H3>Implementation</H3>
+Library call implemented in music.lib V21. <P>
+<H3>Associated Files</H3>
+soundspooler.h, music.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./02mpr119.html#XREF23431"><CODE>ssplStartSpooler</A>(), <A HREF="./02mpr108.html#XREF36471">ssplPause</A>(), <A HREF="./02mpr096.html#XREF40388">ssplAbort</A>(), <A HREF="./01mpr075.html#XREF37581">StopInstrument</A>(), <A HREF="./02mpr105.html#XREF10988">ssplGetSpoolerStatus</A>() </CODE><P>
+</CODE>

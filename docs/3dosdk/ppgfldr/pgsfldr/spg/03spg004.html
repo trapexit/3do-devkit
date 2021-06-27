@@ -1,0 +1,36 @@
+<TITLE>Tags and VarArgs</TITLE>
+<H1>Tags and VarArgs</H1><HR>
+Although Portfolio TagArg calls traditionally use static arrays of TagArg structures to define their parameters, a much superior approach is possible by using the C VarArgs capability.<P>
+VarArgs lets C routines like <CODE>printf()</CODE> accept a variable number of parameters. You can use VarArgs to construct arrays of TagArg structures on the fly within a function call you are making. This is generally easier to write, understand, and maintain than static arrays.<P>
+Most Portfolio functions that accept TagArg arrays as parameters also have VarArgs counterparts. These counterparts have the same names as the regular functions, with the addition of a VA suffix to identify them as VarArgs.<P>
+For example, the <CODE>CreateItem()</CODE> kernel function accepts an array of TagArg structures as a parameter. The <CODE>CreateItemVA()</CODE> function is identical in purpose and function, except that it uses a VarArgs list of tags instead of a pointer to an array.<P>
+To build up a tag list on the stack, you enumerate all commands and their arguments in sequence, separated by commas, and terminate them with a <CODE>TAG_END</CODE> tag command. Here are examples of using <CODE>CreateItem()</CODE> and <CODE>CreateItemVA()</CODE> to create a message port.<P>
+<B>Example 1: </B><I>Creating a message port</I><P>
+<CODE>
+<PRE>
+static TagArgs tags[] =
+{
+    {CREATEPORT_TAG_SIGNAL,   0},
+    {CREATEPORT_TAG_USERDATA, 0},
+    {TAG_END,              0}
+};
+
+{
+Item mp;
+
+    tags[0].ta_Arg = (void *)sigMask;
+    tags[1].ta_Arg = (void *)userData;
+    mp = CreateItem(MKNODEID(KERNELNODE,MSGPORTNODE),tags);
+}
+
+{
+Item mp;
+
+    mp = CreateItemVA(MKNODEID(KERNELNODE,MSGPORTNODE),
+                      CREATEPORT_TAG_SIGNAL,   sigMask,
+                      CREATEPORT_TAG_USERDATA, userData,
+                      TAG_END);
+}
+</CODE>
+</PRE>
+As you can see, the version using <CODE>CreateItemVA()</CODE> is easier to understand. All the definitions pertaining to the tags can be kept within the function call itself, instead of requiring a separate array.<P>

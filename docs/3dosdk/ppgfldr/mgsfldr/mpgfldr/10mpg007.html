@@ -1,0 +1,12 @@
+<TITLE>Timing</TITLE>
+<H1><LINK NAME="XREF38328">Timing</LINK></H1><HR>
+<H2>DSP Time versus System Time</H2>
+<B>Q:  </B> What is the link between DSP time and system time? <P>
+<B>A:  </B> The audio/music timer is divided down from the DSP frame rate of 44.1 kHz. The microsecond or the vertical blanking timer can also be used but are not synchronous with the audio clock. <P>
+<H2>SMPTE</H2>
+<B>Q:  </B> Can we link an effect to SMPTE?<P>
+<B>A:</B>  SMPTE decoding hardware for tape is not available. <P>
+<H2>Multi-thread Timers</H2>
+<B>Q: </B>  I have some success with GetAudioTime using ticks. I was not sure if multiple threads could use the timer at the same time?<P>
+<B>A: </B>  Yes they can. The restriction is that cue items must be allocated by the thread that uses them. You may also want to own the audio timer, <CODE>OwnAudioTimer()</CODE>, if you are worried about some other thread changing the audio timer rate on you.<P>
+<P>

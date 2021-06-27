@@ -1,0 +1,19 @@
+<Title>LinkCel</Title>
+<A NAME="XREF40527"><H1>LinkCel </A></H1>
+ Links two cels<P>
+<H3>Synopsis</H3>
+<CODE>void LinkCel (CCB *ccb, CCB *nextCCB)</CODE><P>
+<H3>Description</H3>
+Links nextCCB to ccb by setting ccb's NextPtr field to nextCCB, turning off the CCB_Last flag in the ccb's ccb_Flags field by setting CCB_Last to NULL. <P>
+This function does not splice nextCCB into an existing list. It only replaces value of ccb_NextPtr in ccb to point to nextCCB. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ccb
+<DD>Pointer to the CCB being linked. 
+</DL>
+<DL>
+<DT>nextCCB
+<DD>Pointer to the CCB being added to the list. 
+</DL>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>

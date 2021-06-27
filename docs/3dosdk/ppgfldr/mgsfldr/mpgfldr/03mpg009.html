@@ -1,0 +1,86 @@
+<TITLE>Modifying Attachments</TITLE>
+<H1>Modifying Attachments</H1><HR>
+Whenever you attach an envelope or a sample to an instrument, you create an attachment item that controls the attachment's attributes. These attributes include the item numbers of the instrument, the item number of the envelope or sample being attached, and more. By modifying the attachment's attributes, you can control the way the attachment plays when the instrument is played. By linking two or more attachments together with a linking audio call, you can set a sequence of attachments to play back during a note.<P>
+<A NAME="XREF14700"><H2>Setting an Attachment's Attributes</A></H2>
+To see the current settings of an attachment, use the <CODE>GetAudioItemInfo()</CODE> call 
+discussed in <A HREF="03mpg007.html#XREF35697">Reading Audio Item 
+Characteristics</A>. You can use the attachment tag arguments described in 
+Table 1 to define what information you want to see.<P>
+<PRE>
+<B>Table 1: </B><I> Tag arguments that define the characteristics of an attachment.</I>
+--------------------------------------------------------
+Tag Name           |Description                         
+--------------------------------------------------------
+AF_TAG_CLEAR_FLAGS |Accepts flag bits that it clears.   
+                   |These flags are the same as those   
+                   |used for AF_TAG_SET_FLAGS.          
+--------------------------------------------------------
+AF_TAG_ENVELOPE    |Envelope Item to attach to          
+                   |Instrument. Exactly one of          
+                   |AF_TAG_ENVELOPE or AF_TAG_SAMPLE    
+                   |must be specified.                  
+--------------------------------------------------------
+AF_TAG_HOOKNAME    |The name of the sample or envelope  
+                   |hook in the instrument to attach to.
+                   |For sample hooks, defaults to the   
+                   |first one listed for each           
+                   |instrument. For envelopes, defaults 
+                   |to "Env".                           
+--------------------------------------------------------
+AF_TAG_INSTRUMENT  |Instrument or Template item to      
+                   |attach envelope or sample to. Must  
+                   |be specified when creating an       
+                   |Attachment.                         
+--------------------------------------------------------
+AF_TAG_SAMPLE      |Sample Item to attach to instrument.
+                   |Exactly one of AF_TAG_ENVELOPE or   
+                   |AF_TAG_SAMPLE must be specified.    
+--------------------------------------------------------
+AF_TAG_SET_FLAGS   |Accepts flag bits that it turns on. 
+                   |These flags are AF_ATTF_NOAUTOSTART,
+                   |which sets the attachment for       
+                   |independent play, and               
+                   |AF_ATTF_FATLADYSINGS, which sets the
+                   |instrument to stop when this        
+                   |attachment stops. (Both these flag  
+                   |constants are found in audio.h.)    
+--------------------------------------------------------
+AF_TAG_START_AT    |A uint32 value that specifies the   
+                   |point at which to start when an     
+                   |attachment is played. For a sample, 
+                   |this is an index to a sample frame. 
+                   |For an envelope, this is an index to
+                   |an envelope point. STARTAT is not   
+                   |currently implemented for envelopes.
+--------------------------------------------------------
+AF_TAG_TIME_SCALE  |Scales all of the times in the      
+                   |attached envelopes by the supplied  
+                   |ufrac16. Defaults to 1.0.           
+--------------------------------------------------------
+</PRE>
+<P>
+To change any of the attachment's attributes, use these same tag arguments with the <CODE>SetAudioItemInfo()</CODE> call.<P>
+Do not set AF_TAG_START_AT past a SustainEnd loop marker.
+<H2>Setting a Start-Independent Attachment</H2>
+When you start  an instrument with the <CODE>StartInstrument()</CODE> call (described in <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>), all components of the instrument start playing at the same time: the synthesized waveform, the attached envelope (or envelopes), the attached sample, and so on. There can be times, however, when you want an attached envelope or sample to start independently of the instrument. For example, you can set up a sampled-sound instrument to play the sample of a murmuring crowd. You can then attach an envelope that swells the amplitude for a second and then drops it back to a murmur. A sustain loop keeps the crowd murmuring when the instrument plays. If the envelope is triggered independently, then it can play whenever the program wants the intensity of the crowd noise to step up for a short time.<P>
+To set a start-independent attachment, set the AF_ATTF_NOAUTOSTART flag of the AF_TAG_SET_FLAGS tag argument. (The flag constants are defined in the <I>audio.h</I> header file.)  As long as the flag is set, the sample or envelope specified in the attachment will not start when the instrument starts; it will start only when the <CODE>StartAttachment()</CODE> call (described in <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>) tells the attachment to start.<P>
+Note that a start-independent attachment is independent only in its start and release. It is still attached to the instrument, and will stop if the instrument stops.<P>
+<H2>Creating an Instrument-Stopping Attachment</H2>
+Instruments with loops can play indefinitely once started. For example, an instrument with a sustain loop can play and play while it waits for a release or a stop. Or an instrument with a release loop can play and play while it waits for a stop. You can always stop a looping instrument with a stop call, but you may want to time the stop to occur simultaneously with the end of an envelope or a sample. For example, a sample attached to a sampled-sound instrument can be set to loop indefinitely in a release loop while an envelope plays back. The envelope shapes the sample sound amplitude. When the envelope finishes, reducing the amplitude to 0, the instrument should stop so that it will not waste DSP cycles producing inaudible sound.<P>
+The AF_ATTF_FATLADYSINGS flag of the AF_TAG_SET_FLAGS tag argument, if set, specifies that the sample or envelope attached will stop the instrument at the same moment the sample or envelope itself stops. This kind of attachment is called a <I>stop-linked attachment. </I>If the flag is not set, the attached sample or envelope is not a stop-linked attachment and can stop without any effect on the instrument's playback. Note that when the instrument stops, all attachments stop with it whether they are finished or not.<P>
+<H2>Linking Attachments</H2>
+There are times when it is more economical and flexible to work with a series of small samples instead of a single large sample. You can assemble the small samples in different orders for different situations. For example, you may have the sound of a car door opening and closing, the sound of a seat belt ratchet, the sound of seat belt buckle, and the sound of the turn of a key click. Played in one sequence, they provide the proper sounds for entering a car and starting it. Played in another sequence, they provide the proper sounds for turning off a car and leaving it.<P>
+The Audio folio allows you to link attached items so that you can play back a series of samples (or envelopes) by starting a single instrument. To link attached items, use this call:<P>
+<DL>
+<DD><CODE>Err LinkAttachments( Item At1, Item At2 )</CODE><BR>
+</DL>
+The call accepts the item number of a first attachment and the item number of a second attachment. When it executes, it links the end of the first attachment to the beginning of the second attachment. It returns 0 if successful, or a negative value (an error code) if unsuccessful.<P>
+<B>Note: </B><CODE>LinkAttachments()</CODE> does not link envelopes.<P>
+<CODE>LinkAttachments()</CODE> can be used many times to create a chain of linked attached items. When the first attached item in a linked chain starts playing, it continues playing until its end, when the second attached item starts playing, and so on to the end of last attached item in the chain. Note that sustain loops in linked attached items can hold playback in one place for a while. For example, a sustain loop in the first attached item can loop continuously until the attachment is released, at which point the attached item plays through to its end and into the beginning of the next attached item. If there is a sustain loop in that item, playback will hold there until playback is released once again. Release loops in linked attachments are ignored.<P>
+You can use <CODE>LinkAttachments()</CODE> to create circularly linked 
+attachments. This is helpful for creating sound buffers for spooling sound 
+off a disc. While one sample in the linked group plays, another sample is 
+loaded from disc. The <CODE>MonitorAttachment()</CODE> call (described in ) 
+allows the task to see where playback is located so it can plan spooling 
+appropriately. The Music library sound file routines (described in 
+<A HREF="../mprfldr/02mpr.html#XREF20449">Music Library Calls</A>, of the <I>3DO Music and Audio Programmer's Reference</I>) use this technique.<A NAME="XREF11340"></A><P>

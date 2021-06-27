@@ -1,0 +1,21 @@
+<TITLE>How Do I Play an Audio Sample?</TITLE>
+<H1>How Do I Play an Audio Sample?</H1><HR>
+To play an audio sample, you need to do the following:<P>
+<OL>
+<LI>Call <CODE>LoadSample()</CODE> to load an AIFF sample into memory. 
+<p>You can also load samples of other formats into memory yourself and turn them into 3DO sample items by calling <CODE>CreateSample()</CODE>.
+<p>
+<LI>Call <CODE>LoadInstrument()</CODE> to <CODE>l</CODE>oad a DSP instrument that can play that sample. You can determine the appropriate instrument name by looking in the table at the beginning of <A HREF="../mprfldr/03mpr.html#XREF41103">Instrument Templates</A>, in the <I>3DO Music and Audio Programmer's Reference</I> or by calling <CODE>SelectSamplePlayer()</CODE>.
+<p>
+<LI>Call <CODE>AttachSample()</CODE> to attach the sample to the instrument. 
+<p>You can use the same sample on multiple instruments, or  you can use multiple samples on one instrument.
+<p>
+<LI>Call <CODE>StartInstrument()</CODE> to start playing the sample. 
+<p>The instrument starts whatever sample is attached to it. 
+<p>
+<LI>Call <CODE>ReleaseInstrument()</CODE> to stop a sample that is looping, 
+</OL>
+<H3>For More Information</H3>
+For more information on the calls in this section, see <A HREF="../mprfldr/01mpr.html#XREF16932">Audio Folio Calls</A>, in the <I>3DO Music and Audio Programmer's Reference</I>.<P>
+See <A HREF="./03mpg.html#XREF22719">Preparing Instruments</A>, and  <A HREF="./04mpg.html#XREF33207">Playing Instruments</A>, for complete programming details. <P>
+For an example of playing a sound,  see the example program <I>playsample.c</I>.<P>

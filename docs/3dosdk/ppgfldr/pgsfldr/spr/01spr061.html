@@ -1,0 +1,43 @@
+<TITLE>FindVersionedItem</TITLE>
+<A NAME="XREF25874"><H1>FindVersionedItem </A></H1>
+<A NAME="XREF31428"></A>Finds an item by name and version.<P>
+<H3>Synopsis</H3>
+<CODE>Item FindVersionedItem( int32 ctype, const char *name, uint8 vers, uint8 rev )</CODE><P>
+<H3>Description</H3>
+This procedure finds an item of a specified type by its name, version number, and revision number. These values are required tag arguments for all items. If all three values match, the procedure returns the item number of the matching item. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ctype
+<DD>The type of the item to find. Use MkNodeID() to create this value. 
+</DL>
+<DL>
+<DT>name
+<DD>The name of the item to find. 
+</DL>
+<DL>
+<DT>vers
+<DD>The version number of the item to find. 
+</DL>
+<DL>
+<DT>rev
+<DD>The revision number of the item to find. 
+</DL>
+<H3>Return Value</H3>
+The procedure returns the number of the item that matches or an error code if an error occurs. <P>
+<H3>Implementation</H3>
+Convenience call implemented in clib.lib V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>item.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Caveats</H3>
+This currently returns a match if the version number and revision number are greater than or equal to the values specified. <P>
+<H3>See Also</H3>
+<CODE><A HREF="./01spr014.html#XREF21994"><CODE>CheckItem</A>(), <A HREF="./01spr050.html#XREF25448">FindItem</A>(), <A HREF="./01spr054.html#XREF34211">FindNamedItem</A>(), <A HREF="./01spr099.html#XREF27851">LookupItem</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF25874"></LINK></H1><HR>

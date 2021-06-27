@@ -1,0 +1,34 @@
+<Title>CreateLRFormCel</Title>
+<A NAME="XREF15268"><H1>CreateLRFormCel </A></H1>
+ Creates an LRForm cel.<P>
+<H3>Synopsis</H3>
+<CODE>CCB * CreateLRFormCel (CCB *cel, Item screenItem, SRect *subRect)</CODE><P>
+<H3>Description</H3>
+Creates an LRForm cel from a screen or portion of a screen. LRForm cels can be used to capture a screen's pixels and project them to another screen (or another portion of the same screen). <P>
+If the cel pointer is NULL, a new cel is allocated for you. If non-NULL it must be an LRForm cel created by an earlier call to this function. Passing a non-NULL cel pointer allows you to repeatedly extract different subrectangles from the same screen without having to create a new cel each time. <P>
+If the subRect pointer is NULL, the cel is the same size as the source screen. If it is non-NULL, the cel accesses the sub-rectangle of pixels described by subRect. <P>
+You cannot pass a Bitmap item in place of the Screen item because the <CODE>GetPixelAddress()</CODE> function used to locate the pixels in the screen does not accept a Bitmap item. <P>
+The cel created by this function uses the pixels in the screen's bitmap buffer as the cel source pixels. The pixels are not copied, and if you render new pixels into the screen, subsequent projections of the cel use the new pixels. <P>
+The cel is created with a position of 0,0 and size and perspective values for a 1:1 mapping. The Preamble Word 1 Blue LSB handling is set to PRE1_TLLSB_PDC0. The PIXC word is set for standard opaque, 0x1F001F00. The cel flags are set to: CCB_LAST | CCB_NPABS | CCB_SPABS | CCB_PPABS | CCB_LDSIZE | CCB_LDPRS | CCB_LDPPMP | CCB_CCBPRE | CCB_YOXY | CCB_USEAV | CCB_NOBLK | CCB_ACE | CCB_ACW | CCB_ACCW | CCB_BGND | PMODE_ONE <P>
+Use <CODE>DeleteCel()</CODE> to release the resources allocated for the cel. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>cel
+<DD>Pointer to a cel created earlier by this function, or NULL to create a new cel. 
+</DL>
+<DL>
+<DT>screenItem
+<DD>Item number of the Screen whose pixels this cel is to project. 
+</DL>
+<DL>
+<DT>subRect
+<DD>Pointer to an SRect describing the sub- rectangle to be extracted from the Screen, or NULL for full-screen. 
+</DL>
+<H3>Return Value</H3>
+The input parameter dst, if dst was non-NULL on input. Pointer to the newly created cel or NULL if there is not enough memory to create the cel, if dst was NULL on input. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, celutils.h<P>
+<H3>See Also</H3>
+<A HREF="./01LDO045.html#XREF16000"><CODE>CreateSubrectCel</A>, <A HREF="./01LDO055.html#XREF42213">DeleteCel</A> </CODE><P>

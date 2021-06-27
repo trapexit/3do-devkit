@@ -1,0 +1,37 @@
+<TITLE>Overview</TITLE>
+<H1><LINK NAME="XREF22894">Overview</LINK></H1><HR>
+This section lists the requirements for incorporating light gun support in 
+titles development, and describes how the light gun works with cathode ray 
+tube (CRT) displays.<P>
+<H2>Requirements</H2>
+Requirements for incorporating light gun support in titles development 
+include:<P>
+<UL>
+<LI>Light gun
+<LI>Light gun driver (included in the 3DO Portfolio operating system)
+<LI>3DO development system
+</UL>
+<A NAME="XREF38602"><H2>How a Light Gun Works</A></H2>
+With CRT displays, the light gun reports the time lapse between the 
+beginning of a field (vertical blank) and when the scan beam passes into 
+the field of view of the gun's light sensor. Based on the timer values the 
+light gun returns, positions are calculated from the time elapsed between 
+the start of one scan line and the start of one immediately below it 
+(YSCANTIME); x values (XSCANTIME) are determined by the time it takes to 
+draw from the first to last pixel on one scan line. A third value, 
+TIMEOFFSET, is based on the time lapse between when a field begins and 
+when a scan beam begins drawing to the first pixel on the first scan 
+line.<P>
+The NTSC and PAL standards require slightly different values for these 
+time constants. This is to account for the different screen resolution and 
+the speed at which the electron beam draws in the display. The time values 
+are provided in the <I>lightgun.h</I> file.<P>
+The light gun does not work with PCs because of 
+variation in refresh rates and electron beam gun speed among monitors. <P>
+The light gun does not work with LCD displays.<P>
+The illustration below shows the light gun and cable with male DB9 
+connector.<P>
+
+<IMG SRC="Figures/GameGunSetup.gif" ALT="Graphic cannot be displayed">
+<P>
+<B>Figure 1: </B><I>3DO light gun controls.</I><P>

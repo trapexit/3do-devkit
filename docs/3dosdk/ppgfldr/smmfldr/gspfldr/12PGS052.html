@@ -1,0 +1,30 @@
+<Title>spoolsoundfile</Title>
+<A NAME="XREF32076"><H1>spoolsoundfile </A></H1>
+<A NAME="XREF33421"></A>Plays an AIFF sound file from a thread using the 
+original sound file player.<P>
+<H3>Synopsis</H3>
+<CODE> spoolsoundfile &lt;sound file&gt; [&lt;num repeats&gt;]</CODE><P>
+<H3>Description</H3>
+Plays an AIFF sound file using a thread to manage playback. <P>
+This example creates a background thread that runs independently from the 
+foreground task. You can communicate with it via signals. This could be 
+built into a fancier soundfile server using messages. <P>
+This example uses the original Sound File Player in music.lib. See 
+tsp_spoolsoundfile for an example using the Advanced Sound Player to do 
+the same thing. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>sound file
+<DD>Name of an AIFF file to play.
+</DL>
+<DL>
+<DT>num repeats
+<DD>Number of times to repeat the sound file. Defaults to 1.
+</DL>
+<H3>Associated Files</H3>
+spoolsoundfile.c<P>
+<H3>Location</H3>
+examples/Audio <P>
+<H3>See Also</H3>
+<CODE><A HREF="./12PGS047.html#XREF31063">playsoundfile</A>, <A HREF="./12PGS072.html#XREF11133">tsp_spoolsoundfile</A><P>
+</CODE>

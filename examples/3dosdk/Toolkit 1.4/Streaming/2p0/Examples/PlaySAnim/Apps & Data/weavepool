@@ -1,0 +1,5 @@
+AnimToSanm -opool.chnk0  -c0 -r60   -s24 -x40   -y50  -q < pool.anim
+AnimToSanm -opool.chnk1  -c1 -r120   -s24 -x160  -y50  -q < pool.anim
+
+weaver -o pool.sanim < pool.weave 
+dumpstream -i pool.sanim -v

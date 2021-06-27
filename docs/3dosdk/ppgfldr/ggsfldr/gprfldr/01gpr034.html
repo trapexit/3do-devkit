@@ -1,0 +1,32 @@
+<Title>GetPixelAddress </Title>
+<A NAME="XREF16038"><H1>GetPixelAddress </A></H1>
+<A NAME="XREF40181"> Returns a pointer to the pixel at the specified coordinates.</A><P>
+<H3>Synopsis</H3>
+<CODE>void *GetPixelAddress (Item scrbitItem,Coord x,Coord y)</CODE><P>
+<H3>Description</H3>
+GetPixelAddress<CODE>()</CODE> returns a pointer to the pixel at the specified coordinates. <P>
+The argument scrbitItem can refer to either a screen item or a bitmap item. If scrbitItem is a bitmap item, the returned pointer is the address of the pixel in the Bitmaps buffer. If scrbitItem is a screen item, the returned pointer is the address of the pixel in the buffer of the bitmap associated with the screen. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>screenItem
+<DD>Item number of the screen or bitmap containing the pixel. 
+</DL>
+<DL>
+<DT>x
+<DD>The column of the desired pixel address. 
+</DL>
+<DL>
+<DT>y
+<DD>Row of the desired pixel address. 
+</DL>
+<H3>Return Value</H3>
+The call returns a pointer to the pixel in the buffer of the relevant bitmap, or NULL if an error occurs (such as specifying a pixel that lies outside the clip boundaries of the bitmap). <P>
+<H3>Notes</H3>
+Future display modes can cause this call to return addresses of varying alignments. Try not to assume too much about the characteristics of the memory to which the returned address points. <P>
+<H3>Implementation</H3>
+Folio call implemented in Graphics folio V20. <P>
+<H3>Associated Files</H3>
+graphics.h, graphics.lib<P>
+<H3>See Also</H3>
+<CODE><A HREF="./01gpr051.html#XREF20708"><CODE>ReadPixel</A>() </CODE><P>
+</CODE>

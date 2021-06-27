@@ -1,0 +1,32 @@
+<Title>ClearBitmap </Title>
+<A NAME="XREF14862"><H1>ClearBitmap </A></H1>
+ Clears a screen or bitmap.<P>
+<H3>Synopsis</H3>
+<CODE>Err ClearBitmap (Item ioreq, Item scr_bm, Bitmap *bmPtr, int32 rgbValue)</CODE><P>
+<H3>Description</H3>
+Sets all pixels in the screen or bitmap to the specified rgbValue. Uses <CODE>SetVRAMPages()</CODE> for fast operation. <P>
+The rgbValue is a pair of RGB555 values packed into a 32-bit word. If you don't want simple black (zero), use the <CODE>MakeRGB15Pair()</CODE> macro to create this value from separate red, green, and blue values. <P>
+For best performance, pass a non-zero IOreq parameter and a bitmap pointer instead of a screen or bitmap item. This will avoid <CODE>LookupItem()</CODE> and <CODE>CreateIOReq()</CODE> calls that would otherwise be made internally. <P>
+<H3>Arguments</H3>
+<DL>
+<DT>ioreq
+<DD>IOReq item obtained from<CODE> GetVRAMIOReq()</CODE>, or zero to have an IOReq created and deleted internally during the call. 
+</DL>
+<DL>
+<DT>scr_bm
+<DD>Screen or Bitmap item number. May be zero if a Bitmap pointer is provided. 
+</DL>
+<DL>
+<DT>bmPtr
+<DD>Bitmap pointer. May be NULL if a Screen or Bitmap item is provided. 
+</DL>
+<DL>
+<DT>rgbValue
+<DD>Color value to store into all screen or bitmap pixels. 
+</DL>
+<H3>Return Value</H3>
+Returns zero on success or a negative error code. <P>
+<H3>Implementation</H3>
+Library call implemented in lib3do.lib. <P>
+<H3>Associated Files</H3>
+lib3do.lib, displayutils.h<P>

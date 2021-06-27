@@ -1,0 +1,54 @@
+<Title>DSDataBuf</Title>
+<A NAME="XREF16873"><H1>DSDataBuf</A></H1>
+<A NAME="XREF38166"></A>Data buffer structure.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>struct DSDataBuf {
+   struct DSDataBuf* permanentNext;
+   struct DSDataBuf* next;
+   long useCount;
+   struct DSStreamCB* streamCBPtr;
+   Item ioreqItem;
+   IOReq* ioreqItemPtr;
+   char streamData[4];
+ typedef struct DSDataBuf DSDataBuf, *DSDataBufPtr</CODE></PRE><P>
+<H3>Description</H3>
+The data buffer structure managed by the stream parser. The first part of 
+each physical data buffer must contain the header information described by 
+this structure. The actual data component of a <CODE>DSDataBuf</CODE> can 
+be a different length for each stream. However, buffer sizes are fixed 
+within a given stream. <P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>permanentNext</CODE>
+<DD>Pointer for keeping permanent global buffer list for debugging, etc. 
+(not used by streamer).
+</DL>
+<DL>
+<DT><CODE>next</CODE>
+<DD>Pointer for linking buffers into lists (free, in use, etc.).
+</DL>
+<DL>
+<DT><CODE>useCount</CODE>
+<DD>Count of subscribers using this buffer.
+</DL>
+<DL>
+<DT><CODE>streamCBPtr</CODE>
+<DD>Pointer to the context block of the owning stream.
+</DL>
+<B>Note: </B>The following two fields are filled in by data acquisition at 
+"opening" time. <P>
+<DL>
+<DT><CODE>ioreqItem</CODE>
+<DD>I/O request item for queuing reads for this buffer
+</DL>
+<DL>
+<DT><CODE>oreqItemPtr</CODE>
+<DD>Pointer to the item in system space
+</DL>
+<DL>
+<DT><CODE>streamData</CODE>
+<DD>Start of (variable length) stream data
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

@@ -1,0 +1,69 @@
+<Title>AsyncReadBlockFile</Title>
+<A NAME="XREF21649"><H1>AsynchReadBlockFile</A></H1>
+<A NAME="XREF21067"></A> Reads data blocks from file.<P>
+<H3>Synopsis</H3>
+<CODE>int32 AsynchReadBlockFile (BlockFilePtr bf, Item ioreqItem, void* 
+buffer, long count, long offset)</CODE><P>
+<H3>Description</H3>
+Reads a number of data blocks from the specified block file. 
+<CODE>AsynchReadBlockFile()</CODE> calls <CODE>SendIO()</CODE> to make an 
+asynchronous Portfolio I/O request for the data.<P>
+Because <CODE>AsynchReadBlockFile()</CODE> reads only whole blocks from 
+the specified file, it reads the first whole block containing the location 
+specified by <CODE>offset</CODE> (that is, it begins to read data blocks 
+at the block margin prior to the specified byte location).<P>
+The file must be opened by <CODE>OpenBlockFile()</CODE> before 
+<CODE>AsynchReadBlockFile()</CODE> can read data blocks from it.<P>
+<H3>Arguments</H3>
+<DL>
+<DT><CODE>bf</CODE>
+<DD>Pointer to the block file.
+</DL>
+<DL>
+<DT><CODE>ioreqItem</CODE>
+<DD>Item of the I/O request.
+</DL>
+<DL>
+<DT><CODE>buffer</CODE>
+<DD>Pointer to buffer into which the data blocks are read.
+</DL>
+<DL>
+<DT><CODE>count</CODE>
+<DD>Number of bytes that are read.
+</DL>
+<DL>
+<DT><CODE>offset</CODE>
+<DD>Location at which the first block is read, measured in bytes from the 
+start of the file.
+</DL>
+<H3>Return Value</H3>
+<DL>
+<DT>Value
+<DD>Error Condition
+</DL>
+<DL>
+<DT>0
+<DD>None (the I/O request has not completed)
+</DL>
+<DL>
+<DT>1
+<DD>None (the I/O request has already completed)
+</DL>
+<DL>
+<DT>(Portfolio error code)
+<DD><CODE>SendIO()</CODE> failed
+</DL>
+<CODE>AsynchReadBlockFile()</CODE> does not return the value of the 
+<CODE>io_Error </CODE>field to which returns the status of the I/O 
+request.<P>
+See "Error Messages" in the <I>3DO Portfolio Reference Manual</I> for a 
+listing of error messages returned by <CODE>CreateItem()</CODE>.<P>
+<H3>Caveats</H3>
+This function only works when called with a count that's the multiple of 
+the cel's blocksize.<P>
+<H3>Associated Files</H3>
+BlockFile.h<P>
+<H3>See Also</H3>
+<A HREF="./01DSR054.html#XREF38570"><CODE>OpenBlockFile</A>, 
+<A HREF="../../ppgfldr/msgfldr/mprfldr/001mpr058.html#XREF22869">OwnAudioClock</A>,
+<A HREF="../../ppgfldr/pgsfldr/sprfldr/001spr121.html#XREF16419">SendIO</A> </CODE><P>

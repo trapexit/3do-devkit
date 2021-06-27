@@ -1,0 +1,110 @@
+<HTML><TITLE>inplace_merge </TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>inplace_merge </H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Merge two sorted sequences into one.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warnings"><LI>Warnings</LI></A>
+<A HREF="#See Also"><LI>See Also</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>template &#60;class BidirectionalIterator>
+  void <B>inplace_merge</B>(BidirectionalIterator first,
+                     BidirectionalIterator middle,
+                     BidirectionalIterator last);
+template &#60;class BidirectionalIterator, class Compare>
+  void <B>inplace_merge</B>(BidirectionalIterator first,
+                     BidirectionalIterator middle,
+                     BidirectionalIterator last, Compare comp);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>inplace_merge</B></I> algorithm merges two sorted consecutive ranges <SAMP>[first, middle)</SAMP> and <SAMP>[middle, last)</SAMP>, and puts the result of the merge into the range <SAMP>[first, last)</SAMP>.  The merge is stable, that is, if the two ranges contain equivalent elements, the elements from the first range always precede the elements from the second. </P>
+<P>There are two versions of the <B><I>inplace_merge</B></I> algorithm.  The first version uses the less than operator (<SAMP>operator&#60;</SAMP>) as the default for comparison, and the second version accepts a third argument that specifies a comparison operator.</P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>When enough additional memory is available, <B><I>inplace_merge</B></I> does at most<SAMP> (last - first) - 1</SAMP>  comparisons. If no additional memory is available, an algorithm with <SAMP>O(NlogN)</SAMP> complexity (where <SAMP>N</SAMP> is equal to <SAMP>last-first</SAMP>) may be used.</P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// merge.cpp
+//
+ #include &#60;algorithm>
+ #include &#60;vector>
+ #include &#60;iostream.h>
+ int main()
+ {
+   int d1[4] = {1,2,3,4};
+   int d2[8] = {11,13,15,17,12,14,16,18};
+   // Set up two vectors
+   vector&#60;int> v1(d1,d1 + 4), v2(d1,d1 + 4);
+   // Set up four destination vectors
+   vector&#60;int> v3(d2,d2 + 8),v4(d2,d2 + 8),
+               v5(d2,d2 + 8),v6(d2,d2 + 8);
+   // Set up one empty vector
+   vector&#60;int> v7;</PRE>
+<PRE>   // Merge v1 with v2
+   merge(v1.begin(),v1.end(),v2.begin(),v2.end(),v3.begin());
+   // Now use comparator
+   merge(v1.begin(),v1.end(),v2.begin(),v2.end(),v4.begin(),
+         less&#60;int>());</PRE>
+<PRE>  <B> </B>// In place merge v5
+   vector&#60;int>::iterator mid = v5.begin();
+   advance(mid,4);
+   <B>inplace_merge</B>(v5.begin(),mid,v5.end());
+   // Now use a comparator on v6
+   mid = v6.begin();
+   advance(mid,4);
+   <B>inplace_merge</B>(v6.begin(),mid,v6.end(),less&#60;int>());<B> </B></PRE>
+<PRE>   // Merge v1 and v2 to empty vector using insert iterator
+
+   merge(v1.begin(),v1.end(),v2.begin(),v2.end(),
+         back_inserter(v7));</PRE>
+<PRE>   // Copy all cout
+   ostream_iterator&#60;int> out(cout," ");
+   copy(v1.begin(),v1.end(),out);
+   cout &#60;&#60; endl;
+   copy(v2.begin(),v2.end(),out);
+   cout &#60;&#60; endl;
+   copy(v3.begin(),v3.end(),out);
+   cout &#60;&#60; endl;
+   copy(v4.begin(),v4.end(),out);
+   cout &#60;&#60; endl;
+   copy(v5.begin(),v5.end(),out);
+   cout &#60;&#60; endl;
+   copy(v6.begin(),v6.end(),out);
+   cout &#60;&#60; endl;
+   copy(v7.begin(),v7.end(),out);
+   cout &#60;&#60; endl;
+    
+   // Merge v1 and v2 to cout
+   merge(v1.begin(),v1.end(),v2.begin(),v2.end(),
+         ostream_iterator&#60;int>(cout," "));
+   cout &#60;&#60; endl;</PRE>
+<PRE>   return 0;
+ }
+
+Output:
+1 2 3 4
+1 2 3 4
+1 1 2 2 3 3 4 4
+1 1 2 2 3 3 4 4
+11 12 13 14 15 16 17 18
+11 12 13 14 15 16 17 18
+1 1 2 2 3 3 4 4
+1 1 2 2 3 3 4 4</PRE>
+<A NAME="Warnings"><H3>Warnings</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you'll have to write :</P>
+<P><SAMP>vector&#60;int, allocator></SAMP></P>
+<P>instead of </P>
+<P><SAMP>vector&#60;int></SAMP></P>
+<A NAME="See Also"><H3>See Also</H3></A>
+<P><A HREF="mer_0626.htm"><B><I>merge</B></I></A></P>
+<HR>
+<A HREF="inn_8576.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="Inp_4853.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

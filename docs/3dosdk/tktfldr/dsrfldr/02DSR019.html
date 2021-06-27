@@ -1,0 +1,69 @@
+<Title>StreamOpcode</Title>
+<A NAME="XREF32440"><H1>StreamOpcode</A></H1>
+<A NAME="XREF28912"></A>Stream operation code enumeration.<P>
+<H3>Synopsis</H3>
+<pre>
+<CODE>typedef enum StreamOpcode {
+   kStreamOpData 0,
+   kStreamOpGetChan,
+   kStreamOpSetChan,
+   kStreamOpControl,
+   kStreamOpSync,
+   kStreamOpStart,
+   kStreamOpStop,
+   kStreamOpOpening,
+   kStreamOpClosing,
+   kStreamOpEOF,
+   kStreamOpAbort
+}</CODE></pre><P>
+<H3>Description</H3>
+Opcode values as passed in <CODE>whatToDo</CODE><P>
+<H3>Fields</H3>
+<DL>
+<DT><CODE>kStreamOpData</CODE>
+<DD>0
+<DD>new data has arrived.
+</DL>
+<DL>
+<DT><CODE>kStreamOpGetChan</CODE>
+<DD>Get logical channel status.
+</DL>
+<DL>
+<DT><CODE>kStreamOpSetChan</CODE>
+<DD>Set logical channel status.
+</DL>
+<DL>
+<DT><CODE>kStreamOpControl</CODE>
+<DD>Perform subscriber defined function.
+</DL>
+<DL>
+<DT><CODE>kStreamOpSync</CODE>
+<DD>Clock stream resynched the clock. 
+</DL>
+<DL>
+<DT><CODE>kStreamOpStart</CODE>
+<DD>Stream is being started.
+</DL>
+<DL>
+<DT><CODE>kStreamOpStop</CODE>
+<DD>Stream is being stopped.
+</DL>
+The following messages have no extended message arguments and only may use the whatToDo and context fields in the following message record.<P>
+<DL>
+<DT><CODE>kStreamOpOpening</CODE>
+<DD>One-time initialization call from DSH.
+</DL>
+<DL>
+<DT><CODE>kStreamOpClosing</CODE>
+<DD>Stream is being closed.
+</DL>
+<DL>
+<DT><CODE>kStreamOpEOF</CODE>
+<DD>Physical end of file on data, no more to come.
+</DL>
+<DL>
+<DT><CODE>kStreamOpAbort</CODE>
+<DD>Some subscriber gave up, streaming is aborted.
+</DL>
+<H3>Associated Files</H3>
+DataStream.h<P>

@@ -1,0 +1,35 @@
+<Title>tsp_switcher</Title>
+<A NAME="XREF12413"><H1>tsp_switcher</A></H1>
+<A NAME="XREF11562">Advanced sound player example that switches between 
+</A>sounds based on control pad input.<P>
+<H3>Synopsis</H3>
+<CODE>tsp_switcher</CODE><P>
+<H3>Description</H3>
+Loops one of three sound files off of disc. The user can select a 
+different sound to loop by pressing the A, B, or C buttons on the control 
+pad. The last button pressed corresponds to the sound being played. <P>
+This program demonstrates how one might use the advanced sound player as 
+an engine for doing environmentally-sensitive soundtrack playback. Note 
+that the sound being played doesn't change to the newly selected one until 
+the end of the current sound is reached. This demonstrates, for example 
+how a score might be made to change at the next musically sensible point. 
+See tsp_rooms for another way to do this. <P>
+Control pad operation: <P>
+<UL>
+<LI>A-Select sound #1. 
+<LI>B-Select sound #2.
+<LI>C-Select sound #3. 
+<LI>X-Stop, quit when done playing. 
+<LI>Shift-X-Quit immediately. 
+<LI>Start-Toggle pause on/off. 
+</UL>
+<H3>Associated Files</H3>
+tsp_switcher.c, <P>
+$samples<P>
+<H3>Location</H3>
+examples/Audio/Advanced_Sound_Player<P>
+<H3>See Also</H3>
+<CODE><A HREF="../../mgsfldr/mprfldr/02mpr068.html#XREF24761">spCreatePlayer</A>,
+<A HREF="./12PGS071.html#XREF30384">tsp_rooms</A>,
+<A HREF="./12PGS070.html#XREF12219">tsp_algorithmic</A><P>
+</CODE>

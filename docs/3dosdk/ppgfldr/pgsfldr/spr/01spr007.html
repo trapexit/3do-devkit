@@ -1,0 +1,49 @@
+<Title>AllocMemFromMemLists</Title>
+<A NAME="XREF42660"><H1>AllocMemFromMemLists </A></H1>
+<A NAME="XREF33221"></A>Allocates a memory block from a list of memory lists.<P>
+<H3>Synopsis</H3>
+<CODE>void *AllocMemFromMemLists( List *l, int32 size, uint32 memflags)</CODE><P>
+<H3>Description</H3>
+This procedure allocates a memory block of the specified type from a list of free memory lists. Although it is used most often by the kernel, it can also be called by user tasks that need to do their own memory management. <P>
+<B>Note: </B> Most applications do not need to do their own memory management. When you use standard memory-allocation procedures like <CODE>AllocMem()</CODE>, the details of memory management are handled for you by the kernel. <P>
+The free memory pools in Portfolio are implemented as lists of memory lists: <P>
+<UL>
+<LI>The system-wide free memory pool is the list of memory lists that contain the free memory pages owned by the system. 
+<LI>A task's free memory pool is a list of memory lists that have been allocated for the task. These include (1) the two memory lists - one for VRAM and one for DRAM -that are allocated automatically for a task when the task is created. 
+</UL>
+ <CODE>AllocMemFromMemLists()</CODE> allocates memory directly from a particular memory pool. This is in contrast to <CODE>AllocMemFromMemList()</CODE>, which allocates memory from a specific memory list, typically one that was created by the task for doing its own memory management. <P>
+<B>Note: </B> Tasks can only allocate memory from memory lists that belong to them. This means that user tasks cannot use <CODE>AllocMemFromMemLists()</CODE> to allocate memory directly from the system-wide free memory pool, because the memory in that pool belongs to the system. <P>
+If a task requests more memory from its free memory pool than is available, the kernel automatically allocates the necessary additional memory pages from the system-wide free memory pool if they are available. The task gets ownership of the additional memory and, when the memory is later freed, it is added to the task's free memory pool.<P>
+<H3>Arguments</H3>
+<DL>
+<DT>l
+<DD>A pointer to the memory pool from which to allocate the block. 
+</DL>
+<DL>
+<DT>size
+<DD>The size of the memory block to allocate, in bytes. 
+</DL>
+<DL>
+<DT>memflags
+<DD>Flags that specify the type of memory to allocate. These flags can include MEMTYPE_ANY, MEMTYPE_VRAM, MEMTYPE_DRAM, MEMTYPE_BANKSELECT, MEMTYPE_BANK1, MEMTYPE_BANK2, MEMTYPE_DMA, MEMTYPE_CEL, MEMTYPE_AUDIO, MEMTYPE_DSP, MEMTYPE_FILL, MEMTYPE_INPAGE, MEMTYPE_TRACKSIZE, MEMTYPE_STARTPAGE, and MEMTYPE_MYPOOL. For information about these flags, see the description of AllocMem(). 
+</DL>
+<H3>Return Value</H3>
+The procedure returns a pointer to memory block that was allocated or NULL if the memory couldn't be allocated.<P>
+<H3>Implementation</H3>
+Folio call implemented in kernel folio V20. <P>
+<H3>Associated Files</H3>
+<DL>
+<DT>mem.h
+<DD>ANSI C Prototype 
+</DL>
+<DL>
+<DT>clib.lib
+<DD>ARM Link Library 
+</DL>
+<H3>Notes</H3>
+To free a memory block allocated with <CODE>AllocMemFromMemLists()</CODE>, use the <CODE>FreeMemToMemLists()</CODE> procedure. <P>
+You can enable memory debugging in your application by compiling your entire project with the MEMDEBUG value defined on the compiler's command-line. Refer to the <CODE>CreateMemDebug()</CODE> function for more details. <P>
+<H3>See Also</H3>
+<CODE><A HREF="#XREF42660"><CODE>AllocMemFromMemLists</A>() </CODE><P>
+</CODE>
+<H1><LINK NAME="XREF42660"></LINK></H1><HR>

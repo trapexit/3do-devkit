@@ -1,0 +1,90 @@
+<HTML><TITLE>transform</TITLE><BODY>
+<A HREF="ref.htm"><IMG SRC="images/banner.gif"></A>
+<P><STRONG>Click on the banner to return to the Class Reference home page.</STRONG></P>
+<P>&copy;Copyright 1996 Rogue Wave Software</P>
+<H2>transform</H2>
+<HR><PRE>     Algorithm</PRE><HR>
+<A NAME="Summary"><H3>Summary</H3></A>
+<P>Applies an operation to a range of values in a collection and stores the result.</P>
+<H3>Contents</H3>
+<UL>
+<A HREF="#Synopsis"><LI>Synopsis</LI></A>
+<A HREF="#Description"><LI>Description</LI></A>
+<A HREF="#Complexity"><LI>Complexity</LI></A>
+<A HREF="#Example"><LI>Example</LI></A>
+<A HREF="#Warning"><LI>Warning</LI></A>
+</UL>
+<A NAME="Synopsis"><H3>Synopsis</H3></A>
+<PRE>#include &#60;algorithm></PRE>
+<PRE>
+template &#60;class InputIterator,
+          class OutputIterator,
+          class UnaryOperation>
+OutputIterator <B>transform</B> (InputIterator first,
+                          InputIterator last,
+                          OutputIterator result,
+                          UnaryOperation op);
+template &#60;class InputIterator1,
+          class InputIterator2,
+          class OutputIterator,
+          class BinaryOperation>
+OutputIterator <B>transform</B> (InputIterator1 first1,
+                          InputIterator1 last1,
+                          InputIterator2 first2,
+                          OutputIterator result,
+                          BinaryOperation binary_op);
+</PRE>
+<A NAME="Description"><H3>Description</H3></A>
+<P>The <B><I>transform</B></I> algorithm has two forms.  The first form applies unary operation <SAMP>op</SAMP> to each element of the range <SAMP>[first, last)</SAMP>, and sends the result to the output iterator <SAMP>result</SAMP>.  For example, this version of <B><I>transform</B></I>, could be used to square each element in a vector.  If the output iterator (<SAMP>result</SAMP>) is the same as the input iterator used to traverse the range, <B><I>transform</B></I>, performs its transformation inplace.</P>
+<P>The second form of <B><I>transform</B></I> applies a binary operation, <SAMP>binary_op</SAMP>, to corresponding elements in the range <SAMP>[first1, last1)</SAMP> and the range that begins at <SAMP>first2</SAMP>, and sends the result to <SAMP>result</SAMP>.   For example, <B><I>transform</B></I> can be used to add corresponding elements in two sequences, and store the set of sums in a third.  The algorithm assumes, but does not check, that the second sequence has at least as many elements as the first sequence.  Note that the output iterator <SAMP>result</SAMP> can be a third sequence, or either of the two input sequences.</P>
+<P>Formally, <B><I>transform</B></I> assigns through every  iterator <SAMP>i</SAMP> in the range <SAMP>[result, result + (last1 - first1))</SAMP> a new corresponding value equal to:</P>
+<PRE>op(*(first1 + (i - result))</PRE>
+<PRE></PRE><P> or </P>
+<PRE>binary_op(*(first1 + (i - result), *(first2 + (i - result)))</PRE>
+<PRE></PRE><P><B><I>transform</B></I> returns  <SAMP>result + (last1 - first1)</SAMP>.   <SAMP>op</SAMP> and <SAMP>binary_op</SAMP> must not have any side effects.  <SAMP>result</SAMP> may be equal to <SAMP>first</SAMP> in case of unary transform, or to <SAMP>first1</SAMP> or <SAMP>first2</SAMP> in case of binary transform. </P>
+<A NAME="Complexity"><H3>Complexity</H3></A>
+<P>Exactly <SAMP>last1 - first1 </SAMP>applications of <SAMP>op</SAMP> or  <SAMP>binary_op </SAMP> are performed. </P>
+<A NAME="Example"><H3>Example</H3></A>
+<PRE>//
+// trnsform.cpp
+//
+ #include &#60;functional>
+ #include &#60;deque>
+ #include &#60;algorithm>
+ #include &#60;iostream.h>
+ #include &#60;iomanip.h></PRE><PRE> int main()
+ {
+   //Initialize a deque with an array of ints
+   int arr1[5] = {99, 264, 126, 330, 132};
+   int arr2[5] = {280, 105, 220, 84, 210};
+   deque&#60;int> d1(arr1, arr1+5), d2(arr2, arr2+5);</PRE><PRE>   //Print the original values
+   cout &#60;&#60; "The following pairs of numbers: " 
+        &#60;&#60; endl &#60;&#60; "     ";
+   deque&#60;int>::iterator i1;
+   for(i1 = d1.begin(); i1 != d1.end(); i1++)
+      cout &#60;&#60; setw(6) &#60;&#60; *i1 &#60;&#60; " ";
+   cout &#60;&#60; endl &#60;&#60; "     ";
+   for(i1 = d2.begin(); i1 != d2.end(); i1++)
+      cout &#60;&#60; setw(6) &#60;&#60; *i1 &#60;&#60; " ";</PRE><PRE>   // Transform the numbers in the deque to their 
+   // factorials and store in the vector
+   <B>transform</B>(d1.begin(), d1.end(), d2.begin(), 
+             d1.begin(), times&#60;int>());</PRE><PRE>   //Display the results
+   cout &#60;&#60; endl &#60;&#60; endl;
+   cout &#60;&#60; "Have the products: " &#60;&#60; endl &#60;&#60; "     ";
+   for(i1 = d1.begin(); i1 != d1.end(); i1++)
+     cout &#60;&#60; setw(6) &#60;&#60; *i1 &#60;&#60; " ";</PRE><PRE>   return 0;
+ }
+Output :
+The following pairs of numbers:
+         99    264    126    330    132
+        280    105    220     84    210
+Have the products:
+      27720  27720  27720  27720  27720
+</PRE>
+<A NAME="Warning"><H3>Warning</H3></A>
+<P>If your compiler does not support default template parameters, then you need to always supply the <SAMP>Allocator</SAMP> template argument.  For instance, you will need to write :</P>
+<P><SAMP>deque&#60;int, allocator></SAMP></P>
+<P>instead of:</P>
+<P><SAMP>deque&#60;int></SAMP></P>
+<HR>
+<A HREF="tim_4491.htm"><IMG SRC="images/prev.gif"></A> <A HREF="ref.htm#contents"><IMG SRC="images/toc.gif"></A> <A HREF="una_4659.htm"><IMG SRC="images/next.gif"></A></BODY></HTML>

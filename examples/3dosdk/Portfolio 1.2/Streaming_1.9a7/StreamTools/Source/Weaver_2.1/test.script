@@ -1,0 +1,83 @@
+# Example Weaver script for Cinepak movie with two audio channels
+# and markers layed out at one second intervals.
+
+	WriteStreamHeader
+	WriteMarkerTable
+	StreamBlockSize		0x8000
+	StreamBuffers		4
+	NumSubsMessages		200
+
+#	Subscribers & delta priorities
+
+	Subscriber			FILM			7
+	Subscriber 			SNDS			10
+	Subscriber 			CTRL			11
+
+#	Delta priorities for the streamer thread and data acquisition
+
+	StreamerDeltaPri	6
+	DataAcqDeltaPri		8
+
+#	Audio parameters
+
+	PreloadInstrument	SA_44K_16B_M
+	AudioClockChan		0
+	EnableAudioMask		0x3
+
+# Input files go here...
+
+	File	dummyfile1		0	0
+	File	dummyfile2		1	0
+
+# Here come the markers...
+
+	MarkerTime	240
+	MarkerTime	480
+	MarkerTime	720
+	MarkerTime	960
+	MarkerTime	1200
+	MarkerTime	1440
+	MarkerTime	1680
+	MarkerTime	1920
+	MarkerTime	2160
+	MarkerTime	2400
+	MarkerTime	2640
+	MarkerTime	2880
+	MarkerTime	3120
+	MarkerTime	3360
+	MarkerTime	3600
+	MarkerTime	3840
+	MarkerTime	4080
+	MarkerTime	4320
+	MarkerTime	4560
+	MarkerTime	4800
+	MarkerTime	5040
+	MarkerTime	5280
+	MarkerTime	5520
+	MarkerTime	5760
+	MarkerTime	6000
+	MarkerTime	6240
+	MarkerTime	6480
+	MarkerTime	6720
+	MarkerTime	6960
+	MarkerTime	7200
+	MarkerTime	7440
+	MarkerTime	7680
+	MarkerTime	7920
+	MarkerTime	8160
+	MarkerTime	8400
+	MarkerTime	8640
+	MarkerTime	8880
+	MarkerTime	9120
+	MarkerTime	9360
+	MarkerTime	9600
+	MarkerTime	9840
+	MarkerTime	10080
+	MarkerTime	10320
+	MarkerTime	10560
+	MarkerTime	10800
+	MarkerTime	11040
+	MarkerTime	11280
+	MarkerTime	11520
+	MarkerTime	11760
+	MarkerTime	12000
