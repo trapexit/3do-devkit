@@ -16,8 +16,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_ITERATOR_DISTANCE_INCLUDED
-#define TTL_ITERATOR_DISTANCE_INCLUDED
+#pragma include_only_once
 
 #include "iterator_tags"
 #include "iterator_traits"
@@ -35,5 +34,3 @@ distance(ITER* first_,
 {
   return (last_ - first_);
 }
-
-#endif

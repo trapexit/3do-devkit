@@ -1,7 +1,7 @@
 /*
   ISC License
 
-  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+  Copyright (c) 2022, Antonio SJ Musumeci <trapexit@spawn.link>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -16,26 +16,13 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_MEMORY_DESTROY_INCLUDED
-#define TTL_MEMORY_DESTROY_INCLUDED
+#pragma include_only_once
 
 #include "new"
 #include "pod"
 #include "memory_addressof"
 
-template<class T>
-inline
-void
-destroy_at(T* p_)
-{
-  __destruct(p_);
-}
-
-#define DESTROY_AT(TYPE) template<> inline void destroy_at(TYPE *) {}
-
-POD_TYPES_FUNC(DESTROY_AT)
-
-#undef DESTROY_AT
+template<typename ITER> void destroy(ITER,ITER);
 
 template<typename ITER>
 void
@@ -54,7 +41,3 @@ destroy(ITER begin_,
 POD_TYPES_FUNC(DESTROY)
 
 #undef DESTROY
-
-
-
-#endif

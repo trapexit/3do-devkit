@@ -1,5 +1,4 @@
-#ifndef __SOUNDSPOOLER_H
-#define __SOUNDSPOOLER_H
+#pragma include_only_once
 
 /****************************************************************************
  **
@@ -12,6 +11,7 @@
  **
  ****************************************************************************/
 
+#include "extern_c.h"
 
 #include "types.h"
 #include "list.h"
@@ -31,15 +31,15 @@ typedef int32 (*SoundBufferFunc)(SoundSpooler *sspl, SoundBufferNode *sbn, int32
 /* SoundBufferNode */
 struct SoundBufferNode
 {
-  Node	sbn_Node;
-  Item    sbn_Sample;         /* Sample item used to reference data. */
+  Node    sbn_Node;
+  Item    sbn_Sample;           /* Sample item used to reference data. */
   Item    sbn_Attachment;
-  Item    sbn_Cue;            /* Used for signaling completion. */
-  int32   sbn_Signal;         /* Signal from Cue */
-  uint32  sbn_Flags;          /* SBN_FLAG_ below */
-  char   *sbn_Address;        /* Address of sound data. */
-  int32   sbn_NumBytes;       /* Number of bytes of sound data. */
-  int32   sbn_SequenceNum;    /* For tracking buffers. */
+  Item    sbn_Cue;              /* Used for signaling completion. */
+  int32   sbn_Signal;           /* Signal from Cue */
+  uint32  sbn_Flags;            /* SBN_FLAG_ below */
+  char   *sbn_Address;          /* Address of sound data. */
+  int32   sbn_NumBytes;         /* Number of bytes of sound data. */
+  int32   sbn_SequenceNum;      /* For tracking buffers. */
   void   *sbn_UserData;
 };
 
@@ -50,15 +50,15 @@ struct SoundBufferNode
 /* SoundSpooler */
 struct SoundSpooler
 {
-  List	sspl_FreeBuffers;   /* List of SoundBufferNodes available for use. */
-  List	sspl_ActiveBuffers; /* List of SoundBufferNodes queued up in audiofolio. */
-  int32   sspl_NumBuffers;
-  int32   sspl_SignalMask;    /* OR of all Cue signals. */
-  Item    sspl_SamplerIns;    /* Appropriate sample player instrument */
-  uint32  sspl_Flags;         /* Private flags field. */
+  List            sspl_FreeBuffers; /* List of SoundBufferNodes available for use. */
+  List            sspl_ActiveBuffers; /* List of SoundBufferNodes queued up in audiofolio. */
+  int32           sspl_NumBuffers;
+  int32           sspl_SignalMask; /* OR of all Cue signals. */
+  Item            sspl_SamplerIns; /* Appropriate sample player instrument */
+  uint32          sspl_Flags;   /* Private flags field. */
   /* Optional callback function called for SoundBufferNode state changes */
   SoundBufferFunc sspl_SoundBufferFunc;
-  List    sspl_RequestedBuffers; /* List of SoundBufferNodes that have been returned by ssplRequestBuffer() but not resubmitted or unrequested. */
+  List            sspl_RequestedBuffers; /* List of SoundBufferNodes that have been returned by ssplRequestBuffer() but not resubmitted or unrequested. */
 };
 
 
@@ -133,48 +133,38 @@ struct SoundSpooler
 
 /* -------------------- Functions */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+EXTERN_C_BEGIN
 
-  /* macros */
+/* macros */
 #define ssplGetSBMsgClass(msg) ((msg) & SSPL_SBMSGCLASS_MASK)
 #define ssplIsSpoolerActive(spooler) (boolean)((ssplGetSpoolerStatus(spooler) & SSPL_STATUS_F_ACTIVE) != 0)
 
-  /* functions */
-  Err ssplAbort( SoundSpooler *sspl, void (*UserBufferProcessor)( SoundSpooler *sspl, SoundBufferNode *sbn ) );
-  Err ssplAttachInstrument( SoundSpooler *sspl, Item SamplerIns );
-  SoundSpooler *ssplCreateSoundSpooler( int32 NumBuffers, Item SamplerIns );
-  Err ssplDeleteSoundSpooler( SoundSpooler *sspl );
-  Err ssplDetachInstrument( SoundSpooler *sspl );
-  void ssplDumpSoundBufferNode( const SoundBufferNode *sbn );
-  void ssplDumpSoundSpooler( const SoundSpooler *sspl );
-  int32 ssplGetSequenceNum( SoundSpooler *sspl, SoundBufferNode *sbn );
-  int32 ssplGetSpoolerStatus (const SoundSpooler *);
-  void *ssplGetUserData( SoundSpooler *sspl, SoundBufferNode *sbn );
-  Err ssplPause( SoundSpooler *sspl );
-  int32 ssplPlayData( SoundSpooler *sspl, char *Data, int32 NumBytes );
-  int32 ssplProcessSignals( SoundSpooler *sspl, int32 SignalMask, void (*UserBufferProcessor)( SoundSpooler *sspl, SoundBufferNode *sbn ) );
-  SoundBufferNode *ssplRequestBuffer( SoundSpooler *sspl );
-  Err ssplReset( SoundSpooler *sspl, void (*UserBufferProcessor)( SoundSpooler *sspl, SoundBufferNode *sbn ) );
-  Err ssplResume( SoundSpooler *sspl );
-  int32 ssplSendBuffer( SoundSpooler *sspl, SoundBufferNode *sbn );
-  Err ssplSetBufferAddressLength( SoundSpooler *sspl, SoundBufferNode *sbn, char *Data, int32 NumBytes );
-  Err ssplSetSoundBufferFunc( SoundSpooler *, SoundBufferFunc );
-  void ssplSetUserData( SoundSpooler *sspl, SoundBufferNode *sbn, void *UserData );
-  int32 ssplSpoolData( SoundSpooler *sspl, char *Data, int32 NumBytes, void *UserData );
-  Err ssplStartSpooler( SoundSpooler *sspl, int32 Amplitude);
-  Err ssplStartSpoolerTags (SoundSpooler *sspl, const TagArg *samplertags);
-  Err ssplStartSpoolerTagsVA (SoundSpooler *sspl, uint32 tag1, ...);
-  Err ssplStopSpooler( SoundSpooler *sspl );
-  Err ssplUnrequestBuffer( SoundSpooler *sspl, SoundBufferNode *sbn );
+/* functions */
+Err ssplAbort(SoundSpooler *sspl, void (*UserBufferProcessor)(SoundSpooler *sspl, SoundBufferNode *sbn));
+Err ssplAttachInstrument(SoundSpooler *sspl, Item SamplerIns);
+SoundSpooler *ssplCreateSoundSpooler(int32 NumBuffers, Item SamplerIns);
+Err ssplDeleteSoundSpooler(SoundSpooler *sspl);
+Err ssplDetachInstrument(SoundSpooler *sspl);
+void ssplDumpSoundBufferNode(const SoundBufferNode *sbn);
+void ssplDumpSoundSpooler(const SoundSpooler *sspl);
+int32 ssplGetSequenceNum(SoundSpooler *sspl, SoundBufferNode *sbn);
+int32 ssplGetSpoolerStatus (const SoundSpooler *);
+void *ssplGetUserData(SoundSpooler *sspl, SoundBufferNode *sbn);
+Err ssplPause(SoundSpooler *sspl);
+int32 ssplPlayData(SoundSpooler *sspl, char *Data, int32 NumBytes);
+int32 ssplProcessSignals(SoundSpooler *sspl, int32 SignalMask, void (*UserBufferProcessor)(SoundSpooler *sspl, SoundBufferNode *sbn));
+SoundBufferNode *ssplRequestBuffer(SoundSpooler *sspl);
+Err ssplReset(SoundSpooler *sspl, void (*UserBufferProcessor)(SoundSpooler *sspl, SoundBufferNode *sbn));
+Err ssplResume(SoundSpooler *sspl);
+int32 ssplSendBuffer(SoundSpooler *sspl, SoundBufferNode *sbn);
+Err ssplSetBufferAddressLength(SoundSpooler *sspl, SoundBufferNode *sbn, char *Data, int32 NumBytes);
+Err ssplSetSoundBufferFunc(SoundSpooler *, SoundBufferFunc);
+void ssplSetUserData(SoundSpooler *sspl, SoundBufferNode *sbn, void *UserData);
+int32 ssplSpoolData(SoundSpooler *sspl, char *Data, int32 NumBytes, void *UserData);
+Err ssplStartSpooler(SoundSpooler *sspl, int32 Amplitude);
+Err ssplStartSpoolerTags (SoundSpooler *sspl, const TagArg *samplertags);
+Err ssplStartSpoolerTagsVA (SoundSpooler *sspl, uint32 tag1, ...);
+Err ssplStopSpooler(SoundSpooler *sspl);
+Err ssplUnrequestBuffer(SoundSpooler *sspl, SoundBufferNode *sbn);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __SOUNDSPOOLER_H */
+EXTERN_C_END

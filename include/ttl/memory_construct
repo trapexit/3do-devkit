@@ -16,16 +16,24 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_MEMORY_CONSTRUCT_INCLUDED
-#define TTL_MEMORY_CONSTRUCT_INCLUDED
+#pragma include_only_once
 
 #include "new"
+
+
+template<typename T>
+inline
+void
+memory_construct(T *ptr_)
+{
+  ::new(ptr_) T();
+}
 
 template<typename T,typename V>
 inline
 void
-__construct(T       *ptr_,
-            const V &val_)
+memory_construct(T       *ptr_,
+                 const V &val_)
 {
   ::new(ptr_) T(val_);
 }
@@ -35,11 +43,39 @@ template<typename T,
          typename V2>
 inline
 void
-__construct(T        *ptr_,
-            const V1 &val1_,
-            const V2 &val2_)
+memory_construct(T        *ptr_,
+                 const V1 &val1_,
+                 const V2 &val2_)
 {
   ::new(ptr_) T(val1_,val2_);
 }
 
-#endif
+template<typename T,
+         typename V1,
+         typename V2,
+         typename V3>
+inline
+void
+memory_construct(T        *ptr_,
+                 const V1 &val1_,
+                 const V2 &val2_,
+                 const V3 &val3_)
+{
+  ::new(ptr_) T(val1_,val2_,val3_);
+}
+
+template<typename T,
+         typename V1,
+         typename V2,
+         typename V3,
+         typename V4>
+inline
+void
+memory_construct(T        *ptr_,
+                 const V1 &val1_,
+                 const V2 &val2_,
+                 const V3 &val3_,
+                 const V4 &val4_)
+{
+  ::new(ptr_) T(val1_,val2_,val3_,val4_);
+}

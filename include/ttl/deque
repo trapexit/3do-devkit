@@ -16,11 +16,13 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_DEQUE_INCLUDED
-#define TTL_DEQUE_INCLUDED
+#pragma include_only_once
+
+#error TODO
 
 #include "allocator"
 #include "cstdint"
+
 
 template<class T,
          class ALLOC = allocator<T> >
@@ -58,7 +60,7 @@ public:
   resize();
   empty();
   shrink_to_fit();
-  
+
 public:
   operator[]();
   at();
@@ -82,5 +84,3 @@ private:
   size_type _size;
   const size_type _cap;
 };
-
-#endif

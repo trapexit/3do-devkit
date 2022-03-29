@@ -1,5 +1,4 @@
-#ifndef __EZQSUBSCRIBER_H__
-#define __EZQSUBSCRIBER_H__
+#pragma include_only_once
 
 #include "graphics.h"
 #include "subscriberutils.h"
@@ -190,5 +189,3 @@ int32 SendFreeEZQSignal(EZQContextPtr ctx);
 
 void EZQSubscriberThread(int32 notUsed, EZQContextPtr ctx);
 void FreeMovieBuff(ImageDesc *imagePtr);
-
-#endif	/* __EZQSUBSCRIBER_H__ */

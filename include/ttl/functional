@@ -16,8 +16,8 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_FUNCTIONAL_INCLUDED
-#define TTL_FUNCTIONAL_INCLUDED
+#pragma include_only_once
+
 
 #define TRIVIAL_HASH(TYPE)                      \
   template<>                                    \
@@ -79,5 +79,3 @@ struct functional
   TRIVIAL_HASH(unsigned long long)
   TRIVIAL_HASH(bool)
 };
-
-#endif

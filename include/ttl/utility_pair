@@ -16,10 +16,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_UTILITY_PAIR_INCLUDED
-#define TTL_UTILITY_PAIR_INCLUDED
+#pragma include_only_once
 
 #include "utility_swap"
+
 
 template<typename T1,
          typename T2>
@@ -105,5 +105,3 @@ operator==(const pair<T1,T2> &a_obj_,
   return ((a_obj_.first  == b_obj_.first) &&
           (a_obj_.second == b_obj_.second));
 }
-
-#endif

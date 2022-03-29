@@ -1,4 +1,25 @@
+if test -n "$BASH" ; then script=$BASH_SOURCE
+elif test -n "$TMOUT"; then script=${.sh.file}
+elif test -n "$ZSH_NAME" ; then script=${(%):-%x}
+elif test ${0##*/} = dash; then x=$(lsof -p $$ -Fn0 | tail -1); script=${x#n}
+else script=$0
+fi
+
+abspath() {
+  filename=$1
+  parentdir=$(dirname "${filename}")
+
+  if [ -d "${filename}" ]; then
+      echo "$(cd "${filename}" && pwd)"
+  elif [ -d "${parentdir}" ]; then
+    echo "$(cd "${parentdir}" && pwd)/$(basename "${filename}")"
+  fi
+}
+
+script=$(abspath "${script}")
+
 which armcc > /dev/null
 if [ $? -ne 0 ]; then
-    PATH="$PATH":"$PWD/bin/compiler/linux":"$PWD/bin/tools/linux"
+    BASEPATH=$(dirname "${script}")
+    PATH="$PATH":"${BASEPATH}/bin/compiler/linux":"${BASEPATH}/bin/tools/linux"
 fi

@@ -16,8 +16,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_POD_INCLUDED
-#define TTL_POD_INCLUDED
+#pragma include_only_once
 
 /*
   Ideally sfinae would be used (ex std::enable_if) to manage
@@ -43,5 +42,3 @@
   FUNC(float) \
   FUNC(double) \
   FUNC(long double)
-
-#endif

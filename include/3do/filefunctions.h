@@ -1,21 +1,19 @@
-#ifndef __H_FILEFUNCTIONS
-#define __H_FILEFUNCTIONS
+#pragma include_only_once
 
 /******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: filefunctions.h,v 1.22 1994/10/21 21:06:16 shawn Exp $
-**
-**  Function prototypes for the userland interfaces to the File Folio.
-**
-******************************************************************************/
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: filefunctions.h,v 1.22 1994/10/21 21:06:16 shawn Exp $
+ **
+ **  Function prototypes for the userland interfaces to the File Folio.
+ **
+ ******************************************************************************/
 
+#include "extern_c.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* cplusplus */
+EXTERN_C_BEGIN
 
 #define FILEFOLIOSWI 0x00030000
 
@@ -35,29 +33,20 @@ extern Item  __swi(FILEFOLIOSWI+11) CreateAlias(char *aliasPath,
 extern Err   __swi(FILEFOLIOSWI+13) DismountFileSystem(char *name);
 
 
-extern Item                        LoadProgram(char *path);
-extern Item                        LoadProgramPrio(char *path, int32 prio);
-extern Err                         LoadCode(char *fileName, CodeHandle *code);
-extern Err                         UnloadCode(CodeHandle code);
-extern int32                       ExecuteAsSubroutine(CodeHandle code,
-						       uint32 argc,
-						       char **argv);
-extern Item                        ExecuteAsThread(CodeHandle code,
-						   uint32 argc,
-						   char **argv,
-						   char *threadName,
-						   int32 priority);
+extern Item  LoadProgram(char *path);
+extern Item  LoadProgramPrio(char *path, int32 prio);
+extern Err   LoadCode(char *fileName, CodeHandle *code);
+extern Err   UnloadCode(CodeHandle code);
+extern int32 ExecuteAsSubroutine(CodeHandle code,
+                                 uint32 argc,
+                                 char **argv);
+extern Item  ExecuteAsThread(CodeHandle code,
+                             uint32 argc,
+                             char **argv,
+                             char *threadName,
+                             int32 priority);
 
-extern void                        OpenFileFolio(void);
-extern void                        CloseFileFolio(void);
+extern void OpenFileFolio(void);
+extern void CloseFileFolio(void);
 
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __H_FILEFUNCTIONS */
+EXTERN_C_END

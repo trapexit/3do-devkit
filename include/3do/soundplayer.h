@@ -1,5 +1,4 @@
-#ifndef __SOUNDPLAYER_H
-#define __SOUNDPLAYER_H
+#pragma include_only_once
 
 /****************************************************************************
  **
@@ -13,6 +12,8 @@
  **  By: Bill Barton
  **
  ****************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 
@@ -89,64 +90,54 @@ extern const char sp_markerNameReleaseEnd[];
 
 /* -------------------- Functions */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+EXTERN_C_BEGIN
 
-  /* SPPlayer create, deletion, set attributes */
-  Err spCreatePlayer (SPPlayer **resultPlayer, Item samplerIns, uint32 numBuffers, uint32 bufSize, void * const buffers[]);
-  Err spDeletePlayer (SPPlayer *);
-  Err spSetDefaultDecisionFunction (SPPlayer *, SPDecisionFunction, void *decisionData);
+/* SPPlayer create, deletion, set attributes */
+Err spCreatePlayer (SPPlayer **resultPlayer, Item samplerIns, uint32 numBuffers, uint32 bufSize, void * const buffers[]);
+Err spDeletePlayer (SPPlayer *);
+Err spSetDefaultDecisionFunction (SPPlayer *, SPDecisionFunction, void *decisionData);
 #define spClearDefaultDecisionFunction(player) spSetDefaultDecisionFunction ((player), NULL, NULL)
-  int32 spGetPlayerSignalMask (const SPPlayer *);
+int32 spGetPlayerSignalMask (const SPPlayer *);
 
-  /* SPPlayer control */
-  Err spStartReading (SPSound *startSound, const char *startMarkerName);
-  Err spStartPlaying (SPPlayer *, const TagArg *samplerTags);
-  Err spStartPlayingVA (SPPlayer *, uint32 samplerTag1, ...);
-  Err spStop (SPPlayer *);
-  Err spPause (SPPlayer *);
-  Err spResume (SPPlayer *);
-  int32 spService (SPPlayer *, int32 signals);
-  int32 spGetPlayerStatus (const SPPlayer *);
+/* SPPlayer control */
+Err spStartReading (SPSound *startSound, const char *startMarkerName);
+Err spStartPlaying (SPPlayer *, const TagArg *samplerTags);
+Err spStartPlayingVA (SPPlayer *, uint32 samplerTag1, ...);
+Err spStop (SPPlayer *);
+Err spPause (SPPlayer *);
+Err spResume (SPPlayer *);
+int32 spService (SPPlayer *, int32 signals);
+int32 spGetPlayerStatus (const SPPlayer *);
 
-  /* SPSound add, remove, status */
-  Err spAddSample (SPSound **resultSound, SPPlayer *, Item sample);
-  Err spAddSoundFile (SPSound **resultSound, SPPlayer *, const char *fileName);
-  Err spRemoveSound (SPSound *);
-  SPPlayer *spGetPlayerFromSound (const SPSound *);
-  boolean spIsSoundInUse (const SPSound *);
+/* SPSound add, remove, status */
+Err spAddSample (SPSound **resultSound, SPPlayer *, Item sample);
+Err spAddSoundFile (SPSound **resultSound, SPPlayer *, const char *fileName);
+Err spRemoveSound (SPSound *);
+SPPlayer *spGetPlayerFromSound (const SPSound *);
+boolean spIsSoundInUse (const SPSound *);
 
-  /* SPMarker add, remove, set attributes */
-  Err spAddMarker (SPSound *, uint32 position, const char *markerName);
-  Err spRemoveMarker (SPMarker *);
-  SPMarker *spFindMarkerName (const SPSound *, const char *markerName);
-  Err spSetMarkerDecisionFunction (SPSound *, const char *markerName, SPDecisionFunction, void *decisionData);
+/* SPMarker add, remove, set attributes */
+Err spAddMarker (SPSound *, uint32 position, const char *markerName);
+Err spRemoveMarker (SPMarker *);
+SPMarker *spFindMarkerName (const SPSound *, const char *markerName);
+Err spSetMarkerDecisionFunction (SPSound *, const char *markerName, SPDecisionFunction, void *decisionData);
 #define spClearMarkerDecisionFunction(sound,markerName) spSetMarkerDecisionFunction ((sound), (markerName), NULL, NULL)
-  SPSound *spGetSoundFromMarker (const SPMarker *);
-  uint32 spGetMarkerPosition (const SPMarker *);
-  const char *spGetMarkerName (const SPMarker *);
+SPSound *spGetSoundFromMarker (const SPMarker *);
+uint32 spGetMarkerPosition (const SPMarker *);
+const char *spGetMarkerName (const SPMarker *);
 
-  /* SPMarker action control */
-  Err spContinueAtMarker (SPSound *, const char *markerName);
-  Err spStopAtMarker (SPSound *, const char *markerName);
-  Err spBranchAtMarker (SPSound *fromSound, const char *fromMarkerName, SPSound *toSound, const char *toMarkerName);
+/* SPMarker action control */
+Err spContinueAtMarker (SPSound *, const char *markerName);
+Err spStopAtMarker (SPSound *, const char *markerName);
+Err spBranchAtMarker (SPSound *fromSound, const char *fromMarkerName, SPSound *toSound, const char *toMarkerName);
 #define spLinkSounds(fromSound,toSound) spBranchAtMarker ((fromSound), SP_MARKER_NAME_END, (toSound), SP_MARKER_NAME_BEGIN)
 #define spLoopSound(sound) spLinkSounds((sound),(sound))
 
-  /* SPAction functions */
-  Err spSetBranchAction (SPAction *, SPSound *toSound, const char *toMarkerName);
-  Err spSetStopAction (SPAction *);
+/* SPAction functions */
+Err spSetBranchAction (SPAction *, SPSound *toSound, const char *toMarkerName);
+Err spSetStopAction (SPAction *);
 
-  /* Debug (careful not to include these in a released application) */
-  void spDumpPlayer (const SPPlayer *);
+/* Debug (careful not to include these in a released application) */
+void spDumpPlayer (const SPPlayer *);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __SOUNDPLAYER_H */
+EXTERN_C_END

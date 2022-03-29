@@ -16,9 +16,6 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_ITERATOR_INCLUDED
-#define TTL_ITERATOR_INCLUDED
+#pragma include_only_once
 
 #include "iterator_distance"
-
-#endif

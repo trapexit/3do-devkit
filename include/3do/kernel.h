@@ -1,17 +1,15 @@
-#ifndef __KERNEL_H
-#define __KERNEL_H
+#pragma include_only_once
 
 /******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: kernel.h,v 1.57 1994/12/08 18:59:54 markn Exp $
-**
-**  Kernel folio structure definition
-**
-******************************************************************************/
-
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: kernel.h,v 1.57 1994/12/08 18:59:54 markn Exp $
+ **
+ **  Kernel folio structure definition
+ **
+ ******************************************************************************/
 
 #include "types.h"
 #include "item.h"
@@ -59,15 +57,12 @@ struct KernelBase
 
 extern struct KernelBase *KernelBase;
 
-#define CURRENTTASK	(KernelBase->kb_CurrentTask)
-#define GetCurrentSignals()	GetTaskSignals(CURRENTTASK)
+#define CURRENTTASK            (KernelBase->kb_CurrentTask)
+#define GetCurrentSignals()    GetTaskSignals(CURRENTTASK)
 #define ClearCurrentSignals(s) ((GetCurrentSignals() & (s)) ? WaitSignal(GetCurrentSignals() & (s)) : 0)
 
 /* kb_CPUFlags */
-#define KB_NODBGR	0x8000	/* debugger is gone */
-#define KB_SERIALPORT   0x00100000	/* diagnostic serial port */
+#define KB_NODBGR     0x8000	/* debugger is gone */
+#define KB_SERIALPORT 0x00100000 /* diagnostic serial port */
 
 /*****************************************************************************/
-
-
-#endif /* __KERNEL_H */

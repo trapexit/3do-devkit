@@ -1,5 +1,6 @@
-#ifndef	_PLAYSTREAM_H_
-#define	_PLAYSTREAM_H_
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "graphics.h"
 #include "types.h"
@@ -46,8 +47,12 @@ typedef struct Player {
 /* Public routine prototypes */
 /*****************************/
 
-int32	PlayCPakStream( ScreenContext *screenContextPtr, char* streamFileName,
-                        PlayCPakUserFn userFn, void *userContext );
-void	DismantlePlayer( PlayerPtr ctx );
+EXTERN_C_BEGIN
 
-#endif	/* _PLAYSTREAM_H_ */
+int32 PlayCPakStream(ScreenContext  *screenContextPtr,
+                     char*           streamFileName,
+                     PlayCPakUserFn  userFn,
+                     void           *userContext );
+void DismantlePlayer(PlayerPtr ctx);
+
+EXTERN_C_END

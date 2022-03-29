@@ -1,5 +1,4 @@
-#ifndef __DEVICE_H
-#define __DEVICE_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -11,7 +10,6 @@
  **  Kernel device management definitions
  **
  ******************************************************************************/
-
 
 #include "types.h"
 #include "item.h"
@@ -33,13 +31,9 @@ typedef struct Device
 
 
 /* easy def for opening device without regard to version */
-#define FindDevice(n)		FindNamedItem(MKNODEID(KERNELNODE,DEVICENODE),(n))
-#define FindAndOpenDevice(n)	FindAndOpenNamedItem(MKNODEID(KERNELNODE,DEVICENODE),(n))
-#define OpenNamedDevice(n,a)	FindAndOpenNamedItem(MKNODEID(KERNELNODE,DEVICENODE),(n))
-#define CloseNamedDevice(dev)	CloseItem(dev)
-
+#define FindDevice(n)	      FindNamedItem(MKNODEID(KERNELNODE,DEVICENODE),(n))
+#define FindAndOpenDevice(n)  FindAndOpenNamedItem(MKNODEID(KERNELNODE,DEVICENODE),(n))
+#define OpenNamedDevice(n,a)  FindAndOpenNamedItem(MKNODEID(KERNELNODE,DEVICENODE),(n))
+#define CloseNamedDevice(dev) CloseItem(dev)
 
 /*****************************************************************************/
-
-
-#endif	/* __DEVICE_H */

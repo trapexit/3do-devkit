@@ -16,16 +16,16 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_MEMORY_INCLUDED
-#define TTL_MEMORY_INCLUDED
+#pragma include_only_once
 
 #include "new"
 
-#include "memory_construct"
-#include "memory_destruct"
-#include "memory_destroy"
-#include "memory_unique_ptr"
-#include "memory_auto_ptr"
 #include "memory_addressof"
-
-#endif
+#include "memory_auto_ptr"
+#include "memory_construct"
+#include "memory_delete"
+#include "memory_destroy"
+#include "memory_destroy_at"
+#include "memory_destruct"
+#include "memory_new"
+#include "memory_unique_ptr"

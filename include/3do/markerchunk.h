@@ -1,3 +1,5 @@
+#pragma include_only_once
+
 /*******************************************************************************************
  *	File:			MarkerChunk.h
  *
@@ -20,9 +22,6 @@
  *
  *******************************************************************************************/
 
-#ifndef __MARKERCHUNK_H__
-#define __MARKERCHUNK_H__
-
 #include "types.h"
 #include "subscriberutils.h"
 
@@ -30,13 +29,13 @@
 /* Marker record, associates a time with a file position */
 /*********************************************************/
 typedef struct MarkerRec {
-  long		markerTime;			/* stream time */
-  long		markerOffset;		/* file position in output stream */
+  long markerTime;		/* stream time */
+  long markerOffset;		/* file position in output stream */
 } MarkerRec, *MarkerRecPtr;
 
 /********************************************************************/
-/* Marker chunk record, used by DataAcq.c to translate stream time	*/
-/* to stream file position.											*/
+/* Marker chunk record, used by DataAcq.c to translate stream time  */
+/* to stream file position.					    */
 /********************************************************************/
 #define	DATAACQ_CHUNK_TYPE   (0x44414351) /* 'DACQ' */
 #define	MARKER_TABLE_SUBTYPE (0x4D54424C) /* 'MTBL' */
@@ -44,5 +43,3 @@ typedef struct MarkerRec {
 typedef struct MarkerChunk {
   SUBS_CHUNK_COMMON;
 } MarkerChunk, *MarkerChunkPtr;
-
-#endif	/* __MARKERCHUNK_H__ */

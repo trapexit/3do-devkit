@@ -1,5 +1,6 @@
-#ifndef	_PREPARESTREAM_H_
-#define	_PREPARESTREAM_H_
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "datastreamlib.h"
@@ -11,9 +12,9 @@
  */
 #define	FIND_HEADER_BUFFER_SIZE		2048
 
-#define	CTRL_CHUNK_TYPE		CHAR4LITERAL('C','T','R','L')	/* chunk type for this subscriber */
-#define	SNDS_CHUNK_TYPE		CHAR4LITERAL('S','N','D','S')	/* chunk type for this subscriber */
-#define	FILM_CHUNK_TYPE		CHAR4LITERAL('F','I','L','M')	/* chunk type for this subscriber */
+#define	CTRL_CHUNK_TYPE	CHAR4LITERAL('C','T','R','L') /* chunk type for this subscriber */
+#define	SNDS_CHUNK_TYPE	CHAR4LITERAL('S','N','D','S') /* chunk type for this subscriber */
+#define	FILM_CHUNK_TYPE	CHAR4LITERAL('F','I','L','M') /* chunk type for this subscriber */
 
 /*********************/
 /* Default constants */
@@ -37,8 +38,8 @@
 /***************/
 enum
   {
-   kPSVersionErr	     = -2001,
-   kPSMemFullErr	     = -2002,
+   kPSVersionErr	= -2001,
+   kPSMemFullErr	= -2002,
    kPSUnknownSubscriber = -2003,
    kPSHeaderNotFound    = -2004
   };
@@ -47,8 +48,10 @@ enum
 /* Public routine prototypes */
 /*****************************/
 
-int32	     FindAndLoadStreamHeader( DSHeaderChunkPtr headerPtr, char *streamFileName );
-DSDataBufPtr CreateBufferList( long numBuffers, long bufferSize );
-int32	     UseDefaultStreamHeader( DSHeaderChunkPtr headerPtr );
+EXTERN_C_BEGIN
 
-#endif	/* _PREPARESTREAM_H_ */
+int32	     FindAndLoadStreamHeader(DSHeaderChunkPtr headerPtr, char *streamFileName);
+DSDataBufPtr CreateBufferList(long numBuffers, long bufferSize);
+int32	     UseDefaultStreamHeader(DSHeaderChunkPtr headerPtr);
+
+EXTERN_C_END

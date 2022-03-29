@@ -1,11 +1,10 @@
-#ifndef STRING_H
-#define STRING_H
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "types.h"
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
 #define bcopy(Src,Dest,Len) memcpy(Dest,Src,Len)
 #define bzero(Dest,Len) memset(Dest,0,Len)
@@ -19,10 +18,10 @@ extern char *strcpy(char *s1, const char *s2);
 extern char *strncpy(char *s1, const char *s2, size_t n);
 extern char *strcat(char *s1, const char *s2);
 extern char *strncat(char *s1, const char *s2, size_t n);
-extern int strcmp(char *s1, const char *s2);
-extern int stricmp(char *s1, const char *s2);
-extern int strcasecmp(char *s1, const char *s2);
-extern int strncmp(char *s1, const char *s2, size_t n);
+extern int strcmp(const char *s1, const char *s2);
+extern int stricmp(const char *s1, const char *s2);
+extern int strcasecmp(const char *s1, const char *s2);
+extern int strncmp(const char *s1, const char *s2, size_t n);
 extern size_t strlen(const char *s1);
 
 extern const char *strstr(const char *str, const char *substring);
@@ -33,8 +32,4 @@ extern long strtol(const char *nsptr, char **endptr, int base);
 #define CopyMem(a,b,c) memcpy(a,b,c)
 #define SetMem(a,b,c) memset(a,b,c)
 
-#ifdef  __cplusplus
-}
-#endif
-
-#endif
+EXTERN_C_END

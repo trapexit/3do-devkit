@@ -1,5 +1,6 @@
-#ifndef __CPAKSUBSCRIBER_H__
-#define __CPAKSUBSCRIBER_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "graphics.h"
 #include "subscriberutils.h"
@@ -21,11 +22,9 @@
 
 #define	NO_FRAME_ITEM -1	/* used to indicate no current frame msg item */
 
-
 #define	SKIP_DIFF_FRAMES   0	//  skip difference frames to catch up
 #define DECODE_DIFF_FRAMES 1	//  decode as fast as you can
 #define	BEST_METHOD	   -1	//  something else
-
 
 typedef struct ImageDesc_Tag
 {
@@ -33,9 +32,7 @@ typedef struct ImageDesc_Tag
   int32	rowBytes;
   int32	width;
   int32	height;
-}ImageDesc;
-typedef ImageDesc *ImageDescPtr;
-
+} ImageDesc, *ImageDescPtr;
 
 typedef struct CPakChannel
 {
@@ -46,7 +43,6 @@ typedef struct CPakChannel
   ImageDesc	imageData;	/* this structure contains the LR form buffer and
                                    dimension fields for the unpacked Cinepak data */
 } CPakChannel, *CPakChannelPtr;
-
 
 typedef struct CPakContext
 {
@@ -90,7 +86,6 @@ typedef struct CPakChunkMsg
   void*	buffer;			/* ptr to the data */
 } CPakChunkMsg, *CPakChunkMsgPtr;
 
-
 typedef	struct CinePakHeader
 {
   SUBS_CHUNK_COMMON;
@@ -102,15 +97,13 @@ typedef	struct CinePakHeader
   int32	count;			/*	Number of frames			*/
 } CinePakHeader, *CinePakHeaderPtr;
 
-
-typedef	struct	CinePakFrame {
+typedef	struct	CinePakFrame
+{
   SUBS_CHUNK_COMMON;
   int32	duration;		/*	Duration of this sample		*/
   int32	frameSize;		/*	Number of bytes in frame	*/
   char	frameData[4];           /*	compressed frame data...	*/
 } CinePakFrame, *CinePakFramePtr;
-
-
 
 typedef struct CPakRec
 {
@@ -123,7 +116,7 @@ typedef struct CPakRec
   int32		       lastCurTime;	/* Remember the previous Stream clock time to check for loop */
 } CPakRec, *CPakRecPtr;
 
-
+EXTERN_C_BEGIN
 
 int32 InitCPakSubscriber(void);
 int32 CloseCPakSubscriber(void);
@@ -155,4 +148,4 @@ int32 SendFreeCPakSignal(CPakContextPtr ctx);
 void CPakSubscriberThread(int32 notUsed, CPakContextPtr ctx);
 void FreeMovieBuff(ImageDesc *imagePtr);
 
-#endif	/* __CPAKSUBSCRIBER_H__ */
+EXTERN_C_END

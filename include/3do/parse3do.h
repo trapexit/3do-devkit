@@ -1,5 +1,4 @@
-#ifndef __PARSE3DO_H
-#define __PARSE3DO_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -15,6 +14,8 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "init3do.h"
 #include "animutils.h"
 #include "celutils.h"
@@ -23,15 +24,9 @@
  * prototypes
  *--------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+EXTERN_C_BEGIN
 
 int32 GetFileSize(char *fn);
 int32 ReadFile(char *filename, int32 size, int32 *buffer, int32 offset);
 
-#ifdef __cplusplus
-  }
-#endif
-
-#endif /* __PARSE3DO_H */
+EXTERN_C_END

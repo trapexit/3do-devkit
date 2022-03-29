@@ -1,17 +1,17 @@
-#ifndef __MUSICERROR_H
-#define __MUSICERROR_H
+#pragma include_only_once
 
 /****************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: musicerror.h,v 1.11 1994/10/07 21:09:39 peabody Exp $
-**
-**  Music library error codes.
-**
-****************************************************************************/
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: musicerror.h,v 1.11 1994/10/07 21:09:39 peabody Exp $
+ **
+ **  Music library error codes.
+ **
+ ****************************************************************************/
 
+#include "extern_c.h"
 
 #include "operror.h"
 
@@ -19,20 +19,20 @@
 /* -------------------- Error codes */
 
 #ifndef ER_LINKLIB
-  #define ER_LINKLIB               Make6Bit('L')
+#define ER_LINKLIB               Make6Bit('L')
 #endif
 
 #ifndef ER_MUSICLIB
-  #define ER_MUSICLIB              MakeErrId('M','u')
+#define ER_MUSICLIB              MakeErrId('M','u')
 #endif
 
 #ifdef MakeLErr
-  #define MAKEMLERR(svr,class,err) MakeLErr(ER_MUSICLIB,svr,class,err)
+#define MAKEMLERR(svr,class,err) MakeLErr(ER_MUSICLIB,svr,class,err)
 #else
-  #define MAKEMLERR(svr,class,err) MakeErr(ER_LINKLIB,ER_MUSICLIB,svr,ER_E_SSTM,class,err)
+#define MAKEMLERR(svr,class,err) MakeErr(ER_LINKLIB,ER_MUSICLIB,svr,ER_E_SSTM,class,err)
 #endif
 
-    /* Standard errors */
+/* Standard errors */
 #define ML_ERR_BADTAG               MAKEMLERR(ER_SEVERE,ER_C_STND,ER_BadTagArg)
 #define ML_ERR_BADTAGVAL            MAKEMLERR(ER_SEVERE,ER_C_STND,ER_BadTagArgVal)
 #define ML_ERR_BADPRIV              MAKEMLERR(ER_SEVERE,ER_C_STND,ER_NotPrivileged)
@@ -42,7 +42,7 @@
 #define ML_ERR_BADPTR               MAKEMLERR(ER_SEVERE,ER_C_STND,ER_BadPtr)
 #define ML_ERR_NOT_SUPPORTED        MAKEMLERR(ER_SEVERE,ER_C_STND,ER_NotSupported)
 
-    /* Non-standard errors */
+/* Non-standard errors */
 #define ML_ERR_NOT_IFF_FORM         MAKEMLERR(ER_SEVERE,ER_C_NSTND,1)   /* Illegal IFF format. */
 #define ML_ERR_BAD_FILE_NAME        MAKEMLERR(ER_SEVERE,ER_C_NSTND,2)   /* Could not open file. */
 #define ML_ERR_NOT_OPEN             MAKEMLERR(ER_SEVERE,ER_C_NSTND,3)   /* Stream or file not open. */
@@ -68,18 +68,8 @@
 
 /* -------------------- Functions */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+EXTERN_C_BEGIN    
 
 Err InstallMusicLibErrors (void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif  /* __MUSICERROR_H */
+EXTERN_C_END

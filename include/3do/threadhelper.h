@@ -1,3 +1,5 @@
+#pragma include_only_once
+
 /*******************************************************************************************
  *	File:			ThreadHelper.h
  *
@@ -15,8 +17,7 @@
  *
  *******************************************************************************************/
 
-#ifndef __THREADHELPER_H__
-#define __THREADHELPER_H__
+#include "extern_c.h"
 
 #include "types.h"
 #include "item.h"
@@ -38,17 +39,10 @@
 /* Prototypes for thread functions */
 /***********************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  Item	NewThread( void* threadProcPtr, int32 stackSize, int32 threadPriority,
-                   char* threadName, void** stackMemoryPtr, int32 argc, void* argp );
+Item NewThread(void* threadProcPtr, int32 stackSize, int32 threadPriority,
+               char* threadName, void** stackMemoryPtr, int32 argc, void* argp);
+int32 DisposeThread(Item threadItem);
 
-  int32	DisposeThread( Item threadItem );
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+EXTERN_C_END

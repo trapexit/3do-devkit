@@ -16,11 +16,11 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_STACK_INCLUDED
-#define TTL_STACK_INCLUDED
+#pragma include_only_once
 
 #include "cstdint"
 #include "vector"
+
 
 template<typename T,
          class CONTAINER = vector<T> >
@@ -97,5 +97,3 @@ public:
 private:
   CONTAINER _stack;
 };
-
-#endif

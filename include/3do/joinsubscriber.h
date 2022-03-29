@@ -1,5 +1,6 @@
-#ifndef __JOINSUBSCRIBER_H__
-#define __JOINSUBSCRIBER_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "datastreamlib.h"
 #include "subscriberutils.h"
@@ -43,33 +44,24 @@ typedef struct JoinElementMsg {
 /**************************************/
 
 typedef struct JoinContext {
-  Item	 creatorTask;		/* who to signal when we're done initializing */
-  uint32 creatorSignal;		/* signal to send for synchronous completion */
-  int32	 creatorStatus;		/* result code for creator */
-
-  Item	threadItem;		/* subscriber thread item */
-  void*	threadStackBlock;	/* pointer to thread's stack memory block */
-
-  Item	 requestPort;		/* message port item for subscriber requests */
-  uint32 requestPortSignal;	/* signal to detect request port messages */
-
-  MemPoolPtr joinElemMsgPool;	/* Pool of msgs for sending data elements to display task */
-
-  Item	     portListSem;       /* semaphore to arbitrate access to the dataPort info */
-  Item	     dataPort[MAX_PORTS]; /* message port item to send data elements */
-  DSDataType dataType[MAX_PORTS]; /* message type for this port */
-  boolean    userPort[MAX_PORTS]; /* true if client allocated the port for InitJoinPort */
-  int32	     numPorts;          /* number of ports currently in use */
-
-  Item replyPort; /* message port item for subscriber requests */
-  uint32 replyPortSignal; /* signal to detect request port messages */
-
-  int32	localTimeOrigin; /* local version of the time */
-
+  Item              creatorTask; /* who to signal when we're done initializing */
+  uint32            creatorSignal; /* signal to send for synchronous completion */
+  int32             creatorStatus; /* result code for creator */
+  Item              threadItem; /* subscriber thread item */
+  void*             threadStackBlock; /* pointer to thread's stack memory block */
+  Item              requestPort; /* message port item for subscriber requests */
+  uint32            requestPortSignal; /* signal to detect request port messages */
+  MemPoolPtr        joinElemMsgPool; /* Pool of msgs for sending data elements to display task */
+  Item              portListSem; /* semaphore to arbitrate access to the dataPort info */
+  Item              dataPort[MAX_PORTS]; /* message port item to send data elements */
+  DSDataType        dataType[MAX_PORTS]; /* message type for this port */
+  boolean           userPort[MAX_PORTS]; /* true if client allocated the port for InitJoinPort */
+  int32             numPorts;   /* number of ports currently in use */
+  Item              replyPort;  /* message port item for subscriber requests */
+  uint32            replyPortSignal; /* signal to detect request port messages */
+  int32             localTimeOrigin; /* local version of the time */
   JoinElementMsgPtr dataMsgHead; /* ptr to a list of data that is not yet full */
-
-  boolean streamStopped;	/* TRUE if kOpStopStream has been sent */
-
+  boolean           streamStopped; /* TRUE if kOpStopStream has been sent */
   JoinElementMsgPtr JoinElemMsgWaitingPtr; /* Unfinish message */
   SubscriberMsgPtr  psubMsgWaiting; /* Info to finish the unfinished message */
   boolean 	    bRequestSignal; /* boolean indicating a request needs to be processed */
@@ -101,37 +93,32 @@ typedef struct JoinChunkData {
 /*****************************/
 /* Public routine prototypes */
 /*****************************/
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-  /* Subscriber one-time init/shutdown routines */
+EXTERN_C_BEGIN
 
-  int32	InitJoinSubscriber( void );
-  int32	CloseJoinSubscriber( void );
+/* Subscriber one-time init/shutdown routines */
 
-  /* New/dispose subscriber instance */
+int32 InitJoinSubscriber( void );
+int32 CloseJoinSubscriber( void );
 
-  int32	NewJoinSubscriber( JoinContextPtr *pCtx, int32 priority );
-  int32	DisposeJoinSubscriber( JoinContextPtr ctx );
+/* New/dispose subscriber instance */
 
-  /* Data port create/destroy */
+int32 NewJoinSubscriber( JoinContextPtr *pCtx, int32 priority );
+int32 DisposeJoinSubscriber( JoinContextPtr ctx );
 
-  Int32	InitJoinPort( JoinContextPtr ctx, Item *joinPort, int32 dataType );
-  void	DestroyJoinPort( JoinContextPtr ctx, DSDataType dataType);
+/* Data port create/destroy */
 
-  /* Get/release data element */
+Int32 InitJoinPort( JoinContextPtr ctx, Item *joinPort, int32 dataType );
+void  DestroyJoinPort( JoinContextPtr ctx, DSDataType dataType);
 
-  JoinElementMsgPtr GetJoinElement( JoinContextPtr ctx, Item joinPort );
-  void		    ReleaseJoinElement( JoinContextPtr ctx, JoinElementMsgPtr joinElemPtr );
-  void		    ReleaseJoinElementResources( JoinContextPtr ctx, JoinElementMsgPtr joinElemPtr );
+/* Get/release data element */
 
-  /* Miscellaneous */
+JoinElementMsgPtr GetJoinElement( JoinContextPtr ctx, Item joinPort );
+void		  ReleaseJoinElement( JoinContextPtr ctx, JoinElementMsgPtr joinElemPtr );
+void		  ReleaseJoinElementResources( JoinContextPtr ctx, JoinElementMsgPtr joinElemPtr );
 
-  int32	FlushJoinSubscriber( JoinContextPtr ctx );
+/* Miscellaneous */
 
-#ifdef __cplusplus
-}
-#endif
+int32 FlushJoinSubscriber( JoinContextPtr ctx );
 
-#endif	/* __JOINSUBSCRIBER_H__ */
+EXTERN_C_END

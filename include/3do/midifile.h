@@ -1,5 +1,4 @@
-#ifndef __MIDIFILE_H
-#define __MIDIFILE_H
+#pragma include_only_once
 
 /****************************************************************************
  **
@@ -14,6 +13,7 @@
  **
  ****************************************************************************/
 
+#include "extern_c.h"
 
 #include "types.h"
 #include "debug.h"
@@ -67,26 +67,16 @@ typedef struct MIDIEvent
   unsigned char mev_Data3;
 } MIDIEvent;
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+EXTERN_C_BEGIN
 
-  Err ParseMFEvent( MIDIFileParser *mfpptr );
-  Err ParseMFHeader( MIDIFileParser *mfpptr );
-  Err ParseMFMetaEvent( MIDIFileParser *mfpptr );
-  Err ParseMFTrack( MIDIFileParser *mfpptr );
-  Err ScanMFTrack( MIDIFileParser *mfpptr, int32 Size );
-  int32 GetMFChar( MIDIFileParser *mfpptr );
-  int32 MIDIDataBytesPer( int32 command );
-  int32 ParseMFVLN( MIDIFileParser *mfpptr );
-  int32 ReadMFTrackHeader( MIDIFileParser *mfpptr );
+Err ParseMFEvent( MIDIFileParser *mfpptr );
+Err ParseMFHeader( MIDIFileParser *mfpptr );
+Err ParseMFMetaEvent( MIDIFileParser *mfpptr );
+Err ParseMFTrack( MIDIFileParser *mfpptr );
+Err ScanMFTrack( MIDIFileParser *mfpptr, int32 Size );
+int32 GetMFChar( MIDIFileParser *mfpptr );
+int32 MIDIDataBytesPer( int32 command );
+int32 ParseMFVLN( MIDIFileParser *mfpptr );
+int32 ReadMFTrackHeader( MIDIFileParser *mfpptr );
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __MIDIFILE_H */
+EXTERN_C_END

@@ -16,38 +16,11 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_NEW_INCLUDED
-#define TTL_NEW_INCLUDED
+#pragma include_only_once
 
-#include "cstdint"
-
-inline
-void*
-operator new(uint32_t,
-             void *ptr_)
-{
-  return ptr_;
-}
-
-inline
-void*
-operator new[](uint32_t,
-               void *ptr_)
-{
-  return ptr_;
-}
-
-inline
-void
-operator delete(void*)
-{
-}
-
-inline
-void
-operator delete[](void*,
-                  void*)
-{
-}
-
-#endif
+extern void* operator new(unsigned int);
+extern void* operator new[](unsigned int);
+extern void* operator new(unsigned int,void*);
+extern void* operator new[](unsigned int,void*);
+extern void  operator delete(void*);
+extern void  operator delete[](void*);

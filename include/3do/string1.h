@@ -1,5 +1,4 @@
-#ifndef __STRING_H
-#define __STRING_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -12,17 +11,15 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 #include "stdlib.h"	/* temporarily left for application src compatibility */
 			/* strtol(),strtoul() in stdlib.h used to be here */
 
 /*****************************************************************************/
 
-
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
-
+EXTERN_C_BEGIN
 
 /* string manipulation routines */
 
@@ -75,18 +72,10 @@ extern int FindLSB(uint32 mask); 	/* find LSBit */
 extern int CountBits(uint32 mask);	/* count 1s in mask */
 
 
-#ifdef  __cplusplus
-}
-#endif  /* __cplusplus */
+EXTERN_C_END
 
 
 /* synonyms */
 #define CopyMem(a,b,c) memcpy(a,b,c)
 #define SetMem(a,b,c)  memset(a,b,c)
 #define popc(mask)     CountBits(mask)
-
-
-/*****************************************************************************/
-
-
-#endif /* __STRING_H */

@@ -1,5 +1,4 @@
-#ifndef __GRAPHICS_H
-#define __GRAPHICS_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -13,6 +12,8 @@
  **  I've really got to clean this thing up big time...
  **
  ******************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "folio.h"
@@ -291,7 +292,7 @@
 /* ===                   ================================================ */
 /* ===  ===============  ================================================ */
 
-typedef uint32 VDLEntry;
+  typedef uint32 VDLEntry;
 
 typedef uint32  Color;
 typedef uint32  RGB888;
@@ -772,158 +773,152 @@ extern Item GrafFolioNum;
 #define _DRAWCELS	(GRAFSWI+39)
 #define _DRAWSCREENCELS	(GRAFSWI+23)
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+EXTERN_C_BEGIN
 
 #ifdef _GRAPHICS_INTERNAL
 #define __swi(x)
 #endif
 
-  Err AddScreenGroup( Item screenGroup, TagArg *targs );
-  Err AddScreenGroupVA (Item screenGroup, uint32 tag, ...);
-  /* int32 CloseFont( void ); */
+Err AddScreenGroup(Item screenGroup, TagArg *targs);
+Err AddScreenGroupVA(Item screenGroup, uint32 tag, ...);
+/* int32 CloseFont(void); */
 #define CreateBitmap(x) CreateItem(MKNODEID(NST_GRAPHICS,BITMAPNODE),x)
 #define DeleteBitmap(x) DeleteItem(x)
-  Item CreateBitmapVA (uint32 tag, ...);
-  Item CreateScreenGroup( Item *screenItemArray, TagArg *targs );
-  Item CreateScreenGroupVA (Item *screenItemArray, uint32 tag, ...);
-  Err DeleteScreenGroup (Item screenGroupItem);
+Item CreateBitmapVA(uint32 tag, ...);
+Item CreateScreenGroup(Item *screenItemArray, TagArg *targs);
+Item CreateScreenGroupVA(Item *screenItemArray, uint32 tag, ...);
+Err DeleteScreenGroup(Item screenGroupItem);
 #define CreateVDL(x) CreateItem(MKNODEID(NST_GRAPHICS,VDLNODE),x)
 #define DeleteVDL(x) DeleteItem(x)
-  Item CreateVDLVA (uint32 tag, ...);
-  Err DisableHAVG( Item screenItem );
-  Err DisableVAVG( Item screenItem );
-  Item DisplayOverlay (Item bitmap, int32 topedge);
-  Err DisplayScreen( Item screenItem0, Item screenItem1 );
-  Err DrawChar( GrafCon *gcon, Item bitmapItem, uint32 character );
-  Err DrawText16( GrafCon *gcon, Item bitmapItem, uint16 *text );
-  Err DrawText8( GrafCon *gcon, Item bitmapItem, uint8 *text );
-  Err DrawTo( Item bitmapItem, GrafCon *grafcon, Coord x, Coord y );
-  Err EnableHAVG( Item screenItem );
-  Err EnableVAVG( Item screenItem );
-  Err FillRect( Item bitmapItem, GrafCon *gc, struct Rect *r );
-  Font *GetCurrentFont( void );
-  void *GetPixelAddress( Item screenItem, Coord x, Coord y );
-  void MapCel( CCB *ccb, Point *quad );
-  void MoveTo( GrafCon *gc, Coord x, Coord y );
-  /* int32 OpenFileFont( char *filename );  */
-  Err OpenGraphicsFolio( void );
-  Err CloseGraphicsFolio (void);
-  /* int32 OpenRAMFont( Font *font ); */
-  Err QueryGraphics ( int32 tag, void *ret );
-  Err QueryGraphicsList ( TagArg *ta );
-  Err QueryGraphicsListVA (uint32 tag, ...);
-  RGB888 ReadCLUTColor( uint32 index );
-  Color ReadPixel( Item bitmapItem, GrafCon *gc, Coord x, Coord y );
-  Err RemoveScreenGroup( Item screenGroup );
-  Err ResetCurrentFont( void );
-  Err ResetReadAddress( Item bitmapItem );
-  Err ResetScreenColors( Item screenItem );
-  void  SetBGPen( GrafCon *gc, Color c );
-  Err SetCEControl( Item bitmapItem, int32 controlWord, int32 controlMask );
-  Err SetCEWatchDog( Item bitmapItem, int32 db_ctr );
-  Err SetClipHeight( Item bitmapItem, int32 clipHeight );
-  Err SetClipOrigin( Item bitmapItem, int32 x, int32 y );
-  Err SetClipWidth( Item bitmapItem, int32 clipWidth );
-  Err SetCurrentFontCCB( CCB *ccb );
-  void SetFGPen( GrafCon *gc, Color c );
-  /* int32 SetFileFontCacheSize( int32 size ); */
-  Err SetReadAddress( Item bitmapItem, ubyte *buffer, int32 width );
-  Err SetScreenColor( Item screenItem, uint32 colorEntry );
-  Err SetScreenColors( Item screenItem, uint32 *entries, int32 count );
-  Err SetVDL( Item screenItem, Item vdlItem );
-  Item SubmitVDL( VDLEntry *VDLDataPtr, int32 length, int32 type );
-  Err WritePixel( Item bitmapItem, GrafCon *gc, Coord x, Coord y );
+Item CreateVDLVA(uint32 tag, ...);
+Err DisableHAVG(Item screenItem);
+Err DisableVAVG(Item screenItem);
+Item DisplayOverlay(Item bitmap, int32 topedge);
+Err DisplayScreen(Item screenItem0, Item screenItem1);
+Err DrawChar(GrafCon *gcon, Item bitmapItem, uint32 character);
+Err DrawText16(GrafCon *gcon, Item bitmapItem, uint16 *text);
+Err DrawText8(GrafCon *gcon, Item bitmapItem, const uint8 *text);
+Err DrawTo(Item bitmapItem, GrafCon *grafcon, Coord x, Coord y);
+Err EnableHAVG(Item screenItem);
+Err EnableVAVG(Item screenItem);
+Err FillRect(Item bitmapItem, GrafCon *gc, struct Rect *r);
+Font *GetCurrentFont(void);
+void *GetPixelAddress(Item screenItem, Coord x, Coord y);
+void MapCel(CCB *ccb, Point *quad);
+void MoveTo(GrafCon *gc, Coord x, Coord y);
+/* int32 OpenFileFont(char *filename);  */
+Err OpenGraphicsFolio(void);
+Err CloseGraphicsFolio(void);
+/* int32 OpenRAMFont(Font *font); */
+Err QueryGraphics(int32 tag, void *ret);
+Err QueryGraphicsList(TagArg *ta);
+Err QueryGraphicsListVA(uint32 tag, ...);
+RGB888 ReadCLUTColor(uint32 index);
+Color ReadPixel(Item bitmapItem, GrafCon *gc, Coord x, Coord y);
+Err RemoveScreenGroup(Item screenGroup);
+Err ResetCurrentFont(void);
+Err ResetReadAddress(Item bitmapItem);
+Err ResetScreenColors(Item screenItem);
+void  SetBGPen(GrafCon *gc, Color c);
+Err SetCEControl(Item bitmapItem, int32 controlWord, int32 controlMask);
+Err SetCEWatchDog(Item bitmapItem, int32 db_ctr);
+Err SetClipHeight(Item bitmapItem, int32 clipHeight);
+Err SetClipOrigin(Item bitmapItem, int32 x, int32 y);
+Err SetClipWidth(Item bitmapItem, int32 clipWidth);
+Err SetCurrentFontCCB(CCB *ccb);
+void SetFGPen(GrafCon *gc, Color c);
+/* int32 SetFileFontCacheSize(int32 size); */
+Err SetReadAddress(Item bitmapItem, ubyte *buffer, int32 width);
+Err SetScreenColor(Item screenItem, uint32 colorEntry);
+Err SetScreenColors(Item screenItem, uint32 *entries, int32 count);
+Err SetVDL(Item screenItem, Item vdlItem);
+Item SubmitVDL(VDLEntry *VDLDataPtr, int32 length, int32 type);
+Err WritePixel(Item bitmapItem, GrafCon *gc, Coord x, Coord y);
 
-  Err ModifyVDL (Item vdlItem, TagArg* vdlTags);
-  Err ModifyVDLVA (Item vdlItem, uint32 tag, ...);
+Err ModifyVDL(Item vdlItem, TagArg* vdlTags);
+Err ModifyVDLVA(Item vdlItem, uint32 tag, ...);
 
-  DisplayInfo* GetFirstDisplayInfo (void);
+DisplayInfo* GetFirstDisplayInfo(void);
 
-  Item GetVRAMIOReq (void);
-#define	DeleteVRAMIOReq(x)	DeleteItem(x)
-  Err SetVRAMPages (Item ioreq, void *dest, int32 val, int32 numpages, int32 mask);
-  Err CopyVRAMPages (Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
-  Err CloneVRAMPages (Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
-  Err SetVRAMPagesDefer (Item ioreq, void *dest, int32 val, int32 numpages, int32 mask);
-  Err CopyVRAMPagesDefer (Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
-  Err CloneVRAMPagesDefer (Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
+Item GetVRAMIOReq(void);
+#define	DeleteVRAMIOReq(x) DeleteItem(x)
+Err SetVRAMPages(Item ioreq, void *dest, int32 val, int32 numpages, int32 mask);
+Err CopyVRAMPages(Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
+Err CloneVRAMPages(Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
+Err SetVRAMPagesDefer(Item ioreq, void *dest, int32 val, int32 numpages, int32 mask);
+Err CopyVRAMPagesDefer(Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
+Err CloneVRAMPagesDefer(Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
 
-  Item GetVBLIOReq (void);
+Item GetVBLIOReq(void);
 #define	DeleteVBLIOReq(x)	DeleteItem(x)
-  Err WaitVBL (Item ioreq, uint32 numfields);
-  Err WaitVBLDefer (Item ioreq, uint32 numfields);
+Err WaitVBL(Item ioreq, uint32 numfields);
+Err WaitVBLDefer(Item ioreq, uint32 numfields);
 
 
-  /***************************************************************************
-   * Documented graphics SWI's.
-   */
-  __swi(_DRAWCELS) Err DrawCels (Item bitmapItem, CCB *ccb);
-  __swi(_DRAWSCREENCELS) Err DrawScreenCels (Item screenItem, CCB *ccb);
+/***************************************************************************
+ * Documented graphics SWI's.
+ */
+__swi(_DRAWCELS) Err DrawCels(Item bitmapItem, CCB *ccb);
+__swi(_DRAWSCREENCELS) Err DrawScreenCels(Item screenItem, CCB *ccb);
 
 
-  /***************************************************************************
-   * Miscellaneous stuff...
-   */
-  /*
-   * fast mapcel routines by Greg Omi
-   */
+/***************************************************************************
+ * Miscellaneous stuff...
+ */
+/*
+ * fast mapcel routines by Greg Omi
+ */
 
 
-  /*
-   *	Name:
-   *		FastMapCelInit
-   *	Purpose:
-   *		If width and height are powers of 2 then
-   *			ccb_Width = log2(ccb_Width)
-   *			ccb_Height = log2(ccb_Height)
-   *		else
-   *			ccb_Width = -(0x10000/ccb_Width)
-   *			ccb_Height = 0x10000/ccb_Height
-   *	Entry:
-   *		Cel index
-   */
-  void FastMapCelInit (CCB *ccb);
+/*
+ *	Name:
+ *		FastMapCelInit
+ *	Purpose:
+ *		If width and height are powers of 2 then
+ *			ccb_Width = log2(ccb_Width)
+ *			ccb_Height = log2(ccb_Height)
+ *		else
+ *			ccb_Width = -(0x10000/ccb_Width)
+ *			ccb_Height = 0x10000/ccb_Height
+ *	Entry:
+ *		Cel index
+ */
+void FastMapCelInit(CCB *ccb);
 
-  /*
-   *	Name:
-   *		FastMapCel
-   *	Purpose:
-   *		Sets up delta fields to creat cel mapped to
-   *		four points in quad argument.
-   *	Entry:
-   *		CCB Pointer
-   *		Quad pointer
-   *	Exit:
-   *		None
-   *	Max time:
-   *		Approx. 103 + 16(ENTER) + 14(EXIT) = 133 cycles or 10.64Usec
-   */
-  void FastMapCel (CCB *ccb, Point *quad);
+/*
+ *	Name:
+ *		FastMapCel
+ *	Purpose:
+ *		Sets up delta fields to creat cel mapped to
+ *		four points in quad argument.
+ *	Entry:
+ *		CCB Pointer
+ *		Quad pointer
+ *	Exit:
+ *		None
+ *	Max time:
+ *		Approx. 103 + 16(ENTER) + 14(EXIT) = 133 cycles or 10.64Usec
+ */
+void FastMapCel(CCB *ccb, Point *quad);
 
-  /*
-   *	Name:
-   *		FastMapCelf16
-   *	Purpose:
-   *		Sets up delta fields to creat cel mapped to
-   *		four frac16 points in quad argument.
-   *	Entry:
-   *		CCB Pointer
-   *		Quad pointer
-   *	Exit:
-   *		None
-   *	Max time:
-   *		Approx. 111 + 16(ENTER) + 14(EXIT) = 141 cycles or 11.28Usec
-   */
-  void FastMapCelf16 (CCB *ccb, Point *quad);
+/*
+ *	Name:
+ *		FastMapCelf16
+ *	Purpose:
+ *		Sets up delta fields to creat cel mapped to
+ *		four frac16 points in quad argument.
+ *	Entry:
+ *		CCB Pointer
+ *		Quad pointer
+ *	Exit:
+ *		None
+ *	Max time:
+ *		Approx. 111 + 16(ENTER) + 14(EXIT) = 141 cycles or 11.28Usec
+ */
+void FastMapCelf16(CCB *ccb, Point *quad);
 
 #ifdef _GRAPHICS_INTERNAL
 #undef __swi
 #endif
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#endif  /* of #define __GRAPHICS_H */
+EXTERN_C_END

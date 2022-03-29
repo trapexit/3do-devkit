@@ -1,5 +1,4 @@
-#ifndef TDO_GRAPHICS_POINT_H_INCLUDED
-#define TDO_GRAPHICS_POINT_H_INCLUDED
+#pragma include_only_once
 
 #include "graphics_coord.h"
 
@@ -9,5 +8,3 @@ struct Point
   Coord pt_X;
   Coord pt_Y;
 };
-
-#endif

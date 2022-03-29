@@ -1,5 +1,4 @@
-#ifndef TDO_NODES_H_INCLUDED
-#define TDO_NODES_H_INCLUDED
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -122,5 +121,3 @@ typedef struct MinNode
   struct MinNode *n_Next;
   struct MinNode *n_Prev;
 } MinNode;
-
-#endif

@@ -16,10 +16,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_HASH_INCLUDED
-#define TTL_HASH_INCLUDED
+#pragma include_only_once
 
 #include "cstdint"
+
 
 template<typename T>
 struct hash;
@@ -105,5 +105,3 @@ struct hash<T*>
     return (uint32_t)(v_); // proper hash;
   }
 };
-
-#endif

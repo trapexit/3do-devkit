@@ -1,5 +1,4 @@
-#ifndef _GETVIDEOINFO_H
-#define _GETVIDEOINFO_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -10,29 +9,25 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 #include "graphics.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 #define NTSC_SCREEN_WIDTH	320
 #define NTSC_SCREEN_HEIGHT	240
-#define NTSC_DISPLAY( _displayType )	( _displayType == DI_TYPE_NTSC )
+#define NTSC_DISPLAY( _displayType ) ( _displayType == DI_TYPE_NTSC )
 
 #define PAL1_SCREEN_WIDTH	320
 #define PAL2_SCREEN_WIDTH	384
 #define PAL1_SCREEN_HEIGHT	240
 #define PAL2_SCREEN_HEIGHT	288
-#define PAL_DISPLAY( _displayType )		( (_displayType == DI_TYPE_PAL1) || (_displayType == DI_TYPE_PAL2) )
+#define PAL_DISPLAY( _displayType ) ( (_displayType == DI_TYPE_PAL1) || (_displayType == DI_TYPE_PAL2) )
 
-int32 GetDisplayType( void );
-int32 GetScreenWidth( int32 displayType );
-int32 GetScreenHeight( int32 displayType );
+EXTERN_C_BEGIN
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+int32 GetDisplayType(void);
+int32 GetScreenWidth(int32 displayType);
+int32 GetScreenHeight(int32 displayType);
 
-#endif
+EXTERN_C_END

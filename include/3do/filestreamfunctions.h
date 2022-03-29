@@ -1,5 +1,4 @@
-#ifndef __H_FILESTREAMFUNCTIONS
-#define __H_FILESTREAMFUNCTIONS
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -12,23 +11,20 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "filestream.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* cplusplus */
+EXTERN_C_BEGIN
 
-extern Stream *OpenDiskStream(char *theName, int32 bSize);
-extern int32 SeekDiskStream(Stream *theStream, int32 offset,
-			       enum SeekOrigin whence);
+extern Stream *OpenDiskStream(char *theName,
+                              int32 bSize);
+extern int32 SeekDiskStream(Stream *theStream,
+                            int32   offset,
+                            enum SeekOrigin whence);
 extern void CloseDiskStream(Stream *theStream);
-extern int32 ReadDiskStream(Stream *theStream, char *buffer, int32 nBytes);
+extern int32 ReadDiskStream(Stream *theStream,
+                            char *buffer,
+                            int32 nBytes);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-#endif /* __H_FILESTREAMFUNCTIONS */
+EXTERN_C_END

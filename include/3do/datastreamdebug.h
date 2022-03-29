@@ -15,15 +15,16 @@
  *	5/21/93		jb		New today.
  *
  *******************************************************************************************/
-#ifndef __DATASTREAMDEBUG_H__
-#define __DATASTREAMDEBUG_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "datastream.h"
 
 #if DEBUG
 
-#include "stdlib.h"			/* for exit() */
-#include "stdio.h"			/* for printf() */
+#include "stdlib.h"		/* for exit() */
+#include "stdio.h"		/* for printf() */
 
 #define CHECK_DS_RESULT( name, dsResult )                               \
   if ( ((int32) dsResult) < 0 )                                         \
@@ -40,14 +41,9 @@
 /*****************************/
 /* Public routine prototypes */
 /*****************************/
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-  void	PrintfDSError(int32 dsResult);
+EXTERN_C_BEGIN
 
-#ifdef __cplusplus
-}
-#endif
+void PrintfDSError(int32 dsResult);
 
-#endif	/* __DATASTREAMDEBUG_H__ */
+EXTERN_C_END

@@ -1,0 +1,101 @@
+/*
+  ISC License
+
+  Copyright (c) 2022, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#pragma include_only_once
+
+#include "types_size_t.h"
+#include "types_ptrdiff_t.h"
+
+
+template<class T>
+class allocator
+{
+public:
+  typedef size_t    size_type;
+  typedef ptrdiff_t difference_type;
+  typedef T*        pointer;
+  typedef const T*  const_pointer;
+  typedef T&        reference;
+  typedef const T&  const_reference;
+  typedef T         value_type;
+
+public:
+  allocator() {;}
+  ~allocator() {;}
+
+public:
+  pointer
+  address(reference x_) const
+  {
+    return &x_;
+  }
+
+  pointer
+  address(const_reference x_) const
+  {
+    return &x_;
+  }
+
+  pointer
+  allocate(size_type   n_,
+           const void *hint_ = 0)
+  {
+    (void)hint_;
+    return (pointer)::operator new(n_ * sizeof(T));
+  }
+
+  void
+  deallocate(pointer ptr_)
+  {
+    ::operator delete(ptr_);
+  }
+
+  size_type
+  max_size() const
+  {
+    return ~0;
+  }
+
+  void
+  construct(pointer         ptr_,
+            const_reference val_)
+  {
+    memory_construct(ptr_,val_);
+  }
+
+  void
+  destroy(pointer ptr_)
+  {
+    memory_destruct(ptr_);
+  }
+};
+
+template<>
+class allocator<void>
+{
+public:
+  typedef void* pointer;
+  typedef const void* const_pointer;
+  typedef void value_type;
+
+  template<class U>
+  struct rebind
+  {
+    typedef allocator<U> other;
+  };
+};

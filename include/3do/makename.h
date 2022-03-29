@@ -1,3 +1,5 @@
+#pragma include_only_once
+
 /*******************************************************************************************
  *	File:			MakeName.h
  *
@@ -10,20 +12,15 @@
  *	7/10/93		jb		New today
  *
  *******************************************************************************************/
-#ifndef __MAKENAME_H__
-#define __MAKENAME_H__
 
 /*****************************/
 /* Public routine prototypes */
 /*****************************/
-#ifdef __cplusplus 
-extern "C" {
-#endif
 
-char* MakeName( char* outputNameBuf, int32 maxNameLen, char* baseNameString, int32 uniqueID );
+#include "extern_c.h"
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_C_BEGIN
 
-#endif	/* __MAKENAME_H__ */
+char* MakeName(char* outputNameBuf, int32 maxNameLen, char* baseNameString, int32 uniqueID);
+
+EXTERN_C_END

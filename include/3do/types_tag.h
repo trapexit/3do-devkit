@@ -1,5 +1,4 @@
-#ifndef TYPES_TAG_H_INCLUDED
-#define TYPES_TAG_H_INCLUDED
+#pragma include_only_once
 
 /* TagArgs - use to pass a list of arguments to functions */
 typedef	void *TagData;
@@ -13,5 +12,3 @@ typedef struct TagArg
 #define TAG_END	 0
 #define TAG_JUMP 254
 #define TAG_NOP	 255
-
-#endif

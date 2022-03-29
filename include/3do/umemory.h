@@ -1,5 +1,4 @@
-#ifndef __UMEMORY_H
-#define __UMEMORY_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -12,18 +11,16 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "mem.h"
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+EXTERN_C_BEGIN
 
 void *Malloc(uint32 size, uint32 memtype);
 void *Free(void *ptr);
 
-#ifdef __cplusplus
-  }
-#endif
+EXTERN_C_END
 
 #define NewPtr	Malloc
 #define FreePtr	Free
@@ -35,8 +32,3 @@ void *Free(void *ptr);
 
 #define ReportMemoryUsage()
 #define DebugMemUsage()
-
-/*****************************************************************************/
-
-
-#endif /* __UMEMORY_H */

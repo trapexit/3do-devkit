@@ -1,5 +1,4 @@
-#ifndef __JSTRING_H
-#define __JSTRING_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -12,18 +11,18 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 #include "operror.h"
 
 /*****************************************************************************/
-
 
 /* kernel interface definitions */
 #define JSTR_FOLIONAME  "jstring"
 
 
 /*****************************************************************************/
-
 
 /* jstring folio errors */
 #define MakeJstrErr(svr,class,err) MakeErr(ER_FOLI,ER_JSTR,svr,ER_E_SSTM,class,err)
@@ -33,11 +32,7 @@
 
 /*****************************************************************************/
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+EXTERN_C_BEGIN
 
 /* folio management */
 Err OpenJStringFolio(void);
@@ -77,11 +72,7 @@ int32 ConvertHalfKana2FullKana(const char *string, char *result,
 int32 ConvertHalfKana2Hiragana(const char *string, char *result,
                                uint32 resultSize, uint8 filler);
 
-
-#ifdef __cplusplus
-}
-#endif
-
+EXTERN_C_END
 
 /****************************************************************************/
 
@@ -106,6 +97,3 @@ int32 ConvertHalfKana2Hiragana(const char *string, char *result,
 
 
 /*****************************************************************************/
-
-
-#endif /* __JSTRING_H */

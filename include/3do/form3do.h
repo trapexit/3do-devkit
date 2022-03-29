@@ -1,5 +1,4 @@
-#ifndef __FORM3DO_H
-#define __FORM3DO_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -19,15 +18,15 @@
  **  {chunk}                 ::= {chunk_header}{chunk body}
  **
  **  {chunk_ID}              ::= 'IMAG'  |           Image header
- **                                          'CCB '  |           CEL header
- **                                          'PDAT'  |           Pixel Data
- **                                          'PLUT'  |           PLUT Table (Pixel Lookup Table)
- **                                          'ANIM'  |           Animation Info
- **                                          'VDL '  |           VDL list
- **                                          'CPYR'  |           Copyright Notice
- **                                          'DESC'  |           Text Description of image
- **                                          'KWRD'  |           Text Keywords associated with image
- **                                          'CRDT'              Text credits associated with image
+ **                              'CCB '  |           CEL header
+ **                              'PDAT'  |           Pixel Data
+ **                              'PLUT'  |           PLUT Table (Pixel Lookup Table)
+ **                              'ANIM'  |           Animation Info
+ **                              'VDL '  |           VDL list
+ **                              'CPYR'  |           Copyright Notice
+ **                              'DESC'  |           Text Description of image
+ **                              'KWRD'  |           Text Keywords associated with image
+ **                              'CRDT'              Text credits associated with image
  **
  **  {chunk_size}::= Unsigned 32 bit integer (includes size of chunk body plus size
  **                                  of the chunk header).  Chunk_size is 8 plus size of the chunk_body.
@@ -36,6 +35,7 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
 
 #include "types.h"
 #include "graphics.h"
@@ -111,51 +111,51 @@ typedef struct RGB888_Tag RGB;
 
 typedef struct WrapperChunk 	/* Optional  chunk. Must be first if present */
 {
-  int32	chunk_ID;			/* '3DO '  Magic number to identify wrapper chunk */
+  int32	chunk_ID;		/* '3DO '  Magic number to identify wrapper chunk */
   int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
-  uint8	data[1];			/*	contains a collection of atomic chunks	*/
+  uint8	data[1];		/*	contains a collection of atomic chunks	*/
 } WrapperChunk;
 
 /* Image Control Chunk */
 typedef struct ImageCC
 {
-  int32	chunk_ID;			/* 'IMAG' Magic number to identify the image control chunk */
+  int32	chunk_ID;		/* 'IMAG' Magic number to identify the image control chunk */
   int32	chunk_size; 		/*	size in bytes of chunk including chunk_size  (24)  */
 
-  int32	w;					/*	width in pixels */
-  int32	h;					/*	height in pixels */
+  int32	w;			/*	width in pixels */
+  int32	h;			/*	height in pixels */
   int32	bytesperrow;		/*	may include pad bytes at row end for alignment */
   uint8	bitsperpixel;		/*	8,16,24 */
   uint8	numcomponents;		/*	3 => RGB (or YUV) , 1 => color index */
-  /*	3 => RGB (8  16 or 24 bits per pixel)	*/
-  /*		 8 bit is 332 RGB  (or YUV) */
-  /*		 16 bit is 555 RGB	(or YUV) */
-  /*		 24 bit is 888 RGB	(or YUV) */
-  /* 1 => coded  meaning	color indexed;	 */
-  /*			 Coded images Require a Pixel Lookup Table Chunk */
-  uint8	numplanes;			/*	1 => chunky;  3=> planar  */
+                                /*	3 => RGB (8  16 or 24 bits per pixel)	*/
+                                /*		 8 bit is 332 RGB  (or YUV) */
+                                /*		 16 bit is 555 RGB	(or YUV) */
+                                /*		 24 bit is 888 RGB	(or YUV) */
+                                /*      1 => coded  meaning	color indexed;	 */
+                                /*	Coded images Require a Pixel Lookup Table Chunk */
+  uint8	numplanes;		/*	1 => chunky;  3=> planar  */
   /*	although the hardware does not support planar modes */
   /*	it is useful for some compression methods to separate */
   /*	the image into RGB planes or into YCrCb planes */
   /*	numcomponents must be greater than 1 for planar to */
   /*	have any effect */
   uint8	colorspace; 		/*	0 => RGB, 1 => YCrCb   */
-  uint8	comptype;			/*	compression type; 0 => uncompressed */
-  /*	1=Cel bit packed */
-  /*	other compression types will be defined later */
-  uint8	hvformat;			/*	0 => 0555;	1=> 0554h;	2=> 0554v; 3=> v554h  */
+  uint8	comptype;		/*	compression type; 0 => uncompressed */
+                                /*	1=Cel bit packed */
+                                /*	other compression types will be defined later */
+  uint8	hvformat;		/*	0 => 0555;	1=> 0554h;	2=> 0554v; 3=> v554h  */
   uint8	pixelorder; 		/*	0 => (0,0), (1,0),	(2,0)	(x,y) is (row,column) */
-  /*	1 => (0,0), (0,1), (1,0), (1,1)  Sherrie LRform  */
-  /*	2 => (0,1), (0,0), (1,1), (1,0)  UGO LRform  */
-  uint8	version;			/*	file format version identifier.  0 for now	*/
+                                /*	1 => (0,0), (0,1), (1,0), (1,1)  Sherrie LRform  */
+                                /*	2 => (0,1), (0,0), (1,1), (1,0)  UGO LRform  */
+  uint8	version;		/*	file format version identifier.  0 for now	*/
 } ImageCC;
 
 
 typedef struct PixelChunk
 {
-  int32	chunk_ID;				/* 'PDAT' Magic number to identify pixel data */
-  int32	chunk_size; 			/*	size in bytes of chunk including chunk_size */
-  uint8	pixels[1];				/*	pixel data (format depends upon description in the imagehdr */
+  int32	chunk_ID;		/* 'PDAT' Magic number to identify pixel data */
+  int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
+  uint8	pixels[1];		/*	pixel data (format depends upon description in the imagehdr */
 } PixelChunk;
 
 /* Notes this data structure is the same size and shares common fields with */
@@ -168,13 +168,13 @@ typedef struct PixelChunk
 /* Cel Control Block Chunk	 */
 typedef struct CCC
 {
-  int32  chunk_ID;              /* 'CCB ' Magic number to identify pixel data */
-  int32  chunk_size;            /* size in bytes of chunk including chunk_size */
-  uint32 ccbversion;            /* version number of the scob data structure.  0 for now */
-  uint32 ccb_Flags;             /* 32 bits of CCB flags */
+  int32       chunk_ID;         /* 'CCB ' Magic number to identify pixel data */
+  int32       chunk_size;       /* size in bytes of chunk including chunk_size */
+  uint32      ccbversion;       /* version number of the scob data structure.  0 for now */
+  uint32      ccb_Flags;        /* 32 bits of CCB flags */
   struct CCB *ccb_NextPtr;
-  CelData *ccb_CelData;
-  void    *ccb_PIPPtr;          /* This will change to ccb_PLUTPtr in the next release */
+  CelData    *ccb_CelData;
+  void       *ccb_PIPPtr;       /* This will change to ccb_PLUTPtr in the next release */
 
   Coord  ccb_X;
   Coord  ccb_Y;
@@ -202,8 +202,8 @@ typedef struct CCC
 
 typedef struct LoopRec
 {
-  int32	loopStart;			/*	start frame for a loop in the animation */
-  int32	loopEnd;			/*	end frame for a loop in the animation */
+  int32	loopStart;		/*	start frame for a loop in the animation */
+  int32	loopEnd;		/*	end frame for a loop in the animation */
   int32	repeatCount;		/*	number of times to repeat the looped portion */
   int32	repeatDelay;		/*	number of 1/60s of a sec to delay each time thru loop */
 } LoopRec;
@@ -211,24 +211,24 @@ typedef struct LoopRec
 
 typedef struct AnimChunk
 {
-  int32	chunk_ID;			/* 'ANIM' Magic number to identify ANIM chunk */
-  int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
-  int32	version;			/*	current version = 0 */
-  int32	animType;			/*	0 = multi-CCB ; 1 = single CCB	*/
-  int32	numFrames;			/*	number of frames for this animation */
-  int32	frameRate;			/*	number of 1/60s of a sec to display each frame */
-  int32	startFrame; 		/*	the first frame in the anim. Can be non zero */
-  int32	numLoops;			/*	number of loops in loop array. Loops are executed serially */
-  LoopRec loop[1];			/*	array of loop info. see numLoops */
+  int32   chunk_ID;		/* 'ANIM' Magic number to identify ANIM chunk */
+  int32   chunk_size; 		/*	size in bytes of chunk including chunk_size */
+  int32   version;		/*	current version = 0 */
+  int32   animType;		/*	0 = multi-CCB ; 1 = single CCB	*/
+  int32   numFrames;		/*	number of frames for this animation */
+  int32   frameRate;		/*	number of 1/60s of a sec to display each frame */
+  int32   startFrame; 		/*	the first frame in the anim. Can be non zero */
+  int32   numLoops;		/*	number of loops in loop array. Loops are executed serially */
+  LoopRec loop[1];		/*	array of loop info. see numLoops */
 } AnimChunk;
 
 
 typedef struct PLUTChunk
 {
-  int32	chunk_ID;			/* 'PLUT' Magic number to identify pixel data */
-  int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
-  int32	numentries; 		/*	number of entries in PLUT Table */
-  RGB555	PLUT[1];			/*	PLUT entries  */
+  int32  chunk_ID;		/* 'PLUT' Magic number to identify pixel data */
+  int32  chunk_size; 		/*	size in bytes of chunk including chunk_size */
+  int32  numentries; 		/*	number of entries in PLUT Table */
+  RGB555 PLUT[1];		/*	PLUT entries  */
 } PLUTChunk;
 
 
@@ -237,30 +237,30 @@ typedef struct PLUTChunk
 /***************************************/
 typedef struct VDL_REC
 {
-  uint32	controlword;					/*	VDL display control word (+ number of int32words in this entry - 4) */
-  /*	(+ number of lines that this vdl is in effect -1) */
-  uint32	curLineBuffer;					/*	1st byte of frame buffer */
-  uint32	prevLineBuffer; 				/*	1st byte of frame buffer */
-  uint32	nextVDLEntry;					/*	GrafBase->gf_VDLPostDisplay for last VDL Entry */
-  uint32	displayControl; 				/*	Setup control info: DEFAULT_DISPCTRL */
-  uint32	CLUTEntry[kCLUTWords];			/*	32 Clut entries for each R, G, and B */
-  uint32	backgroundEntry;				/*	RGB 000 will use this entry */
-  uint32	filler1;						/*	need 40 entries for now, hardware bug */
-  uint32	filler2;
+  uint32 controlword;		/*	VDL display control word (+ number of int32words in this entry - 4) */
+                                /*	(+ number of lines that this vdl is in effect -1) */
+  uint32 curLineBuffer;		/*	1st byte of frame buffer */
+  uint32 prevLineBuffer; 	/*	1st byte of frame buffer */
+  uint32 nextVDLEntry;		/*	GrafBase->gf_VDLPostDisplay for last VDL Entry */
+  uint32 displayControl; 	/*	Setup control info: DEFAULT_DISPCTRL */
+  uint32 CLUTEntry[kCLUTWords];	/*	32 Clut entries for each R, G, and B */
+  uint32 backgroundEntry;	/*	RGB 000 will use this entry */
+  uint32 filler1;		/*	need 40 entries for now, hardware bug */
+  uint32 filler2;
 } VDL_REC;
 
-typedef struct VDLCHUNK 		/* used for a standard 33 entry vdl list */
+typedef struct VDLCHUNK 	/* used for a standard 33 entry vdl list */
 {
-  int32	chunk_ID;			/* 'VDL ' Magic number to identify VDL chunk */
-  int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
-  int32	vdlcount;			/*	count of number of vdls following */
-  VDL_REC vdl[1]; 			/*	VDL control words and entries  */
+  int32   chunk_ID;		/* 'VDL ' Magic number to identify VDL chunk */
+  int32   chunk_size; 		/*	size in bytes of chunk including chunk_size */
+  int32   vdlcount;		/*	count of number of vdls following */
+  VDL_REC vdl[1]; 		/*	VDL control words and entries  */
 } VdlChunk;
 
 
 typedef struct Cpyr
 {
-  int32	chunk_ID;			/* 'CPYR' Magic number to identify pixel data */
+  int32	chunk_ID;		/* 'CPYR' Magic number to identify pixel data */
   int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
   char	copyright[1];		/*	C String ASCII Copyright Notice  */
 } Cpyr;
@@ -268,21 +268,21 @@ typedef struct Cpyr
 
 typedef struct Desc
 {
-  int32	chunk_ID;			/* 'DESC' Magic number to identify pixel data */
+  int32	chunk_ID;		/* 'DESC' Magic number to identify pixel data */
   int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
   char	descrip[1]; 		/*	C String ASCII image description  */
 } Desc;
 
 typedef struct Kwrd
 {
-  int32	chunk_ID;			/* 'KWRD' Magic number to identify pixel data */
+  int32	chunk_ID;		/* 'KWRD' Magic number to identify pixel data */
   int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
   char	keywords[1];		/*	C String ASCII keywords, separated by ';'   */
 } Kwrd;
 
 typedef struct Crdt
 {
-  int32	chunk_ID;			/* 'CRDT' Magic number to identify pixel data */
+  int32	chunk_ID;		/* 'CRDT' Magic number to identify pixel data */
   int32	chunk_size; 		/*	size in bytes of chunk including chunk_size */
   char	credits[1]; 		/*	C String ASCII credits for this image  */
 } Crdt;
@@ -296,29 +296,22 @@ typedef struct Crdt
  * CHUNKHDR_SIZE is the size of the common chunk fields (chunk_ID and chunk_size).
  */
 
-#define WRAPPER_CHUNKHDR_SIZE		offsetof(WrapperChunk, data)
-#define PDAT_CHUNKHDR_SIZE			offsetof(PixelChunk, pixels)
-#define ANIM_CHUNKHDR_SIZE			offsetof(AnimChunk, loop)
-#define PLUT_CHUNKHDR_SIZE			offsetof(PLUTChunk, PLUT)
-#define VDL_CHUNKHDR_SIZE			offsetof(VDLCHUNK, vdl)
-#define CPYR_CHUNKHDR_SIZE			offsetof(Cpyr, copyright)
-#define DESC_CHUNKHDR_SIZE			offsetof(Desc, descrip)
-#define KWRD_CHUNKHDR_SIZE			offsetof(Kwrd, keywords)
-#define CRDT_CHUNKHDR_SIZE			offsetof(Crdt, credits)
+#define WRAPPER_CHUNKHDR_SIZE offsetof(WrapperChunk, data)
+#define PDAT_CHUNKHDR_SIZE    offsetof(PixelChunk, pixels)
+#define ANIM_CHUNKHDR_SIZE    offsetof(AnimChunk, loop)
+#define PLUT_CHUNKHDR_SIZE    offsetof(PLUTChunk, PLUT)
+#define VDL_CHUNKHDR_SIZE     offsetof(VDLCHUNK, vdl)
+#define CPYR_CHUNKHDR_SIZE    offsetof(Cpyr, copyright)
+#define DESC_CHUNKHDR_SIZE    offsetof(Desc, descrip)
+#define KWRD_CHUNKHDR_SIZE    offsetof(Kwrd, keywords)
+#define CRDT_CHUNKHDR_SIZE    offsetof(Crdt, credits)
 
-#define CHUNKHDR_SIZE				WRAPPER_CHUNKHDR_SIZE
+#define CHUNKHDR_SIZE WRAPPER_CHUNKHDR_SIZE
 
 /* service routines used internally and also generally useful... */
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-    char * GetChunk( uint32 *chunk_ID, char **buffer, int32 *bufLen );
+char *GetChunk(uint32 *chunk_ID, char **buffer, int32 *bufLen);
 
-#ifdef __cplusplus
-  }
-#endif
-
-
-#endif /* __FORM3DO_H */
+EXTERN_C_END

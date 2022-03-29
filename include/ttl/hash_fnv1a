@@ -16,10 +16,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_HASH_FNV1A_INCLUDED
-#define TTL_HASH_FNV1A_INCLUDED
+#pragma include_only_once
 
 #include "cstdint"
+
 
 struct FNV1A_32
 {
@@ -49,5 +49,3 @@ struct FNV1A_32
     return hash_;
   }
 };
-
-#endif

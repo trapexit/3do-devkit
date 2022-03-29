@@ -1,5 +1,4 @@
-#ifndef __LOOPSTEREOSOUNDFILE_H
-#define __LOOPSTEREOSOUNDFILE_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -10,18 +9,12 @@
 **
 ******************************************************************************/
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+#include "extern_c.h"
 
 #include "types.h"
 
-Err LoopStereoSoundFile( const char* filename );
+EXTERN_C_BEGIN
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+Err LoopStereoSoundFile(const char* filename);
 
-
-#endif /* __LOOPSTEREOSOUNDFILE_H */
+EXTERN_C_END

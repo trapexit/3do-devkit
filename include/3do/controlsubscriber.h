@@ -1,13 +1,13 @@
-#ifndef __CTRLSUBSCRIBER_H__
-#define __CTRLSUBSCRIBER_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "subscriberutils.h"
 #include "itempool.h"
 #include "datastreamlib.h"
 
-#define	CTRL_CHUNK_TYPE	CHAR4LITERAL('C','T','R','L') /* chunk type for this subscriber */
-
+#define	CTRL_CHUNK_TYPE    CHAR4LITERAL('C','T','R','L') /* chunk type for this subscriber */
 #define	GOTO_CHUNK_SUBTYPE CHAR4LITERAL('G','O','T','O') /* GOTO chunk sub-type */
 #define	SYNC_CHUNK_SUBTYPE CHAR4LITERAL('S','Y','N','C') /* SYNC chunk sub-type */
 #define	ALRM_CHUNK_SUBTYPE CHAR4LITERAL('A','L','R','M') /* ALRM chunk sub-type */
@@ -46,12 +46,11 @@ typedef struct CtrlContext
   boolean fTimerRunning;	/* flag: timer currently running */
   uint32  timerOwner;		/* subchunk processing that is using the timer */
 
-  uint32 newClockTime;			/* set stream clock to this when we wake from timer */
+  uint32 newClockTime;		/* set stream clock to this when we wake from timer */
 
   int32	      numChannels;
   SubsChannel channel[CTRL_MAX_CHANNELS]; /* an array of channels */
 } CtrlContext, *CtrlContextPtr;
-
 
 typedef struct ControlChunk
 {
@@ -82,22 +81,14 @@ typedef struct ControlChunk
 
 } ControlChunk, *ControlChunkPtr;
 
+EXTERN_C_BEGIN
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+int32 InitCtrlSubscriber(void);
+int32 CloseCtrlSubscriber(void);
 
-  int32	InitCtrlSubscriber(void);
-  int32	CloseCtrlSubscriber(void);
+int32 NewCtrlSubscriber(CtrlContextPtr *pCtx, DSStreamCBPtr	streamCBPtr, int32 priority);
+int32 DisposeCtrlSubscriber(CtrlContextPtr ctx);
 
+void CtrlSubscriberThread(int32 notUsed, CtrlContextPtr ctx);
 
-  int32	NewCtrlSubscriber(CtrlContextPtr *pCtx, DSStreamCBPtr	streamCBPtr, int32 priority);
-  int32	DisposeCtrlSubscriber(CtrlContextPtr ctx);
-
-  void	CtrlSubscriberThread(int32 notUsed, CtrlContextPtr ctx);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __CTRLSUBSCRIBER_H__ */
+EXTERN_C_END

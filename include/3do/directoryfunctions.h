@@ -1,5 +1,4 @@
-#ifndef __H_DIRECTORYFUNCTIONS
-#define __H_DIRECTORYFUNCTIONS
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -12,22 +11,17 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* cplusplus */
+EXTERN_C_BEGIN
 
 Directory *OpenDirectoryItem(Item openFileItem);
 Directory *OpenDirectoryPath(char *thePath);
-int32 ReadDirectory (Directory *dir, DirectoryEntry *de);
-void CloseDirectory (Directory *dir);
+int32      ReadDirectory (Directory *dir, DirectoryEntry *de);
+void       CloseDirectory (Directory *dir);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
+EXTERN_C_END
 
 /*****************************************************************************/
-
-#endif /* __H_DIRECTORYFUNCTIONS */

@@ -16,10 +16,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_ALLOCATOR_INCLUDED
-#define TTL_ALLOCATOR_INCLUDED
+#pragma include_only_once
 
 #include "memory"
+
 
 template<typename T>
 class allocator
@@ -75,20 +75,18 @@ public:
   construct(pointer         p_,
             const_reference v_)
   {
-    __construct(p_,v_);
+    memory_construct(p_,v_);
   }
 
   void
   construct(pointer p_)
   {
-    __construct(p_);
+    memory_construct(p_);
   }
 
   void
   destroy(pointer p_)
   {
-    __destruct(p_);
+    memory_destruct(p_);
   }
 };
-
-#endif

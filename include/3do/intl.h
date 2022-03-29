@@ -1,5 +1,4 @@
-#ifndef __INTL_H
-#define __INTL_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -12,6 +11,8 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 #include "folio.h"
 #include "item.h"
@@ -19,20 +20,15 @@
 
 /****************************************************************************/
 
-
 /* kernel interface definitions */
 #define INTL_FOLIONAME  "international"
 
-
 /****************************************************************************/
-
 
 /* International folio item types */
 #define INTL_LOCALE_NODE  1
 
-
 /**********************************************************************/
-
 
 /* International folio errors */
 #define INTL_ERR_BADTAG           MakeIErr(ER_SEVERE,ER_C_STND,ER_BadTagArg)
@@ -57,7 +53,6 @@
 
 /*****************************************************************************/
 
-
 #define MAKE_LANG(a,b) ((a << 24) | (b << 16))
 
 /* These definitions come from the standard "ISO-639, Codes for the
@@ -67,45 +62,45 @@
  * even though only a subset of the codes are given names in this include
  * file
  */
-    typedef enum LanguageCodes
-      {
-       INTL_LANG_ARABIC       = MAKE_LANG('a','r'),
-       INTL_LANG_ARMENIAN     = MAKE_LANG('h','y'),
-       INTL_LANG_BULGARIAN    = MAKE_LANG('b','g'),
-       INTL_LANG_CHINESE      = MAKE_LANG('z','h'),
-       INTL_LANG_CZECH        = MAKE_LANG('c','s'),
-       INTL_LANG_DANISH       = MAKE_LANG('d','a'),
-       INTL_LANG_DUTCH        = MAKE_LANG('n','l'),
-       INTL_LANG_ENGLISH      = MAKE_LANG('e','n'),
-       INTL_LANG_FINNISH      = MAKE_LANG('f','i'),
-       INTL_LANG_FRENCH       = MAKE_LANG('f','r'),
-       INTL_LANG_GERMAN       = MAKE_LANG('d','e'),
-       INTL_LANG_GREEK        = MAKE_LANG('e','l'),
-       INTL_LANG_HEBREW       = MAKE_LANG('i','w'),
-       INTL_LANG_HUNGARIAN    = MAKE_LANG('h','u'),
-       INTL_LANG_ICELANDIC    = MAKE_LANG('i','s'),
-       INTL_LANG_INDONESIAN   = MAKE_LANG('i','n'),
-       INTL_LANG_IRISH        = MAKE_LANG('g','a'),
-       INTL_LANG_ITALIAN      = MAKE_LANG('i','t'),
-       INTL_LANG_JAPANESE     = MAKE_LANG('j','a'),
-       INTL_LANG_KOREAN       = MAKE_LANG('k','o'),
-       INTL_LANG_LATIN        = MAKE_LANG('l','a'),
-       INTL_LANG_MONGOLIAN    = MAKE_LANG('m','n'),
-       INTL_LANG_NORWEGIAN    = MAKE_LANG('n','o'),
-       INTL_LANG_PERSIAN      = MAKE_LANG('f','a'),
-       INTL_LANG_POLISH       = MAKE_LANG('p','l'),
-       INTL_LANG_PORTUGUESE   = MAKE_LANG('p','t'),
-       INTL_LANG_ROMANIAN     = MAKE_LANG('r','o'),
-       INTL_LANG_RUSSIAN      = MAKE_LANG('r','u'),
-       INTL_LANG_SCOTS_GAELIC = MAKE_LANG('g','d'),
-       INTL_LANG_SINGHALESE   = MAKE_LANG('s','i'),
-       INTL_LANG_SPANISH      = MAKE_LANG('e','s'),
-       INTL_LANG_SWEDISH      = MAKE_LANG('s','v'),
-       INTL_LANG_TURKISH      = MAKE_LANG('t','r'),
-       INTL_LANG_UKRAINIAN    = MAKE_LANG('u','k'),
-       INTL_LANG_VIETNAMESE   = MAKE_LANG('v','i'),
-       INTL_LANG_WELSH        = MAKE_LANG('c','y')
-      } LanguageCodes;
+  typedef enum LanguageCodes
+    {
+     INTL_LANG_ARABIC       = MAKE_LANG('a','r'),
+     INTL_LANG_ARMENIAN     = MAKE_LANG('h','y'),
+     INTL_LANG_BULGARIAN    = MAKE_LANG('b','g'),
+     INTL_LANG_CHINESE      = MAKE_LANG('z','h'),
+     INTL_LANG_CZECH        = MAKE_LANG('c','s'),
+     INTL_LANG_DANISH       = MAKE_LANG('d','a'),
+     INTL_LANG_DUTCH        = MAKE_LANG('n','l'),
+     INTL_LANG_ENGLISH      = MAKE_LANG('e','n'),
+     INTL_LANG_FINNISH      = MAKE_LANG('f','i'),
+     INTL_LANG_FRENCH       = MAKE_LANG('f','r'),
+     INTL_LANG_GERMAN       = MAKE_LANG('d','e'),
+     INTL_LANG_GREEK        = MAKE_LANG('e','l'),
+     INTL_LANG_HEBREW       = MAKE_LANG('i','w'),
+     INTL_LANG_HUNGARIAN    = MAKE_LANG('h','u'),
+     INTL_LANG_ICELANDIC    = MAKE_LANG('i','s'),
+     INTL_LANG_INDONESIAN   = MAKE_LANG('i','n'),
+     INTL_LANG_IRISH        = MAKE_LANG('g','a'),
+     INTL_LANG_ITALIAN      = MAKE_LANG('i','t'),
+     INTL_LANG_JAPANESE     = MAKE_LANG('j','a'),
+     INTL_LANG_KOREAN       = MAKE_LANG('k','o'),
+     INTL_LANG_LATIN        = MAKE_LANG('l','a'),
+     INTL_LANG_MONGOLIAN    = MAKE_LANG('m','n'),
+     INTL_LANG_NORWEGIAN    = MAKE_LANG('n','o'),
+     INTL_LANG_PERSIAN      = MAKE_LANG('f','a'),
+     INTL_LANG_POLISH       = MAKE_LANG('p','l'),
+     INTL_LANG_PORTUGUESE   = MAKE_LANG('p','t'),
+     INTL_LANG_ROMANIAN     = MAKE_LANG('r','o'),
+     INTL_LANG_RUSSIAN      = MAKE_LANG('r','u'),
+     INTL_LANG_SCOTS_GAELIC = MAKE_LANG('g','d'),
+     INTL_LANG_SINGHALESE   = MAKE_LANG('s','i'),
+     INTL_LANG_SPANISH      = MAKE_LANG('e','s'),
+     INTL_LANG_SWEDISH      = MAKE_LANG('s','v'),
+     INTL_LANG_TURKISH      = MAKE_LANG('t','r'),
+     INTL_LANG_UKRAINIAN    = MAKE_LANG('u','k'),
+     INTL_LANG_VIETNAMESE   = MAKE_LANG('v','i'),
+     INTL_LANG_WELSH        = MAKE_LANG('c','y')
+    } LanguageCodes;
 
 
 /*****************************************************************************/
@@ -343,30 +338,30 @@ typedef uint32 GroupingDesc;
 typedef struct NumericSpec
 {
   /* how to generate a positive number */
-  GroupingDesc      ns_PosGroups;              /* grouping description */
-  unichar          *ns_PosGroupSep;            /* separates the groups */
-  unichar          *ns_PosRadix;               /* decimal mark         */
-  GroupingDesc      ns_PosFractionalGroups;    /* grouping description */
-  unichar          *ns_PosFractionalGroupSep;  /* separates the groups */
-  unichar          *ns_PosFormat;              /* for post-processing  */
-  uint32            ns_PosMinFractionalDigits; /* min # of frac digits */
-  uint32            ns_PosMaxFractionalDigits; /* max # of frac digits */
+  GroupingDesc  ns_PosGroups;   /* grouping description */
+  unichar      *ns_PosGroupSep; /* separates the groups */
+  unichar      *ns_PosRadix;    /* decimal mark         */
+  GroupingDesc  ns_PosFractionalGroups; /* grouping description */
+  unichar      *ns_PosFractionalGroupSep; /* separates the groups */
+  unichar      *ns_PosFormat;   /* for post-processing  */
+  uint32        ns_PosMinFractionalDigits; /* min # of frac digits */
+  uint32        ns_PosMaxFractionalDigits; /* max # of frac digits */
 
   /* how to generate a negative number */
-  GroupingDesc      ns_NegGroups;              /* grouping description */
-  unichar          *ns_NegGroupSep;            /* separates the groups */
-  unichar          *ns_NegRadix;               /* decimal mark         */
-  GroupingDesc      ns_NegFractionalGroups;    /* grouping description */
-  unichar          *ns_NegFractionalGroupSep;  /* separates the groups */
-  unichar          *ns_NegFormat;              /* for post-processing  */
-  uint32            ns_NegMinFractionalDigits; /* min # of frac digits */
-  uint32            ns_NegMaxFractionalDigits; /* max # of frac digits */
+  GroupingDesc  ns_NegGroups;   /* grouping description */
+  unichar      *ns_NegGroupSep; /* separates the groups */
+  unichar      *ns_NegRadix;    /* decimal mark         */
+  GroupingDesc  ns_NegFractionalGroups; /* grouping description */
+  unichar      *ns_NegFractionalGroupSep; /* separates the groups */
+  unichar      *ns_NegFormat;   /* for post-processing  */
+  uint32        ns_NegMinFractionalDigits; /* min # of frac digits */
+  uint32        ns_NegMaxFractionalDigits; /* max # of frac digits */
 
   /* when the number is zero, this string is used 'as-is' */
-  unichar          *ns_Zero;
+  unichar *ns_Zero;
 
   /* additional formatting options */
-  uint32            ns_Flags;                  /* for now, always 0    */
+  uint32 ns_Flags;              /* for now, always 0    */
 } NumericSpec;
 
 
@@ -421,44 +416,40 @@ typedef struct Locale
 /*****************************************************************************/
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
 
-  /***** International folio functions and macros *****/
+/***** International folio functions and macros *****/
 
-  /* folio management */
-  Err intlOpenFolio(void);
-  Err intlCloseFolio(void);
+/* folio management */
+Err intlOpenFolio(void);
+Err intlCloseFolio(void);
 
-  /* core Locale functions */
+/* core Locale functions */
 #define intlOpenLocale(tags)      FindAndOpenItem(MKNODEID(NST_INTL,INTL_LOCALE_NODE),tags)
 #define intlCloseLocale(locItem)  CloseItem(locItem)
 #define intlLookupLocale(locItem) ((Locale *)CheckItem(locItem,(uint8)NST_INTL,INTL_LOCALE_NODE))
 
-  /* date formatting */
-  int32 intlFormatDate(Item locItem, DateSpec spec,
-                       const GregorianDate *date,
+/* date formatting */
+int32 intlFormatDate(Item locItem, DateSpec spec,
+                     const GregorianDate *date,
+                     unichar *result, uint32 resultSize);
+
+/* number and currency formatting */
+int32 intlFormatNumber(Item locItem, const NumericSpec *spec,
+                       uint32 whole, uint32 frac, boolean negative, boolean doFrac,
                        unichar *result, uint32 resultSize);
 
-  /* number and currency formatting */
-  int32 intlFormatNumber(Item locItem, const NumericSpec *spec,
-                         uint32 whole, uint32 frac, boolean negative, boolean doFrac,
-                         unichar *result, uint32 resultSize);
-
-  /* localized string handling routines */
-  int32 intlCompareStrings(Item locItem, const unichar *string1, const unichar *string2);
-  int32 intlConvertString(Item locItem, const unichar *string, unichar *result, uint32 resultSize, uint32 flags);
-  int32 intlTransliterateString(const void *string, CharacterSets stringSet,
-                                void *result, CharacterSets resultSet,
-                                uint32 resultSize, uint8 unknownFiller);
-  uint32 intlGetCharAttrs(Item locItem, unichar character);
+/* localized string handling routines */
+int32 intlCompareStrings(Item locItem, const unichar *string1, const unichar *string2);
+int32 intlConvertString(Item locItem, const unichar *string, unichar *result, uint32 resultSize, uint32 flags);
+int32 intlTransliterateString(const void *string, CharacterSets stringSet,
+                              void *result, CharacterSets resultSet,
+                              uint32 resultSize, uint8 unknownFiller);
+uint32 intlGetCharAttrs(Item locItem, unichar character);
 
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_C_END
 
 
 /****************************************************************************/
@@ -474,6 +465,3 @@ extern "C" {
 
 
 /*****************************************************************************/
-
-
-#endif /* __INTL_H */

@@ -1,5 +1,4 @@
-#ifndef TYPES_INTS_H_INCLUDED
-#define TYPES_INTS_H_INCLUDED
+#pragma include_only_once
 
 /* 8bit */
 typedef signed char   i8;
@@ -28,5 +27,3 @@ typedef i32           int32;
 typedef i32           sint32;
 typedef u32           uint32;
 typedef u32           ulong;
-
-#endif

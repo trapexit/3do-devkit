@@ -61,8 +61,8 @@ BasicDisplay::BasicDisplay()
       DisableVAVG(sc->sc_Screens[i]);
     }
 
-  _vram_ioreq = GetVRAMIOReq();
-  _vbl_ioreq  = GetVBLIOReq();
+  _vram_ioreq = CreateVRAMIOReq();
+  _vbl_ioreq  = CreateVBLIOReq();
   _screen     = 0;
 }
 

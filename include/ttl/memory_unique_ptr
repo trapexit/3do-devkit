@@ -16,10 +16,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_MEMORY_UNIQUE_PTR
-#define TTL_MEMORY_UNIQUE_PTR
+#pragma include_only_once
 
 #include "memory_default_delete"
+
 
 template<typename T,
          typename DELETER = default_delete<T> >
@@ -37,19 +37,18 @@ public:
   }
 
   unique_ptr(pointer ptr_)
+    : _ptr(ptr_)
   {
-    _ptr = ptr_;
   }
 
   ~unique_ptr()
   {
-    deleter(_ptr);
+    _deleter(_ptr);
   }
 
-private:
-  unique_ptr(const unique_ptr &)
-  {
-  }
+public:
+  unique_ptr(const unique_ptr&);
+  unique_ptr& operator=(const unique_ptr&);
 
 public:
   reference
@@ -60,6 +59,11 @@ public:
 
   pointer
   operator->() const
+  {
+    return _ptr;
+  }
+
+  operator pointer()
   {
     return _ptr;
   }
@@ -87,6 +91,12 @@ public:
   operator bool() const
   {
     return (_ptr != 0);
+  }
+
+  bool
+  operator!() const
+  {
+    return (_ptr == 0);
   }
 
 public:
@@ -127,12 +137,6 @@ public:
   }
 
 private:
-  unique_ptr&
-  operator=(const unique_ptr &)
-  {
-  }
-
-private:
   pointer _ptr;
   DELETER _deleter;
 };
@@ -159,18 +163,12 @@ public:
 
   ~unique_ptr()
   {
-    deleter(_ptr);
+    _deleter(_ptr);
   }
 
-private:
-  unique_ptr(const unique_ptr &)
-  {
-  }
-
-  unique_ptr&
-  operator=(const unique_ptr&)
-  {
-  }
+public:
+  unique_ptr(const unique_ptr&);
+  unique_ptr& operator=(const unique_ptr&);
 
 public:
   reference
@@ -222,7 +220,7 @@ public:
   {
     pointer tmp;
 
-    tmp = get();
+    tmp  = get();
     _ptr = 0;
 
     return tmp;
@@ -254,6 +252,8 @@ template<typename T1,
          typename D1,
          typename T2,
          typename D2>
+static
+inline
 bool
 operator==(const unique_ptr<T1,D1> &lhs_,
            const unique_ptr<T2,D2> &rhs_)
@@ -262,6 +262,8 @@ operator==(const unique_ptr<T1,D1> &lhs_,
 }
 
 template<typename T1,typename D1,typename T2,typename D2>
+static
+inline
 bool
 operator<(const unique_ptr<T1,D1> &lhs_,
           const unique_ptr<T2,D2> &rhs_)
@@ -270,6 +272,8 @@ operator<(const unique_ptr<T1,D1> &lhs_,
 }
 
 template<typename T1,typename D1,typename T2,typename D2>
+static
+inline
 bool
 operator<=(const unique_ptr<T1,D1> &lhs_,
            const unique_ptr<T2,D2> &rhs_)
@@ -278,6 +282,8 @@ operator<=(const unique_ptr<T1,D1> &lhs_,
 }
 
 template<typename T1,typename D1,typename T2,typename D2>
+static
+inline
 bool
 operator>(const unique_ptr<T1,D1> &lhs_,
           const unique_ptr<T2,D2> &rhs_)
@@ -286,11 +292,11 @@ operator>(const unique_ptr<T1,D1> &lhs_,
 }
 
 template<typename T1,typename D1,typename T2,typename D2>
+static
+inline
 bool
 operator>=(const unique_ptr<T1,D1> &lhs_,
            const unique_ptr<T2,D2> &rhs_)
 {
   return !(lhs_ < rhs_);
 }
-
-#endif

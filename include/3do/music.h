@@ -1,5 +1,4 @@
-#ifndef __MUSIC_H
-#define __MUSIC_H
+#pragma include_only_once
 
 /****************************************************************************
 **
@@ -12,7 +11,6 @@
 **
 ****************************************************************************/
 
-
 #include "musicerror.h"
 #include "midifile.h"
 #include "juggler.h"
@@ -24,9 +22,3 @@
 #include "flex_stream.h"
 #include "sound3d.h"
 #include "soundplayer.h"
-
-
-/*****************************************************************************/
-
-
-#endif  /* __MUSIC_H */

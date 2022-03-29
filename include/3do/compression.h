@@ -1,5 +1,4 @@
-#ifndef __COMPRESSION_H
-#define __COMPRESSION_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -12,6 +11,8 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 #include "operror.h"
 
@@ -20,9 +21,7 @@
 /* kernel interface definitions */
 #define COMP_FOLIONAME  "compression"
 
-
 /*****************************************************************************/
-
 
 typedef void (* CompFunc)(void *userData, uint32 word);
 
@@ -71,46 +70,37 @@ typedef void Decompressor;
 
 /*****************************************************************************/
 
+EXTERN_C_BEGIN
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* folio management */
+Err OpenCompressionFolio(void);
+Err CloseCompressionFolio(void);
 
+/* compressor */
+Err CreateCompressor(Compressor **comp, CompFunc cf, const TagArg *tags);
+Err DeleteCompressor(Compressor *comp);
+Err FeedCompressor(Compressor *comp, void *data, uint32 numDataWords);
+int32 GetCompressorWorkBufferSize(const TagArg *tags);
 
-  /* folio management */
-  Err OpenCompressionFolio(void);
-  Err CloseCompressionFolio(void);
+/* decompressor */
+Err CreateDecompressor(Decompressor **decomp, CompFunc cf, const TagArg *tags);
+Err DeleteDecompressor(Decompressor *decomp);
+Err FeedDecompressor(Decompressor *decomp, void *data, uint32 numDataWords);
+int32 GetDecompressorWorkBufferSize(const TagArg *tags);
 
-  /* compressor */
-  Err CreateCompressor(Compressor **comp, CompFunc cf, const TagArg *tags);
-  Err DeleteCompressor(Compressor *comp);
-  Err FeedCompressor(Compressor *comp, void *data, uint32 numDataWords);
-  int32 GetCompressorWorkBufferSize(const TagArg *tags);
+/* varargs variants of some of the above */
+Err CreateCompressorVA(Compressor **comp, CompFunc cf, uint32 tags, ...);
+int32 GetCompressorWorkBufferSizeVA(uint32 tags, ...);
+Err CreateDecompressorVA(Decompressor **decomp, CompFunc cf, uint32 tags, ...);
+int32 GetDecompressorWorkBufferSizeVA(uint32 tags, ...);
 
-  /* decompressor */
-  Err CreateDecompressor(Decompressor **decomp, CompFunc cf, const TagArg *tags);
-  Err DeleteDecompressor(Decompressor *decomp);
-  Err FeedDecompressor(Decompressor *decomp, void *data, uint32 numDataWords);
-  int32 GetDecompressorWorkBufferSize(const TagArg *tags);
+/* convenience routines */
+Err SimpleCompress(void *source, uint32 sourceWords, void *result, uint32 resultWords);
+Err SimpleDecompress(void *source, uint32 sourceWords, void *result, uint32 resultWords);
 
-  /* varargs variants of some of the above */
-  Err CreateCompressorVA(Compressor **comp, CompFunc cf, uint32 tags, ...);
-  int32 GetCompressorWorkBufferSizeVA(uint32 tags, ...);
-  Err CreateDecompressorVA(Decompressor **decomp, CompFunc cf, uint32 tags, ...);
-  int32 GetDecompressorWorkBufferSizeVA(uint32 tags, ...);
-
-  /* convenience routines */
-  Err SimpleCompress(void *source, uint32 sourceWords, void *result, uint32 resultWords);
-  Err SimpleDecompress(void *source, uint32 sourceWords, void *result, uint32 resultWords);
-
-
-#ifdef __cplusplus
-}
-#endif
-
+EXTERN_C_END
 
 /****************************************************************************/
-
 
 /* user function offsets */
 #define CREATECOMPRESSOR              -1
@@ -122,8 +112,4 @@ extern "C" {
 #define FEEDDECOMPRESSOR              -7
 #define GETDECOMPRESSORWORKBUFFERSIZE -8
 
-
 /*****************************************************************************/
-
-
-#endif /* __COMPRESSION_H */

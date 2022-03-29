@@ -16,10 +16,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_ITERATOR_TRAITS_INCLUDED
-#define TTL_ITERATOR_TRAITS_INCLUDED
+#pragma include_only_once
 
 #include "iterator_tags"
+
 
 template<typename ITER>
 struct iterator_traits
@@ -50,5 +50,3 @@ struct iterator_traits<T*>
 //   typedef const T*                    pointer;
 //   typedef const T&                    reference;
 // };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __MACROS3DO_H
-#define __MACROS3DO_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -18,13 +17,10 @@
 **
 ******************************************************************************/
 
-
 #ifndef AddToPtr
   #define AddToPtr(ptr, val) ((void*)((((char *)(ptr)) + (long)(val))))
 #endif
 
 #ifndef ArrayElements
-  #define ArrayElements(a)	(sizeof(a) / sizeof((a)[0]))
+  #define ArrayElements(a) (sizeof(a) / sizeof((a)[0]))
 #endif
-
-#endif /* __MACROS3DO_H */

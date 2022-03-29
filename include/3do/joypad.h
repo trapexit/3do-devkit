@@ -1,18 +1,19 @@
-#ifndef __JPIJOYPAD__
-#define __JPIJOYPAD__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "event.h"
 
 // as written, we allow 4 control pads
 #define	kDefaultCtrlPadCount	4
 
-#define LONGWORD(aStruct)		( *((long*) &(aStruct)) )
+#define LONGWORD(aStruct) ( *((long*) &(aStruct)) )
 
 // a couple of handy defines for setting pad continuous flag
-#define		PADARROWS	(ControlDown | ControlUp | ControlRight | ControlLeft)
-#define		PADBUTTONS	(ControlA | ControlB | ControlC | ControlStart | ControlX)
-#define		PADSHIFT	(ControlRightShift | ControlLeftShift)
-#define		PADALL		(PADARROWS | PADBUTTONS | PADSHIFT)
+#define		PADARROWS  (ControlDown | ControlUp | ControlRight | ControlLeft)
+#define		PADBUTTONS (ControlA | ControlB | ControlC | ControlStart | ControlX)
+#define		PADSHIFT   (ControlRightShift | ControlLeftShift)
+#define		PADALL	   (PADARROWS | PADBUTTONS | PADSHIFT)
 
 // bitfield structure for the control pad buttons
 typedef struct
@@ -32,12 +33,15 @@ typedef struct
 } JoyPadState;
 typedef JoyPadState *JoyPadStatePtr;
 
+EXTERN_C_BEGIN
 
 int32	KillJoypad( void );
 int32	GetJoyPadContinuous(int32 padNum);
 int32	SetJoyPadContinuous(int32 continuousBtnFlags, int32 padNum);
 void	SetJoyPadLeftHanded(boolean playLeftHanded, int32 padNum);
 boolean	GetJoyPad(JoyPadState* joyState, int32 padNum);
+
+EXTERN_C_END
 
 extern	boolean gPadInitialized;
 #endif

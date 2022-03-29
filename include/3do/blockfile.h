@@ -1,5 +1,4 @@
-#ifndef __BLOCKFILE_H
-#define __BLOCKFILE_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -11,6 +10,8 @@
  **  Lib3DO utilities for block-level file IO
  **
  ******************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "filesystem.h"
@@ -42,40 +43,34 @@ typedef struct LoadFileInfo {
  * low-level block IO routines
  *--------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  Item    CreateBlockFileIOReq(Item deviceItem, Item iodoneReplyPort);
-  Err	  OpenBlockFile(char *name, BlockFilePtr bf);
-  void    CloseBlockFile(BlockFilePtr bf);
-  int32   GetBlockFileSize(BlockFilePtr bf);
-  int32   GetBlockFileBlockSize(BlockFilePtr bf);
-  Err	  AsynchReadBlockFile(BlockFilePtr bf, Item ioreqItem, void* buffer, int32 count, int32 offset);
-  boolean ReadDoneBlockFile(Item ioreqItem);
-  Err	  WaitReadDoneBlockFile(Item ioreqItem);
+Item    CreateBlockFileIOReq(Item deviceItem, Item iodoneReplyPort);
+Err	OpenBlockFile(char *name, BlockFilePtr bf);
+void    CloseBlockFile(BlockFilePtr bf);
+int32   GetBlockFileSize(BlockFilePtr bf);
+int32   GetBlockFileBlockSize(BlockFilePtr bf);
+Err	AsynchReadBlockFile(BlockFilePtr bf, Item ioreqItem, void* buffer, int32 count, int32 offset);
+boolean ReadDoneBlockFile(Item ioreqItem);
+Err	WaitReadDoneBlockFile(Item ioreqItem);
 
-  /*----------------------------------------------------------------------------
-   * higher-level file-oriented routines that use block IO
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * higher-level file-oriented routines that use block IO
+ *--------------------------------------------------------------------------*/
 
-  void	UnloadFile(void *bufptr);
+void UnloadFile(void *bufptr);
 
-  void * LoadFile(char *filename, int32 *pfsize, uint32 memTypeBits);
-  void * LoadFileHere(char *fname, int32 *pfsize, void *buffer, int32 bufsize);
+void *LoadFile(const char *filename, int32 *pfsize, uint32 memTypeBits);
+void *LoadFileHere(const char *fname, int32 *pfsize, void *buffer, int32 bufsize);
 
-  Err AsyncLoadFile(char *fname, LoadFileInfo *lf);
-  Err CheckAsyncLoadFile(LoadFileInfo *lf);
-  Err FinishAsyncLoadFile(LoadFileInfo *lf, Err loadStatus);
-  Err WaitAsyncLoadFile(LoadFileInfo *lf);
-  Err AbortAsyncLoadFile(LoadFileInfo *lf);
+Err AsyncLoadFile(const char *fname, LoadFileInfo *lf);
+Err CheckAsyncLoadFile(LoadFileInfo *lf);
+Err FinishAsyncLoadFile(LoadFileInfo *lf, Err loadStatus);
+Err WaitAsyncLoadFile(LoadFileInfo *lf);
+Err AbortAsyncLoadFile(LoadFileInfo *lf);
 
-  Err SaveFile(char *filename, void *buffer, int32 bufsize, int32 extrabytes);
+Err SaveFile(const char *filename, void *buffer, int32 bufsize, int32 extrabytes);
 
-  int32 WriteMacFile(char *filename, void *buf, int32 count);
+int32 WriteMacFile(const char *filename, void *buf, int32 count);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __BLOCKFILE_H */
+EXTERN_C_END

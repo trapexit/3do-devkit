@@ -1,0 +1,266 @@
+/*
+  ISC License
+
+  Copyright (c) 2022, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#pragma include_only_once
+
+#include "utility_pair"
+#include "algorithm"
+#include "vector"
+
+
+template<typename TKEY,
+         typename TVAL>
+class kvvec
+{
+public:
+  typedef TKEY key_type;
+  typedef TVAL val_type;
+  typedef pair<TKEY,TVAL> value_type;
+
+private:
+  typedef vector<value_type> rep_type;
+
+public:
+  typedef typename rep_type::pointer         pointer;
+  typedef typename rep_type::const_pointer   const_pointer;
+  typedef typename rep_type::reference       reference;
+  typedef typename rep_type::const_reference const_reference;
+  typedef typename rep_type::iterator        iterator;
+  typedef typename rep_type::const_iterator  const_iterator;
+  typedef typename rep_type::size_type       size_type;
+  typedef typename rep_type::difference_type difference_type;
+
+private:
+  rep_type _vec;
+
+public:
+  iterator
+  begin()
+  {
+    return _vec.begin();
+  }
+
+  const_iterator
+  begin() const
+  {
+    return _vec.begin();
+  }
+
+  iterator
+  end()
+  {
+    return _vec.end();
+  }
+
+  const_iterator
+  end() const
+  {
+    return _vec.end();
+  }
+
+  const_iterator
+  cend() const
+  {
+    return _vec.end();
+  }
+
+public:
+  void
+  push_back(const TKEY &k_,
+            const TVAL &v_ = TVAL())
+  {
+    _vec.push_back(value_type(k_,v_));
+  }
+
+  void
+  emplace_back(const TKEY &k_,
+               const TVAL &v_ = TVAL())
+  {
+    _vec.emplace_back(k_,v_);
+  }
+
+public:
+  bool
+  empty() const
+  {
+    return _vec.empty();
+  }
+
+  size_type
+  size() const
+  {
+    return _vec.size();
+  }
+
+  size_type
+  max_size() const
+  {
+    _vec.max_size();
+  }
+
+public:
+  void
+  pop_back()
+  {
+    _vec.pop_back();
+  }
+
+  void
+  clear()
+  {
+    _vec.clear();
+  }
+
+  size_type
+  erase(const key_type &key_)
+  {
+    for(size_type i = 0; i < _vec.size(); i++)
+      {
+        if(!(_vec[i].first == key_))
+          continue;
+
+        _vec[i] = _vec.back();
+        _vec.pop_back();
+        return 1;
+      }
+
+    return 0;
+  }
+
+  void
+  swap(kvvec &obj_)
+  {
+    _vec.swap(obj_._vec);
+  }
+
+public:
+  value_type&
+  operator[](const size_type idx_)
+  {
+    return _vec[idx_];
+  }
+
+  TVAL&
+  operator[](const TKEY &key_)
+  {
+    for(size_type i = 0; i < _vec.size(); i++)
+      {
+        if(_vec[i].first == key_)
+          return _vec[i].second;
+      }
+
+    _vec.emplace_back(key_,TVAL());
+
+    return _vec.back().second;
+  }
+
+  const_reference
+  front(void) const
+  {
+    return _vec.front();
+  }
+
+  reference
+  front(void)
+  {
+    return _vec.front();
+  }
+
+  const_reference
+  back(void) const
+  {
+    return _vec.back();
+  }
+
+  reference
+  back(void)
+  {
+    return _vec.back();
+  }
+
+  pointer
+  data()
+  {
+    return _vec.data();
+  }
+
+  const_pointer
+  data() const
+  {
+    return _vec.data();
+  }
+
+  iterator
+  find(const TKEY &key_)
+  {
+    for(size_type i = 0; i < _vec.size(); i++)
+      {
+        if(_vec[i].first != key_)
+          continue;
+
+        return &_vec[i];
+      }
+
+    return end();
+  }
+
+  const_iterator
+  find(const TKEY &key_) const
+  {
+    for(size_type i = 0; i < _vec.size(); i++)
+      {
+        if(_vec[i].first != key_)
+          continue;
+
+        return &_vec[i];
+      }
+
+    return end();
+  }
+
+  size_type
+  count(const TKEY &key_) const
+  {
+    size_type c;
+
+    c = 0;
+    for(size_type i = 0; i < _vec.size(); i++)
+      {
+        if(_vec[i].first != key_)
+          continue;
+
+        c++;
+      }
+
+    return c;
+  }
+
+  bool
+  contains(const TKEY &key_) const
+  {
+    for(size_type i = 0; i < _vec.size(); i++)
+      {
+        if(_vec[i].first != key_)
+          continue;
+
+        return true;
+      }
+
+    return false;
+  }
+};

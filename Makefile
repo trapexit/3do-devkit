@@ -36,22 +36,22 @@ MAKEBANNER = MakeBanner
 # -apcs     : nofp - Do not use a frame-pointer register. This is the default.
 #             softfp - Use software floating-point library functions for floating-point code.
 #             noswstackcheck - No software stack-checking PCS variant. This is the default.
-OPT      = -O0
+OPT      = -O2
 CFLAGS   = $(OPT) -bigend -za1 -zps0 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '/softfp/nofp/swstackcheck'
 CXXFLAGS = $(CFLAGS)
-ASFLAGS	 = -BI -i ./include/3do
-INCPATH	 = -I ./include/3do -I ./include/ttl
-LIBPATH  = ./lib/3do
-LDFLAGS	 = -match 0x1 -nodebug -noscanlib -verbose -remove -aif -reloc -dupok -ro-base 0 -sym $(EXENAME).sym -libpath $(LIBPATH)
-STARTUP	 = $(LIBPATH)/cstartup.o
+ASFLAGS  = -BI -i ./include/3do
+INCPATH  = -I ./include/3do -I ./include/ttl
+LIBPATH  = ./lib
+LDFLAGS  = -match 0x1 -nodebug -noscanlib -verbose -remove -aif -reloc -dupok -ro-base 0 -sym $(EXENAME).sym
+STARTUP  = $(LIBPATH)/3do/cstartup.o
 
 LIBS =					\
-	$(LIBPATH)/clib.lib		\
-	$(LIBPATH)/cpluslib.lib		\
-	$(LIBPATH)/graphics.lib         \
-	$(LIBPATH)/lib3do.lib           \
-	$(LIBPATH)/filesystem.lib       \
-	$(LIBPATH)/operamath.lib
+	$(LIBPATH)/3do/clib.lib		\
+	$(LIBPATH)/community/cpplib.lib	\
+	$(LIBPATH)/3do/graphics.lib     \
+	$(LIBPATH)/3do/lib3do.lib       \
+	$(LIBPATH)/3do/filesystem.lib   \
+	$(LIBPATH)/3do/operamath.lib
 
 SRC_S   = $(wildcard src/*.s)
 SRC_C   = $(wildcard src/*.c)
