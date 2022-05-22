@@ -1,5 +1,4 @@
-#ifndef __SASTREAMCHUNKS_H__
-#define __SASTREAMCHUNKS_H__
+#pragma include_only_once
 
 #include "subscriberutils.h"
 
@@ -31,6 +30,3 @@ typedef struct SAudioDataChunk
   long actualSampleSize;	/* actual number of bytes in the sample data */
   char samples[4];		/* start of audio samples */
 } SAudioDataChunk, *SAudioDataChunkPtr;
-
-
-#endif	/* __SASTREAMCHUNKS_H__ */

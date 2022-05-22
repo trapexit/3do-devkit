@@ -1,5 +1,4 @@
-#ifndef TDO_GRAPHICS_CCB_H_INCLUDED
-#define TDO_GRAPHICS_CCB_H_INCLUDED
+#pragma include_only_once
 
 #include "graphics_celdata.h"
 #include "graphics_coord.h"
@@ -32,5 +31,3 @@ struct CCB
   int32 ccb_Width;
   int32 ccb_Height;
 };
-
-#endif

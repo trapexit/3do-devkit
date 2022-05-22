@@ -1,5 +1,4 @@
-#ifndef __DISPLAYUTILS_H
-#define __DISPLAYUTILS_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -12,12 +11,13 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 #include "graphics.h"
 #include "form3do.h"
 
 /*****************************************************************************/
-
 
 /* anybody ever hear of hexa-buffering? */
 #define MAXSCREENS 6
@@ -34,13 +34,12 @@ typedef struct ScreenContext
   Item    sc_BitmapItems[MAXSCREENS]; /* bitmap item for the screen */
   Bitmap *sc_Bitmaps[MAXSCREENS]; /* structure itself           */
 
-  uint32  sc_NumBitmapPages;      /* # pages of memory for each bitmap */
-  uint32  sc_NumBitmapBytes;      /* # bytes of memory for each bitmap */
-  uint32  sc_BitmapBank;          /* bank of memory for all bitmaps    */
-  uint32  sc_BitmapWidth;         /* pixel width of each bitmap        */
-  uint32  sc_BitmapHeight;        /* pixel height of each bitmap       */
+  uint32 sc_NumBitmapPages;     /* # pages of memory for each bitmap */
+  uint32 sc_NumBitmapBytes;     /* # bytes of memory for each bitmap */
+  uint32 sc_BitmapBank;         /* bank of memory for all bitmaps    */
+  uint32 sc_BitmapWidth;        /* pixel width of each bitmap        */
+  uint32 sc_BitmapHeight;       /* pixel height of each bitmap       */
 } ScreenContext;
-
 
 /* remap old names to new ones */
 #define sc_nScreens          sc_NumScreens
@@ -49,13 +48,9 @@ typedef struct ScreenContext
 #define sc_nFrameBufferPages sc_NumBitmapPages
 #define sc_nFrameByteCount   sc_NumBitmapBytes
 
-
 /*****************************************************************************/
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
 Item     CreateBasicDisplay(ScreenContext *sc, uint32 displayType, uint32 numScreens);
 Err      DeleteBasicDisplay(ScreenContext *sc);
@@ -66,17 +61,10 @@ void     FadeToBlack(ScreenContext *sc, int32 nFrames);
 void     FadeFromBlack(ScreenContext *sc, int32 frameCount);
 Err      ClearBitmap(Item ioreq, Item screen_or_bitmap, Bitmap *bm, int32 value);
 
-#ifdef __cplusplus
-}
-#endif
-
+EXTERN_C_END
 
 /* for compatibility only, do not use in new code */
 //#define OpenGraphics(sc,n) (CreateBasicDisplay(sc,DI_TYPE_DEFAULT,n) >= 0 ? TRUE : FALSE)
 //#define CloseGraphics(sc)  DeleteBasicDisplay(sc)
 
-
 /*****************************************************************************/
-
-
-#endif /* __DISPLAYUTILS_H */

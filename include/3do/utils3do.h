@@ -1,5 +1,4 @@
-#ifndef __UTILS3DO_H
-#define __UTILS3DO_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -16,6 +15,7 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
 
 #include "parse3do.h"
 #include "blockfile.h"
@@ -65,39 +65,33 @@ typedef	struct MoveVect {
 } MoveVect;
 
 typedef struct MoveRec {
-  MoveVect	curQuadf16[4];	/* the current Coord positions for the Cel */
-  MoveVect	quadIncr[4];	/* X and Y increments for the Cel's corners */
+  MoveVect curQuadf16[4];	/* the current Coord positions for the Cel */
+  MoveVect quadIncr[4];         /* X and Y increments for the Cel's corners */
 } MoveRec;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  void 	PreMoveCel(CCB *ccb, Point *beginQuad, Point *endQuad, int32 numberOfFrames, MoveRec *pMove);
-  void 	MoveCel(CCB *ccb, MoveRec *pMove);
+void 	PreMoveCel(CCB *ccb, Point *beginQuad, Point *endQuad, int32 numberOfFrames, MoveRec *pMove);
+void 	MoveCel(CCB *ccb, MoveRec *pMove);
 
-  void 	MapP2Cel(CCB* ccb, Point* quad);
+void 	MapP2Cel(CCB* ccb, Point* quad);
 
-  void 	SetQuad(Point *r, Coord left, Coord top, Coord right, Coord bottom);
-  void 	SetRectf16(Rectf16 *r, Coord left, Coord top, Coord right, Coord bottom);
-  void	CenterRectf16(Point *q, Rectf16 *rect, Rectf16 *Frame);
-  void	CenterCelOnScreen(CCB *ccb);
+void 	SetQuad(Point *r, Coord left, Coord top, Coord right, Coord bottom);
+void 	SetRectf16(Rectf16 *r, Coord left, Coord top, Coord right, Coord bottom);
+void	CenterRectf16(Point *q, Rectf16 *rect, Rectf16 *Frame);
+void	CenterCelOnScreen(CCB *ccb);
 
-  void    SetCelScale(CCB *ccb, CCB *maskccb, int32 step);
-  void    SetFadeInCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
-  boolean FadeInCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
-  void    SetFadeOutCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
-  boolean FadeOutCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
+void    SetCelScale(CCB *ccb, CCB *maskccb, int32 step);
+void    SetFadeInCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
+boolean FadeInCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
+void    SetFadeOutCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
+boolean FadeOutCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
 
-  int32 ReadControlPad(int32 lControlMask);
+int32 ReadControlPad(int32 lControlMask);
 
-  boolean FrameBufferToCel(Item iScreen, CCB* cel);
-  CCB*    MakeNewCel(Rectf16 *r);
-  CCB*    MakeNewDupCCB(CCB *ccb);
-  void    FreeBuffer(char *filename, int32 *fileBuffer);
+boolean FrameBufferToCel(Item iScreen, CCB* cel);
+CCB*    MakeNewCel(Rectf16 *r);
+CCB*    MakeNewDupCCB(CCB *ccb);
+void    FreeBuffer(char *filename, int32 *fileBuffer);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __UTILS3DO_H */
+EXTERN_C_END

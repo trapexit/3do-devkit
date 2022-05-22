@@ -1,5 +1,4 @@
-#ifndef __DRIVER_H
-#define __DRIVER_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -21,7 +20,6 @@
 #define	IOReq_typedef
 typedef struct IOReq IOReq;
 #endif
-
 
 typedef struct Driver
 {
@@ -62,7 +60,6 @@ typedef struct DeviceStatus
 #define DI_HOLLYWOOD           0x08
 #define DI_LCCD_CDROM          0x09
 
-
 /*
   Values for ds_FamilyCode.  This byte field contains the family
   identifier for this device.
@@ -78,24 +75,18 @@ typedef struct DeviceStatus
 #define DS_DEVTYPE_NETWORK     6
 #define DS_DEVTYPE_CODEC       7
 
-
 /*
   Values for ds_DeviceUsageFlags.  This field contains device
   characteristic/usage information.  (NOTE: ds_DeviceFlagWord
   is for driver specific flag usage.)
 */
 
-#define DS_USAGE_FILESYSTEM    0x80000000
-#define DS_USAGE_PRIVACCESS    0x40000000
-#define DS_USAGE_READONLY      0x20000000
-#define DS_USAGE_OFFLINE       0x10000000
+#define DS_USAGE_FILESYSTEM 0x80000000
+#define DS_USAGE_PRIVACCESS 0x40000000
+#define DS_USAGE_READONLY   0x20000000
+#define DS_USAGE_OFFLINE    0x10000000
 
-#define DS_USAGE_FAST          0x00000002
-#define DS_USAGE_SLOW          0x00000001
-
-
+#define DS_USAGE_FAST       0x00000002
+#define DS_USAGE_SLOW       0x00000001
 
 /*****************************************************************************/
-
-
-#endif	/* __DRIVER_H */

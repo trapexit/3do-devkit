@@ -16,8 +16,8 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_TYPE_TRAITS_INCLUDED
-#define TTL_TYPE_TRAITS_INCLUDED
+#pragma include_only_once
+
 
 template<class T,
          T VALUE>
@@ -76,8 +76,31 @@ template<typename T> struct is_pod<T*>                 : is_pod<T> {};
 
 //template<typename T> struct is_trivially_constructible : is_pod<T> {};
 
-//template<bool B,class T = void> struct enable_if {};
-//template<class T> struct enable_if<true,T> { typedef T type; };
-//};
+// template<bool B,class T = void> struct enable_if {};
+// template<class T> struct enable_if<true,T> { typedef T type; };
 
-#endif
+// template<typename T>
+// struct is_array : false_type {};
+// template<typename T>
+// struct is_array<T[]> : true_type {};
+
+// template<typename T>
+// struct remove_volatile { typedef T type; };
+// template<typename T>
+// struct remove_volatile<volatile T> { typedef T type; };
+
+// template<typename T>
+// struct remove_const { typedef T type; };
+// template<typename T>
+// struct remove_const<const T> { typedef T type; };
+
+// template<typename T>
+// struct remove_cv
+// {
+//   typedef typename remove_volatile<typename remove_const<T>::type>::type type;
+// };
+
+// template<typename T>
+// struct is_pointer : false_type {};
+// template<typename T>
+// struct is_pointer<T*> : true_type {};

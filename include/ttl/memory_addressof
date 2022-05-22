@@ -16,14 +16,13 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_MEMORY_ADDRESSOF_INCLUDED
-#define TTL_MEMORY_ADDRESSOF_INCLUDED
+#pragma include_only_once
 
 template<typename T>
+static
+inline
 T*
 addressof(T &obj_)
 {
   return (T*)&obj_;
 }
-
-#endif

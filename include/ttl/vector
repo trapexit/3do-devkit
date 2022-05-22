@@ -16,12 +16,13 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_VECTOR_INCLUDED
-#define TTL_VECTOR_INCLUDED
+#pragma include_only_once
 
 #include "stdlib.h"
 
 #include "memory"
+
+#define VECTOR_EXPAND_AMOUNT 8
 
 
 template<typename T>
@@ -102,19 +103,29 @@ private:
   void
   expand(size_type size_)
   {
-    T x;
-    _buf = (T*)realloc(_buf,(size_*sizeof(T)));
+    _buf = (pointer)realloc(_buf,(size_*sizeof(T)));
     for(size_type i = _size; i < size_; i++)
-      __construct(&_buf[i],x);
+      memory_construct(&_buf[i]);
 
+    _size    = size_;
     _bufsize = size_;
+  }
+
+  void
+  expand_if_needed()
+  {
+    if((_size + 1) <= _bufsize)
+      return;
+
+    _buf = (pointer)realloc(_buf,((_bufsize+VECTOR_EXPAND_AMOUNT)*sizeof(T)));
+    _bufsize += VECTOR_EXPAND_AMOUNT;
   }
 
   void
   shrink(size_type size_)
   {
     for(size_type i = size_; i < _size; i++)
-      destroy_at(&_buf[i]);
+      memory_destruct(&_buf[i]);
 
     _size = size_;
   }
@@ -125,11 +136,12 @@ public:
   {
     if((_size + 1) > _bufsize)
       {
-        _buf = (T*)realloc(_buf,((_size+1)*sizeof(T)));
-        _bufsize = _size + 1;
+        _buf = (pointer)realloc(_buf,((_bufsize+VECTOR_EXPAND_AMOUNT)*sizeof(T)));
+        _bufsize += VECTOR_EXPAND_AMOUNT;
       }
 
-    __construct(&_buf[_size],obj_);
+    memory_construct(addressof(_buf[_size]),obj_);
+
     _size++;
   }
 
@@ -137,7 +149,10 @@ public:
   void
   emplace_back(const typename V &val_)
   {
-    __construct(&_buf[_size],val_);
+    expand_if_needed();
+
+    memory_construct(addressof(_buf[_size]),val_);
+
     _size++;
   }
 
@@ -147,7 +162,25 @@ public:
   emplace_back(const typename V1 &val1_,
                const typename V2 &val2_)
   {
-    __construct(&_buf[_size],val1_,val2_);
+    expand_if_needed();
+
+    memory_construct(&_buf[_size],val1_,val2_);
+
+    _size++;
+  }
+
+  template<typename V1,
+           typename V2,
+           typename V3>
+  void
+  emplace_back(const typename V1 &val1_,
+               const typename V2 &val2_,
+               const typename V3 &val3_)
+  {
+    expand_if_needed();
+
+    memory_construct(&_buf[_size],val1_,val2_,val3_);
+
     _size++;
   }
 
@@ -166,10 +199,10 @@ public:
     else
       {
         i = addressof(*pos_);
-        destroy_at(i);
+        memory_destruct(i);
       }
 
-    __construct(i,val_);
+    memory_construct(i,val_);
 
     return i;
   }
@@ -177,7 +210,7 @@ public:
   void
   pop_back(void)
   {
-    destroy_at(&_buf[--_size]);
+    memory_destruct(&_buf[--_size]);
   }
 
   void
@@ -186,14 +219,13 @@ public:
     resize(0);
   }
 
-  T&
+  reference
   operator[](const size_type pos_)
   {
     return _buf[pos_];
   }
 
-  const
-  T&
+  const_reference
   operator[](const size_type pos_) const
   {
     return _buf[pos_];
@@ -211,27 +243,25 @@ public:
     return _buf[pos_];
   }
 
-  const
-  T&
+  const_reference
   front(void) const
   {
     return _buf[0];
   }
 
-  T&
+  reference
   front(void)
   {
     return _buf[0];
   }
 
-  const
-  T&
+  const_reference
   back(void) const
   {
     return _buf[_size - 1];
   }
 
-  T&
+  reference
   back(void)
   {
     return _buf[_size - 1];
@@ -273,7 +303,7 @@ public:
     if(size_ <= _bufsize)
       return;
 
-    _buf     = (T*)realloc(_buf,(size_*sizeof(T)));
+    _buf     = (pointer)realloc(_buf,(size_*sizeof(T)));
     _bufsize = size_;
   }
 
@@ -294,7 +324,7 @@ public:
     resize(_size);
     if(_size != _bufsize)
       {
-        _buf     = (T*)realloc(_buf,(_size*sizeof(T)));
+        _buf     = (pointer)realloc(_buf,(_size*sizeof(T)));
         _bufsize = _size;
       }
   }
@@ -309,5 +339,3 @@ template<typename T>
 class vector : public ::vector_impl<T>
 {
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __ANIMUTILS_H
-#define __ANIMUTILS_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -12,6 +11,8 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "operamath.h"
 #include "form3do.h"
 
@@ -19,19 +20,21 @@
  * datatypes
  *--------------------------------------------------------------------------*/
 
-typedef struct AnimFrame {
-  CCB 		*af_CCB;		/* Pointer to CCB for this frame */
-  char		*af_PLUT;		/* Pointer to PLUT for this frame */
-  char		*af_pix;		/* Pointer to pixels for this frame */
-  int32		reserved;
+typedef struct AnimFrame
+{
+  CCB 	*af_CCB;		/* Pointer to CCB for this frame */
+  char	*af_PLUT;		/* Pointer to PLUT for this frame */
+  char	*af_pix;		/* Pointer to pixels for this frame */
+  int32  reserved;
 } AnimFrame;
 
-typedef struct ANIM {
-  int32		num_Frames; /* greatest number of PDATs or CCBs in file */
-  frac16		cur_Frame;	/* allows fractional values for smooth speed */
-  int32		num_Alloced_Frames;
-  AnimFrame	*pentries;
-  void		*dataBuffer; /* for internal use by LoadAnim/UnloadAnim only! */
+typedef struct ANIM
+{
+  int32      num_Frames;        /* greatest number of PDATs or CCBs in file */
+  frac16     cur_Frame;         /* allows fractional values for smooth speed */
+  int32      num_Alloced_Frames;
+  AnimFrame *pentries;
+  void      *dataBuffer;        /* for internal use by LoadAnim/UnloadAnim only! */
 } ANIM;
 
 #define CenterHotSpot		1
@@ -44,20 +47,12 @@ typedef struct ANIM {
  * Prototypes.
  *--------------------------------------------------------------------------*/
 
+EXTERN_C_BEGIN
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+ANIM *LoadAnim(char *filename, uint32 memTypeBits);
+void  UnloadAnim(ANIM *anim);
+ANIM *ParseAnim(void *inBuf, int32 inBufSize, uint32 memTypeBits);
+void  DrawAnimCel(ANIM *pAnim, Item bitmapItem, int32 xPos, int32 yPos, frac16 frameIncrement, int32 hotSpot);
+CCB  *GetAnimCel(ANIM *pAnim, frac16 frameIncrement);
 
-  ANIM * LoadAnim(char *filename, uint32 memTypeBits);
-  void   UnloadAnim(ANIM *anim);
-  ANIM * ParseAnim(void *inBuf, int32 inBufSize, uint32 memTypeBits);
-
-  void	DrawAnimCel(ANIM *pAnim, Item bitmapItem, int32 xPos, int32 yPos, frac16 frameIncrement, int32 hotSpot);
-  CCB *	GetAnimCel(ANIM *pAnim, frac16 frameIncrement);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __ANIMUTILS_H */
+EXTERN_C_END

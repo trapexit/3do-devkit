@@ -16,22 +16,23 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_MEMORY_DESTRUCT_INCLUDED
-#define TTL_MEMORY_DESTRUCT_INCLUDED
+#pragma include_only_once
 
 #include "new"
 #include "pod"
 
 
-template<class T>
+template<typename T>
 inline
 void
-__destruct(T *ptr_)
+memory_destruct(T *ptr_)
 {
-  ::delete (T*)(ptr_);
+  // delete is used / abused for forcing destruction since there is no
+  // default destructors and obj->~OBJ() won't work
+  delete ptr_;
 }
 
-#define BASE_DESTRUCT(TYPE) inline void __destruct(TYPE) {;}
+#define BASE_DESTRUCT(TYPE) inline void memory_destruct(TYPE) {;}
 #define DESTRUCT(TYPE)                          \
   BASE_DESTRUCT(TYPE*)                          \
   BASE_DESTRUCT(TYPE**)                         \
@@ -41,5 +42,3 @@ POD_TYPES_FUNC(DESTRUCT)
 
 #undef BASE_DESTRUCT
 #undef DESTRUCT
-
-#endif

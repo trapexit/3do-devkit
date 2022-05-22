@@ -16,8 +16,11 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_UTILITY_SWAP_INCLUDED
-#define TTL_UTILITY_SWAP_INCLUDED
+#pragma include_only_once
+
+
+template<typename T> void swap(T&,T&);
+template<typename T, unsigned int N> void swap(T(&)[N],T(&)[N]);
 
 template<typename T>
 void
@@ -38,5 +41,3 @@ swap(T (&a_)[N],
   for(unsigned int i = 0; i < N; i++)
     swap(a_[i],b_[i]);
 }
-
-#endif

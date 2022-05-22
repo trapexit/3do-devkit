@@ -1,5 +1,4 @@
-#ifndef __TASK_H
-#define __TASK_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -11,6 +10,8 @@
  **  Kernel task management definitions
  **
  ******************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "nodes.h"
@@ -109,26 +110,19 @@ enum task_tags
 /* internal use only */
 #define Task_Addr(a)	(Task *)((uint32)(a) - Offset(Task *, t_TasksLinkNode))
 
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+EXTERN_C_BEGIN
 
-  extern Item CreateThread(const char *name, uint8 pri, void (*code)(),int32 stacksize);
-  extern Err DeleteThread(Item x);
+extern Item CreateThread(const char *name, uint8 pri, void (*code)(),int32 stacksize);
+extern Err DeleteThread(Item x);
 
-  extern int32 __swi(KERNELSWI+1)  WaitSignal(uint32 sigMask);
-  extern Err   __swi(KERNELSWI+2)  SendSignal(Item task,uint32 sigMask);
-  extern void  __swi(KERNELSWI+9)  Yield(void);
-  extern int32 __swi(KERNELSWI+21) AllocSignal(uint32 sigMask);
-  extern Err   __swi(KERNELSWI+22) FreeSignal(uint32 sigMask);
-  extern Err   __swi(KERNELSWI+39) SetExitStatus(int32 status);
+extern int32 __swi(KERNELSWI+1)  WaitSignal(uint32 sigMask);
+extern Err   __swi(KERNELSWI+2)  SendSignal(Item task,uint32 sigMask);
+extern void  __swi(KERNELSWI+9)  Yield(void);
+extern int32 __swi(KERNELSWI+21) AllocSignal(uint32 sigMask);
+extern Err   __swi(KERNELSWI+22) FreeSignal(uint32 sigMask);
+extern Err   __swi(KERNELSWI+39) SetExitStatus(int32 status);
 
-#ifdef  __cplusplus
-}
-#endif  /* __cplusplus */
+EXTERN_C_END
 
-#define GetTaskSignals(t)     ((t)->t_SigBits)
-#define FindTask(n)           FindNamedItem(MKNODEID(KERNELNODE,TASKNODE),(n))
-
-
-#endif /* __TASK_H */
+#define GetTaskSignals(t) ((t)->t_SigBits)
+#define FindTask(n)       FindNamedItem(MKNODEID(KERNELNODE,TASKNODE),(n))

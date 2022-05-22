@@ -1,5 +1,4 @@
-#ifndef TDO_ITEM_H_INCLUDED
-#define TDO_ITEM_H_INCLUDED
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -16,11 +15,11 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+EXTERN_C_BEGIN
 
 Item  __swi(KERNELSWI+0)  CreateSizedItem(int32 ctype,TagArg *p,int32 size);
 Err   __swi(KERNELSWI+3)  DeleteItem(Item i);
@@ -49,9 +48,7 @@ Item FindNamedItem(int32 ctype, const char *name);
 Item FindVersionedItem(int32 ctype, const char *name, uint8 vers, uint8 rev);
 Item FindAndOpenNamedItem(int32 ctype, const char *name);
 
-#ifdef  __cplusplus
-}
-#endif  /* __cplusplus */
+EXTERN_C_END
 
 #define CreateItem(ct,p) CreateSizedItem((ct),(p),0)
 
@@ -63,12 +60,12 @@ Item FindAndOpenNamedItem(int32 ctype, const char *name);
 enum item_tags
 {
  TAG_ITEM_END = TAG_END,	/* 0 */
- TAG_ITEM_NAME,		/* 1 */
- TAG_ITEM_PRI,		/* 2 */
- TAG_ITEM_VERSION,	/* 3 */
- TAG_ITEM_REVISION,	/* 4 */
- TAG_ITEM_CONSTANT_NAME, /* 5 */
- TAG_ITEM_UNIQUE_NAME,   /* 6 */
+ TAG_ITEM_NAME,                 /* 1 */
+ TAG_ITEM_PRI,                  /* 2 */
+ TAG_ITEM_VERSION,              /* 3 */
+ TAG_ITEM_REVISION,             /* 4 */
+ TAG_ITEM_CONSTANT_NAME,        /* 5 */
+ TAG_ITEM_UNIQUE_NAME,          /* 6 */
  TAG_ITEM_RESERVED7,
  TAG_ITEM_RESERVED8,
  TAG_ITEM_RESERVED9,
@@ -81,5 +78,3 @@ enum item_tags
 #define DEMANDLOAD_MAIN_DELETE -2
 
 /*****************************************************************************/
-
-#endif /* __ITEM_H */

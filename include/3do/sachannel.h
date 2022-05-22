@@ -1,5 +1,6 @@
-#ifndef __SACHANNEL_H__
-#define __SACHANNEL_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "mempool.h"
@@ -59,27 +60,21 @@ typedef struct SAudioChannel
 struct SAudioContext;
 struct SAudioHeaderChunk;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  long InitSAudioChannel( struct SAudioContext* ctx, struct SAudioHeaderChunk* headerPtr );
-  void StartSAudioChannel(struct SAudioContext* ctx, long channelNumber, boolean doFlush );
-  long StopSAudioChannel( struct SAudioContext* ctx, long channelNumber, boolean doFlush );
-  long FlushSAudioChannel( struct SAudioContext* ctx, long channelNumber );
-  long CloseSAudioChannel( struct SAudioContext* ctx, long channelNumber );
+long InitSAudioChannel(struct SAudioContext* ctx, struct SAudioHeaderChunk* headerPtr);
+void StartSAudioChannel(struct SAudioContext* ctx, long channelNumber, boolean doFlush);
+long StopSAudioChannel(struct SAudioContext* ctx, long channelNumber, boolean doFlush);
+long FlushSAudioChannel(struct SAudioContext* ctx, long channelNumber);
+long CloseSAudioChannel(struct SAudioContext* ctx, long channelNumber);
 
-  long SetSAudioChannelAmplitude( struct SAudioContext* ctx, long channelNumber, long newAmp );
-  long SetSAudioChannelPan( struct SAudioContext* ctx, long channelNumber, long newPan );
-  long GetSAudioChannelAmplitude( struct SAudioContext* ctx, long channelNumber, long* Amp );
-  long GetSAudioChannelPan( struct SAudioContext* ctx, long channelNumber, long* Pan );
-  long MuteSAudioChannel( struct SAudioContext* ctx, long channelNumber, boolean callerFlag );
-  long UnMuteSAudioChannel( struct SAudioContext* ctx, long channelNumber, boolean callerFlag );
+long SetSAudioChannelAmplitude(struct SAudioContext* ctx, long channelNumber, long newAmp);
+long SetSAudioChannelPan(struct SAudioContext* ctx, long channelNumber, long newPan);
+long GetSAudioChannelAmplitude(struct SAudioContext* ctx, long channelNumber, long* Amp);
+long GetSAudioChannelPan(struct SAudioContext* ctx, long channelNumber, long* Pan);
+long MuteSAudioChannel(struct SAudioContext* ctx, long channelNumber, boolean callerFlag);
+long UnMuteSAudioChannel(struct SAudioContext* ctx, long channelNumber, boolean callerFlag);
 
-  void BeginSAudioPlaybackIfAppropriate( struct SAudioContext* ctx, long channelNumber );
+void BeginSAudioPlaybackIfAppropriate(struct SAudioContext* ctx, long channelNumber);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __SACHANNEL_H__ */
+EXTERN_C_END

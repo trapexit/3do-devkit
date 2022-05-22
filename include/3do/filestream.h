@@ -1,16 +1,15 @@
-#ifndef __H_FILESTREAM
-#define __H_FILESTREAM
+#pragma include_only_once
 
 /******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: filestream.h,v 1.7 1994/09/10 01:36:15 peabody Exp $
-**
-**  Folio data structures for bytestream-oriented file access
-**
-******************************************************************************/
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: filestream.h,v 1.7 1994/09/10 01:36:15 peabody Exp $
+ **
+ **  Folio data structures for bytestream-oriented file access
+ **
+ ******************************************************************************/
 
 #include "types.h"
 #include "filesystem.h"
@@ -26,7 +25,8 @@ enum SeekOrigin
 #define FILESTREAM_BUFFER_MIN_BLOCKS 2
 #define FILESTREAM_BUFFER_MIN_BYTES  256
 
-typedef struct Stream {
+typedef struct Stream
+{
   Item             st_OpenFileItem;
   IOReq           *st_IOReq;
   uchar           *st_Buffer;
@@ -43,7 +43,3 @@ typedef struct Stream {
   uchar            st_HadError;
   enum SeekOrigin  st_SeekOrigin;
 } Stream;
-
-/*****************************************************************************/
-
-#endif /* __H_FILESTREAM_H */

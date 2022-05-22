@@ -1,3 +1,5 @@
+#pragma include_only_once
+
 /*******************************************************************************************
  *	File:			ItemPool.h
  *
@@ -12,8 +14,7 @@
  *
  *******************************************************************************************/
 
-#ifndef	__ITEMPOOL_H__
-#define	__ITEMPOOL_H__
+#include "extern_c.h"
 
 #include "types.h"
 #include "item.h"
@@ -38,19 +39,13 @@ typedef struct ItemPool {
 /********************************************/
 /* Routines for managing preallocated items */
 /********************************************/
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  typedef Item (*CreateProcPtr)(void* createArg);
+typedef Item (*CreateProcPtr)(void* createArg);
 
-  ItemPoolPtr CreateItemPool(long numToPreallocate, CreateProcPtr createProc, void *createArg);
-  void	      DeleteItemPool(ItemPoolPtr itemPool);
-  Item	      AllocPoolItem(ItemPoolPtr itemPool);
-  void	      ReturnPoolItem(ItemPoolPtr itemPool, Item item);
+ItemPoolPtr CreateItemPool(long numToPreallocate, CreateProcPtr createProc, void *createArg);
+void	    DeleteItemPool(ItemPoolPtr itemPool);
+Item	    AllocPoolItem(ItemPoolPtr itemPool);
+void	    ReturnPoolItem(ItemPoolPtr itemPool, Item item);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __ITEMPOOL_H__ */
+EXTERN_C_END

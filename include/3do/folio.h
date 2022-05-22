@@ -1,5 +1,4 @@
-#ifndef __FOLIO_H
-#define __FOLIO_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -32,7 +31,7 @@ typedef struct Folio
 
 enum folio_tags
   {
-   CREATEFOLIO_TAG_NUSERVECS = TAG_ITEM_LAST+1,	/* # of uservecs */
+   CREATEFOLIO_TAG_NUSERVECS = TAG_ITEM_LAST+1, /* # of uservecs */
    CREATEFOLIO_TAG_USERFUNCS	/* ptr to uservec table */
   };
 
@@ -111,9 +110,3 @@ typedef int32 (*FolioFunc)();
 
 #define FindFolio(n)        FindNamedItem(MKNODEID(KERNELNODE,FOLIONODE),(n))
 #define FindAndOpenFolio(n) FindAndOpenNamedItem(MKNODEID(KERNELNODE,FOLIONODE),(n))
-
-
-/*****************************************************************************/
-
-
-#endif	/* __FOLIO_H */

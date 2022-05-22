@@ -1,14 +1,13 @@
-#ifndef __OPERAMATH_H
-#define __OPERAMATH_H
+#pragma include_only_once
 
 /******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: operamath.h,v 1.9 1994/09/10 01:17:40 peabody Exp $
-**
-******************************************************************************/
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: operamath.h,v 1.9 1994/09/10 01:17:40 peabody Exp $
+ **
+ ******************************************************************************/
 
 #include "types.h"
 #include "nodes.h"
@@ -17,7 +16,7 @@
 #include "folio.h"
 
 /***************************************************************\
-* Basic typedefs and structures                                 *
+ * Basic typedefs and structures                                 *
 \***************************************************************/
 
 /*
@@ -43,7 +42,7 @@ extern MathFolio *_MathBase;
 
 
 /***************************************************************\
-* Useful constants                                              *
+ * Useful constants                                              *
 \***************************************************************/
 
 #define FULLCIRCLE	Convert32_F16(256)
@@ -52,7 +51,7 @@ extern MathFolio *_MathBase;
 
 
 /***************************************************************\
-* Macros that look like subroutine calls                        *
+ * Macros that look like subroutine calls                        *
 \***************************************************************/
 
 #define Convert32_F16(x) ((x)<<16)
@@ -123,7 +122,7 @@ extern MathFolio *_MathBase;
 
 
 /***************************************************************\
-* Folio routine number equates                                  *
+ * Folio routine number equates                                  *
 \***************************************************************/
 
 #define MATHFOLIO	5
@@ -151,7 +150,7 @@ extern MathFolio *_MathBase;
 
 
 /***************************************************************\
-* Math routine prototypes					*
+ * Math routine prototypes					*
 \***************************************************************/
 
 /* structure to pass arguments to MulManyVec3Mat33DivZ_F16 routine */
@@ -177,9 +176,7 @@ typedef struct ObjOffset2 {
   int32 oo2_SrcMatOffset;
 } ObjOffset2;
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+EXTERN_C_BEGIN
 
 Err OpenMathFolio (void);
 /* Open the math folio and set up the global variable _MathBase. */
@@ -386,7 +383,7 @@ void __swi(MULMANYVEC3MAT33DIVZ_F16) MulManyVec3Mat33DivZ_F16 (mmv3m33d *s);
 /* Return the result vectors {x*n/z, y*n/z, z} */
 
 void __swi(MULVEC3MAT33DIVZ_F16)
-     MulVec3Mat33DivZ_F16 (vec3f16 dest, vec3f16 vec, mat33f16 mat, frac16 n);
+  MulVec3Mat33DivZ_F16 (vec3f16 dest, vec3f16 vec, mat33f16 mat, frac16 n);
 /* Multiply a 3x3 matrix of 16.16 values by a vector, then multiply x and y by n/z */
 /* Return the result vector {x*n/z, y*n/z, z} */
 
@@ -418,30 +415,30 @@ void Transpose44_F16 (mat44f16 dest, mat44f16 src);
 /* Return the transpose of a 4x4 matrix of 16.16 values */
 
 void __swi(MULMANYVEC3MAT33_F16) MulManyVec3Mat33_F16
-       (vec3f16 *dest, vec3f16 *src, mat33f16 mat, int32 count);
+  (vec3f16 *dest, vec3f16 *src, mat33f16 mat, int32 count);
 /* Multiply many vectors by a matrix */
 
 void __swi(MULMANYVEC4MAT44_F16) MulManyVec4Mat44_F16
-       (vec4f16 *dest, vec4f16 *src, mat44f16 mat, int32 count);
+  (vec4f16 *dest, vec4f16 *src, mat44f16 mat, int32 count);
 /* Multiply many vectors by a matrix */
 
 void __swi(MULOBJECTVEC3MAT33_F16) MulObjectVec3Mat33_F16
-       (void *objectlist[], ObjOffset1 *offsetstruct, int32 count);
+  (void *objectlist[], ObjOffset1 *offsetstruct, int32 count);
 /* Multiply many vectors within object structures by a matrix within that object */
 /* structure, and repeat over a number of objects */
 
 void __swi(MULOBJECTVEC4MAT44_F16) MulObjectVec4Mat44_F16
-       (void *objectlist[], ObjOffset1 *offsetstruct, int32 count);
+  (void *objectlist[], ObjOffset1 *offsetstruct, int32 count);
 /* Multiply many vectors within object structures by a matrix within that object */
 /* structure, and repeat over a number of objects */
 
 void __swi(MULOBJECTMAT33_F16) MulObjectMat33_F16
-       (void *objectlist[], ObjOffset2 *offsetstruct, mat33f16 mat, int32 count);
+  (void *objectlist[], ObjOffset2 *offsetstruct, mat33f16 mat, int32 count);
 /* Multiply a matrix within an object structure by an external matrix, and repeat */
 /* over a number of objects */
 
 void __swi(MULOBJECTMAT44_F16) MulObjectMat44_F16
-       (void *objectlist[], ObjOffset2 *offsetstruct, mat44f16 mat, int32 count);
+  (void *objectlist[], ObjOffset2 *offsetstruct, mat44f16 mat, int32 count);
 /* Multiply a matrix within an object structure by an external matrix, and repeat */
 /* over a number of objects */
 
@@ -457,12 +454,4 @@ frac16 __swi(ABSVEC3_F16) AbsVec3_F16 (vec3f16 vec);
 frac16 __swi(ABSVEC4_F16) AbsVec4_F16 (vec4f16 vec);
 /* Return the absolute value (length) of a vector of 16.16 values */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __OPERAMATH_H */
+EXTERN_C_END

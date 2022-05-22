@@ -1,16 +1,17 @@
-#ifndef __HARDWARE_H
-#define __HARDWARE_H
+#pragma include_only_once
 
 /******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: hardware.h,v 1.13 1994/11/08 02:08:07 ewhac Exp $
-**
-**  Opera hardware constants
-**
-******************************************************************************/
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: hardware.h,v 1.13 1994/11/08 02:08:07 ewhac Exp $
+ **
+ **  Opera hardware constants
+ **
+ ******************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 
@@ -368,20 +369,9 @@
 #define JOYBUTTONS  (JOYFIREA+JOYFIREB+JOYFIREC+JOYSTART)
 
 
-
-#ifdef	__cplusplus
-extern "C" {
-#endif	/* __cplusplus */
+EXTERN_C_BEGIN
 
 /* === Finally, a kernel call that uses the hardware (?) === */
 uint32 __swi(KERNELSWI+17) ReadHardwareRandomNumber(void);
 
-#ifdef	__cplusplus
-}
-#endif	/* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __HARDWARE_H */
+EXTERN_C_END

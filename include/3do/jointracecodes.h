@@ -1,5 +1,4 @@
-#ifndef __PROTOTRACECODES_H__
-#define __PROTOTRACECODES_H__
+#pragma include_only_once
 
 #include "types.h"
 
@@ -34,5 +33,3 @@ enum {
       kNewHeaderMsgArrived        = 1026,
       kNewDataMsgArrived          = 1027
 };
-
-#endif	/* __PROTOTRACECODES_H__ */

@@ -1,5 +1,4 @@
-#ifndef __3DLIB_H
-#define __3DLIB_H
+#pragma include_only_once
 
 #include "portfolio.h"
 #include "init3do.h"
@@ -843,5 +842,3 @@ int32 CreateIntMeshDefinition(WorldObject *object,int32 obj_id,int32 mindist,int
 GeoDefinition *CreateIntMeshGeodef(WorldObject *object, GeoDefinition *src_geodef);
 void DestroyGeodef(GeoDefinition *geodef,int32 flags);
 void GenerateImeshData(WorldPort *wport,WorldObject *object);
-
-#endif  /* _3dlib_H */

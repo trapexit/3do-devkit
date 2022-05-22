@@ -1,5 +1,4 @@
-#ifndef __COBJ_H
-#define __COBJ_H
+#pragma include_only_once
 
 /****************************************************************************
  **
@@ -27,16 +26,16 @@ typedef long int32;
 
 #endif
 
-#define VALID_OBJECT_KEY  (0xABCD4321)
-#define COBJ_ERR_NO_MEM (-1)
-#define COBJ_ERR_NO_METHOD (-2)
-#define COBJ_ERR_DATA_SIZE (-3)
+#define VALID_OBJECT_KEY     (0xABCD4321)
+#define COBJ_ERR_NO_MEM      (-1)
+#define COBJ_ERR_NO_METHOD   (-2)
+#define COBJ_ERR_DATA_SIZE   (-3)
 #define COBJ_ERR_NULL_OBJECT (-4)
 
 typedef struct COBClass
 {
-  struct  COBClass *Super;		/* Superclass */
-  int32    DataSize;				/* Size of an object of this class */
+  struct  COBClass *Super;	/* Superclass */
+  int32             DataSize;	/* Size of an object of this class */
   int32    (*Init)();
   int32    (*Term)();
   int32    (*Print)();
@@ -59,9 +58,7 @@ typedef struct COBClass
   int32    (*Done)();
 } COBClass;
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+EXTERN_C_BEGIN
 
 #define PrintObject(obj) obj->Class->Print(obj)
 #define SetObjectInfo(obj,tags) obj->Class->SetInfo(obj,tags)
@@ -76,22 +73,17 @@ extern "C" {
 
 #define COBObjectIV                             \
   Node      COBNode;                            \
-  COBClass  *Class;                             \
+  COBClass *Class;                              \
   uint32    cob_ValidationKey
 
-  typedef struct COBObject
-  {
-    COBObjectIV;
-  } COBObject;
+typedef struct COBObject
+{
+  COBObjectIV;
+} COBObject;
 
-  int32 DefineClass( COBClass *Class, COBClass *SuperClass, int32 DataSize);
-  COBObject *CreateObject( COBClass *Class);
-  int32 DestroyObject( COBObject *Object );
-  int32 ValidateObject( COBObject *cob );
+int32 DefineClass( COBClass *Class, COBClass *SuperClass, int32 DataSize);
+COBObject *CreateObject( COBClass *Class);
+int32 DestroyObject( COBObject *Object );
+int32 ValidateObject( COBObject *cob );
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-#endif /* __COBJ_H */
+EXTERN_C_END

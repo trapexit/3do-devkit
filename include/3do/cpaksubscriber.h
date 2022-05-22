@@ -1,5 +1,6 @@
-#ifndef __CPAKSUBSCRIBER_H__
-#define __CPAKSUBSCRIBER_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "graphics.h"
 #include "subscriberutils.h"
@@ -125,36 +126,29 @@ typedef struct CPakRec
   int32		       lastCurTime;	/* Remember the previous Stream clock time to check for loop */
 } CPakRec, *CPakRecPtr;
 
+EXTERN_C_BEGIN
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+int32 InitCPakSubscriber(void);
+int32 CloseCPakSubscriber(void);
 
-  int32	InitCPakSubscriber(void);
-  int32	CloseCPakSubscriber(void);
+int32 NewCPakSubscriber(CPakContextPtr *pCtx, int32 numChannels, int32 priority);
+int32 DisposeCPakSubscriber(CPakContextPtr ctx);
 
-  int32	NewCPakSubscriber(CPakContextPtr *pCtx, int32 numChannels, int32 priority);
-  int32	DisposeCPakSubscriber(CPakContextPtr ctx);
+int32 CPakDuration(CPakRecPtr cpRecPtr);
+int32 CPakCurrTime(CPakRecPtr cpRecPtr);
 
-  int32	CPakDuration(CPakRecPtr cpRecPtr);
-  int32	CPakCurrTime(CPakRecPtr cpRecPtr);
+int32 InitCPakCel(DSStreamCBPtr   streamCBPtr,
+                  CPakContextPtr  ctx,
+                  CPakRecPtr	 *pCPRecPtr,
+                  int32           channel,
+                  boolean         flushOnSync);
+int32 DestroyCPakCel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, int32 channel);
+CCB*  GetCPakCel(CPakContextPtr ctx, CPakRecPtr cpRecPtr);
+void  DrawCPakToBuffer(CPakContextPtr ctx, CPakRecPtr cpRecPtr, Bitmap *bitmap);
+void  FlushCPakChannel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, int32 channel);
+int32 SendFreeCPakSignal(CPakContextPtr ctx);
 
-  int32	InitCPakCel(DSStreamCBPtr   streamCBPtr,
-                    CPakContextPtr  ctx,
-                    CPakRecPtr	   *pCPRecPtr,
-                    int32	    channel,
-                    boolean         flushOnSync);
-  int32	DestroyCPakCel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, int32 channel);
-  CCB*	GetCPakCel(CPakContextPtr ctx, CPakRecPtr cpRecPtr);
-  void	DrawCPakToBuffer(CPakContextPtr ctx, CPakRecPtr cpRecPtr, Bitmap *bitmap);
-  void	FlushCPakChannel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, int32 channel);
-  int32	SendFreeCPakSignal(CPakContextPtr ctx);
+void CPakSubscriberThread(int32 notUsed, CPakContextPtr ctx);
+void FreeMovieBuff(ImageDesc *imagePtr);
 
-  void	CPakSubscriberThread(int32 notUsed, CPakContextPtr ctx);
-  void	FreeMovieBuff(ImageDesc *imagePtr);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __CPAKSUBSCRIBER_H__ */
+EXTERN_C_END

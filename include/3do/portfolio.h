@@ -1,5 +1,4 @@
-#ifndef __PORTFOLIO_H
-#define __PORTFOLIO_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -17,7 +16,6 @@
 **  actually need, and including just those from within your source code.
 **
 ******************************************************************************/
-
 
 #include "types.h"
 #include "debug.h"
@@ -38,5 +36,3 @@
 #include "audio.h"
 #include "operamath.h"
 #include "form3do.h"
-
-#endif /* __PORTFOLIO_H */

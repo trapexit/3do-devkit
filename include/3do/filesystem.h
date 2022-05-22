@@ -1,17 +1,15 @@
-#ifndef __H_FILESYSTEM
-#define __H_FILESYSTEM
+#pragma include_only_once
 
 /******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: filesystem.h,v 1.39 1994/10/21 21:06:16 shawn Exp $
-**
-**  Kernel data structures for filesystem access
-**
-******************************************************************************/
-
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: filesystem.h,v 1.39 1994/10/21 21:06:16 shawn Exp $
+ **
+ **  Kernel data structures for filesystem access
+ **
+ ******************************************************************************/
 
 #include "types.h"
 #include "io.h"
@@ -21,11 +19,11 @@
 #include "folio.h"
 #include "semaphore.h"
 
-#define FILEFOLIO          3
+#define FILEFOLIO 3
 
-#define FILESYSTEMNODE  1
-#define FILENODE        2
-#define FILEALIASNODE   3
+#define FILESYSTEMNODE 1
+#define FILENODE       2
+#define FILEALIASNODE  3
 
 #define FILESYSTEM_DEFAULT_BLOCKSIZE   2048
 
@@ -95,35 +93,35 @@ typedef struct File File;
 */
 
 struct HighLevelDisk {
-  Device             hdi;
+  Device hdi;
 };
 
 
 typedef struct OptimizedDisk {
-  HighLevelDisk        odi;
+  HighLevelDisk odi;
 } OptimizedDisk;
 
 
 #ifndef notAFileErr
-# define notAFileErr                   -1302
+# define notAFileErr -1302
 #endif
 
 
 typedef struct MacDisk {
-  HighLevelDisk      mdi;
+  HighLevelDisk mdi;
 } MacDisk;
 
 
 typedef struct LinkedMemDisk {
-  HighLevelDisk         lmd;
+  HighLevelDisk lmd;
 } LinkedMemDisk;
 
 typedef struct FileSystem {
-  ItemNode         fs;
+  ItemNode fs;
 } FileSystem;
 
 struct File {
-  ItemNode         fi;
+  ItemNode fi;
 };
 
 /*
@@ -147,39 +145,39 @@ struct File {
 #define FILE_HIGHEST_AVATAR    255
 
 typedef struct OpenFile {
-  Device             ofi;
+  Device ofi;
 } OpenFile;
 
 typedef struct FileIOReq {
-  IOReq          fio;
+  IOReq fio;
 } FileIOReq;
 
 typedef struct FileStatus {
-  DeviceStatus   fs;
-  uint32         fs_ByteCount;
+  DeviceStatus fs;
+  uint32       fs_ByteCount;
 } FileStatus;
 
 
 typedef struct Alias {
-  ItemNode       a;
-  uchar         *a_Value;
+  ItemNode  a;
+  uchar    *a_Value;
 } Alias;
 
 
 typedef struct FileFolio {
-  Folio          ff;
+  Folio ff;
 } FileFolio;
 
 
 /*
  *	Filesystem status definitions (FILECMD_FSSTAT)
  */
-#define	FSSTAT_CREATETIME	0x1
-#define	FSSTAT_BLOCKSIZE	0x2
-#define	FSSTAT_SIZE		0x4
-#define	FSSTAT_MAXFILESIZE	0x8
-#define	FSSTAT_FREE		0x10
-#define	FSSTAT_USED		0x20
+#define	FSSTAT_CREATETIME  0x1
+#define	FSSTAT_BLOCKSIZE   0x2
+#define	FSSTAT_SIZE	   0x4
+#define	FSSTAT_MAXFILESIZE 0x8
+#define	FSSTAT_FREE	   0x10
+#define	FSSTAT_USED	   0x20
 
 #define	FSSTAT_ISSET(bmap, bit)	(bmap & bit)
 #define	FSSTAT_SET(bmap, bit)	(bmap |= bit)
@@ -188,19 +186,13 @@ typedef struct FileFolio {
 #define	HOWMANY(sz, unt)        ((sz + (unt - 1)) / unt)
 #endif	/* HOWMANY */
 
-typedef struct FileSystemStat {
-  uint32     fst_BitMap;	/* field bitmap */
-  uint32     fst_CreateTime;	/* filesystem creation time */
-  uint32     fst_BlockSize;	/* block size of the filesystem */
-  uint32     fst_Size;		/* size of the filesystem in blocks */
-  uint32     fst_MaxFileSize;	/* max blocks that can be allocated */
-  uint32     fst_Free;		/* total number of free blocks available */
-  uint32     fst_Used;		/* total number of blocks in use */
+typedef struct FileSystemStat
+{
+  uint32 fst_BitMap;            /* field bitmap */
+  uint32 fst_CreateTime;	/* filesystem creation time */
+  uint32 fst_BlockSize;         /* block size of the filesystem */
+  uint32 fst_Size;		/* size of the filesystem in blocks */
+  uint32 fst_MaxFileSize;	/* max blocks that can be allocated */
+  uint32 fst_Free;		/* total number of free blocks available */
+  uint32 fst_Used;		/* total number of blocks in use */
 } FileSystemStat;
-
-
-
-/*****************************************************************************/
-
-
-#endif /* __H_FILESYSTEM */

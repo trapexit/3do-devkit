@@ -1,5 +1,4 @@
-#ifndef __INIT3DO_H
-#define __INIT3DO_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -31,48 +30,44 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "displayutils.h"
 
 /*----------------------------------------------------------------------------
  * Prototypes.
  *--------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  Err ChangeInitialDirectory(char *firstChoice, char *secondChoice, boolean always);
+Err ChangeInitialDirectory(char *firstChoice, char *secondChoice, boolean always);
 
-  /*----------------------------------------------------------------------------
-   * Obsolete stuff.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * Obsolete stuff.
+ *--------------------------------------------------------------------------*/
 
-  typedef struct SoundInfo
-  {
-    Item		iSoundEffect;
-    Item		iSoundData;
-    Item		iSoundTemplate;
-    Item		iSoundAttachment;
-    struct SoundInfo	*next;
-  } SoundInfo;
+typedef struct SoundInfo
+{
+  Item iSoundEffect;
+  Item iSoundData;
+  Item iSoundTemplate;
+  Item iSoundAttachment;
+  struct SoundInfo *next;
+} SoundInfo;
 
-  boolean OpenMacLink(void);
-  boolean OpenSPORT(void);
+boolean OpenMacLink(void);
+boolean OpenSPORT(void);
 
-  boolean OpenAudio(void);
-  void    ShutDown(void);
+boolean OpenAudio(void);
+void    ShutDown(void);
 
-  boolean SetChannel(Item iInstrument, int nChannel);
-  boolean SetMixer(int nChannel, int32 nVolume, int32 nBalance);
-  boolean SetMixerChannel(int nChannel, int32 nLeftLevel, int32 nRightLevel);
-  Item    LoadSoundEffect(char* sFilename, int nNumVoices);
-  Item    LoadSoundFX(char* sFilename, int nNumVoices, SoundInfo *theSoundInfo);
-  void    FreeSoundEffects(void);
+boolean SetChannel(Item iInstrument, int nChannel);
+boolean SetMixer(int nChannel, int32 nVolume, int32 nBalance);
+boolean SetMixerChannel(int nChannel, int32 nLeftLevel, int32 nRightLevel);
+Item    LoadSoundEffect(char* sFilename, int nNumVoices);
+Item    LoadSoundFX(char* sFilename, int nNumVoices, SoundInfo *theSoundInfo);
+void    FreeSoundEffects(void);
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_C_END
 
 extern Item TheMixer;
-
-#endif /* __INIT3DO_H */

@@ -1,5 +1,4 @@
-#ifndef __DEBUG_H
-#define __DEBUG_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -10,11 +9,11 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
 #define DEBUGGERNODE (0)
 #define DEBUGGERSWI ((DEBUGGERNODE << 16) + 0x0100)
@@ -23,10 +22,7 @@ extern void __swi(0x1000e)    kprintf(const char *fmt, ... );
 extern int  __swi(0x10000+30) MayGetChar(void); /* get a char from diagport */
 extern void __swi(0x101)      Debug(void);
 
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+EXTERN_C_END
 
 #define MACNAMEBUFBYTES 128
 
@@ -46,7 +42,4 @@ typedef struct debugio
   char    namebuf[MACNAMEBUFBYTES];
 } debugio;
 
-
 /*****************************************************************************/
-
-#endif /* __DEBUG_H */

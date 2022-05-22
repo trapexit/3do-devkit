@@ -1,5 +1,4 @@
-#ifndef __H_DISCDATA
-#define __H_DISCDATA
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -32,8 +31,4 @@
 #define DIRECTORY_LAST_IN_DIR        0x80000000
 #define DIRECTORY_LAST_IN_BLOCK      0x40000000
 
-
 /*****************************************************************************/
-
-
-#endif /* __H_DISCDATA */

@@ -16,13 +16,13 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_STRING_INCLUDED
-#define TTL_STRING_INCLUDED
+#pragma include_only_once
 
 #include "algorithm"
 
 #include "string.h"
 #include "stdlib.h"
+
 
 class string
 {
@@ -59,6 +59,11 @@ public:
     _str = (char*)malloc(str_._len + 1);
     _cap = _len;
     strcpy(_str,str_._str);
+  }
+
+  ~string()
+  {
+    free(_str);
   }
 
 private:
@@ -450,10 +455,20 @@ public:
     return (compare(str_) == 0);
   }
 
+  bool
+  operator!=(const char *str_) const
+  {
+    return !operator==(str_);
+  }
+
+  bool
+  operator!=(const string &str_) const
+  {
+    return !operator==(str_);
+  }
+
 private:
   char      *_str;
   size_type  _len;
   size_type  _cap;
 };
-
-#endif

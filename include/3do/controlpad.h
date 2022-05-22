@@ -1,5 +1,4 @@
-#ifndef __CONTROLPAD_H
-#define __CONTROLPAD_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -33,11 +32,11 @@
 
 #define MAKECPADERR( class, errNum )MakeErr( ER_USER, ER_CPAD, ER_SEVERE, ER_E_USER, class, errNum )
 
-#define INITCONTROLPAD_ERR	MAKECPADERR ( ER_C_NSTND, 1 )
-#define PADNUMBER_ERR		MAKECPADERR ( ER_C_NSTND, 2 )
-#define INITEDUTIL_ERR		MAKECPADERR ( ER_C_NSTND, 3 )
-#define ALLOCMEM_ERR		MAKECPADERR ( ER_C_NSTND, 4 )
-#define ALREADYALLOC_ERR	MAKECPADERR ( ER_C_NSTND, 5 )
+#define INITCONTROLPAD_ERR MAKECPADERR ( ER_C_NSTND, 1 )
+#define PADNUMBER_ERR	   MAKECPADERR ( ER_C_NSTND, 2 )
+#define INITEDUTIL_ERR	   MAKECPADERR ( ER_C_NSTND, 3 )
+#define ALLOCMEM_ERR	   MAKECPADERR ( ER_C_NSTND, 4 )
+#define ALREADYALLOC_ERR   MAKECPADERR ( ER_C_NSTND, 5 )
 
 /*
   function prototypes for functions found in controlpad.c
@@ -50,5 +49,3 @@ extern int32 DoControlPad ( int32 whichPad, uint32 *pButton, int32 continuousBit
 extern int32 ReturnPreviousControlPad ( int32 whichPad, uint32 *pButton );
 
 EXTERN_C_END
-
-#endif /* __CONTROLPAD_H */

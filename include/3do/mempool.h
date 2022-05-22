@@ -1,3 +1,5 @@
+#pragma include_only_once
+
 /*******************************************************************************************
  *	File:			MemPool.h
  *
@@ -13,8 +15,7 @@
  *
  *******************************************************************************************/
 
-#ifndef	__MEMPOOL_H__
-#define	__MEMPOOL_H__
+#include "extern_c.h"
 
 #include "mem.h"
 
@@ -38,22 +39,17 @@ typedef struct MemPool {
 /******************************************/
 /* Fixed pool memory management functions */
 /******************************************/
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-  typedef boolean (*ForEachFreePoolMemberFuncPtr)( void* argValue, void* poolEntry );
+EXTERN_C_BEGIN
 
-  MemPoolPtr CreateMemPool( long numToPreallocate, long sizeOfEntry );
-  void       DeleteMemPool( MemPoolPtr memPool );
-  void      *AllocPoolMem( MemPoolPtr memPool );
-  void       ReturnPoolMem( MemPoolPtr memPool, void* poolEntry );
-  boolean    ForEachFreePoolMember(MemPoolPtr                   memPool,
-                                   ForEachFreePoolMemberFuncPtr forEachFunc,
-                                   void*                        argValue );
+typedef boolean (*ForEachFreePoolMemberFuncPtr)( void* argValue, void* poolEntry );
 
-#ifdef __cplusplus
-}
-#endif
+MemPoolPtr CreateMemPool( long numToPreallocate, long sizeOfEntry );
+void       DeleteMemPool( MemPoolPtr memPool );
+void      *AllocPoolMem( MemPoolPtr memPool );
+void       ReturnPoolMem( MemPoolPtr memPool, void* poolEntry );
+boolean    ForEachFreePoolMember(MemPoolPtr                   memPool,
+                                 ForEachFreePoolMemberFuncPtr forEachFunc,
+                                 void*                        argValue );
 
-#endif	/* __MEMPOOL_H__ */
+EXTERN_C_END

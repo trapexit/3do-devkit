@@ -1,5 +1,6 @@
-#ifndef __DATASTREAM_H__
-#define __DATASTREAM_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "item.h"
@@ -46,7 +47,7 @@
 #if RELATIVE_BRANCHING
 
 #define	kKeyChunkFlag 1<<0	/* indicates a chunk that does not
-                                                 * depend on its sibling predecessors */
+                                 * depend on its sibling predecessors */
 #endif  /*  RELATIVE_BRANCHING  */
 
 
@@ -517,19 +518,17 @@ typedef struct StreamControlChunk
  *		High level procedural interface
  *******************************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  int32	InitDataStreaming(long maxNumberOfStreams);
-  int32	CloseDataStreaming(void);
+int32 InitDataStreaming(long maxNumberOfStreams);
+int32 CloseDataStreaming(void);
 
-  int32	NewDataStream(DSStreamCBPtr *pCtx, void* bufferListPtr, long bufferSize,
-                      long deltaPriority, long numSubsMsgs);
-  int32	DisposeDataStream(Item msgItem, DSStreamCBPtr streamCBPtr);
+int32 NewDataStream(DSStreamCBPtr *pCtx,
+                    void*          bufferListPtr,
+                    long           bufferSize,
+                    long           deltaPriority,
+                    long           numSubsMsgs);
+int32 DisposeDataStream(Item          msgItem,
+                        DSStreamCBPtr streamCBPtr);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __DATASTREAM_H__ */
+EXTERN_C_END

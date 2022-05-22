@@ -16,12 +16,12 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_FILESYSTEM_INCLUDED
-#define TTL_FILESYSTEM_INCLUDED
+#pragma include_only_once
 
 #include "string"
 
 #include "string.h"
+
 
 struct filesystem
 {
@@ -226,6 +226,8 @@ struct filesystem
   };
 };
 
+static
+inline
 filesystem::path
 operator/(const filesystem::path &lhs_,
           const filesystem::path &rhs_)
@@ -237,5 +239,3 @@ operator/(const filesystem::path &lhs_,
 
   return path;
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef TDO_GRAPHICS_RECT_H_INCLUDED
-#define TDO_GRAPHICS_RECT_H_INCLUDED
+#pragma include_only_once
 
 #include "graphics_coord.h"
 
@@ -11,5 +10,3 @@ struct Rect
   Coord rect_XRight;
   Coord rect_YBottom;
 };
-
-#endif

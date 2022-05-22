@@ -1,5 +1,4 @@
-#ifndef TYPES_BOOLEAN_H_INCLUDED
-#define TYPES_BOOLEAN_H_INCLUDED
+#pragma include_only_once
 
 typedef unsigned char boolean;
 
@@ -9,6 +8,4 @@ typedef unsigned char boolean;
 
 #ifndef FALSE
 #define FALSE ((boolean)0)
-#endif
-
 #endif

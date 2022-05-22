@@ -1,5 +1,4 @@
-#ifndef __TIMERUTILS_H
-#define __TIMERUTILS_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -63,6 +62,7 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
 
 #include "types.h"
 
@@ -83,86 +83,80 @@
  * Passive utilites.
  ****************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  Item GetTimerIOReq(void);
+Item GetTimerIOReq(void);
 
-  int32	GetVBLTime(Item ioreq, uint32 *hiorder, uint32 *loworder);
+int32	GetVBLTime(Item ioreq, uint32 *hiorder, uint32 *loworder);
 
-  int32	GetUSecTime(Item ioreq, uint32 *seconds, uint32 *useconds);
-  int32	GetMSecTime(Item ioreq);
-  int32	GetHSecTime(Item ioreq);
-  int32	GetTSecTime(Item ioreq);
-  int32	GetTime(Item ioreq);
+int32	GetUSecTime(Item ioreq, uint32 *seconds, uint32 *useconds);
+int32	GetMSecTime(Item ioreq);
+int32	GetHSecTime(Item ioreq);
+int32	GetTSecTime(Item ioreq);
+int32	GetTime(Item ioreq);
 
-  Err SleepUSec(Item ioreq, uint32 seconds, uint32 useconds);
-  Err SleepMSec(Item ioreq, uint32 mseconds);
-  Err SleepHSec(Item ioreq, uint32 hseconds);
-  Err SleepTSec(Item ioreq, uint32 tseconds);
-  Err Sleep(Item ioreq, uint32 seconds);
+Err SleepUSec(Item ioreq, uint32 seconds, uint32 useconds);
+Err SleepMSec(Item ioreq, uint32 mseconds);
+Err SleepHSec(Item ioreq, uint32 hseconds);
+Err SleepTSec(Item ioreq, uint32 tseconds);
+Err Sleep(Item ioreq, uint32 seconds);
 
-  /*****************************************************************************
-   * TimerServices package...
-   ****************************************************************************/
+/*****************************************************************************
+ * TimerServices package...
+ ****************************************************************************/
 
-  typedef int32 TimerHandle;
+typedef int32 TimerHandle;
 
-  /*----------------------------------------------------------------------------
-   * Create a timer functions.
-   *	Functions that return a TimerHandle type will return negative on error.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * Create a timer functions.
+ *	Functions that return a TimerHandle type will return negative on error.
+ *--------------------------------------------------------------------------*/
 
-  TimerHandle TimerMsgAtTime(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
-  TimerHandle TimerMsgAfterDelay(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
-  TimerHandle TimerMsgHeartbeat(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
+TimerHandle TimerMsgAtTime(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
+TimerHandle TimerMsgAfterDelay(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
+TimerHandle TimerMsgHeartbeat(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
 
-  TimerHandle TimerSignalAtTime(int32 signal, uint32 seconds, uint32 microseconds);
-  TimerHandle TimerSignalAfterDelay(int32 signal, uint32 seconds, uint32 microseconds);
-  TimerHandle TimerSignalHeartbeat(int32 signal, uint32 seconds, uint32 microseconds);
+TimerHandle TimerSignalAtTime(int32 signal, uint32 seconds, uint32 microseconds);
+TimerHandle TimerSignalAfterDelay(int32 signal, uint32 seconds, uint32 microseconds);
+TimerHandle TimerSignalHeartbeat(int32 signal, uint32 seconds, uint32 microseconds);
 
-  TimerHandle TimerMsgAtTimeVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
-  TimerHandle TimerMsgAfterDelayVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
-  TimerHandle TimerMsgHeartbeatVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
+TimerHandle TimerMsgAtTimeVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
+TimerHandle TimerMsgAfterDelayVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
+TimerHandle TimerMsgHeartbeatVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
 
-  TimerHandle TimerSignalAtTimeVBL(int32 signal, uint32 fields);
-  TimerHandle TimerSignalAfterDelayVBL(int32 signal, uint32 fields);
-  TimerHandle TimerSignalHeartbeatVBL(int32 signal, uint32 fields);
+TimerHandle TimerSignalAtTimeVBL(int32 signal, uint32 fields);
+TimerHandle TimerSignalAfterDelayVBL(int32 signal, uint32 fields);
+TimerHandle TimerSignalHeartbeatVBL(int32 signal, uint32 fields);
 
-  /*----------------------------------------------------------------------------
-   * Manipulate an existing timer functions.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * Manipulate an existing timer functions.
+ *--------------------------------------------------------------------------*/
 
-  Err TimerCancel(TimerHandle thandle);
-  Err TimerSuspend(TimerHandle thandle);
-  Err TimerRestart(TimerHandle thandle);
-  Err TimerReset(TimerHandle thandle, uint32 seconds, uint32 microseconds_or_fields);
-  Err TimerChangeUserdata(TimerHandle thandle, uint32 userdata1, uint32 userdata2);
+Err TimerCancel(TimerHandle thandle);
+Err TimerSuspend(TimerHandle thandle);
+Err TimerRestart(TimerHandle thandle);
+Err TimerReset(TimerHandle thandle, uint32 seconds, uint32 microseconds_or_fields);
+Err TimerChangeUserdata(TimerHandle thandle, uint32 userdata1, uint32 userdata2);
 
-  /*----------------------------------------------------------------------------
-   * Open/Close functions.
-   *	These are used by a task that didn't directly start the service thread
-   *	but wants to use the service thread started by some other task.  Only
-   *	the main task needs to call Open, then any of its threads can use the
-   *	services as well.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * Open/Close functions.
+ *	These are used by a task that didn't directly start the service thread
+ *	but wants to use the service thread started by some other task.  Only
+ *	the main task needs to call Open, then any of its threads can use the
+ *	services as well.
+ *--------------------------------------------------------------------------*/
 
-  Err  TimerServicesOpen(void);
-  void TimerServicesClose(void);
+Err  TimerServicesOpen(void);
+void TimerServicesClose(void);
 
-  /*----------------------------------------------------------------------------
-   * Startup/Shutdown functions.
-   *	These are used by a task that wants to start and own the service thread.
-   *	After calling Startup the task & any of its threads can use the	services.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * Startup/Shutdown functions.
+ *	These are used by a task that wants to start and own the service thread.
+ *	After calling Startup the task & any of its threads can use the	services.
+ *--------------------------------------------------------------------------*/
 
-  Err  TimerServicesStartup(int32 delta_priority);
-  void TimerServicesShutdown(void);
-  Err  TimerServicesVerify(void);
+Err  TimerServicesStartup(int32 delta_priority);
+void TimerServicesShutdown(void);
+Err  TimerServicesVerify(void);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __TIMERUTILS_H */
+EXTERN_C_END

@@ -1,55 +1,54 @@
-#ifndef __OPERROR_H
-#define __OPERROR_H
+#pragma include_only_once
 
 /******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: operror.h,v 1.64 1994/11/19 03:28:15 deborah Exp $
-**
-**  System error definitions.
-**
-**  Portfolio error codes are 32-bit numbers that are subdivided into
-**  multiple sub-components. Using these components, you can identify
-**  which subsystem generated the error, and get a fairly descriptive error
-**  number. The various components of an error code are:
-**
-**	Bit(s)  Purpose
-**	------  -------
-**
-**	31      Always set, makes the error codes negative numbers
-**
-**      25-30   Object type which generated the error. This tells you
-**	        whether a folio, a device, or a task generated the
-**	        error. Possible values for this field include ER_FOLI,
-**	        ER_DEVC, ER_TASK, and ER_LINKLIB.
-**
-**	13-24   Object ID. This is a code that uniquely identifies the
-**	        component that generated the error. The value for this field
-**	        is created with the MakeErrId() macro and is basically two
-**	        6-bit ASCII characters identifying the module. For example,
-**	        Kernel errors have an object ID of 'Kr'.
-**
-**	11-12   A severity code for the error. This can be one of ER_INFO,
-**	        ER_WARN, ER_SEVERE, or ER_FATAL.
-**
-**	9-10	An environment code which defines who created the component
-**	        that generated the error. This can be one of ER_E_SSTM for
-**	        system errors, ER_E_APPL for application errors, and
-**	        ER_E_USER for user-code errors.
-**
-**	8	The error class. This can be either ER_C_STND for a
-**	        standard error code, or ER_C_NSTND for a non-standard
-**	        error codes. Standard error codes are errors which
-**	        are well known in the system, and have a default string
-**	        to describe them. Non-standard errors are module-specific
-**	        and the module must provide a string to the system
-**	        to describe the error.
-**
-**	0-7	The actual error code.
-**
-******************************************************************************/
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: operror.h,v 1.64 1994/11/19 03:28:15 deborah Exp $
+ **
+ **  System error definitions.
+ **
+ **  Portfolio error codes are 32-bit numbers that are subdivided into
+ **  multiple sub-components. Using these components, you can identify
+ **  which subsystem generated the error, and get a fairly descriptive error
+ **  number. The various components of an error code are:
+ **
+ **	Bit(s)  Purpose
+ **	------  -------
+ **
+ **	31      Always set, makes the error codes negative numbers
+ **
+ **      25-30   Object type which generated the error. This tells you
+ **	        whether a folio, a device, or a task generated the
+ **	        error. Possible values for this field include ER_FOLI,
+ **	        ER_DEVC, ER_TASK, and ER_LINKLIB.
+ **
+ **	13-24   Object ID. This is a code that uniquely identifies the
+ **	        component that generated the error. The value for this field
+ **	        is created with the MakeErrId() macro and is basically two
+ **	        6-bit ASCII characters identifying the module. For example,
+ **	        Kernel errors have an object ID of 'Kr'.
+ **
+ **	11-12   A severity code for the error. This can be one of ER_INFO,
+ **	        ER_WARN, ER_SEVERE, or ER_FATAL.
+ **
+ **	9-10	An environment code which defines who created the component
+ **	        that generated the error. This can be one of ER_E_SSTM for
+ **	        system errors, ER_E_APPL for application errors, and
+ **	        ER_E_USER for user-code errors.
+ **
+ **	8	The error class. This can be either ER_C_STND for a
+ **	        standard error code, or ER_C_NSTND for a non-standard
+ **	        error codes. Standard error codes are errors which
+ **	        are well known in the system, and have a default string
+ **	        to describe them. Non-standard errors are module-specific
+ **	        and the module must provide a string to the system
+ **	        to describe the error.
+ **
+ **	0-7	The actual error code.
+ **
+ ******************************************************************************/
 
 
 #include "types.h"
@@ -74,12 +73,12 @@
 #define ERR_IDSHIFT	(ERR_SEVERESHIFT+ERR_SEVERESIZE)
 #define ERR_OBJSHIFT	(ERR_IDSHIFT+ERR_IDSIZE)
 
-#define MAKEERR(o,id,severity,env,class,err) (0x80000000 \
-					| ((id)<<ERR_IDSHIFT) \
-					| (severity<<ERR_SEVERESHIFT) \
-					| (env<<ERR_ENVSHIFT) \
-					| (class<<ERR_CLASHIFT) \
-			 		| (o<<ERR_OBJSHIFT) | (err<<ERR_ERRSHIFT) )
+#define MAKEERR(o,id,severity,env,class,err) (0x80000000                \
+                                              | ((id)<<ERR_IDSHIFT)     \
+                                              | (severity<<ERR_SEVERESHIFT) \
+                                              | (env<<ERR_ENVSHIFT)     \
+                                              | (class<<ERR_CLASHIFT)   \
+                                              | (o<<ERR_OBJSHIFT) | (err<<ERR_ERRSHIFT) )
 #define MakeErr(o,id,severity,env,class,er) MAKEERR(o,id,severity,env,class,er)
 
 /* Make ID from the 2-char erring object name */
@@ -191,23 +190,23 @@
 
 
 /* This is the structure used by the kernel to map error codes to strings */
-typedef struct ErrorText
-{
-	ItemNode et;
-	uint32	et_ObjID;	/* 12 bit identifier */
-	uint8	et_MaxErr;	/* max size of table */
-	uint8	et_MaxStringSize;	/* size of largest string */
-	uint8	et_Reserved[2];
-	char	**et_ErrorTable;	/* ptr to table of char * */
-} ErrorText;
+    typedef struct ErrorText
+    {
+      ItemNode et;
+      uint32	et_ObjID;	/* 12 bit identifier */
+      uint8	et_MaxErr;	/* max size of table */
+      uint8	et_MaxStringSize;	/* size of largest string */
+      uint8	et_Reserved[2];
+      char	**et_ErrorTable;	/* ptr to table of char * */
+    } ErrorText;
 
 enum errtxt_tags
-{
-	ERRTEXT_TAG_OBJID = TAG_ITEM_LAST+1,
-	ERRTEXT_TAG_MAXERR,
-	ERRTEXT_TAG_TABLE,
-	ERRTEXT_TAG_MAXSTR
-};
+  {
+   ERRTEXT_TAG_OBJID = TAG_ITEM_LAST+1,
+   ERRTEXT_TAG_MAXERR,
+   ERRTEXT_TAG_TABLE,
+   ERRTEXT_TAG_MAXSTR
+  };
 
 
 /*****************************************************************************/
@@ -267,10 +266,7 @@ enum errtxt_tags
 
 /*****************************************************************************/
 
-
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+EXTERN_C_BEGIN
 
 void PrintfSysErr(Item);	/* printfs the error */
 int32 GetSysErr(char *buff,int32 buffsize,Item err);	/* fills buffer with error text */
@@ -278,18 +274,10 @@ int32 GetSysErr(char *buff,int32 buffsize,Item err);	/* fills buffer with error 
 /* PrintError is quiet on RUNTIME builds */
 #ifndef	RUNTIME
 void	clib_PrintError(char *who, char *what, char *whom, Err err);
-#define	PrintError(who, what, whom, err)	\
-	clib_PrintError(((char *)(who)),((char *)(what)),((char *)(whom)),((Err)(err)))
+#define	PrintError(who, what, whom, err)                                \
+  clib_PrintError(((char *)(who)),((char *)(what)),((char *)(whom)),((Err)(err)))
 #else
 #define	PrintError(who, what, whom, err)	/* nothing! */
 #endif
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __OPERROR_H */
+EXTERN_C_END

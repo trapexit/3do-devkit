@@ -1,5 +1,4 @@
-#ifndef __CELUTILS_H
-#define __CELUTILS_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -42,6 +41,8 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "graphics.h"
 #include "operamath.h"
 #include "mem.h"
@@ -51,31 +52,41 @@
  * Datatypes.
  *--------------------------------------------------------------------------*/
 
-typedef struct FPoint {	/* Frac16 point */
+/* Frac16 point */
+typedef struct FPoint
+{
   frac16	x;
   frac16	y;
 } FPoint;
 
-typedef struct IPoint {	/* Integer point */
+/* Integer point */
+typedef struct IPoint
+{
   int32	x;
   int32	y;
 } IPoint;
 
-typedef struct SRect {	/* Size Rectangle	- specifies topleft corner and size */
-  IPoint	pos;		/*	x/y of TopLeft corner */
-  IPoint	size;		/*	x/y sizes (ie, width and height) */
+/* Size Rectangle - specifies topleft corner and size */
+typedef struct SRect
+{
+  IPoint pos;                   /*	x/y of TopLeft corner */
+  IPoint size;                  /*	x/y sizes (ie, width and height) */
 } SRect;
 
-typedef struct CRect {	/* Corner Rectangle	- specifies diagonal corners */
-  IPoint	tl;			/* 	TopLeft corner */
-  IPoint	br;			/* 	BottomRight corner */
+/* Corner Rectangle - specifies diagonal corners */
+typedef struct CRect
+{
+  IPoint tl;			/* 	TopLeft corner */
+  IPoint br;			/* 	BottomRight corner */
 } CRect;
 
-typedef struct CQuad {	/* Corner quad		- specifies all four corners */
-  IPoint	tl;			/*	TopLeft corner */
-  IPoint	tr;			/* 	TopRight corner */
-  IPoint	br;			/* 	BottomRight corner */
-  IPoint	bl;			/* 	BottomLeft corner */
+/* Corner quad - specifies all four corners */
+typedef struct CQuad
+{
+  IPoint tl;			/*	TopLeft corner */
+  IPoint tr;			/* 	TopRight corner */
+  IPoint br;			/* 	BottomRight corner */
+  IPoint bl;			/* 	BottomLeft corner */
 } CQuad;
 
 /*----------------------------------------------------------------------------
@@ -113,11 +124,11 @@ typedef struct CQuad {	/* Corner quad		- specifies all four corners */
  * Misc cel macros.
  *--------------------------------------------------------------------------*/
 
-#define SKIP_CEL(ccb)		ccb->ccb_Flags |= CCB_SKIP
-#define UNSKIP_CEL(ccb)		ccb->ccb_Flags &= ~CCB_SKIP
+#define SKIP_CEL(ccb)	ccb->ccb_Flags |= CCB_SKIP
+#define UNSKIP_CEL(ccb)	ccb->ccb_Flags &= ~CCB_SKIP
 
-#define LAST_CEL(ccb)		ccb->ccb_Flags |= CCB_LAST
-#define UNLAST_CEL(ccb)		ccb->ccb_Flags &= ~CCB_LAST
+#define LAST_CEL(ccb)	ccb->ccb_Flags |= CCB_LAST
+#define UNLAST_CEL(ccb)	ccb->ccb_Flags &= ~CCB_LAST
 
 /*----------------------------------------------------------------------------
  * Widely-used PIXC values.
@@ -140,190 +151,184 @@ typedef struct CQuad {	/* Corner quad		- specifies all four corners */
  * Prototypes...
  *--------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  /*----------------------------------------------------------------------------
-   * functions for creating lists of cels.
-   *	All of these quietly cope with NULL pointers in fairly intelligent ways.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * functions for creating lists of cels.
+ *	All of these quietly cope with NULL pointers in fairly intelligent ways.
+ *--------------------------------------------------------------------------*/
 
-  CCB *	LastCelInList(CCB *list); /* returns -> last cel in list */
-  CCB *	ChainCelsAtTail(CCB *existingCels, CCB *newCels); /* returns -> new last cel in list (LastCelInList(newcels)) */
-  CCB *	ChainCelsAtHead(CCB *existingCels, CCB *newCels); /* returns -> new first cel in list (newcels) */
-  void	LinkCel(CCB *ccb, CCB *nextCCB);
+CCB  *LastCelInList(CCB *list); /* returns -> last cel in list */
+CCB  *ChainCelsAtTail(CCB *existingCels, CCB *newCels); /* returns -> new last cel in list (LastCelInList(newcels)) */
+CCB  *ChainCelsAtHead(CCB *existingCels, CCB *newCels); /* returns -> new first cel in list (newcels) */
+void  LinkCel(CCB *ccb, CCB *nextCCB);
 
-  /*----------------------------------------------------------------------------
-   * functions for mapping and moving and sizing cels.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * functions for mapping and moving and sizing cels.
+ *--------------------------------------------------------------------------*/
 
-  void OffsetCel(CCB *ccb, int32 xOffset, int32 yOffset);
+void OffsetCel(CCB *ccb, int32 xOffset, int32 yOffset);
 
-  void OffsetCelByFDelta(CCB *list, FPoint *deltaXY);
-  void OffsetCelByIDelta(CCB *list, IPoint *deltaXY);
+void OffsetCelByFDelta(CCB *list, FPoint *deltaXY);
+void OffsetCelByIDelta(CCB *list, IPoint *deltaXY);
 
-  void OffsetAACelByFDelta(CCB *list, FPoint *deltaXY);
-  void OffsetAACelByIDelta(CCB *list, IPoint *deltaXY);
+void OffsetAACelByFDelta(CCB *list, FPoint *deltaXY);
+void OffsetAACelByIDelta(CCB *list, IPoint *deltaXY);
 
-  void OffsetCelListByFDelta(CCB *list, FPoint *deltaXY, boolean copyPerspective);
-  void OffsetCelListByIDelta(CCB *list, IPoint *deltaXY, boolean copyPerspective);
+void OffsetCelListByFDelta(CCB *list, FPoint *deltaXY, boolean copyPerspective);
+void OffsetCelListByIDelta(CCB *list, IPoint *deltaXY, boolean copyPerspective);
 
-  void MapCelToFPoint(CCB *cel, FPoint *newPosition);
-  void MapCelToIPoint(CCB *cel, IPoint *newPosition);
+void MapCelToFPoint(CCB *cel, FPoint *newPosition);
+void MapCelToIPoint(CCB *cel, IPoint *newPosition);
 
-  void MapAACelToFPoint(CCB *aacel, FPoint *newPosition);
-  void MapAACelToIPoint(CCB *aacel, IPoint *newPosition);
+void MapAACelToFPoint(CCB *aacel, FPoint *newPosition);
+void MapAACelToIPoint(CCB *aacel, IPoint *newPosition);
 
-  void MapCelListToFPoint(CCB *list, FPoint *newPosition, boolean copyPerspective);
-  void MapCelListToIPoint(CCB *list, IPoint *newPosition, boolean copyPerspective);
+void MapCelListToFPoint(CCB *list, FPoint *newPosition, boolean copyPerspective);
+void MapCelListToIPoint(CCB *list, IPoint *newPosition, boolean copyPerspective);
 
-  void MapCelToCRect(CCB *cel, CRect *rect);
-  void MapCelToSRect(CCB *cel, SRect *rect);
+void MapCelToCRect(CCB *cel, CRect *rect);
+void MapCelToSRect(CCB *cel, SRect *rect);
 
-  void MapAACelToCRect(CCB *aacel, CRect *rect);
-  void MapAACelToSRect(CCB *aacel, SRect *rect);
+void MapAACelToCRect(CCB *aacel, CRect *rect);
+void MapAACelToSRect(CCB *aacel, SRect *rect);
 
-  void MapCelListToCRect(CCB *list, CRect *rect);
-  void MapCelListToSRect(CCB *list, SRect *rect);
+void MapCelListToCRect(CCB *list, CRect *rect);
+void MapCelListToSRect(CCB *list, SRect *rect);
 
-  void MapCelToCQuad(CCB *cel, CQuad *quad);
-  void MapAACelToCQuad(CCB *aacel, CQuad *quad);
-  void MapCelListToCQuad(CCB *list, CQuad *quad);
+void MapCelToCQuad(CCB *cel, CQuad *quad);
+void MapAACelToCQuad(CCB *aacel, CQuad *quad);
+void MapCelListToCQuad(CCB *list, CQuad *quad);
 
-  void CenterRectCelOverFPoint(CCB *cel, FPoint *point);
-  void CenterRectCelOverIPoint(CCB *cel, IPoint *point);
+void CenterRectCelOverFPoint(CCB *cel, FPoint *point);
+void CenterRectCelOverIPoint(CCB *cel, IPoint *point);
 
-  void CenterRectAACelOverFPoint(CCB *cel, FPoint *point);
-  void CenterRectAACelOverIPoint(CCB *cel, IPoint *point);
+void CenterRectAACelOverFPoint(CCB *cel, FPoint *point);
+void CenterRectAACelOverIPoint(CCB *cel, IPoint *point);
 
-  void CenterRectCelListOverFPoint(CCB *cel, FPoint *point);
-  void CenterRectCelListOverIPoint(CCB *cel, IPoint *point);
+void CenterRectCelListOverFPoint(CCB *cel, FPoint *point);
+void CenterRectCelListOverIPoint(CCB *cel, IPoint *point);
 
-  void CenterRectCelInCRect(CCB *cel, CRect *rect);
-  void CenterRectCelInSRect(CCB *cel, SRect *rect);
+void CenterRectCelInCRect(CCB *cel, CRect *rect);
+void CenterRectCelInSRect(CCB *cel, SRect *rect);
 
-  void CenterRectAACelInCRect(CCB *cel, CRect *rect);
-  void CenterRectAACelInSRect(CCB *cel, SRect *rect);
+void CenterRectAACelInCRect(CCB *cel, CRect *rect);
+void CenterRectAACelInSRect(CCB *cel, SRect *rect);
 
-  void CenterRectCelListInCRect(CCB *cel, CRect *rect);
-  void CenterRectCelListInSRect(CCB *cel, SRect *rect);
+void CenterRectCelListInCRect(CCB *cel, CRect *rect);
+void CenterRectCelListInSRect(CCB *cel, SRect *rect);
 
-  void CenterRectCelInDisplay(CCB *cel);
-  void CenterRectAACelInDisplay(CCB *cel);
-  void CenterRectCelListInDisplay(CCB *cel);
+void CenterRectCelInDisplay(CCB *cel);
+void CenterRectAACelInDisplay(CCB *cel);
+void CenterRectCelListInDisplay(CCB *cel);
 
-  /*----------------------------------------------------------------------------
-   * functions for Point and Rect conversions.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * functions for Point and Rect conversions.
+ *--------------------------------------------------------------------------*/
 
-  FPoint *FPointFromIVal(FPoint *dst, int32 x, int32 y);
-  FPoint *FPointFromFVal(FPoint *dst, frac16 x, frac16 y);
-  FPoint *FPointFromIPoint(FPoint *dst, IPoint *src);
+FPoint *FPointFromIVal(FPoint *dst, int32 x, int32 y);
+FPoint *FPointFromFVal(FPoint *dst, frac16 x, frac16 y);
+FPoint *FPointFromIPoint(FPoint *dst, IPoint *src);
 
-  IPoint *IPointFromIVal(IPoint *dst, int32 x, int32 y);
-  IPoint *IPointFromFVal(IPoint *dst, frac16 x, frac16 y);
-  IPoint *IPointFromFPoint(IPoint *dst, FPoint *src);
+IPoint *IPointFromIVal(IPoint *dst, int32 x, int32 y);
+IPoint *IPointFromFVal(IPoint *dst, frac16 x, frac16 y);
+IPoint *IPointFromFPoint(IPoint *dst, FPoint *src);
 
-  CRect *CRectFromIVal(CRect *dst, int32  tlx, int32  tly, int32  brx, int32  bry);
-  CRect *CRectFromSRect(CRect *dst, SRect *src);
-  CRect *CRectFromCel(CRect *dst, CCB *cel);
+CRect *CRectFromIVal(CRect *dst, int32  tlx, int32  tly, int32  brx, int32  bry);
+CRect *CRectFromSRect(CRect *dst, SRect *src);
+CRect *CRectFromCel(CRect *dst, CCB *cel);
 
-  SRect *SRectFromIVal(SRect *dst, int32 x, int32 y, int32 w, int32 h);
-  SRect *SRectFromCRect(SRect *dst, CRect *src);
-  SRect *SRectFromCel(SRect *dst, CCB *cel);
+SRect *SRectFromIVal(SRect *dst, int32 x, int32 y, int32 w, int32 h);
+SRect *SRectFromCRect(SRect *dst, CRect *src);
+SRect *SRectFromCel(SRect *dst, CCB *cel);
 
-  IPoint *ISizeFromCRect(IPoint *dst, CRect *src);
-  IPoint *ICornerFromSRect(IPoint *dst, SRect *src);
+IPoint *ISizeFromCRect(IPoint *dst, CRect *src);
+IPoint *ICornerFromSRect(IPoint *dst, SRect *src);
 
-  /*----------------------------------------------------------------------------
-   * functions for manipulating Points and Rects.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * functions for manipulating Points and Rects.
+ *--------------------------------------------------------------------------*/
 
-  FPoint *CenterFPointInDisplay(void);
-  IPoint *CenterIPointInDisplay(void);
+FPoint *CenterFPointInDisplay(void);
+IPoint *CenterIPointInDisplay(void);
 
-  IPoint *CenterIPointInSRect(IPoint *dst, SRect *rect);
-  IPoint *CenterIPointInCRect(IPoint *dst, CRect *rect);
+IPoint *CenterIPointInSRect(IPoint *dst, SRect *rect);
+IPoint *CenterIPointInCRect(IPoint *dst, CRect *rect);
 
-  SRect *CenterSRectOverIPoint(SRect *dst, IPoint *point);
-  CRect *CenterCRectOverIPoint(CRect *dst, IPoint *point);
+SRect *CenterSRectOverIPoint(SRect *dst, IPoint *point);
+CRect *CenterCRectOverIPoint(CRect *dst, IPoint *point);
 
-  SRect *CenterSRectInSRect(SRect *dst, SRect *rect);
-  SRect *CenterSRectInDisplay(SRect *dst);
+SRect *CenterSRectInSRect(SRect *dst, SRect *rect);
+SRect *CenterSRectInDisplay(SRect *dst);
 
-  CRect *CenterCRectInCRect(CRect *dst, CRect *rect);
-  CRect *CenterCRectInDisplay(CRect *dst);
+CRect *CenterCRectInCRect(CRect *dst, CRect *rect);
+CRect *CenterCRectInDisplay(CRect *dst);
 
-  SRect *OffsetSRect(SRect *dst, IPoint *delta);
-  CRect *OffsetCRect(CRect *dst, IPoint *delta);
+SRect *OffsetSRect(SRect *dst, IPoint *delta);
+CRect *OffsetCRect(CRect *dst, IPoint *delta);
 
-  SRect *InsetSRect(SRect *dst, IPoint *delta);
-  CRect *InsetCRect(CRect *dst, IPoint *delta);
+SRect *InsetSRect(SRect *dst, IPoint *delta);
+CRect *InsetCRect(CRect *dst, IPoint *delta);
 
-  SRect *SRectBounds(SRect *dst, SRect *rect1, SRect *rect2);
-  SRect *SRectIntersection(SRect *dst, SRect *rect1, SRect *rect2);
+SRect *SRectBounds(SRect *dst, SRect *rect1, SRect *rect2);
+SRect *SRectIntersection(SRect *dst, SRect *rect1, SRect *rect2);
 
-  CRect *CRectBounds(CRect *dst, CRect *rect1, CRect *rect2);
-  CRect *CRectIntersection(CRect *dst, CRect *rect1, CRect *rect2);
+CRect *CRectBounds(CRect *dst, CRect *rect1, CRect *rect2);
+CRect *CRectIntersection(CRect *dst, CRect *rect1, CRect *rect2);
 
-  boolean IPointIsInSRect(IPoint *point, SRect *rect);
-  boolean IPointIsInCRect(IPoint *point, CRect *rect);
+boolean IPointIsInSRect(IPoint *point, SRect *rect);
+boolean IPointIsInCRect(IPoint *point, CRect *rect);
 
-  /*----------------------------------------------------------------------------
-   * functions for creating and deleting cels.
-   *	DeleteCel() can delete any of the cel types created by these functions,
-   *	including one returned by LoadCel().  UnloadCel() just calls DeleteCel().
-   *	DeleteCel() can handle a NULL pointer, and always returns a NULL pointer.
-   *	DeleteCelList() walks the ccb_NextPtr list, calling DeleteCel() on each.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * functions for creating and deleting cels.
+ *	DeleteCel() can delete any of the cel types created by these functions,
+ *	including one returned by LoadCel().  UnloadCel() just calls DeleteCel().
+ *	DeleteCel() can handle a NULL pointer, and always returns a NULL pointer.
+ *	DeleteCelList() walks the ccb_NextPtr list, calling DeleteCel() on each.
+ *--------------------------------------------------------------------------*/
 
-  CCB *DeleteCel(CCB *cel);
-  CCB *DeleteCelList(CCB *celList);
+CCB *DeleteCel(CCB *cel);
+CCB *DeleteCelList(CCB *celList);
 
-  CCB *CreateCel(int32 width, int32 height, int32 bitsPerPixel, int32 options, void *dataBuf);
-  CCB *CreateBackdropCel(int32 width, int32 height, int32 color, int32 opacityPercent);
-  CCB *CreateLRFormCel(CCB *dst, Item screenItem, SRect *subRect);
-  CCB *CreateSubrectCel(CCB *dst, CCB *src, SRect *subRect);
+CCB *CreateCel(int32 width, int32 height, int32 bitsPerPixel, int32 options, void *dataBuf);
+CCB *CreateBackdropCel(int32 width, int32 height, int32 color, int32 opacityPercent);
+CCB *CreateLRFormCel(CCB *dst, Item screenItem, SRect *subRect);
+CCB *CreateSubrectCel(CCB *dst, CCB *src, SRect *subRect);
 
-  CCB  *LoadCel (const char *filename, uint32 memTypeBits);
-  void 	UnloadCel(CCB *cel);
+CCB  *LoadCel (const char *filename, uint32 memTypeBits);
+void  UnloadCel(CCB *cel);
 
-  CCB *CloneCel(CCB *src, int32 options);
+CCB *CloneCel(CCB *src, int32 options);
 
-  /*----------------------------------------------------------------------------
-   * functions for rendering into a cel's data buffer.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * functions for rendering into a cel's data buffer.
+ *--------------------------------------------------------------------------*/
 
-  void RenderCelPixel(CCB *cel, int32 pixel, int32 x, int32 y);
-  void RenderCelHLine(CCB *cel, int32 pixel, int32 x, int32 y, int32 w);
-  void RenderCelVLine(CCB *cel, int32 pixel, int32 x, int32 y, int32 h);
-  void RenderCelFillRect(CCB *cel, int32 pixel, int32 x, int32 y, int32 w, int32 h);
-  void RenderCelOutlineRect(CCB *cel, int32 pixel, int32 x, int32 y, int32 w, int32 h);
+void RenderCelPixel(CCB *cel, int32 pixel, int32 x, int32 y);
+void RenderCelHLine(CCB *cel, int32 pixel, int32 x, int32 y, int32 w);
+void RenderCelVLine(CCB *cel, int32 pixel, int32 x, int32 y, int32 h);
+void RenderCelFillRect(CCB *cel, int32 pixel, int32 x, int32 y, int32 w, int32 h);
+void RenderCelOutlineRect(CCB *cel, int32 pixel, int32 x, int32 y, int32 w, int32 h);
 
-  int32	ReturnCelPixel(CCB *cel, int32 x, int32 y);
+int32 ReturnCelPixel(CCB *cel, int32 x, int32 y);
 
-  /*----------------------------------------------------------------------------
-   * misc functions.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * misc functions.
+ *--------------------------------------------------------------------------*/
 
-  CCB *CrossFadeCels8(Item screen, int32 step, CCB *oldCel, CCB *newCel);
-  CCB *CrossFadeCels(Item screen, int32 step, CCB *oldCel, CCB *newCel);
+CCB *CrossFadeCels8(Item screen, int32 step, CCB *oldCel, CCB *newCel);
+CCB *CrossFadeCels(Item screen, int32 step, CCB *oldCel, CCB *newCel);
 
-  CCB *ParseCel(void *inBuf, int32 inBufSize);
+CCB *ParseCel(void *inBuf, int32 inBufSize);
 
-  int32	InitCel(CCB * cel, int32 width, int32 height, int32 bitsPerPixel, int32 options);
+int32 InitCel(CCB * cel, int32 width, int32 height, int32 bitsPerPixel, int32 options);
 
-  /*----------------------------------------------------------------------------
-   * functions that support library internals, but might be generally useful.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * functions that support library internals, but might be generally useful.
+ *--------------------------------------------------------------------------*/
 
-  int32	GetCelBitsPerPixel(CCB *cel);
-  int32	GetCelBytesPerRow(CCB *cel);
-  int32	GetCelDataBufferSize(CCB *cel);
+int32 GetCelBitsPerPixel(CCB *cel);
+int32 GetCelBytesPerRow(CCB *cel);
+int32 GetCelDataBufferSize(CCB *cel);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __CELUTILS_H */
+EXTERN_C_END

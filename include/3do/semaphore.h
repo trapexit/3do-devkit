@@ -1,5 +1,4 @@
-#ifndef __SEMAPHORE_H
-#define __SEMAPHORE_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -12,6 +11,7 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
 
 #include "types.h"
 #include "nodes.h"
@@ -34,28 +34,15 @@ typedef struct Semaphore
 } Semaphore, *SemaphoreP;
 
 
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+EXTERN_C_BEGIN
 
+int32 __swi(KERNELSWI+7) LockSemaphore(Item s,uint32 flags);
+Err   __swi(KERNELSWI+6) UnlockSemaphore(Item s);
 
-  int32 __swi(KERNELSWI+7) LockSemaphore(Item s,uint32 flags);
-  Err __swi(KERNELSWI+6)   UnlockSemaphore(Item s);
+extern Item CreateSemaphore(const char *name, uint8 pri);
+extern Item CreateUniqueSemaphore(const char *name, uint8 pri);
 
-  extern Item CreateSemaphore(const char *name, uint8 pri);
-  extern Item CreateUniqueSemaphore(const char *name, uint8 pri);
+EXTERN_C_END
 
-
-#ifdef  __cplusplus
-}
-#endif  /* __cplusplus */
-
-
-#define FindSemaphore(n)     FindNamedItem(MKNODEID(KERNELNODE,SEMAPHORENODE),(n))
-#define DeleteSemaphore(semaphore)	DeleteItem(semaphore)
-
-
-/*****************************************************************************/
-
-
-#endif /* __SEMAPHORE_H */
+#define FindSemaphore(n)           FindNamedItem(MKNODEID(KERNELNODE,SEMAPHORENODE),(n))
+#define DeleteSemaphore(semaphore) DeleteItem(semaphore)

@@ -1,5 +1,4 @@
-#ifndef __MEM_H
-#define __MEM_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -113,19 +112,19 @@ typedef struct MemHdr
   /****************************************************************************/
 
 
-  typedef struct MemList
-  {
-    Node    meml_n;           /* need to link these together */
-    uint32  meml_Types;       /* copy of meml_mh->memh_Types */
-    uint32 *meml_OwnBits;     /* memory we own               */
-    uint32 *meml_WriteBits;   /* memory we can write to      */
-    MemHdr *meml_MemHdr;
-    List   *meml_l;
-    Item    meml_Sema4;
-    uint8   meml_OwnBitsSize; /* in uint32s (fd_set)         */
-    uint8   meml_Reserved[3];
-    List   *meml_AlignedTrackSize;
-  } MemList;
+typedef struct MemList
+{
+  Node    meml_n;           /* need to link these together */
+  uint32  meml_Types;       /* copy of meml_mh->memh_Types */
+  uint32 *meml_OwnBits;     /* memory we own               */
+  uint32 *meml_WriteBits;   /* memory we can write to      */
+  MemHdr *meml_MemHdr;
+  List   *meml_l;
+  Item    meml_Sema4;
+  uint8   meml_OwnBitsSize; /* in uint32s (fd_set)         */
+  uint8   meml_Reserved[3];
+  List   *meml_AlignedTrackSize;
+} MemList;
 
 
 /*****************************************************************************/
@@ -171,13 +170,9 @@ typedef enum MemDebugCalls
 
 /****************************************************************************/
 
+EXTERN_C_BEGIN
 
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
-
-
-  /****************************************************************************/
+/****************************************************************************/
 
 
 #ifdef MEMDEBUG
@@ -186,19 +181,19 @@ extern "C" {
 #define FreeMemToMemLists(l,p,s)    FreeMemToMemListsDebug(l,p,s,__FILE__,__LINE__,MEMDEBUG_CALL_FREEMEMTOMEMLISTS)
 #define AllocMemBlocks(s,t)         AllocMemBlocksDebug(s,t,__FILE__,__LINE__)
 
-  Err CreateMemDebug(uint32 controlFlags, const TagArg *args);
-  Err DeleteMemDebug(void);
-  Err DumpMemDebug(const TagArg *args);
-  Err SanityCheckMemDebug(const TagArg *args);
-  void *AllocMemFromMemListsDebug(List *l, uint32 memSize, uint32 memFlags, const char *sourceFile, uint32 sourceLine, MemDebugCalls call);
-  void FreeMemToMemListsDebug(List *l, void *mem, uint32 memSize, const char *sourceFile, uint32 sourceLine, MemDebugCalls call);
-  void *AllocMemBlocksDebug(int32 size, uint32 typebits, const char *sourceFile, uint32 sourceLine);
+Err CreateMemDebug(uint32 controlFlags, const TagArg *args);
+Err DeleteMemDebug(void);
+Err DumpMemDebug(const TagArg *args);
+Err SanityCheckMemDebug(const TagArg *args);
+void *AllocMemFromMemListsDebug(List *l, uint32 memSize, uint32 memFlags, const char *sourceFile, uint32 sourceLine, MemDebugCalls call);
+void FreeMemToMemListsDebug(List *l, void *mem, uint32 memSize, const char *sourceFile, uint32 sourceLine, MemDebugCalls call);
+void *AllocMemBlocksDebug(int32 size, uint32 typebits, const char *sourceFile, uint32 sourceLine);
 
 #else
 
-  void *AllocMemFromMemLists(List *l, int32 size, uint32 typebits);
-  void FreeMemToMemLists(List *l, void *p, int32 size);
-  void __swi(KERNELSWI+13) *AllocMemBlocks(int32 size, uint32 typebits);
+void *AllocMemFromMemLists(List *l, int32 size, uint32 typebits);
+void FreeMemToMemLists(List *l, void *p, int32 size);
+void __swi(KERNELSWI+13) *AllocMemBlocks(int32 size, uint32 typebits);
 
 #define CreateMemDebug(cf,a)                   (0)
 #define DeleteMemDebug()                       (0)
@@ -210,33 +205,31 @@ extern "C" {
 
 #endif
 
-  Err   __swi(KERNELSWI+20) ControlMem(void *p, int32 size, int32 cmd, Item task);
-  int32 __swi(KERNELSWI+33) SystemScavengeMem(void);
+Err   __swi(KERNELSWI+20) ControlMem(void *p, int32 size, int32 cmd, Item task);
+int32 __swi(KERNELSWI+33) SystemScavengeMem(void);
 
-  int32 ScavengeMem(void);
-  int32 GetPageSize(uint32 typebits);
-  int32 GetMemAllocAlignment(uint32 typebits);
-  uint32 GetMemType(void *p);
-  void availMem(MemInfo *minfo, uint32 flags);
-  int32 GetMemTrackSize(const void *p);
+int32 ScavengeMem(void);
+int32 GetPageSize(uint32 typebits);
+int32 GetMemAllocAlignment(uint32 typebits);
+uint32 GetMemType(void *p);
+void availMem(MemInfo *minfo, uint32 flags);
+int32 GetMemTrackSize(const void *p);
 
-  /* routines for managing private pools (lists) of memory */
-  MemList *AllocMemList(const void *p, const char *name);
-  void FreeMemList(MemList *ml);
-  void *AllocMemFromMemList(MemList *ml, int32 size, uint32 memflags);
-  void FreeMemToMemList(MemList *ml, void *p, int32 size);
+/* routines for managing private pools (lists) of memory */
+MemList *AllocMemList(const void *p, const char *name);
+void FreeMemList(MemList *ml);
+void *AllocMemFromMemList(MemList *ml, int32 size, uint32 memflags);
+void FreeMemToMemList(MemList *ml, void *p, int32 size);
 
-  /* sanity check memory pointers */
-  boolean IsMemReadable(const void *p, int32 size);
-  boolean IsMemWritable(const void *p, int32 size);
-
-
-  /****************************************************************************/
+/* sanity check memory pointers */
+boolean IsMemReadable(const void *p, int32 size);
+boolean IsMemWritable(const void *p, int32 size);
 
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+/****************************************************************************/
+
+
+EXTERN_C_END
 
 
 /****************************************************************************/
@@ -263,6 +256,3 @@ extern "C" {
 
 
 /****************************************************************************/
-
-
-#endif	/* __MEM_H */

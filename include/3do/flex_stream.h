@@ -1,5 +1,4 @@
-#ifndef __FLEX_STREAM_H
-#define __FLEX_STREAM_H
+#pragma include_only_once
 
 /****************************************************************************
 **
@@ -12,6 +11,7 @@
 **
 ****************************************************************************/
 
+#include "extern_c.h"
 
 #include "types.h"
 #include "stdarg.h"
@@ -27,16 +27,14 @@
 
 typedef struct FlexStream
 {
-	Stream *flxs_FileStream;
-/* The following fields are used for parsing from an in memory image. */
-	char   *flxs_Image;     /* Image in memory. */
-	int32   flxs_Cursor;    /* Position in image. */
-	int32   flxs_Size;      /* Size of image. */
+  Stream *flxs_FileStream;
+  /* The following fields are used for parsing from an in memory image. */
+  char   *flxs_Image;     /* Image in memory. */
+  int32   flxs_Cursor;    /* Position in image. */
+  int32   flxs_Size;      /* Size of image. */
 } FlexStream;
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+EXTERN_C_BEGIN
 
 int32 CloseFlexStreamFile( FlexStream *flxs );
 int32 CloseFlexStreamImage( FlexStream *flxs );
@@ -48,12 +46,4 @@ int32 TellFlexStream( const FlexStream *flxs );
 char *TellFlexStreamAddress( const FlexStream *flxs );
 char *LoadFileImage( const char *Name, int32 *NumBytesPtr );
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __FLEX_STREAM_H */
+EXTERN_C_END

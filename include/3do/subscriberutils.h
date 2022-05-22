@@ -1,5 +1,6 @@
-#ifndef __SUBSCRIBERUTILS_H__
-#define __SUBSCRIBERUTILS_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #ifdef __CC_NORCROFT
 #include "datastreamlib.h"
@@ -23,17 +24,11 @@ typedef struct SubsChannel {
 } SubsChannel, *SubsChannelPtr;
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  boolean	   AddDataMsgToTail( SubsQueuePtr subsQueue, SubscriberMsgPtr subMsg );
-  SubscriberMsgPtr GetNextDataMsg( SubsQueuePtr subsQueue );
+boolean          AddDataMsgToTail( SubsQueuePtr subsQueue, SubscriberMsgPtr subMsg );
+SubscriberMsgPtr GetNextDataMsg( SubsQueuePtr subsQueue );
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_C_END
 
 #endif  /* __CC_NORCROFT */
-
-#endif	/* __SUBSCRIBERUTILS_H__ */

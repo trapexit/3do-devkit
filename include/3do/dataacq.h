@@ -45,8 +45,9 @@
  *	4/5/93		jb		New today.
  *
  *******************************************************************************************/
-#ifndef __DATAACQ_H__
-#define __DATAACQ_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "blockfile.h"
 #include "datastream.h"
@@ -63,7 +64,7 @@
  * when a data request arrives, we just queue it instead of replying with
  * an error status.
  */
-#define	ALLOW_REQUEST_OVERLOADING	1
+#define	ALLOW_REQUEST_OVERLOADING 1
 
 /* The following switch determines what is done when I/O operations are
  * flushed. If the switch is non-zero, in progress operations are actually
@@ -72,15 +73,15 @@
  * code set to 'kDSWasFlushedErr'. Setting the flag to zero allows the
  * operation to actually complete normally (moves data into memory).
  */
-#define	REALLY_ABORT_IO_ON_FLUSH			1
+#define	REALLY_ABORT_IO_ON_FLUSH 1
 
 /* The following switch causes the thread to not exit until all I/O operations
  * have been returned (completed or aborted).
  */
-#define	WAIT_FOR_IO_COMPLETION_BEFORE_EXIT	1
+#define	WAIT_FOR_IO_COMPLETION_BEFORE_EXIT 1
 
-#define	ACQ_MAX_STREAMS		4				/* max # of streams supported */
-#define	NUM_IOREQ_ITEMS		8				/* number of ioReq items allocated for each instantiation */
+#define	ACQ_MAX_STREAMS	4	/* max # of streams supported */
+#define	NUM_IOREQ_ITEMS	8	/* number of ioReq items allocated for each instantiation */
 
 
 #if TIME_BASED_BRANCHING
@@ -90,7 +91,8 @@
 /********************************************************/
 /* Acquisition context, one per open acquisition stream */
 /********************************************************/
-typedef struct AcqContext {
+typedef struct AcqContext
+{
   Item	 creatorTask;		/* who to signal when we're done initializing */
   uint32 creatorSignal;		/* signal to send for synchronous completion */
   int32	 creatorStatus;		/* result code for creator */
@@ -125,8 +127,8 @@ typedef struct AcqContext {
   Item	 dsReqReplyPort;        /* reply port for requests to streamer */
   uint32 dsReqReplyPortSignal;  /* signal for replies to streamer requests */
 
-  uint32 subscriberPortSignal; /* signal for receipt of subscriber messages */
-  Item	 subscriberPort; /* message port for our data type */
+  uint32 subscriberPortSignal;  /* signal for receipt of subscriber messages */
+  Item	 subscriberPort;        /* message port for our data type */
 
   DSStreamCBPtr	streamCBPtr;	/* stream control block of stream we are connected to */
 
@@ -136,22 +138,16 @@ typedef struct AcqContext {
 } AcqContext, *AcqContextPtr;
 
 
-
 /*****************************/
 /* Public routine prototypes */
 /*****************************/
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-  int32	InitDataAcq(int32 dataAcqCount );
-  int32	CloseDataAcq void);
+EXTERN_C_BEGIN
 
-  int32	NewDataAcq(AcqContextPtr *pCtx, char* fileName, long deltaPriority);
-  void	DisposeDataAcq(AcqContextPtr ctx);
+int32 InitDataAcq(int32 dataAcqCount);
+int32 CloseDataAcq(void);
 
-#ifdef __cplusplus
-}
-#endif
+int32 NewDataAcq(AcqContextPtr *pCtx, char* fileName, long deltaPriority);
+void  DisposeDataAcq(AcqContextPtr ctx);
 
-#endif	/* __DATAACQ_H__ */
+EXTERN_C_END

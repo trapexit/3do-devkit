@@ -1,5 +1,4 @@
-#ifndef __TEXTLIB_H
-#define __TEXTLIB_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -12,6 +11,7 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
 
 #include "fontlib.h"
 #include "graphics.h"
@@ -86,63 +86,57 @@ enum {
       TCEL_TAG_UPDATE_TEXT_ARGS
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  TextCel *taCreateTextCel(TagArg *args);
-  Err	   taModifyTextCel(TextCel *tCel, TagArg *args);
+TextCel *taCreateTextCel(TagArg *args);
+Err	   taModifyTextCel(TextCel *tCel, TagArg *args);
 
-  /*----------------------------------------------------------------------------
-   * prototypes for text-in-a-cel routines
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * prototypes for text-in-a-cel routines
+ *--------------------------------------------------------------------------*/
 
-  TextCel *CreateTextCel(FontDescriptor *fDesc, uint32 formatFlags, int32 width, int32 height);
-  TextCel *CloneTextCel(TextCel *templateTextCel, boolean clonePixels);
-  void	   DeleteTextCel(TextCel *tCel);
-  CCB     *DetachTextCelCCB(TextCel *tCel);
+TextCel *CreateTextCel(const FontDescriptor *fDesc, uint32 formatFlags, int32 width, int32 height);
+TextCel *CloneTextCel(TextCel *templateTextCel, boolean clonePixels);
+void	   DeleteTextCel(TextCel *tCel);
+CCB     *DetachTextCelCCB(TextCel *tCel);
 
-  void SetTextCelSpacingAdjust(TextCel *tCel, int32 adjustSpacing);
-  void SetTextCelLeadingAdjust(TextCel *tCel, int32 adjustLeading);
-  void SetTextCelColor(TextCel *tCel, int32 bgColor, int32 fgColor0);
-  void SetTextCelColors(TextCel *tCel, int32 bgColor, int32 fgColors[4]);
-  void SetTextCelCoords(TextCel *tCel, Coord ccbX, Coord ccbY);
-  void SetTextCelMargins(TextCel *tCel, int32 leftMargin, int32 topMargin);
-  void SetTextCelPenNumber(TextCel *tCel, int32 penNumber);
-  void SetTextCelFormatFlags(TextCel *tCel, uint32 formatFlags);
-  Err  SetTextCelSize(TextCel *tCel, int32 width, int32 height);
-  Err  SetTextCelFormatBuffer(TextCel *tCel, char *buffer, uint32 bufsize);
-  void SetTextCelTabStops(TextCel *tCel, uint16 tabStops[16], ...);
+void SetTextCelSpacingAdjust(TextCel *tCel, int32 adjustSpacing);
+void SetTextCelLeadingAdjust(TextCel *tCel, int32 adjustLeading);
+void SetTextCelColor(TextCel *tCel, int32 bgColor, int32 fgColor0);
+void SetTextCelColors(TextCel *tCel, int32 bgColor, int32 fgColors[4]);
+void SetTextCelCoords(TextCel *tCel, Coord ccbX, Coord ccbY);
+void SetTextCelMargins(TextCel *tCel, int32 leftMargin, int32 topMargin);
+void SetTextCelPenNumber(TextCel *tCel, int32 penNumber);
+void SetTextCelFormatFlags(TextCel *tCel, uint32 formatFlags);
+Err  SetTextCelSize(TextCel *tCel, int32 width, int32 height);
+Err  SetTextCelFormatBuffer(TextCel *tCel, char *buffer, uint32 bufsize);
+void SetTextCelTabStops(TextCel *tCel, uint16 tabStops[16], ...);
 
-  void	 GetTextCelSpacingAdjust(TextCel *tCel, int32 *adjustSpacing);
-  void	 GetTextCelLeadingAdjust(TextCel *tCel, int32 *adjustLeading);
-  void	 GetTextCelColor(TextCel *tCel, int32 *bgColor, int32 *fgColor0);
-  void	 GetTextCelColors(TextCel *tCel, int32 *bgColor, int32 fgColors[4]);
-  void	 GetTextCelCoords(TextCel *tCel, Coord *ccbX, Coord *ccbY);
-  void	 GetTextCelMargins(TextCel *tCel, int32 *leftMargin, int32 *topMargin);
-  void	 GetTextCelPenNumber(TextCel *tCel, int32 *penNumber);
-  uint32 GetTextCelFormatFlags(TextCel *tCel, uint32 *formatFlags);
-  void	 GetTextCelSize(TextCel *tCel, int32 *width, int32 *height);
-  void	 GetTextCelFormatBuffer(TextCel *tCel, char **buffer, uint32 *bufsize);
-  void	 GetTextCelTabStops(TextCel *tCel, uint16 tabStops[16]);
+void   GetTextCelSpacingAdjust(TextCel *tCel, int32 *adjustSpacing);
+void   GetTextCelLeadingAdjust(TextCel *tCel, int32 *adjustLeading);
+void   GetTextCelColor(TextCel *tCel, int32 *bgColor, int32 *fgColor0);
+void   GetTextCelColors(TextCel *tCel, int32 *bgColor, int32 fgColors[4]);
+void   GetTextCelCoords(TextCel *tCel, Coord *ccbX, Coord *ccbY);
+void   GetTextCelMargins(TextCel *tCel, int32 *leftMargin, int32 *topMargin);
+void   GetTextCelPenNumber(TextCel *tCel, int32 *penNumber);
+uint32 GetTextCelFormatFlags(TextCel *tCel, uint32 *formatFlags);
+void   GetTextCelSize(TextCel *tCel, int32 *width, int32 *height);
+void   GetTextCelFormatBuffer(TextCel *tCel, char **buffer, uint32 *bufsize);
+void   GetTextCelTabStops(TextCel *tCel, uint16 tabStops[16]);
 
-  void EraseTextInCel(TextCel *tCel);
+void EraseTextInCel(TextCel *tCel);
 
-  Err vUpdateTextInCel(TextCel *tCel, boolean replaceExisting, const char *fmtString, va_list fmtArgs);
-  Err UpdateTextInCel(TextCel *tCel, boolean replaceExisting, const char *fmtString, ...);
+Err vUpdateTextInCel(TextCel *tCel, boolean replaceExisting, const char *fmtString, va_list fmtArgs);
+Err UpdateTextInCel(TextCel *tCel, boolean replaceExisting, const char *fmtString, ...);
 
-  char *vGetTextExtent(TextCel *tCel, int32 *pWidth, int32 *pHeight, const char *fmtString, va_list fmtArgs);
-  char *GetTextExtent(TextCel *tCel, int32 *pWidth, int32 *pHeight, const char *fmtString, ...);
+char *vGetTextExtent(TextCel *tCel, int32 *pWidth, int32 *pHeight, const char *fmtString, va_list fmtArgs);
+char *GetTextExtent(TextCel *tCel, int32 *pWidth, int32 *pHeight, const char *fmtString, ...);
 
-  /*----------------------------------------------------------------------------
-   * prototypes for render-direct-to-screen routines
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * prototypes for render-direct-to-screen routines
+ *--------------------------------------------------------------------------*/
 
-  void DrawTextString(FontDescriptor *fDesc, GrafCon *gcon, Item bitmapItem, const char *text, ...);
-  void DrawTextChar(FontDescriptor *fDesc, GrafCon *gcon, Item bitmapItem, uint32 character);
+void DrawTextString(FontDescriptor *fDesc, GrafCon *gcon, Item bitmapItem, const char *text, ...);
+void DrawTextChar(FontDescriptor *fDesc, GrafCon *gcon, Item bitmapItem, uint32 character);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __TEXTLIB_H */
+EXTERN_C_END

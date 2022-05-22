@@ -1,5 +1,4 @@
-#ifndef __MSGUTILS_H
-#define __MSGUTILS_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -12,6 +11,7 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
 
 #include "msgport.h"
 
@@ -49,18 +49,12 @@ typedef struct MSEventData {
  * Prototypes.
  *--------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  int32		DispatchMSEvents(MSEventHandle mseHandle, void *userContext, int32 reserved);
-  void		CleanupMSEvents(MSEventHandle mseHandle);
-  MSEventHandle	SetupMSEvents(MSEventData eventData[], int32 numEvents, int32 reserved);
-  void		DisableMSEvent(MSEventData *theEvent, int32 reserved);
-  void		EnableMSEvent(MSEventData *theEvent, int32 reserved);
+int32	      DispatchMSEvents(MSEventHandle mseHandle, void *userContext, int32 reserved);
+void	      CleanupMSEvents(MSEventHandle mseHandle);
+MSEventHandle SetupMSEvents(MSEventData eventData[], int32 numEvents, int32 reserved);
+void	      DisableMSEvent(MSEventData *theEvent, int32 reserved);
+void	      EnableMSEvent(MSEventData *theEvent, int32 reserved);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __MSGUTILS_H */
+EXTERN_C_END

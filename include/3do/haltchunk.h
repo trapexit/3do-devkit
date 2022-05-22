@@ -1,3 +1,5 @@
+#pragma include_only_once
+
 /*******************************************************************************************
  *	File:			HaltChunk.h
  *
@@ -14,9 +16,6 @@
  *	06/30/94		jb		New today.
  *
  *******************************************************************************************/
-
-#ifndef __HALTCHUNK_H__
-#define __HALTCHUNK_H__
 
 #include "dsstreamheader.h"
 
@@ -51,5 +50,3 @@ typedef struct HaltChunks {
   HaltChunk	     DataChunk;
   struct HaltChunks* Next;
 } HaltChunks, *HaltChunksPtr;
-
-#endif

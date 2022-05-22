@@ -1,3 +1,5 @@
+#pragma include_only_once
+
 /*******************************************************************************************
  *	File:			SemHelper.h
  *
@@ -11,8 +13,7 @@
  *
  *******************************************************************************************/
 
-#ifndef __SEMHELPER_H__
-#define __SEMHELPER_H__
+#include "extern_c.h"
 
 #include "semaphore.h"
 #include "makename.h"
@@ -21,21 +22,16 @@
 /* Macros to make semaphore operations consistent with	*/
 /* "new, dispose, wait, and signal" paradigm			*/
 /********************************************************/
-#define	DisposeSemaphore( semaphore )	DeleteItem( semaphore )
-#define	WaitSemaphore( semaphore )		LockSemaphore( semaphore, 1 )
-#define	SignalSemaphore( semaphore )	UnlockSemaphore( semaphore )
+#define	DisposeSemaphore( semaphore )  DeleteItem( semaphore )
+#define	WaitSemaphore( semaphore )     LockSemaphore( semaphore, 1 )
+#define	SignalSemaphore( semaphore )   UnlockSemaphore( semaphore )
 
 /*****************************/
 /* Public routine prototypes */
 /*****************************/
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-  Item	NewSemaphore( char* baseNameString, int32 uniqueID );
+EXTERN_C_BEGIN
 
-#ifdef __cplusplus
-}
-#endif
+Item NewSemaphore(char* baseNameString, int32 uniqueID);
 
-#endif	/* __SEMHELPER_H__ */
+EXTERN_C_END

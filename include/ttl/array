@@ -16,10 +16,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_ARRAY_INCLUDED
-#define TTL_ARRAY_INCLUDED
+#pragma include_only_once
 
 #include "memory"
+
 
 template<class T,unsigned int N>
 struct array_impl
@@ -33,13 +33,13 @@ public:
   array_impl(void)
   {
     for(size_type i = 0; i < N; i++)
-      __construct(&_data[i]);
+      memory_construct(&_data[i]);
   }
 
   ~array_impl(void)
   {
     for(size_type i = 0; i < N; i++)
-      __destruct(&_data[i]);
+      memory_destruct(&_data[i]);
   }
 
 public:
@@ -141,5 +141,3 @@ template<typename T,unsigned int N>
 class array : public ::array_impl<T,N>
 {
 };
-
-#endif

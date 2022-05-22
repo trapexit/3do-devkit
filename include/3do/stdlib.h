@@ -1,5 +1,4 @@
-#ifndef __STDLIB_H
-#define __STDLIB_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -10,18 +9,11 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
+
 #include "types.h"
 
-/*****************************************************************************/
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
+EXTERN_C_BEGIN
 
 #ifdef MEMDEBUG
 
@@ -46,9 +38,6 @@ void *realloc(void *oldBlock, size_t newSize);
 #define reallocDebug(p,s,f,l) realloc(p,s)
 
 #endif
-
-
-/*****************************************************************************/
 
 
 extern void exit(int status);
@@ -79,16 +68,4 @@ extern int system(const char *cmdString);
  * couldn't be started, and will otherwise always return 0.
  */
 
-
-/*****************************************************************************/
-
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif /* __STDLIB_H */
+EXTERN_C_END

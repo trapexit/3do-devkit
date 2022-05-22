@@ -16,8 +16,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_MEMORY_DEFAULT_DELETE_INCLUDED
-#define TTL_MEMORY_DEFAULT_DELETE_INCLUDED
+#pragma include_only_once
+
+#include "memory_delete"
+
 
 template<typename T>
 struct default_delete
@@ -25,7 +27,7 @@ struct default_delete
   void
   operator()(T *ptr_) const
   {
-    delete ptr_;
+    memory_delete(ptr_);
   }
 };
 
@@ -43,5 +45,3 @@ struct default_delete<T[]>
     delete[] ptr_;
   }
 };
-
-#endif

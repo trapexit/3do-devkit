@@ -1,5 +1,4 @@
-#ifndef TDO_LIST_H_INCLUDED
-#define TDO_LIST_H_INCLUDED
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -11,6 +10,8 @@
  **  Kernel list management definitions
  **
  ******************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "nodes.h"
@@ -88,60 +89,54 @@ typedef struct List
    */
 #define INITLIST(l,n) {{NULL,NULL,KERNELNODE,LISTNODE,0,(uint8)NODE_NAMEVALID,sizeof(List),n}, {(Link *)&l.ListAnchor.tail.links.flink,NULL,(Link *)&l.ListAnchor.head.links.flink}}
 
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+EXTERN_C_BEGIN
 
-  /* set the priority of a node in a list */
-  extern uint8 SetNodePri(Node *n, uint8 newpri);	/* returns old pri */
+/* set the priority of a node in a list */
+extern uint8 SetNodePri(Node *n, uint8 newpri);	/* returns old pri */
 
-  /* insert a node in the prioritized list starting from the tail */
-  extern void InsertNodeFromTail(List *l, Node *n);
+/* insert a node in the prioritized list starting from the tail */
+extern void InsertNodeFromTail(List *l, Node *n);
 
-  /* insert a node in the prioritized list starting from the head */
-  extern void InsertNodeFromHead(List *l, Node *n);
+/* insert a node in the prioritized list starting from the head */
+extern void InsertNodeFromHead(List *l, Node *n);
 
-  /* insert a node in the prioritized list using (*f)() as a cmp func */
-  /* starts at beginning of list and traverses till the end */
-  /* should return true if n should be inserted before this node m */
-  /* m is already in the list, n is the new node to be inserted */
-  extern void UniversalInsertNode(List *l, Node *n, boolean (*f)(Node *n,Node *m));
+/* insert a node in the prioritized list using (*f)() as a cmp func */
+/* starts at beginning of list and traverses till the end */
+/* should return true if n should be inserted before this node m */
+/* m is already in the list, n is the new node to be inserted */
+extern void UniversalInsertNode(List *l, Node *n, boolean (*f)(Node *n,Node *m));
 
-  /* Remove the first node on the list, return a ptr to it */
-  extern Node *RemHead(List *l);
+/* Remove the first node on the list, return a ptr to it */
+extern Node *RemHead(List *l);
 
-  /* Remove the last node on the list, return a ptr to it */
-  extern Node *RemTail(List *l);
+/* Remove the last node on the list, return a ptr to it */
+extern Node *RemTail(List *l);
 
-  /* Add a node to the end of the list, no priority */
-  extern void AddTail(List *l, Node *n);
+/* Add a node to the end of the list, no priority */
+extern void AddTail(List *l, Node *n);
 
-  /* Add a node to the head of the list, no priority */
-  extern void AddHead(List *l, Node *n);
+/* Add a node to the head of the list, no priority */
+extern void AddHead(List *l, Node *n);
 
-  /* remove a node from a list */
-  extern void RemNode( Node *n);
+/* remove a node from a list */
+extern void RemNode( Node *n);
 
-  /* Initialize a list to the empty list */
-  extern void InitList(List *l, const char *name);
+/* Initialize a list to the empty list */
+extern void InitList(List *l, const char *name);
 
-  /* find a Node in a List with the name of <name> */
-  extern Node *FindNamedNode(const List *l, const char *name);
+/* find a Node in a List with the name of <name> */
+extern Node *FindNamedNode(const List *l, const char *name);
 
-  /* convenience routines */
-  extern uint32 GetNodeCount(const List *l);
-  extern void InsertNodeBefore(Node *oldNode, Node *newNode);
-  extern void InsertNodeAfter(Node *oldNode, Node *newNode);
-  extern Node *FindNodeFromHead(const List *l, uint32 position);
-  extern Node *FindNodeFromTail(const List *l, uint32 position);
-  extern int32 GetNodePosFromHead(const List *l, const Node *n);
-  extern int32 GetNodePosFromTail(const List *l, const Node *n);
+/* convenience routines */
+extern uint32 GetNodeCount(const List *l);
+extern void InsertNodeBefore(Node *oldNode, Node *newNode);
+extern void InsertNodeAfter(Node *oldNode, Node *newNode);
+extern Node *FindNodeFromHead(const List *l, uint32 position);
+extern Node *FindNodeFromTail(const List *l, uint32 position);
+extern int32 GetNodePosFromHead(const List *l, const Node *n);
+extern int32 GetNodePosFromTail(const List *l, const Node *n);
 
-  /* debugging aid */
-  extern void DumpNode(const Node *n, const char *banner);
+/* debugging aid */
+extern void DumpNode(const Node *n, const char *banner);
 
-#ifdef  __cplusplus
-}
-#endif  /* __cplusplus */
-
-#endif /* __LIST_H */
+EXTERN_C_END

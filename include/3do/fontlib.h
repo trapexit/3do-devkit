@@ -1,5 +1,4 @@
-#ifndef __FONTLIB_H
-#define __FONTLIB_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -17,6 +16,7 @@
  **
  ******************************************************************************/
 
+#include "extern_c.h"
 
 #include "types.h"		/* the 3DO types.h, so on the 3DO side we use the */
 
@@ -31,7 +31,8 @@
 
 #define CHUNK_FONT			CHAR4LITERAL('F','O','N','T')
 
-typedef struct FontHeader {
+typedef struct FontHeader
+{
   int32	 chunk_ID;		/* Standard 3DO file header fields; */
   int32	 chunk_size; 		/* font file is one huge chunk */
   uint32 fh_version;		/* Font header/date version number */
@@ -52,7 +53,8 @@ typedef struct FontHeader {
   uint32 fh_reserved[4];	/* Typical reserved-for-future-expansion */
 } FontHeader;
 
-typedef struct FontCharInfo {
+typedef struct FontCharInfo
+{
   unsigned int	fci_charOffset : 22; /* Offset from start of char data to this char */
   unsigned int	fci_unused     :  2; /* two available bits */
   unsigned int	fci_charWidth  :  8; /* Width (in pixels) of data for this char */
@@ -75,57 +77,52 @@ typedef struct FontCharInfo {
 #define	FFLAG_UNDERLINED 0x00000020 /* Font typefaces */
 #define	FFLAG_TWOCOLOR	 0x00000100 /* Font contains two-color characters (5bpp) */
 
-typedef struct FontDescriptor  {
-  uint32 fd_fontFlags;		/* Flags describing the font */
-  uint32 fd_charHeight;		/* Height of character (ascent+descent) */
-  uint32 fd_charWidth;		/* Max width of character (pixels) */
-  uint32 fd_bitsPerPixel;	/* Pixel depth of each character, as stored in file */
-  uint32 fd_firstChar;		/* First char defined in character set */
-  uint32 fd_lastChar;		/* Last char defined in character set */
-  uint32 fd_charExtra;		/* Spacing between characters */
-  uint32 fd_ascent;		/* Distance from baseline to ascentline */
-  uint32 fd_descent;		/* Distance from baseline to descentline */
-  uint32 fd_leading;		/* Distance from descent line to next ascent line */
-  uint32 fd_reserved[4];	/* Reserved values from font file header. */
-  void * fd_userData;		/* Client code can store a value here. */
-  void * fd_fontHeader;		/* Font header information */
-  void * fd_charInfo;		/* Per-character data table */
-  void * fd_charData;		/* The character data */
+typedef struct FontDescriptor
+{
+  uint32  fd_fontFlags;		/* Flags describing the font */
+  uint32  fd_charHeight;	/* Height of character (ascent+descent) */
+  uint32  fd_charWidth;		/* Max width of character (pixels) */
+  uint32  fd_bitsPerPixel;	/* Pixel depth of each character, as stored in file */
+  uint32  fd_firstChar;		/* First char defined in character set */
+  uint32  fd_lastChar;		/* Last char defined in character set */
+  uint32  fd_charExtra;		/* Spacing between characters */
+  uint32  fd_ascent;		/* Distance from baseline to ascentline */
+  uint32  fd_descent;		/* Distance from baseline to descentline */
+  uint32  fd_leading;		/* Distance from descent line to next ascent line */
+  uint32  fd_reserved[4];	/* Reserved values from font file header. */
+  void   *fd_userData;		/* Client code can store a value here. */
+  void   *fd_fontHeader;	/* Font header information */
+  void   *fd_charInfo;		/* Per-character data table */
+  void   *fd_charData;		/* The character data */
 } FontDescriptor;
 
 /*----------------------------------------------------------------------------
  * prototypes...
  *--------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
-  /*----------------------------------------------------------------------------
-   * FontBlit API
-   *	These things are used to blit character pixels from the font data
-   *	area into a cel buffer.
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * FontBlit API
+ *	These things are used to blit character pixels from the font data
+ *	area into a cel buffer.
+ *--------------------------------------------------------------------------*/
 
-  int32	GetFontCharInfo(FontDescriptor *fDesc, int32 character, void **blitInfo);
-  int32	BlitFontChar(FontDescriptor *fDesc, uint32 theChar, void *blitInfo,
-                     void *dstBuf, int32 dstX, int32 dstY,
-                     int32 dstBPR, int32 dstColorIndex, int32 dstBPP);
+int32 GetFontCharInfo(FontDescriptor *fDesc, int32 character, void **blitInfo);
+int32 BlitFontChar(FontDescriptor *fDesc, uint32 theChar, void *blitInfo,
+                   void *dstBuf, int32 dstX, int32 dstY,
+                   int32 dstBPR, int32 dstColorIndex, int32 dstBPP);
 
-  /*----------------------------------------------------------------------------
-   * Font file API
-   *--------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+ * Font file API
+ *--------------------------------------------------------------------------*/
 
-  FontDescriptor *	ParseFont(void *fontImage);
-  FontDescriptor *	LoadFont(char *fontFileName, uint32 memTypeBits);
-  void				UnloadFont(FontDescriptor * fDesc);
+FontDescriptor *ParseFont(void *fontImage);
+FontDescriptor *LoadFont(const char *fontFileName, uint32 memTypeBits);
+void		UnloadFont(FontDescriptor *fDesc);
 
-  int32	GetFontCharWidth(FontDescriptor *fDesc, int32 character);
-  int32	GetFontCharWidest(FontDescriptor *fDesc, char *string);
-  int32	GetFontStringWidth(FontDescriptor *fDesc, char *string);
+int32 GetFontCharWidth(FontDescriptor *fDesc, int32 character);
+int32 GetFontCharWidest(FontDescriptor *fDesc, char *string);
+int32 GetFontStringWidth(FontDescriptor *fDesc, char *string);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __FONTLIB_H */
+EXTERN_C_END

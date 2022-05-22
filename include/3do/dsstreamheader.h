@@ -1,3 +1,5 @@
+#pragma include_only_once
+
 /*******************************************************************************************
  *	File:			DSStreamHeader.h
  *
@@ -19,8 +21,6 @@
  *	10/13/93		jb		New today.
  *
  *******************************************************************************************/
-#ifndef _DSSTREAMHEADER_H_
-#define _DSSTREAMHEADER_H_
 
 #include "types.h"
 
@@ -47,9 +47,10 @@
 /* data type for the subscriber and a delta priority at	*/
 /* which the subscriber is instantiated.				*/
 /********************************************************/
-typedef struct DSHeaderSubs {
-  long		subscriberType;			/* data type for subscriber */
-  long		deltaPriority;			/* its delta priority */
+typedef struct DSHeaderSubs
+{
+  long subscriberType;		/* data type for subscriber */
+  long deltaPriority;		/* its delta priority */
 } DSHeaderSubs, *DSHeaderSubsPtr;
 
 /************************************/
@@ -58,8 +59,9 @@ typedef struct DSHeaderSubs {
 #define	DS_HDR_MAX_PRELOADINST	16
 #define	DS_HDR_MAX_SUBSCRIBER	16
 
-typedef struct DSHeaderChunk {
-  SUBS_CHUNK_COMMON;					/* from SubscriberUtils.h */
+typedef struct DSHeaderChunk
+{
+  SUBS_CHUNK_COMMON;		/* from SubscriberUtils.h */
 
   long headerVersion;		/* version of header data */
 
@@ -77,7 +79,4 @@ typedef struct DSHeaderChunk {
 
   DSHeaderSubs subscriberList[DS_HDR_MAX_SUBSCRIBER];
   /* NULL terminated list of subscriber tags */
-
 } DSHeaderChunk, *DSHeaderChunkPtr;
-
-#endif	/* _DSSTREAMHEADER_H_ */

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+WIN_TOOL=$(basename "$0")
+BASEPATH=$(dirname $(realpath "$0"))
+
+exec wine "${BASEPATH}/../win/${WIN_TOOL}" $@

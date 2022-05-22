@@ -1,5 +1,4 @@
-#ifndef TDO_MSGPORT_H_INCLUDED
-#define TDO_MSGPORT_H_INCLUDED
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -11,6 +10,8 @@
  **  Kernel messaging system management
  **
  ******************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "nodes.h"
@@ -65,35 +66,29 @@ enum message_tags
    CREATEMSG_TAG_DATA_SIZE			/* data area for pass by value */
   };
 
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+EXTERN_C_BEGIN
 
-  extern Item CreateMsgPort(const char *name, uint8 pri, uint32 signal);
-  extern Item CreateUniqueMsgPort(const char *name, uint8 pri, uint32 signal);
+extern Item CreateMsgPort(const char *name, uint8 pri, uint32 signal);
+extern Item CreateUniqueMsgPort(const char *name, uint8 pri, uint32 signal);
 
-  extern Item CreateMsg(const char *name, uint8 pri, Item mp);
-  extern Item CreateSmallMsg(const char *name, uint8 pri, Item mp);
-  extern Item CreateBufferedMsg(const char *name, uint8 pri, Item mp, uint32 buffsize);
+extern Item CreateMsg(const char *name, uint8 pri, Item mp);
+extern Item CreateSmallMsg(const char *name, uint8 pri, Item mp);
+extern Item CreateBufferedMsg(const char *name, uint8 pri, Item mp, uint32 buffsize);
 
-  extern Err __swi(KERNELSWI+16)  SendMsg(Item mp,Item msg,
-                                          const void *dataptr, int32 datasize);
-  extern Err __swi(KERNELSWI+16)  SendSmallMsg(Item mp,Item msg,
-                                               uint32 val1, uint32 val2);
-  extern Item __swi(KERNELSWI+19) GetMsg(Item mp);
-  extern Item __swi(KERNELSWI+15) GetThisMsg(Item msg);
-  extern Item __swi(KERNELSWI+40) WaitPort(Item mp,Item msg);
-  extern Err __swi(KERNELSWI+18)  ReplyMsg(Item msg, int32 result,
-                                           const void *dataptr, int32 datasize);
-  extern Err __swi(KERNELSWI+18)  ReplySmallMsg(Item msg, int32 result,
-                                                uint32 val1, uint32 val2);
+extern Err __swi(KERNELSWI+16)  SendMsg(Item mp,Item msg,
+                                        const void *dataptr, int32 datasize);
+extern Err __swi(KERNELSWI+16)  SendSmallMsg(Item mp,Item msg,
+                                             uint32 val1, uint32 val2);
+extern Item __swi(KERNELSWI+19) GetMsg(Item mp);
+extern Item __swi(KERNELSWI+15) GetThisMsg(Item msg);
+extern Item __swi(KERNELSWI+40) WaitPort(Item mp,Item msg);
+extern Err __swi(KERNELSWI+18)  ReplyMsg(Item msg, int32 result,
+                                         const void *dataptr, int32 datasize);
+extern Err __swi(KERNELSWI+18)  ReplySmallMsg(Item msg, int32 result,
+                                              uint32 val1, uint32 val2);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+EXTERN_C_END
 
 #define DeleteMsgPort(x) DeleteItem(x)
 #define DeleteMsg(x)	 DeleteItem(x)
 #define FindMsgPort(n)   FindNamedItem(MKNODEID(KERNELNODE,MSGPORTNODE),(n))
-
-#endif	/* __MSGPORT_H */

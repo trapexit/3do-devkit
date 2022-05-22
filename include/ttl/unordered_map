@@ -16,22 +16,21 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_UNORDERED_MAP_INCLUDED
-#define TTL_UNORDERED_MAP_INCLUDED
+#pragma include_only_once
 
-#include "hash"
 #include "utility_pair"
 #include "algorithm"
 #include "vector"
 
+
 template<typename TKEY,
-         typename T>
+         typename TVAL>
 class unordered_map
 {
 public:
-  typedef TKEY               key_type;
-  typedef T                  mapped_type;
-  typedef pair<const TKEY,T> value_type;
+  typedef TKEY key_type;
+  typedef TVAL mapped_type;
+  typedef pair<const TKEY,TVAL> value_type;
 
 private:
   typedef vector<value_type> rep_type;
@@ -46,14 +45,26 @@ public:
   //  typedef typename rep_type::reverse_iterator       reverse_iterator;
   //  typedef typename rep_type::const_reverse_iterator const_reverse_iterator;
 
-public:
-  vector<value_type> _map;
+private:
+  rep_type _map;
 
 public:
-  void*
+  iterator
+  begin()
+  {
+    return _map.begin();
+  }
+
+  const_iterator
+  begin() const
+  {
+    return _map.begin();
+  }
+
+  iterator
   end()
   {
-    return (void*)_map.end();
+    return _map.end();
   }
 
   const_iterator
@@ -94,22 +105,17 @@ public:
     _map.clear();
   }
 
-  // pair<iterator,bool>
-  // insert(const value_type &val_)
-  // {
-
-  // }
-
   size_type
   erase(const key_type &key_)
   {
     for(size_type i = 0; i < _map.size(); i++)
       {
-        if(_map[i].first != key_)
+        if(!(_map[i].first == key_))
           continue;
 
         _map[i] = _map.back();
         _map.pop_back();
+
         return 1;
       }
 
@@ -123,17 +129,16 @@ public:
   }
 
 public:
-  T&
+  TVAL&
   operator[](const TKEY &key_)
   {
     for(size_type i = 0; i < _map.size(); i++)
       {
-        if(_map[i].first != key_)
-          continue;
-        return _map[i].second;
+        if(_map[i].first == key_)
+          return _map[i].second;
       }
 
-    _map.push_back(value_type(key_,T()));
+    _map.push_back(value_type(key_,TVAL()));
 
     return _map.back().second;
   }
@@ -145,10 +150,11 @@ public:
       {
         if(_map[i].first != key_)
           continue;
+
         return &_map[i];
       }
 
-    return 0;
+    return end();
   }
 
   const_iterator
@@ -156,12 +162,11 @@ public:
   {
     for(size_type i = 0; i < _map.size(); i++)
       {
-        if(_map[i].first != key_)
-          continue;
-        return &_map[i];
+        if(_map[i].first == key_)
+          return &_map[i];
       }
 
-    return 0;
+    return end();
   }
 
   size_type
@@ -169,10 +174,8 @@ public:
   {
     for(size_type i = 0; i < _map.size(); i++)
       {
-        if(_map[i].first != key_)
-          continue;
-
-        return 1;
+        if(_map[i].first == key_)
+          return 1;
       }
 
     return 0;
@@ -183,13 +186,10 @@ public:
   {
     for(size_type i = 0; i < _map.size(); i++)
       {
-        if(_map[i].first != key_)
-          continue;
-        return true;
+        if(_map[i].first == key_)
+          return true;
       }
 
     return false;
   }
 };
-
-#endif

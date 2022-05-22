@@ -16,8 +16,8 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_ALGORITHM_INCLUDED
-#define TTL_ALGORITHM_INCLUDED
+#pragma include_only_once
+
 
 struct algorithm
 {
@@ -76,5 +76,3 @@ struct algorithm
     }
   };
 };
-
-#endif

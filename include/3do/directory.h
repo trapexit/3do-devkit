@@ -1,19 +1,25 @@
-#ifndef __H_DIRECTORY
-#define __H_DIRECTORY
+#pragma include_only_once
 
 /******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: directory.h,v 1.7 1994/09/10 01:36:15 peabody Exp $
-**
-**  Folio data structures for semi-device-independent access to entries
-**  in filesystem directories.
-**
-******************************************************************************/
+ **
+ **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+ **  This material contains confidential information that is the property of The 3DO Company.
+ **  Any unauthorized duplication, disclosure or use is prohibited.
+ **  $Id: directory.h,v 1.7 1994/09/10 01:36:15 peabody Exp $
+ **
+ **  Folio data structures for semi-device-independent access to entries
+ **  in filesystem directories.
+ **
+ ******************************************************************************/
 
-typedef struct Directory {
+#include "filesystem.h"
+#include "io.h"
+#include "types.h"
+
+
+typedef struct Directory Directory;
+struct Directory
+{
   Item    dir_OpenFileItem;
   Item    dir_IOReqItem;
   IOReq  *dir_IOReq;
@@ -24,9 +30,11 @@ typedef struct Directory {
   uint32  dir_BlockOffset;
   uint32  dir_EntryNum;
   char   *dir_BlockBuf;
-} Directory;
+};
 
-typedef struct DirectoryEntry {
+typedef struct DirectoryEntry DirectoryEntry;
+struct DirectoryEntry
+{
   uint32 de_Flags;
   uint32 de_UniqueIdentifier;
   uint32 de_Type;
@@ -38,6 +46,4 @@ typedef struct DirectoryEntry {
   uint32 de_AvatarCount;
   char   de_FileName[FILESYSTEM_MAX_NAME_LEN];
   uint32 de_Location;
-} DirectoryEntry;
-
-#endif /* __H_DIRECTORY */
+};

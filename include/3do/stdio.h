@@ -1,5 +1,6 @@
-#ifndef __STDIO_H
-#define __STDIO_H
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "varargs.h"
@@ -30,15 +31,13 @@ extern FILE *stdout;
 extern FILE *stderr;
 #define putchar(c) putc(c,stdout)
 
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+EXTERN_C_BEGIN
 
 void perror(char *s);
 
 extern FILE *tmpfile(void);
 
-FILE *fopen(char *filename, char *type);
+FILE *fopen(const char *filename, char *type);
 int32 fread(void *ptr, int32 size, int32 nitems, FILE *stream);
 int32 fwrite(const void *ptr, int32 size, int32 nitems, FILE *stream);
 int32 fclose (FILE *stream);
@@ -57,8 +56,4 @@ int32 remove(const char *);
 
 int32 MacExpect(char *buff, int32 maxchars);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#endif /* __STDIO_H */
+EXTERN_C_END

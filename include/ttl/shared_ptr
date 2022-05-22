@@ -1,0 +1,126 @@
+/*
+  ISC License
+
+  Copyright (c) 2022, Antonio SJ Musumeci <trapexit@spawn.link>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+#pragma include_only_once
+
+#include "memory_delete"
+
+
+template<class T>
+class shared_ptr
+{
+public:
+  typedef T  element_type;
+  typedef T* pointer;
+
+public:
+  shared_ptr()
+    : _ptr(NULL),
+      _refcount(new long(0))
+  {
+
+  }
+
+  shared_ptr(T *ptr_)
+    : _ptr(ptr_),
+      _refcount(new long(1))
+  {
+  }
+
+  ~shared_ptr()
+  {
+    _cleanup();
+  }
+
+public:
+  shared_ptr(const shared_ptr &obj_)
+  {
+    _ptr      = obj_._ptr;
+    _refcount = obj_._refcount;
+    if(obj_._ptr != NULL)
+      (*_refcount)++;
+  }
+
+  shared_ptr&
+  operator=(const shared_ptr &obj_)
+  {
+    _cleanup();
+
+    _ptr      = obj_._ptr;
+    _refcount = obj_._refcount;
+    if(obj_._ptr != NULL)
+      (*_refcount)++;
+
+    return *this;
+  }
+
+public:
+  void
+  reset()
+  {
+    _cleanup();
+  }
+
+  void
+  reset(T *ptr_)
+  {
+    (void)ptr_;
+  }
+
+public:
+  long
+  get_count() const
+  {
+    return *_refcount;
+  }
+
+  T*
+  get() const
+  {
+    return _ptr;
+  }
+
+  T*
+  operator->() const
+  {
+    return _ptr;
+  }
+
+  T&
+  operator*() const
+  {
+    return *_ptr;
+  }
+
+private:
+  void
+  _cleanup()
+  {
+    (*_refcount)--;
+    if(*_refcount == 0)
+      {
+        if(_ptr != NULL)
+          memory_delete(_ptr);
+        memory_delete(_refcount);
+      }
+  }
+
+private:
+  T    *_ptr;
+  long *_refcount;
+};

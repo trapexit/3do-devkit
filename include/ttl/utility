@@ -16,11 +16,8 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef TTL_UTILITY_INCLUDED
-#define TTL_UTILITY_INCLUDED
+#pragma include_only_once
 
 #include "utility_swap"
 #include "utility_exchange"
 #include "utility_pair"
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __TIME_H
-#define __TIME_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -11,6 +10,8 @@
  **  Kernel time management definitions
  **
  ******************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "device.h"
@@ -68,33 +69,26 @@ typedef struct VBlankTimeVal
 /*****************************************************************************/
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_C_BEGIN
 
+/* sample the current system time with very low overhead */
+uint32 __swi(KERNELSWI+38) SampleSystemTime(void);
+void SampleSystemTimeTV(TimeVal *time);
 
-  /* sample the current system time with very low overhead */
-  uint32 __swi(KERNELSWI+38) SampleSystemTime(void);
-  void SampleSystemTimeTV(TimeVal *time);
+/* timer device convenience routines */
+Item CreateTimerIOReq(void);
+Err DeleteTimerIOReq(Item ioreq);
+Err WaitTime(Item ioreq, uint32 seconds, uint32 micros);
+Err WaitUntil(Item ioreq, uint32 seconds, uint32 micros);
+Err StartMetronome(Item ioreq, uint32 seconds, uint32 micros, int32 signal);
+Err StopMetronome(Item ioreq);
 
-  /* timer device convenience routines */
-  Item CreateTimerIOReq(void);
-  Err DeleteTimerIOReq(Item ioreq);
-  Err WaitTime(Item ioreq, uint32 seconds, uint32 micros);
-  Err WaitUntil(Item ioreq, uint32 seconds, uint32 micros);
-  Err StartMetronome(Item ioreq, uint32 seconds, uint32 micros, int32 signal);
-  Err StopMetronome(Item ioreq);
+/* time arithmetic convenience routines */
+void AddTimes(const TimeVal *tv1, const TimeVal *tv2, TimeVal *result);
+void SubTimes(const TimeVal *tv1, const TimeVal *tv2, TimeVal *result);
+int32 CompareTimes(const TimeVal *tv1, const TimeVal *tv2);
 
-  /* time arithmetic convenience routines */
-  void AddTimes(const TimeVal *tv1, const TimeVal *tv2, TimeVal *result);
-  void SubTimes(const TimeVal *tv1, const TimeVal *tv2, TimeVal *result);
-  int32 CompareTimes(const TimeVal *tv1, const TimeVal *tv2);
-
-
-#ifdef __cplusplus
-}
-#endif
-
+EXTERN_C_END
 
 /*****************************************************************************/
 
@@ -104,6 +98,3 @@ extern "C" {
 
 
 /*****************************************************************************/
-
-
-#endif /* __TIME_H */

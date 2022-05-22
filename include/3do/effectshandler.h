@@ -1,5 +1,4 @@
-#ifndef _EFFECTSHANDLER_H
-#define _EFFECTSHANDLER_H
+#pragma include_only_once
 
 /******************************************************************************
  **
@@ -9,6 +8,8 @@
  **  $Id: effectshandler.h,v 1.9 1995/01/08 04:20:45 ceckhaus Exp $
  **
  ******************************************************************************/
+
+#include "extern_c.h"
 
 #include "types.h"
 #include "operror.h"
@@ -26,24 +27,22 @@
 #define EHERR( errNum, message )
 #endif
 
-#define ER_EH						MakeErrId( 'E', 'h' )
-#define MAKEEHERR( class, errNum )	MakeErr( ER_USER, ER_EH, ER_SEVERE, ER_E_USER, class, errNum )
+#define ER_EH MakeErrId( 'E', 'h' )
+#define MAKEEHERR( class, errNum ) MakeErr( ER_USER, ER_EH, ER_SEVERE, ER_E_USER, class, errNum )
 
 /* Standard errors */
-#define EHNOMEM_ERR				MAKEEHERR ( ER_C_STND, ER_NoMem )
+#define EHNOMEM_ERR MAKEEHERR ( ER_C_STND, ER_NoMem )
 
 /* Non-standard errors */
-#define EHNOINIT_ERR			MAKEEHERR ( ER_C_NSTND, 1 )
-#define EHALREADYINIT_ERR		MAKEEHERR ( ER_C_NSTND, 2 )
-#define EHARG_ERR				MAKEEHERR ( ER_C_NSTND, 3 )
-#define EHNOPLAYER_ERR			MAKEEHERR ( ER_C_NSTND, 4 )
-#define EHNUMOUTPUTS_ERR		MAKEEHERR ( ER_C_NSTND, 5 )
-
+#define EHNOINIT_ERR	  MAKEEHERR ( ER_C_NSTND, 1 )
+#define EHALREADYINIT_ERR MAKEEHERR ( ER_C_NSTND, 2 )
+#define EHARG_ERR	  MAKEEHERR ( ER_C_NSTND, 3 )
+#define EHNOPLAYER_ERR	  MAKEEHERR ( ER_C_NSTND, 4 )
+#define EHNUMOUTPUTS_ERR  MAKEEHERR ( ER_C_NSTND, 5 )
 
 /*** Effects-handling definitions ***/
-
-#define		kEqualBalance 0x4000
-#define		kMaxBalance   0x8000
+#define kEqualBalance 0x4000
+#define	kMaxBalance   0x8000
 
 typedef struct TMixerInfoTag
 {
@@ -67,6 +66,8 @@ typedef struct TSampleInfoTag
   Item		si_RightGainKnob;
 } TSampleInfo, *pTSampleInfo;
 
+EXTERN_C_BEGIN
+
 extern Err  ehNewMixerInfo( pTMixerInfo *pNewMixerInfo, int32 channelsUsed, const char *mixerName );
 extern void ehDisposeMixerInfo( pTMixerInfo pMixerInfo );
 
@@ -80,4 +81,4 @@ extern Err ehLoadSoundEffect( pTSampleInfo *pNewSampleInfo, pTMixerInfo pMixerIn
 
 extern void ehSetChannelLevels( pTMixerInfo pMixerInfo, Item leftKnob, Item rightKnob, int32 volume, int32 balance);
 
-#endif /* _EFFECTSHANDLER_H */
+EXTERN_C_END

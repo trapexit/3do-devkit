@@ -1,5 +1,6 @@
-#ifndef __PROTOSUBSCRIBER_H__
-#define __PROTOSUBSCRIBER_H__
+#pragma include_only_once
+
+#include "extern_c.h"
 
 #include "datastream.h"
 #include "subscriberutils.h"
@@ -22,19 +23,19 @@
  * the streamer so that the streamer will know what sort of data gets delivered
  * to our thread.
  */
-#define	PRTO_CHUNK_TYPE		CHAR4LITERAL('P','R','T','O')
+#define	PRTO_CHUNK_TYPE	CHAR4LITERAL('P','R','T','O')
 
 /* Header subchunk type.  Header chunks contain one time initalization and
  * configuration stuff for a given channel.
  */
-#define	PHDR_CHUNK_TYPE		CHAR4LITERAL('P','H','D','R')
+#define	PHDR_CHUNK_TYPE	CHAR4LITERAL('P','H','D','R')
 
 /* Data subchunk type. The actual data that will be consumed. */
-#define	PDAT_CHUNK_TYPE		CHAR4LITERAL('P','D','A','T')
+#define	PDAT_CHUNK_TYPE	CHAR4LITERAL('P','D','A','T')
 
 /* HALT subchunk type.  Used to halt data flow in the streamer until we
  * reply.  Useful for time consuming subscriber level initalization tasks. */
-#define	PHLT_CHUNK_TYPE		CHAR4LITERAL('P','H','L','T')
+#define	PHLT_CHUNK_TYPE	CHAR4LITERAL('P','H','L','T')
 
 /************************************************/
 /* Subscriber Header and Data chunk definitions */
@@ -42,19 +43,19 @@
 
 typedef	struct ProtoHeaderChunk {
   SUBS_CHUNK_COMMON;
-  long		version;					/*	version control for proto stream data */
+  long version;			/*	version control for proto stream data */
 } ProtoHeaderChunk, *ProtoHeaderChunkPtr;
 
 typedef struct ProtoDataChunk {
   SUBS_CHUNK_COMMON;
-  long		actualDataSize;				/* Number of actual data bytes in chunk,
-                                                           i.e. not including the chunk header */
-  char		data[4];					/* start of test data */
+  long actualDataSize;		/* Number of actual data bytes in chunk,
+                                   i.e. not including the chunk header */
+  char data[4];		        /* start of test data */
 } ProtoDataChunk, *ProtoDataChunkPtr;
 
 typedef struct ProtoHaltChunk {
-  SUBS_CHUNK_COMMON;						/* Just the subscriber part of the halt chunk */
-  long		haltDuration;				/* How long to wait before replying */
+  SUBS_CHUNK_COMMON;		/* Just the subscriber part of the halt chunk */
+  long haltDuration;		/* How long to wait before replying */
 } ProtoHaltChunk, *ProtoHaltChunkPtr;
 
 /**************************************/
@@ -82,39 +83,33 @@ typedef struct ProtoContext {
 /***********************************************/
 /* Opcode values as passed in control messages */
 /***********************************************/
-enum ProtoControlOpcode {
-                         kProtoCtlOpTest = 0
-};
+enum ProtoControlOpcode
+  {
+   kProtoCtlOpTest = 0
+  };
 
 /**************************************/
 /* A Control block 					  */
 /**************************************/
 typedef union ProtoCtlBlock {
-
-  struct {					/* kProtoCtlOpTest */
-    long	channelNumber;	/* Logical channel to send value to */
-    long	aValue;			/* test value */
+  struct {			/* kProtoCtlOpTest */
+    long channelNumber;         /* Logical channel to send value to */
+    long aValue;		/* test value */
   } test;
-
 } ProtoCtlBlock, *ProtoCtlBlockPtr;
 
 
 /*****************************/
 /* Public routine prototypes */
 /*****************************/
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-  long	InitProtoSubscriber( void );
-  long	CloseProtoSubscriber( void );
+EXTERN_C_BEGIN
 
-  long	NewProtoSubscriber( ProtoContextPtr *pCtx, DSStreamCBPtr streamCBPtr,
-                            long deltaPriority );
-  long	DisposeProtoSubscriber( ProtoContextPtr ctx );
+long InitProtoSubscriber(void);
+long CloseProtoSubscriber(void);
+long NewProtoSubscriber(ProtoContextPtr *pCtx,
+                        DSStreamCBPtr    streamCBPtr,
+                        long             deltaPriority);
+long DisposeProtoSubscriber(ProtoContextPtr ctx);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* __PROTOSUBSCRIBER_H__ */
+EXTERN_C_END

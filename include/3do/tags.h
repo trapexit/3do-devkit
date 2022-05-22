@@ -1,5 +1,4 @@
-#ifndef __TAGS_H
-#define __TAGS_H
+#pragma include_only_once
 
 /******************************************************************************
 **
@@ -12,26 +11,15 @@
 **
 ******************************************************************************/
 
+#include "extern_c.h"
 
 #include "types.h"
 
-#ifdef  __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
-
+EXTERN_C_BEGIN
 
 void     DumpTagList(const TagArg *tagList, const char *desc);
 TagArg  *FindTagArg(const TagArg *tagList, uint32 tag);
 TagData  GetTagArg(const TagArg *tagList, uint32 tag, TagData defaultValue);
 TagArg  *NextTagArg(const TagArg **tagList);
 
-
-#ifdef  __cplusplus
-}
-#endif  /* __cplusplus */
-
-
-/*****************************************************************************/
-
-
-#endif	/* __TAGS_H */
+EXTERN_C_END

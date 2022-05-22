@@ -1,5 +1,4 @@
-#ifndef __PROTOTRACECODES_H__
-#define __PROTOTRACECODES_H__
+#pragma include_only_once
 
 #include "types.h"
 
@@ -35,5 +34,3 @@ enum
    kHaltChunkArrived           = 1026,
    kRepliedToHaltChunk         = 1027
   };
-
-#endif	/* __PROTOTRACECODES_H__ */

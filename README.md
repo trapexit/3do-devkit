@@ -31,14 +31,17 @@ more homebrew on the 3DO.
 * MakeBanner v1.0b by Charles Doty
 * 3doiso v0.1 by nikk
 * 3DOEncrypt v0.6a by Charles Doty
+* BMPTo3DOCel v0.6a by Charles Doty
+* BMPTo3DOImage v1.0b by Charles Doty
+* BMPTo3DOAnim v0.6a by Charles Doty
 * modbin: [trapexit's recreation](https://github.com/trapexit/modbin) of the original SDK's tool by the same name
 * 3dt: [trapexit's 3DO Disc Tool](https://github.com/trapexit/3dt)
 
 
 ### Examples
 
-* 3DO Portfolio 2.5 Examples
-* CEL rotation and zoom demo
+* [3DO Portfolio 2.5 Examples](examples/3dosdk/Portfolio%202.5)
+* [CEL rotation and zoom demo](src/cel_rotation.cpp)
 
 
 ### Misc
@@ -70,7 +73,22 @@ We need project files for common Windows IDEs.
 Same as Linux
 
 
+## Media Conversion
+
+The most comprehensive tooling is only available from the original SDK. It can
+be used via QEMU base emulation. There are some older tools to convert BMP
+to 'image', 'cel', or banners. New tools are in the works.
+
+* http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
+* BMPTo3DOCel
+* BMPTo3DOImage
+* BMPTo3DOAnim
+* MakeBanner
+
+
 ## Notes
+
+### ARM C++ 1.11 compiler
 
 * ARM C++ 1.11 is a pre-standard compiler. From section 3.10 in the ref guide:
   * Exceptions are NOT supported
@@ -79,6 +97,24 @@ Same as Linux
   * C++ style casting is only partially supported
   * While technically mostly supported templates can be buggy and complex
     usage may crash the compiler
+
+
+### Memory Management
+
+ARM C++ 1.11 treats POD (plain old data) and objects differently so POD must be
+expressly handled/ignored when worrying about object destruction. There are no
+default destructors for objects either meaning it is not possible to simulate a
+'placement delete' to force destruction. obj->~OBJ() will not work unless
+expressly defined. As a result it is difficult to write generic template
+based data types. To work around this the STL like library provided removed
+memory freeing from 'delete' to force its use as a placement delete. Meaning
+that when wanting to free data from 'new' one should use `memory_delete(ptr)`.
+That said best to use or create higher level objects to manage such things.
+Simple versions of shared_ptr and unique_ptr are provided.
+
+There might be a better solution to this problem but after many attempts,
+including attempting to use the strategy by RogueWave which didn't seem
+to work, this was settled on till something better could be be done.
 
 
 ## TODO
@@ -111,7 +147,9 @@ this project.
 
 ## Links
 
-* 3do-devkit: https://github.com/trapexit/3do-devkit
 * 3DO Development Repo: https://3dodev.com
+* 3do-devkit: https://github.com/trapexit/3do-devkit
+* 3do-cpplib: https://github.com/trapexit/3do-cpplib
+* Portfolio OS: https://github.com/trapexit/portfolio_os
 * The 3DO Community Discord: https://discord.com/invite/kvM9cQG
 * OpenLara: https://github.com/XProger/OpenLara
