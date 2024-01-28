@@ -13,6 +13,8 @@
 
 #include "extern_c.h"
 
+#include "types.h"
+
 EXTERN_C_BEGIN
 
 #define FILEFOLIOSWI 0x00030000

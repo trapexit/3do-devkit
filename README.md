@@ -28,14 +28,20 @@ more homebrew on the 3DO.
 
 ### Tooling
 
-* MakeBanner v1.0b by Charles Doty
+* 3it: [trapexit's 3DO Image Tool](https://github.com/trapexit/3it/releases)
+* 3dt: [trapexit's 3DO Disc Tool](https://github.com/trapexit/3dt/releases)
+* 3ct: [trapexit's 3DO Compression Tool](https://github.com/trapexit/3ct/releases)
+* modbin: [trapexit's recreation](https://github.com/trapexit/modbin/releases)
+  of the original SDK's tool by the same name
 * 3doiso v0.1 by nikk
 * 3DOEncrypt v0.6a by Charles Doty
+* MakeBanner v1.0b by Charles Doty
 * BMPTo3DOCel v0.6a by Charles Doty
 * BMPTo3DOImage v1.0b by Charles Doty
 * BMPTo3DOAnim v0.6a by Charles Doty
-* modbin: [trapexit's recreation](https://github.com/trapexit/modbin) of the original SDK's tool by the same name
-* 3dt: [trapexit's 3DO Disc Tool](https://github.com/trapexit/3dt)
+
+trapexit's tooling may not always be fully up to date in this repo so
+double check by visiting the links provided above.
 
 
 ### Examples
@@ -46,18 +52,24 @@ more homebrew on the 3DO.
 
 ### Misc
 
-* 3DO "takeme" CDROM base files from Portfolio 2.5 w/ a swapped out boot_code from Game Guru
+* 3DO "takeme" CDROM base files from Portfolio 2.5 w/ a swapped out
+  boot_code from Game Guru
+
 
 
 ## Usage
 
 ### Linux
 
-Make sure you have WINE installed. Some tools are currently only available on Windows.
+Make sure you have WINE installed. Some tools are currently only
+available on Windows.
+
 
 #### makefile
 
-1. Get dev kit: `git clone https://github.com/trapexit/3do-devkit`
+1. Get dev kit: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
+  * or download: `https://github.com/trapexit/3do-devkit/zipball/master`
+  * `wget -O 3do-devkit.zip https://github.com/trapexit/3do-devkit/zipball/master`
 1. Enter the directory: `cd 3do-devkit`
 1. Source the environment: `source activate-env`
 1. Run make: `make`
@@ -67,6 +79,7 @@ Make sure you have WINE installed. Some tools are currently only available on Wi
 ### Windows
 
 We need project files for common Windows IDEs.
+
 
 #### WSL2
 
@@ -153,3 +166,11 @@ this project.
 * Portfolio OS: https://github.com/trapexit/portfolio_os
 * The 3DO Community Discord: https://discord.com/invite/kvM9cQG
 * OpenLara: https://github.com/XProger/OpenLara
+
+
+## Donations / Sponsorship
+
+If you find 3do-devkit useful please consider supporting its ongoing
+development.
+
+https://github.com/trapexit/support
