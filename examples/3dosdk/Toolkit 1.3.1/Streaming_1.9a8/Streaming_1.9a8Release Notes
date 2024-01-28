@@ -1,1 +1,223 @@
-============================================================================== 					 Streaming 1.9 Release Notes					====== 						 March 15, 1994	     						======================================================================================================	Release 1.9a8 ========================¥	A minor change to the Cinepak Subscriber was made to enable centering    of a movie stream within a PAL-sized framebuffer.  In fact, it will now	center within ANY sized framebuffer that is handed to it.  Since there are	now three sizes available (320x240, 320x288, and 384x288) we have to be	a little more flexible.	¥	Changed the link order of files to make it a little more kosher.  Occasionally,	errors would be generated in the example apps ue to ordering problems and	dependencies.	¥	Changed the example code makefiles to reflect the new home of codec.lib,	in the {3DOLibraries} folder.¥	Added a new program, PALTestDS, which is functionally the same as TestDS,	but uses a PAL-sized screen (384x288) instead of an NTSC one like TestDS.	======================== Release 1.9a6 ========================This release introduces the ability to branch within streams based uponstream time, or marker position. Every effort has been made to remove memory leaks.=============================== Example code changes ===============================¥	All example code has been moved into a folder called 'Examples' in	the main data stream folder. A build script, BuildDSExamples, has	been added to build all example programs in the Examples folder.¥	A new Cinepak player example, NuPlayer, illustrates the use of the	user interface callback procedure and the time based positioning	feature new in this release. NuPlayer replaces TestPlayCPAK.¥	A new Join subscriber example illustrates the use of the Join	subscriber by implementing a simple slide show with audio. MPW scripts	to build the slide show data are included which show how to automate	the data building process.=========================== Streamer changes ===========================¥	A check for zero or negative chunk sizes was added to the streamer's	DeliverData() routine which should prevent unexpected results	when attempting to stream poorly formed stream data.¥	All data stream error codes are now explicitly coded in the include	file "DataStream.h" to facilitate easier diagnosis of errors.	In addition, an MPW tool has been added to the release which will	output the error text for any data stream error (see below).¥	A symbol, SOPT_NOFLUSH, was added to DataStream.h for use with the	DSStartStream() and DSStopStream() routines' option value to specify	that no data flushing should take place. Previously, this was 	specified with a literal value "0". The symbol was added for better	readability of user code.¥	A problem with flushing normally done as a result of branching	has been fixed. Time based branching required that the actual	destination stream time be "remembered" in the stream control	block. Conditional flushing done by CTRL/SYNC chunks now works 	properly.=================================== Data Acquisition changes ===================================¥	DataAcq.c now supports time based branching. A number of new 'options'	values for use with DSGoMarker() have been added. These are:	Option				Meaning of DSGoMarker() value	------				-----------------------------	GOMARKER_ABSOLUTE	absolute marker FILE POSITION	GOMARKER_FORWARD	count of markers to skip forward	GOMARKER_BACKWARD	count of markers to skip backward	GOMARKER_ABS_TIME	absolute stream time of destination	GOMARKER_FORW_TIME	stream time by which to advance	GOMARKER_BACK_TIME	stream time by which to regress		Added, but not yet supported, is a symbol for an option to specify	branching to named locations in a stream: GOMARKER_NAMED.	A time-to-position mapping table can now be output into streams	by the Weaver tool. This mapping table is a standard data chunk that	DataAcq.c actually subscribes to. Multiple tables may appear in a 	stream, each one dynamically replacing its predecessor as it arrives.	This could easily be used to implement a satellite directory system.	The Weaver, however, currently only supports writing one such mapping	table at the beginning of a stream.============================= Subscriber changes =============================¥	"CloseXXX" routines were added for each subscriber which balance the	allocation of resources done by their one-time "InitXXX" routines. This 	addition was required to remove known remaining memory leaks. 	NOTE: You must call these routines after all other destroy/dispose	routines have been used to shut down subscribers, data acquisition,	and the streamer, if you wish to reclaim all memory. See the code	in DismantlePlayer() in the file "PlayCPakStream.c" in the folder	"NuPlayer_1.1". If you use subscribers other than those used in the	high level Cinepak player, you must call their "Close" routines	as well. Missing from this example are examples of calling the	"Close" routines for the SAnimSubscriber and JoinSubscriber.¥	The Join subscriber, which apparently never worked as released, has	been fixed, and an example program was developed to illustrate its use.	See the "SlideStream_1.0" folder, which implements a stream based	slide show with audio.¥	A bug in the SAudioSubscriber was fixed which could result in incorrect	handling of subscriber requests when several requests were delivered	to the subscriber in rapid succession, or back to back, such as might	occur when rapidly starting and stopping a stream.============================== Stream Tool Changes ==============================¥	Weaver_2.1	The Weaver has been updated to write out a time-to-position mapping	chunk at the beginning of a stream if the "writemarkertable"	directive appears in a weave script. Mapping information is written	into the first stream block and must fit entirely into this block.	Subsequent user data is written into the stream starting with the	second stream block. This was done to avoid causing poor user data	alignment by having inserted, perhaps, a fairly sizable data chunk	in front of user data. This provides the user more control over	how his/her data will be layed out into the stream.		A new command "numsubsmessages" has been added to allow the 	specification of the number of subscriber messages that should be	allocated for stream playback to match the new argument added to	NewDataStream(). This value was previously changeable only by	modifying a #define in DataStream.h. The value determines the maximum	number of outstanding, delivered, data chunks that may exist. The	smaller your data chunks, and the larger the total buffer space	(number of buffers times buffer size), the more messages must be	allocated. For example, if you used 10 stream buffers, each of	which was 32K bytes (320K bytes total) and your average data chunk	size was 2048 bytes, you would need approximately 160 subscriber 	messages (a few extra are needed for communications between the 	streamer and subscribers). If your chunks sizes are larger, then	fewer would be needed. If an insufficient number are specified,	the streamer may run out and stream playback will be aborted. Its	best to have a few too many than not enough.		Example use:						numsubsmessages		200	Lastly, the parser has been modified to allow key words to be 	specified in upper, lower, or mixed case. So, for example, the above	example could be written equivalently as:						numsubsmessages		200						NUMSUBSMESSAGES		200						NumSubsMessages		200¥	MovieToStream_1.6	A bug which caused the truncation of stream time for longer movies	has been fixed. Also, a "-v" verbose option was added to the tool 	which defaults to FALSE. Excessive output from the tool is now	suppressed.		A new feature has been added to facilitate the automatic generation	of stream markers to coincide with Cinepak key frames. Using the new	"-m" command line flag, you specify the number of seconds between	which you wish markers to be generated. For example, if you wanted	markers generated every second, you would use "-m 1". If the "-m"	flag is specified, the tool will generate an additional output file	whose name is the same as that of the movie input file, but with	a suffix of ".KEY". This file will contain "markertime" commands	that can be used as input to the Weaver tool by appending them to	an appropriate Weaver script that includes the related movie chunk	data.	Regarding the marker generation, markers are generated with the	periodic rate specified, but only at stream times that correspond to	Cinepak key frames. This guarantees that branching within the stream	will be contrained to branching to key frames, which is necessary 	to prevent undesireable image residue that would result from branching	directly to a "difference frame".¥	GetDSErrorText_1.1	A new MPW tool has been added to the release which will output the 	error text for any data stream error given an error code. The usage	for this new MPW tool is:				GetDSErrorText  <data stream error number>	Error numbers are accepted in decimal or hex. Hexadecimal error	codes should be preceded with a "0x" prefix to denote hex input.	The error mnemonic, a short descriptive message, and the error code	converted to both decimal and hex are written to standard output.¥	AnimToSanim_1.0	A new MPW tool has been added to convert the output of 3DO Animator	to SAnimSubscriber compatible animation streams.
+===========================================================================
+=== 					 Streaming 1.9 Release Notes					===
+=== 						 March 15, 1994	     						===
+===========================================================================
+
+=====================
+===	Release 1.9a8 ===
+=====================
+
+¥	A minor change to the Cinepak Subscriber was made to enable centering
+    of a movie stream within a PAL-sized framebuffer.  In fact, it will now
+	center within ANY sized framebuffer that is handed to it.  Since there are
+	now three sizes available (320x240, 320x288, and 384x288) we have to be
+	a little more flexible.
+	
+¥	Changed the link order of files to make it a little more kosher.  Occasionally,
+	errors would be generated in the example apps ue to ordering problems and
+	dependencies.
+	
+¥	Changed the example code makefiles to reflect the new home of codec.lib,
+	in the {3DOLibraries} folder.
+
+¥	Added a new program, PALTestDS, which is functionally the same as TestDS,
+	but uses a PAL-sized screen (384x288) instead of an NTSC one like TestDS.
+	
+=====================
+=== Release 1.9a6 ===
+=====================
+
+This release introduces the ability to branch within streams based upon
+stream time, or marker position. 
+
+Every effort has been made to remove memory leaks.
+
+
+============================
+=== Example code changes ===
+============================
+
+¥	All example code has been moved into a folder called 'Examples' in
+	the main data stream folder. A build script, BuildDSExamples, has
+	been added to build all example programs in the Examples folder.
+
+¥	A new Cinepak player example, NuPlayer, illustrates the use of the
+	user interface callback procedure and the time based positioning
+	feature new in this release. NuPlayer replaces TestPlayCPAK.
+
+¥	A new Join subscriber example illustrates the use of the Join
+	subscriber by implementing a simple slide show with audio. MPW scripts
+	to build the slide show data are included which show how to automate
+	the data building process.
+
+
+========================
+=== Streamer changes ===
+========================
+
+¥	A check for zero or negative chunk sizes was added to the streamer's
+	DeliverData() routine which should prevent unexpected results
+	when attempting to stream poorly formed stream data.
+
+¥	All data stream error codes are now explicitly coded in the include
+	file "DataStream.h" to facilitate easier diagnosis of errors.
+	In addition, an MPW tool has been added to the release which will
+	output the error text for any data stream error (see below).
+
+¥	A symbol, SOPT_NOFLUSH, was added to DataStream.h for use with the
+	DSStartStream() and DSStopStream() routines' option value to specify
+	that no data flushing should take place. Previously, this was 
+	specified with a literal value "0". The symbol was added for better
+	readability of user code.
+
+¥	A problem with flushing normally done as a result of branching
+	has been fixed. Time based branching required that the actual
+	destination stream time be "remembered" in the stream control
+	block. Conditional flushing done by CTRL/SYNC chunks now works 
+	properly.
+
+================================
+=== Data Acquisition changes ===
+================================
+
+¥	DataAcq.c now supports time based branching. A number of new 'options'
+	values for use with DSGoMarker() have been added. These are:
+
+	Option				Meaning of DSGoMarker() value
+	------				-----------------------------
+	GOMARKER_ABSOLUTE	absolute marker FILE POSITION
+	GOMARKER_FORWARD	count of markers to skip forward
+	GOMARKER_BACKWARD	count of markers to skip backward
+	GOMARKER_ABS_TIME	absolute stream time of destination
+	GOMARKER_FORW_TIME	stream time by which to advance
+	GOMARKER_BACK_TIME	stream time by which to regress
+	
+	Added, but not yet supported, is a symbol for an option to specify
+	branching to named locations in a stream: GOMARKER_NAMED.
+
+	A time-to-position mapping table can now be output into streams
+	by the Weaver tool. This mapping table is a standard data chunk that
+	DataAcq.c actually subscribes to. Multiple tables may appear in a 
+	stream, each one dynamically replacing its predecessor as it arrives.
+	This could easily be used to implement a satellite directory system.
+	The Weaver, however, currently only supports writing one such mapping
+	table at the beginning of a stream.
+
+
+==========================
+=== Subscriber changes ===
+==========================
+
+¥	"CloseXXX" routines were added for each subscriber which balance the
+	allocation of resources done by their one-time "InitXXX" routines. This 
+	addition was required to remove known remaining memory leaks. 
+	NOTE: You must call these routines after all other destroy/dispose
+	routines have been used to shut down subscribers, data acquisition,
+	and the streamer, if you wish to reclaim all memory. See the code
+	in DismantlePlayer() in the file "PlayCPakStream.c" in the folder
+	"NuPlayer_1.1". If you use subscribers other than those used in the
+	high level Cinepak player, you must call their "Close" routines
+	as well. Missing from this example are examples of calling the
+	"Close" routines for the SAnimSubscriber and JoinSubscriber.
+
+¥	The Join subscriber, which apparently never worked as released, has
+	been fixed, and an example program was developed to illustrate its use.
+	See the "SlideStream_1.0" folder, which implements a stream based
+	slide show with audio.
+
+¥	A bug in the SAudioSubscriber was fixed which could result in incorrect
+	handling of subscriber requests when several requests were delivered
+	to the subscriber in rapid succession, or back to back, such as might
+	occur when rapidly starting and stopping a stream.
+
+===========================
+=== Stream Tool Changes ===
+===========================
+
+¥	Weaver_2.1
+
+	The Weaver has been updated to write out a time-to-position mapping
+	chunk at the beginning of a stream if the "writemarkertable"
+	directive appears in a weave script. Mapping information is written
+	into the first stream block and must fit entirely into this block.
+	Subsequent user data is written into the stream starting with the
+	second stream block. This was done to avoid causing poor user data
+	alignment by having inserted, perhaps, a fairly sizable data chunk
+	in front of user data. This provides the user more control over
+	how his/her data will be layed out into the stream.
+	
+	A new command "numsubsmessages" has been added to allow the 
+	specification of the number of subscriber messages that should be
+	allocated for stream playback to match the new argument added to
+	NewDataStream(). This value was previously changeable only by
+	modifying a #define in DataStream.h. The value determines the maximum
+	number of outstanding, delivered, data chunks that may exist. The
+	smaller your data chunks, and the larger the total buffer space
+	(number of buffers times buffer size), the more messages must be
+	allocated. For example, if you used 10 stream buffers, each of
+	which was 32K bytes (320K bytes total) and your average data chunk
+	size was 2048 bytes, you would need approximately 160 subscriber 
+	messages (a few extra are needed for communications between the 
+	streamer and subscribers). If your chunks sizes are larger, then
+	fewer would be needed. If an insufficient number are specified,
+	the streamer may run out and stream playback will be aborted. Its
+	best to have a few too many than not enough.
+	
+	Example use:
+
+						numsubsmessages		200
+
+	Lastly, the parser has been modified to allow key words to be 
+	specified in upper, lower, or mixed case. So, for example, the above
+	example could be written equivalently as:
+
+						numsubsmessages		200
+						NUMSUBSMESSAGES		200
+						NumSubsMessages		200
+
+
+¥	MovieToStream_1.6
+
+	A bug which caused the truncation of stream time for longer movies
+	has been fixed. Also, a "-v" verbose option was added to the tool 
+	which defaults to FALSE. Excessive output from the tool is now
+	suppressed.
+	
+	A new feature has been added to facilitate the automatic generation
+	of stream markers to coincide with Cinepak key frames. Using the new
+	"-m" command line flag, you specify the number of seconds between
+	which you wish markers to be generated. For example, if you wanted
+	markers generated every second, you would use "-m 1". If the "-m"
+	flag is specified, the tool will generate an additional output file
+	whose name is the same as that of the movie input file, but with
+	a suffix of ".KEY". This file will contain "markertime" commands
+	that can be used as input to the Weaver tool by appending them to
+	an appropriate Weaver script that includes the related movie chunk
+	data.
+
+	Regarding the marker generation, markers are generated with the
+	periodic rate specified, but only at stream times that correspond to
+	Cinepak key frames. This guarantees that branching within the stream
+	will be contrained to branching to key frames, which is necessary 
+	to prevent undesireable image residue that would result from branching
+	directly to a "difference frame".
+
+
+¥	GetDSErrorText_1.1
+
+	A new MPW tool has been added to the release which will output the 
+	error text for any data stream error given an error code. The usage
+	for this new MPW tool is:
+	
+			GetDSErrorText  <data stream error number>
+
+	Error numbers are accepted in decimal or hex. Hexadecimal error
+	codes should be preceded with a "0x" prefix to denote hex input.
+	The error mnemonic, a short descriptive message, and the error code
+	converted to both decimal and hex are written to standard output.
+
+
+¥	AnimToSanim_1.0
+
+	A new MPW tool has been added to convert the output of 3DO Animator
+	to SAnimSubscriber compatible animation streams.

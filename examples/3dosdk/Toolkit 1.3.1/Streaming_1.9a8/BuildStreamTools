@@ -1,1 +1,90 @@
-###########################################################################   File:       BuildStreamTools##	Contains:	Script to build all of the data stream tools:##	Usage:		BuildStreamTools { clean | "" } { root folder | "" }##					"clean"		deletes all object files before#								building everything##	Copyright © 1992 The 3DO Company## 	All rights reserved. This material constitutes confidential and proprietary #	information of the 3DO Company and shall not be used by any Person or for any #	purpose except as expressly authorized in writing by the 3DO Company.##	History:#	8/5/93		jb		New today.############################################################################	Determine the tools root folder name. May be specified as#	arg 2 on the command line, or will be prompted for if omitted.#	If "{2}" == ""		Directory `getfilename -d -m "Select StreamTools:Source directory"`	Else		Directory "{2}"	End		##	Delete all object files for a "clean" build completely from source#	If "{1}" == "clean"		Begin			# Save state of {Exit}			Set saveExit {Exit}			Set Exit 0			# Delete object files in each directory, except for the 			# SANMMaker directory because this is a THINK C application.			For toolDir in `Files -d`				If "{toolDir}" !~ /ÅSANMMakerÅ/					Delete -i "{toolDir}"Å.o				End			End					# Restore the state of {Exit}			Set Exit {saveExit}			End ·· Dev:Null	End##	Build the tool found in each of the tool folders#	For ToolDir in `Files -d`		If "{ToolDir}" !~ /ÅSANMMakerÅ/			# Get the tool name with version number			(Evaluate "{ToolDir}" =~ /Å:(Å)¨1:/ ) ·· Dev:Null			Set ToolName "{¨1}"			# Get the tool name without version number			(Evaluate "{ToolDir}" =~ /Å:(Å)¨1_Å:/ ) ·· Dev:Null			Set ToolRootName "{¨1}"			# Build the tool			Echo "Building {ToolName} ..."			Directory "{ToolDir}"			Make -f {ToolRootName}.make {ToolRootName} > {ToolRootName}.makeout			{ToolRootName}.makeout			Delete -i {ToolRootName}.makeout			Move -y {ToolRootName} :::			Directory ::		End	End##	Say we're finished#	Echo	Echo "...BuildStreamTools finished."	Beep
+##########################################################################
+#   File:       BuildStreamTools
+#
+#	Contains:	Script to build all of the data stream tools:
+#
+#	Usage:		BuildStreamTools { clean | "" } { root folder | "" }
+#
+#					"clean"		deletes all object files before
+#								building everything
+#
+#	Copyright © 1992 The 3DO Company
+#
+# 	All rights reserved. This material constitutes confidential and proprietary 
+#	information of the 3DO Company and shall not be used by any Person or for any 
+#	purpose except as expressly authorized in writing by the 3DO Company.
+#
+#	History:
+#	8/5/93		jb		New today.
+##########################################################################
+
+#
+#	Determine the tools root folder name. May be specified as
+#	arg 2 on the command line, or will be prompted for if omitted.
+#
+	If "{2}" == ""
+		Directory `getfilename -d -m "Select StreamTools:Source directory"`
+	Else
+		Directory "{2}"
+	End
+		
+#
+#	Delete all object files for a "clean" build completely from source
+#
+	If "{1}" == "clean"
+		Begin
+			# Save state of {Exit}
+			Set saveExit {Exit}
+			Set Exit 0
+
+			# Delete object files in each directory, except for the 
+			# SANMMaker directory because this is a THINK C application.
+
+			For toolDir in `Files -d`
+				If "{toolDir}" !~ /ÅSANMMakerÅ/
+					Delete -i "{toolDir}"Å.o
+				End
+			End
+		
+			# Restore the state of {Exit}
+			Set Exit {saveExit}
+	
+		End ·· Dev:Null
+	End
+
+#
+#	Build the tool found in each of the tool folders
+#
+
+	For ToolDir in `Files -d`
+		If "{ToolDir}" !~ /ÅSANMMakerÅ/
+
+			# Get the tool name with version number
+
+			(Evaluate "{ToolDir}" =~ /Å:(Å)¨1:/ ) ·· Dev:Null
+			Set ToolName "{¨1}"
+
+			# Get the tool name without version number
+
+			(Evaluate "{ToolDir}" =~ /Å:(Å)¨1_Å:/ ) ·· Dev:Null
+			Set ToolRootName "{¨1}"
+
+			# Build the tool
+
+			Echo "Building {ToolName} ..."
+			Directory "{ToolDir}"
+			Make -f {ToolRootName}.make {ToolRootName} > {ToolRootName}.makeout
+			{ToolRootName}.makeout
+			Delete -i {ToolRootName}.makeout
+			Move -y {ToolRootName} :::
+			Directory ::
+		End
+	End
+
+
+#
+#	Say we're finished
+#
+	Echo
+	Echo "...BuildStreamTools finished."
+	Beep

@@ -1,1 +1,12 @@
-Set Echo 1armcc -g -fa -zps0 -za1 -i "{3DOIncludes}" -d DEBUG=1 -o :Objects:JSPlayBgndMusic.c.o JSPlayBgndMusic.carmlink	-d -aif -r -b 0x00					¶		-o JSPlayBgndMusic				¶		"{3DOLibs}cstartup.o"		¶		":Objects:JSPlayBgndMusic.c.o"					¶		"{3DOLibs}music.lib" "{3DOLibs}operamath.lib" "{3DOLibs}filesystem.lib" "{3DOLibs}audio.lib" "{3DOLibs}clib.lib" "{3DOLibs}swi.lib"SetFile JSPlayBgndMusic -c 'EaDJ' -t 'PROJ'modbin JSPlayBgndMusic -stack 4000 -debugstripaif "JSPlayBgndMusic" -o "JSPlayBgndMusic"Duplicate JSPlayBgndMusic "{3DORemote}"JSData:Sound:JSPlayBgndMusic.task {3DOAutodup}Duplicate JSPlayBgndMusic.sym "{3DORemote}"JSData:Sound: {3DOAutodup}
+Set Echo 1
+armcc -g -fa -zps0 -za1 -i "{3DOIncludes}" -d DEBUG=1 -o :Objects:JSPlayBgndMusic.c.o JSPlayBgndMusic.c
+armlink	-d -aif -r -b 0x00					¶
+		-o JSPlayBgndMusic				¶
+		"{3DOLibs}cstartup.o"		¶
+		":Objects:JSPlayBgndMusic.c.o"					¶
+		"{3DOLibs}music.lib" "{3DOLibs}operamath.lib" "{3DOLibs}filesystem.lib" "{3DOLibs}audio.lib" "{3DOLibs}clib.lib" "{3DOLibs}swi.lib"
+SetFile JSPlayBgndMusic -c 'EaDJ' -t 'PROJ'
+modbin JSPlayBgndMusic -stack 4000 -debug
+stripaif "JSPlayBgndMusic" -o "JSPlayBgndMusic"
+Duplicate JSPlayBgndMusic "{3DORemote}"JSData:Sound:JSPlayBgndMusic.task {3DOAutodup}
+Duplicate JSPlayBgndMusic.sym "{3DORemote}"JSData:Sound: {3DOAutodup}

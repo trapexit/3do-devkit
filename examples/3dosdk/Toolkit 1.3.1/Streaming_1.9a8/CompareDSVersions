@@ -1,1 +1,167 @@
-###########################################################################   File:       CompareDSVersions##	Contains:	Script to compare two versions of Data Streaming sources##	Usage:		CompareDSVersions {folder1} {folder2}##	Copyright © 1992 The 3DO Company##	History:#	12/2/93		jb		New today.############################################################################	Determine the root folder names. #	If "{1}" == ""		Set DSRoot1 "`getfilename -q -d -m "Select 1st DS dir"`"	Else		Set DSRoot1 "{1}"	End	If "{2}" == ""		Set DSRoot2 "`getfilename -q -d -m "Select 2nd DS dir"`"	Else		Set DSRoot2 "{2}"	End	Set SaveExit {Exit}	Set Exit 0	Set FilesDifferent 0#	Set MonitorXY	"-b 1000 760"		# for 19 inch monitor	Set MonitorXY	"-16"	Echo "# Comparing DS versions from:"	Echo "# Folder 1: {DSRoot1}"	Echo "# Folder 2: {DSRoot2}"##	Compare data stream, data acquisition, and library files#	Echo "#	Comparing DataStream"	Set DSFolder1	"{DSRoot1}DataStream:"	Set DSFolder2	"{DSRoot2}DataStream:"	For file in `Files -t TEXT "{DSFolder1}"`		If `Exists "{DSFolder2}{file}"` != ""			Equal -d -q "{DSFolder1}{file}" "{DSFolder2}{file}" 			If {Status} != 0 				Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{file}¶" ¶"{DSFolder2}{file}¶" 				Set FilesDifferent `Evaluate {FilesDifferent}+1`			End		Else			Echo "{DSFolder2}{file} not found in {DSFolder1}"			Set FilesDifferent `Evaluate {FilesDifferent}+1`		End	End##	Compare subscribers#	Echo "#	Comparing Subscribers"	Set DSFolder1	"{DSRoot1}DataStream:Subscribers:"	Set DSFolder2	"{DSRoot2}DataStream:Subscribers:"	For file in `Files -t TEXT "{DSFolder1}"`		If `Exists "{DSFolder2}{file}"` != ""			Equal -d -q "{DSFolder1}{file}" "{DSFolder2}{file}" 			If {Status} != 0 				Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{file}¶" ¶"{DSFolder2}{file}¶" 				Set FilesDifferent `Evaluate {FilesDifferent}+1`			End		Else			Echo "{DSFolder2}{file} not found in {DSFolder1}"			Set FilesDifferent `Evaluate {FilesDifferent}+1`		End	End##	Compare SAudio specific subscriber files#	Echo "#	Comparing SAudioSubscriber"	Set DSFolder1	"{DSRoot1}DataStream:Subscribers:SAudioSubscriber:"	Set DSFolder2	"{DSRoot2}DataStream:Subscribers:SAudioSubscriber:"	For file in `Files -t TEXT "{DSFolder1}"`		If `Exists "{DSFolder2}{file}"` != ""			Equal -d -q "{DSFolder1}{file}" "{DSFolder2}{file}" 			If {Status} != 0 				Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{file}¶" ¶"{DSFolder2}{file}¶" 				Set FilesDifferent `Evaluate {FilesDifferent}+1`			End		Else			Echo "{DSFolder2}{file} not found in {DSFolder1}"			Set FilesDifferent `Evaluate {FilesDifferent}+1`		End	End##	Compare stream tool files#	Echo "#	Comparing StreamTools"	Set DSFolder1	"{DSRoot1}StreamTools:Source"	Set DSFolder2	"{DSRoot2}StreamTools:Source"	For ToolDir in `Files -d "{DSFolder1}"`		Echo "#		{ToolDir}"		For file in `Files -t TEXT "{DSFolder1}{ToolDir}"`			If `Exists "{DSFolder2}{ToolDir}{file}"` != ""			   Equal -d -q "{DSFolder1}{ToolDir}{file}" "{DSFolder2}{ToolDir}{file}" 				If {Status} != 0 					Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{ToolDir}{file}¶" ¶"{DSFolder2}{ToolDir}{file}¶" 					Set FilesDifferent `Evaluate {FilesDifferent}+1`				End			Else				Echo "{DSFolder2}{ToolDir}{file} not found in {DSFolder1}{ToolDir}"				Set FilesDifferent `Evaluate {FilesDifferent}+1`			End		End	End##	Compare Examples files#	Echo "#	Comparing Examples"	Set DSFolder1	"{DSRoot1}Examples"	Set DSFolder2	"{DSRoot2}Examples"	For ToolDir in `Files -d "{DSFolder1}"`		Echo "#		{ToolDir}"		For file in `Files -t TEXT "{DSFolder1}{ToolDir}"`			If `Exists "{DSFolder2}{ToolDir}{file}"` != ""			   Equal -d -q "{DSFolder1}{ToolDir}{file}" "{DSFolder2}{ToolDir}{file}" 				If {Status} != 0 					Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{ToolDir}{file}¶" ¶"{DSFolder2}{ToolDir}{file}¶" 					Set FilesDifferent `Evaluate {FilesDifferent}+1`				End			Else				Echo "{DSFolder2}{ToolDir}{file} not found in {DSFolder1}{ToolDir}"				Set FilesDifferent `Evaluate {FilesDifferent}+1`			End		End	End##	Restore and undefine shell variables#	If {FilesDifferent} == 0		Echo "#	No differences found!"	Else If {FilesDifferent} == 1		Echo "#	1 file was different"	Else		Echo "#	{FilesDifferent} files were different"	End	Set Exit {SaveExit}	Unset DSFolder1 DSFolder2 DSRoot1 DSRoot2 FilesDifferent	Beep
+##########################################################################
+#   File:       CompareDSVersions
+#
+#	Contains:	Script to compare two versions of Data Streaming sources
+#
+#	Usage:		CompareDSVersions {folder1} {folder2}
+#
+#	Copyright © 1992 The 3DO Company
+#
+#	History:
+#	12/2/93		jb		New today.
+##########################################################################
+
+#
+#	Determine the root folder names. 
+#
+	If "{1}" == ""
+		Set DSRoot1 "`getfilename -q -d -m "Select 1st DS dir"`"
+	Else
+		Set DSRoot1 "{1}"
+	End
+
+	If "{2}" == ""
+		Set DSRoot2 "`getfilename -q -d -m "Select 2nd DS dir"`"
+	Else
+		Set DSRoot2 "{2}"
+	End
+
+	Set SaveExit {Exit}
+	Set Exit 0
+
+	Set FilesDifferent 0
+#	Set MonitorXY	"-b 1000 760"		# for 19 inch monitor
+	Set MonitorXY	"-16"
+
+	Echo "# Comparing DS versions from:"
+	Echo "# Folder 1: {DSRoot1}"
+	Echo "# Folder 2: {DSRoot2}"
+
+#
+#	Compare data stream, data acquisition, and library files
+#
+	Echo "#	Comparing DataStream"
+
+	Set DSFolder1	"{DSRoot1}DataStream:"
+	Set DSFolder2	"{DSRoot2}DataStream:"
+
+	For file in `Files -t TEXT "{DSFolder1}"`
+		If `Exists "{DSFolder2}{file}"` != ""
+			Equal -d -q "{DSFolder1}{file}" "{DSFolder2}{file}" 
+			If {Status} != 0 
+				Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{file}¶" ¶"{DSFolder2}{file}¶" 
+				Set FilesDifferent `Evaluate {FilesDifferent}+1`
+			End
+		Else
+			Echo "{DSFolder2}{file} not found in {DSFolder1}"
+			Set FilesDifferent `Evaluate {FilesDifferent}+1`
+		End
+	End
+
+#
+#	Compare subscribers
+#
+	Echo "#	Comparing Subscribers"
+
+	Set DSFolder1	"{DSRoot1}DataStream:Subscribers:"
+	Set DSFolder2	"{DSRoot2}DataStream:Subscribers:"
+
+	For file in `Files -t TEXT "{DSFolder1}"`
+		If `Exists "{DSFolder2}{file}"` != ""
+			Equal -d -q "{DSFolder1}{file}" "{DSFolder2}{file}" 
+			If {Status} != 0 
+				Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{file}¶" ¶"{DSFolder2}{file}¶" 
+				Set FilesDifferent `Evaluate {FilesDifferent}+1`
+			End
+		Else
+			Echo "{DSFolder2}{file} not found in {DSFolder1}"
+			Set FilesDifferent `Evaluate {FilesDifferent}+1`
+		End
+	End
+
+#
+#	Compare SAudio specific subscriber files
+#
+	Echo "#	Comparing SAudioSubscriber"
+
+	Set DSFolder1	"{DSRoot1}DataStream:Subscribers:SAudioSubscriber:"
+	Set DSFolder2	"{DSRoot2}DataStream:Subscribers:SAudioSubscriber:"
+
+	For file in `Files -t TEXT "{DSFolder1}"`
+		If `Exists "{DSFolder2}{file}"` != ""
+			Equal -d -q "{DSFolder1}{file}" "{DSFolder2}{file}" 
+			If {Status} != 0 
+				Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{file}¶" ¶"{DSFolder2}{file}¶" 
+				Set FilesDifferent `Evaluate {FilesDifferent}+1`
+			End
+		Else
+			Echo "{DSFolder2}{file} not found in {DSFolder1}"
+			Set FilesDifferent `Evaluate {FilesDifferent}+1`
+		End
+	End
+
+
+#
+#	Compare stream tool files
+#
+	Echo "#	Comparing StreamTools"
+
+	Set DSFolder1	"{DSRoot1}StreamTools:Source"
+	Set DSFolder2	"{DSRoot2}StreamTools:Source"
+
+	For ToolDir in `Files -d "{DSFolder1}"`
+		Echo "#		{ToolDir}"
+		For file in `Files -t TEXT "{DSFolder1}{ToolDir}"`
+			If `Exists "{DSFolder2}{ToolDir}{file}"` != ""
+			   Equal -d -q "{DSFolder1}{ToolDir}{file}" "{DSFolder2}{ToolDir}{file}" 
+				If {Status} != 0 
+					Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{ToolDir}{file}¶" ¶"{DSFolder2}{ToolDir}{file}¶" 
+					Set FilesDifferent `Evaluate {FilesDifferent}+1`
+				End
+			Else
+				Echo "{DSFolder2}{ToolDir}{file} not found in {DSFolder1}{ToolDir}"
+				Set FilesDifferent `Evaluate {FilesDifferent}+1`
+			End
+		End
+	End
+
+
+#
+#	Compare Examples files
+#
+	Echo "#	Comparing Examples"
+
+	Set DSFolder1	"{DSRoot1}Examples"
+	Set DSFolder2	"{DSRoot2}Examples"
+
+	For ToolDir in `Files -d "{DSFolder1}"`
+		Echo "#		{ToolDir}"
+		For file in `Files -t TEXT "{DSFolder1}{ToolDir}"`
+			If `Exists "{DSFolder2}{ToolDir}{file}"` != ""
+			   Equal -d -q "{DSFolder1}{ToolDir}{file}" "{DSFolder2}{ToolDir}{file}" 
+				If {Status} != 0 
+					Echo CompareFiles {MonitorXY} ¶"{DSFolder1}{ToolDir}{file}¶" ¶"{DSFolder2}{ToolDir}{file}¶" 
+					Set FilesDifferent `Evaluate {FilesDifferent}+1`
+				End
+			Else
+				Echo "{DSFolder2}{ToolDir}{file} not found in {DSFolder1}{ToolDir}"
+				Set FilesDifferent `Evaluate {FilesDifferent}+1`
+			End
+		End
+	End
+
+
+#
+#	Restore and undefine shell variables
+#
+	If {FilesDifferent} == 0
+		Echo "#	No differences found!"
+	Else If {FilesDifferent} == 1
+		Echo "#	1 file was different"
+	Else
+		Echo "#	{FilesDifferent} files were different"
+	End
+
+	Set Exit {SaveExit}
+	Unset DSFolder1 DSFolder2 DSRoot1 DSRoot2 FilesDifferent
+	Beep

@@ -66,7 +66,7 @@ $Log: types.h,v $
 //	*	C++ is currently incapable of handling volatile.	*
 //	*	Remove the following line as soon as this bug is fixed.	*
 //	*****************************************************************
-#define	volatile
+#define volatile
 #endif /* __cplusplus */
 
 #pragma force_top_level
@@ -77,10 +77,10 @@ $Log: types.h,v $
 /* On the arm, char is unsigned */
 
 /* compatibility typedefs */
-//typedef unsigned long ulong;
-//typedef unsigned short ushort;
-//typedef char uchar;		/* unsigned 8 bit */
-//typedef uchar ubyte;
+// typedef unsigned long ulong;
+// typedef unsigned short ushort;
+// typedef char uchar;		/* unsigned 8 bit */
+// typedef uchar ubyte;
 
 typedef signed char int8;
 typedef char uint8;
@@ -99,85 +99,89 @@ typedef volatile long vint32;
 #ifdef ARMCC_IS_BROKE
 typedef unsigned long uint32;
 typedef volatile unsigned long vuint32;
-#else	/* ARMCC is ok */
+#else /* ARMCC is ok */
 typedef unsigned int32 uint32;
 #endif
 
-typedef	uint32 size_t;
+typedef uint32 size_t;
 
 #ifndef NULL
-#define NULL	((void *)0)
+#define NULL ((void *)0)
 #endif
 
 // typedef	uint8 Boolean;
 typedef Boolean bool;
 
-#define TRUE	((Boolean) 1)
-#define FALSE	((Boolean) 0)
+#define TRUE ((Boolean)1)
+#define FALSE ((Boolean)0)
 
-#define false	FALSE
-#define true	TRUE
+#define false FALSE
+#define true TRUE
 
 /* TagArgs */
 /* TagArgs are used for passing a list */
 /* of arguments to functions. */
 typedef struct TagArg
 {
-	uint32 ta_Tag;
-	void *ta_Arg;
+  uint32 ta_Tag;
+  void *ta_Arg;
 } TagArg, *TagArgP;
 
 #define TAG_JUMP 254
-#define TAG_NOP	255
-#define TAG_END	0
+#define TAG_NOP 255
+#define TAG_END 0
 
 /* non portable inline __swi stuff */
 #ifndef __CC_NORCROFT
-#define __swi(x)		/* nothing */
+#define __swi(x) /* nothing */
 #endif
 
 /* Bit manipulation macros */
-#define NBBY	8	/* bits per byte */
+#define NBBY 8 /* bits per byte */
 
 /* page descriptor bits */
-/*#define PD_SETSIZE	128*/	/* 128 bits */
-typedef uint32		pd_mask;
-#define NPDBITS	(sizeof(pd_mask) * NBBY)	/* bits per mask  = 32 */
+/*#define PD_SETSIZE	128*/ /* 128 bits */
+typedef uint32 pd_mask;
+#define NPDBITS (sizeof (pd_mask) * NBBY) /* bits per mask  = 32 */
 
-#define howmany(x,y)	(((x)+((y)-1))/(y))
+#define howmany(x, y) (((x) + ((y)-1)) / (y))
 
 typedef struct pd_set
 {
-	pd_mask	pds_bits[1];	/* actually variable size */
+  pd_mask pds_bits[1]; /* actually variable size */
 } pd_set;
 
-#define PD_Set(n, p)	((p)->pds_bits[(n)/NPDBITS] |= ((uint32)1 << ((n) % NPDBITS)))
-#define PD_Clr(n, p)	((p)->pds_bits[(n)/NPDBITS] &= ~((uint32)1 << ((n) % NPDBITS)))
-#define PD_IsSet(n, p)	((p)->pds_bits[(n)/NPDBITS] & ((uint32)1 << ((n) % NPDBITS)))
-#define PD_Zero(p)	bzero((int8 *)(p), sizeof (*(p)))
+#define PD_Set(n, p)                                                          \
+  ((p)->pds_bits[(n) / NPDBITS] |= ((uint32)1 << ((n) % NPDBITS)))
+#define PD_Clr(n, p)                                                          \
+  ((p)->pds_bits[(n) / NPDBITS] &= ~((uint32)1 << ((n) % NPDBITS)))
+#define PD_IsSet(n, p)                                                        \
+  ((p)->pds_bits[(n) / NPDBITS] & ((uint32)1 << ((n) % NPDBITS)))
+#define PD_Zero(p) bzero ((int8 *)(p), sizeof (*(p)))
 
-typedef int32	Item;
-typedef	int32	Err;
+typedef int32 Item;
+typedef int32 Err;
 
-typedef int32	      (*func_t)();	/* generic function type, returning integer */
-typedef void	      (*vfunc_t)();	/* generic function type, returning void */
-typedef void	     *(*vpfunc_t)();	/* generic function type, returning pointer */
+typedef int32 (*func_t) ();   /* generic function type, returning integer */
+typedef void (*vfunc_t) ();   /* generic function type, returning void */
+typedef void *(*vpfunc_t) (); /* generic function type, returning pointer */
 
-#define Make_Func(x,y) (x (*)())make_func((int32)(y))
-#define Make_Ptr(x,y) (x *)make_int((func_t)(y))
-#define Make_Int(x,y) (x)make_int((func_t)(y))
+#define Make_Func(x, y) (x (*) ()) make_func ((int32)(y))
+#define Make_Ptr(x, y) (x *)make_int ((func_t)(y))
+#define Make_Int(x, y) (x) make_int ((func_t)(y))
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif /* __cplusplus */
 
-func_t	make_func(int32);
-int32	make_int(func_t);
+  func_t make_func (int32);
+  int32 make_int (func_t);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#define KERNELSWI	0x10000
+#define KERNELSWI 0x10000
 
 #endif /* __TYPES_H */

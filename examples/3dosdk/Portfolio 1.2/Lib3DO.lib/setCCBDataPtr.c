@@ -1,6 +1,6 @@
-#include "Portfolio.h"
 #include "Init3DO.h"
 #include "Parse3DO.h"
+#include "Portfolio.h"
 #include "Utils3DO.h"
 
 /*	setCCBDataPtr
@@ -9,8 +9,9 @@
  *	1) there is PDAT to use (lastPDAT)
  *	2) Cel expects data address to be absolute (CCB_SPABS)
  */
-void setCCBDataPtr(CCB *lastCCB, char *lastPDAT)
+void
+setCCBDataPtr (CCB *lastCCB, char *lastPDAT)
 {
   if ((lastCCB->ccb_Flags & CCB_SPABS) && (lastPDAT != NULL))
-	lastCCB->ccb_SourcePtr = (CelData *)&(((PixelChunk *)lastPDAT)->pixels[0]);
+    lastCCB->ccb_SourcePtr = (CelData *)&(((PixelChunk *)lastPDAT)->pixels[0]);
 }

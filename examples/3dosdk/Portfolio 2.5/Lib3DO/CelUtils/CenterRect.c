@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: CenterRect.c,v 1.2 1994/10/05 17:45:01 vertex Exp $
 **
@@ -26,12 +28,13 @@
  *	Align an SRect so that its center is at the specified point.
  *--------------------------------------------------------------------------*/
 
-SRect * CenterSRectOverIPoint(SRect *dst, IPoint *point)
+SRect *
+CenterSRectOverIPoint (SRect *dst, IPoint *point)
 {
-	dst->pos.x = point->x - (dst->size.x >> 1);
-	dst->pos.y = point->y - (dst->size.y >> 1);
+  dst->pos.x = point->x - (dst->size.x >> 1);
+  dst->pos.y = point->y - (dst->size.y >> 1);
 
-	return dst;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
@@ -39,25 +42,28 @@ SRect * CenterSRectOverIPoint(SRect *dst, IPoint *point)
  *	Align a CRect so that its center is at the specified point.
  *--------------------------------------------------------------------------*/
 
-CRect * CenterCRectOverIPoint(CRect *dst, IPoint *point)
+CRect *
+CenterCRectOverIPoint (CRect *dst, IPoint *point)
 {
-	dst->tl.x = point->x - (XSIZEFROMCRECT(dst) >> 1);
-	dst->tl.y = point->y - (YSIZEFROMCRECT(dst) >> 1);
+  dst->tl.x = point->x - (XSIZEFROMCRECT (dst) >> 1);
+  dst->tl.y = point->y - (YSIZEFROMCRECT (dst) >> 1);
 
-	return dst;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
  * CenterSRectInSRect()
- *	Align an SRect so that it is centered over or within the specified rect.
+ *	Align an SRect so that it is centered over or within the specified
+ *rect.
  *--------------------------------------------------------------------------*/
 
-SRect * CenterSRectInSRect(SRect *dst, SRect *rect)
+SRect *
+CenterSRectInSRect (SRect *dst, SRect *rect)
 {
-	dst->pos.x = rect->pos.x + ((rect->size.x - dst->size.x) >> 1);
-	dst->pos.y = rect->pos.y + ((rect->size.y - dst->size.y) >> 1);
+  dst->pos.x = rect->pos.x + ((rect->size.x - dst->size.x) >> 1);
+  dst->pos.y = rect->pos.y + ((rect->size.y - dst->size.y) >> 1);
 
-	return dst;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
@@ -65,16 +71,17 @@ SRect * CenterSRectInSRect(SRect *dst, SRect *rect)
  *	Align an SRect so that its center is at the display center point.
  *--------------------------------------------------------------------------*/
 
-SRect * CenterSRectInDisplay(SRect *dst)
+SRect *
+CenterSRectInDisplay (SRect *dst)
 {
-	IPoint *	point;
+  IPoint *point;
 
-	point = CenterIPointInDisplay();
+  point = CenterIPointInDisplay ();
 
-	dst->pos.x = point->x - (dst->size.x >> 1);
-	dst->pos.y = point->y - (dst->size.y >> 1);
+  dst->pos.x = point->x - (dst->size.x >> 1);
+  dst->pos.y = point->y - (dst->size.y >> 1);
 
-	return dst;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
@@ -82,12 +89,15 @@ SRect * CenterSRectInDisplay(SRect *dst)
  *	Align a CRect so that it is centered over or within the specified rect.
  *--------------------------------------------------------------------------*/
 
-CRect * CenterCRectInCRect(CRect *dst, CRect *rect)
+CRect *
+CenterCRectInCRect (CRect *dst, CRect *rect)
 {
-	dst->tl.x = rect->tl.x + ((XSIZEFROMCRECT(rect) - XSIZEFROMCRECT(dst)) >> 1);
-	dst->tl.y = rect->tl.y + ((YSIZEFROMCRECT(rect) - YSIZEFROMCRECT(dst)) >> 1);
+  dst->tl.x
+      = rect->tl.x + ((XSIZEFROMCRECT (rect) - XSIZEFROMCRECT (dst)) >> 1);
+  dst->tl.y
+      = rect->tl.y + ((YSIZEFROMCRECT (rect) - YSIZEFROMCRECT (dst)) >> 1);
 
-	return dst;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
@@ -95,14 +105,15 @@ CRect * CenterCRectInCRect(CRect *dst, CRect *rect)
  *	Align a CRect so that its center is at the display center point.
  *--------------------------------------------------------------------------*/
 
-CRect * CenterCRectInDisplay(CRect *dst)
+CRect *
+CenterCRectInDisplay (CRect *dst)
 {
-	IPoint *	point;
+  IPoint *point;
 
-	point = CenterIPointInDisplay();
+  point = CenterIPointInDisplay ();
 
-	dst->tl.x = point->x - (XSIZEFROMCRECT(dst) >> 1);
-	dst->tl.y = point->y - (YSIZEFROMCRECT(dst) >> 1);
+  dst->tl.x = point->x - (XSIZEFROMCRECT (dst) >> 1);
+  dst->tl.y = point->y - (YSIZEFROMCRECT (dst) >> 1);
 
-	return dst;
+  return dst;
 }

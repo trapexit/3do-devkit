@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: MapCelToPoint.c,v 1.2 1994/10/05 18:41:08 vertex Exp $
 **
@@ -23,22 +25,22 @@
 **
 ******************************************************************************/
 
-
 #include "celutils.h"
 #include "string.h"
 
-#define COORDINATESIZE  (offsetof(CCB, ccb_PIXC) - offsetof(CCB, ccb_XPos))
-#define PERSPECTIVESIZE (offsetof(CCB, ccb_PIXC) - offsetof(CCB, ccb_HDX))
+#define COORDINATESIZE (offsetof (CCB, ccb_PIXC) - offsetof (CCB, ccb_XPos))
+#define PERSPECTIVESIZE (offsetof (CCB, ccb_PIXC) - offsetof (CCB, ccb_HDX))
 
 /*------------------------------------------------------------------------------
  * MapCelToIPoint()
  *	Simple set cel XY coords.
  *----------------------------------------------------------------------------*/
 
-void MapCelToIPoint(CCB *cel, IPoint *newPos)
+void
+MapCelToIPoint (CCB *cel, IPoint *newPos)
 {
-	cel->ccb_XPos = Convert32_F16(newPos->x);
-	cel->ccb_YPos = Convert32_F16(newPos->y);
+  cel->ccb_XPos = Convert32_F16 (newPos->x);
+  cel->ccb_YPos = Convert32_F16 (newPos->y);
 }
 
 /*------------------------------------------------------------------------------
@@ -46,10 +48,11 @@ void MapCelToIPoint(CCB *cel, IPoint *newPos)
  *	Simple set cel XY coords.
  *----------------------------------------------------------------------------*/
 
-void MapCelToFPoint(CCB *cel, FPoint *newPos)
+void
+MapCelToFPoint (CCB *cel, FPoint *newPos)
 {
-	cel->ccb_XPos = newPos->x;
-	cel->ccb_YPos = newPos->y;
+  cel->ccb_XPos = newPos->x;
+  cel->ccb_YPos = newPos->y;
 }
 
 /*------------------------------------------------------------------------------
@@ -57,17 +60,19 @@ void MapCelToFPoint(CCB *cel, FPoint *newPos)
  *	Set the XY coordinates for an anti-aliased cel.
  *----------------------------------------------------------------------------*/
 
-void MapAACelToIPoint(CCB *cel1, IPoint *newPos)
+void
+MapAACelToIPoint (CCB *cel1, IPoint *newPos)
 {
-	CCB *	cel2;
+  CCB *cel2;
 
-	cel1->ccb_XPos = Convert32_F16(newPos->x);
-	cel1->ccb_YPos = Convert32_F16(newPos->y);
+  cel1->ccb_XPos = Convert32_F16 (newPos->x);
+  cel1->ccb_YPos = Convert32_F16 (newPos->y);
 
-	if (!IS_LASTCEL(cel1)) {
-		cel2 = CEL_NEXTPTR(cel1);
-		memcpy(&cel2->ccb_XPos, &cel1->ccb_XPos, COORDINATESIZE);
-	}
+  if (!IS_LASTCEL (cel1))
+    {
+      cel2 = CEL_NEXTPTR (cel1);
+      memcpy (&cel2->ccb_XPos, &cel1->ccb_XPos, COORDINATESIZE);
+    }
 }
 
 /*------------------------------------------------------------------------------
@@ -75,17 +80,19 @@ void MapAACelToIPoint(CCB *cel1, IPoint *newPos)
  *	Set the XY coordinates for an anti-aliased cel.
  *----------------------------------------------------------------------------*/
 
-void MapAACelToFPoint(CCB *cel1, FPoint *newPos)
+void
+MapAACelToFPoint (CCB *cel1, FPoint *newPos)
 {
-	CCB *	cel2;
+  CCB *cel2;
 
-	cel1->ccb_XPos = newPos->x;
-	cel1->ccb_YPos = newPos->y;
+  cel1->ccb_XPos = newPos->x;
+  cel1->ccb_YPos = newPos->y;
 
-	if (!IS_LASTCEL(cel1)) {
-		cel2 = CEL_NEXTPTR(cel1);
-		memcpy(&cel2->ccb_XPos, &cel1->ccb_XPos, COORDINATESIZE);
-	}
+  if (!IS_LASTCEL (cel1))
+    {
+      cel2 = CEL_NEXTPTR (cel1);
+      memcpy (&cel2->ccb_XPos, &cel1->ccb_XPos, COORDINATESIZE);
+    }
 }
 
 /*------------------------------------------------------------------------------
@@ -96,14 +103,15 @@ void MapAACelToFPoint(CCB *cel1, FPoint *newPos)
  *	perspective (HDX thru HDDY) can be propagated to all cels in the list.
  *----------------------------------------------------------------------------*/
 
-void MapCelListToIPoint(CCB *list, IPoint *newPos, Boolean copyPerspective)
+void
+MapCelListToIPoint (CCB *list, IPoint *newPos, Boolean copyPerspective)
 {
-	FPoint delta;
+  FPoint delta;
 
-	delta.x = SubF16(Convert32_F16(newPos->x), list->ccb_XPos);
-	delta.y = SubF16(Convert32_F16(newPos->y), list->ccb_YPos);
+  delta.x = SubF16 (Convert32_F16 (newPos->x), list->ccb_XPos);
+  delta.y = SubF16 (Convert32_F16 (newPos->y), list->ccb_YPos);
 
-	OffsetCelListByFDelta(list, &delta, copyPerspective);
+  OffsetCelListByFDelta (list, &delta, copyPerspective);
 }
 
 /*------------------------------------------------------------------------------
@@ -114,12 +122,13 @@ void MapCelListToIPoint(CCB *list, IPoint *newPos, Boolean copyPerspective)
  *	perspective (HDX thru HDDY) can be propagated to all cels in the list.
  *----------------------------------------------------------------------------*/
 
-void MapCelListToFPoint(CCB *list, FPoint *newPos, Boolean copyPerspective)
+void
+MapCelListToFPoint (CCB *list, FPoint *newPos, Boolean copyPerspective)
 {
-	FPoint delta;
+  FPoint delta;
 
-	delta.x = SubF16(newPos->x, list->ccb_XPos);
-	delta.y = SubF16(newPos->y, list->ccb_YPos);
+  delta.x = SubF16 (newPos->x, list->ccb_XPos);
+  delta.y = SubF16 (newPos->y, list->ccb_YPos);
 
-	OffsetCelListByFDelta(list, &delta, copyPerspective);
+  OffsetCelListByFDelta (list, &delta, copyPerspective);
 }

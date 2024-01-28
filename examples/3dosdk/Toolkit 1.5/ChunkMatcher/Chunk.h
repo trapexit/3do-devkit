@@ -17,62 +17,56 @@
 #ifndef __CHUNK__
 #define __CHUNK__
 
-
-
 /*************/
 /*  CLASSES  */
 /*************/
 
-
-class TChunk {
+class TChunk
+{
 public:
-							TChunk ();
-							TChunk (ChunkHeader* rawChunkPtr);
+  TChunk ();
+  TChunk (ChunkHeader *rawChunkPtr);
 
-	virtual 				~TChunk ();
+  virtual ~TChunk ();
 
-	virtual	TChunk&			operator = (const TChunk&);
+  virtual TChunk &operator= (const TChunk &);
 
-	virtual	uint32			GetSize () const;
-								// Return size of chunk header and data
+  virtual uint32 GetSize () const;
+  // Return size of chunk header and data
 
-	virtual	uint32			GetDataSize () const;
-								// Return size of chunk data
+  virtual uint32 GetDataSize () const;
+  // Return size of chunk data
 
-	virtual	TTypeID			GetType () const;
-								// Return type signature of this chunk
+  virtual TTypeID GetType () const;
+  // Return type signature of this chunk
 
-	virtual	TTypeID			GetSubType () const;
-								// Return sub-type signature of this chunk
+  virtual TTypeID GetSubType () const;
+  // Return sub-type signature of this chunk
 
-	virtual	ostream&		operator >>= (ostream&) const;
-								// Flatten this chunk to the specified stream
+  virtual ostream &operator>>= (ostream &) const;
+  // Flatten this chunk to the specified stream
 
-	virtual	istream&		operator <<= (istream&);
-								// Unflatten this chunk from the specified stream
+  virtual istream &operator<<= (istream &);
+  // Unflatten this chunk from the specified stream
 
-	friend	ostream&		operator << (ostream&, const TChunk&);
-								// Print this chunk to the specified character stream
-
+  friend ostream &operator<< (ostream &, const TChunk &);
+  // Print this chunk to the specified character stream
 
 protected:
-							TChunk (const TChunk&);
-							TChunk (uint32 rawType, uint32 rawSize);
+  TChunk (const TChunk &);
+  TChunk (uint32 rawType, uint32 rawSize);
 
-			void*			GetRawChunk () const;
-								// Return a pointer to the raw chunk representation
+  void *GetRawChunk () const;
+  // Return a pointer to the raw chunk representation
 
-			Boolean			IsStreamChunk () const;
-								// Determine whether this chunk is a stream-format chunk
+  Boolean IsStreamChunk () const;
+  // Determine whether this chunk is a stream-format chunk
 
 private:
-			void			Copy (const TChunk& that);
-								// Copy this object from the specified object
+  void Copy (const TChunk &that);
+  // Copy this object from the specified object
 
-	ChunkHeader*			rawChunk;		// pointer to header of chunk
+  ChunkHeader *rawChunk; // pointer to header of chunk
 };
 
-
-
 #endif
-

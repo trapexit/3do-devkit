@@ -69,77 +69,80 @@ $Log: item.h,v $
 /* The programmer interface is really done via Items */
 /* which are passed to the system, the system keeps */
 /* a database of Items and their associated structures */
-  
-#ifdef  __cplusplus 
-extern "C" { 
-#endif  /* __cplusplus */ 
 
-Item __swi(KERNELSWI+0) CreateSizedItem(int32 ctype,TagArg *p,int32 size);
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
-/* used for testing arm cc */
-/*Item __swi(kernelitem & 0xff) CreateSizedItem(int32 ctype,void *p,int32 size);*/
+  Item __swi (KERNELSWI + 0)
+      CreateSizedItem (int32 ctype, TagArg *p, int32 size);
 
-Err __swi(KERNELSWI+3) DeleteItem(Item i);
-Item __swi(KERNELSWI+4) FindItem(int32 ctype,TagArg *tp);
-Err __swi(KERNELSWI+8) CloseItem(Item i);
-Item __swi(KERNELSWI+5) OpenItem(Item FoundItem, void *args);
-int32 __swi(KERNELSWI+10) SetItemPri(Item i,uint8 newpri);
-Err __swi(KERNELSWI+28) SetItemOwner(Item i,Item newOwner);
-int32 __swi(KERNELSWI+7)        LockItem(Item s,uint32 flags);
-Err __swi(KERNELSWI+6)        UnlockItem(Item s);
+  /* used for testing arm cc */
+  /*Item __swi(kernelitem & 0xff) CreateSizedItem(int32 ctype,void *p,int32
+   * size);*/
+
+  Err __swi (KERNELSWI + 3) DeleteItem (Item i);
+  Item __swi (KERNELSWI + 4) FindItem (int32 ctype, TagArg *tp);
+  Err __swi (KERNELSWI + 8) CloseItem (Item i);
+  Item __swi (KERNELSWI + 5) OpenItem (Item FoundItem, void *args);
+  int32 __swi (KERNELSWI + 10) SetItemPri (Item i, uint8 newpri);
+  Err __swi (KERNELSWI + 28) SetItemOwner (Item i, Item newOwner);
+  int32 __swi (KERNELSWI + 7) LockItem (Item s, uint32 flags);
+  Err __swi (KERNELSWI + 6) UnlockItem (Item s);
 
 /* flags for LockItem */
-#define SEM_WAIT	1
-#define SEM_SHAREDREAD	2
+#define SEM_WAIT 1
+#define SEM_SHAREDREAD 2
 
-/* helper routines */
-Item FindNamedItem(int32 ctype, char *name);
-Item FindVersionedItem(int32 ctype, char *name, uint8 vers, uint8 rev);
-  
-#ifdef  __cplusplus 
+  /* helper routines */
+  Item FindNamedItem (int32 ctype, char *name);
+  Item FindVersionedItem (int32 ctype, char *name, uint8 vers, uint8 rev);
+
+#ifdef __cplusplus
 }
-#endif  /* __cplusplus */ 
+#endif /* __cplusplus */
 
-#define CreateItem(ct,p)	CreateSizedItem((ct),(p),0)
+#define CreateItem(ct, p) CreateSizedItem ((ct), (p), 0)
 
 /* common TagArg commands for all Items */
 /* All system routines that create Items must assign their */
 /* TAGS after ITEM_TAG_LAST */
 enum item_tags
 {
-	TAG_ITEM_END = TAG_END,	/* 0 */
-	TAG_ITEM_NAME,		/* 1 */
-	TAG_ITEM_PRI,		/* 2 */
-	TAG_ITEM_VERSION,	/* 3 */
-	TAG_ITEM_REVISION,	/* 4 */
-	TAG_ITEM_CONSTANT_NAME, /* 5 */
-	TAG_ITEM_RESERVED6,
-	TAG_ITEM_RESERVED7,
-	TAG_ITEM_RESERVED8,
-	TAG_ITEM_RESERVED9,
-	TAG_ITEM_LAST = TAG_ITEM_RESERVED9
+  TAG_ITEM_END = TAG_END, /* 0 */
+  TAG_ITEM_NAME,          /* 1 */
+  TAG_ITEM_PRI,           /* 2 */
+  TAG_ITEM_VERSION,       /* 3 */
+  TAG_ITEM_REVISION,      /* 4 */
+  TAG_ITEM_CONSTANT_NAME, /* 5 */
+  TAG_ITEM_RESERVED6,
+  TAG_ITEM_RESERVED7,
+  TAG_ITEM_RESERVED8,
+  TAG_ITEM_RESERVED9,
+  TAG_ITEM_LAST = TAG_ITEM_RESERVED9
 };
 
 typedef struct ItemEntry
 {
-	void	*ie_ItemAddr;
-	uint32	ie_ItemInfo;
+  void *ie_ItemAddr;
+  uint32 ie_ItemInfo;
 } ItemEntry;
 
-#define	ITEM_GEN_MASK	0x7fff0000
-#define ITEM_INDX_MASK	0x00000fff
-#define ITEM_FLGS_MASK	0x0000f000
-  
-#ifdef  __cplusplus 
-extern "C" { 
-#endif  /* __cplusplus */ 
+#define ITEM_GEN_MASK 0x7fff0000
+#define ITEM_INDX_MASK 0x00000fff
+#define ITEM_FLGS_MASK 0x0000f000
 
-void *LookupItem(Item i);
-void *CheckItem(Item i,uint8 ftype,uint8 ntype);
-  
-#ifdef  __cplusplus 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
+  void *LookupItem (Item i);
+  void *CheckItem (Item i, uint8 ftype, uint8 ntype);
+
+#ifdef __cplusplus
 }
-#endif  /* __cplusplus */ 
+#endif /* __cplusplus */
 
 #endif /* __ITEM_H */
-

@@ -7,5 +7,4 @@
 **
 */
 
-int32 Open24BitGraphics (ScreenContext * sc, int nScreens);
-
+int32 Open24BitGraphics (ScreenContext *sc, int nScreens);

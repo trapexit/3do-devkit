@@ -1,9 +1,10 @@
 /*****************************************************************************
- *	File:			GetChunk.c 
+ *	File:			GetChunk.c
  *
  *	Contains:		Routine to help parse 3DO chunky files.
  *
- *	Copyright:		(c) 1993-1994 The 3DO Company.  All Rights Reserved.
+ *	Copyright:		(c) 1993-1994 The 3DO Company.  All Rights
+ *Reserved.
  *
  *	History:
  *	07/12/94  Ian 	General library cleanup.
@@ -16,25 +17,27 @@
  *	has the number of bytes remaining in the buffer.  Returns NULL when
  *	no chunks left in buffer.
  ****************************************************************************/
- 
+
 #include "Form3DO.h"
 
-char *GetChunk( uint32 *chunk_ID, char **buffer, int32 *bufLen )
+char *
+GetChunk (uint32 *chunk_ID, char **buffer, int32 *bufLen)
 {
-	char *buf;
+  char *buf;
 
-	if ( *bufLen > 0 ) {
+  if (*bufLen > 0)
+    {
 
-		buf = *buffer;
-		*chunk_ID = ((PixelChunk *)buf)->chunk_ID;
-		
-		/* jump to next chunk */
-	
-		*bufLen -= ((PixelChunk *)buf)->chunk_size;
-		*buffer += ((PixelChunk *)buf)->chunk_size;
-		
-		return buf;
-	}
-	
-	return NULL;
+      buf = *buffer;
+      *chunk_ID = ((PixelChunk *)buf)->chunk_ID;
+
+      /* jump to next chunk */
+
+      *bufLen -= ((PixelChunk *)buf)->chunk_size;
+      *buffer += ((PixelChunk *)buf)->chunk_size;
+
+      return buf;
+    }
+
+  return NULL;
 }

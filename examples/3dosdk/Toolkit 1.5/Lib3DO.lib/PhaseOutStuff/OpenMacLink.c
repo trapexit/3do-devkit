@@ -1,9 +1,11 @@
 /*****************************************************************************
- *	File:			OpenMacLink.c 
+ *	File:			OpenMacLink.c
  *
- *	Contains:		Routine to open the 'mac' device for WriteMacFile().
+ *	Contains:		Routine to open the 'mac' device for
+ *WriteMacFile().
  *
- *	Copyright:		(c) 1993-1994 The 3DO Company.  All Rights Reserved.
+ *	Copyright:		(c) 1993-1994 The 3DO Company.  All Rights
+ *Reserved.
  *
  *	History:
  *	07/12/94  Ian 	This function is now obsolete.
@@ -11,14 +13,15 @@
  *	Implementation notes:
  *
  ****************************************************************************/
- 
-#include "kernel.h"
-#include "Init3DO.h"
-#include "Debug3DO.h"
 
-Boolean OpenMacLink(void)
+#include "Debug3DO.h"
+#include "Init3DO.h"
+#include "kernel.h"
+
+Boolean
+OpenMacLink (void)
 {
-	return TRUE;
+  return TRUE;
 }
 
 #if 0 // obsolete code...

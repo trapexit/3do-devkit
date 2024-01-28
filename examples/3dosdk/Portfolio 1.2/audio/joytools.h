@@ -10,8 +10,7 @@
 ** Confidential and Proprietary
 */
 
-
-int32 InitJoypad( void );
-int32 ReadJoypad( uint32 *Buttons );
-int32 TermJoypad( void );
-int32 WaitJoypad( uint32 Mask, uint32 *Buttons );
+int32 InitJoypad (void);
+int32 ReadJoypad (uint32 *Buttons);
+int32 TermJoypad (void);
+int32 WaitJoypad (uint32 Mask, uint32 *Buttons);

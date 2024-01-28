@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: LoadCel.c,v 1.8 1994/11/02 00:25:05 vertex Exp $
 **
@@ -13,7 +15,8 @@
 **
 **  We have to meet a pair of goals here:  Load a cel file in such a way that
 **  it can later be unloaded with a call to UnloadCel() (or DeleteCel()), and
-**  do so without loading into one buffer then copying to another (which requires
+**  do so without loading into one buffer then copying to another (which
+*requires
 **  twice as much memory, and is slower).  ParseCel() returns a pointer to
 **  a CCB which it has located within the file buffer.      That pointer won't
 **  be at a known offset from the start of the buffer however, so we need
@@ -40,47 +43,49 @@
 **
 ******************************************************************************/
 
-
-#include "types.h"
-#include "mem.h"
-#include "celutils.h"
-#include "form3do.h"
 #include "blockfile.h"
-#include "deletecelmagic.h"
+#include "celutils.h"
 #include "debug3do.h"
+#include "deletecelmagic.h"
+#include "form3do.h"
+#include "mem.h"
+#include "types.h"
 
 /*----------------------------------------------------------------------------
  * CCB * LoadCel(char *filename, uint32 memTypeBits)
  *
  *	Loads a cel from a 3DO file.  Returns a pointer to the CCB for the cel;
- *	the CCB will contain pointers to the pixels and (optional) PLUT.  If the
- *	cel file contains an AA cel or multiple cels, the cels will be linked
+ *	the CCB will contain pointers to the pixels and (optional) PLUT.  If
+ *the cel file contains an AA cel or multiple cels, the cels will be linked
  *	together through the ccb_NextPtr fields (in the right order for drawing
- *	when it's an AA cel, in the order they're found in the file for others).
- *	The cel buffer can be freed later by passing the CCB pointer to UnloadCel(),
- *	or to DeleteCel().
+ *	when it's an AA cel, in the order they're found in the file for
+ *others). The cel buffer can be freed later by passing the CCB pointer to
+ *UnloadCel(), or to DeleteCel().
  *--------------------------------------------------------------------------*/
 
-CCB * LoadCel(char *name, uint32 memTypeBits)
+CCB *
+LoadCel (char *name, uint32 memTypeBits)
 {
-	int32	filesize;
-	void *	filebuf;
-	CCB *	pCCB;
+  int32 filesize;
+  void *filebuf;
+  CCB *pCCB;
 
-	if (NULL == (filebuf = LoadFile(name, &filesize, memTypeBits))) {
-		DIAGNOSE(("Can't load file %s\n", name));
-		return NULL;
-	}
+  if (NULL == (filebuf = LoadFile (name, &filesize, memTypeBits)))
+    {
+      DIAGNOSE (("Can't load file %s\n", name));
+      return NULL;
+    }
 
-	if (NULL == (pCCB = ParseCel(filebuf, filesize))) {
-		UnloadFile(filebuf);
-		DIAGNOSE(("Can't parse cel file %s\n", name));
-		return NULL;
-	}
-	ModifyMagicCel_(pCCB, DELETECELMAGIC_DATA_ONLY, filebuf, LastCelInList(pCCB));
+  if (NULL == (pCCB = ParseCel (filebuf, filesize)))
+    {
+      UnloadFile (filebuf);
+      DIAGNOSE (("Can't parse cel file %s\n", name));
+      return NULL;
+    }
+  ModifyMagicCel_ (pCCB, DELETECELMAGIC_DATA_ONLY, filebuf,
+                   LastCelInList (pCCB));
 
-	return pCCB;
-
+  return pCCB;
 }
 
 /*----------------------------------------------------------------------------
@@ -88,7 +93,8 @@ CCB * LoadCel(char *name, uint32 memTypeBits)
  *	Unload a cel file previously loaded via LoadCel().
  *--------------------------------------------------------------------------*/
 
-void UnloadCel(CCB *cel)
+void
+UnloadCel (CCB *cel)
 {
-	DeleteCel(cel);
+  DeleteCel (cel);
 }

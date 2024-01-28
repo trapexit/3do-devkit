@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: CrossFadeCels.c,v 1.4 1994/11/08 06:24:13 ewhac Exp $
 **
@@ -55,62 +57,71 @@
 **
 ******************************************************************************/
 
-
 #include "celutils.h"
 #include "debug3do.h"
 
-#define	DUP16(word)	((word) | ((word) << 16))
-
-
+#define DUP16(word) ((word) | ((word) << 16))
 
 /*****************************************************************************
  * CrossFadeCels8()
  *	Cross-fade from the old cel to the new cel in 8 equal steps.
  ****************************************************************************/
 
-CCB * CrossFadeCels8(Item screen, int32 step, CCB *oldCel, CCB *newCel)
+CCB *
+CrossFadeCels8 (Item screen, int32 step, CCB *oldCel, CCB *newCel)
 {
-	static uint32 pixctable[] = {
-		DUP16 (PPMPC_MF_1 | PPMPC_SF_8),		/*  1/8 cel */
-		DUP16 (PPMPC_MF_2 | PPMPC_SF_8),		/*  2/8 cel */
-		DUP16 (PPMPC_MF_3 | PPMPC_SF_8),		/*  3/8 cel */
-		DUP16 (PPMPC_MF_4 | PPMPC_SF_8),		/*  4/8 cel */
-		DUP16 (PPMPC_MF_5 | PPMPC_SF_8),		/*  5/8 cel */
-		DUP16 (PPMPC_MF_6 | PPMPC_SF_8),		/*  6/8 cel */
-		DUP16 (PPMPC_MF_7 | PPMPC_SF_8),		/*  7/8 cel */
-	};
-	Item		bitmap;
-	Screen *	scr;
-	CCB *		drawCel;
+  static uint32 pixctable[] = {
+    DUP16 (PPMPC_MF_1 | PPMPC_SF_8), /*  1/8 cel */
+    DUP16 (PPMPC_MF_2 | PPMPC_SF_8), /*  2/8 cel */
+    DUP16 (PPMPC_MF_3 | PPMPC_SF_8), /*  3/8 cel */
+    DUP16 (PPMPC_MF_4 | PPMPC_SF_8), /*  4/8 cel */
+    DUP16 (PPMPC_MF_5 | PPMPC_SF_8), /*  5/8 cel */
+    DUP16 (PPMPC_MF_6 | PPMPC_SF_8), /*  6/8 cel */
+    DUP16 (PPMPC_MF_7 | PPMPC_SF_8), /*  7/8 cel */
+  };
+  Item bitmap;
+  Screen *scr;
+  CCB *drawCel;
 
-	if (step < 7) {
-		oldCel->ccb_PIXC	= pixctable[6-step];
-		newCel->ccb_PIXC	= pixctable[step] | DUP16 (PPMPC_2S_CFBD);	/* OR in PIXC bits to use CFDB as secondary source */
-		oldCel->ccb_Flags  &= ~CCB_LAST;
-		oldCel->ccb_NextPtr	= newCel;
-		drawCel = oldCel;
-	} else {
-		oldCel->ccb_PIXC	= PIXC_OPAQUE;
-		newCel->ccb_PIXC	= PIXC_OPAQUE;
-		oldCel->ccb_Flags  |= CCB_LAST;
-		oldCel->ccb_NextPtr	= NULL;
-		drawCel = newCel;
-	}
+  if (step < 7)
+    {
+      oldCel->ccb_PIXC = pixctable[6 - step];
+      newCel->ccb_PIXC
+          = pixctable[step]
+            | DUP16 (PPMPC_2S_CFBD); /* OR in PIXC bits to use CFDB as
+                                        secondary source */
+      oldCel->ccb_Flags &= ~CCB_LAST;
+      oldCel->ccb_NextPtr = newCel;
+      drawCel = oldCel;
+    }
+  else
+    {
+      oldCel->ccb_PIXC = PIXC_OPAQUE;
+      newCel->ccb_PIXC = PIXC_OPAQUE;
+      oldCel->ccb_Flags |= CCB_LAST;
+      oldCel->ccb_NextPtr = NULL;
+      drawCel = newCel;
+    }
 
-	if (screen > 0) {
-		if ((scr = (Screen *)LookupItem(screen)) == NULL) {
-			DIAGNOSE_SYSERR(BADITEM, ("LookupItem(%08lx) failed\n", screen));
-			return drawCel;
-		}
-		if (scr->scr.n_Type == SCREENNODE) {
-			bitmap = scr->scr_TempBitmap->bm.n_Item;
-		} else {
-			bitmap = screen;
-		}
-		DrawCels(bitmap, drawCel);
-	}
+  if (screen > 0)
+    {
+      if ((scr = (Screen *)LookupItem (screen)) == NULL)
+        {
+          DIAGNOSE_SYSERR (BADITEM, ("LookupItem(%08lx) failed\n", screen));
+          return drawCel;
+        }
+      if (scr->scr.n_Type == SCREENNODE)
+        {
+          bitmap = scr->scr_TempBitmap->bm.n_Item;
+        }
+      else
+        {
+          bitmap = screen;
+        }
+      DrawCels (bitmap, drawCel);
+    }
 
-	return drawCel;
+  return drawCel;
 }
 
 /*****************************************************************************
@@ -118,69 +129,94 @@ CCB * CrossFadeCels8(Item screen, int32 step, CCB *oldCel, CCB *newCel)
  *	Cross-fade from the old cel to the new cel in 16 equal steps.
  ****************************************************************************/
 
-CCB * CrossFadeCels(Item screen, int32 step, CCB *oldCel, CCB *newCel)
+CCB *
+CrossFadeCels (Item screen, int32 step, CCB *oldCel, CCB *newCel)
 {
-	static uint32 pixctable[] = {
-		DUP16 (PPMPC_MF_1 | PPMPC_SF_16 | PPMPC_2S_CFBD),	/*  1/16 cel + CFBD */
-		DUP16 (PPMPC_MF_2 | PPMPC_SF_16 | PPMPC_2S_CFBD),	/*  2/16 cel + CFBD */
-		DUP16 (PPMPC_MF_3 | PPMPC_SF_16 | PPMPC_2S_CFBD),	/*  3/16 cel + CFBD */
-		DUP16 (PPMPC_MF_4 | PPMPC_SF_16 | PPMPC_2S_CFBD),	/*  4/16 cel + CFBD */
-		DUP16 (PPMPC_MF_5 | PPMPC_SF_16 | PPMPC_2S_CFBD),	/*  5/16 cel + CFBD */
-		DUP16 (PPMPC_MF_6 | PPMPC_SF_16 | PPMPC_2S_CFBD),	/*  6/16 cel + CFBD */
-		DUP16 (PPMPC_MF_7 | PPMPC_SF_16 | PPMPC_2S_CFBD),	/*  7/16 cel + CFBD */
-		DUP16 (PPMPC_MF_8 | PPMPC_SF_16 | PPMPC_2S_CFBD),	/*  8/16 cel + CFBD */
-		DUP16 (PPMPC_MF_1 | PPMPC_SF_16 | PPMPC_2S_PDC | PPMPC_AV_SF2_2),	/*  1/16 cel + 1/2 cel =  9/16 cel */
-		DUP16 (PPMPC_MF_2 | PPMPC_SF_16 | PPMPC_2S_PDC | PPMPC_AV_SF2_2),	/*  2/16 cel + 1/2 cel = 10/16 cel */
-		DUP16 (PPMPC_MF_3 | PPMPC_SF_16 | PPMPC_2S_PDC | PPMPC_AV_SF2_2),	/*  3/16 cel + 1/2 cel = 11/16 cel */
-		DUP16 (PPMPC_MF_4 | PPMPC_SF_16 | PPMPC_2S_PDC | PPMPC_AV_SF2_2),	/*  4/16 cel + 1/2 cel = 12/16 cel */
-		DUP16 (PPMPC_MF_5 | PPMPC_SF_16 | PPMPC_2S_PDC | PPMPC_AV_SF2_2),	/*  5/16 cel + 1/2 cel = 13/16 cel */
-		DUP16 (PPMPC_MF_6 | PPMPC_SF_16 | PPMPC_2S_PDC | PPMPC_AV_SF2_2),	/*  6/16 cel + 1/2 cel = 14/16 cel */
-		DUP16 (PPMPC_MF_7 | PPMPC_SF_16 | PPMPC_2S_PDC | PPMPC_AV_SF2_2),	/*  7/16 cel + 1/2 cel = 15/16 cel */
-	};
-	Item		bitmap;
-	Screen *	scr;
-	CCB *		drawCel;
+  static uint32 pixctable[] = {
+    DUP16 (PPMPC_MF_1 | PPMPC_SF_16 | PPMPC_2S_CFBD), /*  1/16 cel + CFBD */
+    DUP16 (PPMPC_MF_2 | PPMPC_SF_16 | PPMPC_2S_CFBD), /*  2/16 cel + CFBD */
+    DUP16 (PPMPC_MF_3 | PPMPC_SF_16 | PPMPC_2S_CFBD), /*  3/16 cel + CFBD */
+    DUP16 (PPMPC_MF_4 | PPMPC_SF_16 | PPMPC_2S_CFBD), /*  4/16 cel + CFBD */
+    DUP16 (PPMPC_MF_5 | PPMPC_SF_16 | PPMPC_2S_CFBD), /*  5/16 cel + CFBD */
+    DUP16 (PPMPC_MF_6 | PPMPC_SF_16 | PPMPC_2S_CFBD), /*  6/16 cel + CFBD */
+    DUP16 (PPMPC_MF_7 | PPMPC_SF_16 | PPMPC_2S_CFBD), /*  7/16 cel + CFBD */
+    DUP16 (PPMPC_MF_8 | PPMPC_SF_16 | PPMPC_2S_CFBD), /*  8/16 cel + CFBD */
+    DUP16 (PPMPC_MF_1 | PPMPC_SF_16 | PPMPC_2S_PDC
+           | PPMPC_AV_SF2_2), /*  1/16 cel + 1/2 cel =  9/16 cel */
+    DUP16 (PPMPC_MF_2 | PPMPC_SF_16 | PPMPC_2S_PDC
+           | PPMPC_AV_SF2_2), /*  2/16 cel + 1/2 cel = 10/16 cel */
+    DUP16 (PPMPC_MF_3 | PPMPC_SF_16 | PPMPC_2S_PDC
+           | PPMPC_AV_SF2_2), /*  3/16 cel + 1/2 cel = 11/16 cel */
+    DUP16 (PPMPC_MF_4 | PPMPC_SF_16 | PPMPC_2S_PDC
+           | PPMPC_AV_SF2_2), /*  4/16 cel + 1/2 cel = 12/16 cel */
+    DUP16 (PPMPC_MF_5 | PPMPC_SF_16 | PPMPC_2S_PDC
+           | PPMPC_AV_SF2_2), /*  5/16 cel + 1/2 cel = 13/16 cel */
+    DUP16 (PPMPC_MF_6 | PPMPC_SF_16 | PPMPC_2S_PDC
+           | PPMPC_AV_SF2_2), /*  6/16 cel + 1/2 cel = 14/16 cel */
+    DUP16 (PPMPC_MF_7 | PPMPC_SF_16 | PPMPC_2S_PDC
+           | PPMPC_AV_SF2_2), /*  7/16 cel + 1/2 cel = 15/16 cel */
+  };
+  Item bitmap;
+  Screen *scr;
+  CCB *drawCel;
 
-	if (step >= 15) {
-		oldCel->ccb_PIXC	= PIXC_OPAQUE;				/* end case, restore the pixc  */
-		newCel->ccb_PIXC	= PIXC_OPAQUE;				/* words in both cels to normal */
-		newCel->ccb_Flags  |= CCB_LAST;
-		newCel->ccb_NextPtr	= NULL;
-		drawCel = newCel;
-	} else if (step == 7) {
-		oldCel->ccb_PIXC	= DUP16 (PPMPC_MF_8 | PPMPC_SF_16);	/* 8/16 cel + 0 (special case) */
-		newCel->ccb_PIXC	= pixctable[step];					/* 8/16 cel + CFDB */
-		oldCel->ccb_Flags  &= ~CCB_LAST;
-		oldCel->ccb_NextPtr = newCel;
-		drawCel = oldCel;
-	} else if (step < 7) {
-		oldCel->ccb_PIXC	= pixctable[14-step];		/* old cel gets high-intensity opaque pixc */
-		newCel->ccb_PIXC	= pixctable[step];			/* new cel gets low-intensity blend pixc */
-		oldCel->ccb_Flags  &= ~CCB_LAST;
-		oldCel->ccb_NextPtr = newCel;
-		drawCel = oldCel;
-	} else {
-		oldCel->ccb_PIXC	= pixctable[14-step];		/* old cel gets low-intensity blend pixc */
-		newCel->ccb_PIXC	= pixctable[step];			/* new cel gets high-intensity opaque pixc */
-		newCel->ccb_Flags  &= ~CCB_LAST;
-		newCel->ccb_NextPtr = oldCel;
-		oldCel->ccb_Flags  |= CCB_LAST;
-		oldCel->ccb_NextPtr = NULL;
-		drawCel = newCel;
-	}
+  if (step >= 15)
+    {
+      oldCel->ccb_PIXC = PIXC_OPAQUE; /* end case, restore the pixc  */
+      newCel->ccb_PIXC = PIXC_OPAQUE; /* words in both cels to normal */
+      newCel->ccb_Flags |= CCB_LAST;
+      newCel->ccb_NextPtr = NULL;
+      drawCel = newCel;
+    }
+  else if (step == 7)
+    {
+      oldCel->ccb_PIXC
+          = DUP16 (PPMPC_MF_8 | PPMPC_SF_16); /* 8/16 cel + 0 (special case) */
+      newCel->ccb_PIXC = pixctable[step];     /* 8/16 cel + CFDB */
+      oldCel->ccb_Flags &= ~CCB_LAST;
+      oldCel->ccb_NextPtr = newCel;
+      drawCel = oldCel;
+    }
+  else if (step < 7)
+    {
+      oldCel->ccb_PIXC
+          = pixctable[14 - step]; /* old cel gets high-intensity opaque pixc */
+      newCel->ccb_PIXC
+          = pixctable[step]; /* new cel gets low-intensity blend pixc */
+      oldCel->ccb_Flags &= ~CCB_LAST;
+      oldCel->ccb_NextPtr = newCel;
+      drawCel = oldCel;
+    }
+  else
+    {
+      oldCel->ccb_PIXC
+          = pixctable[14 - step]; /* old cel gets low-intensity blend pixc */
+      newCel->ccb_PIXC
+          = pixctable[step]; /* new cel gets high-intensity opaque pixc */
+      newCel->ccb_Flags &= ~CCB_LAST;
+      newCel->ccb_NextPtr = oldCel;
+      oldCel->ccb_Flags |= CCB_LAST;
+      oldCel->ccb_NextPtr = NULL;
+      drawCel = newCel;
+    }
 
-	if (screen > 0) {
-		if ((scr = (Screen *)LookupItem(screen)) == NULL) {
-			DIAGNOSE_SYSERR(BADITEM, ("LookupItem(%08lx) failed\n", screen));
-			return drawCel;
-		}
-		if (scr->scr.n_Type == SCREENNODE) {
-			bitmap = scr->scr_TempBitmap->bm.n_Item;
-		} else {
-			bitmap = screen;
-		}
-		DrawCels(bitmap, drawCel);
-	}
+  if (screen > 0)
+    {
+      if ((scr = (Screen *)LookupItem (screen)) == NULL)
+        {
+          DIAGNOSE_SYSERR (BADITEM, ("LookupItem(%08lx) failed\n", screen));
+          return drawCel;
+        }
+      if (scr->scr.n_Type == SCREENNODE)
+        {
+          bitmap = scr->scr_TempBitmap->bm.n_Item;
+        }
+      else
+        {
+          bitmap = screen;
+        }
+      DrawCels (bitmap, drawCel);
+    }
 
-	return drawCel;
+  return drawCel;
 }

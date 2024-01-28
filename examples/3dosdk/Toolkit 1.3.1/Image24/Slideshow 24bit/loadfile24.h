@@ -12,10 +12,7 @@
 *								*
 \***************************************************************/
 
-
 int32 openmacdevice (void);
 int32 getfilesize (char *name);
-int32 loadfile24 (char *name, void *buffer, uint32 buffersize, uint32 memtype, VdlChunk **rawVDLPtr,
-      ImageCC *image);
-
-
+int32 loadfile24 (char *name, void *buffer, uint32 buffersize, uint32 memtype,
+                  VdlChunk **rawVDLPtr, ImageCC *image);

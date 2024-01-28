@@ -11,8 +11,8 @@
 */
 
 #include "faders.h"
-#include "joytools.h"
 #include "graphic_tools.h"
+#include "joytools.h"
 
 extern GrafCon GCon[2];
 extern Item ScreenItems[2];

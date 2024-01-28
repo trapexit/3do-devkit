@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: OffsetInsetRect.c,v 1.2 1994/10/05 18:49:08 vertex Exp $
 **
@@ -13,20 +15,19 @@
 **
 ******************************************************************************/
 
-
 #include "celutils.h"
-
 
 /*----------------------------------------------------------------------------
  * OffsetSRect()
  *	Offset the position of an SRect by the specified XY deltas.
  *--------------------------------------------------------------------------*/
 
-SRect * OffsetSRect(SRect *dst, IPoint *delta)
+SRect *
+OffsetSRect (SRect *dst, IPoint *delta)
 {
-	dst->pos.x += delta->x;
-	dst->pos.y += delta->y;
-	return dst;
+  dst->pos.x += delta->x;
+  dst->pos.y += delta->y;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
@@ -34,11 +35,12 @@ SRect * OffsetSRect(SRect *dst, IPoint *delta)
  *	Offset the position of a CRect by the specified XY deltas.
  *--------------------------------------------------------------------------*/
 
-CRect * OffsetCRect(CRect *dst, IPoint *delta)
+CRect *
+OffsetCRect (CRect *dst, IPoint *delta)
 {
-	dst->tl.x += delta->x;
-	dst->tl.y += delta->y;
-	return dst;
+  dst->tl.x += delta->x;
+  dst->tl.y += delta->y;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
@@ -47,13 +49,14 @@ CRect * OffsetCRect(CRect *dst, IPoint *delta)
  *	are positive the rect insets (shrinks); if negative the rect grows.
  *--------------------------------------------------------------------------*/
 
-SRect * InsetSRect(SRect *dst, IPoint *delta)
+SRect *
+InsetSRect (SRect *dst, IPoint *delta)
 {
-	dst->pos.x  += delta->x;
-	dst->pos.y  += delta->y;
-	dst->size.x -= delta->x << 1;
-	dst->size.y -= delta->y << 1;
-	return dst;
+  dst->pos.x += delta->x;
+  dst->pos.y += delta->y;
+  dst->size.x -= delta->x << 1;
+  dst->size.y -= delta->y << 1;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
@@ -62,11 +65,12 @@ SRect * InsetSRect(SRect *dst, IPoint *delta)
  *	are positive the rect insets (shrinks); if negative the rect grows.
  *--------------------------------------------------------------------------*/
 
-CRect * InsetCRect(CRect *dst, IPoint *delta)
+CRect *
+InsetCRect (CRect *dst, IPoint *delta)
 {
-	dst->tl.x += delta->x;
-	dst->tl.y += delta->y;
-	dst->br.x -= delta->x;
-	dst->br.y -= delta->y;
-	return dst;
+  dst->tl.x += delta->x;
+  dst->tl.y += delta->y;
+  dst->br.x -= delta->x;
+  dst->br.y -= delta->y;
+  return dst;
 }

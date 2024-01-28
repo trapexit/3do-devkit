@@ -52,96 +52,98 @@ $Log: list.h,v $
 
 typedef struct Link
 {
-	struct Link *flink;	/* forward (next) link */
-	struct Link *blink;	/* backward (prev) link */
+  struct Link *flink; /* forward (next) link */
+  struct Link *blink; /* backward (prev) link */
 } Link;
 
 typedef union ListAnchor
 {
-    struct			/* ptr to first node */
-    {				/* anchor for lastnode */
-	Link links;
-	Link *filler;		
-    } head;
-    struct
-    {
-	Link *filler;
-	Link links;		/* ptr to lastnode */
-    } tail;			/* anchore for firstnode */
+  struct /* ptr to first node */
+  {      /* anchor for lastnode */
+    Link links;
+    Link *filler;
+  } head;
+  struct
+  {
+    Link *filler;
+    Link links; /* ptr to lastnode */
+  } tail;       /* anchore for firstnode */
 } ListAnchor;
 
 typedef struct List
 {
-	Node l;			/* A list is a node itself */
-	ListAnchor ListAnchor;	/* Anchor point for list of nodes */
+  Node l;                /* A list is a node itself */
+  ListAnchor ListAnchor; /* Anchor point for list of nodes */
 } List, *ListP;
 
 /* return the first node on the list or the anchor if empty */
-#define FIRSTNODE(l)	((Node *)((l)->ListAnchor.head.links.flink))
-#define FirstNode(l)	((Node *)((l)->ListAnchor.head.links.flink))
+#define FIRSTNODE(l) ((Node *)((l)->ListAnchor.head.links.flink))
+#define FirstNode(l) ((Node *)((l)->ListAnchor.head.links.flink))
 
 /* return the last node on the list or the anchor if empty */
-#define LASTNODE(l)	((Node *)((l)->ListAnchor.tail.links.blink))
-#define LastNode(l)	((Node *)((l)->ListAnchor.tail.links.blink))
+#define LASTNODE(l) ((Node *)((l)->ListAnchor.tail.links.blink))
+#define LastNode(l) ((Node *)((l)->ListAnchor.tail.links.blink))
 
 /* define for finding end while using flink */
-#define ISNODE(l,n)	(((Link**)(n)) != &((l)->ListAnchor.head.links.blink))
-#define IsNode(l,n)	(((Link**)(n)) != &((l)->ListAnchor.head.links.blink))
+#define ISNODE(l, n) (((Link **)(n)) != &((l)->ListAnchor.head.links.blink))
+#define IsNode(l, n) (((Link **)(n)) != &((l)->ListAnchor.head.links.blink))
 
 /* define for finding end while using blink */
-#define ISNODEB(l,n)	(((Link**)(n)) != &((l)->ListAnchor.head.links.flink))
-#define IsNodeB(l,n)	(((Link**)(n)) != &((l)->ListAnchor.head.links.flink))
+#define ISNODEB(l, n) (((Link **)(n)) != &((l)->ListAnchor.head.links.flink))
+#define IsNodeB(l, n) (((Link **)(n)) != &((l)->ListAnchor.head.links.flink))
 
-#define ISEMPTYLIST(l)	(!ISNODE((l),FIRSTNODE(l)))
-#define IsEmptyList(l)	(!IsNode((l),FirstNode(l)))
+#define ISEMPTYLIST(l) (!ISNODE ((l), FIRSTNODE (l)))
+#define IsEmptyList(l) (!IsNode ((l), FirstNode (l)))
 
-#define NEXTNODE(n)	(((Node *)(n))->n_Next)
-#define NextNode(n)	(((Node *)(n))->n_Next)
-#define PREVNODE(n)	(((Node *)(n))->n_Prev)
-#define PrevNode(n)	(((Node *)(n))->n_Prev)
-  
-#ifdef  __cplusplus 
-extern "C" { 
-#endif  /* __cplusplus */ 
+#define NEXTNODE(n) (((Node *)(n))->n_Next)
+#define NextNode(n) (((Node *)(n))->n_Next)
+#define PREVNODE(n) (((Node *)(n))->n_Prev)
+#define PrevNode(n) (((Node *)(n))->n_Prev)
 
-/* set the priority of a node in a list */
-extern uint8 SetNodePri(Node *n, uint8 newpri);	/* returns old pri */
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
-/* insert a node in the prioritized list starting from the tail */
-extern void InsertNodeFromTail(List *l, Node *n);
+  /* set the priority of a node in a list */
+  extern uint8 SetNodePri (Node *n, uint8 newpri); /* returns old pri */
 
-/* insert a node in the prioritized list starting from the head */
-extern void InsertNodeFromHead(List *l, Node *n);
+  /* insert a node in the prioritized list starting from the tail */
+  extern void InsertNodeFromTail (List *l, Node *n);
 
-/* insert a node in the prioritized list using (*f)() as a cmp func */
-/* starts at beginning of list and traverses till the end */
-/* should return true if n should be inserted before this node m */
-/* m is already in the list, n is the new node to be inserted */
-extern void UniversalInsertNode(List *l, Node *n, bool (*f)(Node *n,Node *m));
+  /* insert a node in the prioritized list starting from the head */
+  extern void InsertNodeFromHead (List *l, Node *n);
 
-/* Remove the first node on the list, return a ptr to it */
-extern Node *RemHead(List *l);
+  /* insert a node in the prioritized list using (*f)() as a cmp func */
+  /* starts at beginning of list and traverses till the end */
+  /* should return true if n should be inserted before this node m */
+  /* m is already in the list, n is the new node to be inserted */
+  extern void UniversalInsertNode (List *l, Node *n,
+                                   bool (*f) (Node *n, Node *m));
 
-/* Remove the last node on the list, return a ptr to it */
-extern Node *RemTail(List *l);
+  /* Remove the first node on the list, return a ptr to it */
+  extern Node *RemHead (List *l);
 
-/* Add a node to the end of the list, no priority */
-extern void AddTail(List *l, Node *n);
+  /* Remove the last node on the list, return a ptr to it */
+  extern Node *RemTail (List *l);
 
-/* Add a node to the head of the list, no priority */
-extern void AddHead(List *l, Node *n);
+  /* Add a node to the end of the list, no priority */
+  extern void AddTail (List *l, Node *n);
 
-/* remove a node from a list */
-extern void RemNode( Node *n);
+  /* Add a node to the head of the list, no priority */
+  extern void AddHead (List *l, Node *n);
 
-/* Initialize a list to the empty list */
-extern void InitList(List *l, char *name);
+  /* remove a node from a list */
+  extern void RemNode (Node *n);
 
-/* find a Node in a List with the name of <name> */
-extern Node *FindNamedNode(List *l, char *name);
+  /* Initialize a list to the empty list */
+  extern void InitList (List *l, char *name);
 
-#ifdef  __cplusplus
+  /* find a Node in a List with the name of <name> */
+  extern Node *FindNamedNode (List *l, char *name);
+
+#ifdef __cplusplus
 }
-#endif  /* __cplusplus */
+#endif /* __cplusplus */
 
 #endif /* __LISTS_H */

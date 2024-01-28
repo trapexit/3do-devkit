@@ -16,6 +16,7 @@
 /* Public routine prototypes */
 /*****************************/
 
-char*	MakeName( char* outputNameBuf, int32 maxNameLen, char* baseNameString, int32 uniqueID );
+char *MakeName (char *outputNameBuf, int32 maxNameLen, char *baseNameString,
+                int32 uniqueID);
 
-#endif	/* __MAKENAME_H__ */
+#endif /* __MAKENAME_H__ */

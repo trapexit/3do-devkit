@@ -16,75 +16,69 @@
 #ifndef __CHUNKQUEUE__
 #define __CHUNKQUEUE__
 
-
-
 class TChunkListElement;
-
-
 
 /*************/
 /*  CLASSES  */
 /*************/
 
-
-
-class TChunkQueue {
+class TChunkQueue
+{
 public:
-							TChunkQueue ();
+  TChunkQueue ();
 
-	virtual 				~TChunkQueue ();
+  virtual ~TChunkQueue ();
 
-			void			Add (TChunk* chunk);
-								// Add the specified chunk to the tail of this queue
-								
-			TChunk*			Remove ();
-								// Remove a number of chunks from the head of this queue
+  void Add (TChunk *chunk);
+  // Add the specified chunk to the tail of this queue
 
-			void			RemoveAll ();
-								// Remove all chunks from this queue
+  TChunk *Remove ();
+  // Remove a number of chunks from the head of this queue
 
-			Boolean			IsEmpty () const;
-								// Return true if this queue is empty
+  void RemoveAll ();
+  // Remove all chunks from this queue
 
+  Boolean IsEmpty () const;
+  // Return true if this queue is empty
 
 private:
-	friend	class	TChunkQueueIterator;
-								// Iterator is allowed to paw through the queue representation
+  friend class TChunkQueueIterator;
+  // Iterator is allowed to paw through the queue representation
 
-							TChunkQueue (const TChunkQueue&) {}
-			void			operator = (const TChunkQueue&) {}
-								// Copying and assignment are disallowed
+  TChunkQueue (const TChunkQueue &) {}
+  void
+  operator= (const TChunkQueue &)
+  {
+  }
+  // Copying and assignment are disallowed
 
-
-	TChunkListElement*		head;		// pointer to head of this queue
-	TChunkListElement*		tail;		// pointer to tail of this queue
+  TChunkListElement *head; // pointer to head of this queue
+  TChunkListElement *tail; // pointer to tail of this queue
 };
 
-
-
-class TChunkQueueIterator {
+class TChunkQueueIterator
+{
 public:
-							TChunkQueueIterator (const TChunkQueue* chunkQueue);
+  TChunkQueueIterator (const TChunkQueue *chunkQueue);
 
-	virtual 				~TChunkQueueIterator ();
+  virtual ~TChunkQueueIterator ();
 
-			void			Reset ();
-								// Reset this iterator to the beginning of the queue
+  void Reset ();
+  // Reset this iterator to the beginning of the queue
 
-			TChunk*			GetNext ();
-								// Return the next chunk from the queue
-
+  TChunk *GetNext ();
+  // Return the next chunk from the queue
 
 private:
-							TChunkQueueIterator (const TChunkQueueIterator&) {}
-			void			operator = (const TChunkQueueIterator&) {}
-								// Copying and assignment are disallowed
+  TChunkQueueIterator (const TChunkQueueIterator &) {}
+  void
+  operator= (const TChunkQueueIterator &)
+  {
+  }
+  // Copying and assignment are disallowed
 
-	const TChunkQueue*		iterQueue;	// associated chunk queue
-	TChunkListElement*		next;		// pointer to next element in queue
+  const TChunkQueue *iterQueue; // associated chunk queue
+  TChunkListElement *next;      // pointer to next element in queue
 };
-
-
 
 #endif
-

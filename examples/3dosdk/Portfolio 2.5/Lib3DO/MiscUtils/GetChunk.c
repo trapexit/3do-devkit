@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: GetChunk.c,v 1.5 1994/10/05 18:23:43 vertex Exp $
 **
@@ -16,25 +18,26 @@
 **
 ******************************************************************************/
 
-
 #include "form3do.h"
 
-char *GetChunk( uint32 *chunk_ID, char **buffer, int32 *bufLen )
+char *
+GetChunk (uint32 *chunk_ID, char **buffer, int32 *bufLen)
 {
-	char *buf;
+  char *buf;
 
-	if ( *bufLen > 0 ) {
+  if (*bufLen > 0)
+    {
 
-		buf = *buffer;
-		*chunk_ID = ((PixelChunk *)buf)->chunk_ID;
+      buf = *buffer;
+      *chunk_ID = ((PixelChunk *)buf)->chunk_ID;
 
-		/* jump to next chunk */
+      /* jump to next chunk */
 
-		*bufLen -= ((PixelChunk *)buf)->chunk_size;
-		*buffer += ((PixelChunk *)buf)->chunk_size;
+      *bufLen -= ((PixelChunk *)buf)->chunk_size;
+      *buffer += ((PixelChunk *)buf)->chunk_size;
 
-		return buf;
-	}
+      return buf;
+    }
 
-	return NULL;
+  return NULL;
 }

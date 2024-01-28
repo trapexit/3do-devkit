@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: CenterRectCelRect.c,v 1.2 1994/10/05 17:49:13 vertex Exp $
 **
@@ -34,22 +36,23 @@
 #include "celutils.h"
 #include "string.h"
 
-#define COORDINATESIZE  (offsetof(CCB, ccb_PIXC) - offsetof(CCB, ccb_XPos))
-#define PERSPECTIVESIZE (offsetof(CCB, ccb_PIXC) - offsetof(CCB, ccb_HDX))
+#define COORDINATESIZE (offsetof (CCB, ccb_PIXC) - offsetof (CCB, ccb_XPos))
+#define PERSPECTIVESIZE (offsetof (CCB, ccb_PIXC) - offsetof (CCB, ccb_HDX))
 
 /*----------------------------------------------------------------------------
  * CenterRectCelInSRect()
  *	Center a cel in/over the specified rect.
  *--------------------------------------------------------------------------*/
 
-void CenterRectCelInSRect(CCB *cel, SRect *rect)
+void
+CenterRectCelInSRect (CCB *cel, SRect *rect)
 {
-	FPoint center;
+  FPoint center;
 
-	center.x = Convert32_F16(rect->pos.x + (rect->size.x >> 1));
-	center.y = Convert32_F16(rect->pos.y + (rect->size.y >> 1));
+  center.x = Convert32_F16 (rect->pos.x + (rect->size.x >> 1));
+  center.y = Convert32_F16 (rect->pos.y + (rect->size.y >> 1));
 
-	CenterRectCelOverFPoint(cel, &center);
+  CenterRectCelOverFPoint (cel, &center);
 }
 
 /*----------------------------------------------------------------------------
@@ -57,46 +60,49 @@ void CenterRectCelInSRect(CCB *cel, SRect *rect)
  *	Center a cel in/over the specified rect.
  *--------------------------------------------------------------------------*/
 
-void CenterRectCelInCRect(CCB *cel, CRect *rect)
+void
+CenterRectCelInCRect (CCB *cel, CRect *rect)
 {
-	FPoint center;
+  FPoint center;
 
-	center.x = Convert32_F16(rect->tl.x + (XSIZEFROMCRECT(rect) >> 1));
-	center.y = Convert32_F16(rect->tl.y + (YSIZEFROMCRECT(rect) >> 1));
+  center.x = Convert32_F16 (rect->tl.x + (XSIZEFROMCRECT (rect) >> 1));
+  center.y = Convert32_F16 (rect->tl.y + (YSIZEFROMCRECT (rect) >> 1));
 
-	CenterRectCelOverFPoint(cel, &center);
+  CenterRectCelOverFPoint (cel, &center);
 }
 
 /*----------------------------------------------------------------------------
  * CenterRectAACelInSRect()
- *	Center an anti-aliased cel in/over the specified rect.  The AA cel's mask
- *	and data CCBs are both set to the same location.
+ *	Center an anti-aliased cel in/over the specified rect.  The AA cel's
+ *mask and data CCBs are both set to the same location.
  *--------------------------------------------------------------------------*/
 
-void CenterRectAACelInSRect(CCB *cel, SRect *rect)
+void
+CenterRectAACelInSRect (CCB *cel, SRect *rect)
 {
-	FPoint center;
+  FPoint center;
 
-	center.x = Convert32_F16(rect->pos.x + (rect->size.x >> 1));
-	center.y = Convert32_F16(rect->pos.y + (rect->size.y >> 1));
+  center.x = Convert32_F16 (rect->pos.x + (rect->size.x >> 1));
+  center.y = Convert32_F16 (rect->pos.y + (rect->size.y >> 1));
 
-	CenterRectAACelOverFPoint(cel, &center);
+  CenterRectAACelOverFPoint (cel, &center);
 }
 
 /*----------------------------------------------------------------------------
  * CenterRectAACelInCRect()
- *	Center an anti-aliased cel in/over the specified rect.  The AA cel's mask
- *	and data CCBs are both set to the same location.
+ *	Center an anti-aliased cel in/over the specified rect.  The AA cel's
+ *mask and data CCBs are both set to the same location.
  *--------------------------------------------------------------------------*/
 
-void CenterRectAACelInCRect(CCB *cel, CRect *rect)
+void
+CenterRectAACelInCRect (CCB *cel, CRect *rect)
 {
-	FPoint center;
+  FPoint center;
 
-	center.x = Convert32_F16(rect->tl.x + (XSIZEFROMCRECT(rect) >> 1));
-	center.y = Convert32_F16(rect->tl.y + (YSIZEFROMCRECT(rect) >> 1));
+  center.x = Convert32_F16 (rect->tl.x + (XSIZEFROMCRECT (rect) >> 1));
+  center.y = Convert32_F16 (rect->tl.y + (YSIZEFROMCRECT (rect) >> 1));
 
-	CenterRectAACelOverFPoint(cel, &center);
+  CenterRectAACelOverFPoint (cel, &center);
 }
 
 /*----------------------------------------------------------------------------
@@ -107,14 +113,15 @@ void CenterRectAACelInCRect(CCB *cel, CRect *rect)
  *	on entry.
  *--------------------------------------------------------------------------*/
 
-void CenterRectCelListInSRect(CCB *cel, SRect *rect)
+void
+CenterRectCelListInSRect (CCB *cel, SRect *rect)
 {
-	FPoint center;
+  FPoint center;
 
-	center.x = Convert32_F16(rect->pos.x + (rect->size.x >> 1));
-	center.y = Convert32_F16(rect->pos.y + (rect->size.y >> 1));
+  center.x = Convert32_F16 (rect->pos.x + (rect->size.x >> 1));
+  center.y = Convert32_F16 (rect->pos.y + (rect->size.y >> 1));
 
-	CenterRectCelListOverFPoint(cel, &center);
+  CenterRectCelListOverFPoint (cel, &center);
 }
 
 /*----------------------------------------------------------------------------
@@ -125,13 +132,13 @@ void CenterRectCelListInSRect(CCB *cel, SRect *rect)
  *	on entry.
  *--------------------------------------------------------------------------*/
 
-void CenterRectCelListInCRect(CCB *cel, CRect *rect)
+void
+CenterRectCelListInCRect (CCB *cel, CRect *rect)
 {
-	FPoint center;
+  FPoint center;
 
-	center.x = Convert32_F16(rect->tl.x + (XSIZEFROMCRECT(rect) >> 1));
-	center.y = Convert32_F16(rect->tl.y + (YSIZEFROMCRECT(rect) >> 1));
+  center.x = Convert32_F16 (rect->tl.x + (XSIZEFROMCRECT (rect) >> 1));
+  center.y = Convert32_F16 (rect->tl.y + (YSIZEFROMCRECT (rect) >> 1));
 
-	CenterRectCelListOverFPoint(cel, &center);
+  CenterRectCelListOverFPoint (cel, &center);
 }
-

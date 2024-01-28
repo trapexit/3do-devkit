@@ -16,37 +16,30 @@
 #ifndef __FORM3DOCHUNKS__
 #define __FORM3DOCHUNKS__
 
-
-
 /*************/
 /*  CLASSES  */
 /*************/
 
-
-
-class TCCBChunk : public TChunk {
+class TCCBChunk : public TChunk
+{
 public:
-				TCCBChunk (const CCB& ccb);
-	virtual 	~TCCBChunk ();
+  TCCBChunk (const CCB &ccb);
+  virtual ~TCCBChunk ();
 
 private:
-				TCCBChunk () {}
-				TCCBChunk (const TCCBChunk&) {}
+  TCCBChunk () {}
+  TCCBChunk (const TCCBChunk &) {}
 };
 
-
-
-class TPLUTChunk : public TChunk {
+class TPLUTChunk : public TChunk
+{
 public:
-				TPLUTChunk (const uint32* plutPtr, int count = MAX_PLUT_ENTRIES);
-	virtual 	~TPLUTChunk ();
+  TPLUTChunk (const uint32 *plutPtr, int count = MAX_PLUT_ENTRIES);
+  virtual ~TPLUTChunk ();
 
 private:
-				TPLUTChunk () {}
-				TPLUTChunk (const TPLUTChunk&) {}
+  TPLUTChunk () {}
+  TPLUTChunk (const TPLUTChunk &) {}
 };
-
-
 
 #endif
-

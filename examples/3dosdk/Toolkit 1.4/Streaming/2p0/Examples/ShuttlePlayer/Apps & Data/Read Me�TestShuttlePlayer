@@ -1,1 +1,42 @@
-#	TestShuttlePlayer	##	June 7, 1994		##	F. Y. Pai			##########################To demonstrate ShuttlePlayer, this folder contains the following data and script:Video=====¥  TestShuttle.cv  		This is a one minute cinepak movie compressed at 20fps, with keyframe at 20fps, and 		a data rate setting at 270 kb/s.¥  TestShuttle.cv.FILM		This is created using MovieToStream_Shuttle using the source TestShuttle.cv.				->  movietostreamshuttle testshuttle.cvAudio=====¥  ShuttleAudio.aiff  	(one minute, 44KHz 16Bit Mono)¥  ShuttleAudio.aifc	(one minute, 44KHz 16Bit Mono Compressed 2:1)¥  ShuttleAudio.saudioTo create streamed audio (saudio) files, you would use squashsnd to compress and sftostreamto obtain the final saudio files.  For example.		->	squashsnd -i ShuttleAudio.aiff -o ShuttleAudio.aifc		->	sftostream -i ShuttleAudio.aifc -o ShuttleAudio.saudioScript======¥	ShuttleWeaveScript		This script is used to weave the streamed audio and video files.  Please read		the script to get the details on the headers used.				-> weaver -o Movie_0.stream < shuttleweavescriptLastly,=======Put the stream Movie_0.stream into the folder Player_Movies.  Put the folders Player_Movies and Player_Screens to your remote folder.
+#	TestShuttlePlayer	#
+#	June 7, 1994		#
+#	F. Y. Pai			#
+#########################
+
+To demonstrate ShuttlePlayer, this folder contains the following data and script:
+
+Video
+=====
+¥  TestShuttle.cv  
+		This is a one minute cinepak movie compressed at 20fps, with keyframe at 20fps, and 
+		a data rate setting at 270 kb/s.
+¥  TestShuttle.cv.FILM
+		This is created using MovieToStream_Shuttle using the source TestShuttle.cv.
+		
+		->  movietostreamshuttle testshuttle.cv
+
+Audio
+=====
+¥  ShuttleAudio.aiff  	(one minute, 44KHz 16Bit Mono)
+¥  ShuttleAudio.aifc	(one minute, 44KHz 16Bit Mono Compressed 2:1)
+¥  ShuttleAudio.saudio
+
+To create streamed audio (saudio) files, you would use squashsnd to compress and sftostream
+to obtain the final saudio files.  For example.
+		->	squashsnd -i ShuttleAudio.aiff -o ShuttleAudio.aifc
+		->	sftostream -i ShuttleAudio.aifc -o ShuttleAudio.saudio
+
+Script
+======
+¥	ShuttleWeaveScript
+		This script is used to weave the streamed audio and video files.  Please read
+		the script to get the details on the headers used.
+		
+		-> weaver -o Movie_0.stream < shuttleweavescript
+
+
+Lastly,
+=======
+
+Put the stream Movie_0.stream into the folder Player_Movies.  
+Put the folders Player_Movies and Player_Screens to your remote folder.

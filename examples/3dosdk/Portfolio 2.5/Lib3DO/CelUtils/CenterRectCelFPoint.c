@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: CenterRectCelFPoint.c,v 1.2 1994/10/05 17:46:16 vertex Exp $
 **
@@ -34,24 +36,25 @@
 #include "celutils.h"
 #include "string.h"
 
-#define COORDINATESIZE  (offsetof(CCB, ccb_PIXC) - offsetof(CCB, ccb_XPos))
-#define PERSPECTIVESIZE (offsetof(CCB, ccb_PIXC) - offsetof(CCB, ccb_HDX))
+#define COORDINATESIZE (offsetof (CCB, ccb_PIXC) - offsetof (CCB, ccb_XPos))
+#define PERSPECTIVESIZE (offsetof (CCB, ccb_PIXC) - offsetof (CCB, ccb_HDX))
 
 /*----------------------------------------------------------------------------
  * CenterRectCelOverFPoint()
  *	Center a cel over the specified point.
  *--------------------------------------------------------------------------*/
 
-void CenterRectCelOverFPoint(CCB *cel, FPoint *point)
+void
+CenterRectCelOverFPoint (CCB *cel, FPoint *point)
 {
-	frac16 width;
-	frac16 height;
+  frac16 width;
+  frac16 height;
 
-	width  = MulSF16((cel->ccb_HDX >> 4), Convert32_F16(cel->ccb_Width));
-	height = MulSF16((cel->ccb_VDY), 	  Convert32_F16(cel->ccb_Height));
+  width = MulSF16 ((cel->ccb_HDX >> 4), Convert32_F16 (cel->ccb_Width));
+  height = MulSF16 ((cel->ccb_VDY), Convert32_F16 (cel->ccb_Height));
 
-	cel->ccb_XPos = SubF16(point->x, DivSF16(width,  Convert32_F16(2)));
-	cel->ccb_YPos = SubF16(point->y, DivSF16(height, Convert32_F16(2)));
+  cel->ccb_XPos = SubF16 (point->x, DivSF16 (width, Convert32_F16 (2)));
+  cel->ccb_YPos = SubF16 (point->y, DivSF16 (height, Convert32_F16 (2)));
 }
 
 /*----------------------------------------------------------------------------
@@ -60,17 +63,18 @@ void CenterRectCelOverFPoint(CCB *cel, FPoint *point)
  *	and data CCBs are both set to the same location.
  *--------------------------------------------------------------------------*/
 
-void CenterRectAACelOverFPoint(CCB *cel1, FPoint *point)
+void
+CenterRectAACelOverFPoint (CCB *cel1, FPoint *point)
 {
-	CCB *	cel2;
+  CCB *cel2;
 
-	CenterRectCelOverFPoint(cel1, point);
+  CenterRectCelOverFPoint (cel1, point);
 
-	if (!IS_LASTCEL(cel1)) {
-		cel2 = CEL_NEXTPTR(cel1);
-		memcpy(&cel2->ccb_XPos, &cel1->ccb_XPos, COORDINATESIZE);
-	}
-
+  if (!IS_LASTCEL (cel1))
+    {
+      cel2 = CEL_NEXTPTR (cel1);
+      memcpy (&cel2->ccb_XPos, &cel1->ccb_XPos, COORDINATESIZE);
+    }
 }
 
 /*----------------------------------------------------------------------------
@@ -81,21 +85,23 @@ void CenterRectAACelOverFPoint(CCB *cel1, FPoint *point)
  *	on entry.
  *--------------------------------------------------------------------------*/
 
-void CenterRectCelListOverFPoint(CCB *list, FPoint *point)
+void
+CenterRectCelListOverFPoint (CCB *list, FPoint *point)
 {
-	FPoint delta;
+  FPoint delta;
 
-	delta.x = list->ccb_XPos;					/* capture starting position */
-	delta.y = list->ccb_YPos;
+  delta.x = list->ccb_XPos; /* capture starting position */
+  delta.y = list->ccb_YPos;
 
-	CenterRectCelOverFPoint(list, point);		/* go center first cel */
+  CenterRectCelOverFPoint (list, point); /* go center first cel */
 
-	delta.x = SubF16(list->ccb_XPos, delta.x);	/* calc delta from captured  */
-	delta.y = SubF16(list->ccb_YPos, delta.y);	/* starting position */
+  delta.x = SubF16 (list->ccb_XPos, delta.x); /* calc delta from captured  */
+  delta.y = SubF16 (list->ccb_YPos, delta.y); /* starting position */
 
-	if (!IS_LASTCEL(list)) {
-		OffsetCelListByFDelta(CEL_NEXTPTR(list), &delta, FALSE);
-	}
+  if (!IS_LASTCEL (list))
+    {
+      OffsetCelListByFDelta (CEL_NEXTPTR (list), &delta, FALSE);
+    }
 }
 
 /*----------------------------------------------------------------------------
@@ -103,9 +109,10 @@ void CenterRectCelListOverFPoint(CCB *list, FPoint *point)
  *	Center a cel at the center point of the display.
  *--------------------------------------------------------------------------*/
 
-void CenterRectCelInDisplay(CCB *cel)
+void
+CenterRectCelInDisplay (CCB *cel)
 {
-	CenterRectCelOverFPoint(cel, CenterFPointInDisplay());
+  CenterRectCelOverFPoint (cel, CenterFPointInDisplay ());
 }
 
 /*----------------------------------------------------------------------------
@@ -114,21 +121,22 @@ void CenterRectCelInDisplay(CCB *cel)
  *	cel's mask and data CCBs are both set to the same location.
  *--------------------------------------------------------------------------*/
 
-void CenterRectAACelInDisplay(CCB *cel)
+void
+CenterRectAACelInDisplay (CCB *cel)
 {
-	CenterRectAACelOverFPoint(cel, CenterFPointInDisplay());
+  CenterRectAACelOverFPoint (cel, CenterFPointInDisplay ());
 }
 
 /*----------------------------------------------------------------------------
  * CenterRectCelListInDisplay()
- *	Center a list of cels at the center point of the display.  The first cel
- *	is centered, then all other cels' locations are modified so that they
+ *	Center a list of cels at the center point of the display.  The first
+ *cel is centered, then all other cels' locations are modified so that they
  *	maintain the same relative location to the first cel that they had
  *	on entry.
  *--------------------------------------------------------------------------*/
 
-void CenterRectCelListInDisplay(CCB *cel)
+void
+CenterRectCelListInDisplay (CCB *cel)
 {
-	CenterRectCelListOverFPoint(cel, CenterFPointInDisplay());
+  CenterRectCelListOverFPoint (cel, CenterFPointInDisplay ());
 }
-

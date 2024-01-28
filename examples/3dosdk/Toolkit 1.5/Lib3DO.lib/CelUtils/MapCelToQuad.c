@@ -6,80 +6,86 @@
  *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
- *	02/28/94  Ian	Radically modified.  This module now contains only MapToQuad
- *					operations; mappings of other types now live elsewhere.
- *	02/08/94  Ian	Added MapRectCelList() and MapRectAACel to work with the 
- *					new MapRectCel() function.
- *	10/24/93  Ian	New today.
+ *	02/28/94  Ian	Radically modified.  This module now contains only
+ *MapToQuad operations; mappings of other types now live elsewhere. 02/08/94
+ *Ian	Added MapRectCelList() and MapRectAACel to work with the new
+ *MapRectCel() function. 10/24/93  Ian	New today.
  *
  *	Implementation notes:
- *	
- *	In these routines, an AA cel is presumed to be two CCBs linked together, 
- *	both having the same XY coordinates to begin with.  For operations on AA
- *	cels, the perspective info (HDX thru HDDY) is also copied from the first 
- *	to the second cel, if a second cel exists. The AA calls will work if called 
- *	on a single cel that has no links, allowing you to easily toggle between
- *	using AA and non-AA cels if you want.
  *
- *	The list-oriented functions will also work on both AA and non-AA cels.  
- *	They even work on lists containing a mixture of both types of cels.  The
- *	main difference between the list-oriented calls and AA-oriented calls is
- *	that the AA calls will only affect the immediately-following CCB (if it
- *	exists) but won't walk any further down the list.  
+ *	In these routines, an AA cel is presumed to be two CCBs linked
+ *together, both having the same XY coordinates to begin with.  For operations
+ *on AA cels, the perspective info (HDX thru HDDY) is also copied from the
+ *first to the second cel, if a second cel exists. The AA calls will work if
+ *called on a single cel that has no links, allowing you to easily toggle
+ *between using AA and non-AA cels if you want.
+ *
+ *	The list-oriented functions will also work on both AA and non-AA cels.
+ *	They even work on lists containing a mixture of both types of cels. The
+ *	main difference between the list-oriented calls and AA-oriented calls
+ *is that the AA calls will only affect the immediately-following CCB (if it
+ *	exists) but won't walk any further down the list.
  ****************************************************************************/
 
 #include "CelUtils.h"
 #include "string.h"
 
-#define COORDINATESIZE  (offsetof(CCB, ccb_PIXC) - offsetof(CCB, ccb_XPos))
-#define PERSPECTIVESIZE (offsetof(CCB, ccb_PIXC) - offsetof(CCB, ccb_HDX))
+#define COORDINATESIZE (offsetof (CCB, ccb_PIXC) - offsetof (CCB, ccb_XPos))
+#define PERSPECTIVESIZE (offsetof (CCB, ccb_PIXC) - offsetof (CCB, ccb_HDX))
 
 /*------------------------------------------------------------------------------
  * MapCelToCQuad()
- *	A standard MapCel() call, but it takes a CQuad* instead of Point[] parm.
+ *	A standard MapCel() call, but it takes a CQuad* instead of Point[]
+ *parm.
  *----------------------------------------------------------------------------*/
 
-void MapCelToCQuad(CCB *cel, CQuad *quad)
+void
+MapCelToCQuad (CCB *cel, CQuad *quad)
 {
-	MapCel(cel, (Point *)quad);
+  MapCel (cel, (Point *)quad);
 }
 
 /*------------------------------------------------------------------------------
  * MapAACelTo CQuad()
- *	Perform a MapCel() operation on an anti-aliased cel. 
+ *	Perform a MapCel() operation on an anti-aliased cel.
  *----------------------------------------------------------------------------*/
 
-void MapAACelToCQuad(CCB *cel1, CQuad *quad)
+void
+MapAACelToCQuad (CCB *cel1, CQuad *quad)
 {
-	CCB *	cel2;
+  CCB *cel2;
 
-	MapCel(cel1, (Point *)quad);
+  MapCel (cel1, (Point *)quad);
 
-	if (!IS_LASTCEL(cel1)) {
-		cel2 = CEL_NEXTPTR(cel1);
-		memcpy(&cel2->ccb_XPos, &cel1->ccb_XPos, COORDINATESIZE);
-	}
+  if (!IS_LASTCEL (cel1))
+    {
+      cel2 = CEL_NEXTPTR (cel1);
+      memcpy (&cel2->ccb_XPos, &cel1->ccb_XPos, COORDINATESIZE);
+    }
 }
 
 /*------------------------------------------------------------------------------
  * MapCelListToCQuad()
- *	Perform a MapCel() operation for all cels in a list.  The MapCel() is done
- *	on the first cel.  Then for all other cels in the list, the CCB perspective
- *	fields (HDX thru HDDY) from the first cel are copied to each cel in the
- *	list, and the XY coordinates of each cel in the list are modified so that
- *	the cels maintain the same relative position as they had to the first cel.
+ *	Perform a MapCel() operation for all cels in a list.  The MapCel() is
+ *done on the first cel.  Then for all other cels in the list, the CCB
+ *perspective fields (HDX thru HDDY) from the first cel are copied to each cel
+ *in the list, and the XY coordinates of each cel in the list are modified so
+ *that the cels maintain the same relative position as they had to the first
+ *cel.
  *----------------------------------------------------------------------------*/
 
-void MapCelListToCQuad(CCB *list, CQuad *quad)
+void
+MapCelListToCQuad (CCB *list, CQuad *quad)
 {
-	FPoint	delta;
-	
-	delta.x = SubF16(Convert32_F16(quad->tl.x), list->ccb_XPos);
-	delta.y = SubF16(Convert32_F16(quad->tl.y), list->ccb_YPos);
+  FPoint delta;
 
-	MapCel(list, (Point *)quad);
-	
-	if (!IS_LASTCEL(list)) {
-		OffsetCelListByFDelta(CEL_NEXTPTR(list), &delta, TRUE);
-	}
+  delta.x = SubF16 (Convert32_F16 (quad->tl.x), list->ccb_XPos);
+  delta.y = SubF16 (Convert32_F16 (quad->tl.y), list->ccb_YPos);
+
+  MapCel (list, (Point *)quad);
+
+  if (!IS_LASTCEL (list))
+    {
+      OffsetCelListByFDelta (CEL_NEXTPTR (list), &delta, TRUE);
+    }
 }

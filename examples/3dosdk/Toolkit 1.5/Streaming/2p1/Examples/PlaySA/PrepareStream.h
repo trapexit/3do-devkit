@@ -1,20 +1,21 @@
 /*******************************************************************************************
  *	File:			PrepareStream.h
  *
- *	Contains:		definitions for high level stream playback preparation
+ *	Contains:		definitions for high level stream playback
+ *preparation
  *
  *	Written by:		Joe Buczek
  *
  *	Copyright © 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
- *	10/05/94		dtc		Removed typedef in enum declaration.
- *	10/20/93		jb		New today
+ *	10/05/94		dtc		Removed typedef in enum
+ *declaration. 10/20/93		jb		New today
  *
  *******************************************************************************************/
 
-#ifndef	_PREPARESTREAM_H_
-#define	_PREPARESTREAM_H_
+#ifndef _PREPARESTREAM_H_
+#define _PREPARESTREAM_H_
 
 #ifndef _TYPES_H
 #include "Types.h"
@@ -30,23 +31,25 @@
  * For now, we require that the stream header, if present, be located
  * at the very first byte of the file. This may get better, eventually.
  */
-#define	FIND_HEADER_BUFFER_SIZE		2048
+#define FIND_HEADER_BUFFER_SIZE 2048
 
 /***************/
 /* Error codes */
 /***************/
-enum {
-	kPSVersionErr			= -2001,
-	kPSMemFullErr			= -2002,
-	kPSUnknownSubscriber	= -2003,
-	kPSHeaderNotFound		= -2004
-	};
+enum
+{
+  kPSVersionErr = -2001,
+  kPSMemFullErr = -2002,
+  kPSUnknownSubscriber = -2003,
+  kPSHeaderNotFound = -2004
+};
 
 /*****************************/
 /* Public routine prototypes */
 /*****************************/
 
-int32			FindAndLoadStreamHeader( DSHeaderChunkPtr headerPtr, char *streamFileName );
-DSDataBufPtr	CreateBufferList( long numBuffers, long bufferSize );
+int32 FindAndLoadStreamHeader (DSHeaderChunkPtr headerPtr,
+                               char *streamFileName);
+DSDataBufPtr CreateBufferList (long numBuffers, long bufferSize);
 
-#endif	/* _PREPARESTREAM_H_ */
+#endif /* _PREPARESTREAM_H_ */
