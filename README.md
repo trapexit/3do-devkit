@@ -139,7 +139,6 @@ to work, this was settled on till something better could be be done.
 * Project files for popular IDEs.
 * Continue to enhance the C++ standard library replacement.
 * C++ based 3DO specific libraries.
-* Create a new banner conversion tool.
 * Create a new iso building tool.
 * Create a new iso encrypt tool.
 * More examples.
