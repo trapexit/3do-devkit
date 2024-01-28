@@ -1,9 +1,9 @@
 /*****************************************************************************
  *	File:			LoadAnim.c
  *
- *	Contains:		Routine to allocate a buffer and load an anim file
- *					into it, using fast block I/O, then parse the anim
- *					file into an ANIM structure with attached AnimFrames.
+ *	Contains:		Routine to allocate a buffer and load an anim
+ *file into it, using fast block I/O, then parse the anim file into an ANIM
+ *structure with attached AnimFrames.
  *
  *	Copyright © 1993 The 3DO Company. All Rights Reserved.
  *
@@ -33,59 +33,67 @@
  *
  ****************************************************************************/
 
-#include "Portfolio.h"
+#include "BlockFile.h"
 #include "Init3DO.h"
 #include "Parse3DO.h"
-#include "Utils3DO.h"
-#include "BlockFile.h"
+#include "Portfolio.h"
 #include "UMemory.h"
+#include "Utils3DO.h"
 
 #include "Debug3DO.h"
 
 /*----------------------------------------------------------------------------
  * LoadAnim
- *	Load an ANIM file, parse it into an ANIM structure and a set of AnimFrames.
+ *	Load an ANIM file, parse it into an ANIM structure and a set of
+ *AnimFrames.
  *--------------------------------------------------------------------------*/
 
-ANIM * LoadAnim(char *name, uint32 memTypeBits)
+ANIM *
+LoadAnim (char *name, uint32 memTypeBits)
 {
-	long		filesize;
-	void *		filebuf;
-	ANIM *		pAnim;
+  long filesize;
+  void *filebuf;
+  ANIM *pAnim;
 
-	/*------------------------------------------------------------------------
-	 * Load the file into a buffer, call ParseAnim() to do the real work.
-	 *----------------------------------------------------------------------*/
+  /*------------------------------------------------------------------------
+   * Load the file into a buffer, call ParseAnim() to do the real work.
+   *----------------------------------------------------------------------*/
 
-	if (NULL == (filebuf = LoadFile(name, &filesize, memTypeBits))) {
-		DIAGNOSE(("Can't load file %s\n", name));
-		return NULL;
-	}
+  if (NULL == (filebuf = LoadFile (name, &filesize, memTypeBits)))
+    {
+      DIAGNOSE (("Can't load file %s\n", name));
+      return NULL;
+    }
 
-	if (NULL == (pAnim = ParseAnim(filebuf, filesize, memTypeBits))) {
-		UnloadFile(filebuf);
-		DIAGNOSE(("Can't parse file %s\n", name));
-		return NULL;
-	}
+  if (NULL == (pAnim = ParseAnim (filebuf, filesize, memTypeBits)))
+    {
+      UnloadFile (filebuf);
+      DIAGNOSE (("Can't parse file %s\n", name));
+      return NULL;
+    }
 
-	pAnim->dataBuffer = filebuf;	// attach buffer so Unload can free it.
+  pAnim->dataBuffer = filebuf; // attach buffer so Unload can free it.
 
-	return pAnim;
+  return pAnim;
 }
 
 /*----------------------------------------------------------------------------
  *
  *--------------------------------------------------------------------------*/
 
-void UnloadAnim(ANIM *anim)
+void
+UnloadAnim (ANIM *anim)
 {
-	if (anim != NULL) {
-		if (anim->dataBuffer != NULL) {
-			UnloadFile(anim->dataBuffer);
-		}
-		if (anim->pentries != NULL) {
-			Free(anim->pentries);
-		}
-		Free(anim);
-	}
+  if (anim != NULL)
+    {
+      if (anim->dataBuffer != NULL)
+        {
+          UnloadFile (anim->dataBuffer);
+        }
+      if (anim->pentries != NULL)
+        {
+          Free (anim->pentries);
+        }
+      Free (anim);
+    }
 }

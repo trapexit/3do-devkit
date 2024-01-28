@@ -25,13 +25,13 @@
 /* Macros to make semaphore operations consistent with	*/
 /* "new, dispose, wait, and signal" paradigm			*/
 /********************************************************/
-#define	DisposeSemaphore( semaphore )	DeleteItem( semaphore )
-#define	WaitSemaphore( semaphore )		LockSemaphore( semaphore, 1 )
-#define	SignalSemaphore( semaphore )	UnlockSemaphore( semaphore )
+#define DisposeSemaphore(semaphore) DeleteItem (semaphore)
+#define WaitSemaphore(semaphore) LockSemaphore (semaphore, 1)
+#define SignalSemaphore(semaphore) UnlockSemaphore (semaphore)
 
 /*****************************/
 /* Public routine prototypes */
 /*****************************/
-Item	NewSemaphore( char* baseNameString, int32 uniqueID );
+Item NewSemaphore (char *baseNameString, int32 uniqueID);
 
-#endif	/* __SEMHELPER_H__ */
+#endif /* __SEMHELPER_H__ */

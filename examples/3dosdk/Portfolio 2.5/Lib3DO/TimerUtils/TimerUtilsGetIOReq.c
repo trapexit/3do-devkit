@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: TimerUtilsGetIOReq.c,v 1.3 1994/11/01 03:49:01 vertex Exp $
 **
@@ -16,14 +18,13 @@
 **
 ******************************************************************************/
 
-
-#include "timerutils.h"
 #include "debug3do.h"
 #include "device.h"
 #include "io.h"
 #include "kernel.h"
+#include "timerutils.h"
 
-static Item	timer_dev;
+static Item timer_dev;
 
 /*----------------------------------------------------------------------------
  * GetTimerIOReq()
@@ -33,24 +34,28 @@ static Item	timer_dev;
  *	Use DeleteIOReq() to dispose of it when you don't need it anymore.
  *--------------------------------------------------------------------------*/
 
-Item GetTimerIOReq(void)
+Item
+GetTimerIOReq (void)
 {
-	Item	tDev;
+  Item tDev;
 
-	if ((tDev = timer_dev) <= 0) {
-		if ((timer_dev = tDev = FindDevice("timer")) < 0) {
-			DIAGNOSE_SYSERR(tDev, ("FindDevice(timer) failed\n"));
-			return tDev;
-		}
-	}
+  if ((tDev = timer_dev) <= 0)
+    {
+      if ((timer_dev = tDev = FindDevice ("timer")) < 0)
+        {
+          DIAGNOSE_SYSERR (tDev, ("FindDevice(timer) failed\n"));
+          return tDev;
+        }
+    }
 
-	if (IsItemOpened(CURRENTTASK->t.n_Item,tDev) != 0) {
-		if ((tDev = OpenItem(tDev, NULL)) < 0) {
-			DIAGNOSE_SYSERR(tDev, ("OpenItem(timer_device) failed\n"));
-			return tDev;
-		}
-	}
+  if (IsItemOpened (CURRENTTASK->t.n_Item, tDev) != 0)
+    {
+      if ((tDev = OpenItem (tDev, NULL)) < 0)
+        {
+          DIAGNOSE_SYSERR (tDev, ("OpenItem(timer_device) failed\n"));
+          return tDev;
+        }
+    }
 
-	return CreateIOReq(NULL, 0, tDev, 0);
-
+  return CreateIOReq (NULL, 0, tDev, 0);
 }

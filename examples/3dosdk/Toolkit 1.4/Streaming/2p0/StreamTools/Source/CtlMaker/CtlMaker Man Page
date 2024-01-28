@@ -1,1 +1,133 @@
-============================================================================== 					CtlMaker 1.0 Release Notes						====== 							July 10, 1993							==============================================================================CtlMaker is an MPW tool to create Control Subscriber data chunksthat can be woven into streams to accomplish:							- branching							- pausing							- stoping							- loopingAll but looping are simple and require little further explanation. Generally,the way the Control subscriber works is that it receives a chunk from thestream and executes a command or set of commands based upon the chunk itreceives. There are currently 4 types of control chunks that are userspecifyable. These are:	SubChunk	Action Taken by Control Subscriber	--------	----------------------------------	GOTO		Execute a DSGoMarker() call to the streamer, effecting				a branch in the stream's data flow.		PAUS		Call DSStopStream(), pause the specified amount of audio 				time, then call DSStartStream() to resume playback.		STOP		Call DSStopStream(), halting playback altogether.		ALRM		Used in looping; see comments below.The last subchunk type, ALRM, is used in looping and requires someadditional explanation. When a stream is performing a looping operation,it is frequently desirable to allow all data in the looping section to playback before restarting the loop. Since subscribers handle data flushingbased on receipt of the "clocksync" message, it would be inappropriate to set the clock back (in looping) the moment the data representing the brancharrival was received. Doing so would cause desirable data to be flushed,resulting in a perceived "gap" in the loop. The ALRM chunk is used to dealwith this situation in the following way.When an ALRM chunk is receive by the Control subscriber, the subscriber uses the timestamp built in to every chunk, and sets a timer to expire when thatactual stream time is to happen. When the stream time arrives that matchesthe chunk, the Control Subscriber calls DSSetClock() to set the stream timeto the specified value. ================ Usage ================	CtlMaker version 1.0	Usage: CtlMaker <flags>	   -o <file>                output file name	   -time <stream time>      timestamp for output chunk	   -goto <marker value>     place to branch in the stream	   -pause <pause duration>  length of pause in stream time	   -stop                    specify creation of a STOP chunk	   -alarm <new Time>        new stream clock value	   -options <chunk options> options for chunk, if applicable========================== Examples of Use ==========================##################################################################### Create a STOP subchunk at stream time = 256, with options# set to 0x1F00. Put the output in file "test"####################################################################CtlMaker -stop -o test -time 0x100 -options 0x1f00dumpfile test##################################################################### Create a PAUS subchunk at stream time = 0x20000, with options# set to 1, and pause time = 240. Put the output in file "test"####################################################################CtlMaker -pause 240 -o test -options 1 -time 0x20000dumpfile test##################################################################### Create an ALRM subchunk at stream time = 1000, with options# set to 1, and alarm newTime = 0. Put the output in file "test"####################################################################CtlMaker -alarm 0 -o test -options 1 -time 1000dumpfile test##################################################################### Create a GOTO subchunk at stream time = 1000, with options# set to 1, destination = 240. Put the output in file "test".####################################################################CtlMaker -goto 240 -o test -options 1 -time 1000dumpfile test===================================== Output from above examples =====================================File : testData Fork Length     : 28Resource Fork Length : 0Dumping Data Fork from offset 0 to 27   0: 43 54 52 4C 00 00 00 1C 00 00 01 00 00 00 00 00 CTRL............  10: 53 54 4F 50 00 00 1F 00 00 00 00 00             STOP........File : testData Fork Length     : 28Resource Fork Length : 0Dumping Data Fork from offset 0 to 27   0: 43 54 52 4C 00 00 00 1C 00 02 00 00 00 00 00 00 CTRL............  10: 50 41 55 53 00 00 00 01 00 00 00 F0             PAUS.......ðFile : testData Fork Length     : 28Resource Fork Length : 0Dumping Data Fork from offset 0 to 27   0: 43 54 52 4C 00 00 00 1C 00 00 03 E8 00 00 00 00 CTRL.......è....  10: 41 4C 52 4D 00 00 00 01 00 00 00 00             ALRM........File : testData Fork Length     : 28Resource Fork Length : 0Dumping Data Fork from offset 0 to 27   0: 43 54 52 4C 00 00 00 1C 00 00 03 E8 00 00 00 00 CTRL.......è....  10: 47 4F 54 4F 00 00 00 F0 00 00 00 00             GOTO...ð....
+===========================================================================
+=== 					CtlMaker 1.0 Release Notes						===
+=== 							July 10, 1993							===
+===========================================================================
+
+CtlMaker is an MPW tool to create Control Subscriber data chunks
+that can be woven into streams to accomplish:
+
+							- branching
+							- pausing
+							- stoping
+							- looping
+
+All but looping are simple and require little further explanation. Generally,
+the way the Control subscriber works is that it receives a chunk from the
+stream and executes a command or set of commands based upon the chunk it
+receives. There are currently 4 types of control chunks that are user
+specifyable. These are:
+
+
+	SubChunk	Action Taken by Control Subscriber
+	--------	----------------------------------
+	GOTO		Execute a DSGoMarker() call to the streamer, effecting
+				a branch in the stream's data flow.
+	
+	PAUS		Call DSStopStream(), pause the specified amount of audio 
+				time, then call DSStartStream() to resume playback.
+	
+	STOP		Call DSStopStream(), halting playback altogether.
+	
+	ALRM		Used in looping; see comments below.
+
+The last subchunk type, ALRM, is used in looping and requires some
+additional explanation. When a stream is performing a looping operation,
+it is frequently desirable to allow all data in the looping section to 
+playback before restarting the loop. Since subscribers handle data flushing
+based on receipt of the "clocksync" message, it would be inappropriate to 
+set the clock back (in looping) the moment the data representing the branch
+arrival was received. Doing so would cause desirable data to be flushed,
+resulting in a perceived "gap" in the loop. The ALRM chunk is used to deal
+with this situation in the following way.
+
+When an ALRM chunk is receive by the Control subscriber, the subscriber uses 
+the timestamp built in to every chunk, and sets a timer to expire when that
+actual stream time is to happen. When the stream time arrives that matches
+the chunk, the Control Subscriber calls DSSetClock() to set the stream time
+to the specified value. 
+
+
+=============
+=== Usage ===
+=============
+
+	CtlMaker version 1.0
+	Usage: CtlMaker <flags>
+	   -o <file>                output file name
+	   -time <stream time>      timestamp for output chunk
+	   -goto <marker value>     place to branch in the stream
+	   -pause <pause duration>  length of pause in stream time
+	   -stop                    specify creation of a STOP chunk
+	   -alarm <new Time>        new stream clock value
+	   -options <chunk options> options for chunk, if applicable
+
+=======================
+=== Examples of Use ===
+=======================
+
+####################################################################
+# Create a STOP subchunk at stream time = 256, with options
+# set to 0x1F00. Put the output in file "test"
+####################################################################
+CtlMaker -stop -o test -time 0x100 -options 0x1f00
+dumpfile test
+
+####################################################################
+# Create a PAUS subchunk at stream time = 0x20000, with options
+# set to 1, and pause time = 240. Put the output in file "test"
+####################################################################
+CtlMaker -pause 240 -o test -options 1 -time 0x20000
+dumpfile test
+
+####################################################################
+# Create an ALRM subchunk at stream time = 1000, with options
+# set to 1, and alarm newTime = 0. Put the output in file "test"
+####################################################################
+CtlMaker -alarm 0 -o test -options 1 -time 1000
+dumpfile test
+
+####################################################################
+# Create a GOTO subchunk at stream time = 1000, with options
+# set to 1, destination = 240. Put the output in file "test".
+####################################################################
+CtlMaker -goto 240 -o test -options 1 -time 1000
+dumpfile test
+
+==================================
+=== Output from above examples ===
+==================================
+
+File : test
+Data Fork Length     : 28
+Resource Fork Length : 0
+
+Dumping Data Fork from offset 0 to 27
+
+   0: 43 54 52 4C 00 00 00 1C 00 00 01 00 00 00 00 00 CTRL............
+  10: 53 54 4F 50 00 00 1F 00 00 00 00 00             STOP........
+File : test
+Data Fork Length     : 28
+Resource Fork Length : 0
+
+Dumping Data Fork from offset 0 to 27
+
+   0: 43 54 52 4C 00 00 00 1C 00 02 00 00 00 00 00 00 CTRL............
+  10: 50 41 55 53 00 00 00 01 00 00 00 F0             PAUS.......ð
+File : test
+Data Fork Length     : 28
+Resource Fork Length : 0
+
+Dumping Data Fork from offset 0 to 27
+
+   0: 43 54 52 4C 00 00 00 1C 00 00 03 E8 00 00 00 00 CTRL.......è....
+  10: 41 4C 52 4D 00 00 00 01 00 00 00 00             ALRM........
+File : test
+Data Fork Length     : 28
+Resource Fork Length : 0
+
+Dumping Data Fork from offset 0 to 27
+
+   0: 43 54 52 4C 00 00 00 1C 00 00 03 E8 00 00 00 00 CTRL.......è....
+  10: 47 4F 54 4F 00 00 00 F0 00 00 00 00             GOTO...ð....
+
+

@@ -1,21 +1,22 @@
 /*
-	File:		OrbitSound.h
+        File:		OrbitSound.h
 
-	Contains:	xxx put contents here xxx
+        Contains:	xxx put contents here xxx
 
-	Written by:	Jay Moreland,lynn ackler,philippe cassereau
+        Written by:	Jay Moreland,lynn ackler,philippe cassereau
 
-	Copyright:	© 1993 by The 3DO Company. All rights reserved.
-				This material constitutes confidential and proprietary
-				information of the 3DO Company and shall not be used by
-				any Person or for any purpose except as expressly
-				authorized in writing by the 3DO Company.
+        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+                                This material constitutes confidential and
+   proprietary information of the 3DO Company and shall not be used by any
+   Person or for any purpose except as expressly authorized in writing by the
+   3DO Company.
 
-	Change History (most recent first):
+        Change History (most recent first):
 
-		 <1>	 3/17/93	JAY		making changes for Cardinal
+                 <1>	 3/17/93	JAY		making changes for
+   Cardinal
 
-	To Do:
+        To Do:
 */
 
 /*********************************************************************************************
@@ -25,9 +26,10 @@
  *
  *	Copyright © 1992 The 3DO Company
  *
- *	All rights reserved. This material constitutes confidential and proprietary 
- *	information of the 3DO Company and shall not be used by any Person or for any 
- *	purpose except as expressly authorized in writing by the 3DO Company.
+ *	All rights reserved. This material constitutes confidential and
+ *proprietary information of the 3DO Company and shall not be used by any
+ *Person or for any purpose except as expressly authorized in writing by the
+ *3DO Company.
  *
  *	History:
  *	-------
@@ -42,9 +44,9 @@
 
 #define Use_Announce
 
-bool	InitOrbitSound( void );
-void	StopAllOrbitSound( void );
+bool InitOrbitSound (void);
+void StopAllOrbitSound (void);
 
-void	PlayStop( long numSegmentsRemoved );
-void	PlayAnnounce(void);
-#endif	/* __OrbitSOUND_H__ */
+void PlayStop (long numSegmentsRemoved);
+void PlayAnnounce (void);
+#endif /* __OrbitSOUND_H__ */

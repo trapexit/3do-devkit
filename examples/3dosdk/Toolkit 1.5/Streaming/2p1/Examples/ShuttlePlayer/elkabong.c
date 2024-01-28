@@ -34,37 +34,33 @@
  * Leo L. Schwab					9311.07
  *  Minor sanity check on returned block size.		9311.16
  */
- 
-#include <types.h>
-#include <mem.h>
-#include <filesystem.h>
-#include <filefunctions.h>
 
+#include <filefunctions.h>
+#include <filesystem.h>
+#include <mem.h>
+#include <types.h>
 
 /***************************************************************************
  * #defines
  */
-#define	KABONG_VERSION		0	/*  WHAT ARE THESE REALLY???  */
-#define	KABONG_REVISION		0
+#define KABONG_VERSION 0 /*  WHAT ARE THESE REALLY???  */
+#define KABONG_REVISION 0
 
-#define	DEFAULT_BLOCK_SIZE	2048
-
+#define DEFAULT_BLOCK_SIZE 2048
 
 /***************************************************************************
  * Prototypes.
  */
-int32 performElKabong(void *buf);
-int32 initElKabong(char *filename);
-void closeElKabong(void);
-int elKabongRequired(void);
-
+int32 performElKabong (void *buf);
+int32 initElKabong (char *filename);
+void closeElKabong (void);
+int elKabongRequired (void);
 
 /***************************************************************************
  * Static globals.
  */
-static Item	file, jamio, unjamio;
-static int32	blocksize;
-
+static Item file, jamio, unjamio;
+static int32 blocksize;
 
 /***************************************************************************
  * Code.
@@ -79,66 +75,65 @@ static int32	blocksize;
  *
  * Returns zero if successful; negative error code if anything went wrong.
  */
-int32
-performElKabong (buf)
-void	*buf;
+int32 performElKabong (buf) void *buf;
 {
-	IOInfo	jaminf, unjaminf;
-	void	*mybuf = NULL;
-	int32	retval;
+  IOInfo jaminf, unjaminf;
+  void *mybuf = NULL;
+  int32 retval;
 
-	if (!elKabongRequired ())
-		/*
-		 * If this version of the filesystem folio is newer than the
-		 * one with the bug in it, DO NOTHING.
-		 */
-		return (0);
+  if (!elKabongRequired ())
+    /*
+     * If this version of the filesystem folio is newer than the
+     * one with the bug in it, DO NOTHING.
+     */
+    return (0);
 
-	/*
-	 * If the client has not passed in their own buffer, we create
-	 * our own temporary buffer.
-	 */
-	if (!buf) {
-		if (!(mybuf = AllocMem (blocksize, 0))) {
+  /*
+   * If the client has not passed in their own buffer, we create
+   * our own temporary buffer.
+   */
+  if (!buf)
+    {
+      if (!(mybuf = AllocMem (blocksize, 0)))
+        {
 #ifdef DEBUG
-			kprintf ("Can't allocate tmp disk buffer.\n");
+          kprintf ("Can't allocate tmp disk buffer.\n");
 #endif
-			return (-1);
-		}
-		buf = mybuf;
-	}
+          return (-1);
+        }
+      buf = mybuf;
+    }
 
-	/*
-	 * Setup two identical reads for a single block.
-	 */
-	memset (&jaminf, 0, sizeof (jaminf));
-	jaminf.ioi_Command		= CMD_READ;
-	jaminf.ioi_Recv.iob_Buffer	= buf;
-	jaminf.ioi_Recv.iob_Len		= blocksize;
+  /*
+   * Setup two identical reads for a single block.
+   */
+  memset (&jaminf, 0, sizeof (jaminf));
+  jaminf.ioi_Command = CMD_READ;
+  jaminf.ioi_Recv.iob_Buffer = buf;
+  jaminf.ioi_Recv.iob_Len = blocksize;
 
-	unjaminf = jaminf;
+  unjaminf = jaminf;
 
-	/*
-	 * The first transaction (SendIO()) will jam, but cause the
-	 * filesystem to reconsider reality.  The second transaction (DoIO())
-	 * will go through, and cause the first to be released.  All
-	 * subsequent I/O will then operate normally.
-	 */
-	if (!(retval = SendIO (jamio, &jaminf)))
-		retval = DoIO (unjamio, &unjaminf);
+  /*
+   * The first transaction (SendIO()) will jam, but cause the
+   * filesystem to reconsider reality.  The second transaction (DoIO())
+   * will go through, and cause the first to be released.  All
+   * subsequent I/O will then operate normally.
+   */
+  if (!(retval = SendIO (jamio, &jaminf)))
+    retval = DoIO (unjamio, &unjaminf);
 
-	/*
-	 * Free our temporary buffer, if present.
-	 */
-	if (mybuf)
-		FreeMem (mybuf, blocksize);
+  /*
+   * Free our temporary buffer, if present.
+   */
+  if (mybuf)
+    FreeMem (mybuf, blocksize);
 
-	/*
-	 * Let upstairs know about how we did.
-	 */
-	return (retval);
+  /*
+   * Let upstairs know about how we did.
+   */
+  return (retval);
 }
-
 
 /***************************************************************************
  * Basic housekeeping.
@@ -153,79 +148,84 @@ void	*buf;
  */
 int32
 initElKabong (filename)
-char	*filename;
+char *filename;
 {
-	FileStatus	fstat;
-	IOInfo		ioi;
-	int32		retval;
-	char		*errstr;
+  FileStatus fstat;
+  IOInfo ioi;
+  int32 retval;
+  char *errstr;
 
-	if (!elKabongRequired ())
-		/*
-		 * If this version of the filesystem folio is newer than the
-		 * one with the bug in it, DO NOTHING.
-		 */
-		return (0);
+  if (!elKabongRequired ())
+    /*
+     * If this version of the filesystem folio is newer than the
+     * one with the bug in it, DO NOTHING.
+     */
+    return (0);
 
-	if (!filename)
-		/*
-		 * Use the current directory if no preferred filename given.
-		 */
-		filename = ".";
+  if (!filename)
+    /*
+     * Use the current directory if no preferred filename given.
+     */
+    filename = ".";
 
-	/*
-	 * Open the file.
-	 */
-	if ((retval = OpenDiskFile (filename)) < 0) {
-		errstr = "Can't open kabonging file.\n";
-		goto imdeadjim;		// Look down.
-	}
-	file = retval;
+  /*
+   * Open the file.
+   */
+  if ((retval = OpenDiskFile (filename)) < 0)
+    {
+      errstr = "Can't open kabonging file.\n";
+      goto imdeadjim; // Look down.
+    }
+  file = retval;
 
-	/*
-	 * Create the I/O requests that will be used to clobber some sense
-	 * into the filesystem.
-	 */
-	if ((retval = CreateIOReq (NULL, 199, file, 0)) < 0) {
-		errstr = "Can't create jamming I/O.\n";
-		goto imdeadjim;		// Look down.
-	}
-	jamio = retval;
+  /*
+   * Create the I/O requests that will be used to clobber some sense
+   * into the filesystem.
+   */
+  if ((retval = CreateIOReq (NULL, 199, file, 0)) < 0)
+    {
+      errstr = "Can't create jamming I/O.\n";
+      goto imdeadjim; // Look down.
+    }
+  jamio = retval;
 
-	if ((retval = CreateIOReq (NULL, 199, file, 0)) < 0) {
-		errstr = "Can't create unjamming I/O.\n";
-		goto imdeadjim;		// Look down.
-	}
-	unjamio = retval;
+  if ((retval = CreateIOReq (NULL, 199, file, 0)) < 0)
+    {
+      errstr = "Can't create unjamming I/O.\n";
+      goto imdeadjim; // Look down.
+    }
+  unjamio = retval;
 
-	/*
-	 * Find the prevailing block size on the filesystem.
-	 */
-	memset (&ioi, 0, sizeof (ioi));
-	ioi.ioi_Command		= CMD_STATUS;
-	ioi.ioi_Recv.iob_Buffer	= &fstat;
-	ioi.ioi_Recv.iob_Len	= sizeof (fstat);
-	if (retval = DoIO (jamio, &ioi)) {
-		errstr = "CMD_STATUS failed on kabonging file.\n";
-		goto imdeadjim;		// Look down.
-	}
-	if ((blocksize = fstat.fs.ds_DeviceBlockSize) <= 0)
-		blocksize = DEFAULT_BLOCK_SIZE;
+  /*
+   * Find the prevailing block size on the filesystem.
+   */
+  memset (&ioi, 0, sizeof (ioi));
+  ioi.ioi_Command = CMD_STATUS;
+  ioi.ioi_Recv.iob_Buffer = &fstat;
+  ioi.ioi_Recv.iob_Len = sizeof (fstat);
+  if (retval = DoIO (jamio, &ioi))
+    {
+      errstr = "CMD_STATUS failed on kabonging file.\n";
+      goto imdeadjim; // Look down.
+    }
+  if ((blocksize = fstat.fs.ds_DeviceBlockSize) <= 0)
+    blocksize = DEFAULT_BLOCK_SIZE;
 
-	/*
-	 * If there was an error, go here, clean up, and output a diagnostic.
-	 */
-	if (retval) {
-imdeadjim:	closeElKabong ();
+  /*
+   * If there was an error, go here, clean up, and output a diagnostic.
+   */
+  if (retval)
+    {
+    imdeadjim:
+      closeElKabong ();
 #ifdef DEBUG
-		kprintf (errstr);
-		PrintfSysErr (retval);
+      kprintf (errstr);
+      PrintfSysErr (retval);
 #endif
-	}
+    }
 
-	return (retval);
+  return (retval);
 }
-
 
 /***************************************************************************
  * Cleanup resources allocated to deal with filesystem bug.
@@ -233,11 +233,13 @@ imdeadjim:	closeElKabong ();
 void
 closeElKabong ()
 {
-	if (file > 0)		CloseDiskFile (file), file = 0;
-	if (unjamio > 0)	DeleteIOReq (unjamio), unjamio = 0;
-	if (jamio > 0)		DeleteIOReq (jamio), jamio = 0;
+  if (file > 0)
+    CloseDiskFile (file), file = 0;
+  if (unjamio > 0)
+    DeleteIOReq (unjamio), unjamio = 0;
+  if (jamio > 0)
+    DeleteIOReq (jamio), jamio = 0;
 }
-
 
 /***************************************************************************
  * This routine checks the version and revision numbers of the filesystem
@@ -246,16 +248,15 @@ closeElKabong ()
  * to have been fixed, and FALSE is returned.  Else, TRUE is returned.
  */
 
-
 int
 elKabongRequired ()
 {
-	FileFolio	*ff;
+  FileFolio *ff;
 
-//	ff = GetFileFolio ();
-//	return (ff->ff.fn.n_Version < KABONG_VERSION  ||
-//		(ff->ff.fn.n_Version == KABONG_VERSION  &&
-//		 ff->ff.fn.n_Revision <= KABONG_REVISION));
+  //	ff = GetFileFolio ();
+  //	return (ff->ff.fn.n_Version < KABONG_VERSION  ||
+  //		(ff->ff.fn.n_Version == KABONG_VERSION  &&
+  //		 ff->ff.fn.n_Revision <= KABONG_REVISION));
 
-	return true;
+  return true;
 }

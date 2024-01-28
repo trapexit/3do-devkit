@@ -1,6 +1,6 @@
-#include "Portfolio.h"
 #include "Init3DO.h"
 #include "Parse3DO.h"
+#include "Portfolio.h"
 #include "Utils3DO.h"
 
 /*	setCCBPLUTPtr
@@ -10,9 +10,10 @@
  *	2) there is a PLUT to use (lastPLUT)
  *	3) Cel expects PLUT address to be absolute (CCB_PPABS)
  */
-void setCCBPLUTPtr(CCB *lastCCB, char *lastPLUT)
+void
+setCCBPLUTPtr (CCB *lastCCB, char *lastPLUT)
 {
-	if ((lastCCB->ccb_Flags & CCB_LDPLUT) && (lastPLUT != NULL))
-		if (lastCCB->ccb_Flags & CCB_PPABS)
-			lastCCB->ccb_PLUTPtr = &(((PLUTChunk *)lastPLUT)->PLUT[0]);
+  if ((lastCCB->ccb_Flags & CCB_LDPLUT) && (lastPLUT != NULL))
+    if (lastCCB->ccb_Flags & CCB_PPABS)
+      lastCCB->ccb_PLUTPtr = &(((PLUTChunk *)lastPLUT)->PLUT[0]);
 }

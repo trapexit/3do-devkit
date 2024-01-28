@@ -1,1 +1,24 @@
-#################################################################################	BuildStreamAudio##	MPW script to build the audio stream file to be used with the#	Data Stream example programs. ##	Usage:#		BuildStreamAudio <InputFile>##	History:#	--------#	04/15/94	dtc		New today################################################################################# Compress the AIFF files into 2:1 SDX2 AIFC format with SquashSnd	if `evaluate "{1}" =~ "/(Å)¨1.aiff/"`		SquashSnd -i "{1}" -o "{¨1}".aifc# Make streamed audio files from AIFF and AIFC sources		sftostream -i "{¨1}".aifc -o "{¨1}".saudio	else		echo "Not an aiff file."	end
+################################################################################
+#	BuildStreamAudio
+#
+#	MPW script to build the audio stream file to be used with the
+#	Data Stream example programs. 
+#
+#	Usage:
+#		BuildStreamAudio <InputFile>
+#
+#	History:
+#	--------
+#	04/15/94	dtc		New today
+################################################################################
+# Compress the AIFF files into 2:1 SDX2 AIFC format with SquashSnd
+
+	if `evaluate "{1}" =~ "/(Å)¨1.aiff/"`
+
+		SquashSnd -i "{1}" -o "{¨1}".aifc
+
+# Make streamed audio files from AIFF and AIFC sources
+		sftostream -i "{¨1}".aifc -o "{¨1}".saudio
+	else
+		echo "Not an aiff file."
+	end

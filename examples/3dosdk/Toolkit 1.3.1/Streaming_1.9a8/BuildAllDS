@@ -1,1 +1,57 @@
-###########################################################################   File:       BuildAllDS##	Contains:	Script to build all of the data stream code#					Data Streamer and Subscribers#					Example programs#					Data Stream Tools##	Usage:		BuildAllDS { clean | "" } { root folder | "" }##					"clean"		deletes all object files before#								building everything##	Copyright © 1992 The 3DO Company## 	All rights reserved. This material constitutes confidential and proprietary #	information of the 3DO Company and shall not be used by any Person or for any #	purpose except as expressly authorized in writing by the 3DO Company.##	History:#	12/14/93		jb		New today.############################################################################	Determine the datastream root folder name. May be specified as#	arg 2 on the command line, or will be prompted for if omitted.#	If "{2}" == ""		Set DSRoot "`GetFileName -q -d -m "Select release root"`"	Else		Set DSRoot "{2}"	End##	First, build the streamer, data acquisition, and subscriber libraries#	Directory "{DSRoot}"	BuildDS "{1}" "{DSRoot}"##	Second, build the data stream tools#	Directory "{DSRoot}"	BuildStreamTools "{1}" "{DSRoot}StreamTools:Source:"##	Last, build the example programs#	Directory "{DSRoot}"	BuildDSExamples "{1}" "{DSRoot}Examples:"##	All finished.#	Directory "{DSRoot}"	Beep	Echo "# BuildAllDS finished."
+##########################################################################
+#   File:       BuildAllDS
+#
+#	Contains:	Script to build all of the data stream code
+#					Data Streamer and Subscribers
+#					Example programs
+#					Data Stream Tools
+#
+#	Usage:		BuildAllDS { clean | "" } { root folder | "" }
+#
+#					"clean"		deletes all object files before
+#								building everything
+#
+#	Copyright © 1992 The 3DO Company
+#
+# 	All rights reserved. This material constitutes confidential and proprietary 
+#	information of the 3DO Company and shall not be used by any Person or for any 
+#	purpose except as expressly authorized in writing by the 3DO Company.
+#
+#	History:
+#	12/14/93		jb		New today.
+##########################################################################
+
+#
+#	Determine the datastream root folder name. May be specified as
+#	arg 2 on the command line, or will be prompted for if omitted.
+#
+	If "{2}" == ""
+		Set DSRoot "`GetFileName -q -d -m "Select release root"`"
+	Else
+		Set DSRoot "{2}"
+	End
+
+#
+#	First, build the streamer, data acquisition, and subscriber libraries
+#
+	Directory "{DSRoot}"
+	BuildDS "{1}" "{DSRoot}"
+
+#
+#	Second, build the data stream tools
+#
+	Directory "{DSRoot}"
+	BuildStreamTools "{1}" "{DSRoot}StreamTools:Source:"
+
+#
+#	Last, build the example programs
+#
+	Directory "{DSRoot}"
+	BuildDSExamples "{1}" "{DSRoot}Examples:"
+
+#
+#	All finished.
+#
+	Directory "{DSRoot}"
+	Beep
+	Echo "# BuildAllDS finished."

@@ -1,1 +1,182 @@
-###########################################################################   File:       DS.lib.make##	Contains:	make file for building DS.lib##	Copyright © 1993 The 3DO Company## 	All rights reserved. This material constitutes confidential and proprietary #	information of the 3DO Company and shall not be used by any Person or for any #	purpose except as expressly authorized in writing by the 3DO Company.###	History:##	 8/15/94	dtc		Add auto-generation of .c.o dependencies#	 7/07/94	dtc		Make objects dependent on make file.#						Make DataStream.c, DataStreamDebug.c and DataStreamLib.c#						dependent on HaltChunk.h#	 6/30/94	dtc		Added a line to set DebugFlag to 0 and changed the make#						file to compile without the -g option.#	6/23/94		rdg		Changes were made but we don't know who did them...#						 RELATIVE_BRANCHING switch was added to command line#						 BlockFile.x were removed because they are now in Lib3DO#						 Symbol definition for ObjectDirectory was added#	7/24/93		jb		Get rid of 'H' and switch everything to 'DSxxxx'#	7/10/93		jb		Add SemHelper.c and MakeName.c#	6/23/93		jb		Turn on stack checking for Dragon O/S release#	6/15/93		jb		Add DataStreamDebug.c#	6/8/93		jb		Add ThreadHelper.c#	5/12/93		jb		Add DataStreamLib.c#	5/9/93		jb		Fix header file dependencies, remove TimerUtils.c#	4/3/93		jb		New today.##	To regenerate the .c.o -> .h file dependencies, get write access to this#	make file and execute the following MPW code:#	make Depends -f DS.lib.make ·· Dev:Null > temp.makeout ·· Dev:Null; temp.makeout; delete -i temp.makeout#################################################################################################################		Symbol definitions#####################################Library			=	DS#DebugFlag		=	1DebugFlag		=	0ObjectDir		=	:Objects:CC				=	armccASM				=	armasmLIBRARIAN		=	armlibMakeFileName	=	{Library}.lib.makeRelativeBranchSwitch = -dRELATIVE_BRANCHING=0######################################	Default compiler options######################################COptions		= -g -zps0 -za1 -i "{3DOIncludes}"  -dDEBUG={DebugFlag} {RelativeBranchSwitch}COptions		=    -zps0 -za1 -i "{3DOIncludes}"  -dDEBUG={DebugFlag} {RelativeBranchSwitch}SOptions		= -bi -g -i "{3DOIncludes}"LOptions		= -c -o######################################	Object files#	Be sure to keep these two definitions in synch!#####################################OBJECTS			=	"{ObjectDir}DataStream.c.o"			¶					"{ObjectDir}DataStreamLib.c.o"		¶					"{ObjectDir}DataStreamDebug.c.o"	¶					"{ObjectDir}MemPool.c.o"			¶					"{ObjectDir}MsgUtils.c.o"			¶					"{ObjectDir}ThreadHelper.c.o"		¶					"{ObjectDir}SemHelper.c.o"			¶					"{ObjectDir}MakeName.c.o"OBJECTDEPENDS	=	"{ObjectDir}DataStream.c.depends"		¶					"{ObjectDir}DataStreamLib.c.depends"	¶					"{ObjectDir}DataStreamDebug.c.depends"	¶					"{ObjectDir}MemPool.c.depends"			¶					"{ObjectDir}MsgUtils.c.depends"			¶					"{ObjectDir}ThreadHelper.c.depends"		¶					"{ObjectDir}SemHelper.c.depends"		¶					"{ObjectDir}MakeName.c.depends"######################################	Default build rules#####################################All				Ä	{Library}.lib{ObjectDir}		Ä	:.c.o			Ä	.c	echo "	compiling {Default}.c with {RelativeBranchSwitch}"	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c.c.depends		Ä	.c	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c -M -c ¶		| search -q -r "{3DOIncludes}" ¶		| StreamEdit -e "1 delete; 1,$ Replace /{ObjectDir}/ '¶"¶{ObjectDir¶}¶"'; Replace /Ä/ '	Ä'" ¶		>> "{MakeFileName}".s.o			Ä	.s	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s######################################	Dependency re-building rules#	The .c.depends rule asks the compiler to generate source file dependencies, then#	removes the first line (.c.o dependency on .c), substitutes a symbolic reference#	to "{ObjectDir}", puts in a tab before the Äs, and appends the result to this make#	file. The following rules setup and sequence the work.##	HOW TO USE IT: Get write access to this make file then make "depends".#	This will replace the include file dependencies lines at the end of this makefile.#####################################Depends					Ä	DeleteOldDependencies {ObjectDepends} SaveNewMakefileDeleteOldDependencies	Ä	# This is a workaround to make it work with the latest version of Make Tool (MPW V3.4a4).	# Without the next line, find /.../ will break (MakeFileName) isn't resolved.	set MakeFileName "{MakeFileName}"	Open "{MakeFileName}"	Find ¥ "{MakeFileName}"	Find /¥#¶tInclude file dependencies ¶(DonÕt change this line or put anything after this section.¶)°/ "{MakeFileName}"	Find /¥[Â#]/  "{MakeFileName}"	Replace Æ¤:° "¶n" "{MakeFileName}"SaveNewMakefile			Ä	Save "{MakeFileName}"######################################	Target build rules#####################################{Library}.lib		ÄÄ	{Library}.lib.make {OBJECTS}	{LIBRARIAN}	{LOptions}			¶				{Library}.lib		¶				{OBJECTS}######################################	make or build script Dependancies###################################### Target dependancy to rebuild when makefile or build script changes{Library}.c.o	Ä	{MakeFileName} ######################################	Include file dependencies (DonÕt change this line or put anything after this section.)#####################################"{ObjectDir}"DataStream.c.o	Ä	:DataStream.h"{ObjectDir}"DataStream.c.o	Ä	:MsgUtils.h"{ObjectDir}"DataStream.c.o	Ä	:MemPool.h"{ObjectDir}"DataStream.c.o	Ä	:SubsChunkCommon.h"{ObjectDir}"DataStream.c.o	Ä	:HaltChunk.h"{ObjectDir}"DataStream.c.o	Ä	:DSStreamHeader.h"{ObjectDir}"DataStream.c.o	Ä	:DataStreamLib.h"{ObjectDir}"DataStream.c.o	Ä	:DataStream.h"{ObjectDir}"DataStream.c.o	Ä	:ThreadHelper.h"{ObjectDir}"DataStream.c.o	Ä	:MakeName.h"{ObjectDir}"DataStream.c.o	Ä	:SemHelper.h"{ObjectDir}"DataStreamLib.c.o	Ä	:DataStreamLib.h"{ObjectDir}"DataStreamLib.c.o	Ä	:DataStream.h"{ObjectDir}"DataStreamLib.c.o	Ä	:MsgUtils.h"{ObjectDir}"DataStreamLib.c.o	Ä	:MemPool.h"{ObjectDir}"DataStreamLib.c.o	Ä	:SubsChunkCommon.h"{ObjectDir}"DataStreamLib.c.o	Ä	:HaltChunk.h"{ObjectDir}"DataStreamLib.c.o	Ä	:DSStreamHeader.h"{ObjectDir}"DataStreamDebug.c.o	Ä	:DataStreamDebug.h"{ObjectDir}"DataStreamDebug.c.o	Ä	:DataStream.h"{ObjectDir}"DataStreamDebug.c.o	Ä	:MsgUtils.h"{ObjectDir}"DataStreamDebug.c.o	Ä	:MemPool.h"{ObjectDir}"DataStreamDebug.c.o	Ä	:SubsChunkCommon.h"{ObjectDir}"DataStreamDebug.c.o	Ä	:HaltChunk.h"{ObjectDir}"DataStreamDebug.c.o	Ä	:DSStreamHeader.h"{ObjectDir}"MemPool.c.o	Ä	:MemPool.h"{ObjectDir}"MsgUtils.c.o	Ä	:MsgUtils.h"{ObjectDir}"ThreadHelper.c.o	Ä	:ThreadHelper.h"{ObjectDir}"ThreadHelper.c.o	Ä	:MakeName.h"{ObjectDir}"SemHelper.c.o	Ä	:SemHelper.h"{ObjectDir}"SemHelper.c.o	Ä	:MakeName.h"{ObjectDir}"SemHelper.c.o	Ä	:ThreadHelper.h"{ObjectDir}"MakeName.c.o	Ä	:MakeName.h
+##########################################################################
+#   File:       DS.lib.make
+#
+#	Contains:	make file for building DS.lib
+#
+#	Copyright © 1993 The 3DO Company
+#
+# 	All rights reserved. This material constitutes confidential and proprietary 
+#	information of the 3DO Company and shall not be used by any Person or for any 
+#	purpose except as expressly authorized in writing by the 3DO Company.
+#
+#
+#	History:
+#
+#	 8/15/94	dtc		Add auto-generation of .c.o dependencies
+#	 7/07/94	dtc		Make objects dependent on make file.
+#						Make DataStream.c, DataStreamDebug.c and DataStreamLib.c
+#						dependent on HaltChunk.h
+#	 6/30/94	dtc		Added a line to set DebugFlag to 0 and changed the make
+#						file to compile without the -g option.
+#	6/23/94		rdg		Changes were made but we don't know who did them...
+#						 RELATIVE_BRANCHING switch was added to command line
+#						 BlockFile.x were removed because they are now in Lib3DO
+#						 Symbol definition for ObjectDirectory was added
+#	7/24/93		jb		Get rid of 'H' and switch everything to 'DSxxxx'
+#	7/10/93		jb		Add SemHelper.c and MakeName.c
+#	6/23/93		jb		Turn on stack checking for Dragon O/S release
+#	6/15/93		jb		Add DataStreamDebug.c
+#	6/8/93		jb		Add ThreadHelper.c
+#	5/12/93		jb		Add DataStreamLib.c
+#	5/9/93		jb		Fix header file dependencies, remove TimerUtils.c
+#	4/3/93		jb		New today.
+#
+#	To regenerate the .c.o -> .h file dependencies, get write access to this
+#	make file and execute the following MPW code:
+#	make Depends -f DS.lib.make ·· Dev:Null > temp.makeout ·· Dev:Null; temp.makeout; delete -i temp.makeout
+#
+##########################################################################
+
+#####################################
+#		Symbol definitions
+#####################################
+Library			=	DS
+#DebugFlag		=	1
+DebugFlag		=	0
+ObjectDir		=	:Objects:
+CC				=	armcc
+ASM				=	armasm
+LIBRARIAN		=	armlib
+MakeFileName	=	{Library}.lib.make
+RelativeBranchSwitch = -dRELATIVE_BRANCHING=0
+
+#####################################
+#	Default compiler options
+#####################################
+#COptions		= -g -zps0 -za1 -i "{3DOIncludes}"  -dDEBUG={DebugFlag} {RelativeBranchSwitch}
+COptions		=    -zps0 -za1 -i "{3DOIncludes}"  -dDEBUG={DebugFlag} {RelativeBranchSwitch}
+
+SOptions		= -bi -g -i "{3DOIncludes}"
+
+LOptions		= -c -o
+
+
+#####################################
+#	Object files
+#	Be sure to keep these two definitions in synch!
+#####################################
+OBJECTS			=	"{ObjectDir}DataStream.c.o"			¶
+					"{ObjectDir}DataStreamLib.c.o"		¶
+					"{ObjectDir}DataStreamDebug.c.o"	¶
+					"{ObjectDir}MemPool.c.o"			¶
+					"{ObjectDir}MsgUtils.c.o"			¶
+					"{ObjectDir}ThreadHelper.c.o"		¶
+					"{ObjectDir}SemHelper.c.o"			¶
+					"{ObjectDir}MakeName.c.o"
+
+OBJECTDEPENDS	=	"{ObjectDir}DataStream.c.depends"		¶
+					"{ObjectDir}DataStreamLib.c.depends"	¶
+					"{ObjectDir}DataStreamDebug.c.depends"	¶
+					"{ObjectDir}MemPool.c.depends"			¶
+					"{ObjectDir}MsgUtils.c.depends"			¶
+					"{ObjectDir}ThreadHelper.c.depends"		¶
+					"{ObjectDir}SemHelper.c.depends"		¶
+					"{ObjectDir}MakeName.c.depends"
+
+
+#####################################
+#	Default build rules
+#####################################
+All				Ä	{Library}.lib
+
+{ObjectDir}		Ä	:
+
+.c.o			Ä	.c
+	echo "	compiling {Default}.c with {RelativeBranchSwitch}"
+	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
+
+.c.depends		Ä	.c
+	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c -M -c ¶
+		| search -q -r "{3DOIncludes}" ¶
+		| StreamEdit -e "1 delete; 1,$ Replace /{ObjectDir}/ '¶"¶{ObjectDir¶}¶"'; Replace /Ä/ '	Ä'" ¶
+		>> "{MakeFileName}"
+
+.s.o			Ä	.s
+	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
+
+#####################################
+#	Dependency re-building rules
+#	The .c.depends rule asks the compiler to generate source file dependencies, then
+#	removes the first line (.c.o dependency on .c), substitutes a symbolic reference
+#	to "{ObjectDir}", puts in a tab before the Äs, and appends the result to this make
+#	file. The following rules setup and sequence the work.
+#
+#	HOW TO USE IT: Get write access to this make file then make "depends".
+#	This will replace the include file dependencies lines at the end of this makefile.
+#####################################
+Depends					Ä	DeleteOldDependencies {ObjectDepends} SaveNewMakefile
+
+DeleteOldDependencies	Ä
+	# This is a workaround to make it work with the latest version of Make Tool (MPW V3.4a4).
+	# Without the next line, find /.../ will break (MakeFileName) isn't resolved.
+	set MakeFileName "{MakeFileName}"
+	Open "{MakeFileName}"
+	Find ¥ "{MakeFileName}"
+	Find /¥#¶tInclude file dependencies ¶(DonÕt change this line or put anything after this section.¶)°/ "{MakeFileName}"
+	Find /¥[Â#]/  "{MakeFileName}"
+	Replace Æ¤:° "¶n" "{MakeFileName}"
+
+SaveNewMakefile			Ä
+	Save "{MakeFileName}"
+
+#####################################
+#	Target build rules
+#####################################
+{Library}.lib		ÄÄ	{Library}.lib.make {OBJECTS}
+	{LIBRARIAN}	{LOptions}			¶
+				{Library}.lib		¶
+				{OBJECTS}
+
+#####################################
+#	make or build script Dependancies
+#####################################
+# Target dependancy to rebuild when makefile or build script changes
+{Library}.c.o	Ä	{MakeFileName}
+ 
+#####################################
+#	Include file dependencies (DonÕt change this line or put anything after this section.)
+#####################################
+
+"{ObjectDir}"DataStream.c.o	Ä	:DataStream.h
+"{ObjectDir}"DataStream.c.o	Ä	:MsgUtils.h
+"{ObjectDir}"DataStream.c.o	Ä	:MemPool.h
+"{ObjectDir}"DataStream.c.o	Ä	:SubsChunkCommon.h
+"{ObjectDir}"DataStream.c.o	Ä	:HaltChunk.h
+"{ObjectDir}"DataStream.c.o	Ä	:DSStreamHeader.h
+"{ObjectDir}"DataStream.c.o	Ä	:DataStreamLib.h
+"{ObjectDir}"DataStream.c.o	Ä	:DataStream.h
+"{ObjectDir}"DataStream.c.o	Ä	:ThreadHelper.h
+"{ObjectDir}"DataStream.c.o	Ä	:MakeName.h
+"{ObjectDir}"DataStream.c.o	Ä	:SemHelper.h
+"{ObjectDir}"DataStreamLib.c.o	Ä	:DataStreamLib.h
+"{ObjectDir}"DataStreamLib.c.o	Ä	:DataStream.h
+"{ObjectDir}"DataStreamLib.c.o	Ä	:MsgUtils.h
+"{ObjectDir}"DataStreamLib.c.o	Ä	:MemPool.h
+"{ObjectDir}"DataStreamLib.c.o	Ä	:SubsChunkCommon.h
+"{ObjectDir}"DataStreamLib.c.o	Ä	:HaltChunk.h
+"{ObjectDir}"DataStreamLib.c.o	Ä	:DSStreamHeader.h
+"{ObjectDir}"DataStreamDebug.c.o	Ä	:DataStreamDebug.h
+"{ObjectDir}"DataStreamDebug.c.o	Ä	:DataStream.h
+"{ObjectDir}"DataStreamDebug.c.o	Ä	:MsgUtils.h
+"{ObjectDir}"DataStreamDebug.c.o	Ä	:MemPool.h
+"{ObjectDir}"DataStreamDebug.c.o	Ä	:SubsChunkCommon.h
+"{ObjectDir}"DataStreamDebug.c.o	Ä	:HaltChunk.h
+"{ObjectDir}"DataStreamDebug.c.o	Ä	:DSStreamHeader.h
+"{ObjectDir}"MemPool.c.o	Ä	:MemPool.h
+"{ObjectDir}"MsgUtils.c.o	Ä	:MsgUtils.h
+"{ObjectDir}"ThreadHelper.c.o	Ä	:ThreadHelper.h
+"{ObjectDir}"ThreadHelper.c.o	Ä	:MakeName.h
+"{ObjectDir}"SemHelper.c.o	Ä	:SemHelper.h
+"{ObjectDir}"SemHelper.c.o	Ä	:MakeName.h
+"{ObjectDir}"SemHelper.c.o	Ä	:ThreadHelper.h
+"{ObjectDir}"MakeName.c.o	Ä	:MakeName.h

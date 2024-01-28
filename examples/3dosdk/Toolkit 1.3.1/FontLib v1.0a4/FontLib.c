@@ -1,30 +1,30 @@
 /*****************************************************************************
  *	File:		FontLib.c
  *
- *	Contains:	Implementation for low-level handling of 3DO font files.
- *				This file, along with some assembler code, implements low-level font 
- *				handling.  The implementation allows you to load and unload font files,
- *				parse a font file that has been pre-loaded into memory by some other
- *				means, obtain information about the font file and the characters within
- *				it, and unpack/blit individual characters from the font into another
+ *	Contains:	Implementation for low-level handling of 3DO font
+ *files. This file, along with some assembler code, implements low-level font
+ *				handling.  The implementation allows you to load and
+ *unload font files, parse a font file that has been pre-loaded into memory by
+ *some other means, obtain information about the font file and the characters
+ *within it, and unpack/blit individual characters from the font into another
  *				memory location.
  *
  *	Written by:  Edgar Lee and Ian Lepore
  *
  *	Copyright:	© 1993 by The 3DO Company. All rights reserved.
- *				This material constitutes confidential and proprietary
- *				information of the 3DO Company and shall not be used by
- *				any Person or for any purpose except as expressly
- *				authorized in writing by the 3DO Company.
+ *				This material constitutes confidential and
+ *proprietary information of the 3DO Company and shall not be used by any
+ *Person or for any purpose except as expressly authorized in writing by the
+ *3DO Company.
  *
  *	Change History (most recent first):
  *
  *    03/18/94	Edgar	Replaced %d with %ld in the DIAGNOSE message.
  *
  *	  12/09/93	Ian		First release version.
- * 
+ *
  *	Implementation notes:
- *	
+ *
  *	Parts of the low-level font handling are implemented in assembler for
  *	performance.  To 'hide' the global functions names which live in other
  *	modules but shouldn't be directly invoked by the client applications,
@@ -32,57 +32,59 @@
  *	reserves names beginning with an underbar for the compiler, so we use
  *	a trailing underbar instead for hiding our own internals.
  *
- *	In an ideal world, a variety of font formats might be supported, with 
+ *	In an ideal world, a variety of font formats might be supported, with
  *	varying bit depths, compression schemes, and whatnot.  Any such format-
- *	specific stuff would be hidden by the API this module presents.  
- *	
+ *	specific stuff would be hidden by the API this module presents.
+ *
  *	Right now, we handle a single font-processing concept:  3 bit-per-pixel
- *	font data, compressed in a custom format, and unpacked as needed into a 
+ *	font data, compressed in a custom format, and unpacked as needed into a
  *	buffer which is presumed to be formatted as an 8-bit-coded cel.  If and
  *	when other font storage schemes or cel buffer formats are added, the
- *	support will be hidden from the client by changing the BlitFontChar() 
+ *	support will be hidden from the client by changing the BlitFontChar()
  *	routine below to recognize the formats and dispatch handling to the
  *	appropriate unpacker/blitter routine.
  ****************************************************************************/
 
 #include "FontLib.h"
 #include "BlockFile.h"
-#include "UMemory.h"
 #include "Debug3DO.h"
+#include "UMemory.h"
 
 #ifndef AddToPtr
-  #define AddToPtr(ptr, val) ((void*)((((char *)(ptr)) + (val))))
+#define AddToPtr(ptr, val) ((void *)((((char *)(ptr)) + (val))))
 #endif
 
 /*----------------------------------------------------------------------------
  * Parameter structures for interfacing to low level pixel blitter functions.
  *	These structures are loaded with values then passed to the assembler
- *	functions that do low-level blitting.  You can't add or change the order
- *	of the fields in these structures without going to the assembler code
+ *	functions that do low-level blitting.  You can't add or change the
+ *order of the fields in these structures without going to the assembler code
  *	and making (perhaps non-trivial) corresponding changes.  The somewhat
  *	arbitrary order of the fields now is purely for the convenience of the
- *	assembler code, which tends to use LDM (load multiple registers) to 
+ *	assembler code, which tends to use LDM (load multiple registers) to
  *	pull all the parameters from the structure into the right registers in
  *	a single operation.
  *--------------------------------------------------------------------------*/
 
-typedef struct FontBlitSrcParms {
-	void *				fbs_charPtr;
-	int32				fbs_charWidth;
-	int32				fbs_charHeight;
-	FontDescriptor *	fbs_fontDesc;
-	int32				fbs_extraData;
+typedef struct FontBlitSrcParms
+{
+  void *fbs_charPtr;
+  int32 fbs_charWidth;
+  int32 fbs_charHeight;
+  FontDescriptor *fbs_fontDesc;
+  int32 fbs_extraData;
 } FontBlitSrcParms;
 
-typedef struct FontBlitDstParms {
-	void *				fbd_pixelBuffer;
-	int32				fbd_bytesPerRow;
-	int32				fbd_X;
-	int32				fbd_Y;
-	int32				fbd_colorIndex;
+typedef struct FontBlitDstParms
+{
+  void *fbd_pixelBuffer;
+  int32 fbd_bytesPerRow;
+  int32 fbd_X;
+  int32 fbd_Y;
+  int32 fbd_colorIndex;
 } FontBlitDstParms;
 
-extern void FontBlit3To8_(FontBlitSrcParms *, FontBlitDstParms *); 
+extern void FontBlit3To8_ (FontBlitSrcParms *, FontBlitDstParms *);
 
 /*****************************************************************************
  * ParseFont()
@@ -91,58 +93,64 @@ extern void FontBlit3To8_(FontBlitSrcParms *, FontBlitDstParms *);
  *	the font for use.
  ****************************************************************************/
 
-FontDescriptor * ParseFont(void *fontImage)
+FontDescriptor *
+ParseFont (void *fontImage)
 {
-	FontDescriptor *	fd;
-	FontHeader	*		fh;
+  FontDescriptor *fd;
+  FontHeader *fh;
 
-	fd = NULL;
-	fh = (FontHeader *)fontImage;			
-	
-	if (fh->chunk_ID != CHUNK_FONT || fh->chunk_size < sizeof(FontHeader)) {
-		DIAGNOSE(("This is not a valid font file image\n"));
-		goto ERROR_EXIT;
-	}
+  fd = NULL;
+  fh = (FontHeader *)fontImage;
 
-	if (fh->fh_bitsPerPixel != 3) {
-		DIAGNOSE(("This font is %ld bits per pixel; can only handle 3-bpp\n", 
-			fh->fh_bitsPerPixel));
-		goto ERROR_EXIT;
-	}
+  if (fh->chunk_ID != CHUNK_FONT || fh->chunk_size < sizeof (FontHeader))
+    {
+      DIAGNOSE (("This is not a valid font file image\n"));
+      goto ERROR_EXIT;
+    }
 
-	if ((fd = (FontDescriptor *)Malloc(sizeof(FontDescriptor), MEMTYPE_ANY)) == NULL) {
-		DIAGNOSE(("Can't allocate memory for FontDescriptor\n"));
-		goto ERROR_EXIT;
-	}
+  if (fh->fh_bitsPerPixel != 3)
+    {
+      DIAGNOSE (("This font is %ld bits per pixel; can only handle 3-bpp\n",
+                 fh->fh_bitsPerPixel));
+      goto ERROR_EXIT;
+    }
 
-	// fill in the public fields in the FontDescriptor...
+  if ((fd = (FontDescriptor *)Malloc (sizeof (FontDescriptor), MEMTYPE_ANY))
+      == NULL)
+    {
+      DIAGNOSE (("Can't allocate memory for FontDescriptor\n"));
+      goto ERROR_EXIT;
+    }
 
-	fd->fd_fontFlags	= fh->fh_fontFlags;
-	fd->fd_charHeight 	= fh->fh_charHeight;
-	fd->fd_charWidth 	= fh->fh_charWidth;
-	fd->fd_bitsPerPixel = fh->fh_bitsPerPixel;
-	fd->fd_firstChar 	= fh->fh_firstChar;
-	fd->fd_lastChar 	= fh->fh_lastChar;
-	fd->fd_charExtra 	= fh->fh_charExtra;
-	fd->fd_ascent 		= fh->fh_ascent;
-	fd->fd_descent 		= fh->fh_descent;
-	fd->fd_leading 		= fh->fh_leading;
+  // fill in the public fields in the FontDescriptor...
 
-	// fill in the private fields in the FontDescriptor...
+  fd->fd_fontFlags = fh->fh_fontFlags;
+  fd->fd_charHeight = fh->fh_charHeight;
+  fd->fd_charWidth = fh->fh_charWidth;
+  fd->fd_bitsPerPixel = fh->fh_bitsPerPixel;
+  fd->fd_firstChar = fh->fh_firstChar;
+  fd->fd_lastChar = fh->fh_lastChar;
+  fd->fd_charExtra = fh->fh_charExtra;
+  fd->fd_ascent = fh->fh_ascent;
+  fd->fd_descent = fh->fh_descent;
+  fd->fd_leading = fh->fh_leading;
 
-	fd->fd_fontHeader	= fh;
-	fd->fd_charInfo		= AddToPtr(fh, fh->fh_charInfoOffset);
-	fd->fd_charData		= AddToPtr(fh, fh->fh_charDataOffset);
-	
-	return fd;
-	
+  // fill in the private fields in the FontDescriptor...
+
+  fd->fd_fontHeader = fh;
+  fd->fd_charInfo = AddToPtr (fh, fh->fh_charInfoOffset);
+  fd->fd_charData = AddToPtr (fh, fh->fh_charDataOffset);
+
+  return fd;
+
 ERROR_EXIT:
 
-	if (fd != NULL) {
-		Free(fd);
-	}
-	
-	return NULL;
+  if (fd != NULL)
+    {
+      Free (fd);
+    }
+
+  return NULL;
 }
 
 /*****************************************************************************
@@ -152,14 +160,17 @@ ERROR_EXIT:
  *	we'll unload the file here.
  ****************************************************************************/
 
-void UnloadFont(FontDescriptor *fd)
+void
+UnloadFont (FontDescriptor *fd)
 {
-	if (fd != NULL) {
-		if ((fd->fd_fontFlags & FFLAG_DYNLOADED) && fd->fd_fontHeader != NULL) {
-			UnloadFile(fd->fd_fontHeader);
-		}
-		Free(fd);
-	}
+  if (fd != NULL)
+    {
+      if ((fd->fd_fontFlags & FFLAG_DYNLOADED) && fd->fd_fontHeader != NULL)
+        {
+          UnloadFile (fd->fd_fontHeader);
+        }
+      Free (fd);
+    }
 }
 
 /*****************************************************************************
@@ -167,70 +178,77 @@ void UnloadFont(FontDescriptor *fd)
  *	Load a font file and parse it, creating a FontDescriptor for it.
  ****************************************************************************/
 
-FontDescriptor * LoadFont(char *fontFileName, uint32 memTypeBits)
+FontDescriptor *
+LoadFont (char *fontFileName, uint32 memTypeBits)
 {
-	void *				fontFileImage;
-	long				fontFileSize;
-	FontDescriptor *	fd;
-	
-	fontFileImage = LoadFile(fontFileName, &fontFileSize, memTypeBits);	
-	if (fontFileImage == NULL) {
-		DIAGNOSE(("LoadFile(%s) failed for font file\n", fontFileName));
-		goto ERROR_EXIT;
- 	}
-	
-	fd = ParseFont(fontFileImage);
-	if (fd == NULL) {
-		DIAGNOSE(("ParseFont(%s) failed\n", fontFileName));
-		goto ERROR_EXIT;
-	}
-	fd->fd_fontFlags |= FFLAG_DYNLOADED;
-	
-	return fd;
-	
+  void *fontFileImage;
+  long fontFileSize;
+  FontDescriptor *fd;
+
+  fontFileImage = LoadFile (fontFileName, &fontFileSize, memTypeBits);
+  if (fontFileImage == NULL)
+    {
+      DIAGNOSE (("LoadFile(%s) failed for font file\n", fontFileName));
+      goto ERROR_EXIT;
+    }
+
+  fd = ParseFont (fontFileImage);
+  if (fd == NULL)
+    {
+      DIAGNOSE (("ParseFont(%s) failed\n", fontFileName));
+      goto ERROR_EXIT;
+    }
+  fd->fd_fontFlags |= FFLAG_DYNLOADED;
+
+  return fd;
+
 ERROR_EXIT:
 
-	if (fontFileImage != NULL) {
-		UnloadFile(fontFileImage);
-	}
-	
-	return NULL;
+  if (fontFileImage != NULL)
+    {
+      UnloadFile (fontFileImage);
+    }
+
+  return NULL;
 }
 
 /*****************************************************************************
  * GetFontCharInfo()
  *	Get width and (optionally) blit-specific information about a character.
  *	The blitinfo is data needed by the blit routine.  A higher-level caller
- *	is likely to obtain width information before blitting a character, so 
- *	this routine can also return info that the blit routine will need.  This
+ *	is likely to obtain width information before blitting a character, so
+ *	this routine can also return info that the blit routine will need. This
  *	can eliminate needless double calls to this routine (one by the high
  *	level to get the char width, and one by the blit internals to get the
- *	blit info).  
+ *	blit info).
  *	Right now, the blitinfo we return is a pointer to the per-char data for
  *	the char; this lets the blit routine lookup the char width and offset
- *	quickly.  This could change to format-specific data if we start supporting
- *	other font formats; the caller doesn't look at this data at all.
+ *	quickly.  This could change to format-specific data if we start
+ *supporting other font formats; the caller doesn't look at this data at all.
  ****************************************************************************/
 
-int32 GetFontCharInfo(FontDescriptor *fd, int32 theChar, void **blitInfo)
+int32
+GetFontCharInfo (FontDescriptor *fd, int32 theChar, void **blitInfo)
 {
-	uint32			firstChar;
-	FontCharInfo *	fci;
-	int32			width = 0;
-	
-	fci = (FontCharInfo *)fd->fd_charInfo;
-	firstChar = fd->fd_firstChar;
-	
-	if (theChar >= firstChar && theChar <= fd->fd_lastChar) {
-		fci   += theChar - firstChar;
-		width  = fci->fci_charWidth;
-	}
+  uint32 firstChar;
+  FontCharInfo *fci;
+  int32 width = 0;
 
-	if (blitInfo) {
-		*blitInfo = (void *)fci;
-	}
+  fci = (FontCharInfo *)fd->fd_charInfo;
+  firstChar = fd->fd_firstChar;
 
-	return width;
+  if (theChar >= firstChar && theChar <= fd->fd_lastChar)
+    {
+      fci += theChar - firstChar;
+      width = fci->fci_charWidth;
+    }
+
+  if (blitInfo)
+    {
+      *blitInfo = (void *)fci;
+    }
+
+  return width;
 }
 
 /*****************************************************************************
@@ -238,9 +256,10 @@ int32 GetFontCharInfo(FontDescriptor *fd, int32 theChar, void **blitInfo)
  *	Just what the name says.
  ****************************************************************************/
 
-int32 GetFontCharWidth(FontDescriptor *fd, int32 theChar)
+int32
+GetFontCharWidth (FontDescriptor *fd, int32 theChar)
 {
-	return GetFontCharInfo(fd, theChar, NULL);
+  return GetFontCharInfo (fd, theChar, NULL);
 }
 
 /*****************************************************************************
@@ -253,40 +272,46 @@ int32 GetFontCharWidth(FontDescriptor *fd, int32 theChar)
  *	the source-to-dest conversion.
  ****************************************************************************/
 
-int32 BlitFontChar(FontDescriptor *fd, uint32 theChar, void *blitInfo,
-					void *dstBuf, int32 dstX, int32 dstY, 
-					int32 dstBPR, int32 dstColor, int32 dstBPP)
+int32
+BlitFontChar (FontDescriptor *fd, uint32 theChar, void *blitInfo, void *dstBuf,
+              int32 dstX, int32 dstY, int32 dstBPR, int32 dstColor,
+              int32 dstBPP)
 {
-	int32				charWidth;
-	FontCharInfo *		fci;
-	FontBlitSrcParms	srcParms;
-	FontBlitDstParms	dstParms;
-	
-#if DEBUG
-	if (dstBPP != 8 || fd->fd_bitsPerPixel != 3) {
-		DIAGNOSE(("Unsupported bits-per-pixel\n"));
-		return 0;
-	}
-#endif
-	
-	if (blitInfo == NULL) {
-		charWidth = GetFontCharInfo(fd, theChar, (void **)&fci);
-	} else {
-		fci = (FontCharInfo *)blitInfo;
-		charWidth = fci->fci_charWidth;
-	}
-	
-	if (charWidth != 0) {
-		srcParms.fbs_charPtr	 = AddToPtr(fd->fd_charData, fci->fci_charOffset);
-		srcParms.fbs_charWidth	 = charWidth;
-		srcParms.fbs_charHeight	 = fd->fd_charHeight;
-		dstParms.fbd_pixelBuffer = dstBuf;
-		dstParms.fbd_X			 = dstX;
-		dstParms.fbd_Y			 = dstY;
-		dstParms.fbd_bytesPerRow = dstBPR;
-		dstParms.fbd_colorIndex	 = dstColor;
-		FontBlit3To8_(&srcParms, &dstParms);
-	}
+  int32 charWidth;
+  FontCharInfo *fci;
+  FontBlitSrcParms srcParms;
+  FontBlitDstParms dstParms;
 
-	return charWidth;
+#if DEBUG
+  if (dstBPP != 8 || fd->fd_bitsPerPixel != 3)
+    {
+      DIAGNOSE (("Unsupported bits-per-pixel\n"));
+      return 0;
+    }
+#endif
+
+  if (blitInfo == NULL)
+    {
+      charWidth = GetFontCharInfo (fd, theChar, (void **)&fci);
+    }
+  else
+    {
+      fci = (FontCharInfo *)blitInfo;
+      charWidth = fci->fci_charWidth;
+    }
+
+  if (charWidth != 0)
+    {
+      srcParms.fbs_charPtr = AddToPtr (fd->fd_charData, fci->fci_charOffset);
+      srcParms.fbs_charWidth = charWidth;
+      srcParms.fbs_charHeight = fd->fd_charHeight;
+      dstParms.fbd_pixelBuffer = dstBuf;
+      dstParms.fbd_X = dstX;
+      dstParms.fbd_Y = dstY;
+      dstParms.fbd_bytesPerRow = dstBPR;
+      dstParms.fbd_colorIndex = dstColor;
+      FontBlit3To8_ (&srcParms, &dstParms);
+    }
+
+  return charWidth;
 }

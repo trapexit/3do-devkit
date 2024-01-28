@@ -16,61 +16,44 @@
 #ifndef __STREAMCHUNKS__
 #define __STREAMCHUNKS__
 
-
-
 /*************/
 /*  CLASSES  */
 /*************/
 
-
-
-class TSAnimCCBChunk : public TChunk {
+class TSAnimCCBChunk : public TChunk
+{
 public:
-
-				const CCB*	GetCCB () const;
-								// Return the CCB encapsulated in this chunk
-
+  const CCB *GetCCB () const;
+  // Return the CCB encapsulated in this chunk
 
 private:
-							TSAnimCCBChunk () {};
-	virtual 				~TSAnimCCBChunk () {};
-							TSAnimCCBChunk (const TSAnimCCBChunk&) {}
+  TSAnimCCBChunk (){};
+  virtual ~TSAnimCCBChunk (){};
+  TSAnimCCBChunk (const TSAnimCCBChunk &) {}
 };
 
-
-
-class TSAnimFrameChunk : public TChunk {
+class TSAnimFrameChunk : public TChunk
+{
 public:
-
-				void			GetEmbeddedChunks (TChunkQueue& chunkList) const;
-									// Return a list of chunks encapsulated in this chunk
-
+  void GetEmbeddedChunks (TChunkQueue &chunkList) const;
+  // Return a list of chunks encapsulated in this chunk
 
 private:
-								TSAnimFrameChunk () {};
-	virtual 					~TSAnimFrameChunk () {};
-								TSAnimFrameChunk (const TSAnimFrameChunk&) {}
+  TSAnimFrameChunk (){};
+  virtual ~TSAnimFrameChunk (){};
+  TSAnimFrameChunk (const TSAnimFrameChunk &) {}
 };
 
-
-
-class TSAnimPLUTChunk : public TChunk {
+class TSAnimPLUTChunk : public TChunk
+{
 public:
-
-				const uint32*	GetPLUT (int& count) const;
-									// Return the PLUT encapsulated in this chunk
-
+  const uint32 *GetPLUT (int &count) const;
+  // Return the PLUT encapsulated in this chunk
 
 private:
-								TSAnimPLUTChunk () {};
-	virtual 					~TSAnimPLUTChunk () {};
-								TSAnimPLUTChunk (const TSAnimPLUTChunk&) {}
+  TSAnimPLUTChunk (){};
+  virtual ~TSAnimPLUTChunk (){};
+  TSAnimPLUTChunk (const TSAnimPLUTChunk &) {}
 };
-
-
-
-
-
 
 #endif
-

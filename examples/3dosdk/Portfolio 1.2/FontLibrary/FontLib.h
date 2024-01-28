@@ -6,18 +6,18 @@
  *	Written by:  Edgar Lee and Ian Lepore
  *
  *	Copyright:	© 1993 by The 3DO Company All rights reserved
- *				This material constitutes confidential and proprietary
- *				information of the 3DO Company and shall not be used by
- *				any Person or for any purpose except as expressly
- *				authorized in writing by the 3DO Company
+ *				This material constitutes confidential and
+ *proprietary information of the 3DO Company and shall not be used by any
+ *Person or for any purpose except as expressly authorized in writing by the
+ *3DO Company
  *
  *	Change History (most recent first):
  *
  *	  12/09/93	Ian		First release version
- * 
+ *
  *	Implementation notes:
- *	
- *	This header file is used with both ARMCC and MPWC; the MPWC use is 
+ *
+ *	This header file is used with both ARMCC and MPWC; the MPWC use is
  *	for the 3DOFontWriter application  If you make changes or additions
  *	to this header file, you must recompile 3DOFontWriter as well as any
  *	3DO-side libraries and applications using fonts
@@ -26,13 +26,13 @@
 #ifndef FONTLIB_H
 #define FONTLIB_H
 
-#ifdef __CC_NORCROFT				// MPWC has its own types.h that conflicts with
-  #include "types.h"				// the 3DO types.h, so on the 3DO side we use the
-#else								// header file, and on the MPW side, we just supply
-  typedef long				int32;	// a few crucial typedefs right here
-  typedef unsigned long		uint32;
-  typedef short				int16;
-  typedef unsigned short	uint16;
+#ifdef __CC_NORCROFT // MPWC has its own types.h that conflicts with
+#include "types.h"   // the 3DO types.h, so on the 3DO side we use the
+#else                // header file, and on the MPW side, we just supply
+typedef long int32; // a few crucial typedefs right here
+typedef unsigned long uint32;
+typedef short int16;
+typedef unsigned short uint16;
 #endif
 
 /*----------------------------------------------------------------------------
@@ -41,87 +41,93 @@
  *--------------------------------------------------------------------------*/
 
 #ifndef CHAR4LITERAL
-  #define CHAR4LITERAL(a,b,c,d)	((unsigned long) (a<<24)|(b<<16)|(c<<8)|d)
+#define CHAR4LITERAL(a, b, c, d)                                              \
+  ((unsigned long)(a << 24) | (b << 16) | (c << 8) | d)
 #endif
 
-#define CHUNK_FONT			CHAR4LITERAL('F','O','N','T')
+#define CHUNK_FONT CHAR4LITERAL ('F', 'O', 'N', 'T')
 
-typedef struct FontHeader {
-	int32			chunk_ID;					// Standard 3DO file header fields;
-	int32			chunk_size; 				// font file is one huge chunk
-	uint32			fh_fontType;				// Font type
-	uint32			fh_fontFlags;				// Font flags
-	uint32			fh_charHeight;				// Height of character (ascent+descent)
-	uint32			fh_charWidth;				// Max width of character (pixels)
-	uint32			fh_bitsPerPixel;			// Pixel depth of each character, as stored in file
-	uint32			fh_firstChar;				// First char defined in character set
-	uint32			fh_lastChar;				// Last char defined in character set
-	uint32			fh_charExtra;				// Spacing between characters
-	uint32			fh_ascent;					// Distance from baseline to ascentline
-	uint32			fh_descent;					// Distance from baseline to descentline
-	uint32			fh_leading;					// Distance from descent line to next ascent line
-	uint32			fh_charInfoOffset;			// Offset from file beginning to offset/width table
-	uint32			fh_charInfoSize;			// Size of offset/width table in bytes
-	uint32			fh_charDataOffset;			// Offset from file beginning to char data
-	uint32			fh_charDataSize;			// Size of all character data in bytes
-	uint32			fh_reserved[4];				// Typical reserved-for-future-expansion
+typedef struct FontHeader
+{
+  int32 chunk_ID;           // Standard 3DO file header fields;
+  int32 chunk_size;         // font file is one huge chunk
+  uint32 fh_fontType;       // Font type
+  uint32 fh_fontFlags;      // Font flags
+  uint32 fh_charHeight;     // Height of character (ascent+descent)
+  uint32 fh_charWidth;      // Max width of character (pixels)
+  uint32 fh_bitsPerPixel;   // Pixel depth of each character, as stored in file
+  uint32 fh_firstChar;      // First char defined in character set
+  uint32 fh_lastChar;       // Last char defined in character set
+  uint32 fh_charExtra;      // Spacing between characters
+  uint32 fh_ascent;         // Distance from baseline to ascentline
+  uint32 fh_descent;        // Distance from baseline to descentline
+  uint32 fh_leading;        // Distance from descent line to next ascent line
+  uint32 fh_charInfoOffset; // Offset from file beginning to offset/width table
+  uint32 fh_charInfoSize;   // Size of offset/width table in bytes
+  uint32 fh_charDataOffset; // Offset from file beginning to char data
+  uint32 fh_charDataSize;   // Size of all character data in bytes
+  uint32 fh_reserved[4];    // Typical reserved-for-future-expansion
 } FontHeader;
 
-typedef struct FontCharInfo {
-	unsigned int	fci_charOffset : 22;		// Offset from start of char data to this char
-	unsigned int	fci_unused     :  2;		// two available bits
-	unsigned int	fci_charWidth  :  8;		// Width (in pixels) of data for this char
+typedef struct FontCharInfo
+{
+  unsigned int
+      fci_charOffset : 22;     // Offset from start of char data to this char
+  unsigned int fci_unused : 2; // two available bits
+  unsigned int fci_charWidth : 8; // Width (in pixels) of data for this char
 } FontCharInfo;
 
 /*----------------------------------------------------------------------------
  * FontDescriptor
- *	Client code should pull any needed info about a font from this structure.
- *	the fields down thru fd_reserved are g'teed to remain the same forever;
- *	fields from fd_fontHeader down may change in the future.
- *	Client code should never modify any values in this structure.
+ *	Client code should pull any needed info about a font from this
+ *structure. the fields down thru fd_reserved are g'teed to remain the same
+ *forever; fields from fd_fontHeader down may change in the future. Client code
+ *should never modify any values in this structure.
  *--------------------------------------------------------------------------*/
 
-#define FFLAG_DYNLOADED		0x01000000			// File loaded via LoadFont (not via ParseFont)
-#define FFLAG_MONOSPACED	0x00000001			// Font is monospaced (not proportional)
+#define FFLAG_DYNLOADED                                                       \
+  0x01000000 // File loaded via LoadFont (not via ParseFont)
+#define FFLAG_MONOSPACED 0x00000001 // Font is monospaced (not proportional)
 
-typedef struct FontDescriptor  {
-	uint32			fd_fontFlags;				// Flags describing the font
-	uint32			fd_charHeight;				// Height of character (ascent+descent)
-	uint32			fd_charWidth;				// Max width of character (pixels)
-	uint32			fd_bitsPerPixel;			// Pixel depth of each character, as stored in file
-	uint32			fd_firstChar;				// First char defined in character set
-	uint32			fd_lastChar;				// Last char defined in character set
-	uint32			fd_charExtra;				// Spacing between characters
-	uint32			fd_ascent;					// Distance from baseline to ascentline
-	uint32			fd_descent;					// Distance from baseline to descentline
-	uint32			fd_leading;					// Distance from descent line to next ascent line
-	uint32			fd_reserved[4];				// Everything from here down private to internals and subject to change
-	void *			fd_fontHeader;				// Font header information
-	void *			fd_charInfo;				// Per-character data table
-	void *			fd_charData;				// The character data
+typedef struct FontDescriptor
+{
+  uint32 fd_fontFlags;    // Flags describing the font
+  uint32 fd_charHeight;   // Height of character (ascent+descent)
+  uint32 fd_charWidth;    // Max width of character (pixels)
+  uint32 fd_bitsPerPixel; // Pixel depth of each character, as stored in file
+  uint32 fd_firstChar;    // First char defined in character set
+  uint32 fd_lastChar;     // Last char defined in character set
+  uint32 fd_charExtra;    // Spacing between characters
+  uint32 fd_ascent;       // Distance from baseline to ascentline
+  uint32 fd_descent;      // Distance from baseline to descentline
+  uint32 fd_leading;      // Distance from descent line to next ascent line
+  uint32 fd_reserved[4];  // Everything from here down private to internals and
+                          // subject to change
+  void *fd_fontHeader;    // Font header information
+  void *fd_charInfo;      // Per-character data table
+  void *fd_charData;      // The character data
 } FontDescriptor;
 
 /*----------------------------------------------------------------------------
  * FontBlit API
- *	These things are used to blit character pixels from the font data 
+ *	These things are used to blit character pixels from the font data
  *	area into a cel buffer.
  *--------------------------------------------------------------------------*/
 
-int32	GetFontCharInfo(FontDescriptor *fDesc, int32 character, void **blitInfo);
-int32	BlitFontChar(FontDescriptor *fDesc, uint32 theChar, void *blitInfo,
-					void *dstBuf, int32 dstX, int32 dstY, 
-					int32 dstBPR, int32 dstColorIndex, int32 dstBPP);
+int32 GetFontCharInfo (FontDescriptor *fDesc, int32 character,
+                       void **blitInfo);
+int32 BlitFontChar (FontDescriptor *fDesc, uint32 theChar, void *blitInfo,
+                    void *dstBuf, int32 dstX, int32 dstY, int32 dstBPR,
+                    int32 dstColorIndex, int32 dstBPP);
 
 /*----------------------------------------------------------------------------
  * Font file API
  *--------------------------------------------------------------------------*/
 
-FontDescriptor *	ParseFont(void *fontImage);
-FontDescriptor *	LoadFont(char *fontFileName, uint32 memTypeBits);
-void				UnloadFont(FontDescriptor * fDesc);
+FontDescriptor *ParseFont (void *fontImage);
+FontDescriptor *LoadFont (char *fontFileName, uint32 memTypeBits);
+void UnloadFont (FontDescriptor *fDesc);
 
-int32	GetFontCharWidth(FontDescriptor *fDesc, int32 character);
-						
+int32 GetFontCharWidth (FontDescriptor *fDesc, int32 character);
 
-#endif	
-
+#endif

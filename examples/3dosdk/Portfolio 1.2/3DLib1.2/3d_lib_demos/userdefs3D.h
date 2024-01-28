@@ -6,11 +6,11 @@
  * Include file for 3D lib				      	*
  *								*
  * By:  Dan Duncalf					        *
- *								*								                                *
- * Copyright (c) 1993, New Technologies Group, Inc.		*
- * All rights reserved					        *
- * This document is proprietary and confidential		*
- *								*                                *
+ *								*
+ ** Copyright (c) 1993, New Technologies Group, Inc.		* All rights
+ *reserved					        * This document is
+ *proprietary and confidential		*
+ *								* *
  ****************************************************************
  *                                                              *
  * This file contains constants you can modify that determine   *
@@ -21,10 +21,4 @@
 
 #define MAX3DOBJECTS 200
 
-#endif	/* _UserDefs3D_h */
-
-
-
-
-
-
+#endif /* _UserDefs3D_h */

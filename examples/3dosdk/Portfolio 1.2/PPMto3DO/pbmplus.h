@@ -13,14 +13,14 @@
 #ifndef _PBMPLUS_H_
 #define _PBMPLUS_H_
 
-/*#include <sys/types.h>*/		// removed for Mac port
+/*#include <sys/types.h>*/ // removed for Mac port
 #include <ctype.h>
 #include <stdio.h>
 
 #if defined(USG) || defined(SVR4)
 #define SYSV
 #endif
-#if ! ( defined(BSD) || defined(SYSV) || defined(MSDOS) )
+#if !(defined(BSD) || defined(SYSV) || defined(MSDOS))
 /* CONFIGURE: If your system is >= 4.2BSD, set the BSD option; if you're a
 ** System V site, set the SYSV option; and if you're IBM-compatible, set
 ** MSDOS.  If your compiler is ANSI C, you're probably better off setting
@@ -34,7 +34,7 @@
 /* CONFIGURE: If you want to enable writing "raw" files, set this option.
 ** "Raw" files are smaller, and much faster to read and write, but you
 ** must have a filesystem that allows all 256 ASCII characters to be read
-** and written.  You will no longer be able to mail P?M files without 
+** and written.  You will no longer be able to mail P?M files without
 ** using uuencode or the equivalent, or running the files through pnmnoraw.
 ** Note that reading "raw" files works whether writing is enabled or not.
 */
@@ -70,35 +70,35 @@
 #ifdef SYSV
 
 #include <string.h>
-#define index(s,c) strchr(s,c)
-#define rindex(s,c) strrchr(s,c)
+#define index(s, c) strchr (s, c)
+#define rindex(s, c) strrchr (s, c)
 
 #ifdef NOTDEF
-#define srandom(s) srand(s)
+#define srandom(s) srand (s)
 #define random rand
 #endif
 
-#define bzero(dst,len) memset(dst,0,len)
-#define bcopy(src,dst,len) memcpy(dst,src,len)
+#define bzero(dst, len) memset (dst, 0, len)
+#define bcopy(src, dst, len) memcpy (dst, src, len)
 #define bcmp memcmp
 
 #ifdef NOTDEF
-extern void srand();
-extern int rand();
+extern void srand ();
+extern int rand ();
 #endif
 
 #else /*SYSV*/
 
 #include <string.h>
-extern void srandom();
-extern long random();
+extern void srandom ();
+extern long random ();
 
 #endif /*SYSV*/
 
-extern int atoi();
-extern void exit();
-extern long time();
-extern int write();
+extern int atoi ();
+extern void exit ();
+extern long time ();
+extern int write ();
 
 /* CONFIGURE: On some systems, malloc.h doesn't declare these, so we have
 ** to do it.  On other systems, for example HP/UX, it declares them
@@ -106,11 +106,11 @@ extern int write();
 ** malloc.h at all.  A sad situation.  If you have compilation problems
 ** that point here, feel free to tweak or remove these declarations.
 */
-#include <stdlib.h>		// changed from malloc.h for Mac port
+#include <stdlib.h> // changed from malloc.h for Mac port
 #ifdef NOTDEF
-extern char* malloc();
-extern char* realloc();
-extern char* calloc();
+extern char *malloc ();
+extern char *realloc ();
+extern char *calloc ();
 #endif
 
 /* CONFIGURE: Some systems don't have vfprintf(), which we need for the
@@ -126,16 +126,14 @@ extern char* calloc();
 
 /* End of configurable definitions. */
 
-
 #undef max
-#define max(a,b) ((a) > (b) ? (a) : (b))
+#define max(a, b) ((a) > (b) ? (a) : (b))
 #undef min
-#define min(a,b) ((a) < (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
 #undef abs
 #define abs(a) ((a) >= 0 ? (a) : -(a))
 #undef odd
-#define odd(n) ((n) & 1)
-
+#define odd(n) ((n)&1)
 
 /* Definitions to make PBMPLUS work with either ANSI C or C Classic. */
 
@@ -146,56 +144,48 @@ extern char* calloc();
 #define const
 #endif /*__STDC__*/
 
-
 /* Initialization. */
 
-void pm_init ARGS(( int* argcP, char* argv[] ));
-
+void pm_init ARGS ((int *argcP, char *argv[]));
 
 /* Variable-sized arrays definitions. */
 
-char** pm_allocarray ARGS(( int cols, int rows, int size ));
-char* pm_allocrow ARGS(( int cols, int size ));
-void pm_freearray ARGS(( char** its, int rows ));
-void pm_freerow ARGS(( char* itrow ));
-
+char **pm_allocarray ARGS ((int cols, int rows, int size));
+char *pm_allocrow ARGS ((int cols, int size));
+void pm_freearray ARGS ((char **its, int rows));
+void pm_freerow ARGS ((char *itrow));
 
 /* Case-insensitive keyword matcher. */
 
-int pm_keymatch ARGS(( char* str, char* keyword, int minchars ));
-
+int pm_keymatch ARGS ((char *str, char *keyword, int minchars));
 
 /* Log base two hacks. */
 
-int pm_maxvaltobits ARGS(( int maxval ));
-int pm_bitstomaxval ARGS(( int bits ));
-
+int pm_maxvaltobits ARGS ((int maxval));
+int pm_bitstomaxval ARGS ((int bits));
 
 /* Error handling definitions. */
 
-void pm_message ARGS(( char*, ... ));
-void pm_error ARGS(( char*, ... ));			/* doesn't return */
-void pm_perror ARGS(( char* reason ));			/* doesn't return */
-void pm_usage ARGS(( char* usage ));			/* doesn't return */
-
+void pm_message ARGS ((char *, ...));
+void pm_error ARGS ((char *, ...));   /* doesn't return */
+void pm_perror ARGS ((char *reason)); /* doesn't return */
+void pm_usage ARGS ((char *usage));   /* doesn't return */
 
 /* File open/close that handles "-" as stdin and checks errors. */
 
-FILE* pm_openr ARGS(( char* name ));
-FILE* pm_openw ARGS(( char* name ));
-void pm_close ARGS(( FILE* f ));
-
+FILE *pm_openr ARGS ((char *name));
+FILE *pm_openw ARGS ((char *name));
+void pm_close ARGS ((FILE * f));
 
 /* Endian I/O. */
 
-int pm_readbigshort ARGS(( FILE* in, short* sP ));
-int pm_writebigshort ARGS(( FILE* out, short s ));
-int pm_readbiglong ARGS(( FILE* in, long* lP ));
-int pm_writebiglong ARGS(( FILE* out, long l ));
-int pm_readlittleshort ARGS(( FILE* in, short* sP ));
-int pm_writelittleshort ARGS(( FILE* out, short s ));
-int pm_readlittlelong ARGS(( FILE* in, long* lP ));
-int pm_writelittlelong ARGS(( FILE* out, long l ));
-
+int pm_readbigshort ARGS ((FILE * in, short *sP));
+int pm_writebigshort ARGS ((FILE * out, short s));
+int pm_readbiglong ARGS ((FILE * in, long *lP));
+int pm_writebiglong ARGS ((FILE * out, long l));
+int pm_readlittleshort ARGS ((FILE * in, short *sP));
+int pm_writelittleshort ARGS ((FILE * out, short s));
+int pm_readlittlelong ARGS ((FILE * in, long *lP));
+int pm_writelittlelong ARGS ((FILE * out, long l));
 
 #endif /*_PBMPLUS_H_*/

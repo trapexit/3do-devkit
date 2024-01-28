@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: focus.c,v 1.7 1995/01/16 19:48:35 vertex Exp $
 **
@@ -23,9 +25,12 @@
 |||
 |||	  Arguments
 |||
-|||	    listener                     Name or hexadecimal address of a message
-|||	                                 port to which the focus should be diverted.
-|||	                                 If this is not specified, the program lists
+|||	    listener                     Name or hexadecimal address of a
+message
+|||	                                 port to which the focus should be
+diverted.
+|||	                                 If this is not specified, the program
+lists
 |||	                                 the current focus holder.
 |||
 |||	  Associated Files
@@ -40,202 +45,208 @@
 |||
 **/
 
-#include "types.h"
+#include "event.h"
 #include "item.h"
 #include "msgport.h"
 #include "operror.h"
-#include "event.h"
 #include "stdio.h"
 #include "string.h"
-
+#include "types.h"
 
 /*****************************************************************************/
 
-
-static Err SendEBMessage(Item ebPortItem, Item msgItem,
-                         enum EventBrokerFlavor flavor)
+static Err
+SendEBMessage (Item ebPortItem, Item msgItem, enum EventBrokerFlavor flavor)
 {
-EventBrokerHeader  ebHdr;
-Err                err;
-Message           *msg;
+  EventBrokerHeader ebHdr;
+  Err err;
+  Message *msg;
 
-    ebHdr.ebh_Flavor = flavor;
+  ebHdr.ebh_Flavor = flavor;
 
-    err = SendMsg(ebPortItem, msgItem, &ebHdr, sizeof(EventBrokerHeader));
-    if (err >= 0)
+  err = SendMsg (ebPortItem, msgItem, &ebHdr, sizeof (EventBrokerHeader));
+  if (err >= 0)
     {
-        msg = (Message *)LookupItem(msgItem);
+      msg = (Message *)LookupItem (msgItem);
 
-        err = WaitPort(msg->msg_ReplyPort, msgItem);
-        if (err >= 0)
+      err = WaitPort (msg->msg_ReplyPort, msgItem);
+      if (err >= 0)
         {
-            if ((Err)msg->msg_Result < 0)
+          if ((Err)msg->msg_Result < 0)
             {
-                printf("Event broker failed: ");
-                PrintfSysErr(msg->msg_Result);
+              printf ("Event broker failed: ");
+              PrintfSysErr (msg->msg_Result);
             }
 
-            return (Err)msg->msg_Result;
+          return (Err)msg->msg_Result;
         }
-        else
+      else
         {
-            printf("Error waiting for reply: ");
-            PrintfSysErr(err);
+          printf ("Error waiting for reply: ");
+          PrintfSysErr (err);
         }
     }
-    else
+  else
     {
-        printf("Error sending message: ");
-        PrintfSysErr(err);
+      printf ("Error sending message: ");
+      PrintfSysErr (err);
     }
 
-    return err;
+  return err;
 }
-
 
 /*****************************************************************************/
 
-
-int main(int32 argc, char **argv)
+int
+main (int32 argc, char **argv)
 {
-Item          ebPortItem;
-Item          msgPortItem;
-Item          msgItem;
-Item          eventItem;
-Item          focusItem;
-Err           err;
-Item          switchItem;
-Message      *msg;
-MsgPort      *listenerPort;
-char          focusPort[16];
-ListenerList *ll;
-int32         i;
-SetFocus      focusRequest;
+  Item ebPortItem;
+  Item msgPortItem;
+  Item msgItem;
+  Item eventItem;
+  Item focusItem;
+  Err err;
+  Item switchItem;
+  Message *msg;
+  MsgPort *listenerPort;
+  char focusPort[16];
+  ListenerList *ll;
+  int32 i;
+  SetFocus focusRequest;
 
-    if (argc > 2)
+  if (argc > 2)
     {
-        printf("Usage: focus [listener]\n");
-        return 0;
+      printf ("Usage: focus [listener]\n");
+      return 0;
     }
 
-    ebPortItem = FindMsgPort(EventPortName);
-    if (ebPortItem >= 0)
+  ebPortItem = FindMsgPort (EventPortName);
+  if (ebPortItem >= 0)
     {
-        msgPortItem = CreateMsgPort(NULL, 0, 0);
-        if (msgPortItem >= 0)
+      msgPortItem = CreateMsgPort (NULL, 0, 0);
+      if (msgPortItem >= 0)
         {
-            msgItem = CreateBufferedMsg(NULL,0,msgPortItem,2048);
-            if (msgItem >= 0)
+          msgItem = CreateBufferedMsg (NULL, 0, msgPortItem, 2048);
+          if (msgItem >= 0)
             {
-                err = SendEBMessage(ebPortItem,msgItem,EB_GetFocus);
-                if (err >= 0)
+              err = SendEBMessage (ebPortItem, msgItem, EB_GetFocus);
+              if (err >= 0)
                 {
-                    msg       = (Message *)LookupItem(msgItem);
-                    focusItem = (Item) msg->msg_Result;
+                  msg = (Message *)LookupItem (msgItem);
+                  focusItem = (Item)msg->msg_Result;
 
-                    if (argc == 1)
+                  if (argc == 1)
                     {
-                        listenerPort = (MsgPort *) CheckItem(focusItem,
-                                                            KERNELNODE, MSGPORTNODE);
-                        if (listenerPort)
+                      listenerPort = (MsgPort *)CheckItem (
+                          focusItem, KERNELNODE, MSGPORTNODE);
+                      if (listenerPort)
                         {
-                            if (listenerPort->mp.n_Name)
+                          if (listenerPort->mp.n_Name)
                             {
-                                printf("Focus is held by '%s' on port 0x%x\n",
-                                       listenerPort->mp.n_Name,
-                                       focusItem);
+                              printf ("Focus is held by '%s' on port 0x%x\n",
+                                      listenerPort->mp.n_Name, focusItem);
                             }
-                            else
+                          else
                             {
-                                printf("Focus is held by unnamed port 0x%x\n", focusItem);
+                              printf ("Focus is held by unnamed port 0x%x\n",
+                                      focusItem);
                             }
                         }
-                        else
+                      else
                         {
-                            printf("Nobody is holding the focus\n");
+                          printf ("Nobody is holding the focus\n");
                         }
                     }
-                    else
+                  else
                     {
-                        err = SendEBMessage(ebPortItem,msgItem,EB_GetListeners);
-                        if (err >= 0)
+                      err = SendEBMessage (ebPortItem, msgItem,
+                                           EB_GetListeners);
+                      if (err >= 0)
                         {
-                            ll = (ListenerList *) msg->msg_DataPtr;
-                            switchItem = 0;
+                          ll = (ListenerList *)msg->msg_DataPtr;
+                          switchItem = 0;
 
-                            for (i = 0; !switchItem && i < ll->ll_Count; i++)
+                          for (i = 0; !switchItem && i < ll->ll_Count; i++)
                             {
-                                listenerPort = (MsgPort *) CheckItem(ll->ll_Listener[i].li_PortItem,
-                                                                       KERNELNODE, MSGPORTNODE);
-                                if (listenerPort && strcmp(listenerPort->mp.n_Name, argv[1]) == 0)
+                              listenerPort = (MsgPort *)CheckItem (
+                                  ll->ll_Listener[i].li_PortItem, KERNELNODE,
+                                  MSGPORTNODE);
+                              if (listenerPort
+                                  && strcmp (listenerPort->mp.n_Name, argv[1])
+                                         == 0)
                                 {
-                                    switchItem = ll->ll_Listener[i].li_PortItem;
+                                  switchItem = ll->ll_Listener[i].li_PortItem;
                                 }
-                                else
+                              else
                                 {
-                                    sprintf(focusPort, "0x%x", ll->ll_Listener[i].li_PortItem);
-                                    if (strcmp(focusPort, argv[1]) == 0)
-                                        switchItem = ll->ll_Listener[i].li_PortItem;
+                                  sprintf (focusPort, "0x%x",
+                                           ll->ll_Listener[i].li_PortItem);
+                                  if (strcmp (focusPort, argv[1]) == 0)
+                                    switchItem
+                                        = ll->ll_Listener[i].li_PortItem;
                                 }
                             }
 
-                            if (switchItem)
+                          if (switchItem)
                             {
-                                focusRequest.sf_Header.ebh_Flavor = EB_SetFocus;
-                                focusRequest.sf_DesiredFocusListener = switchItem;
+                              focusRequest.sf_Header.ebh_Flavor = EB_SetFocus;
+                              focusRequest.sf_DesiredFocusListener
+                                  = switchItem;
 
-                                err = SendMsg(ebPortItem, msgItem, &focusRequest, sizeof focusRequest);
-                                if (err >= 0)
+                              err = SendMsg (ebPortItem, msgItem,
+                                             &focusRequest,
+                                             sizeof focusRequest);
+                              if (err >= 0)
                                 {
-                                    eventItem = WaitPort(msgPortItem, msgItem);
-                                    if (eventItem >= 0)
+                                  eventItem = WaitPort (msgPortItem, msgItem);
+                                  if (eventItem >= 0)
                                     {
-                                        err = (Err) msg->msg_Result;
-                                        if (err < 0)
+                                      err = (Err)msg->msg_Result;
+                                      if (err < 0)
                                         {
-                                            printf("EB_SetFocus failed: ");
-                                            PrintfSysErr(err);
+                                          printf ("EB_SetFocus failed: ");
+                                          PrintfSysErr (err);
                                         }
                                     }
-                                    else
+                                  else
                                     {
-                                        printf("WaitPort() failed: ");
-                                        PrintfSysErr(err);
+                                      printf ("WaitPort() failed: ");
+                                      PrintfSysErr (err);
                                     }
                                 }
-                                else
+                              else
                                 {
-                                    printf("SendMsg() failed: ");
-                                    PrintfSysErr(err);
+                                  printf ("SendMsg() failed: ");
+                                  PrintfSysErr (err);
                                 }
                             }
-                            else
+                          else
                             {
-                                printf("Cannot find listener %s\n", argv[1]);
+                              printf ("Cannot find listener %s\n", argv[1]);
                             }
                         }
                     }
                 }
-                DeleteMsg(msgItem);
+              DeleteMsg (msgItem);
             }
-            else
+          else
             {
-                printf("Cannot create message: ");
-                PrintfSysErr(msgItem);
+              printf ("Cannot create message: ");
+              PrintfSysErr (msgItem);
             }
-            DeleteMsgPort(msgPortItem);
+          DeleteMsgPort (msgPortItem);
         }
-        else
+      else
         {
-            printf("Cannot create event-listener port: ");
-            PrintfSysErr(msgPortItem);
+          printf ("Cannot create event-listener port: ");
+          PrintfSysErr (msgPortItem);
         }
     }
-    else
+  else
     {
-        printf("Can't find Event Broker port: ");
-        PrintfSysErr(ebPortItem);
+      printf ("Can't find Event Broker port: ");
+      PrintfSysErr (ebPortItem);
     }
 
-    return 0;
+  return 0;
 }

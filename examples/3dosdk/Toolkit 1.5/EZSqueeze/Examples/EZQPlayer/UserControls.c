@@ -8,15 +8,16 @@
  *	Copyright © 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
- *	3/7/94			lla		Added GOMARKER_FWD_POS_RELATIVE & GOMARKER_BWD_POS_RELATIVE for fast fwd & bwd
- *	3/2/94			lla		Added block skipping for fast fwd & bwd
- *	12/10/93		lla		Added fast forward and reverse
- *	12/01/93		lla		New today
+ *	3/7/94			lla		Added GOMARKER_FWD_POS_RELATIVE
+ *& GOMARKER_BWD_POS_RELATIVE for fast fwd & bwd 3/2/94			lla
+ *Added block skipping for fast fwd & bwd 12/10/93		lla
+ *Added fast forward and reverse 12/01/93		lla		New
+ *today
  *
  *******************************************************************************************/
 
-#include "Portfolio.h"
 #include "Init3DO.h"
+#include "Portfolio.h"
 #include "Utils3DO.h"
 
 #include "DataStreamDebug.h"
@@ -28,35 +29,35 @@
 /******************************/
 /* Library and system globals */
 /******************************/
-extern	ScreenContext	gScreenContext;
+extern ScreenContext gScreenContext;
 
 /******************************/
 /* Application globals */
 /******************************/
-extern	Boolean			fRunStream;
-extern	Boolean			fCatchupStrategy;
-extern	Boolean			quitFlag;
+extern Boolean fRunStream;
+extern Boolean fCatchupStrategy;
+extern Boolean quitFlag;
 /******************************/
 /* Utility routine prototypes */
 /******************************/
-extern	void			WaitABit(long b);
-extern	void			EraseScreen( ScreenContext *sc, int32 screenNum );
-extern	void 			WaitAudioClicks ( AudioTime clicks );
+extern void WaitABit (long b);
+extern void EraseScreen (ScreenContext *sc, int32 screenNum);
+extern void WaitAudioClicks (AudioTime clicks);
 // extern	int32 			performElKabong ( void *buf );
-		void 			ClosePlayerFunction( PlayerFuntionContextPtr pfc );
+void ClosePlayerFunction (PlayerFuntionContextPtr pfc);
 
 //------------------------------------------------------------------------------------
 //
-//		These functions are called each time through the player's main loop and can be used to
-//		implement any user interface actions necessary. Returning a zero causes playback to
-//		continue. Any other value causes playback to cease and immediately return from
-//		the PlayEZQStream() function.
+//		These functions are called each time through the player's main
+//loop and can be used to 		implement any user interface actions necessary.
+//Returning a zero causes playback to 		continue. Any other value causes playback
+//to cease and immediately return from 		the PlayEZQStream() function.
 //
 //------------------------------------------------------------------------------------
 //************************************************************************************
 //
-//			The "PlayerFunction" is the user controls for the main movie player
-//			"X"			- Back to menu
+//			The "PlayerFunction" is the user controls for the main
+//movie player 			"X"			- Back to menu
 //			"P"			- toggles pause and run
 //			"C"			- Displays help menu
 //			"Shift X"	- rewinds the movie
@@ -71,351 +72,373 @@ extern	void 			WaitAudioClicks ( AudioTime clicks );
 //
 //************************************************************************************
 
-#define		SHIFT_KEY				(joypadStatePtr->rightShift || joypadStatePtr->leftShift)
-#define		steppingClicks			60
-#define		skippingClicks			60
-#define		gFwdBlockSkip			10
-#define		gBwdBlockSkip			20
+#define SHIFT_KEY (joypadStatePtr->rightShift || joypadStatePtr->leftShift)
+#define steppingClicks 60
+#define skippingClicks 60
+#define gFwdBlockSkip 10
+#define gBwdBlockSkip 20
 
-long PlayerFunction ( PlayerFuntionContextPtr pfc )
-	{
-	long				status;
-	JoyPadState 		joypadState, *joypadStatePtr = &joypadState;
-	void				*nullBuffer;
-	SAudioCtlBlock		CtlBlockPtr, *ctlBlockPtr = &CtlBlockPtr;
-	long				skipBlocks;
-	PlayerPtr 			ctx;
-	DSRequestMsgPtr 	reqMsg;
+long
+PlayerFunction (PlayerFuntionContextPtr pfc)
+{
+  long status;
+  JoyPadState joypadState, *joypadStatePtr = &joypadState;
+  void *nullBuffer;
+  SAudioCtlBlock CtlBlockPtr, *ctlBlockPtr = &CtlBlockPtr;
+  long skipBlocks;
+  PlayerPtr ctx;
+  DSRequestMsgPtr reqMsg;
 
-	long				temp, poll_status;
-	
-	nullBuffer = NULL;
+  long temp, poll_status;
 
-	ctx = pfc->playerCtx;
-	status = 0;
-	
-	GetJoyPad( joypadStatePtr, 1 );
+  nullBuffer = NULL;
 
-	if ( joypadStatePtr->xBtn )
-		{
-//------------------------------------------------------------------------------------
-//			The "stop button" and "right shift" or "left shift" rewinds movie
-//------------------------------------------------------------------------------------
-		 if ( SHIFT_KEY )
-			{
-			if ( !fRunStream )
-				{
-//				status = DSStartStream( ctx->messageItem, NULL, ctx->streamCBPtr, 0 );
-//				CHECK_DS_RESULT( "DSStartStream", status );
-			ctlBlockPtr->mute.channelNumber = 0;
-			status = DSControl( ctx->messageItem, NULL, ctx->streamCBPtr, SNDS_CHUNK_TYPE,
-												 kSAudioCtlOpUnMute, ctlBlockPtr );
-				fRunStream = true;
-				}
-	
-	
-			/* Go backward in the stream */
-			status = DSGoMarker( ctx->messageItem, 
-								NULL, 
-								ctx->streamCBPtr, 
-								0,
-								GOMARKER_ABSOLUTE );
-	
-			if ( status == kDSRangeErr || status == kDSBranchNotDefined  )
-				{
-//				status = performElKabong ( nullBuffer );
-				if ( !status ) status = kRewindMovie;
-				}
+  ctx = pfc->playerCtx;
+  status = 0;
 
-			CHECK_DS_RESULT( "Rewind: DSGoMarker", status );
-			status = kDSContinuousFrame;
-			}
+  GetJoyPad (joypadStatePtr, 1);
 
-//------------------------------------------------------------------------------------
-//			The "stop button" only returns to the menu
-//------------------------------------------------------------------------------------
-		else
-			{
-			
-			//status = DSStopStream( ctx->messageItem, false, ctx->streamCBPtr, SOPT_FLUSH );
-			//CHECK_DS_RESULT( "DSStopStream: PlayerFunction", status );
-			//fRunStream = false;
+  if (joypadStatePtr->xBtn)
+    {
+      //------------------------------------------------------------------------------------
+      //			The "stop button" and "right shift" or "left
+      //shift" rewinds movie
+      //------------------------------------------------------------------------------------
+      if (SHIFT_KEY)
+        {
+          if (!fRunStream)
+            {
+              //				status = DSStartStream(
+              //ctx->messageItem, NULL, ctx->streamCBPtr, 0 ); 				CHECK_DS_RESULT(
+              //"DSStartStream", status );
+              ctlBlockPtr->mute.channelNumber = 0;
+              status = DSControl (ctx->messageItem, NULL, ctx->streamCBPtr,
+                                  SNDS_CHUNK_TYPE, kSAudioCtlOpUnMute,
+                                  ctlBlockPtr);
+              fRunStream = true;
+            }
 
-//			status = performElKabong ( nullBuffer );
-			if ( !status ) status = kStopMovie;
-			}
-		}
-	
-//------------------------------------------------------------------------------------
-//			The "start Button" button toggles running the stream
-//------------------------------------------------------------------------------------
+          /* Go backward in the stream */
+          status = DSGoMarker (ctx->messageItem, NULL, ctx->streamCBPtr, 0,
+                               GOMARKER_ABSOLUTE);
 
-	else if ( joypadStatePtr->startBtn )
-		{
-		/* If we're transitioning from stopped to running, start the
-		 * stream. Otherwise, stop the stream.
-		 */
-		if ( fRunStream )
-			{
-			ctlBlockPtr->mute.channelNumber = 0;
-			status = DSControl( ctx->messageItem, NULL, ctx->streamCBPtr, SNDS_CHUNK_TYPE,
-									 kSAudioCtlOpMute, ctlBlockPtr );
-			status = kDSStepFrame;
-			}
-		else
-			{
-			ctlBlockPtr->mute.channelNumber = 0;
-			status = DSControl( ctx->messageItem, NULL, ctx->streamCBPtr, SNDS_CHUNK_TYPE,
-												 kSAudioCtlOpUnMute, ctlBlockPtr );
-			status = kDSContinuousFrame;
-			}
-		/* Flip the logical value of the "stream running" flag
-		 */
-		fRunStream = !fRunStream;
-		}
-	
-//------------------------------------------------------------------------------------
-//			The "C Button" displays help screen
-//------------------------------------------------------------------------------------
+          if (status == kDSRangeErr || status == kDSBranchNotDefined)
+            {
+              //				status = performElKabong (
+              //nullBuffer );
+              if (!status)
+                status = kRewindMovie;
+            }
 
-	else if ( joypadStatePtr->cBtn )
-		{
-		if ( fRunStream )
-			{
-			ctlBlockPtr->mute.channelNumber = 0;
-			status = DSControl( ctx->messageItem, NULL, ctx->streamCBPtr, SNDS_CHUNK_TYPE,
-									 kSAudioCtlOpMute, ctlBlockPtr );
-			status = kDSStepFrame;
-			}
-		DisplayScreen(gScreenContext.sc_Screens[helpScreen], 0);
+          CHECK_DS_RESULT ("Rewind: DSGoMarker", status);
+          status = kDSContinuousFrame;
+        }
 
-		while ( joypadStatePtr->cBtn )
-			GetJoyPad( joypadStatePtr, 1 );
-			
-		DisplayScreen(gScreenContext.sc_Screens[movieScreen], 0);
+      //------------------------------------------------------------------------------------
+      //			The "stop button" only returns to the menu
+      //------------------------------------------------------------------------------------
+      else
+        {
 
-		if ( fRunStream )
-			{
-			ctlBlockPtr->mute.channelNumber = 0;
-			status = DSControl( ctx->messageItem, NULL, ctx->streamCBPtr, SNDS_CHUNK_TYPE,
-												 kSAudioCtlOpUnMute, ctlBlockPtr );
-			status = kDSContinuousFrame;
-			}
-		}
+          // status = DSStopStream( ctx->messageItem, false, ctx->streamCBPtr,
+          // SOPT_FLUSH ); CHECK_DS_RESULT( "DSStopStream: PlayerFunction",
+          // status ); fRunStream = false;
 
-	
-	else if ( joypadStatePtr->bBtn )
-		{
-		fCatchupStrategy = fCatchupStrategy;
-		}
+          //			status = performElKabong ( nullBuffer );
+          if (!status)
+            status = kStopMovie;
+        }
+    }
 
-//------------------------------------------------------------------------------------
-//			We are in pause mode
-//			therefore the pad is for step frame operation
-//------------------------------------------------------------------------------------
-	else if ( !fRunStream )
-		{
-		if ( joypadStatePtr->rightArrow )
-			{
-			WaitAudioClicks ( (AudioTime) steppingClicks );
-			status = kDSDrawSingleFrame;
-			}
-		else if ( joypadStatePtr->leftArrow )
-			{
-			}
-		}
-//------------------------------------------------------------------------------------
-//			We are in run mode
-//			therefore the pad is for fast forward/reverse
-//------------------------------------------------------------------------------------
-	else
-		{
-//------------------------------------------------------------------------------------
-//			The "Right arrow" fast forwards at least one second at a time
-//------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------
+  //			The "start Button" button toggles running the stream
+  //------------------------------------------------------------------------------------
 
-		if ( joypadStatePtr->rightArrow)
-			{
-			if ( SHIFT_KEY ) skipBlocks = 5*gFwdBlockSkip;
-			else skipBlocks = gFwdBlockSkip;
+  else if (joypadStatePtr->startBtn)
+    {
+      /* If we're transitioning from stopped to running, start the
+       * stream. Otherwise, stop the stream.
+       */
+      if (fRunStream)
+        {
+          ctlBlockPtr->mute.channelNumber = 0;
+          status = DSControl (ctx->messageItem, NULL, ctx->streamCBPtr,
+                              SNDS_CHUNK_TYPE, kSAudioCtlOpMute, ctlBlockPtr);
+          status = kDSStepFrame;
+        }
+      else
+        {
+          ctlBlockPtr->mute.channelNumber = 0;
+          status
+              = DSControl (ctx->messageItem, NULL, ctx->streamCBPtr,
+                           SNDS_CHUNK_TYPE, kSAudioCtlOpUnMute, ctlBlockPtr);
+          status = kDSContinuousFrame;
+        }
+      /* Flip the logical value of the "stream running" flag
+       */
+      fRunStream = !fRunStream;
+    }
 
-			/* Go forward in the stream */
+  //------------------------------------------------------------------------------------
+  //			The "C Button" displays help screen
+  //------------------------------------------------------------------------------------
 
-			reqMsg = (DSRequestMsgPtr) AllocPoolMem( pfc->dsMsgPool );
-			if ( reqMsg )
-				{
-				/* WSD status = DSSetSkipMode( reqMsg->msgItem, 
-									 reqMsg,
-									 ctx->streamCBPtr, 
-									 skipBlocks,
-									 GOMARKER_FWD_POS_RELATIVE );
-				*/
-				
-				if ( status == kDSRangeErr || status == kDSBranchNotDefined  )
-					{
-//					status = performElKabong ( nullBuffer );
-					if ( !status ) status = kStopMovie;
-					}
-				else
-					CHECK_DS_RESULT( "forward: DSGoMarker", status );
-				}
-			WaitAudioClicks ( (AudioTime) skippingClicks );	
-			}
-	
-//------------------------------------------------------------------------------------
-//			The "Down & Left arrow" fast reverses at least one second at a time
-//------------------------------------------------------------------------------------
+  else if (joypadStatePtr->cBtn)
+    {
+      if (fRunStream)
+        {
+          ctlBlockPtr->mute.channelNumber = 0;
+          status = DSControl (ctx->messageItem, NULL, ctx->streamCBPtr,
+                              SNDS_CHUNK_TYPE, kSAudioCtlOpMute, ctlBlockPtr);
+          status = kDSStepFrame;
+        }
+      DisplayScreen (gScreenContext.sc_Screens[helpScreen], 0);
 
-		else if ( joypadStatePtr->leftArrow )
-			{
-			if ( SHIFT_KEY ) skipBlocks = 5*gBwdBlockSkip;
-			else skipBlocks = gBwdBlockSkip;
-	
-			/* Go backward in the stream */
-			
-			reqMsg = (DSRequestMsgPtr) AllocPoolMem( pfc->dsMsgPool );
-			if ( reqMsg )
-				{
-				/* WSD status = DSSetSkipMode( reqMsg->msgItem, 
-									 reqMsg,
-									 ctx->streamCBPtr, 
-									 skipBlocks,
-									 GOMARKER_BWD_POS_RELATIVE );
-				*/
-				if ( status == kDSRangeErr || status == kDSBranchNotDefined  )
-					{
-//					status = performElKabong ( nullBuffer );
-					if ( !status ) status = kRewindMovie;
-					}
-				else
-					CHECK_DS_RESULT( "backward: DSGoMarker", status );
-				}
-			WaitAudioClicks ( (AudioTime) skippingClicks );
-			}	
-		}
+      while (joypadStatePtr->cBtn)
+        GetJoyPad (joypadStatePtr, 1);
 
-//------------------------------------------------------------------------------------
-//			flush joy pad
-//------------------------------------------------------------------------------------
+      DisplayScreen (gScreenContext.sc_Screens[movieScreen], 0);
 
-	GetJoyPad( joypadStatePtr, 1 );
+      if (fRunStream)
+        {
+          ctlBlockPtr->mute.channelNumber = 0;
+          status
+              = DSControl (ctx->messageItem, NULL, ctx->streamCBPtr,
+                           SNDS_CHUNK_TYPE, kSAudioCtlOpUnMute, ctlBlockPtr);
+          status = kDSContinuousFrame;
+        }
+    }
 
-//------------------------------------------------------------------------------------
-//			Poll for any completion messages and return them to the pool
-//------------------------------------------------------------------------------------
+  else if (joypadStatePtr->bBtn)
+    {
+      fCatchupStrategy = fCatchupStrategy;
+    }
 
-	while ( (temp = PollForMsg( pfc->replyPort, NULL, NULL, (void**) &reqMsg, &poll_status )) != false )
-		{
-//		kprintf ("PollForMsg:%d, %d <0x%x>\n", temp, poll_status, poll_status);
-		ReturnPoolMem( pfc->dsMsgPool, reqMsg );
-		}
+  //------------------------------------------------------------------------------------
+  //			We are in pause mode
+  //			therefore the pad is for step frame operation
+  //------------------------------------------------------------------------------------
+  else if (!fRunStream)
+    {
+      if (joypadStatePtr->rightArrow)
+        {
+          WaitAudioClicks ((AudioTime)steppingClicks);
+          status = kDSDrawSingleFrame;
+        }
+      else if (joypadStatePtr->leftArrow)
+        {
+        }
+    }
+  //------------------------------------------------------------------------------------
+  //			We are in run mode
+  //			therefore the pad is for fast forward/reverse
+  //------------------------------------------------------------------------------------
+  else
+    {
+      //------------------------------------------------------------------------------------
+      //			The "Right arrow" fast forwards at least one
+      //second at a time
+      //------------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------
-//			Return the status if all else fails
-//------------------------------------------------------------------------------------
+      if (joypadStatePtr->rightArrow)
+        {
+          if (SHIFT_KEY)
+            skipBlocks = 5 * gFwdBlockSkip;
+          else
+            skipBlocks = gFwdBlockSkip;
 
-	return (status);
-	}
+          /* Go forward in the stream */
+
+          reqMsg = (DSRequestMsgPtr)AllocPoolMem (pfc->dsMsgPool);
+          if (reqMsg)
+            {
+              /* WSD status = DSSetSkipMode( reqMsg->msgItem,
+                                                       reqMsg,
+                                                       ctx->streamCBPtr,
+                                                       skipBlocks,
+                                                       GOMARKER_FWD_POS_RELATIVE
+                 );
+              */
+
+              if (status == kDSRangeErr || status == kDSBranchNotDefined)
+                {
+                  //					status = performElKabong ( nullBuffer
+                  //);
+                  if (!status)
+                    status = kStopMovie;
+                }
+              else
+                CHECK_DS_RESULT ("forward: DSGoMarker", status);
+            }
+          WaitAudioClicks ((AudioTime)skippingClicks);
+        }
+
+      //------------------------------------------------------------------------------------
+      //			The "Down & Left arrow" fast reverses at least
+      //one second at a time
+      //------------------------------------------------------------------------------------
+
+      else if (joypadStatePtr->leftArrow)
+        {
+          if (SHIFT_KEY)
+            skipBlocks = 5 * gBwdBlockSkip;
+          else
+            skipBlocks = gBwdBlockSkip;
+
+          /* Go backward in the stream */
+
+          reqMsg = (DSRequestMsgPtr)AllocPoolMem (pfc->dsMsgPool);
+          if (reqMsg)
+            {
+              /* WSD status = DSSetSkipMode( reqMsg->msgItem,
+                                                       reqMsg,
+                                                       ctx->streamCBPtr,
+                                                       skipBlocks,
+                                                       GOMARKER_BWD_POS_RELATIVE
+                 );
+              */
+              if (status == kDSRangeErr || status == kDSBranchNotDefined)
+                {
+                  //					status = performElKabong ( nullBuffer
+                  //);
+                  if (!status)
+                    status = kRewindMovie;
+                }
+              else
+                CHECK_DS_RESULT ("backward: DSGoMarker", status);
+            }
+          WaitAudioClicks ((AudioTime)skippingClicks);
+        }
+    }
+
+  //------------------------------------------------------------------------------------
+  //			flush joy pad
+  //------------------------------------------------------------------------------------
+
+  GetJoyPad (joypadStatePtr, 1);
+
+  //------------------------------------------------------------------------------------
+  //			Poll for any completion messages and return them to the
+  //pool
+  //------------------------------------------------------------------------------------
+
+  while ((temp = PollForMsg (pfc->replyPort, NULL, NULL, (void **)&reqMsg,
+                             &poll_status))
+         != false)
+    {
+      //		kprintf ("PollForMsg:%d, %d <0x%x>\n", temp,
+      //poll_status, poll_status);
+      ReturnPoolMem (pfc->dsMsgPool, reqMsg);
+    }
+
+  //------------------------------------------------------------------------------------
+  //			Return the status if all else fails
+  //------------------------------------------------------------------------------------
+
+  return (status);
+}
 
 //************************************************************************************
 //
 //	InitPlayerFunction -- one time initialization for the player functions
-//		Allocates a pool of streamer request message buffers, a reply port,
-//		and message items to correspond with the request message buffers. 
-//		These are dynamically allocated by the player function as needed
-//		(when there is user interaction with the joypad), and are returned
-//		to the pool by polling the reply port in the callback routine.
-//		The corresponding cleanup routine, ClosePlayerFunction(), should
-//		be called upon completion of use of the player function.
+//		Allocates a pool of streamer request message buffers, a reply
+//port, 		and message items to correspond with the request message buffers. 		These
+//are dynamically allocated by the player function as needed 		(when there is
+//user interaction with the joypad), and are returned 		to the pool by polling
+//the reply port in the callback routine. 		The corresponding cleanup routine,
+//ClosePlayerFunction(), should 		be called upon completion of use of the player
+//function.
 //
 //************************************************************************************
 
-long InitPlayerFunction( PlayerFuntionContextPtr pfc, long numAsyncMsgs )
-	{
-	long	status;
+long
+InitPlayerFunction (PlayerFuntionContextPtr pfc, long numAsyncMsgs)
+{
+  long status;
 
-	status = 0;
+  status = 0;
 
-	/* Init a couple of things in case of an error exit */
-	pfc->dsMsgPool = NULL;
-	pfc->replyPort = 0;
+  /* Init a couple of things in case of an error exit */
+  pfc->dsMsgPool = NULL;
+  pfc->replyPort = 0;
 
-	/* Create a memory pool to hold streamer request messages
-	 * that will be used for async communications with the streamer.
-	 */
-	pfc->dsMsgPool = CreateMemPool( numAsyncMsgs, sizeof(DSRequestMsg) );
-	if ( pfc->dsMsgPool == NULL )
-		{
-		printf( "InitPlayerFunction: CreateMemPool() failed\n" );
-		status = -1;
-		goto BAILOUT;
-		}
+  /* Create a memory pool to hold streamer request messages
+   * that will be used for async communications with the streamer.
+   */
+  pfc->dsMsgPool = CreateMemPool (numAsyncMsgs, sizeof (DSRequestMsg));
+  if (pfc->dsMsgPool == NULL)
+    {
+      printf ("InitPlayerFunction: CreateMemPool() failed\n");
+      status = -1;
+      goto BAILOUT;
+    }
 
-	/* Create a reply port for completed streamer requests to
-	 * be posted to when operations complete.
-	 */
-	pfc->replyPort = NewMsgPort( NULL );
-	if ( pfc->replyPort < 0 )
-		{
-		printf( "InitPlayerFunction: NewMsgPort() failed\n" );
-		status = -2;
-		goto BAILOUT;
-		}
+  /* Create a reply port for completed streamer requests to
+   * be posted to when operations complete.
+   */
+  pfc->replyPort = NewMsgPort (NULL);
+  if (pfc->replyPort < 0)
+    {
+      printf ("InitPlayerFunction: NewMsgPort() failed\n");
+      status = -2;
+      goto BAILOUT;
+    }
 
-	/* Fill each message pool entry with a message item such
-	 * that there is one message item per message buffer.
-	 */
-	if ( ! FillPoolWithMsgItems( pfc->dsMsgPool, pfc->replyPort ) )
-		{
-		printf( "InitPlayerFunction: FillPoolWithMsgItems() failed\n" );
-		status = -3;
-		goto BAILOUT;
-		}
+  /* Fill each message pool entry with a message item such
+   * that there is one message item per message buffer.
+   */
+  if (!FillPoolWithMsgItems (pfc->dsMsgPool, pfc->replyPort))
+    {
+      printf ("InitPlayerFunction: FillPoolWithMsgItems() failed\n");
+      status = -3;
+      goto BAILOUT;
+    }
 
-	return 0;
+  return 0;
 
 BAILOUT:
-	ClosePlayerFunction( pfc );
-	return status;
-	}
-
+  ClosePlayerFunction (pfc);
+  return status;
+}
 
 //************************************************************************************
 //
-//	ClosePlayerFunction -- cleanup of one time initialization for the player functions
+//	ClosePlayerFunction -- cleanup of one time initialization for the
+//player functions
 //
 //************************************************************************************
-	static Boolean	_FreeMsgItem( void* argumentNotUsed, void* poolEntry )
-		{
-		DeleteItem( ((DSRequestMsgPtr) poolEntry)->msgItem );
-		return true;
-		}
+static Boolean
+_FreeMsgItem (void *argumentNotUsed, void *poolEntry)
+{
+  DeleteItem (((DSRequestMsgPtr)poolEntry)->msgItem);
+  return true;
+}
 
-void ClosePlayerFunction( PlayerFuntionContextPtr pfc )
-	{
-	DSRequestMsgPtr reqMsg;
+void
+ClosePlayerFunction (PlayerFuntionContextPtr pfc)
+{
+  DSRequestMsgPtr reqMsg;
 
+  /* Delete any message items associated with the pool,
+   * then delete the pool itself.
+   */
+  if (pfc->dsMsgPool)
+    {
+      /* Wait for any pending asynchronous replys and return
+       * each reply to the pool until all have returned.
+       */
+      while (pfc->dsMsgPool->numFreeInPool < pfc->dsMsgPool->numItemsInPool)
+        {
+          WaitForMsg (pfc->replyPort, NULL, NULL, (void **)&reqMsg, 0);
+          ReturnPoolMem (pfc->dsMsgPool, reqMsg);
+        }
 
-	/* Delete any message items associated with the pool,
-	 * then delete the pool itself.
-	 */
-	if ( pfc->dsMsgPool )
-		{
-		/* Wait for any pending asynchronous replys and return
-		 * each reply to the pool until all have returned.
-		 */
-		while ( pfc->dsMsgPool->numFreeInPool < pfc->dsMsgPool->numItemsInPool )
-			{
-			WaitForMsg( pfc->replyPort, NULL, NULL, (void**) &reqMsg, 0 );
-			ReturnPoolMem( pfc->dsMsgPool, reqMsg );
-			}
+      /* Free up all message items and free the pool memory */
+      ForEachFreePoolMember (pfc->dsMsgPool, _FreeMsgItem, 0);
+      DeleteMemPool (pfc->dsMsgPool);
+    }
 
-		/* Free up all message items and free the pool memory */
-		ForEachFreePoolMember( pfc->dsMsgPool, _FreeMsgItem, 0 );
-		DeleteMemPool( pfc->dsMsgPool );
-		}
-
-	/* Delete the reply port */
-	if ( pfc->replyPort )
-		RemoveMsgPort( pfc->replyPort );
-	}
+  /* Delete the reply port */
+  if (pfc->replyPort)
+    RemoveMsgPort (pfc->replyPort);
+}

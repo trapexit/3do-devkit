@@ -1,8 +1,10 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: FontLib.c,v 1.5 1994/11/02 00:25:05 vertex Exp $
 **
@@ -36,19 +38,18 @@
 **
 ******************************************************************************/
 
-
-#include "types.h"
-#include "mem.h"
 #include "fontlib.h"
 #include "blockfile.h"
 #include "debug3do.h"
 #include "macros3do.h"
+#include "mem.h"
+#include "types.h"
 
 /*----------------------------------------------------------------------------
  * Parameter structures for interfacing to low level pixel blitter functions.
  *	These structures are loaded with values then passed to the assembler
- *	functions that do low-level blitting.  You can't add or change the order
- *	of the fields in these structures without going to the assembler code
+ *	functions that do low-level blitting.  You can't add or change the
+ *order of the fields in these structures without going to the assembler code
  *	and making (perhaps non-trivial) corresponding changes.  The somewhat
  *	arbitrary order of the fields now is purely for the convenience of the
  *	assembler code, which tends to use LDM (load multiple registers) to
@@ -56,24 +57,26 @@
  *	a single operation.
  *--------------------------------------------------------------------------*/
 
-typedef struct FontBlitSrcParms {
-	void *				fbs_charPtr;
-	int32				fbs_charWidth;
-	int32				fbs_charHeight;
-	FontDescriptor *	fbs_fontDesc;
-	int32				fbs_extraData;
+typedef struct FontBlitSrcParms
+{
+  void *fbs_charPtr;
+  int32 fbs_charWidth;
+  int32 fbs_charHeight;
+  FontDescriptor *fbs_fontDesc;
+  int32 fbs_extraData;
 } FontBlitSrcParms;
 
-typedef struct FontBlitDstParms {
-	void *				fbd_pixelBuffer;
-	int32				fbd_bytesPerRow;
-	int32				fbd_X;
-	int32				fbd_Y;
-	int32				fbd_colorIndex;
+typedef struct FontBlitDstParms
+{
+  void *fbd_pixelBuffer;
+  int32 fbd_bytesPerRow;
+  int32 fbd_X;
+  int32 fbd_Y;
+  int32 fbd_colorIndex;
 } FontBlitDstParms;
 
-extern void FontBlit3To8_(FontBlitSrcParms *, FontBlitDstParms *);
-extern void FontBlit5To8_(FontBlitSrcParms *, FontBlitDstParms *);
+extern void FontBlit3To8_ (FontBlitSrcParms *, FontBlitDstParms *);
+extern void FontBlit5To8_ (FontBlitSrcParms *, FontBlitDstParms *);
 
 /*****************************************************************************
  * scan_for_widest_char()
@@ -82,24 +85,27 @@ extern void FontBlit5To8_(FontBlitSrcParms *, FontBlitDstParms *);
  *	files that didn't store this info.
  ****************************************************************************/
 
-static int32 scan_for_widest_char(FontDescriptor *fd)
+static int32
+scan_for_widest_char (FontDescriptor *fd)
 {
-	int32			i;
-	int32			endChar;
-	int32			width;
-	int32			widest = 1;
-	FontCharInfo *	fci;
+  int32 i;
+  int32 endChar;
+  int32 width;
+  int32 widest = 1;
+  FontCharInfo *fci;
 
-	fci		= (FontCharInfo *)fd->fd_charInfo;
-	endChar = fd->fd_lastChar - fd->fd_firstChar;
+  fci = (FontCharInfo *)fd->fd_charInfo;
+  endChar = fd->fd_lastChar - fd->fd_firstChar;
 
-	for (i = 0; i <= endChar; ++i) {
-		width = (int32)fci[i].fci_charWidth;
-		if (widest < width) {
-			widest = width;
-		}
-	}
-	return widest;
+  for (i = 0; i <= endChar; ++i)
+    {
+      width = (int32)fci[i].fci_charWidth;
+      if (widest < width)
+        {
+          widest = width;
+        }
+    }
+  return widest;
 }
 
 /*****************************************************************************
@@ -109,62 +115,70 @@ static int32 scan_for_widest_char(FontDescriptor *fd)
  *	the font for use.
  ****************************************************************************/
 
-FontDescriptor * ParseFont(void *fontImage)
+FontDescriptor *
+ParseFont (void *fontImage)
 {
-	FontDescriptor *	fd;
-	FontHeader	*		fh;
+  FontDescriptor *fd;
+  FontHeader *fh;
 
-	fd = NULL;
-	fh = (FontHeader *)fontImage;
+  fd = NULL;
+  fh = (FontHeader *)fontImage;
 
-	if (fh->chunk_ID != CHUNK_FONT || fh->chunk_size < sizeof(FontHeader)) {
-		DIAGNOSE(("This is not a valid font file image\n"));
-		goto ERROR_EXIT;
-	}
+  if (fh->chunk_ID != CHUNK_FONT || fh->chunk_size < sizeof (FontHeader))
+    {
+      DIAGNOSE (("This is not a valid font file image\n"));
+      goto ERROR_EXIT;
+    }
 
-	if (fh->fh_bitsPerPixel != 3 && fh->fh_bitsPerPixel != 5) {
-		DIAGNOSE(("This font is %ld bits per pixel; can only handle 3 or 5 bpp\n",
-			fh->fh_bitsPerPixel));
-		goto ERROR_EXIT;
-	}
+  if (fh->fh_bitsPerPixel != 3 && fh->fh_bitsPerPixel != 5)
+    {
+      DIAGNOSE (
+          ("This font is %ld bits per pixel; can only handle 3 or 5 bpp\n",
+           fh->fh_bitsPerPixel));
+      goto ERROR_EXIT;
+    }
 
-	if ((fd = (FontDescriptor *)AllocMem(sizeof(FontDescriptor), MEMTYPE_ANY|MEMTYPE_FILL|0)) == NULL) {
-		DIAGNOSE(("Can't allocate memory for FontDescriptor\n"));
-		goto ERROR_EXIT;
-	}
+  if ((fd = (FontDescriptor *)AllocMem (sizeof (FontDescriptor),
+                                        MEMTYPE_ANY | MEMTYPE_FILL | 0))
+      == NULL)
+    {
+      DIAGNOSE (("Can't allocate memory for FontDescriptor\n"));
+      goto ERROR_EXIT;
+    }
 
-	/* fill in the public fields in the FontDescriptor... */
+  /* fill in the public fields in the FontDescriptor... */
 
-	fd->fd_fontFlags	= fh->fh_fontFlags;
-	fd->fd_charHeight 	= fh->fh_charHeight;
-	fd->fd_charWidth 	= fh->fh_charWidth;
-	fd->fd_bitsPerPixel = fh->fh_bitsPerPixel;
-	fd->fd_firstChar 	= fh->fh_firstChar;
-	fd->fd_lastChar 	= fh->fh_lastChar;
-	fd->fd_charExtra 	= fh->fh_charExtra;
-	fd->fd_ascent 		= fh->fh_ascent;
-	fd->fd_descent 		= fh->fh_descent;
-	fd->fd_leading 		= fh->fh_leading;
+  fd->fd_fontFlags = fh->fh_fontFlags;
+  fd->fd_charHeight = fh->fh_charHeight;
+  fd->fd_charWidth = fh->fh_charWidth;
+  fd->fd_bitsPerPixel = fh->fh_bitsPerPixel;
+  fd->fd_firstChar = fh->fh_firstChar;
+  fd->fd_lastChar = fh->fh_lastChar;
+  fd->fd_charExtra = fh->fh_charExtra;
+  fd->fd_ascent = fh->fh_ascent;
+  fd->fd_descent = fh->fh_descent;
+  fd->fd_leading = fh->fh_leading;
 
-	/* fill in the private fields in the FontDescriptor... */
+  /* fill in the private fields in the FontDescriptor... */
 
-	fd->fd_fontHeader	= fh;
-	fd->fd_charInfo		= AddToPtr(fh, fh->fh_charInfoOffset);
-	fd->fd_charData		= AddToPtr(fh, fh->fh_charDataOffset);
+  fd->fd_fontHeader = fh;
+  fd->fd_charInfo = AddToPtr (fh, fh->fh_charInfoOffset);
+  fd->fd_charData = AddToPtr (fh, fh->fh_charDataOffset);
 
-	/* fix the widest-char info based on the font header version... */
+  /* fix the widest-char info based on the font header version... */
 
-	if (fh->fh_version == 0) {
-		fd->fd_charWidth = scan_for_widest_char(fd);
-	}
+  if (fh->fh_version == 0)
+    {
+      fd->fd_charWidth = scan_for_widest_char (fd);
+    }
 
-	return fd;
+  return fd;
 
 ERROR_EXIT:
 
-	FreeMem(fd, sizeof(*fd));
+  FreeMem (fd, sizeof (*fd));
 
-	return NULL;
+  return NULL;
 }
 
 /*****************************************************************************
@@ -174,14 +188,17 @@ ERROR_EXIT:
  *	we'll unload the file here.
  ****************************************************************************/
 
-void UnloadFont(FontDescriptor *fd)
+void
+UnloadFont (FontDescriptor *fd)
 {
-	if (fd != NULL) {
-		if ((fd->fd_fontFlags & FFLAG_DYNLOADED) && fd->fd_fontHeader != NULL) {
-			UnloadFile(fd->fd_fontHeader);
-		}
-		FreeMem(fd,sizeof(*fd));
-	}
+  if (fd != NULL)
+    {
+      if ((fd->fd_fontFlags & FFLAG_DYNLOADED) && fd->fd_fontHeader != NULL)
+        {
+          UnloadFile (fd->fd_fontHeader);
+        }
+      FreeMem (fd, sizeof (*fd));
+    }
 }
 
 /*****************************************************************************
@@ -189,34 +206,38 @@ void UnloadFont(FontDescriptor *fd)
  *	Load a font file and parse it, creating a FontDescriptor for it.
  ****************************************************************************/
 
-FontDescriptor * LoadFont(char *fontFileName, uint32 memTypeBits)
+FontDescriptor *
+LoadFont (char *fontFileName, uint32 memTypeBits)
 {
-	void *				fontFileImage;
-	int32				fontFileSize;
-	FontDescriptor *	fd;
+  void *fontFileImage;
+  int32 fontFileSize;
+  FontDescriptor *fd;
 
-	fontFileImage = LoadFile(fontFileName, &fontFileSize, memTypeBits);
-	if (fontFileImage == NULL) {
-		DIAGNOSE(("LoadFile(%s) failed for font file\n", fontFileName));
-		goto ERROR_EXIT;
- 	}
+  fontFileImage = LoadFile (fontFileName, &fontFileSize, memTypeBits);
+  if (fontFileImage == NULL)
+    {
+      DIAGNOSE (("LoadFile(%s) failed for font file\n", fontFileName));
+      goto ERROR_EXIT;
+    }
 
-	fd = ParseFont(fontFileImage);
-	if (fd == NULL) {
-		DIAGNOSE(("ParseFont(%s) failed\n", fontFileName));
-		goto ERROR_EXIT;
-	}
-	fd->fd_fontFlags |= FFLAG_DYNLOADED;
+  fd = ParseFont (fontFileImage);
+  if (fd == NULL)
+    {
+      DIAGNOSE (("ParseFont(%s) failed\n", fontFileName));
+      goto ERROR_EXIT;
+    }
+  fd->fd_fontFlags |= FFLAG_DYNLOADED;
 
-	return fd;
+  return fd;
 
 ERROR_EXIT:
 
-	if (fontFileImage != NULL) {
-		UnloadFile(fontFileImage);
-	}
+  if (fontFileImage != NULL)
+    {
+      UnloadFile (fontFileImage);
+    }
 
-	return NULL;
+  return NULL;
 }
 
 /*****************************************************************************
@@ -225,29 +246,33 @@ ERROR_EXIT:
  *	return value does NOT include the charExtra (horizontal spacing) value.
  ****************************************************************************/
 
-int32 GetFontCharWidest(FontDescriptor *fd, char *string)
+int32
+GetFontCharWidest (FontDescriptor *fd, char *string)
 {
-	FontCharInfo *	fci;
-	uint32			firstChar;
-	uint32			lastChar;
-	uint32			theChar;
-	int32			width;
-	int32			widest = 0;
+  FontCharInfo *fci;
+  uint32 firstChar;
+  uint32 lastChar;
+  uint32 theChar;
+  int32 width;
+  int32 widest = 0;
 
-	fci			= (FontCharInfo *)fd->fd_charInfo;
-	firstChar	= fd->fd_firstChar;
-	lastChar 	= fd->fd_lastChar;
+  fci = (FontCharInfo *)fd->fd_charInfo;
+  firstChar = fd->fd_firstChar;
+  lastChar = fd->fd_lastChar;
 
-	while ((theChar = *string++) != 0) {
-		if (theChar >= firstChar && theChar <= lastChar) {
-			width  = fci[theChar - firstChar].fci_charWidth;
-			if (widest < width) {
-				widest = width;
-			}
-		}
-	}
+  while ((theChar = *string++) != 0)
+    {
+      if (theChar >= firstChar && theChar <= lastChar)
+        {
+          width = fci[theChar - firstChar].fci_charWidth;
+          if (widest < width)
+            {
+              widest = width;
+            }
+        }
+    }
 
-	return widest;
+  return widest;
 }
 
 /*****************************************************************************
@@ -260,31 +285,35 @@ int32 GetFontCharWidest(FontDescriptor *fd, char *string)
  *	the font.
  ****************************************************************************/
 
-int32 GetFontStringWidth(FontDescriptor *fd, char *string)
+int32
+GetFontStringWidth (FontDescriptor *fd, char *string)
 {
-	FontCharInfo *	fci;
-	uint32			firstChar;
-	uint32			lastChar;
-	uint32			theChar;
-	uint32			charCount = 0;
-	int32			width = 0;
+  FontCharInfo *fci;
+  uint32 firstChar;
+  uint32 lastChar;
+  uint32 theChar;
+  uint32 charCount = 0;
+  int32 width = 0;
 
-	fci			= (FontCharInfo *)fd->fd_charInfo;
-	firstChar	= fd->fd_firstChar;
-	lastChar 	= fd->fd_lastChar;
+  fci = (FontCharInfo *)fd->fd_charInfo;
+  firstChar = fd->fd_firstChar;
+  lastChar = fd->fd_lastChar;
 
-	while ((theChar = *string++) != 0) {
-		++charCount;
-		if (theChar >= firstChar && theChar <= lastChar) {
-			width += fci[theChar - firstChar].fci_charWidth;
-		}
-	}
+  while ((theChar = *string++) != 0)
+    {
+      ++charCount;
+      if (theChar >= firstChar && theChar <= lastChar)
+        {
+          width += fci[theChar - firstChar].fci_charWidth;
+        }
+    }
 
-	if (charCount) {
-		width += (charCount - 1) * fd->fd_charExtra;
-	}
+  if (charCount)
+    {
+      width += (charCount - 1) * fd->fd_charExtra;
+    }
 
-	return width;
+  return width;
 }
 
 /*****************************************************************************
@@ -292,35 +321,38 @@ int32 GetFontStringWidth(FontDescriptor *fd, char *string)
  *	Get width and (optionally) blit-specific information about a character.
  *	The blitinfo is data needed by the blit routine.  A higher-level caller
  *	is likely to obtain width information before blitting a character, so
- *	this routine can also return info that the blit routine will need.  This
+ *	this routine can also return info that the blit routine will need. This
  *	can eliminate needless double calls to this routine (one by the high
  *	level to get the char width, and one by the blit internals to get the
  *	blit info).
  *	Right now, the blitinfo we return is a pointer to the per-char data for
  *	the char; this lets the blit routine lookup the char width and offset
- *	quickly.  This could change to format-specific data if we start supporting
- *	other font formats; the caller doesn't look at this data at all.
+ *	quickly.  This could change to format-specific data if we start
+ *supporting other font formats; the caller doesn't look at this data at all.
  ****************************************************************************/
 
-int32 GetFontCharInfo(FontDescriptor *fd, int32 theChar, void **blitInfo)
+int32
+GetFontCharInfo (FontDescriptor *fd, int32 theChar, void **blitInfo)
 {
-	FontCharInfo *	fci;
-	uint32			firstChar;
-	int32			width = 0;
+  FontCharInfo *fci;
+  uint32 firstChar;
+  int32 width = 0;
 
-	fci = (FontCharInfo *)fd->fd_charInfo;
-	firstChar = fd->fd_firstChar;
+  fci = (FontCharInfo *)fd->fd_charInfo;
+  firstChar = fd->fd_firstChar;
 
-	if (theChar >= firstChar && theChar <= fd->fd_lastChar) {
-		fci   += theChar - firstChar;
-		width  = fci->fci_charWidth;
-	}
+  if (theChar >= firstChar && theChar <= fd->fd_lastChar)
+    {
+      fci += theChar - firstChar;
+      width = fci->fci_charWidth;
+    }
 
-	if (blitInfo) {
-		*blitInfo = (void *)fci;
-	}
+  if (blitInfo)
+    {
+      *blitInfo = (void *)fci;
+    }
 
-	return width;
+  return width;
 }
 
 /*****************************************************************************
@@ -328,9 +360,10 @@ int32 GetFontCharInfo(FontDescriptor *fd, int32 theChar, void **blitInfo)
  *	Just what the name says.
  ****************************************************************************/
 
-int32 GetFontCharWidth(FontDescriptor *fd, int32 theChar)
+int32
+GetFontCharWidth (FontDescriptor *fd, int32 theChar)
 {
-	return GetFontCharInfo(fd, theChar, NULL);
+  return GetFontCharInfo (fd, theChar, NULL);
 }
 
 /*****************************************************************************
@@ -343,44 +376,53 @@ int32 GetFontCharWidth(FontDescriptor *fd, int32 theChar)
  *	the source-to-dest conversion.
  ****************************************************************************/
 
-int32 BlitFontChar(FontDescriptor *fd, uint32 theChar, void *blitInfo,
-					void *dstBuf, int32 dstX, int32 dstY,
-					int32 dstBPR, int32 dstColor, int32 dstBPP)
+int32
+BlitFontChar (FontDescriptor *fd, uint32 theChar, void *blitInfo, void *dstBuf,
+              int32 dstX, int32 dstY, int32 dstBPR, int32 dstColor,
+              int32 dstBPP)
 {
-	int32				charWidth;
-	FontCharInfo *		fci;
-	FontBlitSrcParms	srcParms;
-	FontBlitDstParms	dstParms;
+  int32 charWidth;
+  FontCharInfo *fci;
+  FontBlitSrcParms srcParms;
+  FontBlitDstParms dstParms;
 
 #ifdef DEBUG
-	if (dstBPP != 8 || (fd->fd_bitsPerPixel != 3 && fd->fd_bitsPerPixel != 5)) {
-		DIAGNOSE(("Unsupported bits-per-pixel\n"));
-		return 0;
-	}
+  if (dstBPP != 8 || (fd->fd_bitsPerPixel != 3 && fd->fd_bitsPerPixel != 5))
+    {
+      DIAGNOSE (("Unsupported bits-per-pixel\n"));
+      return 0;
+    }
 #endif
 
-	if (blitInfo == NULL) {
-		charWidth = GetFontCharInfo(fd, theChar, (void **)&fci);
-	} else {
-		fci = (FontCharInfo *)blitInfo;
-		charWidth = fci->fci_charWidth;
-	}
+  if (blitInfo == NULL)
+    {
+      charWidth = GetFontCharInfo (fd, theChar, (void **)&fci);
+    }
+  else
+    {
+      fci = (FontCharInfo *)blitInfo;
+      charWidth = fci->fci_charWidth;
+    }
 
-	if (charWidth != 0) {
-		srcParms.fbs_charPtr	 = AddToPtr(fd->fd_charData, fci->fci_charOffset);
-		srcParms.fbs_charWidth	 = charWidth;
-		srcParms.fbs_charHeight	 = fd->fd_charHeight;
-		dstParms.fbd_pixelBuffer = dstBuf;
-		dstParms.fbd_X			 = dstX;
-		dstParms.fbd_Y			 = dstY;
-		dstParms.fbd_bytesPerRow = dstBPR;
-		dstParms.fbd_colorIndex	 = dstColor;
-		if (fd->fd_bitsPerPixel == 3) {
-			FontBlit3To8_(&srcParms, &dstParms);
-		} else {
-			FontBlit5To8_(&srcParms, &dstParms);
-		}
-	}
+  if (charWidth != 0)
+    {
+      srcParms.fbs_charPtr = AddToPtr (fd->fd_charData, fci->fci_charOffset);
+      srcParms.fbs_charWidth = charWidth;
+      srcParms.fbs_charHeight = fd->fd_charHeight;
+      dstParms.fbd_pixelBuffer = dstBuf;
+      dstParms.fbd_X = dstX;
+      dstParms.fbd_Y = dstY;
+      dstParms.fbd_bytesPerRow = dstBPR;
+      dstParms.fbd_colorIndex = dstColor;
+      if (fd->fd_bitsPerPixel == 3)
+        {
+          FontBlit3To8_ (&srcParms, &dstParms);
+        }
+      else
+        {
+          FontBlit5To8_ (&srcParms, &dstParms);
+        }
+    }
 
-	return charWidth;
+  return charWidth;
 }

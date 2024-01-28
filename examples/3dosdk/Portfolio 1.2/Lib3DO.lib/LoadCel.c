@@ -2,7 +2,8 @@
  *	File:			LoadCel.c
  *
  *	Contains:		Routine to allocate a buffer and load a cel
- *					into it, using fast block I/O, then parse the cel.
+ *					into it, using fast block I/O, then parse the
+ *cel.
  *
  *	Copyright © 1993 The 3DO Company. All Rights Reserved.
  *
@@ -12,12 +13,12 @@
  *
  *	Implementation notes:
  *
- *	We have to meet a pair of goals here:  Load a cel file in such a way that
- *	it can later be unloaded with a call to UnloadCel(), and do so without
+ *	We have to meet a pair of goals here:  Load a cel file in such a way
+ *that it can later be unloaded with a call to UnloadCel(), and do so without
  *	loading into one buffer then copying to another (which requires twice
  *	as much memory, and is slower anyway).	LoadCel() returns a pointer to
- *	a CCB which it has located within the file buffer.	That pointer won't
- *	be at a known offset from the start of the buffer however, so we need
+ *	a CCB which it has located within the file buffer.	That pointer
+ *won't be at a known offset from the start of the buffer however, so we need
  *	a way for UnloadCel() to be able to find the start of the allocated
  *	block containing the CCB we found when parsing the buffer.
  *
@@ -33,57 +34,62 @@
  *	longword as a pointer that can be Free()'d.
  *
  *	Another fine item from the Kludges 'R Us catalog, offering the best in
- *	elegant hacks and designer workarounds for the fashion-forward programmer.
+ *	elegant hacks and designer workarounds for the fashion-forward
+ *programmer.
  ****************************************************************************/
 
-#include "Portfolio.h"
+#include "BlockFile.h"
 #include "Init3DO.h"
 #include "Parse3DO.h"
-#include "Utils3DO.h"
-#include "BlockFile.h"
+#include "Portfolio.h"
 #include "UMemory.h"
+#include "Utils3DO.h"
 
 #include "Debug3DO.h"
 
-typedef struct UnloadCookie {
-	ulong	magic;
-	void *	buffer;
+typedef struct UnloadCookie
+{
+  ulong magic;
+  void *buffer;
 } UnloadCookie;
 
-#define UNLOAD_MAGIC	CHAR4LITERAL('C','C','B','u')
+#define UNLOAD_MAGIC CHAR4LITERAL ('C', 'C', 'B', 'u')
 
 /*----------------------------------------------------------------------------
  * CCB * LoadCel(char *filename, uint32 memTypeBits)
  *
  *	Loads a cel from a 3DO file.  Returns a pointer to the CCB for the cel;
  *	the CCB will contain pointers to the pixels and (optional) PLUT.
- *	The cel buffer can be freed later by passing the CCB pointer to UnloadCel().
+ *	The cel buffer can be freed later by passing the CCB pointer to
+ *UnloadCel().
  *--------------------------------------------------------------------------*/
 
-CCB * LoadCel(char *name, uint32 memTypeBits)
+CCB *
+LoadCel (char *name, uint32 memTypeBits)
 {
-	long			filesize;
-	void *			filebuf;
-	CCB *			pCCB;
-	UnloadCookie *	cookie;
+  long filesize;
+  void *filebuf;
+  CCB *pCCB;
+  UnloadCookie *cookie;
 
-	if (NULL == (filebuf = LoadFile(name, &filesize, memTypeBits))) {
-		DIAGNOSE(("Can't load file %s\n", name));
-		return NULL;
-	}
+  if (NULL == (filebuf = LoadFile (name, &filesize, memTypeBits)))
+    {
+      DIAGNOSE (("Can't load file %s\n", name));
+      return NULL;
+    }
 
-	if (NULL == (pCCB = ParseCel(filebuf, filesize))) {
-		UnloadFile(filebuf);
-		DIAGNOSE(("Can't parse cel file %s\n", name));
-		return NULL;
-	}
+  if (NULL == (pCCB = ParseCel (filebuf, filesize)))
+    {
+      UnloadFile (filebuf);
+      DIAGNOSE (("Can't parse cel file %s\n", name));
+      return NULL;
+    }
 
-	cookie = ((UnloadCookie *)pCCB)-1;
-	cookie->magic  = UNLOAD_MAGIC;
-	cookie->buffer = filebuf;
+  cookie = ((UnloadCookie *)pCCB) - 1;
+  cookie->magic = UNLOAD_MAGIC;
+  cookie->buffer = filebuf;
 
-	return pCCB;
-
+  return pCCB;
 }
 
 /*----------------------------------------------------------------------------
@@ -91,17 +97,21 @@ CCB * LoadCel(char *name, uint32 memTypeBits)
  *	Unload a cel file previously loaded via LoadCel().
  *--------------------------------------------------------------------------*/
 
-void UnloadCel(CCB *celbuf)
+void
+UnloadCel (CCB *celbuf)
 {
-	UnloadCookie	*cookie;
+  UnloadCookie *cookie;
 
-	if (celbuf) {
-		cookie = ((UnloadCookie *)celbuf)-1;
+  if (celbuf)
+    {
+      cookie = ((UnloadCookie *)celbuf) - 1;
 #if DEBUG
-		if (cookie->magic != UNLOAD_MAGIC) {
-			DIAGNOSE(("Attempt to UnloadCel() on a CCB not returned from LoadCel()\n"));
-		}
+      if (cookie->magic != UNLOAD_MAGIC)
+        {
+          DIAGNOSE (("Attempt to UnloadCel() on a CCB not returned from "
+                     "LoadCel()\n"));
+        }
 #endif
-		Free(cookie->buffer);
-	}
+      Free (cookie->buffer);
+    }
 }

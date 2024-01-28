@@ -1,14 +1,17 @@
 
 /******************************************************************************
 **
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
+**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights
+*reserved.
+**  This material contains confidential information that is the property of The
+*3DO Company.
 **  Any unauthorized duplication, disclosure or use is prohibited.
 **  $Id: CenterPoint.c,v 1.2 1994/10/05 17:44:00 vertex Exp $
 **
 **  Lib3DO routines to center points within larger entities.
 **
-**  Right now, the display is assumed to be 320x240.  When the new OpenDisplay()
+**  Right now, the display is assumed to be 320x240.  When the new
+*OpenDisplay()
 **  library routine comes online it will provide proper display sizes we
 **  can refer to.
 **
@@ -26,28 +29,29 @@
 **
 ******************************************************************************/
 
-
 #include "celutils.h"
 
-#define DISPLAY_WIDTH	320
-#define DISPLAY_HEIGHT	240
+#define DISPLAY_WIDTH 320
+#define DISPLAY_HEIGHT 240
 
-static IPoint	iCenter;
-static FPoint	fCenter;
+static IPoint iCenter;
+static FPoint fCenter;
 
 /*----------------------------------------------------------------------------
  * CenterFPointInDisplay()
  *	Return a pointer to an FPoint that marks the center of the display.
  *--------------------------------------------------------------------------*/
 
-FPoint * CenterFPointInDisplay(void)
+FPoint *
+CenterFPointInDisplay (void)
 {
-	if (fCenter.x == 0) {
-		fCenter.x = Convert32_F16(DISPLAY_WIDTH  >> 1);
-		fCenter.y = Convert32_F16(DISPLAY_HEIGHT >> 1);
-	}
+  if (fCenter.x == 0)
+    {
+      fCenter.x = Convert32_F16 (DISPLAY_WIDTH >> 1);
+      fCenter.y = Convert32_F16 (DISPLAY_HEIGHT >> 1);
+    }
 
-	return &fCenter;
+  return &fCenter;
 }
 
 /*----------------------------------------------------------------------------
@@ -55,14 +59,16 @@ FPoint * CenterFPointInDisplay(void)
  *	Return a pointer to an IPoint that marks the center of the display.
  *--------------------------------------------------------------------------*/
 
-IPoint * CenterIPointInDisplay(void)
+IPoint *
+CenterIPointInDisplay (void)
 {
-	if (iCenter.x == 0) {
-		iCenter.x = DISPLAY_WIDTH  >> 1;
-		iCenter.y = DISPLAY_HEIGHT >> 1;
-	}
+  if (iCenter.x == 0)
+    {
+      iCenter.x = DISPLAY_WIDTH >> 1;
+      iCenter.y = DISPLAY_HEIGHT >> 1;
+    }
 
-	return &iCenter;
+  return &iCenter;
 }
 
 /*----------------------------------------------------------------------------
@@ -70,12 +76,13 @@ IPoint * CenterIPointInDisplay(void)
  *	Calc the center point of an SRect.
  *--------------------------------------------------------------------------*/
 
-IPoint * CenterIPointInSRect(IPoint *dst, SRect *rect)
+IPoint *
+CenterIPointInSRect (IPoint *dst, SRect *rect)
 {
-	dst->x = rect->pos.x + (rect->size.x >> 1);
-	dst->y = rect->pos.y + (rect->size.y >> 1);
+  dst->x = rect->pos.x + (rect->size.x >> 1);
+  dst->y = rect->pos.y + (rect->size.y >> 1);
 
-	return dst;
+  return dst;
 }
 
 /*----------------------------------------------------------------------------
@@ -83,11 +90,11 @@ IPoint * CenterIPointInSRect(IPoint *dst, SRect *rect)
  *	Calc the center point of a CRect.
  *--------------------------------------------------------------------------*/
 
-IPoint * CenterIPointInCRect(IPoint *dst, CRect *rect)
+IPoint *
+CenterIPointInCRect (IPoint *dst, CRect *rect)
 {
-	dst->x = rect->tl.x + (XSIZEFROMCRECT(rect) >> 1);
-	dst->y = rect->tl.y + (YSIZEFROMCRECT(rect) >> 1);
+  dst->x = rect->tl.x + (XSIZEFROMCRECT (rect) >> 1);
+  dst->y = rect->tl.y + (YSIZEFROMCRECT (rect) >> 1);
 
-	return dst;
-
+  return dst;
 }

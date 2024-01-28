@@ -1,9 +1,10 @@
 /*****************************************************************************
- *	File:			MakeNewDupCCB.c 
+ *	File:			MakeNewDupCCB.c
  *
  *	Contains:		Routine to clone a cel.
  *
- *	Copyright:		(c) 1993-1994 The 3DO Company.  All Rights Reserved.
+ *	Copyright:		(c) 1993-1994 The 3DO Company.  All Rights
+ *Reserved.
  *
  *	History:
  *	07/12/94  Ian 	General library cleanup.
@@ -12,19 +13,20 @@
  *
  *	This routine isn't very useful; use CloneCel() instead.
  ****************************************************************************/
- 
+
+#include "Utils3DO.h"
 #include "mem.h"
 #include "string.h"
-#include "Utils3DO.h"
 
-CCB * MakeNewDupCCB( CCB *ccb )
+CCB *
+MakeNewDupCCB (CCB *ccb)
 {
-	CCB	*newCCB;
+  CCB *newCCB;
 
-	if ((newCCB = (CCB *)ALLOCMEM(sizeof(CCB),MEMTYPE_CEL)) == NULL)
-		return NULL;
-	
-	memcpy(newCCB, ccb, sizeof(CCB));
-	
-	return newCCB;
+  if ((newCCB = (CCB *)ALLOCMEM (sizeof (CCB), MEMTYPE_CEL)) == NULL)
+    return NULL;
+
+  memcpy (newCCB, ccb, sizeof (CCB));
+
+  return newCCB;
 }

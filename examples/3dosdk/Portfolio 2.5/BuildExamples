@@ -1,1 +1,264 @@
-##############  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.##  This material contains confidential information that is the property of The 3DO Company.##  Any unauthorized duplication, disclosure or use is prohibited.##  $Id: BuildExamples,v 1.5 1995/02/01 21:39:59 gyld Exp $###############	Script to build the entire examples folder or one specific folder.#	If you wish to make an individual program, go to the directory where#	it resides and build it there.##	This script is provided for your convenience.##	To build all examples, type "buildexamples all" in the worksheet.##	To build a specific folder, specify that folders name as the argument###set ExitState {exit}set CurrentDirectory `directory`Set ExamplesLibDir	"{CurrentDirectory}ExamplesLib:"Set Lib3DODir		"{CurrentDirectory}Lib3DO:"Set exit 0If ( Not {1} )	Echo	Echo "Usage:: buildexamples <target>"	Echo "target		specify either all, or example folder to build"	Set exit {ExitState}	ExitEnd##	Building the examples library first, in case of dependencies#If ( Not `Exists "{ExamplesLibDir}ExamplesLib.lib"` )	Set TargetName ExamplesLib	Echo Building "{TargetName}.lib"...	Directory "{ExamplesLibDir}"	If ( `Exists "{TargetName}.make"` )		Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"		"{TargetName}.makeout"		Delete -y "{TargetName}.makeout"	Else	  #  make file doesn't exist		Echo 	¶# Unable to find makefile for "{TargetName}"		Set exit {ExitState}		Exit	End	Directory {CurrentDirectory}End##	Build Lib3DO.lib in case of dependencies#If ( Not `Exists {3DOLibs}Lib3DO.lib` )	Set TargetName Lib3DO.lib	Echo Building "{TargetName}"...	Directory "{Lib3DODir}"	If ( `Exists "{TargetName}.make"` )		Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"		"{TargetName}.makeout"		Delete -y "{TargetName}.makeout"	Else	  #  make file doesn't exist		Echo Unable to find makefile for "{TargetName}"		Set exit {ExitState}		Exit	End	Directory {CurrentDirectory}End##	Now, build the actual TargetName... build all or one#If ( {1} == "all" )	For folder in `Files -d`		If ( "{folder}" != ":ExamplesLib:" AND "{folder}" != ":Lib3DO:" )			Directory "{folder}"				#				#	Check to see if there are any makes at this level and build them				#			For file in `Files`				set ¨1 ""				(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null				If ( {¨1} )					Set TargetName "{¨1}"					Echo Building "{TargetName}"...					Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"					"{TargetName}.makeout"					Delete -y "{TargetName}.makeout"				End			End				#				#	Go down one more level and build stuff down there				#			For SecondLevelDir in `Files -d`				If ( "{SecondLevelDir}" != ":Apps_Data:" AND "{SecondLevelDir}" != ":Objects:" )					Directory "{SecondLevelDir}"					For file in `Files`						set ¨1 ""						(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null						If ( {¨1} )							Set TargetName "{¨1}"							Echo Building "{TargetName}"...								Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"								"{TargetName}.makeout"								Delete -y "{TargetName}.makeout"						End					End					If ( "{SecondLevelDir}" == ":Jumpstart2:" )							#							#	For Jumpstart2... one more level to go							#						For ThirdLevelDir in `Files -d`							If ( "{ThirdLevelDir}" != ":Apps_Data:" AND "{ThirdLevelDir}" != ":Objects:" )								Directory "{ThirdLevelDir}"									For file in `Files`										set ¨1 ""										(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null										If ( {¨1} )											Set TargetName "{¨1}"											Echo Building "{TargetName}"...												Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"												"{TargetName}.makeout"												Delete -y "{TargetName}.makeout"										End		# if ¨1									End		# For File...								Directory ::							End		# If ThirdLevelDir ....						End		# For ThirdLevelDir...					End		#  If JumpStart2					Directory ::				End		# If SecondLevelDir...			End		# For SecondLevelDir...		Directory ::		End		#folder != ExamplesLib AND Lib3DO...	End		# for folder...Else		# if {1} == all	If ( `Exists -d {1}` )		Set folder {1}		If ( "{folder}" != ":ExamplesLib:" AND "{folder}" != ":Lib3DO:" )			Directory "{folder}"				#				#	Check to see if there are any makes at this level and build them				#			For file in `Files`				set ¨1 ""				(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null				If ( {¨1} )					Set TargetName "{¨1}"					Echo Building "{TargetName}"...					Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"					"{TargetName}.makeout"					Delete -y "{TargetName}.makeout"				End			End				#				#	Go down one more level and build stuff down there				#			For SecondLevelDir in `Files -d`				If ( "{SecondLevelDir}" != ":Apps_Data:" AND "{SecondLevelDir}" != ":Objects:" )					Directory "{SecondLevelDir}"					For file in `Files`						set ¨1 ""						(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null						If ( {¨1} )							Set TargetName "{¨1}"							Echo Building "{TargetName}"...								Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"								"{TargetName}.makeout"								Delete -y "{TargetName}.makeout"						End					End					If ( "{SecondLevelDir}" == ":Jumpstart2:" )							#							#	For Jumpstart2... one more level to go							#						For ThirdLevelDir in `Files -d`							If ( "{ThirdLevelDir}" != ":Apps_Data:" AND "{ThirdLevelDir}" != ":Objects:" )								Directory "{ThirdLevelDir}"									For file in `Files`										set ¨1 ""										(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null										If ( {¨1} )											Set TargetName "{¨1}"											Echo Building "{TargetName}"...												Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"												"{TargetName}.makeout"												Delete -y "{TargetName}.makeout"										End		# if ¨1									End		# For File...								Directory ::							End		# If ThirdLevelDir ....						End		# For ThirdLevelDir...					End		#  If JumpStart2					Directory ::				End		# If SecondLevelDir...			End		# For SecondLevelDir...		Directory ::		End		#folder != ExamplesLib AND Lib3DO...	Else		# if exists {1}		Echo {1} does not exist	EndEndbeep -1F,30 e,30 C,60set exit {ExitState}exit
+##########
+##
+##  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
+##  This material contains confidential information that is the property of The 3DO Company.
+##  Any unauthorized duplication, disclosure or use is prohibited.
+##  $Id: BuildExamples,v 1.5 1995/02/01 21:39:59 gyld Exp $
+##
+##########
+
+#
+#
+#	Script to build the entire examples folder or one specific folder.
+#	If you wish to make an individual program, go to the directory where
+#	it resides and build it there.
+#
+#	This script is provided for your convenience.
+#
+#	To build all examples, type "buildexamples all" in the worksheet.
+#
+#	To build a specific folder, specify that folders name as the argument
+#
+#
+#
+
+set ExitState {exit}
+
+set CurrentDirectory `directory`
+
+Set ExamplesLibDir	"{CurrentDirectory}ExamplesLib:"
+Set Lib3DODir		"{CurrentDirectory}Lib3DO:"
+
+Set exit 0
+
+If ( Not {1} )
+	Echo
+	Echo "Usage:: buildexamples <target>"
+	Echo "target		specify either all, or example folder to build"
+
+	Set exit {ExitState}
+	Exit
+End
+
+
+#
+#	Building the examples library first, in case of dependencies
+#
+If ( Not `Exists "{ExamplesLibDir}ExamplesLib.lib"` )
+	Set TargetName ExamplesLib
+
+	Echo Building "{TargetName}.lib"...
+	Directory "{ExamplesLibDir}"
+
+	If ( `Exists "{TargetName}.make"` )
+		Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"
+		"{TargetName}.makeout"
+		Delete -y "{TargetName}.makeout"
+
+	Else	  #  make file doesn't exist
+		Echo 	¶# Unable to find makefile for "{TargetName}"
+		Set exit {ExitState}
+		Exit
+	End
+
+	Directory {CurrentDirectory}
+End
+
+
+#
+#	Build Lib3DO.lib in case of dependencies
+#
+If ( Not `Exists {3DOLibs}Lib3DO.lib` )
+	Set TargetName Lib3DO.lib
+
+	Echo Building "{TargetName}"...
+	Directory "{Lib3DODir}"
+
+	If ( `Exists "{TargetName}.make"` )
+		Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"
+		"{TargetName}.makeout"
+		Delete -y "{TargetName}.makeout"
+
+	Else	  #  make file doesn't exist
+		Echo Unable to find makefile for "{TargetName}"
+		Set exit {ExitState}
+		Exit
+	End
+
+	Directory {CurrentDirectory}
+End
+
+
+#
+#	Now, build the actual TargetName... build all or one
+#
+
+
+If ( {1} == "all" )
+	For folder in `Files -d`
+
+		If ( "{folder}" != ":ExamplesLib:" AND "{folder}" != ":Lib3DO:" )
+
+			Directory "{folder}"
+
+				#
+				#	Check to see if there are any makes at this level and build them
+				#
+			For file in `Files`
+				set ¨1 ""
+				(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null
+
+				If ( {¨1} )
+					Set TargetName "{¨1}"
+					Echo Building "{TargetName}"...
+					Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"
+					"{TargetName}.makeout"
+					Delete -y "{TargetName}.makeout"
+				End
+			End
+
+				#
+				#	Go down one more level and build stuff down there
+				#
+			For SecondLevelDir in `Files -d`
+
+				If ( "{SecondLevelDir}" != ":Apps_Data:" AND "{SecondLevelDir}" != ":Objects:" )
+					Directory "{SecondLevelDir}"
+
+					For file in `Files`
+						set ¨1 ""
+						(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null
+
+						If ( {¨1} )
+							Set TargetName "{¨1}"
+							Echo Building "{TargetName}"...
+								Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"
+								"{TargetName}.makeout"
+								Delete -y "{TargetName}.makeout"
+						End
+					End
+
+					If ( "{SecondLevelDir}" == ":Jumpstart2:" )
+
+							#
+							#	For Jumpstart2... one more level to go
+							#
+						For ThirdLevelDir in `Files -d`
+
+							If ( "{ThirdLevelDir}" != ":Apps_Data:" AND "{ThirdLevelDir}" != ":Objects:" )
+
+								Directory "{ThirdLevelDir}"
+									For file in `Files`
+										set ¨1 ""
+										(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null
+
+										If ( {¨1} )
+											Set TargetName "{¨1}"
+											Echo Building "{TargetName}"...
+												Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"
+												"{TargetName}.makeout"
+												Delete -y "{TargetName}.makeout"
+										End		# if ¨1
+									End		# For File...
+								Directory ::
+							End		# If ThirdLevelDir ....
+						End		# For ThirdLevelDir...
+					End		#  If JumpStart2
+
+					Directory ::
+				End		# If SecondLevelDir...
+			End		# For SecondLevelDir...
+
+		Directory ::
+
+		End		#folder != ExamplesLib AND Lib3DO...
+	End		# for folder...
+Else		# if {1} == all
+
+	If ( `Exists -d {1}` )
+		Set folder {1}
+		If ( "{folder}" != ":ExamplesLib:" AND "{folder}" != ":Lib3DO:" )
+
+			Directory "{folder}"
+
+				#
+				#	Check to see if there are any makes at this level and build them
+				#
+			For file in `Files`
+				set ¨1 ""
+				(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null
+
+				If ( {¨1} )
+					Set TargetName "{¨1}"
+					Echo Building "{TargetName}"...
+					Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"
+					"{TargetName}.makeout"
+					Delete -y "{TargetName}.makeout"
+				End
+			End
+
+				#
+				#	Go down one more level and build stuff down there
+				#
+			For SecondLevelDir in `Files -d`
+
+				If ( "{SecondLevelDir}" != ":Apps_Data:" AND "{SecondLevelDir}" != ":Objects:" )
+					Directory "{SecondLevelDir}"
+
+					For file in `Files`
+						set ¨1 ""
+						(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null
+
+						If ( {¨1} )
+							Set TargetName "{¨1}"
+							Echo Building "{TargetName}"...
+								Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"
+								"{TargetName}.makeout"
+								Delete -y "{TargetName}.makeout"
+						End
+					End
+
+					If ( "{SecondLevelDir}" == ":Jumpstart2:" )
+
+							#
+							#	For Jumpstart2... one more level to go
+							#
+						For ThirdLevelDir in `Files -d`
+
+							If ( "{ThirdLevelDir}" != ":Apps_Data:" AND "{ThirdLevelDir}" != ":Objects:" )
+
+								Directory "{ThirdLevelDir}"
+									For file in `Files`
+										set ¨1 ""
+										(Evaluate "{file}" =~ /(Å)¨1.make/ ) ·· Dev:Null
+
+										If ( {¨1} )
+											Set TargetName "{¨1}"
+											Echo Building "{TargetName}"...
+												Make "{TargetName}" -f "{TargetName}.make" > "{TargetName}.makeout"
+												"{TargetName}.makeout"
+												Delete -y "{TargetName}.makeout"
+										End		# if ¨1
+									End		# For File...
+								Directory ::
+							End		# If ThirdLevelDir ....
+						End		# For ThirdLevelDir...
+					End		#  If JumpStart2
+
+					Directory ::
+				End		# If SecondLevelDir...
+			End		# For SecondLevelDir...
+
+		Directory ::
+
+		End		#folder != ExamplesLib AND Lib3DO...
+	Else		# if exists {1}
+		Echo {1} does not exist
+	End
+End
+
+beep -1F,30 e,30 C,60
+
+set exit {ExitState}
+
+exit

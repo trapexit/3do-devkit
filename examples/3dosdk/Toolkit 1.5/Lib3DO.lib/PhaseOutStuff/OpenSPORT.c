@@ -1,9 +1,10 @@
 /*****************************************************************************
- *	File:			OpenSPORT.c 
+ *	File:			OpenSPORT.c
  *
  *	Contains:		Routine for opening the SPORT device.
  *
- *	Copyright:		(c) 1993-1994 The 3DO Company.  All Rights Reserved.
+ *	Copyright:		(c) 1993-1994 The 3DO Company.  All Rights
+ *Reserved.
  *
  *	History:
  *	07/12/94  Ian 	This function is now obsolete.
@@ -12,12 +13,13 @@
  *
  ****************************************************************************/
 
-#include "Init3DO.h"
 #include "Debug3DO.h"
+#include "Init3DO.h"
 
-Boolean OpenSPORT(void)
+Boolean
+OpenSPORT (void)
 {
-	return TRUE;
+  return TRUE;
 }
 
 #if 0 // obsolete code...

@@ -1,114 +1,114 @@
 /*
-	File:		OldLoadCel.c
+        File:		OldLoadCel.c
 
-	Contains:	old version of LoadCel (Obsolete, use LoadCel/UnloadCel)
+        Contains:	old version of LoadCel (Obsolete, use
+   LoadCel/UnloadCel)
 
-	Written by:	Ian
+        Written by:	Ian
 
-	Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
-				This material constitutes confidential and proprietary
-				information of the 3DO Company and shall not be used by
-				any Person or for any purpose except as expressly
-				authorized in writing by the 3DO Company.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
+                                This material constitutes confidential and
+   proprietary information of the 3DO Company and shall not be used by any
+   Person or for any purpose except as expressly authorized in writing by the
+   3DO Company.
 
-	Change History (most recent first):
+        Change History (most recent first):
 
-		 <1>	 8/20/93	JAY		first checked in
+                 <1>	 8/20/93	JAY		first checked in
 
-	To Do:
+        To Do:
 */
 
-#include "Utils3DO.h"
 #include "Debug3DO.h"
+#include "Utils3DO.h"
 #include "mem.h"
 
 /*	LoadCel - for Single Cel form of 3DO file format
- *	
+ *
  *	Loads the entire file identified by name and points pCel
  *	to the first Cel Control Block in the file. If a Cel does
  *	not point to any Cel data or PLUT, then search for the first
  *	occurance of Cel data (and PLUT if needed) following the Cel
  *	header chunk and the CCB to the data.
- *	
+ *
  *	Errors:	returns NULL, or number of Cels in file
  *
- *	7/1/93		NJC		Commented out the zeroing of ccb_XPos and ccb_YPos
- *						to accomodate CelWriter 1.5's ability to create cels
- *						with non-zero x and y pos.
+ *	7/1/93		NJC		Commented out the zeroing of ccb_XPos
+ *and ccb_YPos to accomodate CelWriter 1.5's ability to create cels with
+ *non-zero x and y pos.
  *
  */
-CCB* OldLoadCel ( char *name, int32 **buffer )
+CCB *
+OldLoadCel (char *name, int32 **buffer)
 {
-int32		result, buffSize;
-int32		tempSize, *theBuffer;
-uint32		chunk_ID;
-char		*tempBuf, *pChunk, *lastPLUT;
-CCB			*lastCCB;
-	
-	/* determine file size, alloc memory, and read the file into memory
-	*/
-	if ((buffSize = GetFileSize(name)) <= 0)
-		return NULL;
-		
-	if(buffer == NULL || (buffer != NULL && *buffer == NULL)) {			
-		if ((theBuffer = (int32 *)ALLOCMEM(buffSize,MEMTYPE_CEL)) == NULL)
-			return NULL;
-	}
-	else {
-		theBuffer = *buffer;
-	}
-	if ((result = ReadFile(name, buffSize, theBuffer, 0)) < 0)
-		return NULL;
-		
-	
-	
-	/*	Init the vars for our chunk hunting while loop
-	 */
-	lastPLUT	= NULL;
-	lastCCB		= NULL;
-	tempBuf		= (char *)theBuffer;
-	tempSize	= buffSize;
-	
+  int32 result, buffSize;
+  int32 tempSize, *theBuffer;
+  uint32 chunk_ID;
+  char *tempBuf, *pChunk, *lastPLUT;
+  CCB *lastCCB;
 
-	/*	Iterate through each chunk and set the CCB.
-	 */
-	while ( (pChunk = GetChunk( &chunk_ID, &tempBuf, &tempSize )) != NULL)
-	{
-	  switch (chunk_ID)
-	  {
-		case CHUNK_CCB:
-			lastCCB	= (CCB *) &(((CCC *)pChunk)->ccb_Flags);
-			
-			lastCCB->ccb_HDX	= 0x00100000;	/* this is 1 in 12.20 fixed pt */
-			lastCCB->ccb_VDY	= 0x00010000;	/* this is 1 in 16.16 fixed pt */
-			// lastCCB->ccb_XPos	=
-			// lastCCB->ccb_YPos	= 0;
-			lastCCB->ccb_Flags	|= CCB_SPABS
-								|  CCB_PPABS
-								|  CCB_NPABS
-								|  CCB_YOXY
-								|  CCB_LAST;	/* V32 anims might not have these set */
-		  break;
-			
-		case CHUNK_PLUT:
-			lastPLUT = (char *)&(((PLUTChunk *)pChunk)->PLUT[0]);
-			lastCCB->ccb_PLUTPtr = lastPLUT;
-		  break;
-	
-		case CHUNK_PDAT:
-			lastCCB->ccb_SourcePtr = (CelData *)&(((PixelChunk *)pChunk)->pixels[0]);
-		  break;
-			
-		default:
-			DIAGNOSE(("Chunk %.4s was parsed but not used.\n", &chunk_ID));
-		  break;
-	  }
-	}
-	
-	if (buffer != NULL)
-		*buffer = theBuffer;
+  /* determine file size, alloc memory, and read the file into memory
+   */
+  if ((buffSize = GetFileSize (name)) <= 0)
+    return NULL;
 
-	/*	return the last ccb found (there should only be one for this call)
-	 */
-	return lastCCB;
+  if (buffer == NULL || (buffer != NULL && *buffer == NULL))
+    {
+      if ((theBuffer = (int32 *)ALLOCMEM (buffSize, MEMTYPE_CEL)) == NULL)
+        return NULL;
+    }
+  else
+    {
+      theBuffer = *buffer;
+    }
+  if ((result = ReadFile (name, buffSize, theBuffer, 0)) < 0)
+    return NULL;
+
+  /*	Init the vars for our chunk hunting while loop
+   */
+  lastPLUT = NULL;
+  lastCCB = NULL;
+  tempBuf = (char *)theBuffer;
+  tempSize = buffSize;
+
+  /*	Iterate through each chunk and set the CCB.
+   */
+  while ((pChunk = GetChunk (&chunk_ID, &tempBuf, &tempSize)) != NULL)
+    {
+      switch (chunk_ID)
+        {
+        case CHUNK_CCB:
+          lastCCB = (CCB *)&(((CCC *)pChunk)->ccb_Flags);
+
+          lastCCB->ccb_HDX = 0x00100000; /* this is 1 in 12.20 fixed pt */
+          lastCCB->ccb_VDY = 0x00010000; /* this is 1 in 16.16 fixed pt */
+          // lastCCB->ccb_XPos	=
+          // lastCCB->ccb_YPos	= 0;
+          lastCCB->ccb_Flags
+              |= CCB_SPABS | CCB_PPABS | CCB_NPABS | CCB_YOXY
+                 | CCB_LAST; /* V32 anims might not have these set */
+          break;
+
+        case CHUNK_PLUT:
+          lastPLUT = (char *)&(((PLUTChunk *)pChunk)->PLUT[0]);
+          lastCCB->ccb_PLUTPtr = lastPLUT;
+          break;
+
+        case CHUNK_PDAT:
+          lastCCB->ccb_SourcePtr
+              = (CelData *)&(((PixelChunk *)pChunk)->pixels[0]);
+          break;
+
+        default:
+          DIAGNOSE (("Chunk %.4s was parsed but not used.\n", &chunk_ID));
+          break;
+        }
+    }
+
+  if (buffer != NULL)
+    *buffer = theBuffer;
+
+  /*	return the last ccb found (there should only be one for this call)
+   */
+  return lastCCB;
 }

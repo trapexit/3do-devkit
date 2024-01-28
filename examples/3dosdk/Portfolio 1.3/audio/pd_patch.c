@@ -13,7 +13,8 @@
 **  940224 WJB  Made FindPatchKnob() public.  Added GetNGrabbedPatchKnobs().
 **  940225 WJB  Tweaked DeletePatch() a bit.
 **  940228 WJB  Added myalloc(), myfree().
-**  940301 WJB  Added LoadSample and AttachSample commands and support code for PatchSample and PatchSampleAttachment.
+**  940301 WJB  Added LoadSample and AttachSample commands and support code for
+*PatchSample and PatchSampleAttachment.
 **  940311 WJB  Converted non-triple-bang C++ comments to C comments.
 **  940407 WJB  Made a bunch of functions private to pd_patch.c
 **  940407 WJB  Added PatchSymbol.
@@ -21,148 +22,180 @@
 **  940408 WJB  Added a triple bang.
 **  940408 WJB  Added optional start frame arg to AttachSample.
 **  940414 WJB  Added DelayLine command.
-**  940414 WJB  Made AddPatchSymbol() trap redefined symbols and restructured clients.
+**  940414 WJB  Made AddPatchSymbol() trap redefined symbols and restructured
+*clients.
 **  940422 WJB  Converted C++ comments to C comments.
 **  940422 WJB  Added support for PIATTRF_Triggerable and PISTATEF_Started.
 ****************************************************************/
 
-    /* local */
+/* local */
 #include "patchdemo.h"
 
-    /* portfolio */
-#include <ctype.h>                  /* isspace() */
+/* portfolio */
+#include <ctype.h> /* isspace() */
 #include <filestreamfunctions.h>
-#include <operror.h>                /* PrintError() */
-#include <stdarg.h>                 /* va_list */
-#include <stdio.h>                  /* printf(), vprintf() */
-#include <stdlib.h>                 /* strtol() */
-#include <string.h>                 /* str...() */
-
+#include <operror.h> /* PrintError() */
+#include <stdarg.h>  /* va_list */
+#include <stdio.h>   /* printf(), vprintf() */
+#include <stdlib.h>  /* strtol() */
+#include <string.h>  /* str...() */
 
 /* -------------------- Debugging */
 
-#define DEBUG_LoadEntry         0   /* entry/exit of LoadPatch()/UnloadPatch() */
-#define DEBUG_LoadInterpreter   0   /* LoadPatch() interpreter and object new/delete functions */
-#define DEBUG_LoadParser        0   /* LoadPatch() line parser */
-#define DEBUG_Symbol            0   /* PatchSymbol system */
-#define DEBUG_Trigger           0   /* entry/exit of all start/stop/release functions */
-
+#define DEBUG_LoadEntry 0 /* entry/exit of LoadPatch()/UnloadPatch() */
+#define DEBUG_LoadInterpreter                                                 \
+  0 /* LoadPatch() interpreter and object new/delete functions */
+#define DEBUG_LoadParser 0 /* LoadPatch() line parser */
+#define DEBUG_Symbol 0     /* PatchSymbol system */
+#define DEBUG_Trigger 0    /* entry/exit of all start/stop/release functions */
 
 /* -------------------- Misc defines */
 
-#define PINST_Priority  100         /* (default) instrument priority (!!! base on some system constant?) */
-
+#define PINST_Priority                                                        \
+  100 /* (default) instrument priority (!!! base on some system constant?) */
 
 /* -------------------- ParserFile (file handle for parser) */
 
-typedef struct ParserFile {
-        /* constants */
-    const char *pfile_FileName;     /* file name */
-    Stream *pfile_Stream;           /* stream associated with file */
+typedef struct ParserFile
+{
+  /* constants */
+  const char *pfile_FileName; /* file name */
+  Stream *pfile_Stream;       /* stream associated with file */
 
-        /* variables */
-    int32 pfile_LineNum;            /* line number of last line read by ReadParserFileLine().  Set to 0 by OpenParserFile(). */
+  /* variables */
+  int32
+      pfile_LineNum; /* line number of last line read by ReadParserFileLine().
+                        Set to 0 by OpenParserFile(). */
 } ParserFile;
 
 static ParserFile *OpenParserFile (const char *filename, Err *errbuf);
 static Err CloseParserFile (ParserFile *);
 static int32 GetParserFileLine (ParserFile *, char *buf, int32 bufsize);
-static void PrintParserFileError (const ParserFile *, const char *errorfmt, ...);
-
+static void PrintParserFileError (const ParserFile *, const char *errorfmt,
+                                  ...);
 
 /* -------------------- Command table */
-    /* misc defines */
-#define CMD_MaxChars 130            /* Max # of characters on a command line, not including null termination or new line character */
-#define CMD_MaxArgs  31             /* Max # of command line arguments including command name, not including null termination */
+/* misc defines */
+#define CMD_MaxChars                                                          \
+  130 /* Max # of characters on a command line, not including null            \
+         termination or new line character */
+#define CMD_MaxArgs                                                           \
+  31 /* Max # of command line arguments including command name, not including \
+        null termination */
 
-    /* processing functions */
-typedef Err cmdprocproto_t (const ParserFile *, Patch *, int argc, const char * const argv[]);
+/* processing functions */
+typedef Err cmdprocproto_t (const ParserFile *, Patch *, int argc,
+                            const char *const argv[]);
 typedef cmdprocproto_t *cmdprocfn_t;
 
-    /* Info */
-typedef struct CommandInfo {
-    const char *Name;               /* command name (note: case insensitive) */
-    int MinArgC;                    /* min argc value (includes command name) */
-    cmdprocfn_t ProcessFN;          /* processing function */
+/* Info */
+typedef struct CommandInfo
+{
+  const char *Name;      /* command name (note: case insensitive) */
+  int MinArgC;           /* min argc value (includes command name) */
+  cmdprocfn_t ProcessFN; /* processing function */
 } CommandInfo;
 
-    /* processing function prototypes */
+/* processing function prototypes */
 static cmdprocproto_t cmdproc_AttachSample;
 static cmdprocproto_t cmdproc_Connect;
 static cmdprocproto_t cmdproc_DelayLine;
 static cmdprocproto_t cmdproc_LoadInstrument;
 static cmdprocproto_t cmdproc_LoadSample;
 static cmdprocproto_t cmdproc_Tweak;
-#if 0       /* useful for prototyping new commands */
+#if 0 /* useful for prototyping new commands */
   static cmdprocproto_t cmdproc_dummy;
 #endif
 
-    /* command table */
+/* command table */
 static const CommandInfo CommandTable[] = {
-    { "AttachSample",   4, cmdproc_AttachSample },      /* AttachSample <attachment symbol> <instrument> <sample> [<fifo name> [<start frame>]] */
-    { "Connect",        5, cmdproc_Connect },           /* Connect <source instrument> <source output> <dest instrument> <dest input> */
-    { "DelayLine",      3, cmdproc_DelayLine },         /* DelayLine <sample symbol> <nbytes> [<nchannels> [<loop (1/0)>]] */
-    { "LoadInstrument", 3, cmdproc_LoadInstrument },    /* LoadInstrument <instrument symbol> <instrument file name> [<triggerable (1/0)>] */
-    { "LoadSample",     3, cmdproc_LoadSample },        /* LoadSample <sample symbol> <sample file name> */
-    { "Tweak",          4, cmdproc_Tweak },             /* Tweak <instrument> <knob> <value> */
+  { "AttachSample", 4,
+    cmdproc_AttachSample }, /* AttachSample <attachment symbol> <instrument>
+                               <sample> [<fifo name> [<start frame>]] */
+  { "Connect", 5,
+    cmdproc_Connect }, /* Connect <source instrument> <source output> <dest
+                          instrument> <dest input> */
+  { "DelayLine", 3, cmdproc_DelayLine }, /* DelayLine <sample symbol> <nbytes>
+                                            [<nchannels> [<loop (1/0)>]] */
+  { "LoadInstrument", 3,
+    cmdproc_LoadInstrument }, /* LoadInstrument <instrument symbol> <instrument
+                                 file name> [<triggerable (1/0)>] */
+  { "LoadSample", 3,
+    cmdproc_LoadSample }, /* LoadSample <sample symbol> <sample file name> */
+  { "Tweak", 4, cmdproc_Tweak }, /* Tweak <instrument> <knob> <value> */
 };
 
-    /* client functions */
+/* client functions */
 static const CommandInfo *LookupCommand (const char *matchcmd);
-
 
 /* -------------------- Misc local functions */
 
-    /* Local Patch stuff */
-#define FindPatchInstrument(patch,symname)       (PatchInstrument *)       FindPatchSymbol (&(patch)->patch_InstrumentList,       (symname))
-#define FindPatchSample(patch,symname)           (PatchSample *)           FindPatchSymbol (&(patch)->patch_SampleList,           (symname))
-#define FindPatchSampleAttachment(patch,symname) (PatchSampleAttachment *) FindPatchSymbol (&(patch)->patch_SampleAttachmentList, (symname))
+/* Local Patch stuff */
+#define FindPatchInstrument(patch, symname)                                   \
+  (PatchInstrument *)FindPatchSymbol (&(patch)->patch_InstrumentList,         \
+                                      (symname))
+#define FindPatchSample(patch, symname)                                       \
+  (PatchSample *)FindPatchSymbol (&(patch)->patch_SampleList, (symname))
+#define FindPatchSampleAttachment(patch, symname)                             \
+  (PatchSampleAttachment *)FindPatchSymbol (                                  \
+      &(patch)->patch_SampleAttachmentList, (symname))
 
-    /* Local PatchInstrument functions */
-static PatchInstrument *CreatePatchInstrument (const char *symname, const char *filename, bool triggerable, Err *errbuf);
+/* Local PatchInstrument functions */
+static PatchInstrument *CreatePatchInstrument (const char *symname,
+                                               const char *filename,
+                                               bool triggerable, Err *errbuf);
 static Err StartPatchInstrument (PatchInstrument *, const TagArg *);
 static Err ReleasePatchInstrument (PatchInstrument *, const TagArg *);
 static Err StopPatchInstrument (PatchInstrument *, const TagArg *);
 
-    /* Local PatchInstrument KnobTable support */
-static PatchKnob *FindPatchKnob (const PatchInstrument *, const char *knobname);
+/* Local PatchInstrument KnobTable support */
+static PatchKnob *FindPatchKnob (const PatchInstrument *,
+                                 const char *knobname);
 static Err AttachKnobTable (PatchInstrument *);
 static Err DetachKnobTable (PatchInstrument *);
 
-    /* Local PatchKnob functions */
+/* Local PatchKnob functions */
 static Err GrabPatchKnob (Item instrument, PatchKnob *);
 static Err ReleasePatchKnob (PatchKnob *);
 
-    /* Local PatchSample functions */
-static PatchSample *CreatePatchSample (const char *symname, const char *filename, Err *errbuf);
-static PatchSample *CreatePatchDelayLine (const char *symname, uint32 nbytes, uint32 nchannels, bool loop, Err *errbuf);
+/* Local PatchSample functions */
+static PatchSample *CreatePatchSample (const char *symname,
+                                       const char *filename, Err *errbuf);
+static PatchSample *CreatePatchDelayLine (const char *symname, uint32 nbytes,
+                                          uint32 nchannels, bool loop,
+                                          Err *errbuf);
 
-    /* Local PatchSampleAttachment functions */
-static PatchSampleAttachment *CreatePatchSampleAttachment (const char *symname, const PatchInstrument *, const PatchSample *, const char *fifoname, uint32 startframe, Err *errbuf);
+/* Local PatchSampleAttachment functions */
+static PatchSampleAttachment *
+CreatePatchSampleAttachment (const char *symname, const PatchInstrument *,
+                             const PatchSample *, const char *fifoname,
+                             uint32 startframe, Err *errbuf);
 
-    /* Local PatchSymbol list functions */
+/* Local PatchSymbol list functions */
 static Err AddPatchSymbol (List *symlist, PatchSymbol *newsym);
-#define FindPatchSymbol(list,symname)   (PatchSymbol *) FindNamedNodeNoCase ((list), (symname))
+#define FindPatchSymbol(list, symname)                                        \
+  (PatchSymbol *)FindNamedNodeNoCase ((list), (symname))
 static Err DeletePatchSymbolList (List *symlist);
 
-    /* Local PatchSymbol functions */
-static PatchSymbol *CreatePatchSymbol (const char *symname, size_t size, const PatchSymbolFunctions *, Err *errbuf);
+/* Local PatchSymbol functions */
+static PatchSymbol *CreatePatchSymbol (const char *symname, size_t size,
+                                       const PatchSymbolFunctions *,
+                                       Err *errbuf);
 static Err DeletePatchSymbol (PatchSymbol *);
 
-    /* command line arg processing */
+/* command line arg processing */
 static int ParseLine (char *s, char *argv[], int argvnelts);
 
-    /* string.h emulation and helpers */
+/* string.h emulation and helpers */
 static char *skipspace (char *s);
 static char *skipnspace (char *s);
 static char *strpbrk (const char *cs, const char *ct);
 
-    /* stream */
+/* stream */
 static int32 GetStreamLine (Stream *, char *buf, int32 bufsize);
 
-    /* utility */
+/* utility */
 static Node *FindNamedNodeNoCase (const List *, const char *name);
-
 
 /* -------------------- LoadPatch() */
 
@@ -209,38 +242,47 @@ static Err readpatchlines (ParserFile *, Patch *);
         UnloadPatch()
 */
 
-Patch *LoadPatch (const char *filename, Err *errbuf)
+Patch *
+LoadPatch (const char *filename, Err *errbuf)
 {
-    Patch *patch = NULL;
-    Err errcode = 0;
+  Patch *patch = NULL;
+  Err errcode = 0;
 
-  #if DEBUG_LoadEntry
-    printf ("LoadPatch() \"%s\" ", filename); printavail(); printf ("\n");
-  #endif
+#if DEBUG_LoadEntry
+  printf ("LoadPatch() \"%s\" ", filename);
+  printavail ();
+  printf ("\n");
+#endif
 
-        /* allocate patch */
-    if ((patch = (Patch *)myalloc (sizeof *patch)) == NULL) {
-        errcode = -1;           /* !!! real error code */
-        goto clean;
+  /* allocate patch */
+  if ((patch = (Patch *)myalloc (sizeof *patch)) == NULL)
+    {
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
-    InitList (&patch->patch_InstrumentList,       "Instrument");
-    InitList (&patch->patch_SampleList,           "Sample");
-    InitList (&patch->patch_SampleAttachmentList, "Sample Attachment");
+  InitList (&patch->patch_InstrumentList, "Instrument");
+  InitList (&patch->patch_SampleList, "Sample");
+  InitList (&patch->patch_SampleAttachmentList, "Sample Attachment");
 
-        /* read patch file */
-    if ((errcode = readpatchfile (filename, patch)) < 0) goto clean;
+  /* read patch file */
+  if ((errcode = readpatchfile (filename, patch)) < 0)
+    goto clean;
 
 clean:
-    if (errcode < 0) {
-        CloseRes (UnloadPatch, patch);
-        if (errbuf) *errbuf = errcode;
+  if (errcode < 0)
+    {
+      CloseRes (UnloadPatch, patch);
+      if (errbuf)
+        *errbuf = errcode;
     }
 
-  #if DEBUG_LoadEntry
-    printf ("  patch=$%p err=%ld ", patch, errcode); printavail(); printf ("\n");
-  #endif
+#if DEBUG_LoadEntry
+  printf ("  patch=$%p err=%ld ", patch, errcode);
+  printavail ();
+  printf ("\n");
+#endif
 
-    return patch;
+  return patch;
 }
 
 /*
@@ -248,26 +290,29 @@ clean:
     Prints diagnostic messages.
     Returns 0 on success, error code on failure.
 */
-static Err readpatchfile (const char *filename, Patch *patch)
+static Err
+readpatchfile (const char *filename, Patch *patch)
 {
-    ParserFile *file = NULL;
-    Err errcode = 0;
+  ParserFile *file = NULL;
+  Err errcode = 0;
 
-        /* open file */
-    if ((file = OpenParserFile (filename, &errcode)) == NULL) {
-            /* !!! really do error message here? */
-        PrintError (NULL, "open patch file", filename, errcode);
-        goto clean;
+  /* open file */
+  if ((file = OpenParserFile (filename, &errcode)) == NULL)
+    {
+      /* !!! really do error message here? */
+      PrintError (NULL, "open patch file", filename, errcode);
+      goto clean;
     }
 
-        /* process lines */
-    if ((errcode = readpatchlines (file, patch)) < 0) goto clean;
+  /* process lines */
+  if ((errcode = readpatchlines (file, patch)) < 0)
+    goto clean;
 
 clean:
-    CloseParserFile (file);
-    /* let LoadPatch() do the Patch cleanup on failure */
+  CloseParserFile (file);
+  /* let LoadPatch() do the Patch cleanup on failure */
 
-    return errcode;
+  return errcode;
 }
 
 /*
@@ -275,143 +320,173 @@ clean:
     Prints syntax errors.
     Returns 0 on success, error code on failure.
 */
-static Err readpatchlines (ParserFile *file, Patch *patch)
+static Err
+readpatchlines (ParserFile *file, Patch *patch)
 {
-    Err errcode = 0;
-    int32 result;
-    char linebuf [CMD_MaxChars + 2];    /* <cmdline> '\n' '\0'.  max cmdline chars = sizeof linebuf - 2. */
-    int argc;
-    char *argv [CMD_MaxArgs + 1];
-    const CommandInfo *cmdinfo;
+  Err errcode = 0;
+  int32 result;
+  char linebuf[CMD_MaxChars + 2]; /* <cmdline> '\n' '\0'.  max cmdline chars =
+                                     sizeof linebuf - 2. */
+  int argc;
+  char *argv[CMD_MaxArgs + 1];
+  const CommandInfo *cmdinfo;
 
-        /* loop on lines */
-    while ((result = GetParserFileLine (file, linebuf, sizeof linebuf)) > 0) {
+  /* loop on lines */
+  while ((result = GetParserFileLine (file, linebuf, sizeof linebuf)) > 0)
+    {
 
-            /* trap line too long: look for new line char in last character of string when string buffer is full */
-        if (strlen (linebuf) == CMD_MaxChars+1 && linebuf[CMD_MaxChars] != '\n') {
-            PrintParserFileError (file, "Line too long.");
-            errcode = -1;           /* !!! real error code */
+      /* trap line too long: look for new line char in last character of string
+       * when string buffer is full */
+      if (strlen (linebuf) == CMD_MaxChars + 1
+          && linebuf[CMD_MaxChars] != '\n')
+        {
+          PrintParserFileError (file, "Line too long.");
+          errcode = -1; /* !!! real error code */
+          goto clean;
+        }
+
+      /* get argc, argv for line.  ignore if no command */
+      if ((argc = ParseLine (linebuf, argv, NArrayElts (argv))) > 0)
+        {
+
+          /* lookup command in table */
+          if ((cmdinfo = LookupCommand (argv[0])) == NULL)
+            {
+              PrintParserFileError (file, "Unknown command \"%s\".", argv[0]);
+              errcode = -1; /* !!! real error code */
+              goto clean;
+            }
+
+          /* check # arg count */
+          if (argc < cmdinfo->MinArgC)
+            {
+              PrintParserFileError (
+                  file, "Missing required argument(s) for %s.", cmdinfo->Name);
+              errcode = -1; /* !!! real error code */
+              goto clean;
+            }
+
+          /* dispatch command processor */
+          /* these can print syntax error messages */
+          /* !!! shouldn't need this cast - armcc 1.6 bug */
+          if ((errcode = cmdinfo->ProcessFN (file, patch, argc,
+                                             (const char *const *)argv))
+              < 0)
             goto clean;
         }
-
-            /* get argc, argv for line.  ignore if no command */
-        if ((argc = ParseLine (linebuf, argv, NArrayElts (argv))) > 0) {
-
-                /* lookup command in table */
-            if ((cmdinfo = LookupCommand (argv[0])) == NULL) {
-                PrintParserFileError (file, "Unknown command \"%s\".", argv[0]);
-                errcode = -1;           /* !!! real error code */
-                goto clean;
-            }
-
-                /* check # arg count */
-            if (argc < cmdinfo->MinArgC) {
-                PrintParserFileError (file, "Missing required argument(s) for %s.", cmdinfo->Name);
-                errcode = -1;           /* !!! real error code */
-                goto clean;
-            }
-
-                /* dispatch command processor */
-                /* these can print syntax error messages */
-                /* !!! shouldn't need this cast - armcc 1.6 bug */
-            if ((errcode = cmdinfo->ProcessFN (file, patch, argc, (const char * const *)argv)) < 0) goto clean;
-        }
     }
-    if (result < 0) {
-            /* !!! error message here?  get operror message? */
-        PrintParserFileError (file, "Error reading file.");
-        errcode = result;
-        goto clean;
+  if (result < 0)
+    {
+      /* !!! error message here?  get operror message? */
+      PrintParserFileError (file, "Error reading file.");
+      errcode = result;
+      goto clean;
     }
 
 clean:
-    /* let LoadPatch() do the Patch cleanup on failure */
+  /* let LoadPatch() do the Patch cleanup on failure */
 
-    return errcode;
+  return errcode;
 }
 
 /*
     find command.  returns NULL on failure.
 */
-static const CommandInfo *LookupCommand (const char *matchcmd)
+static const CommandInfo *
+LookupCommand (const char *matchcmd)
 {
-    const CommandInfo *cmdinfo = CommandTable;
-    int32 count = NArrayElts (CommandTable);
+  const CommandInfo *cmdinfo = CommandTable;
+  int32 count = NArrayElts (CommandTable);
 
-    for (; count--; cmdinfo++) {
-        if (!strcasecmp ((char *)cmdinfo->Name, matchcmd)) return cmdinfo;       /* !!! this function should take const char * */
+  for (; count--; cmdinfo++)
+    {
+      if (!strcasecmp ((char *)cmdinfo->Name, matchcmd))
+        return cmdinfo; /* !!! this function should take const char * */
     }
 
-    return NULL;
+  return NULL;
 }
 
-
 /*
-    LoadInstrument <instrument symbol> <instrument file name> [<triggerable (1/0)>]
+    LoadInstrument <instrument symbol> <instrument file name> [<triggerable
+   (1/0)>]
 
     Load new instrument and add it to Patch's InstrumentList.
 
     <triggerable> defaults to 1.
 */
-static Err cmdproc_LoadInstrument (const ParserFile *file, Patch *patch, int argc, const char * const argv[])
+static Err
+cmdproc_LoadInstrument (const ParserFile *file, Patch *patch, int argc,
+                        const char *const argv[])
 {
-    const char *symname    = argv[1];
-    const char *filename   = argv[2];
-    const bool triggerable = argc > 3 ? (strtoul (argv[3], NULL, 0) != 0) : TRUE;
-    PatchInstrument *inst = NULL;
-    Err errcode = 0;
+  const char *symname = argv[1];
+  const char *filename = argv[2];
+  const bool triggerable = argc > 3 ? (strtoul (argv[3], NULL, 0) != 0) : TRUE;
+  PatchInstrument *inst = NULL;
+  Err errcode = 0;
 
-        /* get new PatchInstrument */
-    if ((inst = CreatePatchInstrument (symname, filename, triggerable, &errcode)) == NULL) {
-            /* !!! generalize this error message */
-        PrintParserFileError (file, "LoadInstrument failed.");
-        goto clean;
+  /* get new PatchInstrument */
+  if ((inst = CreatePatchInstrument (symname, filename, triggerable, &errcode))
+      == NULL)
+    {
+      /* !!! generalize this error message */
+      PrintParserFileError (file, "LoadInstrument failed.");
+      goto clean;
     }
 
-        /* add to InstrumentList */
-    if ((errcode = AddPatchSymbol (&patch->patch_InstrumentList, (PatchSymbol *)inst)) < 0) {
-            /* !!! generalize this error message */
-        PrintParserFileError (file, "Instrument \"%s\" redefined.", symname);
-        goto clean;
+  /* add to InstrumentList */
+  if ((errcode
+       = AddPatchSymbol (&patch->patch_InstrumentList, (PatchSymbol *)inst))
+      < 0)
+    {
+      /* !!! generalize this error message */
+      PrintParserFileError (file, "Instrument \"%s\" redefined.", symname);
+      goto clean;
     }
 
 clean:
-    if (errcode < 0) DeletePatchSymbol ((PatchSymbol *)inst);
-    return errcode;
+  if (errcode < 0)
+    DeletePatchSymbol ((PatchSymbol *)inst);
+  return errcode;
 }
-
 
 /*
     LoadSample <sample symbol> <sample file name>
 
     Load new sample and add it to Patch's SampleList.
 */
-static Err cmdproc_LoadSample (const ParserFile *file, Patch *patch, int argc, const char * const argv[])
+static Err
+cmdproc_LoadSample (const ParserFile *file, Patch *patch, int argc,
+                    const char *const argv[])
 {
-    const char *symname = argv[1];
-    const char *filename = argv[2];
-    PatchSample *samp = NULL;
-    Err errcode = 0;
+  const char *symname = argv[1];
+  const char *filename = argv[2];
+  PatchSample *samp = NULL;
+  Err errcode = 0;
 
-        /* get new PatchSample */
-    if ((samp = CreatePatchSample (symname, filename, &errcode)) == NULL) {
-            /* !!! generalize this error message */
-        PrintParserFileError (file, "LoadSample failed.");
-        goto clean;
+  /* get new PatchSample */
+  if ((samp = CreatePatchSample (symname, filename, &errcode)) == NULL)
+    {
+      /* !!! generalize this error message */
+      PrintParserFileError (file, "LoadSample failed.");
+      goto clean;
     }
 
-        /* add to SampleList */
-    if ((errcode = AddPatchSymbol (&patch->patch_SampleList, (PatchSymbol *)samp)) < 0) {
-            /* !!! generalize this error message */
-        PrintParserFileError (file, "Sample \"%s\" redefined.", symname);
-        goto clean;
+  /* add to SampleList */
+  if ((errcode
+       = AddPatchSymbol (&patch->patch_SampleList, (PatchSymbol *)samp))
+      < 0)
+    {
+      /* !!! generalize this error message */
+      PrintParserFileError (file, "Sample \"%s\" redefined.", symname);
+      goto clean;
     }
 
 clean:
-    if (errcode < 0) DeletePatchSymbol ((PatchSymbol *)samp);
-    return errcode;
+  if (errcode < 0)
+    DeletePatchSymbol ((PatchSymbol *)samp);
+  return errcode;
 }
-
 
 /*
     DelayLine <sample symbol> <nbytes> [<nchannels> [<loop (1/0)>]]
@@ -425,137 +500,172 @@ clean:
         . doesn't check pointer returned by strtol() for junk after number.
         . doesn't do bounds checking on knob_value.
 */
-static Err cmdproc_DelayLine (const ParserFile *file, Patch *patch, int argc, const char * const argv[])
+static Err
+cmdproc_DelayLine (const ParserFile *file, Patch *patch, int argc,
+                   const char *const argv[])
 {
-    const char *symname    = argv[1];
-    const uint32 nbytes    = strtoul (argv[2], NULL, 0);
-    const uint32 nchannels = argc > 3 ? strtoul (argv[3], NULL, 0) : 1;
-    const bool   loop      = argc > 4 ? (strtoul (argv[4], NULL, 0) != 0) : TRUE;
-    PatchSample *samp = NULL;
-    Err errcode = 0;
+  const char *symname = argv[1];
+  const uint32 nbytes = strtoul (argv[2], NULL, 0);
+  const uint32 nchannels = argc > 3 ? strtoul (argv[3], NULL, 0) : 1;
+  const bool loop = argc > 4 ? (strtoul (argv[4], NULL, 0) != 0) : TRUE;
+  PatchSample *samp = NULL;
+  Err errcode = 0;
 
-        /* get new DelayLine PatchSample */
-    if ((samp = CreatePatchDelayLine (symname, nbytes, nchannels, loop, &errcode)) == NULL) {
-            /* !!! generalize this error message */
-        PrintParserFileError (file, "DelayLine failed.");
-        goto clean;
+  /* get new DelayLine PatchSample */
+  if ((samp
+       = CreatePatchDelayLine (symname, nbytes, nchannels, loop, &errcode))
+      == NULL)
+    {
+      /* !!! generalize this error message */
+      PrintParserFileError (file, "DelayLine failed.");
+      goto clean;
     }
 
-        /* add to SampleList */
-    if ((errcode = AddPatchSymbol (&patch->patch_SampleList, (PatchSymbol *)samp)) < 0) {
-            /* !!! generalize this error message */
-        PrintParserFileError (file, "Sample \"%s\" redefined.", symname);
-        goto clean;
+  /* add to SampleList */
+  if ((errcode
+       = AddPatchSymbol (&patch->patch_SampleList, (PatchSymbol *)samp))
+      < 0)
+    {
+      /* !!! generalize this error message */
+      PrintParserFileError (file, "Sample \"%s\" redefined.", symname);
+      goto clean;
     }
 
 clean:
-    if (errcode < 0) DeletePatchSymbol ((PatchSymbol *)samp);
-    return errcode;
+  if (errcode < 0)
+    DeletePatchSymbol ((PatchSymbol *)samp);
+  return errcode;
 }
-
 
 /*
     Connect <source instrument> <source output> <dest instrument> <dest input>
 
-    Make a connection from one instrument's output to another instrument's input or knob.
+    Make a connection from one instrument's output to another instrument's
+   input or knob.
 */
-static Err cmdproc_Connect (const ParserFile *file, Patch *patch, int argc, const char * const argv[])
+static Err
+cmdproc_Connect (const ParserFile *file, Patch *patch, int argc,
+                 const char *const argv[])
 {
-    const char *from_inst_name = argv[1];
-    const char *from_out_name  = argv[2];
-    const char *to_inst_name   = argv[3];
-    const char *to_in_name     = argv[4];
-    PatchInstrument *from_inst;
-    PatchInstrument *to_inst;
-    Err errcode = 0;
+  const char *from_inst_name = argv[1];
+  const char *from_out_name = argv[2];
+  const char *to_inst_name = argv[3];
+  const char *to_in_name = argv[4];
+  PatchInstrument *from_inst;
+  PatchInstrument *to_inst;
+  Err errcode = 0;
 
-  #if DEBUG_LoadInterpreter
-    printf ("  Connect %s.%s -> %s.%s\n", from_inst_name, from_out_name, to_inst_name, to_in_name);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  Connect %s.%s -> %s.%s\n", from_inst_name, from_out_name,
+          to_inst_name, to_in_name);
+#endif
 
-        /* locate instruments from patch's instrument list */
-    {
-        const char *last_name;
+  /* locate instruments from patch's instrument list */
+  {
+    const char *last_name;
 
-        if ( (from_inst = FindPatchInstrument (patch, last_name = from_inst_name)) == NULL ||
-             (to_inst   = FindPatchInstrument (patch, last_name = to_inst_name)) == NULL ) {
-            PrintParserFileError (file, "Instrument \"%s\" undefined.", last_name);
-            errcode = -1;       /* !!! real error code */
-            goto clean;
-        }
-    }
-
-        /* do connection */
-        /* !!! shouldn't need casts */
-    if ((errcode = ConnectInstruments (from_inst->pinst_Instrument, (char *)from_out_name, to_inst->pinst_Instrument, (char *)to_in_name)) < 0) {
-        PrintParserFileError (file, "Unable to connect %s.%s -> %s.%s.", from_inst_name, from_out_name, to_inst_name, to_in_name);
-        /* !!! get operror message? */
+    if ((from_inst = FindPatchInstrument (patch, last_name = from_inst_name))
+            == NULL
+        || (to_inst = FindPatchInstrument (patch, last_name = to_inst_name))
+               == NULL)
+      {
+        PrintParserFileError (file, "Instrument \"%s\" undefined.", last_name);
+        errcode = -1; /* !!! real error code */
         goto clean;
-    }
+      }
+  }
 
-        /* if a knob, need to note that knob has been usurped by connection */
+  /* do connection */
+  /* !!! shouldn't need casts */
+  if ((errcode = ConnectInstruments (
+           from_inst->pinst_Instrument, (char *)from_out_name,
+           to_inst->pinst_Instrument, (char *)to_in_name))
+      < 0)
     {
-        PatchKnob *to_knob;
-
-        if ((to_knob = FindPatchKnob (to_inst, to_in_name)) != NULL) ReleasePatchKnob (to_knob);
+      PrintParserFileError (file, "Unable to connect %s.%s -> %s.%s.",
+                            from_inst_name, from_out_name, to_inst_name,
+                            to_in_name);
+      /* !!! get operror message? */
+      goto clean;
     }
+
+  /* if a knob, need to note that knob has been usurped by connection */
+  {
+    PatchKnob *to_knob;
+
+    if ((to_knob = FindPatchKnob (to_inst, to_in_name)) != NULL)
+      ReleasePatchKnob (to_knob);
+  }
 
 clean:
-    return errcode;
+  return errcode;
 }
 
-
 /*
-    AttachSample <attachment symbol> <instrument> <sample> [<fifo name> [<start frame>]]
+    AttachSample <attachment symbol> <instrument> <sample> [<fifo name> [<start
+   frame>]]
 
     Create attachment (named <attachment>) to attach a sample to an instrument.
     fifo name is optional, defaults to first/only fifo in instrument.
 */
-static Err cmdproc_AttachSample (const ParserFile *file, Patch *patch, int argc, const char * const argv[])
+static Err
+cmdproc_AttachSample (const ParserFile *file, Patch *patch, int argc,
+                      const char *const argv[])
 {
-    const char *att_name     = argv[1];
-    const char *inst_name    = argv[2];
-    const char *samp_name    = argv[3];
-    const char *fifo_name    = argc > 4 ? argv[4] : NULL;
-    const uint32 start_frame = argc > 5 ? strtoul (argv[5], NULL, 0) : 0;
-    PatchSampleAttachment *att = NULL;
-    PatchInstrument *inst;
-    PatchSample *samp;
-    Err errcode = 0;
+  const char *att_name = argv[1];
+  const char *inst_name = argv[2];
+  const char *samp_name = argv[3];
+  const char *fifo_name = argc > 4 ? argv[4] : NULL;
+  const uint32 start_frame = argc > 5 ? strtoul (argv[5], NULL, 0) : 0;
+  PatchSampleAttachment *att = NULL;
+  PatchInstrument *inst;
+  PatchSample *samp;
+  Err errcode = 0;
 
-        /* locate instrument from patch's instrument list */
-    if ( (inst = FindPatchInstrument (patch, inst_name)) == NULL ) {
-        PrintParserFileError (file, "Instrument \"%s\" undefined.", inst_name);
-        errcode = -1;       /* !!! real error code */
-        goto clean;
+  /* locate instrument from patch's instrument list */
+  if ((inst = FindPatchInstrument (patch, inst_name)) == NULL)
+    {
+      PrintParserFileError (file, "Instrument \"%s\" undefined.", inst_name);
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
 
-        /* locate sample from patch's sample list */
-    if ( (samp = FindPatchSample (patch, samp_name)) == NULL ) {
-        PrintParserFileError (file, "Sample \"%s\" undefined.", samp_name);
-        errcode = -1;       /* !!! real error code */
-        goto clean;
+  /* locate sample from patch's sample list */
+  if ((samp = FindPatchSample (patch, samp_name)) == NULL)
+    {
+      PrintParserFileError (file, "Sample \"%s\" undefined.", samp_name);
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
 
-        /* do attachment */
-    if ((att = CreatePatchSampleAttachment (att_name, inst, samp, fifo_name, start_frame, &errcode)) == NULL) {
-        PrintParserFileError (file, "Unable to attach sample \"%s\" to %s.%s.", samp_name, inst_name, fifo_name ? fifo_name : "(default)");
-        /* !!! get operror message? */
-        goto clean;
+  /* do attachment */
+  if ((att = CreatePatchSampleAttachment (att_name, inst, samp, fifo_name,
+                                          start_frame, &errcode))
+      == NULL)
+    {
+      PrintParserFileError (file, "Unable to attach sample \"%s\" to %s.%s.",
+                            samp_name, inst_name,
+                            fifo_name ? fifo_name : "(default)");
+      /* !!! get operror message? */
+      goto clean;
     }
 
-        /* add to SampleAttachmentList */
-    if ((errcode = AddPatchSymbol (&patch->patch_SampleAttachmentList, (PatchSymbol *)att)) < 0) {
-            /* !!! generalize this error message */
-        PrintParserFileError (file, "Sample Attachment \"%s\" redefined.", att_name);
-        goto clean;
+  /* add to SampleAttachmentList */
+  if ((errcode = AddPatchSymbol (&patch->patch_SampleAttachmentList,
+                                 (PatchSymbol *)att))
+      < 0)
+    {
+      /* !!! generalize this error message */
+      PrintParserFileError (file, "Sample Attachment \"%s\" redefined.",
+                            att_name);
+      goto clean;
     }
 
 clean:
-    if (errcode < 0) DeletePatchSymbol ((PatchSymbol *)att);
-    return errcode;
+  if (errcode < 0)
+    DeletePatchSymbol ((PatchSymbol *)att);
+  return errcode;
 }
-
 
 /*
     Tweak <instrument> <knob> <value>
@@ -566,47 +676,55 @@ clean:
         . doesn't check pointer returned by strtol() for junk after number.
         . doesn't do bounds checking on knob_value.
 */
-static Err cmdproc_Tweak (const ParserFile *file, Patch *patch, int argc, const char * const argv[])
+static Err
+cmdproc_Tweak (const ParserFile *file, Patch *patch, int argc,
+               const char *const argv[])
 {
-    const char *inst_name  = argv[1];
-    const char *knob_name  = argv[2];
-    const int32 knob_value = strtol (argv[3], NULL, 0);
-    Err errcode = 0;
-    PatchInstrument *inst;
-    PatchKnob *knob;
+  const char *inst_name = argv[1];
+  const char *knob_name = argv[2];
+  const int32 knob_value = strtol (argv[3], NULL, 0);
+  Err errcode = 0;
+  PatchInstrument *inst;
+  PatchKnob *knob;
 
-  #if DEBUG_LoadInterpreter
-    printf ("  Tweak %s.%s %ld\n", inst_name, knob_name, knob_value);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  Tweak %s.%s %ld\n", inst_name, knob_name, knob_value);
+#endif
 
-        /* locate instrument from patch's instrument list */
-    if ((inst = FindPatchInstrument (patch, inst_name)) == NULL) {
-            /* !!! this seems like a pretty common error message */
-        PrintParserFileError (file, "Instrument \"%s\" undefined.", inst_name);
-        errcode = -1;       /* !!! real error code */
-        goto clean;
+  /* locate instrument from patch's instrument list */
+  if ((inst = FindPatchInstrument (patch, inst_name)) == NULL)
+    {
+      /* !!! this seems like a pretty common error message */
+      PrintParserFileError (file, "Instrument \"%s\" undefined.", inst_name);
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
 
-        /* locate knob */
-    if ((knob = FindPatchKnob (inst, knob_name)) == NULL) {
-        PrintParserFileError (file, "Unknown knob %s.%s.", inst_name, knob_name);
-        errcode = -1;       /* !!! real error code */
-        goto clean;
+  /* locate knob */
+  if ((knob = FindPatchKnob (inst, knob_name)) == NULL)
+    {
+      PrintParserFileError (file, "Unknown knob %s.%s.", inst_name, knob_name);
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
 
-        /* tweak knob (!!! currently letting Tweak() catch ungrabbed knob. is this a good idea?) */
-    if ((errcode = TweakRawKnob (knob->pknob_Knob, knob_value)) < 0) {
-        PrintParserFileError (file, "Unable to tweak knob %s.%s%s.", inst_name, knob_name, IsPatchKnobGrabbed(knob) ? " - TweakRawKnob() failed" : " - instrument connected to it");
-        /* !!! get operror message? */
-        goto clean;
+  /* tweak knob (!!! currently letting Tweak() catch ungrabbed knob. is this a
+   * good idea?) */
+  if ((errcode = TweakRawKnob (knob->pknob_Knob, knob_value)) < 0)
+    {
+      PrintParserFileError (
+          file, "Unable to tweak knob %s.%s%s.", inst_name, knob_name,
+          IsPatchKnobGrabbed (knob) ? " - TweakRawKnob() failed"
+                                    : " - instrument connected to it");
+      /* !!! get operror message? */
+      goto clean;
     }
 
 clean:
-    return errcode;
+  return errcode;
 }
 
-
-#if 0       /* useful for prototyping new commands */
+#if 0 /* useful for prototyping new commands */
 static Err cmdproc_dummy (const ParserFile *file, Patch *patch, int argc, const char * const argv[])
 {
     PrintParserFileError (file, "Warning: Command \"%s\" not implemented yet.", argv[0]);
@@ -614,7 +732,6 @@ static Err cmdproc_dummy (const ParserFile *file, Patch *patch, int argc, const 
     return 0;
 }
 #endif
-
 
 /* -------------------- UnloadPatch() */
 
@@ -648,29 +765,37 @@ static Err cmdproc_dummy (const ParserFile *file, Patch *patch, int argc, const 
         LoadPatch()
 */
 
-Err UnloadPatch (Patch *patch)
+Err
+UnloadPatch (Patch *patch)
 {
-  #if DEBUG_LoadEntry
-    printf ("UnloadPatch() patch=$%p ", patch); printavail(); printf ("\n");
-  #endif
+#if DEBUG_LoadEntry
+  printf ("UnloadPatch() patch=$%p ", patch);
+  printavail ();
+  printf ("\n");
+#endif
 
-    if (patch) {
-            /* delete symbols by name space */
-        DeletePatchSymbolList (&patch->patch_SampleAttachmentList);     /* delete links between samples and instruments */
-        DeletePatchSymbolList (&patch->patch_SampleList);               /* delete samples */
-        DeletePatchSymbolList (&patch->patch_InstrumentList);           /* delete instruments */
+  if (patch)
+    {
+      /* delete symbols by name space */
+      DeletePatchSymbolList (
+          &patch->patch_SampleAttachmentList); /* delete links between samples
+                                                  and instruments */
+      DeletePatchSymbolList (&patch->patch_SampleList); /* delete samples */
+      DeletePatchSymbolList (
+          &patch->patch_InstrumentList); /* delete instruments */
 
-            /* delete Patch */
-        myfree (patch);
+      /* delete Patch */
+      myfree (patch);
     }
 
-  #if DEBUG_LoadEntry
-    printf ("  "); printavail(); printf ("\n");
-  #endif
+#if DEBUG_LoadEntry
+  printf ("  ");
+  printavail ();
+  printf ("\n");
+#endif
 
-    return 0;
+  return 0;
 }
-
 
 /* -------------------- Trigger Patch */
 
@@ -683,24 +808,29 @@ Err UnloadPatch (Patch *patch)
 
     Returns 0 on success, error code on failure.
 */
-Err StartPatch (Patch *patch, const TagArg *taglist)
+Err
+StartPatch (Patch *patch, const TagArg *taglist)
 {
-    struct PatchInstrument *inst;
-    Err errcode = 0;
+  struct PatchInstrument *inst;
+  Err errcode = 0;
 
-  #if DEBUG_Trigger
-    printf ("StartPatch()\n");
-  #endif
+#if DEBUG_Trigger
+  printf ("StartPatch()\n");
+#endif
 
-    for (inst = (PatchInstrument *)FirstNode(&patch->patch_InstrumentList); IsNode(&patch->patch_InstrumentList,inst); inst = (PatchInstrument *)NextNode(inst)) {
-        if ((errcode = StartPatchInstrument (inst, taglist)) < 0) goto clean;
+  for (inst = (PatchInstrument *)FirstNode (&patch->patch_InstrumentList);
+       IsNode (&patch->patch_InstrumentList, inst);
+       inst = (PatchInstrument *)NextNode (inst))
+    {
+      if ((errcode = StartPatchInstrument (inst, taglist)) < 0)
+        goto clean;
     }
 
 clean:
-  #if DEBUG_Trigger
-    printf ("  err=%ld\n", errcode);
-  #endif
-    return errcode;
+#if DEBUG_Trigger
+  printf ("  err=%ld\n", errcode);
+#endif
+  return errcode;
 }
 
 /*
@@ -712,25 +842,30 @@ clean:
 
     Returns first non-zero error code it finds, or 0 on success.
 */
-Err ReleasePatch (Patch *patch, const TagArg *taglist)
+Err
+ReleasePatch (Patch *patch, const TagArg *taglist)
 {
-    struct PatchInstrument *inst;
-    Err errcode = 0;
+  struct PatchInstrument *inst;
+  Err errcode = 0;
 
-  #if DEBUG_Trigger
-    printf ("ReleasePatch()\n");
-  #endif
+#if DEBUG_Trigger
+  printf ("ReleasePatch()\n");
+#endif
 
-    for (inst = (PatchInstrument *)LastNode(&patch->patch_InstrumentList); IsNodeB(&patch->patch_InstrumentList,inst); inst = (PatchInstrument *)PrevNode(inst)) {
-        const Err terrcode = ReleasePatchInstrument (inst, taglist);
+  for (inst = (PatchInstrument *)LastNode (&patch->patch_InstrumentList);
+       IsNodeB (&patch->patch_InstrumentList, inst);
+       inst = (PatchInstrument *)PrevNode (inst))
+    {
+      const Err terrcode = ReleasePatchInstrument (inst, taglist);
 
-        if (errcode >= 0 && terrcode < 0) errcode = terrcode;
+      if (errcode >= 0 && terrcode < 0)
+        errcode = terrcode;
     }
 
-  #if DEBUG_Trigger
-    printf ("  err=%ld\n", errcode);
-  #endif
-    return errcode;
+#if DEBUG_Trigger
+  printf ("  err=%ld\n", errcode);
+#endif
+  return errcode;
 }
 
 /*
@@ -742,80 +877,99 @@ Err ReleasePatch (Patch *patch, const TagArg *taglist)
 
     Returns first non-zero error code it finds, or 0 on success.
 */
-Err StopPatch (Patch *patch, const TagArg *taglist)
+Err
+StopPatch (Patch *patch, const TagArg *taglist)
 {
-    struct PatchInstrument *inst;
-    Err errcode = 0;
+  struct PatchInstrument *inst;
+  Err errcode = 0;
 
-  #if DEBUG_Trigger
-    printf ("StopPatch()\n");
-  #endif
+#if DEBUG_Trigger
+  printf ("StopPatch()\n");
+#endif
 
-    for (inst = (PatchInstrument *)LastNode(&patch->patch_InstrumentList); IsNodeB(&patch->patch_InstrumentList,inst); inst = (PatchInstrument *)PrevNode(inst)) {
-        const Err terrcode = StopPatchInstrument (inst, taglist);
+  for (inst = (PatchInstrument *)LastNode (&patch->patch_InstrumentList);
+       IsNodeB (&patch->patch_InstrumentList, inst);
+       inst = (PatchInstrument *)PrevNode (inst))
+    {
+      const Err terrcode = StopPatchInstrument (inst, taglist);
 
-        if (errcode >= 0 && terrcode < 0) errcode = terrcode;
+      if (errcode >= 0 && terrcode < 0)
+        errcode = terrcode;
     }
 
-  #if DEBUG_Trigger
-    printf ("  err=%ld\n", errcode);
-  #endif
-    return errcode;
+#if DEBUG_Trigger
+  printf ("  err=%ld\n", errcode);
+#endif
+  return errcode;
 }
-
 
 /* -------------------- PatchInstrument */
 
 static Err DestroyPatchInstrument (PatchInstrument *);
 
 /*
-    Create a new PatchInstrument.  Loads an instrument and creates a new instrument symbol.
+    Create a new PatchInstrument.  Loads an instrument and creates a new
+   instrument symbol.
 */
-static PatchInstrument *CreatePatchInstrument (const char *symname, const char *filename, bool triggerable, Err *errbuf)
+static PatchInstrument *
+CreatePatchInstrument (const char *symname, const char *filename,
+                       bool triggerable, Err *errbuf)
 {
-    static const PatchSymbolFunctions PatchInstrumentFunctions = {
-        (PatchSymbolDestructor)DestroyPatchInstrument,
-    };
-    PatchInstrument *inst = NULL;
-    Err errcode = 0;
+  static const PatchSymbolFunctions PatchInstrumentFunctions = {
+    (PatchSymbolDestructor)DestroyPatchInstrument,
+  };
+  PatchInstrument *inst = NULL;
+  Err errcode = 0;
 
-  #if DEBUG_LoadInterpreter
-    printf ("  CreatePatchInstrument() %s = \"%s\" triggerable=%d\n", symname, filename, triggerable);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  CreatePatchInstrument() %s = \"%s\" triggerable=%d\n", symname,
+          filename, triggerable);
+#endif
 
-        /* allocate instrument symbol + file name space */
-    if ((inst = (PatchInstrument *)CreatePatchSymbol (symname, sizeof *inst + strlen(filename) + 1, &PatchInstrumentFunctions, &errcode)) == NULL) goto clean;
-    strcpy (inst->pinst_TemplateName = (char *)(inst + 1), filename);   /* set template file name */
+  /* allocate instrument symbol + file name space */
+  if ((inst = (PatchInstrument *)CreatePatchSymbol (
+           symname, sizeof *inst + strlen (filename) + 1,
+           &PatchInstrumentFunctions, &errcode))
+      == NULL)
+    goto clean;
+  strcpy (inst->pinst_TemplateName = (char *)(inst + 1),
+          filename); /* set template file name */
 
-        /* set attributes */
-    if (triggerable) inst->pinst_AttrFlags |= PIATTRF_Triggerable;
+  /* set attributes */
+  if (triggerable)
+    inst->pinst_AttrFlags |= PIATTRF_Triggerable;
 
-        /* load instrument */
-    {
-            /* !!! this function should take a const filename */
-        const Item result = LoadInstrument ((char *)filename, 0, PINST_Priority);
+  /* load instrument */
+  {
+    /* !!! this function should take a const filename */
+    const Item result = LoadInstrument ((char *)filename, 0, PINST_Priority);
 
-        if (result < 0) {
-            errcode = result;
-            goto clean;
-        }
-        inst->pinst_Instrument = result;
-    }
+    if (result < 0)
+      {
+        errcode = result;
+        goto clean;
+      }
+    inst->pinst_Instrument = result;
+  }
 
-        /* attach knob table */
-    if ((errcode = AttachKnobTable (inst)) < 0) goto clean;
+  /* attach knob table */
+  if ((errcode = AttachKnobTable (inst)) < 0)
+    goto clean;
 
 clean:
-    if (errcode < 0) {
-        DeletePatchSymbol ((PatchSymbol *)inst); inst = NULL;
-        if (errbuf) *errbuf = errcode;
+  if (errcode < 0)
+    {
+      DeletePatchSymbol ((PatchSymbol *)inst);
+      inst = NULL;
+      if (errbuf)
+        *errbuf = errcode;
     }
 
-  #if DEBUG_LoadInterpreter
-    printf ("    inst=$%p err=%ld\n", inst, errcode);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("    inst=$%p err=%ld\n", inst, errcode);
+#endif
 
-    return inst;
+  return inst;
 }
 
 /*
@@ -826,109 +980,129 @@ clean:
     called exactly once for a given PatchInstrument
     not allowed to free PatchInstrument, only its contents.
 */
-static Err DestroyPatchInstrument (PatchInstrument *inst)
+static Err
+DestroyPatchInstrument (PatchInstrument *inst)
 {
-  #if DEBUG_LoadInterpreter
-    printf ("  DestroyPatchInstrument() inst=$%p item=%ld\n", inst, inst->pinst_Instrument);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  DestroyPatchInstrument() inst=$%p item=%ld\n", inst,
+          inst->pinst_Instrument);
+#endif
 
-    DetachKnobTable (inst);
-    UnloadInstrument (inst->pinst_Instrument);
+  DetachKnobTable (inst);
+  UnloadInstrument (inst->pinst_Instrument);
 
-    return 0;
+  return 0;
 }
-
 
 /*
     Trigger PatchInstrument
 
-    @@@ this will eventually turn into a dispatcher function for both PatchInstrument and Patch classes.
+    @@@ this will eventually turn into a dispatcher function for both
+   PatchInstrument and Patch classes.
 */
 
-static Err StartPatchInstrument (PatchInstrument *inst, const TagArg *taglist)
+static Err
+StartPatchInstrument (PatchInstrument *inst, const TagArg *taglist)
 {
-    Err errcode = 0;
+  Err errcode = 0;
 
-  #if DEBUG_Trigger
-    printf ("  StartPatchInstrument() \"%s\" state=$%02x", inst->pinst_Symbol.psym_Node.n_Name, inst->pinst_StateFlags);
-  #endif
+#if DEBUG_Trigger
+  printf ("  StartPatchInstrument() \"%s\" state=$%02x",
+          inst->pinst_Symbol.psym_Node.n_Name, inst->pinst_StateFlags);
+#endif
 
-        /* start instrument if it's triggerable or hasn't been started yet */
-    if (inst->pinst_AttrFlags & PIATTRF_Triggerable || !(inst->pinst_StateFlags & PISTATEF_Started)) {
-        inst->pinst_StateFlags |= PISTATEF_Started;
+  /* start instrument if it's triggerable or hasn't been started yet */
+  if (inst->pinst_AttrFlags & PIATTRF_Triggerable
+      || !(inst->pinst_StateFlags & PISTATEF_Started))
+    {
+      inst->pinst_StateFlags |= PISTATEF_Started;
 
-      #if DEBUG_Trigger
-        printf (" started: state=$%02x", inst->pinst_StateFlags);
-      #endif
+#if DEBUG_Trigger
+      printf (" started: state=$%02x", inst->pinst_StateFlags);
+#endif
 
-        errcode = StartInstrument (inst->pinst_Instrument, (TagArg *)taglist);  /* !!! unnecessary cast */
+      errcode = StartInstrument (inst->pinst_Instrument,
+                                 (TagArg *)taglist); /* !!! unnecessary cast */
     }
 
-  #if DEBUG_Trigger
-    printf ("\n");
-  #endif
+#if DEBUG_Trigger
+  printf ("\n");
+#endif
 
-    return errcode;
+  return errcode;
 }
 
-static Err ReleasePatchInstrument (PatchInstrument *inst, const TagArg *taglist)
+static Err
+ReleasePatchInstrument (PatchInstrument *inst, const TagArg *taglist)
 {
-    Err errcode = 0;
+  Err errcode = 0;
 
-  #if DEBUG_Trigger
-    printf ("  ReleasePatchInstrument() \"%s\" state=$%02x", inst->pinst_Symbol.psym_Node.n_Name, inst->pinst_StateFlags);
-  #endif
+#if DEBUG_Trigger
+  printf ("  ReleasePatchInstrument() \"%s\" state=$%02x",
+          inst->pinst_Symbol.psym_Node.n_Name, inst->pinst_StateFlags);
+#endif
 
-        /* release instrument if triggerable */
-    if (inst->pinst_AttrFlags & PIATTRF_Triggerable) {
-      #if DEBUG_Trigger
-        printf (" released");
-      #endif
-        errcode = ReleaseInstrument (inst->pinst_Instrument, (TagArg *)taglist);    /* !!! unnecessary cast */
+  /* release instrument if triggerable */
+  if (inst->pinst_AttrFlags & PIATTRF_Triggerable)
+    {
+#if DEBUG_Trigger
+      printf (" released");
+#endif
+      errcode
+          = ReleaseInstrument (inst->pinst_Instrument,
+                               (TagArg *)taglist); /* !!! unnecessary cast */
     }
 
-  #if DEBUG_Trigger
-    printf ("\n");
-  #endif
+#if DEBUG_Trigger
+  printf ("\n");
+#endif
 
-    return errcode;
+  return errcode;
 }
 
-static Err StopPatchInstrument (PatchInstrument *inst, const TagArg *taglist)
+static Err
+StopPatchInstrument (PatchInstrument *inst, const TagArg *taglist)
 {
-  #if DEBUG_Trigger
-    printf ("  StopPatchInstrument() \"%s\" state=$%02x", inst->pinst_Symbol.psym_Node.n_Name, inst->pinst_StateFlags);
-  #endif
+#if DEBUG_Trigger
+  printf ("  StopPatchInstrument() \"%s\" state=$%02x",
+          inst->pinst_Symbol.psym_Node.n_Name, inst->pinst_StateFlags);
+#endif
 
-    inst->pinst_StateFlags &= ~PISTATEF_Started;
+  inst->pinst_StateFlags &= ~PISTATEF_Started;
 
-  #if DEBUG_Trigger
-    printf (" stopped: state=$%02x\n", inst->pinst_StateFlags);
-  #endif
+#if DEBUG_Trigger
+  printf (" stopped: state=$%02x\n", inst->pinst_StateFlags);
+#endif
 
-        /* unconditionally stop instrument */
-    return StopInstrument (inst->pinst_Instrument, (TagArg *)taglist);      /* !!! unnecessary cast */
+  /* unconditionally stop instrument */
+  return StopInstrument (inst->pinst_Instrument,
+                         (TagArg *)taglist); /* !!! unnecessary cast */
 }
 
-
-#if 0       /* @@@ these could be used to build patch derived class methods for PatchInstrument, current flag checking code should become common */
+#if 0 /* @@@ these could be used to build patch derived class methods for     \
+         PatchInstrument, current flag checking code should become common */
 
 /*
     Trigger PatchInstrument
 */
 #if DEBUG_Trigger
-  #define _TriggerPatchInstrumentTemplate(_phase) \
-    static Err _phase##PatchInstrument (PatchInstrument *inst, const TagArg *taglist) \
-    { \
-        printf ("  "#_phase"PatchInstrument() \"%s\"\n", inst->pinst_Symbol.psym_Node.n_Name); \
-        return _phase##Instrument (inst->pinst_Instrument, (TagArg *)taglist); /* !!! unnecessary cast */ \
-    }
+#define _TriggerPatchInstrumentTemplate(_phase)                               \
+  static Err _phase##PatchInstrument (PatchInstrument *inst,                  \
+                                      const TagArg *taglist)                  \
+  {                                                                           \
+    printf ("  " #_phase "PatchInstrument() \"%s\"\n",                        \
+            inst->pinst_Symbol.psym_Node.n_Name);                             \
+    return _phase##Instrument (inst->pinst_Instrument,                        \
+                               (TagArg *)taglist); /* !!! unnecessary cast */ \
+  }
 #else
-  #define _TriggerPatchInstrumentTemplate(_phase) \
-    static Err _phase##PatchInstrument (PatchInstrument *inst, const TagArg *taglist) \
-    { \
-        return _phase##Instrument (inst->pinst_Instrument, (TagArg *)taglist); /* !!! unnecessary cast */ \
-    }
+#define _TriggerPatchInstrumentTemplate(_phase)                               \
+  static Err _phase##PatchInstrument (PatchInstrument *inst,                  \
+                                      const TagArg *taglist)                  \
+  {                                                                           \
+    return _phase##Instrument (inst->pinst_Instrument,                        \
+                               (TagArg *)taglist); /* !!! unnecessary cast */ \
+  }
 #endif
 
 _TriggerPatchInstrumentTemplate(Start)      /* StartPatchInstrument() */
@@ -937,8 +1111,7 @@ _TriggerPatchInstrumentTemplate(Stop)       /* StopPatchInstrument() */
 
 #undef _TriggerPatchInstrumentTemplate
 
-#endif      /* @@@ not used - see if above */
-
+#endif /* @@@ not used - see if above */
 
 /* -------------------- KnobTable */
 
@@ -946,123 +1119,144 @@ _TriggerPatchInstrumentTemplate(Stop)       /* StopPatchInstrument() */
 /*
     Attach pinst_KnobTable to inst.
 */
-static Err AttachKnobTable (PatchInstrument *inst)
+static Err
+AttachKnobTable (PatchInstrument *inst)
 {
-    Err errcode = 0;
+  Err errcode = 0;
 
-  #if DEBUG_LoadInterpreter
-    printf ("    AttachKnobTable() inst=$%p", inst);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("    AttachKnobTable() inst=$%p", inst);
+#endif
 
-        /* get nknobs */
+  /* get nknobs */
+  {
+    const int32 result = GetNumKnobs (inst->pinst_Instrument);
+
+    if (result < 0)
+      {
+        errcode = result;
+        goto clean;
+      }
+    inst->pinst_NKnobs = result;
+  }
+
+  /* create table if there are some knobs */
+  if (inst->pinst_NKnobs)
     {
-        const int32 result = GetNumKnobs (inst->pinst_Instrument);
 
-        if (result < 0) {
-            errcode = result;
-            goto clean;
-        }
-        inst->pinst_NKnobs = result;
-    }
-
-        /* create table if there are some knobs */
-    if (inst->pinst_NKnobs) {
-
-            /* alloc/clear table */
-        if ((inst->pinst_KnobTable = (PatchKnob *)myalloc (inst->pinst_NKnobs * sizeof (PatchKnob))) == NULL) {
-            errcode = -1;           /* !!! real error code */
-            goto clean;
-        }
-
-            /* fill out table */
+      /* alloc/clear table */
+      if ((inst->pinst_KnobTable
+           = (PatchKnob *)myalloc (inst->pinst_NKnobs * sizeof (PatchKnob)))
+          == NULL)
         {
-            PatchKnob *knob = inst->pinst_KnobTable;
-            int32 i=0;
-
-            for (; i<inst->pinst_NKnobs; knob++, i++) {
-
-                    /* get knob name */
-                if ((knob->pknob_Name = GetKnobName (inst->pinst_Instrument, i)) == NULL) {
-                    errcode = -1;           /* !!! real error code */
-                    goto clean;
-                }
-
-                    /* grab knob */
-                if ((errcode = GrabPatchKnob (inst->pinst_Instrument, knob)) < 0) goto clean;
-
-            }
+          errcode = -1; /* !!! real error code */
+          goto clean;
         }
+
+      /* fill out table */
+      {
+        PatchKnob *knob = inst->pinst_KnobTable;
+        int32 i = 0;
+
+        for (; i < inst->pinst_NKnobs; knob++, i++)
+          {
+
+            /* get knob name */
+            if ((knob->pknob_Name = GetKnobName (inst->pinst_Instrument, i))
+                == NULL)
+              {
+                errcode = -1; /* !!! real error code */
+                goto clean;
+              }
+
+            /* grab knob */
+            if ((errcode = GrabPatchKnob (inst->pinst_Instrument, knob)) < 0)
+              goto clean;
+          }
+      }
     }
 
 clean:
-  #if DEBUG_LoadInterpreter
-    printf (" tbl=$%p,%ld err=%ld\n", inst->pinst_KnobTable, inst->pinst_NKnobs, errcode);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf (" tbl=$%p,%ld err=%ld\n", inst->pinst_KnobTable, inst->pinst_NKnobs,
+          errcode);
+#endif
 
-    if (errcode < 0) {
-        DetachKnobTable (inst);
+  if (errcode < 0)
+    {
+      DetachKnobTable (inst);
     }
 
-    return errcode;
+  return errcode;
 }
 
 /*
-    Detach pinst_KnobTable attached by AttachKnobTable().  inst must not be NULL.
+    Detach pinst_KnobTable attached by AttachKnobTable().  inst must not be
+   NULL.
 */
-static Err DetachKnobTable (PatchInstrument *inst)
+static Err
+DetachKnobTable (PatchInstrument *inst)
 {
-  #if DEBUG_LoadInterpreter
-    printf ("    DetachKnobTable() inst=$%p tbl=$%p,%ld\n", inst, inst->pinst_KnobTable, inst->pinst_NKnobs);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("    DetachKnobTable() inst=$%p tbl=$%p,%ld\n", inst,
+          inst->pinst_KnobTable, inst->pinst_NKnobs);
+#endif
 
-        /* free KnobTable if it was attached */
-    if (inst->pinst_KnobTable) {
-        PatchKnob *knob = inst->pinst_KnobTable;
-        int32 nknobs = inst->pinst_NKnobs;
+  /* free KnobTable if it was attached */
+  if (inst->pinst_KnobTable)
+    {
+      PatchKnob *knob = inst->pinst_KnobTable;
+      int32 nknobs = inst->pinst_NKnobs;
 
-        for (; nknobs--; knob++) ReleasePatchKnob (knob);
+      for (; nknobs--; knob++)
+        ReleasePatchKnob (knob);
 
-        myfree (inst->pinst_KnobTable);
+      myfree (inst->pinst_KnobTable);
     }
 
-        /* clear pointers since Attach set them */
-    inst->pinst_KnobTable = NULL;
-    inst->pinst_NKnobs    = 0;
+  /* clear pointers since Attach set them */
+  inst->pinst_KnobTable = NULL;
+  inst->pinst_NKnobs = 0;
 
-    return 0;
+  return 0;
 }
 
 /*
     Find a PatchKnob in an instruments KnobTable by name (case insensitive).
 */
-static PatchKnob *FindPatchKnob (const PatchInstrument *inst, const char *knobname)
+static PatchKnob *
+FindPatchKnob (const PatchInstrument *inst, const char *knobname)
 {
-    PatchKnob *knob = inst->pinst_KnobTable;
-    int32 nknobs    = inst->pinst_NKnobs;
+  PatchKnob *knob = inst->pinst_KnobTable;
+  int32 nknobs = inst->pinst_NKnobs;
 
-    for (; nknobs--; knob++) {
-        if (!strcasecmp (knob->pknob_Name, knobname)) return knob;
+  for (; nknobs--; knob++)
+    {
+      if (!strcasecmp (knob->pknob_Name, knobname))
+        return knob;
     }
 
-    return NULL;
+  return NULL;
 }
 
 /*
     Count # of grabbed knobs
 */
-int32 GetNGrabbedPatchKnobs (const PatchInstrument *inst)
+int32
+GetNGrabbedPatchKnobs (const PatchInstrument *inst)
 {
-    PatchKnob *knob = inst->pinst_KnobTable;
-    int32 nknobs    = inst->pinst_NKnobs;
-    int32 ngrabbed  = 0;
+  PatchKnob *knob = inst->pinst_KnobTable;
+  int32 nknobs = inst->pinst_NKnobs;
+  int32 ngrabbed = 0;
 
-    for (; nknobs--; knob++) {
-        if (IsPatchKnobGrabbed(knob)) ngrabbed++;
+  for (; nknobs--; knob++)
+    {
+      if (IsPatchKnobGrabbed (knob))
+        ngrabbed++;
     }
 
-    return ngrabbed;
+  return ngrabbed;
 }
-
 
 /* -------------------- PatchKnob management */
 
@@ -1071,35 +1265,40 @@ int32 GetNGrabbedPatchKnobs (const PatchInstrument *inst)
 
     Handles condition of knob already grabbed, but these functions do not nest.
 */
-static Err GrabPatchKnob (Item instrument, PatchKnob *knob)
+static Err
+GrabPatchKnob (Item instrument, PatchKnob *knob)
 {
-    Err errcode = 0;
+  Err errcode = 0;
 
-    if (!IsPatchKnobGrabbed (knob)) {
-        const Item result = GrabKnob (instrument, knob->pknob_Name);
+  if (!IsPatchKnobGrabbed (knob))
+    {
+      const Item result = GrabKnob (instrument, knob->pknob_Name);
 
-        if (result < 0) errcode          = result;
-        else            knob->pknob_Knob = result;
+      if (result < 0)
+        errcode = result;
+      else
+        knob->pknob_Knob = result;
     }
 
-    return errcode;
+  return errcode;
 }
 
 /*
     Release a PatchKnob.  Return 0 on success, error code on failure.
 */
-static Err ReleasePatchKnob (PatchKnob *knob)
+static Err
+ReleasePatchKnob (PatchKnob *knob)
 {
-    Err errcode = 0;
+  Err errcode = 0;
 
-    if (IsPatchKnobGrabbed (knob)) {
-        errcode = ReleaseKnob (knob->pknob_Knob);
-        knob->pknob_Knob = 0;
+  if (IsPatchKnobGrabbed (knob))
+    {
+      errcode = ReleaseKnob (knob->pknob_Knob);
+      knob->pknob_Knob = 0;
     }
 
-    return errcode;
+  return errcode;
 }
-
 
 /* -------------------- PatchSample */
 
@@ -1109,45 +1308,55 @@ static Err DestroyPatchDelayLine (PatchSample *);
 /*
     Create a new PatchSample.  Loads a sample and creates a new sample symbol.
 */
-static PatchSample *CreatePatchSample (const char *symname, const char *filename, Err *errbuf)
+static PatchSample *
+CreatePatchSample (const char *symname, const char *filename, Err *errbuf)
 {
-    static const PatchSymbolFunctions PatchSampleFunctions = {
-        (PatchSymbolDestructor)DestroyPatchSample,
-    };
-    PatchSample *samp = NULL;
-    Err errcode = 0;
+  static const PatchSymbolFunctions PatchSampleFunctions = {
+    (PatchSymbolDestructor)DestroyPatchSample,
+  };
+  PatchSample *samp = NULL;
+  Err errcode = 0;
 
-  #if DEBUG_LoadInterpreter
-    printf ("  CreatePatchSample() %s = \"%s\"\n", symname, filename);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  CreatePatchSample() %s = \"%s\"\n", symname, filename);
+#endif
 
-        /* allocate sample symbol + file name space */
-    if ((samp = (PatchSample *)CreatePatchSymbol (symname, sizeof *samp + strlen(filename) + 1, &PatchSampleFunctions, &errcode)) == NULL) goto clean;
-    strcpy (samp->psamp_FileName = (char *)(samp + 1), filename);       /* set file name */
+  /* allocate sample symbol + file name space */
+  if ((samp = (PatchSample *)CreatePatchSymbol (
+           symname, sizeof *samp + strlen (filename) + 1,
+           &PatchSampleFunctions, &errcode))
+      == NULL)
+    goto clean;
+  strcpy (samp->psamp_FileName = (char *)(samp + 1),
+          filename); /* set file name */
 
-        /* load sample */
-    {
-            /* !!! this function should take a const filename */
-        const Item result = LoadSample ((char *)filename);
+  /* load sample */
+  {
+    /* !!! this function should take a const filename */
+    const Item result = LoadSample ((char *)filename);
 
-        if (result < 0) {
-            errcode = result;
-            goto clean;
-        }
-        samp->psamp_Sample = result;
-    }
+    if (result < 0)
+      {
+        errcode = result;
+        goto clean;
+      }
+    samp->psamp_Sample = result;
+  }
 
 clean:
-    if (errcode < 0) {
-        DeletePatchSymbol ((PatchSymbol *)samp); samp = NULL;
-        if (errbuf) *errbuf = errcode;
+  if (errcode < 0)
+    {
+      DeletePatchSymbol ((PatchSymbol *)samp);
+      samp = NULL;
+      if (errbuf)
+        *errbuf = errcode;
     }
 
-  #if DEBUG_LoadInterpreter
-    printf ("    samp=$%p err=%ld\n", samp, errcode);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("    samp=$%p err=%ld\n", samp, errcode);
+#endif
 
-    return samp;
+  return samp;
 }
 
 /*
@@ -1158,58 +1367,70 @@ clean:
     called exactly once for a given PatchSample
     not allowed to free PatchSample, only its contents.
 */
-static Err DestroyPatchSample (PatchSample *samp)
+static Err
+DestroyPatchSample (PatchSample *samp)
 {
-  #if DEBUG_LoadInterpreter
-    printf ("  DestroyPatchSample() samp=$%p item=%ld\n", samp, samp->psamp_Sample);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  DestroyPatchSample() samp=$%p item=%ld\n", samp,
+          samp->psamp_Sample);
+#endif
 
-    UnloadSample (samp->psamp_Sample);
+  UnloadSample (samp->psamp_Sample);
 
-    return 0;
+  return 0;
 }
 
-
 /*
-    Create a new DelayLine PatchSample.  Creates a DelayLine and a new sample symbol.
+    Create a new DelayLine PatchSample.  Creates a DelayLine and a new sample
+   symbol.
 */
-static PatchSample *CreatePatchDelayLine (const char *symname, uint32 nbytes, uint32 nchannels, bool loop, Err *errbuf)
+static PatchSample *
+CreatePatchDelayLine (const char *symname, uint32 nbytes, uint32 nchannels,
+                      bool loop, Err *errbuf)
 {
-    static const PatchSymbolFunctions PatchDelayLineFunctions = {
-        (PatchSymbolDestructor)DestroyPatchDelayLine,
-    };
-    PatchSample *samp = NULL;
-    Err errcode = 0;
+  static const PatchSymbolFunctions PatchDelayLineFunctions = {
+    (PatchSymbolDestructor)DestroyPatchDelayLine,
+  };
+  PatchSample *samp = NULL;
+  Err errcode = 0;
 
-  #if DEBUG_LoadInterpreter
-    printf ("  CreatePatchDelayLine() %s: nbytes=%lu nchannels=%lu loop=%d\n", symname, nbytes, nchannels, loop);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  CreatePatchDelayLine() %s: nbytes=%lu nchannels=%lu loop=%d\n",
+          symname, nbytes, nchannels, loop);
+#endif
 
-        /* allocate sample symbol */
-    if ((samp = (PatchSample *)CreatePatchSymbol (symname, sizeof *samp, &PatchDelayLineFunctions, &errcode)) == NULL) goto clean;
+  /* allocate sample symbol */
+  if ((samp = (PatchSample *)CreatePatchSymbol (
+           symname, sizeof *samp, &PatchDelayLineFunctions, &errcode))
+      == NULL)
+    goto clean;
 
-        /* create delay line */
-    {
-        const Item result = CreateDelayLine (nbytes, nchannels, loop);
+  /* create delay line */
+  {
+    const Item result = CreateDelayLine (nbytes, nchannels, loop);
 
-        if (result < 0) {
-            errcode = result;
-            goto clean;
-        }
-        samp->psamp_Sample = result;
-    }
+    if (result < 0)
+      {
+        errcode = result;
+        goto clean;
+      }
+    samp->psamp_Sample = result;
+  }
 
 clean:
-    if (errcode < 0) {
-        DeletePatchSymbol ((PatchSymbol *)samp); samp = NULL;
-        if (errbuf) *errbuf = errcode;
+  if (errcode < 0)
+    {
+      DeletePatchSymbol ((PatchSymbol *)samp);
+      samp = NULL;
+      if (errbuf)
+        *errbuf = errcode;
     }
 
-  #if DEBUG_LoadInterpreter
-    printf ("    samp=$%p err=%ld\n", samp, errcode);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("    samp=$%p err=%ld\n", samp, errcode);
+#endif
 
-    return samp;
+  return samp;
 }
 
 /*
@@ -1220,74 +1441,88 @@ clean:
     called exactly once for a given PatchSample
     not allowed to free PatchSample, only its contents.
 */
-static Err DestroyPatchDelayLine (PatchSample *samp)
+static Err
+DestroyPatchDelayLine (PatchSample *samp)
 {
-  #if DEBUG_LoadInterpreter
-    printf ("  DestroyPatchDelayLine() samp=$%p item=%ld\n", samp, samp->psamp_Sample);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  DestroyPatchDelayLine() samp=$%p item=%ld\n", samp,
+          samp->psamp_Sample);
+#endif
 
-    DeleteDelayLine (samp->psamp_Sample);
+  DeleteDelayLine (samp->psamp_Sample);
 
-    return 0;
+  return 0;
 }
-
 
 /* -------------------- PatchSampleAttachment */
 
 static Err DestroyPatchSampleAttachment (PatchSampleAttachment *);
 
 /*
-    Create a new PatchSampleAttachment.  Attaches a sample to an instrument and creates a new sample attachment symbol.
+    Create a new PatchSampleAttachment.  Attaches a sample to an instrument and
+   creates a new sample attachment symbol.
 */
-static PatchSampleAttachment *CreatePatchSampleAttachment (const char *symname, const PatchInstrument *inst, const PatchSample *samp, const char *fifoname, uint32 startframe, Err *errbuf)
+static PatchSampleAttachment *
+CreatePatchSampleAttachment (const char *symname, const PatchInstrument *inst,
+                             const PatchSample *samp, const char *fifoname,
+                             uint32 startframe, Err *errbuf)
 {
-    static const PatchSymbolFunctions PatchSampleAttachmentFunctions = {
-        (PatchSymbolDestructor)DestroyPatchSampleAttachment,
-    };
-    PatchSampleAttachment *att = NULL;
-    Err errcode = 0;
+  static const PatchSymbolFunctions PatchSampleAttachmentFunctions = {
+    (PatchSymbolDestructor)DestroyPatchSampleAttachment,
+  };
+  PatchSampleAttachment *att = NULL;
+  Err errcode = 0;
 
-  #if DEBUG_LoadInterpreter
-    printf ("  CreatePatchSampleAttachment() \"%s\" = %s <-> %s.%s start=%lu\n", symname, samp->psamp_Symbol.psym_Node.n_Name, inst->pinst_Symbol.psym_Node.n_Name, fifoname ? fifoname : "(default)", startframe);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  CreatePatchSampleAttachment() \"%s\" = %s <-> %s.%s start=%lu\n",
+          symname, samp->psamp_Symbol.psym_Node.n_Name,
+          inst->pinst_Symbol.psym_Node.n_Name,
+          fifoname ? fifoname : "(default)", startframe);
+#endif
 
-        /* allocate attachment symbol */
-    if ((att = (PatchSampleAttachment *)CreatePatchSymbol (symname, sizeof *att, &PatchSampleAttachmentFunctions, &errcode)) == NULL) goto clean;
+  /* allocate attachment symbol */
+  if ((att = (PatchSampleAttachment *)CreatePatchSymbol (
+           symname, sizeof *att, &PatchSampleAttachmentFunctions, &errcode))
+      == NULL)
+    goto clean;
 
-        /* attach sample */
-    {
-            /* !!! this function should take a const fifoname */
-        const Item result = AttachSample (inst->pinst_Instrument, samp->psamp_Sample, (char *)fifoname);
+  /* attach sample */
+  {
+    /* !!! this function should take a const fifoname */
+    const Item result = AttachSample (inst->pinst_Instrument,
+                                      samp->psamp_Sample, (char *)fifoname);
 
-        if (result < 0) {
-            errcode = result;
-            goto clean;
-        }
-        att->psatt_Attachment = result;
-    }
+    if (result < 0)
+      {
+        errcode = result;
+        goto clean;
+      }
+    att->psatt_Attachment = result;
+  }
 
-        /* set attachment start frame */
-    {
-        TagArg tags[] = {
-            { AF_TAG_START_AT },
-            TAG_END
-        };
-        tags[0].ta_Arg = (void *)startframe;
+  /* set attachment start frame */
+  {
+    TagArg tags[] = { { AF_TAG_START_AT }, TAG_END };
+    tags[0].ta_Arg = (void *)startframe;
 
-        if ( (errcode = SetAudioItemInfo (att->psatt_Attachment, tags)) < 0 ) goto clean;
-    }
+    if ((errcode = SetAudioItemInfo (att->psatt_Attachment, tags)) < 0)
+      goto clean;
+  }
 
 clean:
-    if (errcode < 0) {
-        DeletePatchSymbol ((PatchSymbol *)att); att = NULL;
-        if (errbuf) *errbuf = errcode;
+  if (errcode < 0)
+    {
+      DeletePatchSymbol ((PatchSymbol *)att);
+      att = NULL;
+      if (errbuf)
+        *errbuf = errcode;
     }
 
-  #if DEBUG_LoadInterpreter
-    printf ("    att=$%p err=%ld\n", att, errcode);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("    att=$%p err=%ld\n", att, errcode);
+#endif
 
-    return att;
+  return att;
 }
 
 /*
@@ -1298,17 +1533,18 @@ clean:
     called exactly once for a given PatchSampleAttachment
     not allowed to free PatchSampleAttachment, only its contents.
 */
-static Err DestroyPatchSampleAttachment (PatchSampleAttachment *att)
+static Err
+DestroyPatchSampleAttachment (PatchSampleAttachment *att)
 {
-  #if DEBUG_LoadInterpreter
-    printf ("  DestroyPatchSampleAttachment() att=$%p item=%ld\n", att, att->psatt_Attachment);
-  #endif
+#if DEBUG_LoadInterpreter
+  printf ("  DestroyPatchSampleAttachment() att=$%p item=%ld\n", att,
+          att->psatt_Attachment);
+#endif
 
-    DetachSample (att->psatt_Attachment);
+  DetachSample (att->psatt_Attachment);
 
-    return 0;
+  return 0;
 }
-
 
 /* -------------------- PatchSymbol List */
 
@@ -1317,26 +1553,29 @@ static Err DestroyPatchSampleAttachment (PatchSampleAttachment *att)
 
     Returns an error if newsym name isn't unique in symlist.
 */
-static Err AddPatchSymbol (List *symlist, PatchSymbol *newsym)
+static Err
+AddPatchSymbol (List *symlist, PatchSymbol *newsym)
 {
-    const char *symname = newsym->psym_Node.n_Name;
-    Err errcode = 0;
+  const char *symname = newsym->psym_Node.n_Name;
+  Err errcode = 0;
 
-  #if DEBUG_Symbol
-    printf ("  AddPatchSymbol() list: $%p %s  sym: $%p %s\n", symlist, symlist->l.n_Name, newsym, symname);
-  #endif
+#if DEBUG_Symbol
+  printf ("  AddPatchSymbol() list: $%p %s  sym: $%p %s\n", symlist,
+          symlist->l.n_Name, newsym, symname);
+#endif
 
-        /* trap symbol name already in use */
-    if (FindPatchSymbol (symlist, symname)) {
-        errcode = -1;   /* !!! real error code */
-        goto clean;
+  /* trap symbol name already in use */
+  if (FindPatchSymbol (symlist, symname))
+    {
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
 
-        /* add symbol to list */
-    AddTail (symlist, (Node *)newsym);
+  /* add symbol to list */
+  AddTail (symlist, (Node *)newsym);
 
 clean:
-    return errcode;
+  return errcode;
 }
 
 /*
@@ -1346,19 +1585,21 @@ clean:
     Empties list, but doesn't actually free the list structure.
     List is a legal empty list when complete.
 */
-static Err DeletePatchSymbolList (List *symlist)
+static Err
+DeletePatchSymbolList (List *symlist)
 {
-    PatchSymbol *symbol;
+  PatchSymbol *symbol;
 
-  #if DEBUG_Symbol
-    printf ("  DeletePatchSymbolList() list: $%p %s\n", symlist, symlist->l.n_Name);
-  #endif
+#if DEBUG_Symbol
+  printf ("  DeletePatchSymbolList() list: $%p %s\n", symlist,
+          symlist->l.n_Name);
+#endif
 
-    while ((symbol = (PatchSymbol *)RemTail (symlist)) != NULL) DeletePatchSymbol (symbol);
+  while ((symbol = (PatchSymbol *)RemTail (symlist)) != NULL)
+    DeletePatchSymbol (symbol);
 
-    return 0;
+  return 0;
 }
-
 
 /* -------------------- PatchSymbol */
 
@@ -1367,106 +1608,124 @@ static Err DeletePatchSymbolList (List *symlist)
 
     Allocate enough extra space after PatchSymbol to hold symname and copy it.
 */
-static PatchSymbol *CreatePatchSymbol (const char *symname, size_t usersize, const PatchSymbolFunctions *functions, Err *errbuf)
+static PatchSymbol *
+CreatePatchSymbol (const char *symname, size_t usersize,
+                   const PatchSymbolFunctions *functions, Err *errbuf)
 {
-    const size_t allocsize = usersize + strlen(symname) + 1;
-    PatchSymbol *symbol = NULL;
-    Err errcode = 0;
+  const size_t allocsize = usersize + strlen (symname) + 1;
+  PatchSymbol *symbol = NULL;
+  Err errcode = 0;
 
-  #if DEBUG_Symbol
-    printf ("  CreatePatchSymbol() name=%s size=%ld,%ld functions=$%p\n", symname, usersize, allocsize, functions);
-  #endif
+#if DEBUG_Symbol
+  printf ("  CreatePatchSymbol() name=%s size=%ld,%ld functions=$%p\n",
+          symname, usersize, allocsize, functions);
+#endif
 
-        /* allocate requested size + space for symbol name */
-    if ((symbol = (PatchSymbol *)myalloc (allocsize)) == NULL) {
-        errcode = -1;           /* !!! real error code */
-        goto clean;
+  /* allocate requested size + space for symbol name */
+  if ((symbol = (PatchSymbol *)myalloc (allocsize)) == NULL)
+    {
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
 
-        /* init fields */
-    strcpy (symbol->psym_Node.n_Name = (char *)symbol + usersize, symname);
-    symbol->psym_Node.n_Size = allocsize;
-    symbol->psym_Functions = functions;
+  /* init fields */
+  strcpy (symbol->psym_Node.n_Name = (char *)symbol + usersize, symname);
+  symbol->psym_Node.n_Size = allocsize;
+  symbol->psym_Functions = functions;
 
 clean:
-    if (errcode < 0) {
-        CloseRes (DeletePatchSymbol, symbol);
-        if (errbuf) *errbuf = errcode;
+  if (errcode < 0)
+    {
+      CloseRes (DeletePatchSymbol, symbol);
+      if (errbuf)
+        *errbuf = errcode;
     }
 
-  #if DEBUG_Symbol
-    printf ("    symbol=$%p err=%ld\n", symbol, errcode);
-  #endif
+#if DEBUG_Symbol
+  printf ("    symbol=$%p err=%ld\n", symbol, errcode);
+#endif
 
-    return symbol;
+  return symbol;
 }
 
 /*
     Delete PatchSymbol created by CreatePatchSymbol().
 
-    symbol can be NULL or client data (after PatchSymbol structure) can be partially initialized.
-    Dispatches destructor for symbol when symbol is non-NULL.
+    symbol can be NULL or client data (after PatchSymbol structure) can be
+   partially initialized. Dispatches destructor for symbol when symbol is
+   non-NULL.
 */
-static Err DeletePatchSymbol (PatchSymbol *symbol)
+static Err
+DeletePatchSymbol (PatchSymbol *symbol)
 {
-  #if DEBUG_Symbol
-    printf ("  DeletePatchSymbol() symbol=$%p name=%s functions=$%p\n", symbol, symbol ? symbol->psym_Node.n_Name : "<null>", symbol ? symbol->psym_Functions : NULL);
-  #endif
+#if DEBUG_Symbol
+  printf ("  DeletePatchSymbol() symbol=$%p name=%s functions=$%p\n", symbol,
+          symbol ? symbol->psym_Node.n_Name : "<null>",
+          symbol ? symbol->psym_Functions : NULL);
+#endif
 
-    if (symbol) {
-        symbol->psym_Functions->psymfn_Destructor (symbol);
-        myfree (symbol);
+  if (symbol)
+    {
+      symbol->psym_Functions->psymfn_Destructor (symbol);
+      myfree (symbol);
     }
 
-    return 0;
+  return 0;
 }
-
-
 
 /* -------------------- ParserFile */
 
 /*
-    Open a ParserFile.  filename must remain valid for life of returned ParserFile.
+    Open a ParserFile.  filename must remain valid for life of returned
+   ParserFile.
 */
-static ParserFile *OpenParserFile (const char *filename, Err *errbuf)
+static ParserFile *
+OpenParserFile (const char *filename, Err *errbuf)
 {
-    ParserFile *parserfile = NULL;
-    Err errcode = 0;
+  ParserFile *parserfile = NULL;
+  Err errcode = 0;
 
-        /* alloc/clear/init ParserFile */
-    if ((parserfile = (ParserFile *)myalloc (sizeof *parserfile)) == NULL) {
-        errcode = -1;       /* !!! real error code */
-        goto clean;
+  /* alloc/clear/init ParserFile */
+  if ((parserfile = (ParserFile *)myalloc (sizeof *parserfile)) == NULL)
+    {
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
-    parserfile->pfile_FileName = filename;
+  parserfile->pfile_FileName = filename;
 
-        /* open file */
-        /* !!! this function should take a const char * */
-    if ((parserfile->pfile_Stream = OpenDiskStream ((char *)filename, 0)) == NULL) {
-        errcode = -1;       /* !!! real error code */
-        goto clean;
+  /* open file */
+  /* !!! this function should take a const char * */
+  if ((parserfile->pfile_Stream = OpenDiskStream ((char *)filename, 0))
+      == NULL)
+    {
+      errcode = -1; /* !!! real error code */
+      goto clean;
     }
 
 clean:
-    if (errcode < 0) {
-        CloseRes (CloseParserFile, parserfile);
-        if (errbuf) *errbuf = errcode;
+  if (errcode < 0)
+    {
+      CloseRes (CloseParserFile, parserfile);
+      if (errbuf)
+        *errbuf = errcode;
     }
 
-    return parserfile;
+  return parserfile;
 }
 
 /*
     Close ParserFile opened by OpenParserFile().
 */
-static Err CloseParserFile (ParserFile *parserfile)
+static Err
+CloseParserFile (ParserFile *parserfile)
 {
-    if (parserfile) {
-        CloseRes (CloseDiskStream, parserfile->pfile_Stream);
-        myfree (parserfile);
+  if (parserfile)
+    {
+      CloseRes (CloseDiskStream, parserfile->pfile_Stream);
+      myfree (parserfile);
     }
 
-    return 0;
+  return 0;
 }
 
 /*
@@ -1474,36 +1733,37 @@ static Err CloseParserFile (ParserFile *parserfile)
     Return # of characters read into buffer or error code.
     Increment LineNum if successful.
 */
-static int32 GetParserFileLine (ParserFile *parserfile, char *buf, int32 bufsize)
+static int32
+GetParserFileLine (ParserFile *parserfile, char *buf, int32 bufsize)
 {
-    int32 result;
+  int32 result;
 
-    if ((result = GetStreamLine (parserfile->pfile_Stream, buf, bufsize)) > 0) {
-        parserfile->pfile_LineNum++;
+  if ((result = GetStreamLine (parserfile->pfile_Stream, buf, bufsize)) > 0)
+    {
+      parserfile->pfile_LineNum++;
     }
 
-    return result;
+  return result;
 }
-
 
 /*
     Print a parser error message
 */
-static void PrintParserFileError (const ParserFile *file, const char *errorfmt, ...)
+static void
+PrintParserFileError (const ParserFile *file, const char *errorfmt, ...)
 {
-    printf ("\"%s\" line %ld: ", file->pfile_FileName, file->pfile_LineNum);
+  printf ("\"%s\" line %ld: ", file->pfile_FileName, file->pfile_LineNum);
 
-    {
-        va_list vargs;
+  {
+    va_list vargs;
 
-        va_start (vargs, errorfmt);
-        vprintf (errorfmt, vargs);
-        va_end (vargs);
-    }
+    va_start (vargs, errorfmt);
+    vprintf (errorfmt, vargs);
+    va_end (vargs);
+  }
 
-    printf ("\n");
+  printf ("\n");
 }
-
 
 /* -------------------- stream support */
 
@@ -1563,23 +1823,29 @@ static void PrintParserFileError (const ParserFile *file, const char *errorfmt, 
         LoadPatch()
 */
 
-static int32 GetStreamLine (Stream *stream, char *buf, int32 bufsize)
+static int32
+GetStreamLine (Stream *stream, char *buf, int32 bufsize)
 {
-    char *s = buf;
-    int32 n = bufsize-1;        /* bufsize-1 to leave room for null termination */
-    int32 actual;
+  char *s = buf;
+  int32 n = bufsize - 1; /* bufsize-1 to leave room for null termination */
+  int32 actual;
 
-    while (n--) {
-        if ((actual = ReadDiskStream (stream, s, 1)) < 0) return actual;    /* read character to buf, return on error */
-        if (!actual) break;                                                 /* simply leave loop on EOF */
-        if (*s == '\r') *s = '\n';                                          /* !!! hack to convert mac EOL to somethine sensible.  causes trouble for pc EOL's though. */
-        if (*s++ == '\n') break;                                            /* increment buffer pointer, leave loop if new line */
+  while (n--)
+    {
+      if ((actual = ReadDiskStream (stream, s, 1)) < 0)
+        return actual; /* read character to buf, return on error */
+      if (!actual)
+        break; /* simply leave loop on EOF */
+      if (*s == '\r')
+        *s = '\n'; /* !!! hack to convert mac EOL to somethine sensible. causes
+                      trouble for pc EOL's though. */
+      if (*s++ == '\n')
+        break; /* increment buffer pointer, leave loop if new line */
     }
-    *s = '\0';                  /* terminate string */
+  *s = '\0'; /* terminate string */
 
-    return s - buf;             /* return string length */
+  return s - buf; /* return string length */
 }
-
 
 /* -------------------- command line arg processing */
 
@@ -1594,27 +1860,30 @@ static char *breakword (char *s, char **newp);
 
     Returns filled out argv[] array and argc as function return value.
 */
-static int ParseLine (char *s, char *argv[], int argvnelts)
+static int
+ParseLine (char *s, char *argv[], int argvnelts)
 {
-    int argc;
+  int argc;
 
-  #if DEBUG_LoadParser
-    printf ("    ParseLine() \"%s\" len=%ld\n", s, strlen(s));
-  #endif
+#if DEBUG_LoadParser
+  printf ("    ParseLine() \"%s\" len=%ld\n", s, strlen (s));
+#endif
 
-    argc = getargs (trimline(s), argv, argvnelts);
+  argc = getargs (trimline (s), argv, argvnelts);
 
-  #if DEBUG_LoadParser
-    {
-        int i;
+#if DEBUG_LoadParser
+  {
+    int i;
 
-        for (i=0; i<argc; i++) {
-            printf ("      %d: $%p \"%s\" %ld\n", i, argv[i], argv[i], strlen(argv[i]));
-        }
-    }
-  #endif
+    for (i = 0; i < argc; i++)
+      {
+        printf ("      %d: $%p \"%s\" %ld\n", i, argv[i], argv[i],
+                strlen (argv[i]));
+      }
+  }
+#endif
 
-    return argc;
+  return argc;
 }
 
 /*
@@ -1622,35 +1891,37 @@ static int ParseLine (char *s, char *argv[], int argvnelts)
 
     Breaks original string bufffer.
 */
-static int getargs (char *s, char *argv[], int argvnelts)
+static int
+getargs (char *s, char *argv[], int argvnelts)
 {
-    char **targv = argv;
-    int n = argvnelts-1;        /* leave room for NULL termination of array */
+  char **targv = argv;
+  int n = argvnelts - 1; /* leave room for NULL termination of array */
 
-        /* loop until space exhausted or no more words in s */
-    while (n-- && (*targv = breakword (s, &s)) != NULL) targv++;
+  /* loop until space exhausted or no more words in s */
+  while (n-- && (*targv = breakword (s, &s)) != NULL)
+    targv++;
 
-        /* NULL terminate array */
-    *targv = NULL;
+  /* NULL terminate array */
+  *targv = NULL;
 
-    return targv - argv;
+  return targv - argv;
 }
-
 
 /*
     Break string at first instance of new line, pound sign, or semicolon
     by writing '\0' there.  Returns original buffer pointer.
 */
-static char *trimline (char *buf)
+static char *
+trimline (char *buf)
 {
-    char *s;
+  char *s;
 
-        /* replace first occurance of EOL or comment char w/ '\0' */
-    if ((s = strpbrk(buf, ";#\n")) != NULL) *s = '\0';
+  /* replace first occurance of EOL or comment char w/ '\0' */
+  if ((s = strpbrk (buf, ";#\n")) != NULL)
+    *s = '\0';
 
-    return buf;
+  return buf;
 }
-
 
 /*
     SYNOPSIS
@@ -1678,45 +1949,48 @@ static char *trimline (char *buf)
             location would then have to occur here instead of separate)
 */
 
-static char *breakword (char *s, char **newp)
+static char *
+breakword (char *s, char **newp)
 {
-    char *wordp;
+  char *wordp;
 
-        /* skip leading white space */
-    s = skipspace(s);
+  /* skip leading white space */
+  s = skipspace (s);
 
-        /* get word pointer, if there is one */
-    wordp = *s ? s : NULL;
+  /* get word pointer, if there is one */
+  wordp = *s ? s : NULL;
 
-        /* locate end of word (does nothing if already at end of string) */
-    s = skipnspace(s);
+  /* locate end of word (does nothing if already at end of string) */
+  s = skipnspace (s);
 
-        /* if not at end of string, break string and get pointer to next character */
-    if (*s) *s++ = '\0';
+  /* if not at end of string, break string and get pointer to next character */
+  if (*s)
+    *s++ = '\0';
 
-        /* set pointer to current string location for next call to breakword(). */
-    *newp = s;
+  /* set pointer to current string location for next call to breakword(). */
+  *newp = s;
 
-    return wordp;
+  return wordp;
 }
-
 
 /* -------------------- utility */
 
 /*
     Locate a named node w/ case insensitivity
 */
-static Node *FindNamedNodeNoCase (const List *list, const char *name)
+static Node *
+FindNamedNodeNoCase (const List *list, const char *name)
 {
-    Node *node;
+  Node *node;
 
-    for (node = FirstNode(list); IsNode(list,node); node = NextNode(node)) {
-        if (!strcasecmp (node->n_Name, name)) return node;
+  for (node = FirstNode (list); IsNode (list, node); node = NextNode (node))
+    {
+      if (!strcasecmp (node->n_Name, name))
+        return node;
     }
 
-    return NULL;
+  return NULL;
 }
-
 
 /* -------------------- string.h helpers and emulation (!!! publish) */
 
@@ -1724,27 +1998,34 @@ static Node *FindNamedNodeNoCase (const List *list, const char *name)
     Return pointer to first non-whitespace character in string,
     or end of string if none found.
 */
-static char *skipspace (char *s)
+static char *
+skipspace (char *s)
 {
-    while (*s && isspace(*s)) s++;
-    return s;
+  while (*s && isspace (*s))
+    s++;
+  return s;
 }
 
 /*
     Return pointer to first whitespace character in string,
     or end of string if none found.
 */
-static char *skipnspace (char *s)
+static char *
+skipnspace (char *s)
 {
-    while (*s && !isspace(*s)) s++;
-    return s;
+  while (*s && !isspace (*s))
+    s++;
+  return s;
 }
 
-static char *strpbrk (const char *cs, const char *ct)
+static char *
+strpbrk (const char *cs, const char *ct)
 {
-    for (; *cs; cs++) {
-        if (strchr (ct, *cs)) return (char *)cs;
+  for (; *cs; cs++)
+    {
+      if (strchr (ct, *cs))
+        return (char *)cs;
     }
 
-    return NULL;
+  return NULL;
 }
