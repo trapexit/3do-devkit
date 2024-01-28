@@ -68,8 +68,7 @@ available on Windows.
 #### makefile
 
 1. Get dev kit: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
-  * or download: `https://github.com/trapexit/3do-devkit/zipball/master`
-  * `wget -O 3do-devkit.zip https://github.com/trapexit/3do-devkit/zipball/master`
+1. You can also download a zip file from the GitHub page
 1. Enter the directory: `cd 3do-devkit`
 1. Source the environment: `source activate-env`
 1. Run make: `make`
@@ -88,15 +87,20 @@ Same as Linux
 
 ## Media Conversion
 
-The most comprehensive tooling is only available from the original SDK. It can
-be used via QEMU base emulation. There are some older tools to convert BMP
-to 'image', 'cel', or banners. New tools are in the works.
+images: `3it` is a pretty comprehensive tool supporting
+conversion to and from CELs, IMAGs, Banners, etc. Older tools are
+included for completeness but should not be needed.
 
-* http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
-* BMPTo3DOCel
-* BMPTo3DOImage
-* BMPTo3DOAnim
-* MakeBanner
+audio: `ffmpeg` can be used to convert files to `AIFF` files but to
+compress them you will need to use the original software for now. See
+below.
+
+video: Same as audio. Cinepak creation by `ffmpeg` is not compatible
+with the 3DO provided decoder. Regardless, new tooling is need to
+convert files into 3DO supported "Stream" files. https://3dodev.com
+has a tutorial.
+
+http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
 
 
 ## Notes
