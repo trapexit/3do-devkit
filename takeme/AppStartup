@@ -1,22 +1,31 @@
-#
-# This is the application startup script, and should contain your
-# aliases, and anything else you need to prepare to run your title.
-#
-# After this script is run, the system will start $boot/LaunchMe
-#
+##
+## This is the application startup script, and should contain your
+## aliases, and anything else you need to prepare to run your title.
+##
+## After this script is run, the system will start $boot/LaunchMe
+##
 
-# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/dbgCfrst.html#XREF14426
+## https://3dodev.com/documentation/development/opera/pf25/tktfldr/dbgfldr/dbgcfrst
 
-# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbgc.html#XREF11615
+## https://3dodev.com/documentation/development/opera/pf25/tktfldr/dbgfldr/cdbgc
+## Disables kernel kprintf screen output.
 # killkprintf
 
-# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbgx.html#XREF32552
+## https://3dodev.com/documentation/development/opera/pf25/tktfldr/dbgfldr/cdbgx
+## Dynamically displays the system's CPU/memory load.
 # $boot/System/Programs/sysload
 
-# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbge.html#XREF40448
-# $boot/system/Programs/lmadm -vta ram 3 0 nvram
+## https://3dodev.com/documentation/development/opera/pf25/tktfldr/dbgfldr/cdbge
+## Performs linked filesystem administration.
+$boot/system/Programs/lmadm -vta ram 3 0 nvram
 
-# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbgl.html#XREF40881
+## https://3dodev.com/documentation/development/opera/pf25/tktfldr/dbgfldr/cdbgl
+## Sets the amount of memory available in the system to the minimum
+## amount of memory guaranteed to be available in a production
+## environment.
 # minmem
-# https://3dodev.com/ext/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/dbgfldr/Cdbgk.html#XREF39139
+
+## https://3dodev.com/documentation/development/opera/pf25/tktfldr/dbgfldr/cdbgk
+## Sets the amount of memory available in the system to the maximum
+## amount possible.
 maxmem
