@@ -16,13 +16,16 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef ABORT_H_INCLUDED
-#define ABORT_H_INCLUDED
+#pragma once
 
 #include "types.h"
 
 #define abort(STR) __ABORT__(__MODULE__,__LINE__,STR)
 #define abort_err(ERR) __ABORT_ERR__(__MODULE__,__LINE__,ERR)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void __ABORT__(const char *module,
                const int   line,
@@ -32,4 +35,6 @@ void __ABORT_ERR__(const char *module,
                    const int   line,
                    const Err   err);
 
+#ifdef __cplusplus
+}
 #endif
