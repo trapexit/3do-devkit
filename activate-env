@@ -1,25 +1,18 @@
-if test -n "$BASH" ; then script=$BASH_SOURCE
-elif test -n "$TMOUT"; then script=${.sh.file}
-elif test -n "$ZSH_NAME" ; then script=${(%):-%x}
-elif test ${0##*/} = dash; then x=$(lsof -p $$ -Fn0 | tail -1); script=${x#n}
-else script=$0
-fi
+script_basepath() {
+    if test -n "$BASH" ; then filepath=$BASH_SOURCE
+    elif test -n "$TMOUT"; then filepath=${.sh.file}
+    elif test -n "$ZSH_NAME" ; then filepath=${(%):-%x}
+    elif test ${0##*/} = dash; then x=$(lsof -p $$ -Fn0 | tail -1); filepath=${x#n}
+    else filepath=$0
+    fi
 
-abspath() {
-  filename=$1
-  parentdir=$(dirname "${filename}")
+    dirpath=$(dirname "${filepath}")
 
-  if [ -d "${filename}" ]; then
-      echo "$(cd "${filename}" && pwd)"
-  elif [ -d "${parentdir}" ]; then
-    echo "$(cd "${parentdir}" && pwd)/$(basename "${filename}")"
-  fi
+    echo $(cd "${dirpath}" && pwd)
 }
-
-script=$(abspath "${script}")
 
 which armcc > /dev/null
 if [ $? -ne 0 ]; then
-    BASEPATH=$(dirname "${script}")
-    PATH="$PATH":"${BASEPATH}/bin/compiler/linux":"${BASEPATH}/bin/tools/linux"
+    export PATH="$PATH":"$(script_basepath)/bin/compiler/linux":"$(script_basepath)/bin/tools/linux"
 fi
+export TDO_DEVKIT_PATH=$(script_basepath)
