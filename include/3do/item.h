@@ -72,6 +72,16 @@ enum item_tags
  TAG_ITEM_LAST = TAG_ITEM_RESERVED9
 };
 
+typedef struct ItemEntry ItemEntry;
+struct ItemEntry
+{
+  void   *ie_ItemAddr;
+  uint32  ie_ItemInfo;
+};
+
+#define ITEM_GEN_MASK   0x7fff0000
+#define ITEM_INDX_MASK  0x00000fff
+#define ITEM_FLGS_MASK  0x0000f000
 
 /* argc values passed to main() of demand-loaded items */
 #define DEMANDLOAD_MAIN_CREATE -1
