@@ -29,7 +29,7 @@ __ABORT__(const char *module_,
           const char *str_)
 {
   kprintf("abort @ %s:%d - %s\n",module_,line_,str_);
-  exit(1);
+  while(1);
 }
 
 void

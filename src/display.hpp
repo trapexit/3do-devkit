@@ -16,24 +16,44 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/*
-  As a collection of examples grow it's be nice to create a menu to
-  allow a user to select which example to execute.
-*/
+#pragma once
 
-extern int main_cel_rotation();
-extern int main_read_rom();
-extern int main_overwrite_folio_func();
-extern int main_find_semaphore();
+#include "displayutils.h"
+#include "types.h"
+#include "varargs.h"
 
-int
-main(int   argc_,
-     char *argv_)
+class BasicDisplay
 {
-  main_cel_rotation();
-  main_read_rom();
-  main_overwrite_folio_func();
-  main_find_semaphore();
+public:
+  BasicDisplay();
+  ~BasicDisplay();
 
-  return 0;
-}
+  Err clear(const int color = 0x00000000);
+  Err waitvbl();
+  Err display();
+  void swap();
+  Err display_and_swap();
+  Err draw_cels(CCB*);
+
+  // Uses DrawText8 and is therefore slow
+  Err draw_text8(const int   x,
+                 const int   y,
+                 const char *s);
+  Err draw_printf(const int   x,
+                  const int   y,
+                  const char *fmt,
+                  ...);
+  Err draw_vprintf(const int   x,
+                   const int   y,
+                   const char *fmt,
+                   va_list     args);
+
+
+public:
+  ScreenContext *sc;
+
+private:
+  int  _screen;
+  Item _vram_ioreq;
+  Item _vbl_ioreq;
+};

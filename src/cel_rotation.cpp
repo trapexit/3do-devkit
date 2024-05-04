@@ -1,8 +1,7 @@
-#include "abort.hpp"
+#include "display.hpp"
 
 #include "celutils.h"
 #include "debug.h"
-#include "displayutils.h"
 #include "graphics.h"
 #include "hardware.h"
 #include "io.h"
@@ -11,101 +10,6 @@
 #include "operamath.h"
 #include "stdio.h"
 #include "string.h"
-
-#define NUM_SCREENS 2
-
-class BasicDisplay
-{
-public:
-  BasicDisplay();
-  ~BasicDisplay();
-
-  Err clear(const int color = 0x00000000);
-  Err waitvbl();
-  Err swap();
-  Err draw_cels(CCB*);
-
-public:
-  ScreenContext *sc;
-
-private:
-  int  _screen;
-  Item _vram_ioreq;
-  Item _vbl_ioreq;
-};
-
-BasicDisplay::BasicDisplay()
-{
-  Item rv;
-  Err err;
-
-  err = OpenGraphicsFolio();
-  if(err < 0)
-    abort_err(err);
-
-  sc = (ScreenContext*)AllocMem(sizeof(ScreenContext),MEMTYPE_ANY);
-  if(sc == NULL)
-    return;
-
-  rv = CreateBasicDisplay(sc,DI_TYPE_DEFAULT,NUM_SCREENS);
-  if(rv < 0)
-    {
-      FreeMem(sc,sizeof(ScreenContext));
-      sc = NULL;
-      abort("unable to initialize display");
-    }
-
-  for(int i = 0; i < sc->sc_NumScreens; i++)
-    {
-      DisableHAVG(sc->sc_Screens[i]);
-      DisableVAVG(sc->sc_Screens[i]);
-    }
-
-  _vram_ioreq = CreateVRAMIOReq();
-  _vbl_ioreq  = CreateVBLIOReq();
-  _screen     = 0;
-}
-
-BasicDisplay::~BasicDisplay()
-{
-  if(sc == NULL)
-    return;
-
-  DeleteIOReq(_vbl_ioreq);
-  DeleteIOReq(_vram_ioreq);
-  DeleteBasicDisplay(sc);
-  FreeMem(sc,sizeof(ScreenContext));
-}
-
-Err
-BasicDisplay::clear(const int color_)
-{
-  return SetVRAMPages(_vram_ioreq,
-                      sc->sc_Bitmaps[_screen]->bm_Buffer,
-                      color_,
-                      75,
-                      0xFFFFFFFF);
-}
-
-Err
-BasicDisplay::waitvbl()
-{
-  return WaitVBL(_vbl_ioreq,1);
-}
-
-Err
-BasicDisplay::swap()
-{
-  DisplayScreen(sc->sc_Screens[_screen],0);
-  _screen = !_screen;
-  return 0;
-}
-
-Err
-BasicDisplay::draw_cels(CCB *ccb_)
-{
-  return DrawCels(sc->sc_BitmapItems[_screen],ccb_);
-}
 
 static
 void
@@ -198,7 +102,9 @@ main_cel_rotation()
 
       display.clear();
       display.draw_cels(logo);
-      display.swap();
+      display.draw_printf(16,16,"x: %d",ConvertF16_32(x));
+      display.draw_printf(16,24,"y: %d",ConvertF16_32(y));
+      display.display_and_swap();
 
       display.waitvbl();
     }

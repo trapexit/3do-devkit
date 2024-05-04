@@ -1,5 +1,3 @@
-DEBUG = 1
-
 FILESYSTEM = takeme
 EXENAME	   = $(FILESYSTEM)/LaunchMe
 ISONAME    = helloworld.iso
@@ -19,9 +17,9 @@ MAKEBANNER = MakeBanner
 ## Flag definitions ##
 # -bigend   : Compiles code for an ARM operating with big-endian memory. The most
 #             significant byte has lowest address.
-# -za0      : LDR is not restricted to accessing word-aligned addresses.
-# -zps0     :
-# -zpv1     :
+# -za1      : LDR may only access word-aligned addresses.
+# -zps0     : Unknown
+# -zpv1     : Unknown
 # -zi4      : The compiler selects a value for the maximum number of instructions
 #             allowed to generate an integer literal inline before using LDR rx,=value
 # -fa       : Checks for certain types of data flow anomalies.
@@ -29,29 +27,34 @@ MAKEBANNER = MakeBanner
 #             "all file-scoped static objects are used",
 #             "all predeclarations of static functions are used between
 #              their declaration and their definition".
-# -fv       : Reports on all unused declarations, including those from standard headers.
 # -fx       : Enables all warnings that are suppressed by default.
 # -fpu none : No FPU. Use software floating point library.
 # -arch 3   : Compile using ARM3 architecture.
-# -apcs     : nofp - Do not use a frame-pointer register. This is the default.
-#             softfp - Use software floating-point library functions for floating-point code.
-#             noswstackcheck - No software stack-checking PCS variant. This is the default.
+# -apcs     : See page 1-13 of ARM SDT Ref Guide
+#             The default procedure call standard for the ARM compiler in SDT 2.11a was
+#             -apcs 3/32/fp/swst/wide/softfp.
+#             The default Procedure Call Standard (PCS) for the ARM compiler, and
+#             the assembler in SDT 2.50 and C++ 1.10 is now:
+#             -apcs 3/32/nofp/noswst/narrow/softfp
 OPT      = -O2
-CFLAGS   = $(OPT) -bigend -za1 -zps0 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '/softfp/nofp/swstackcheck'
+CFLAGS   = $(OPT) -bigend -za1 -zps0 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '3/32/nofp/swst/wide/softfp'
 CXXFLAGS = $(CFLAGS)
-ASFLAGS  = -BI -i ./include/3do
-INCPATH  = -I ./include/3do -I ./include/ttl
+ASFLAGS  = -BI -i ./include/3do -bigend -fpu none -arch 3 -apcs '3/32/nofp/swst'
+INCPATH  = ./include
+INCFLAGS = -I$(INCPATH)/3do -I$(INCPATH)/community -I$(INCPATH)/ttl
 LIBPATH  = ./lib
 LDFLAGS  = -match 0x1 -nodebug -noscanlib -verbose -remove -aif -reloc -dupok -ro-base 0 -sym $(EXENAME).sym
 STARTUP  = $(LIBPATH)/3do/cstartup.o
 
-LIBS =					\
-	$(LIBPATH)/3do/clib.lib		\
-	$(LIBPATH)/community/cpplib.lib	\
-	$(LIBPATH)/3do/graphics.lib     \
-	$(LIBPATH)/3do/lib3do.lib       \
-	$(LIBPATH)/3do/filesystem.lib   \
-	$(LIBPATH)/3do/operamath.lib
+LIBS =						\
+	$(LIBPATH)/3do/clib.lib			\
+	$(LIBPATH)/3do/filesystem.lib		\
+	$(LIBPATH)/3do/graphics.lib		\
+	$(LIBPATH)/3do/lib3do.lib		\
+	$(LIBPATH)/3do/operamath.lib		\
+	$(LIBPATH)/community/cpplib.lib		\
+	$(LIBPATH)/community/svc_mem.lib	\
+	$(LIBPATH)/community/svc_funcs.lib
 
 SRC_S   = $(wildcard src/*.s)
 SRC_C   = $(wildcard src/*.c)
@@ -66,13 +69,13 @@ all: launchme modbin iso
 launchme: builddir $(OBJ)
 	$(LD) -o $(EXENAME) $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJ)
 
-modbin:
+modbin: launchme
 	$(MODBIN) --stack=$(STACKSIZE) $(EXENAME) $(EXENAME)
 
 banner:
 	$(MAKEBANNER) $(BANNER) $(FILESYSTEM)/BannerScreen
 
-iso:
+iso: modbin
 	$(3DOISO) -in $(FILESYSTEM) -out $(ISONAME)
 	$(3DOENCRYPT) genromtags $(ISONAME)
 
@@ -80,13 +83,13 @@ builddir:
 	mkdir -p build/
 
 build/%.s.o: src/%.s
-	$(AS) $(INCPATH) $(ASFLAGS) $< -o $@
+	$(AS) $(INCFLAGS) $(ASFLAGS) $< -o $@
 
 build/%.c.o: src/%.c
-	$(CC) $(INCPATH) $(CFLAGS) -c $< -o $@
+	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
 
 build/%.cpp.o: src/%.cpp
-	$(CXX) $(INCPATH) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(INCFLAGS) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	$(RM) -vf $(OBJ) $(EXENAME) $(EXENAME).sym $(ISONAME)

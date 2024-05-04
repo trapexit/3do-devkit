@@ -1,7 +1,7 @@
 /*
   ISC License
 
-  Copyright (c) 2022, Antonio SJ Musumeci <trapexit@spawn.link>
+  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -16,12 +16,25 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef ABORT_HPP_INCLUDED
-#define ABORT_HPP_INCLUDED
+#ifndef CRC32B_H_INCLUDED
+#define CRC32B_H_INCLUDED
 
-extern "C"
-{
-#include "abort.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef unsigned int crc32b_t;
+
+crc32b_t crc32b_start(void);
+crc32b_t crc32b_continue(const void     *buf,
+                         const crc32b_t  len,
+                         const crc32b_t  crc);
+crc32b_t crc32b_finish(const crc32b_t crc);
+
+crc32b_t crc32b(const void *buf, crc32b_t len);
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif
