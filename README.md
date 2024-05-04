@@ -16,8 +16,15 @@ more homebrew on the 3DO.
 ### Libraries
 
 * 3DO libraries from Portfolio 2.5 (including Lib3DO)
-* trapexit's basic replacement C++ standard library
+* [cpplib](https://github.com/trapexit/3do-cpplib): basic replacement
+  C++ standard library
 * Roguewave STL which originally came with ARM C++
+* [svc_funcs](https://github.com/trapexit/3do-svc-funcs): provides
+  access to kernel functions while in supervisor mode
+* [svc_mem](https://github.com/trapexit/3do-svc-mem-device): example
+  device driver and its library
+* [example_folio](https://github.com/trapexit/3do-svc-mem-device):
+  example Folio (shared library)
 
 
 ### Documentation
@@ -28,11 +35,14 @@ more homebrew on the 3DO.
 
 ### Tooling
 
-* 3it: [trapexit's 3DO Image Tool](https://github.com/trapexit/3it/releases)
-* 3dt: [trapexit's 3DO Disc Tool](https://github.com/trapexit/3dt/releases)
-* 3ct: [trapexit's 3DO Compression Tool](https://github.com/trapexit/3ct/releases)
-* modbin: [trapexit's recreation](https://github.com/trapexit/modbin/releases)
-  of the original SDK's tool by the same name
+* [3it](https://github.com/trapexit/3it/releases): trapexit's 3DO
+  Image Tool
+* [3dt](https://github.com/trapexit/3dt/releases): trapexit's 3DO Disc
+  Tool
+* [3ct](https://github.com/trapexit/3ct/releases): trapexit's 3DO
+  Compression Tool
+* [modbin](https://github.com/trapexit/modbin/releases): trapexit's
+  recreation of the original SDK's tool by the same name
 * 3doiso v0.1 by nikk
 * 3DOEncrypt v0.6a by Charles Doty
 * MakeBanner v1.0b by Charles Doty
@@ -48,13 +58,16 @@ double check by visiting the links provided above.
 
 * [3DO Portfolio 2.5 Examples](examples/3dosdk/Portfolio%202.5)
 * [CEL rotation and zoom demo](src/cel_rotation.cpp)
+* [Example Folio](src/example_folio.cpp)
+* [Reading the ROM using svc_mem](src/read_rom.cpp)
+* [Finding Items at runtime](src/find_semaphore.cpp)
+* [Overwriting existing Folio functions](src/overwrite_folio_func.cpp)
 
 
 ### Misc
 
 * 3DO "takeme" CDROM base files from Portfolio 2.5 w/ a swapped out
   boot_code from Game Guru
-
 
 
 ## Usage
@@ -165,7 +178,6 @@ this project.
 
 * 3DO Development Repo: https://3dodev.com
 * 3do-devkit: https://github.com/trapexit/3do-devkit
-* 3do-cpplib: https://github.com/trapexit/3do-cpplib
 * Portfolio OS: https://github.com/trapexit/portfolio_os
 * The 3DO Community Discord: https://discord.com/invite/kvM9cQG
 * OpenLara: https://github.com/XProger/OpenLara

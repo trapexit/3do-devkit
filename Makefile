@@ -53,8 +53,9 @@ LIBS =						\
 	$(LIBPATH)/3do/lib3do.lib		\
 	$(LIBPATH)/3do/operamath.lib		\
 	$(LIBPATH)/community/cpplib.lib		\
-	$(LIBPATH)/community/svc_mem.lib	\
-	$(LIBPATH)/community/svc_funcs.lib
+	$(LIBPATH)/community/example_folio.lib	\
+	$(LIBPATH)/community/svc_funcs.lib      \
+	$(LIBPATH)/community/svc_mem.lib
 
 SRC_S   = $(wildcard src/*.s)
 SRC_C   = $(wildcard src/*.c)
