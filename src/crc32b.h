@@ -1,7 +1,7 @@
 /*
   ISC License
 
-  Copyright (c) 2021, Antonio SJ Musumeci <trapexit@spawn.link>
+  Copyright (c) 2024, Antonio SJ Musumeci <trapexit@spawn.link>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -16,8 +16,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifndef CRC32B_H_INCLUDED
-#define CRC32B_H_INCLUDED
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,6 +34,4 @@ crc32b_t crc32b(const void *buf, crc32b_t len);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

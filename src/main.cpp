@@ -18,13 +18,15 @@
 
 /*
   As a collection of examples grow it's be nice to create a menu to
-  allow a user to select which example to execute.
+  allow a user to select which example to execute. Until then please
+  just move the function to the top which you wish to use.
 */
 
 extern int main_cel_rotation();
 extern int main_read_rom();
 extern int main_overwrite_folio_func();
 extern int main_find_semaphore();
+extern int main_example_folio();
 
 int
 main(int   argc_,
@@ -34,6 +36,7 @@ main(int   argc_,
   main_read_rom();
   main_overwrite_folio_func();
   main_find_semaphore();
+  main_example_folio();
 
   return 0;
 }

@@ -1,4 +1,4 @@
-#pragma include_only_once
+#pragma once
 
 /******************************************************************************
  **
@@ -17,8 +17,8 @@
 #include "item.h"
 #include "task.h"
 
-
-typedef struct Folio
+typedef struct Folio Folio;
+struct Folio
 {
   ItemNode fn;
   int32    f_OpenCount;
@@ -27,12 +27,23 @@ typedef struct Folio
   uint8    f_MaxUserFunctions;
   uint8    f_MaxNodeType;
   int32    f_Private[17];
-} Folio, *FolioP;
+};
 
 enum folio_tags
   {
    CREATEFOLIO_TAG_NUSERVECS = TAG_ITEM_LAST+1, /* # of uservecs */
-   CREATEFOLIO_TAG_USERFUNCS	/* ptr to uservec table */
+   CREATEFOLIO_TAG_USERFUNCS,	/* ptr to uservec table */
+   CREATEFOLIO_TAG_DATASIZE,
+   CREATEFOLIO_TAG_INIT,
+   CREATEFOLIO_TAG_NODEDATABASE,
+   CREATEFOLIO_TAG_MAXNODETYPE,
+   CREATEFOLIO_TAG_ITEM,
+   CREATEFOLIO_TAG_OPENF,
+   CREATEFOLIO_TAG_CLOSEF,
+   CREATEFOLIO_TAG_DELETEF,
+   CREATEFOLIO_TAG_NSWIS,	/* number of swis */
+   CREATEFOLIO_TAG_SWIS,	/* ptr to SWI table */
+   CREATEFOLIO_TAG_TASKDATA	/* per task data struct */
   };
 
 /*
