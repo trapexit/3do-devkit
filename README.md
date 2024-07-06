@@ -81,13 +81,13 @@ available on Windows.
 
 #### makefile
 
-1. Get dev kit: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
-1. You can also download a zip file from the GitHub page
-1. Enter the directory: `cd 3do-devkit`
-1. Source the environment: `source activate-env`
-1. Run make: `make`
+* Get dev kit: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
+* You can also download a zip file from the GitHub page
+* Enter the directory: `cd 3do-devkit`
+* Source the environment: `source activate-env`
+* Run make: `make`
   * Generates file `helloworld.iso`
-1. Run in Opera emulator (via RetroArch): `make run`
+* Run in Opera emulator (via RetroArch): `make run`
 
 
 ### Windows
