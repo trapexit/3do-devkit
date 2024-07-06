@@ -18,19 +18,20 @@ more homebrew on the 3DO.
 * 3DO libraries from Portfolio 2.5 (including Lib3DO)
 * [cpplib](https://github.com/trapexit/3do-cpplib): basic replacement
   C++ standard library
-* Roguewave STL which originally came with ARM C++
 * [svc_funcs](https://github.com/trapexit/3do-svc-funcs): provides
   access to kernel functions while in supervisor mode
 * [svc_mem](https://github.com/trapexit/3do-svc-mem-device): example
   device driver and its library
-* [example_folio](https://github.com/trapexit/3do-svc-mem-device):
+* [example_folio](https://github.com/trapexit/3do-example-folio):
   example Folio (shared library)
+* Roguewave STL which originally came with ARM C++ (probably not worth
+  using)
 
 
 ### Documentation
 
-* 3DO SDK's "Developer's Documentation Set"
-* ARM SDT and ARM C++ docs
+* [3DO SDK's "Developer's Documentation Set"](docs/3dosdk)
+* [ARM SDT and ARM C++ docs](docs/compilers)
 
 
 ### Tooling
@@ -85,7 +86,8 @@ available on Windows.
 1. Enter the directory: `cd 3do-devkit`
 1. Source the environment: `source activate-env`
 1. Run make: `make`
-1. Generates file `helloworld.iso`
+  * Generates file `helloworld.iso`
+1. Run in Opera emulator (via RetroArch): `make run`
 
 
 ### Windows
@@ -100,18 +102,62 @@ Same as Linux
 
 ## Media Conversion
 
-images: `3it` is a pretty comprehensive tool supporting
-conversion to and from CELs, IMAGs, Banners, etc. Older tools are
-included for completeness but should not be needed.
+### images
 
-audio: `ffmpeg` can be used to convert files to `AIFF` files but to
-compress them you will need to use the original software for now. See
-below.
+`3it` is a pretty comprehensive tool supporting conversion to and from
+CELs, IMAGs, Banners, etc. Older tools are included for completeness
+but should not be needed.
 
-video: Same as audio. Cinepak creation by `ffmpeg` is not compatible
-with the 3DO provided decoder. Regardless, new tooling is need to
-convert files into 3DO supported "Stream" files. https://3dodev.com
-has a tutorial.
+### audio
+
+`ffmpeg` can be used to convert files to `AIFF` files but to compress
+them you will need to use the original software for now. See below.
+
+SDX2 encoding is not currently supported by `ffmpeg` but work is being
+done to build an encoder.
+
+
+#### uncompressed AIFF signed 16bit bigendian
+
+```
+ffmpeg -i input.file -ar 22050 -c:a pcm_s16be output.aiff"
+```
+
+
+#### uncompressed AIFF signed 8bit
+
+```
+ffmpeg -i input.file -ar 22050 -c:a pcm_s8 output.aiff"
+```
+
+
+#### uncompressed raw signed 16bit bigendian
+
+```
+ffmpeg -i input.file -ar 22050 -f s16be -acodec pcm_s16be output.raw"
+```
+
+
+#### uncompressed raw signed 8bit
+
+```
+ffmpeg -i input.file -ar 22050 -f s8 -acodec pcm_s8 output.raw"
+```
+
+
+#### compressed 4bit ADPCM IMA WS
+
+Make sure you have a more recent version of ffmpeg to use `adpcm_ima_ws`
+
+```
+ffmpeg -i input.file -c:a adpcm_ima_ws output.aifc
+```
+
+
+### video
+
+Same as audio. Cinepak creation by `ffmpeg` is not compatible with the
+3DO provided decoder. https://3dodev.com has a tutorial.
 
 http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
 

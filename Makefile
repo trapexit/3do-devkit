@@ -1,8 +1,9 @@
+NAME       = helloworld
+ISONAME    = $(NAME).iso
 FILESYSTEM = takeme
 EXENAME	   = $(FILESYSTEM)/LaunchMe
-ISONAME    = helloworld.iso
 STACKSIZE  = 4096
-BANNER	   = banner.bmp
+BANNER	   = banner.png
 
 CC	   = armcc
 CXX	   = armcpp
@@ -10,7 +11,6 @@ AS 	   = armasm
 LD	   = armlink
 RM	   = rm
 MODBIN     = modbin
-MAKEBANNER = MakeBanner
 3DOISO     = 3doiso
 3DOENCRYPT = 3DOEncrypt
 
@@ -18,8 +18,6 @@ MAKEBANNER = MakeBanner
 # -bigend   : Compiles code for an ARM operating with big-endian memory. The most
 #             significant byte has lowest address.
 # -za1      : LDR may only access word-aligned addresses.
-# -zps0     : Unknown
-# -zpv1     : Unknown
 # -zi4      : The compiler selects a value for the maximum number of instructions
 #             allowed to generate an integer literal inline before using LDR rx,=value
 # -fa       : Checks for certain types of data flow anomalies.
@@ -37,21 +35,44 @@ MAKEBANNER = MakeBanner
 #             the assembler in SDT 2.50 and C++ 1.10 is now:
 #             -apcs 3/32/nofp/noswst/narrow/softfp
 OPT      = -O2
-CFLAGS   = $(OPT) -bigend -za1 -zps0 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '3/32/nofp/swst/wide/softfp'
-CXXFLAGS = $(CFLAGS)
-ASFLAGS  = -BI -i ./include/3do -bigend -fpu none -arch 3 -apcs '3/32/nofp/swst'
 INCPATH  = ./include
 INCFLAGS = -I$(INCPATH)/3do -I$(INCPATH)/community -I$(INCPATH)/ttl
+CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '3/32/nofp/swst/wide/softfp'
+CXXFLAGS = $(CFLAGS)
+ASFLAGS  = -bigend -fpu none -arch 3 -apcs '3/32/nofp/swst'
 LIBPATH  = ./lib
-LDFLAGS  = -match 0x1 -nodebug -noscanlib -verbose -remove -aif -reloc -dupok -ro-base 0 -sym $(EXENAME).sym
+LDFLAGS  = -match 0x1 -nodebug -noscanlib -verbose -remove -aif -reloc -dupok -ro-base 0
 STARTUP  = $(LIBPATH)/3do/cstartup.o
 
 LIBS =						\
+	$(LIBPATH)/3do/3dlib.lib		\
+	$(LIBPATH)/3do/audio.lib		\
+	$(LIBPATH)/3do/burger.lib		\
 	$(LIBPATH)/3do/clib.lib			\
+	$(LIBPATH)/3do/codec.lib		\
+	$(LIBPATH)/3do/compression.lib		\
+	$(LIBPATH)/3do/cpluslib.lib		\
+	$(LIBPATH)/3do/DataAcq.lib		\
+	$(LIBPATH)/3do/DataAcqShuttle.lib	\
+	$(LIBPATH)/3do/DS.lib			\
+	$(LIBPATH)/3do/DSShuttle.lib		\
+	$(LIBPATH)/3do/exampleslib.lib		\
 	$(LIBPATH)/3do/filesystem.lib		\
 	$(LIBPATH)/3do/graphics.lib		\
+	$(LIBPATH)/3do/input.lib		\
+	$(LIBPATH)/3do/international.lib	\
+	$(LIBPATH)/3do/intmath.lib		\
+	$(LIBPATH)/3do/jstring.lib		\
 	$(LIBPATH)/3do/lib3do.lib		\
+	$(LIBPATH)/3do/memdebug.lib		\
+	$(LIBPATH)/3do/music.lib		\
+	$(LIBPATH)/3do/mvelib.lib		\
+	$(LIBPATH)/3do/obsoletelib3do.lib	\
 	$(LIBPATH)/3do/operamath.lib		\
+	$(LIBPATH)/3do/pgl.lib			\
+	$(LIBPATH)/3do/string.lib		\
+	$(LIBPATH)/3do/Subscriber.lib		\
+	$(LIBPATH)/3do/swi.lib			\
 	$(LIBPATH)/community/cpplib.lib		\
 	$(LIBPATH)/community/example_folio.lib	\
 	$(LIBPATH)/community/svc_funcs.lib      \
@@ -65,19 +86,23 @@ OBJ += $(SRC_S:src/%.s=build/%.s.o)
 OBJ += $(SRC_C:src/%.c=build/%.c.o)
 OBJ += $(SRC_CXX:src/%.cpp=build/%.cpp.o)
 
-all: launchme modbin iso
+all: launchme modbin iso encrypt-iso
 
-launchme: builddir $(OBJ)
+$(EXENAME): builddir $(OBJ)
+
+launchme: $(EXENAME)
 	$(LD) -o $(EXENAME) $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJ)
 
-modbin: launchme
-	$(MODBIN) --stack=$(STACKSIZE) $(EXENAME) $(EXENAME)
+modbin:
+	$(MODBIN) --name="$(NAME)" --time --stack=$(STACKSIZE) $(EXENAME) $(EXENAME)
 
 banner:
-	$(MAKEBANNER) $(BANNER) $(FILESYSTEM)/BannerScreen
+	3it to-banner -o $(FILESYSTEM)/BannerScreen $(BANNER)
 
-iso: modbin
+iso:
 	$(3DOISO) -in $(FILESYSTEM) -out $(ISONAME)
+
+encrypt-iso: $(ISONAME)
 	$(3DOENCRYPT) genromtags $(ISONAME)
 
 builddir:
@@ -95,4 +120,7 @@ build/%.cpp.o: src/%.cpp
 clean:
 	$(RM) -vf $(OBJ) $(EXENAME) $(EXENAME).sym $(ISONAME)
 
-.PHONY: clean modbin banner iso
+run:
+	run-iso $(ISONAME)
+
+.PHONY: clean modbin banner iso encrypt-iso run
