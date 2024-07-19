@@ -1,0 +1,11 @@
+#!/bin/sh
+
+which flatpak
+if [ $? -eq 0 ]; then
+    flatpak run org.libretro.RetroArch -L opera_libretro.so "$@"
+fi
+
+which retroarch
+if [ $? -eq 0 ]; then
+    retroarch -L opera_libretro.so "$@"
+fi
