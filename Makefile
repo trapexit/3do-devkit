@@ -5,15 +5,6 @@ EXENAME	   = $(FILESYSTEM)/LaunchMe
 STACKSIZE  = 4096
 BANNER	   = banner.png
 
-CC	   = armcc
-CXX	   = armcpp
-AS 	   = armasm
-LD	   = armlink
-RM	   = rm
-MODBIN     = modbin
-3DOISO     = 3doiso
-3DOENCRYPT = 3DOEncrypt
-
 ## Flag definitions ##
 # -bigend   : Compiles code for an ARM operating with big-endian memory. The most
 #             significant byte has lowest address.
@@ -35,12 +26,12 @@ MODBIN     = modbin
 #             the assembler in SDT 2.50 and C++ 1.10 is now:
 #             -apcs 3/32/nofp/noswst/narrow/softfp
 OPT      = -O2
-INCPATH  = ./include
+INCPATH  = ${TDO_DEVKIT_PATH}/include
 INCFLAGS = -I$(INCPATH)/3do -I$(INCPATH)/community -I$(INCPATH)/ttl
 CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '3/32/nofp/swst/wide/softfp'
 CXXFLAGS = $(CFLAGS)
 ASFLAGS  = -bigend -fpu none -arch 3 -apcs '3/32/nofp/swst'
-LIBPATH  = ./lib
+LIBPATH  = ${TDO_DEVKIT_PATH}/lib
 LDFLAGS  = -match 0x1 -nodebug -noscanlib -verbose -remove -aif -reloc -dupok -ro-base 0
 STARTUP  = $(LIBPATH)/3do/cstartup.o
 
@@ -78,47 +69,57 @@ LIBS =						\
 	$(LIBPATH)/community/svc_funcs.lib      \
 	$(LIBPATH)/community/svc_mem.lib
 
-SRC_S   = $(wildcard src/*.s)
-SRC_C   = $(wildcard src/*.c)
-SRC_CXX = $(wildcard src/*.cpp)
+SRCS_S   = $(wildcard src/*.s)
+SRCS_C   = $(wildcard src/*.c)
+SRCS_CXX = $(wildcard src/*.cpp)
 
-OBJ += $(SRC_S:src/%.s=build/%.s.o)
-OBJ += $(SRC_C:src/%.c=build/%.c.o)
-OBJ += $(SRC_CXX:src/%.cpp=build/%.cpp.o)
+OBJS += $(SRCS_S:src/%.s=build/%.s.o)
+OBJS += $(SRCS_C:src/%.c=build/%.c.o)
+OBJS += $(SRCS_CXX:src/%.cpp=build/%.cpp.o)
 
 all: launchme modbin iso encrypt-iso
 
-$(EXENAME): builddir $(OBJ)
+$(EXENAME): builddir $(OBJS)
 
 launchme: $(EXENAME)
-	$(LD) -o $(EXENAME) $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJ)
+	armlink -o $(EXENAME) $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJS)
 
 modbin:
-	$(MODBIN) --name="$(NAME)" --time --stack=$(STACKSIZE) $(EXENAME) $(EXENAME)
+	modbin --name="$(NAME)" --time --stack=$(STACKSIZE) $(EXENAME) $(EXENAME)
 
 banner:
 	3it to-banner -o $(FILESYSTEM)/BannerScreen $(BANNER)
 
 iso:
-	$(3DOISO) -in $(FILESYSTEM) -out $(ISONAME)
+	3doiso -in $(FILESYSTEM) -out $(ISONAME)
 
 encrypt-iso: $(ISONAME)
-	$(3DOENCRYPT) genromtags $(ISONAME)
+	3DOEncrypt genromtags $(ISONAME)
 
 builddir:
-	mkdir -p build/
+ifeq ($(OS),Windows_NT)
+	if not exist "build" mkdir "build"
+else
+	mkdir -p build
+endif
 
 build/%.s.o: src/%.s
-	$(AS) $(INCFLAGS) $(ASFLAGS) $< -o $@
+	armasm $(INCFLAGS) $(ASFLAGS) $< -o $@
 
 build/%.c.o: src/%.c
-	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
+	armcc $(INCFLAGS) $(CFLAGS) -c $< -o $@
 
 build/%.cpp.o: src/%.cpp
-	$(CXX) $(INCFLAGS) $(CXXFLAGS) -c $< -o $@
+	armcpp $(INCFLAGS) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	$(RM) -vf $(OBJ) $(EXENAME) $(EXENAME).sym $(ISONAME)
+ifeq ($(OS),Windows_NT)
+	if exist "build" rmdir /S /Q "build"
+	if exist $(subst /,\,$(EXENAME)) del $(subst /,\,$(EXENAME))
+	if exist $(subst /,\,$(ISONAME)) del $(subst /,\,$(ISONAME))
+else
+	rm -rvf "build" $(EXENAME) $(ISONAME)
+endif
 
 run:
 	run-iso $(ISONAME)

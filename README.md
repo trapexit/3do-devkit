@@ -95,9 +95,39 @@ available on Windows.
 We need project files for common Windows IDEs.
 
 
+#### General
+
+* Get dev kit: [download](https://github.com/trapexit/3do-devkit/archive/refs/heads/master.zip)
+* Unzip to wherever you like
+* From a terminal (cmd.exe or PowerShell):
+  * Enter the directory: `cd 3do-devkit`
+  * Source the environment: `activate-env` or `.\activate-env`
+  * Run make: `make`
+    * Generates file `helloworld.iso`
+  * Run in Opera emulator (via RetroArch): `make run`
+* From Explorer:
+  * Enter the directory
+  * Run `make.bat` to build the project
+  * Run `make-run.bat` to run the created iso via Opera if RetroArch
+    is installed
+
+
 #### WSL2
 
 Same as Linux
+
+
+### TDO_DEVKIT_PATH
+
+This environment variable is set by `activate-env` on all platforms
+and can be used to have a separate directory from the dev kit for your
+`src`, `takeme`, and other files.
+
+
+## Notes
+
+* Uncomment the line in `takeme/AppStartup` regarding `sysload` to add
+  a CPU and DSP resource overlay to your app.
 
 
 ## Media Conversion
