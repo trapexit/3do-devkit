@@ -33,6 +33,8 @@ more homebrew on the 3DO.
 * [3DO SDK's "Developer's Documentation Set"](docs/3dosdk)
 * [ARM SDT and ARM C++ docs](docs/compilers)
 
+Also found at https://3dodev.com
+
 
 ### Tooling
 
@@ -50,6 +52,7 @@ more homebrew on the 3DO.
 * BMPTo3DOCel v0.6a by Charles Doty
 * BMPTo3DOImage v1.0b by Charles Doty
 * BMPTo3DOAnim v0.6a by Charles Doty
+* [GNU make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm)
 
 trapexit's tooling may not always be fully up to date in this repo so
 double check by visiting the links provided above.
@@ -73,6 +76,15 @@ double check by visiting the links provided above.
 
 ## Usage
 
+This setup is intended to be as simple as possible to get going. To
+that end it is primarily designed to be used in-place. There is no
+install required. Just download, activate environemnt, and build. The
+repo isn't so large that you couldn't have multiple instances for
+multiple projects but if you need to "install" it then you can set the
+environment variables as done in the activate scripts and used in the
+Makefile.
+
+
 ### Linux
 
 Make sure you have WINE installed. Some tools are currently only
@@ -92,7 +104,9 @@ available on Windows.
 
 ### Windows
 
-We need project files for common Windows IDEs.
+Note: We need project files for common Windows IDEs. If you have an
+example project file for your favorite IDE please submit a PR with
+it.
 
 
 #### General
@@ -122,12 +136,6 @@ Same as Linux
 This environment variable is set by `activate-env` on all platforms
 and can be used to have a separate directory from the dev kit for your
 `src`, `takeme`, and other files.
-
-
-## Notes
-
-* Uncomment the line in `takeme/AppStartup` regarding `sysload` to add
-  a CPU and DSP resource overlay to your app.
 
 
 ## Media Conversion
@@ -193,6 +201,12 @@ http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
 
 
 ## Notes
+
+### sysload
+
+Uncomment the line in `takeme/AppStartup` regarding `sysload` to add a
+CPU and DSP resource overlay to your app.
+
 
 ### ARM C++ 1.11 compiler
 
