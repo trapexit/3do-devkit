@@ -16,7 +16,7 @@ setfg
 
 ## https://3dodev.com/documentation/development/opera/pf25/tktfldr/dbgfldr/cdbgx
 ## Dynamically displays the system's CPU/memory load.
-$boot/System/Programs/sysload&
+# $boot/System/Programs/sysload&
 
 ## https://3dodev.com/documentation/development/opera/pf25/tktfldr/dbgfldr/cdbge
 ## Performs linked filesystem administration.
