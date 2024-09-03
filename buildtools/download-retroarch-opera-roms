@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+download() {
+    which curl >/dev/null
+    if [ $? -eq 0 ]; then
+        curl -s -o "$2" "$1" && \
+            echo "Downloaded to $2"
+        return
+    fi
+
+    which wget >/dev/null
+    if [ $? -eq 0 ]; then
+        wget -O "$2" "$1" && \
+            echo "Downloaded to $2"
+        return
+    fi
+
+    echo "Neither curl or wget are available to download file"
+}
+
+paths="${HOME}/.config/retroarch/system ${HOME}/.var/app/org.libretro.RetroArch/config/retroarch/system" 
+
+for path in ${paths}
+do
+    download \
+        "https://3dodev.com/_media/roms/panafz1.bin" \
+        ${path}/panafz1.bin
+    download \
+        "https://3dodev.com/_media/roms/panafz1j-kanji.bin" \
+        ${path}/panafz1j-kanji.bin
+done    

@@ -15,7 +15,7 @@ more homebrew on the 3DO.
 
 ### Libraries
 
-* 3DO libraries from Portfolio 2.5 (including Lib3DO)
+* Original 3DO libraries from Portfolio 2.5 SDK
 * [cpplib](https://github.com/trapexit/3do-cpplib): basic replacement
   C++ standard library
 * [svc_funcs](https://github.com/trapexit/3do-svc-funcs): provides
@@ -30,10 +30,23 @@ more homebrew on the 3DO.
 
 ### Documentation
 
-* [3DO SDK's "Developer's Documentation Set"](docs/3dosdk)
+It is *strongly* suggested that new developers start with the original
+3DO SDK documentation. While the layout is imperfect the documentation
+is reasonably thorough. The 3DO uses a high level operating system
+that abstracts the hardware and provides many features such as
+semaphores, threading, message passing, signals, etc. An initial focus
+on the [OS
+APIs](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/pgsfldr/00pgs)
+and how
+[graphics](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/00ggs)
+work on the console is suggested.
+
+* [3DO SDK's "Developer's Documentation Set"](https://3dodev.com/documentation/development_documents)
+  * Also found in the repo in the original form: [docs/3dosdk](docs/3dosdk)
+* [Dev Notes and Gotchas](https://3dodev.com/documentation/software/opera/portfolio_os/notes_and_gotchas)
 * [ARM SDT and ARM C++ docs](docs/compilers)
 
-Also found at https://3dodev.com
+More can be found at https://3dodev.com
 
 
 ### Tooling
@@ -60,7 +73,9 @@ double check by visiting the links provided above.
 
 ### Examples
 
-* [3DO Portfolio 2.5 Examples](examples/3dosdk/Portfolio%202.5)
+* [3DO Portfolio 2.5 Examples](examples/3dosdk/Portfolio%202.5): These
+  examples do not yet have makefiles to build them using the DevKit
+  but porting them is trivial.
 * [CEL rotation and zoom demo](src/cel_rotation.cpp)
 * [Example Folio](src/example_folio.cpp)
 * [Reading the ROM using svc_mem](src/read_rom.cpp)
@@ -71,54 +86,64 @@ double check by visiting the links provided above.
 ### Misc
 
 * 3DO "takeme" CDROM base files from Portfolio 2.5 w/ a swapped out
-  boot_code from Game Guru
+  boot_code from Game Guru.
+
+
+## Install
+
+There really isn't a need to "install". You can simply download the
+repo and start using it in place. See [#Usage](#Usage) below. However,
+you can set things up in a manner similar to a global install.
+
+
+### Windows
+
+* [Download](https://github.com/trapexit/3do-devkit/archive/refs/heads/master.zip)
+the dev kit. 
+* Uncompress and move the folder into its final location.
+* Run `buildtools\setup-env.bat`
+* This will setup the appropriate enviroment variables at a global
+level. This removes the need to use `activate-env.bat` or
+`activate-env.ps1` each terminal session.
+
+
+### Linux
+
+* Download: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
+* Add `source /path/to/3do-devkit/activate-env` to your shell config file.
 
 
 ## Usage
 
 This setup is intended to be as simple as possible to get going. To
 that end it is primarily designed to be used in-place. There is no
-install required. Just download, activate environemnt, and build. The
-repo isn't so large that you couldn't have multiple instances for
-multiple projects but if you need to "install" it then you can set the
-environment variables as done in the activate scripts and used in the
-Makefile.
+install required. Just download, activate environment, and build. 
 
+### General
 
-### Linux
-
-Make sure you have WINE installed. Some tools are currently only
-available on Windows.
-
-
-#### makefile
-
-* Get dev kit: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
-* You can also download a zip file from the GitHub page
-* Enter the directory: `cd 3do-devkit`
-* Source the environment: `source activate-env`
-* Run make: `make`
-  * Generates file `helloworld.iso`
-* Run in Opera emulator (via RetroArch): `make run`
+* Modify `Makefile` to change the project `NAME`. Not much else should
+  need to be modified in the `Makefile` for basic usage.
+* The makefile handles assembly source files (`*.s`), C files (`*.c`),
+  and C++ files (`*.cpp`) in the root of `src/`.
+* Add and/or remove files from `src/` as needed for your project.
+* Run `make` to build object files, link executable, build ISO, and
+  sign ISO for retail use.
+  
+See below for OS specific workflows.
 
 
 ### Windows
 
-Note: We need project files for common Windows IDEs. If you have an
-example project file for your favorite IDE please submit a PR with
-it.
-
-
 #### General
 
-* Get dev kit: [download](https://github.com/trapexit/3do-devkit/archive/refs/heads/master.zip)
-* Unzip to wherever you like
+* [Download](https://github.com/trapexit/3do-devkit/archive/refs/heads/master.zip)
+* Uncomppress and move the folder into its final location
 * From a terminal (cmd.exe or PowerShell):
   * Enter the directory: `cd 3do-devkit`
   * Source the environment: `activate-env` or `.\activate-env`
   * Run make: `make`
-    * Generates file `helloworld.iso`
-  * Run in Opera emulator (via RetroArch): `make run`
+    * Generates `iso\helloworld.iso`
+  * Run in RetroArch Opera emulator (if installed): `make run`
 * From Explorer:
   * Enter the directory
   * Run `make.bat` to build the project
@@ -131,28 +156,117 @@ it.
 Same as Linux
 
 
-### TDO_DEVKIT_PATH
+### Linux
 
-This environment variable is set by `activate-env` on all platforms
-and can be used to have a separate directory from the dev kit for your
-`src`, `takeme`, and other files.
+Make sure you have WINE installed. Some tools are currently only
+available on Windows.
+
+
+#### makefile
+
+* Download: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
+* Enter the directory: `cd 3do-devkit`
+* Source the environment: `source activate-env`
+* Run make: `make`
+  * Generates `iso/helloworld.iso`
+  * Run in RetroArch Opera emulator (if installed): `make run`
+
+
+## Bootstrapping a New Project
+
+If you have "installed" the dev kit as described above you can create
+code and asset repositories in different directories which will use
+the binaries found in the "install" location.
+
+To simplify the creation of these there are the `bootstrap-project`
+scripts. One for Windows and one Linux.
+
+
+### Windows
+
+* Run `buildtools\setup-env.bat` (if not done already) to setup paths globally
+* Make a directory for your project
+* Copy `buildtools\bootstrap-project.bat` to that directory
+* Run `bootstrap-project.bat` from within that directory
+
+This will copy all relevant files into the path and can use it the
+same as described above. Feel free to remove `bootstrap-project.bat`
+afterwards.
+
+
+### Linux
+
+* Source `activate-env` as described above
+* Make a directory for your project
+* Copy `buildtools/bootstrap-project` to that directory 
+* Run `bootstrap-project` from within that directory
+* You can also simply run `buildtools/bootstrap-project PATH`
+
+This will copy all relevant files into the path and can use it the
+same as described above. Feel free to remove `bootstrap-project`
+afterwards.
+
+
+## RetroArch Opera Setup
+
+`make run` will launch the Opera core of RetroArch if installed and
+run the built ISO. RetroArch can be found at https://retroarch.com but
+you will need ROMs for Opera to work correctly.
+
+The script `buildtools/download-retroarch-opera-roms` will attempt to
+download required ROMs to the "system" directory of RetroArch if
+already installed. On Windows or Linux simply launch from a file
+explorer or a terminal.
+
+NOTE: The scripts look in known directories to copy the ROMs to but it
+is possible you have a different setup. You can just go to the
+[site](https://3dodev.com) and download the ROMs manually and place
+them into the RetroArch `system` folder.
+
+
+## DevKit Layout
+
+* bin/: All core binaries such as compilers, linkers, and media
+  conversion tools.
+* buildtools/: Misc tools to setup the build environment.
+* src/: Directory storing all source.
+* takeme/: Directory storing all CDROM artifacts. Target for final
+  "Launchme" executable. The name "takeme" originates from the
+  original 3DO SDK.
+* art/: 3DO artwork. Currently only original 3DO SDK art.
+* docs/: Misc documentation from the original SDK and compiler suites.
+* include/: All include files from original SDK and community projects.
+* lib/: All libraries from original SDK and community projects.
+* examples/: Primarily examples from all available original 3DO SDK
+  releases.
+* build/: Automatically created directory during build to store object
+  files.
+* iso/: Automatically created directory during build to store ISO file.
 
 
 ## Media Conversion
 
 ### images
 
-`3it` is a pretty comprehensive tool supporting conversion to and from
-CELs, IMAGs, Banners, etc. Older tools are included for completeness
-but should not be needed.
+`3it` is a comprehensive tool supporting conversion to and from CELs,
+IMAGs, Banners, etc. Older tools are included for completeness but
+should not be needed.
+
+Read more about CEL formats at:
+* https://3dodev.com/documentation/file_formats/media/image/cel
+* https://3dodev.com/documentation/file_formats/media/container/3do
+
 
 ### audio
 
-`ffmpeg` can be used to convert files to `AIFF` files but to compress
-them you will need to use the original software for now. See below.
+[ffmpeg](https://ffmpeg.org) can be used to convert files to a couple
+3DO compatible formats but not all. ffmpeg does not currently have a
+SDX2 encoder (only decoder) leaving only the original MacOS software
+capable of encoding the format.
 
-SDX2 encoding is not currently supported by `ffmpeg` but work is being
-done to build an encoder.
+SDX2 compresses the audio to 8bits per sample and according to the
+original author, Phil Burk, sounds noticeably better than using raw
+8bit samples.
 
 
 #### uncompressed AIFF signed 16bit bigendian
@@ -170,6 +284,9 @@ ffmpeg -i input.file -ar 22050 -c:a pcm_s8 output.aiff"
 
 
 #### uncompressed raw signed 16bit bigendian
+
+Raw files can be useful if you want to create multiple samples at
+runtime from the same file.
 
 ```
 ffmpeg -i input.file -ar 22050 -f s16be -acodec pcm_s16be output.raw"
@@ -194,10 +311,15 @@ ffmpeg -i input.file -c:a adpcm_ima_ws output.aifc
 
 ### video
 
-Same as audio. Cinepak creation by `ffmpeg` is not compatible with the
-3DO provided decoder. https://3dodev.com has a tutorial.
+A Cinepak library was included in the original SDK. Unfortunately,
+`ffmpeg` does not support the 3DO Stream container format nor does the
+Cinepak encoder generate frames which align properly for the 3DO.
 
-http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
+Till a new decoder is written or `ffmpeg` modified to provide proper
+alignment you will need to use original Classic MacOS software.
+
+* https://3dodev.com/tutorials/trapexit/creating_3do_compatible_fmv
+* http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
 
 
 ## Notes
@@ -208,12 +330,17 @@ Uncomment the line in `takeme/AppStartup` regarding `sysload` to add a
 CPU and DSP resource overlay to your app.
 
 
+### Development Notes and Gotchas
+
+https://3dodev.com/documentation/software/opera/portfolio_os/notes_and_gotchas
+
+
 ### ARM C++ 1.11 compiler
 
 * ARM C++ 1.11 is a pre-standard compiler. From section 3.10 in the ref guide:
   * Exceptions are NOT supported
   * Namespaces are NOT supported
-  * RTTI is only partially suported
+  * RTTI is only partially supported
   * C++ style casting is only partially supported
   * While technically mostly supported templates can be buggy and complex
     usage may crash the compiler

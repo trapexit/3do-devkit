@@ -6,6 +6,7 @@ script_basepath() {
     else filepath=$0
     fi
 
+    filepath=$(readlink -f "${filepath}")
     dirpath=$(dirname "${filepath}")
 
     echo $(cd "${dirpath}" && pwd)

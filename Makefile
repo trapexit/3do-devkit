@@ -1,5 +1,5 @@
 NAME       = helloworld
-ISONAME    = $(NAME).iso
+ISONAME    = iso/$(NAME).iso
 FILESYSTEM = takeme
 EXENAME	   = $(FILESYSTEM)/LaunchMe
 STACKSIZE  = 4096
@@ -28,17 +28,16 @@ BANNER	   = banner.png
 OPT      = -O2
 INCPATH  = ${TDO_DEVKIT_PATH}/include
 INCFLAGS = -I$(INCPATH)/3do -I$(INCPATH)/community -I$(INCPATH)/ttl
-CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '3/32/nofp/swst/wide/softfp'
+CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '3/32/fp/swst/wide/softfp'
 CXXFLAGS = $(CFLAGS)
-ASFLAGS  = -bigend -fpu none -arch 3 -apcs '3/32/nofp/swst'
+ASFLAGS  = -bigend -fpu none -arch 3 -apcs '3/32/fp/swst'
 LIBPATH  = ${TDO_DEVKIT_PATH}/lib
-LDFLAGS  = -match 0x1 -nodebug -noscanlib -verbose -remove -aif -reloc -dupok -ro-base 0
+LDFLAGS  = -match 0x1 -nodebug -noscanlib -nozeropad -verbose -remove -aif -reloc -dupok -ro-base 0
 STARTUP  = $(LIBPATH)/3do/cstartup.o
 
-LIBS =						\
+LIBS = \
 	$(LIBPATH)/3do/3dlib.lib		\
 	$(LIBPATH)/3do/audio.lib		\
-	$(LIBPATH)/3do/burger.lib		\
 	$(LIBPATH)/3do/clib.lib			\
 	$(LIBPATH)/3do/codec.lib		\
 	$(LIBPATH)/3do/compression.lib		\
@@ -53,12 +52,9 @@ LIBS =						\
 	$(LIBPATH)/3do/input.lib		\
 	$(LIBPATH)/3do/international.lib	\
 	$(LIBPATH)/3do/intmath.lib		\
-	$(LIBPATH)/3do/jstring.lib		\
 	$(LIBPATH)/3do/lib3do.lib		\
-	$(LIBPATH)/3do/memdebug.lib		\
 	$(LIBPATH)/3do/music.lib		\
 	$(LIBPATH)/3do/mvelib.lib		\
-	$(LIBPATH)/3do/obsoletelib3do.lib	\
 	$(LIBPATH)/3do/operamath.lib		\
 	$(LIBPATH)/3do/pgl.lib			\
 	$(LIBPATH)/3do/string.lib		\
@@ -67,7 +63,12 @@ LIBS =						\
 	$(LIBPATH)/community/cpplib.lib		\
 	$(LIBPATH)/community/example_folio.lib	\
 	$(LIBPATH)/community/svc_funcs.lib      \
-	$(LIBPATH)/community/svc_mem.lib
+	$(LIBPATH)/community/svc_mem.lib        \
+#	$(LIBPATH)/3do/burger.lib		\
+#	$(LIBPATH)/3do/jstring.lib		\
+#	$(LIBPATH)/3do/memdebug.lib		\
+#	$(LIBPATH)/3do/obsoletelib3do.lib	\
+
 
 SRCS_S   = $(wildcard src/*.s)
 SRCS_C   = $(wildcard src/*.c)
@@ -82,25 +83,32 @@ all: launchme modbin iso encrypt-iso
 $(EXENAME): builddir $(OBJS)
 
 launchme: $(EXENAME)
-	armlink -o $(EXENAME) $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJS)
+	armlink -o "$(EXENAME)" $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJS)
 
 modbin:
-	modbin --name="$(NAME)" --time --stack=$(STACKSIZE) $(EXENAME) $(EXENAME)
+	modbin --name="$(NAME)" --time --stack=$(STACKSIZE) "$(EXENAME)" "$(EXENAME)"
 
 banner:
-	3it to-banner -o $(FILESYSTEM)/BannerScreen $(BANNER)
+	3it to-banner -o "$(FILESYSTEM)/BannerScreen" "$(BANNER)"
 
-iso:
-	3doiso -in $(FILESYSTEM) -out $(ISONAME)
+isodir:
+ifeq ($(OS),Windows_NT)
+	if not exist "iso" mkdir "iso"
+else
+	mkdir -p "iso"
+endif
+
+iso: isodir
+	3doiso -in "$(FILESYSTEM)" -out "$(ISONAME)"
 
 encrypt-iso: $(ISONAME)
-	3DOEncrypt genromtags $(ISONAME)
+	3DOEncrypt genromtags "$(ISONAME)"
 
 builddir:
 ifeq ($(OS),Windows_NT)
 	if not exist "build" mkdir "build"
 else
-	mkdir -p build
+	mkdir -p "build"
 endif
 
 build/%.s.o: src/%.s
@@ -115,13 +123,13 @@ build/%.cpp.o: src/%.cpp
 clean:
 ifeq ($(OS),Windows_NT)
 	if exist "build" rmdir /S /Q "build"
+	if exist "iso" rmdir /S /Q "iso"
 	if exist $(subst /,\,$(EXENAME)) del $(subst /,\,$(EXENAME))
-	if exist $(subst /,\,$(ISONAME)) del $(subst /,\,$(ISONAME))
 else
-	rm -rvf "build" $(EXENAME) $(ISONAME)
+	rm -rvf "build" "iso" $(EXENAME)
 endif
 
 run:
-	run-iso $(ISONAME)
+	run-iso "$(ISONAME)"
 
-.PHONY: clean modbin banner iso encrypt-iso run
+.PHONY: builddir isodir clean modbin banner iso encrypt-iso run
