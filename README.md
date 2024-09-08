@@ -76,6 +76,7 @@ double check by visiting the links provided above.
 * [3DO Portfolio 2.5 Examples](examples/3dosdk/Portfolio%202.5): These
   examples do not yet have makefiles to build them using the DevKit
   but porting them is trivial.
+* [3D 3DO Logo](src/3d_3do_logo.c)
 * [CEL rotation and zoom demo](src/cel_rotation.cpp)
 * [Example Folio](src/example_folio.cpp)
 * [Reading the ROM using svc_mem](src/read_rom.cpp)

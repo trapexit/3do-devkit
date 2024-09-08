@@ -27,11 +27,14 @@ extern int main_read_rom();
 extern int main_overwrite_folio_func();
 extern int main_find_semaphore();
 extern int main_example_folio();
+extern "C" int main_3d_3do_logo();
 
 int
 main(int   argc_,
      char *argv_)
 {
+  main_3d_3do_logo();
+  
   main_cel_rotation();
   main_read_rom();
   main_overwrite_folio_func();
