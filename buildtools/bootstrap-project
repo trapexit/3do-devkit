@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+case $# in
+    0)
+        DST_PATH="$(pwd)"
+        ;;
+    1)
+        DST_PATH="${1}"
+        ;;
+    *)
+        echo "usage: bootstrap-project [dstpath]"
+        echo "  * dstpath defaults to pwd"
+        ;;
+esac
+
+if [ -z "${TDO_DEVKIT_PATH}" ]; then
+    echo "ERROR: You must first 'source activate-env'"
+    exit 1
+fi
+
+SRC_PATH="${TDO_DEVKIT_PATH}"
+
+if [ -e "${DST_PATH}/takeme" ]; then
+    echo "'takeme' directory exists. Appears path is already bootstrapped."
+    exit 1
+fi    
+
+ln -fvs "${SRC_PATH}/activate-env" "${DST_PATH}/activate-env"
+cp -avf "${SRC_PATH}/Makefile" "${DST_PATH}/Makefile"
+cp -avru "${SRC_PATH}/takeme" "${DST_PATH}/takeme"
+cp -avru "${SRC_PATH}/src" "${DST_PATH}/src"
