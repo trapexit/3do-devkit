@@ -3,9 +3,21 @@
 typedef unsigned char boolean;
 
 #ifndef TRUE
-#define TRUE ((boolean)1)
+#define TRUE 1
 #endif
 
 #ifndef FALSE
-#define FALSE ((boolean)0)
+#define FALSE 0
+#endif
+
+#ifndef __cplusplus
+typedef boolean bool;
+
+#ifndef true
+#define true TRUE
+#endif
+
+#ifndef false
+#define false FALSE
+#endif
 #endif
