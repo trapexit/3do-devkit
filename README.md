@@ -75,7 +75,9 @@ double check by visiting the links provided above.
 
 * [3DO Portfolio 2.5 Examples](examples/3dosdk/Portfolio%202.5): These
   examples do not yet have makefiles to build them using the DevKit
-  but porting them is trivial.
+  but porting them is trivial. Note that other Portfolio and Toolkit
+  examples are provided for completeness but may not compile without
+  modification due incompatibilities between versions.
 * [3D 3DO Logo](src/3d_3do_logo.c)
 * [CEL rotation and zoom demo](src/cel_rotation.cpp)
 * [Example Folio](src/example_folio.cpp)
@@ -100,7 +102,7 @@ you can set things up in a manner similar to a global install.
 ### Windows
 
 * [Download](https://github.com/trapexit/3do-devkit/archive/refs/heads/master.zip)
-the dev kit. 
+the dev kit.
 * Uncompress and move the folder into its final location.
 * Run `buildtools\setup-env.bat`
 * This will setup the appropriate enviroment variables at a global
@@ -118,7 +120,7 @@ level. This removes the need to use `activate-env.bat` or
 
 This setup is intended to be as simple as possible to get going. To
 that end it is primarily designed to be used in-place. There is no
-install required. Just download, activate environment, and build. 
+install required. Just download, activate environment, and build.
 
 ### General
 
@@ -129,7 +131,7 @@ install required. Just download, activate environment, and build.
 * Add and/or remove files from `src/` as needed for your project.
 * Run `make` to build object files, link executable, build ISO, and
   sign ISO for retail use.
-  
+
 See below for OS specific workflows.
 
 
@@ -199,7 +201,7 @@ afterwards.
 
 * Source `activate-env` as described above
 * Make a directory for your project
-* Copy `buildtools/bootstrap-project` to that directory 
+* Copy `buildtools/bootstrap-project` to that directory
 * Run `bootstrap-project` from within that directory
 * You can also simply run `buildtools/bootstrap-project PATH`
 
@@ -333,7 +335,10 @@ CPU and DSP resource overlay to your app.
 
 ### Development Notes and Gotchas
 
-https://3dodev.com/documentation/software/opera/portfolio_os/notes_and_gotchas
+* The Portfolio OS changed over time. As mentioned above the devkit
+  uses Portfolio 2.5 and Toolkit 1.5 which means some examples from
+  older versions may not work without modification.
+* https://3dodev.com/documentation/software/opera/portfolio_os/notes_and_gotchas
 
 
 ### ARM C++ 1.11 compiler
