@@ -14,6 +14,8 @@ script_basepath() {
 
 which armcc > /dev/null
 if [ $? -ne 0 ]; then
-    export PATH="$PATH":"$(script_basepath)/bin/compiler/linux":"$(script_basepath)/bin/tools/linux"
+    export PATH="$PATH":"$(script_basepath)/bin/compiler/linux"
+    export PATH="$PATH":"$(script_basepath)/bin/tools/linux"
+    export PATH="$PATH":"$(script_basepath)/bin/buildtools/linux"    
 fi
 export TDO_DEVKIT_PATH=$(script_basepath)

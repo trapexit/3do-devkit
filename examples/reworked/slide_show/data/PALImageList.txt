@@ -1,0 +1,4 @@
+PALImages/ntscpaltESTpat.imag
+PALImages/contentment_pal.imag
+PALImages/garden_of_allah_pal.imag
+PALImages/daybreak_pal.imag

@@ -25,7 +25,14 @@ BANNER	   = banner.png
 #             The default Procedure Call Standard (PCS) for the ARM compiler, and
 #             the assembler in SDT 2.50 and C++ 1.10 is now:
 #             -apcs 3/32/nofp/noswst/narrow/softfp
+ifeq ($(DEBUG),1)
+OPT      = -O0
+DEFFLAGS = -DDEBUG=1
+else
 OPT      = -O2
+DEFFLAGS = -DNDEBUG=1
+endif
+
 INCPATH  = ${TDO_DEVKIT_PATH}/include
 INCFLAGS = -I$(INCPATH)/3do -I$(INCPATH)/community -I$(INCPATH)/ttl
 CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '3/32/fp/swst/wide/softfp'
@@ -112,13 +119,13 @@ else
 endif
 
 build/%.s.o: src/%.s
-	armasm $(INCFLAGS) $(ASFLAGS) $< -o $@
+	armasm $(INCFLAGS) $(DEFFLAGS) $(ASFLAGS) $< -o $@
 
 build/%.c.o: src/%.c
-	armcc $(INCFLAGS) $(CFLAGS) -c $< -o $@
+	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
 
 build/%.cpp.o: src/%.cpp
-	armcpp $(INCFLAGS) $(CXXFLAGS) -c $< -o $@
+	armcpp $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -c $< -o $@
 
 clean:
 ifeq ($(OS),Windows_NT)

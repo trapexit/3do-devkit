@@ -1,0 +1,45 @@
+#!/usr/bin/env sh
+
+case $# in
+    0)
+        DST_PATH="$(pwd)"
+        ;;
+    1)
+        DST_PATH="${1}"
+        ;;
+    *)
+        echo "usage: bootstrap-project [dstpath]"
+        echo "  * dstpath defaults to pwd"
+        ;;
+esac
+
+if [ -z "${TDO_DEVKIT_PATH}" ]; then
+    echo "ERROR: You must first 'source activate-env'"
+    exit 1
+fi
+
+SRC_PATH="${TDO_DEVKIT_PATH}"
+
+if [ -e "${DST_PATH}/takeme" ]; then
+    echo "'takeme' directory exists. Appears path is already bootstrapped."
+    exit 1
+fi    
+
+echo "Link activate-env"
+ln -fs "${SRC_PATH}/activate-env" "${DST_PATH}/activate-env"
+
+echo "Copying Makefile"
+cp "${SRC_PATH}/Makefile" "${DST_PATH}/Makefile"
+
+echo "Copying takeme (CDROM filesystem contents)"
+cp -r "${SRC_PATH}/takeme" "${DST_PATH}/takeme"
+
+[ -e "${DST_PATH}/data" ] && \
+    echo "Copying data/* into takeme/" && \
+    cp -r "${DST_PATH}/data/"* "${DST_PATH}/takeme/"
+
+[ ! -d "${DST_PATH}/src" ] && \
+    echo "Copying src" && \
+    cp -vr "${SRC_PATH}/src" "${DST_PATH}/src"
+
+echo "Now run 'make' to build the ISO and 'make run' to run in Opera"

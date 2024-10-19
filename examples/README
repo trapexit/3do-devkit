@@ -1,0 +1,24 @@
+The examples in "original" are from the original 3DO SDK releases
+without any changes besides changing the text encoding from classic
+Mac format. They won't be usable without some effort to move the files
+into "takeme" and some possible modifications to account for changes
+in the SDK over time or bugs in the original code. Keep in mind that
+the 3DO Portfolio operating system had numerous releases and some
+libraries changed over time. Non-Portfolio 2.5 / Toolkit 1.5 examples
+may require more significant changes to work but most probably have
+versions or alternatives in later releases.
+
+The "reworked" directory holds examples "ported" to this 3DO DevKit
+setup from the original 3DO SDK releases.
+
+The "community" directory holds examples written by the 3DO homebrew
+community.
+
+The 3DO DevKit includes the "bootstrap-3do-project" script which will
+create the setup for a new project. It is also designed to understand
+the layout of these examples directory so you can simply run
+"bootstrap-3do-project" within an individual example directory and run
+"make" and "make run" to build and run the software in the Opera
+emulator. On Windows either use a shell to go into the directory and
+run bootstrap or copy the file from "bin/buildtools/win" to the
+directory and run it from Explorer.
