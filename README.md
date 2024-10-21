@@ -1,7 +1,9 @@
-This is a 3DO Opera (M1) development environment. It is built from a number of
-components both new and old. The hope is that by making setup more turnkey and
-bringing documentation and examples into one location it will help facilitate
-more homebrew on the 3DO.
+This is a 3DO Opera development environment for Linux and Window. It
+is built from a number of components both new and old. The hope is
+that by making setup more turnkey and bringing documentation and
+examples into one location it will help facilitate more homebrew on
+the 3DO.
+
 
 ## Components
 
@@ -24,6 +26,7 @@ more homebrew on the 3DO.
   device driver and its library
 * [example_folio](https://github.com/trapexit/3do-example-folio):
   example Folio (shared library)
+* ttl: trapexit's template library (simplistic replacement to STL)
 * Roguewave STL which originally came with ARM C++ (probably not worth
   using)
 
@@ -53,6 +56,8 @@ More can be found at https://3dodev.com
 
 * [3it](https://github.com/trapexit/3it/releases): trapexit's 3DO
   Image Tool
+* [3at](https://github.com/trapexit/3at/releases): trapexit's 3DO
+  Audio Tool
 * [3dt](https://github.com/trapexit/3dt/releases): trapexit's 3DO Disc
   Tool
 * [3ct](https://github.com/trapexit/3ct/releases): trapexit's 3DO
@@ -73,17 +78,17 @@ double check by visiting the links provided above.
 
 ### Examples
 
-* [3DO Portfolio 2.5 Examples](examples/3dosdk/Portfolio%202.5): These
-  examples do not yet have makefiles to build them using the DevKit
-  but porting them is trivial. Note that other Portfolio and Toolkit
-  examples are provided for completeness but may not compile without
-  modification due incompatibilities between versions.
+* [README](examples/README) for more information.
+* [Community Examples](examples/community): A collection of examples
+  from the 3DO homebrew community.
+* [Reworked Examples](examples/reworked): A collection of examples reworked from
+  the original 3DO SDKs to work out of the box with this 3DO DevKit.
+* [Original Examples](examples/original): These are all the examples
+  from the original 3DO Portfolio and Toolkit releases in their
+  original form (outside text encoding conversion.) They are not
+  buildable without some effort.
 * [3D 3DO Logo](src/3d_3do_logo.c)
 * [CEL rotation and zoom demo](src/cel_rotation.cpp)
-* [Example Folio](src/example_folio.cpp)
-* [Reading the ROM using svc_mem](src/read_rom.cpp)
-* [Finding Items at runtime](src/find_semaphore.cpp)
-* [Overwriting existing Folio functions](src/overwrite_folio_func.cpp)
 
 
 ### Misc
@@ -104,10 +109,13 @@ you can set things up in a manner similar to a global install.
 * [Download](https://github.com/trapexit/3do-devkit/archive/refs/heads/master.zip)
 the dev kit.
 * Uncompress and move the folder into its final location.
-* Run `buildtools\setup-env.bat`
+* Run `bin\buildtools\win\setup-3do-devkit-env.bat`
 * This will setup the appropriate enviroment variables at a global
 level. This removes the need to use `activate-env.bat` or
 `activate-env.ps1` each terminal session.
+
+Note: the devkit includes `make.bat` and `make-run.bat` which need no
+activation and can be run from Explorer.
 
 
 ### Linux
@@ -118,7 +126,7 @@ level. This removes the need to use `activate-env.bat` or
 
 ## Usage
 
-This setup is intended to be as simple as possible to get going. To
+This setup is intended to be as simple as possible to start using. To
 that end it is primarily designed to be used in-place. There is no
 install required. Just download, activate environment, and build.
 
@@ -130,7 +138,7 @@ install required. Just download, activate environment, and build.
   and C++ files (`*.cpp`) in the root of `src/`.
 * Add and/or remove files from `src/` as needed for your project.
 * Run `make` to build object files, link executable, build ISO, and
-  sign ISO for retail use.
+  sign ISO for retail system usage.
 
 See below for OS specific workflows.
 
@@ -143,7 +151,7 @@ See below for OS specific workflows.
 * Uncomppress and move the folder into its final location
 * From a terminal (cmd.exe or PowerShell):
   * Enter the directory: `cd 3do-devkit`
-  * Source the environment: `activate-env` or `.\activate-env`
+  * Source the environment: `activate-env` (CMD) or `.\activate-env` (PowerShell)
   * Run make: `make`
     * Generates `iso\helloworld.iso`
   * Run in RetroArch Opera emulator (if installed): `make run`
@@ -177,37 +185,36 @@ available on Windows.
 
 ## Bootstrapping a New Project
 
-If you have "installed" the dev kit as described above you can create
-code and asset repositories in different directories which will use
-the binaries found in the "install" location.
+If you have "installed" the dev kit as described above or activated
+the environment you can easily copy code, assets, and build tools into
+their own directories which will use the binaries found in the
+"install" location.
 
-To simplify the creation of these there are the `bootstrap-project`
-scripts. One for Windows and one Linux.
+To simplify the creation of these there is the `bootstrap-3do-project`
+script.
 
 
 ### Windows
 
-* Run `buildtools\setup-env.bat` (if not done already) to setup paths globally
+* Run `setup-3do-devkit-env.bat` (if not done already) to setup paths
+  globally or `activate-env`
 * Make a directory for your project
-* Copy `buildtools\bootstrap-project.bat` to that directory
-* Run `bootstrap-project.bat` from within that directory
+* Change the directory to your new project path
+* Run `bootstrap-3do-project.bat`
+* Or copy `bootstrap-3do-project.bat` to that directory and run it
+  (from shell or Explorer)
 
-This will copy all relevant files into the path and can use it the
-same as described above. Feel free to remove `bootstrap-project.bat`
-afterwards.
+This will copy all relevant files into the path and can be used the
+same as described above. Feel free to remove
+`bootstrap-3do-project.bat` afterwards.
 
 
 ### Linux
 
 * Source `activate-env` as described above
 * Make a directory for your project
-* Copy `buildtools/bootstrap-project` to that directory
-* Run `bootstrap-project` from within that directory
-* You can also simply run `buildtools/bootstrap-project PATH`
-
-This will copy all relevant files into the path and can use it the
-same as described above. Feel free to remove `bootstrap-project`
-afterwards.
+* Run `bootstrap-3do-project` from within that directory
+* You can also simply run `bootstrap-3do-project PATH`
 
 
 ## RetroArch Opera Setup
@@ -216,23 +223,25 @@ afterwards.
 run the built ISO. RetroArch can be found at https://retroarch.com but
 you will need ROMs for Opera to work correctly.
 
-The script `buildtools/download-retroarch-opera-roms` will attempt to
+The script `download-retroarch-opera-roms` will attempt to
 download required ROMs to the "system" directory of RetroArch if
 already installed. On Windows or Linux simply launch from a file
 explorer or a terminal.
 
 NOTE: The scripts look in known directories to copy the ROMs to but it
 is possible you have a different setup. You can just go to the
-[site](https://3dodev.com) and download the ROMs manually and place
-them into the RetroArch `system` folder.
+[site](https://3dodev.com/software/roms) and download the ROMs
+manually and place them into the RetroArch `system` folder.
+
+* https://3dodev.com/_media/roms/panafz1.bin
+* https://3dodev.com/_media/roms/panafz1j-kanji.bin
 
 
 ## DevKit Layout
 
-* bin/: All core binaries such as compilers, linkers, and media
-  conversion tools.
-* buildtools/: Misc tools to setup the build environment.
-* src/: Directory storing all source.
+* bin/: All core binaries such as compilers, linkers, media
+  conversion tools, and misc tooling.
+* src/: Directory storing all application source.
 * takeme/: Directory storing all CDROM artifacts. Target for final
   "Launchme" executable. The name "takeme" originates from the
   original 3DO SDK.
@@ -240,8 +249,8 @@ them into the RetroArch `system` folder.
 * docs/: Misc documentation from the original SDK and compiler suites.
 * include/: All include files from original SDK and community projects.
 * lib/: All libraries from original SDK and community projects.
-* examples/: Primarily examples from all available original 3DO SDK
-  releases.
+* examples/: Examples from all available original 3DO SDK releases as
+  well as new and reworked examples.
 * build/: Automatically created directory during build to store object
   files.
 * iso/: Automatically created directory during build to store ISO file.
@@ -251,9 +260,9 @@ them into the RetroArch `system` folder.
 
 ### images
 
-`3it` is a comprehensive tool supporting conversion to and from CELs,
-IMAGs, Banners, etc. Older tools are included for completeness but
-should not be needed.
+[3it](https://github.com/trapexit/3it) is a comprehensive tool
+supporting conversion to and from CELs, IMAGs, Banners, etc. Older
+tools are included for completeness but should not be needed.
 
 Read more about CEL formats at:
 * https://3dodev.com/documentation/file_formats/media/image/cel
@@ -262,14 +271,22 @@ Read more about CEL formats at:
 
 ### audio
 
+The 3DO can [handle multiple sample rates, sample sizes, channels, and
+codecs.](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/mgsfldr/mpgfldr/03mpg004)
+
 [ffmpeg](https://ffmpeg.org) can be used to convert files to a couple
-3DO compatible formats but not all. ffmpeg does not currently have a
-SDX2 encoder (only decoder) leaving only the original MacOS software
-capable of encoding the format.
+3DO compatible formats. ffmpeg does not currently have a SDX2 encoder
+(only decoder) or a Intel/DVI ADP4 encoder or decoder leaving only the
+original MacOS software capable of encoding the format.
 
 SDX2 compresses the audio to 8bits per sample and according to the
 original author, Phil Burk, sounds noticeably better than using raw
-8bit samples.
+8bit samples. Intel/DVI ADP4 compresses down to 4 bits per sample but
+only allows for mono audio and is notably worse sounding compared to
+SDX2.
+
+trapexit will soon release the tool `3at` which will encode and decode
+SDX2 and ADP4.
 
 
 #### uncompressed AIFF signed 16bit bigendian
@@ -305,7 +322,9 @@ ffmpeg -i input.file -ar 22050 -f s8 -acodec pcm_s8 output.raw"
 
 #### compressed 4bit ADPCM IMA WS
 
-Make sure you have a more recent version of ffmpeg to use `adpcm_ima_ws`
+Make sure you have a more recent version of ffmpeg to use
+`adpcm_ima_ws`. This isn't exactly Intel/DVI ADP4 but "works." It just
+won't sound as good as an authentic ADP4 encoder.
 
 ```
 ffmpeg -i input.file -c:a adpcm_ima_ws output.aifc

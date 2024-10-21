@@ -22,24 +22,22 @@
   just move the function to the top which you wish to use.
 */
 
-extern int main_cel_rotation();
-extern int main_read_rom();
-extern int main_overwrite_folio_func();
-extern int main_find_semaphore();
-extern int main_example_folio();
+#include "hardware.h"
+
+extern     int main_cel_rotation();
 extern "C" int main_3d_3do_logo();
 
 int
 main(int   argc_,
      char *argv_)
 {
-  main_3d_3do_logo();
-  
-  main_cel_rotation();
-  main_read_rom();
-  main_overwrite_folio_func();
-  main_find_semaphore();
-  main_example_folio();
+  u32 rnd;
+
+  rnd = ReadHardwareRandomNumber();
+  if(rnd & 1)
+    main_3d_3do_logo();
+  else
+    main_cel_rotation();
 
   return 0;
 }

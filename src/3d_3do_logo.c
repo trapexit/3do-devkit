@@ -551,9 +551,8 @@ clear_screen(void)
                0xFFFFFFFF);
 }
 
-
 int
-main_3d_3do_logo()
+main_3d_3do_logo(void)
 {
   init_demo();
 
