@@ -1,7 +1,7 @@
 NAME       = helloworld
 ISONAME    = iso/$(NAME).iso
 FILESYSTEM = takeme
-EXENAME	   = $(FILESYSTEM)/LaunchMe
+LAUNCHME   = $(FILESYSTEM)/LaunchMe
 STACKSIZE  = 4096
 BANNER	   = banner.png
 
@@ -35,14 +35,14 @@ endif
 
 INCPATH  = ${TDO_DEVKIT_PATH}/include
 INCFLAGS = -I$(INCPATH)/3do -I$(INCPATH)/community -I$(INCPATH)/ttl
-CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs '3/32/fp/swst/wide/softfp'
+CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs "3/32/fp/swst/wide/softfp"
 CXXFLAGS = $(CFLAGS)
-ASFLAGS  = -bigend -fpu none -arch 3 -apcs '3/32/fp/swst'
+ASFLAGS  = -bigend -fpu none -arch 3 -apcs "3/32/fp/swst"
 LIBPATH  = ${TDO_DEVKIT_PATH}/lib
 LDFLAGS  = -match 0x1 -nodebug -noscanlib -nozeropad -verbose -remove -aif -reloc -dupok -ro-base 0
 STARTUP  = $(LIBPATH)/3do/cstartup.o
 
-LIBS = \
+LIBS =						\
 	$(LIBPATH)/3do/3dlib.lib		\
 	$(LIBPATH)/3do/audio.lib		\
 	$(LIBPATH)/3do/clib.lib			\
@@ -85,25 +85,44 @@ OBJS += $(SRCS_S:src/%.s=build/%.s.o)
 OBJS += $(SRCS_C:src/%.c=build/%.c.o)
 OBJS += $(SRCS_CXX:src/%.cpp=build/%.cpp.o)
 
+DEPS = $(OBJS:.o=.d)
+
 all: launchme modbin iso encrypt-iso
 
-$(EXENAME): builddir $(OBJS)
+build/.touched:
+ifeq ($(OS),Windows_NT)
+	if not exist "build" mkdir "build"
+	type nul > $@
+else
+	mkdir -p "build"
+	touch $@
+endif
 
-launchme: $(EXENAME)
-	armlink -o "$(EXENAME)" $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJS)
+builddir: build/.touched
+
+objs: builddir $(OBJS)
+
+$(LAUNCHME): objs
+	armlink -o $@ $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJS)
+
+launchme: $(LAUNCHME)
 
 modbin:
-	modbin --name="$(NAME)" --time --stack=$(STACKSIZE) "$(EXENAME)" "$(EXENAME)"
+	modbin --name="$(NAME)" --time --stack=$(STACKSIZE) "$(LAUNCHME)" "$(LAUNCHME)"
 
 banner:
 	3it to-banner -o "$(FILESYSTEM)/BannerScreen" "$(BANNER)"
 
-isodir:
+iso/.touched:
 ifeq ($(OS),Windows_NT)
 	if not exist "iso" mkdir "iso"
+	type nul > $@
 else
 	mkdir -p "iso"
+	touch $@
 endif
+
+isodir: iso/.touched
 
 iso: isodir
 	3doiso -in "$(FILESYSTEM)" -out "$(ISONAME)"
@@ -111,32 +130,29 @@ iso: isodir
 encrypt-iso: $(ISONAME)
 	3DOEncrypt genromtags "$(ISONAME)"
 
-builddir:
-ifeq ($(OS),Windows_NT)
-	if not exist "build" mkdir "build"
-else
-	mkdir -p "build"
-endif
-
 build/%.s.o: src/%.s
 	armasm $(INCFLAGS) $(DEFFLAGS) $(ASFLAGS) $< -o $@
 
 build/%.c.o: src/%.c
+	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -M $< -o $@ > ${@:.o=.d}
 	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
 
 build/%.cpp.o: src/%.cpp
+	armcpp $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -M $< -o $@ > ${@:.o=.d}
 	armcpp $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -c $< -o $@
 
 clean:
 ifeq ($(OS),Windows_NT)
 	if exist "build" rmdir /S /Q "build"
 	if exist "iso" rmdir /S /Q "iso"
-	if exist $(subst /,\,$(EXENAME)) del $(subst /,\,$(EXENAME))
+	if exist $(subst /,\,$(LAUNCHME)) del $(subst /,\,$(LAUNCHME))
 else
-	rm -rvf "build" "iso" $(EXENAME)
+	rm -rvf "build" "iso" $(LAUNCHME)
 endif
 
 run:
 	run-iso "$(ISONAME)"
 
 .PHONY: builddir isodir clean modbin banner iso encrypt-iso run
+
+-include $(DEPS)
