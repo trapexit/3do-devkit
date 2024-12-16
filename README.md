@@ -46,8 +46,10 @@ work on the console is suggested.
 
 * [3DO SDK's "Developer's Documentation Set"](https://3dodev.com/documentation/development_documents)
   * Also found in the repo in the original form: [docs/3dosdk](docs/3dosdk)
-* [Dev Notes and Gotchas](https://3dodev.com/documentation/software/opera/portfolio_os/notes_and_gotchas)
+* [ARM60 datasheet](docs/cpu)
 * [ARM SDT and ARM C++ docs](docs/compilers)
+* [Development notes](docs/devnotes/README.md): Collection of notes
+  collected from the homebrew community.
 
 More can be found at https://3dodev.com
 
@@ -110,7 +112,7 @@ you can set things up in a manner similar to a global install.
 the dev kit.
 * Uncompress and move the folder into its final location.
 * Run `bin\buildtools\win\setup-3do-devkit-env.bat`
-* This will setup the appropriate enviroment variables at a global
+* This will setup the appropriate environment variables at a global
 level. This removes the need to use `activate-env.bat` or
 `activate-env.ps1` each terminal session.
 
@@ -148,7 +150,7 @@ See below for OS specific workflows.
 #### General
 
 * [Download](https://github.com/trapexit/3do-devkit/archive/refs/heads/master.zip)
-* Uncomppress and move the folder into its final location
+* Uncompress and move the folder into its final location
 * From a terminal (cmd.exe or PowerShell):
   * Enter the directory: `cd 3do-devkit`
   * Source the environment: `activate-env` (CMD) or `.\activate-env` (PowerShell)
@@ -274,61 +276,19 @@ Read more about CEL formats at:
 The 3DO can [handle multiple sample rates, sample sizes, channels, and
 codecs.](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/mgsfldr/mpgfldr/03mpg004)
 
-[ffmpeg](https://ffmpeg.org) can be used to convert files to a couple
-3DO compatible formats. ffmpeg does not currently have a SDX2 encoder
-(only decoder) or a Intel/DVI ADP4 encoder or decoder leaving only the
-original MacOS software capable of encoding the format.
-
 SDX2 compresses the audio to 8bits per sample and according to the
 original author, Phil Burk, sounds noticeably better than using raw
 8bit samples. Intel/DVI ADP4 compresses down to 4 bits per sample but
 only allows for mono audio and is notably worse sounding compared to
-SDX2.
+SDX2. SDX2 will typically be best for music and ADP4 for sound effects.
 
-trapexit will soon release the tool `3at` which will encode and decode
-SDX2 and ADP4.
+[ffmpeg](https://ffmpeg.org) can be used to convert files to a couple
+raw audio formats which 3DO can use however ffmpeg does not currently
+have a SDX2 encoder (only decoder) or a Intel/DVI ADP4 encoder or
+decoder (though adpcm_ima_ws is similar.)
 
-
-#### uncompressed AIFF signed 16bit bigendian
-
-```
-ffmpeg -i input.file -ar 22050 -c:a pcm_s16be output.aiff"
-```
-
-
-#### uncompressed AIFF signed 8bit
-
-```
-ffmpeg -i input.file -ar 22050 -c:a pcm_s8 output.aiff"
-```
-
-
-#### uncompressed raw signed 16bit bigendian
-
-Raw files can be useful if you want to create multiple samples at
-runtime from the same file.
-
-```
-ffmpeg -i input.file -ar 22050 -f s16be -acodec pcm_s16be output.raw"
-```
-
-
-#### uncompressed raw signed 8bit
-
-```
-ffmpeg -i input.file -ar 22050 -f s8 -acodec pcm_s8 output.raw"
-```
-
-
-#### compressed 4bit ADPCM IMA WS
-
-Make sure you have a more recent version of ffmpeg to use
-`adpcm_ima_ws`. This isn't exactly Intel/DVI ADP4 but "works." It just
-won't sound as good as an authentic ADP4 encoder.
-
-```
-ffmpeg -i input.file -c:a adpcm_ima_ws output.aifc
-```
+[trapexit's 3at](https://github.com/trapexit/3at) can be used to
+convert to and from SDX2 and Intel/DVI ADP4.
 
 
 ### video
@@ -344,54 +304,11 @@ alignment you will need to use original Classic MacOS software.
 * http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
 
 
-## Notes
-
-### sysload
-
-Uncomment the line in `takeme/AppStartup` regarding `sysload` to add a
-CPU and DSP resource overlay to your app.
-
-
-### Development Notes and Gotchas
-
-* The Portfolio OS changed over time. As mentioned above the devkit
-  uses Portfolio 2.5 and Toolkit 1.5 which means some examples from
-  older versions may not work without modification.
-* https://3dodev.com/documentation/software/opera/portfolio_os/notes_and_gotchas
-
-
-### ARM C++ 1.11 compiler
-
-* ARM C++ 1.11 is a pre-standard compiler. From section 3.10 in the ref guide:
-  * Exceptions are NOT supported
-  * Namespaces are NOT supported
-  * RTTI is only partially supported
-  * C++ style casting is only partially supported
-  * While technically mostly supported templates can be buggy and complex
-    usage may crash the compiler
-
-
-### Memory Management
-
-ARM C++ 1.11 treats POD (plain old data) and objects differently so POD must be
-expressly handled/ignored when worrying about object destruction. There are no
-default destructors for objects either meaning it is not possible to simulate a
-'placement delete' to force destruction. obj->~OBJ() will not work unless
-expressly defined. As a result it is difficult to write generic template
-based data types. To work around this the STL like library provided removed
-memory freeing from 'delete' to force its use as a placement delete. Meaning
-that when wanting to free data from 'new' one should use `memory_delete(ptr)`.
-That said best to use or create higher level objects to manage such things.
-Simple versions of shared_ptr and unique_ptr are provided.
-
-There might be a better solution to this problem but after many attempts,
-including attempting to use the strategy by RogueWave which didn't seem
-to work, this was settled on till something better could be be done.
-
-
 ## TODO
 
 * Project files for popular IDEs.
+* Rework libc. Add missing functions.
+* Rebuild original privileged libraries and enhance them where possible.
 * Continue to enhance the C++ standard library replacement.
 * C++ based 3DO specific libraries.
 * Create a new iso building tool.
@@ -406,14 +323,16 @@ to work, this was settled on till something better could be be done.
 
 ## Thanks
 
-* @ArmSoftwareDev on Twitter and Arm Support: for providing me
-with copies of ARM SDT 2.51 and ARM C++ 1.11. After reaching out to former
-Norcroft employees, software archivists, and even Bjarne Stroustrup without
-success finding a copy of ARM C++ from the 3DO era I reached out to ARM
-directly and they were able to find some copies and offered them to me for
-this project.
-* everyone at The 3DO Community Discord
-* XProger (author of OpenLara) who was the first project to use this dev kit
+* @ArmSoftwareDev on Twitter and Arm Support: for providing me with
+copies of ARM SDT 2.51 and ARM C++ 1.11. After reaching out to former
+Norcroft employees, software archivists, and even Bjarne Stroustrup
+without success finding a copy of ARM C++ from the 3DO era I reached
+out to ARM directly and they were able to find some copies and offered
+them to me for this project.
+* Everyone at The 3DO Community Discord.
+* XProger: author of 3DO OpenLara and Wipeout prototype ports.
+* Shaun 3DOHD: author of REAL 3DO Tetris and MK2 3DO Edition.
+* zyzix: author of Biofury, JinglesDefense, REAL Tempest, and the Matinicus engine.
 
 
 ## Links
@@ -422,12 +341,11 @@ this project.
 * 3do-devkit: https://github.com/trapexit/3do-devkit
 * Portfolio OS: https://github.com/trapexit/portfolio_os
 * The 3DO Community Discord: https://discord.com/invite/kvM9cQG
-* OpenLara: https://github.com/XProger/OpenLara
 
 
 ## Donations / Sponsorship
 
-If you find 3do-devkit useful please consider supporting its ongoing
-development.
+If you find 3do-devkit and the surrounding tooling useful please
+consider supporting its ongoing development.
 
 https://github.com/trapexit/support
