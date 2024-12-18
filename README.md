@@ -101,9 +101,9 @@ double check by visiting the links provided above.
 
 ## Install
 
-There really isn't a need to "install". You can simply download the
-repo and start using it in place. See [#Usage](#Usage) below. However,
-you can set things up in a manner similar to a global install.
+There really isn't a need to "install". You can download the repo and
+start using it in place. See [#Usage](#Usage) below. However, you can
+set things up in a manner similar to a global install.
 
 
 ### Windows
@@ -162,6 +162,7 @@ See below for OS specific workflows.
   * Run `make.bat` to build the project
   * Run `make-run.bat` to run the created iso via Opera if RetroArch
     is installed
+  * Run `make-clean.bat` to remove build files
 
 
 #### WSL2
@@ -171,7 +172,17 @@ Same as Linux
 
 ### Linux
 
-Make sure you have WINE installed. Some tools are currently only
+The ARM compile suite binaries are x86 32bit. Be sure to install 32bit
+support for your distro. On Debian / Ubuntu based distros that would
+be:
+
+```console
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get install libc6:i386
+```
+
+Also ensure you have WINE installed. Some tools are currently only
 available on Windows.
 
 
@@ -183,6 +194,7 @@ available on Windows.
 * Run make: `make`
   * Generates `iso/helloworld.iso`
   * Run in RetroArch Opera emulator (if installed): `make run`
+* Run `make clean` to clean up build files
 
 
 ## Bootstrapping a New Project
@@ -216,7 +228,7 @@ same as described above. Feel free to remove
 * Source `activate-env` as described above
 * Make a directory for your project
 * Run `bootstrap-3do-project` from within that directory
-* You can also simply run `bootstrap-3do-project PATH`
+* You can also run `bootstrap-3do-project PATH`
 
 
 ## RetroArch Opera Setup
@@ -225,10 +237,10 @@ same as described above. Feel free to remove
 run the built ISO. RetroArch can be found at https://retroarch.com but
 you will need ROMs for Opera to work correctly.
 
-The script `download-retroarch-opera-roms` will attempt to
-download required ROMs to the "system" directory of RetroArch if
-already installed. On Windows or Linux simply launch from a file
-explorer or a terminal.
+The script `download-retroarch-opera-roms` will attempt to download
+required ROMs to the "system" directory of RetroArch if already
+installed. On Windows or Linux launch from a file explorer or a
+terminal.
 
 NOTE: The scripts look in known directories to copy the ROMs to but it
 is possible you have a different setup. You can just go to the
@@ -319,6 +331,30 @@ alignment you will need to use original Classic MacOS software.
 * More languages? If you have a ARMv3 compatible compiler and AIF linker
   (even if just different versions of Norcroft compilers) please reach out.
 * A version of the Opera emulator tailored for development work?
+
+
+## FAQ
+
+### Why not use a more modern compiler suite?
+
+The 3DO is an early ARMv3 based system which used ARM's Norcroft
+compiler, relocatable AIF executable format, AOF object format,
+etc. Support for these formats were abandoned by ARM around the time
+the console was retired and the limited open source compiler suite
+support for these formats were removed long long ago. Support for
+ARMv3 era CPUs have also been removed.
+
+trapexit has spoken with John Fitch of Codemist regarding licensing or
+open sourcing their ARM compiler suite as well as individuals who
+maintain the compiler suite for RISCOS. Unfortunately, neither were
+able to help. The latter having narrowly scoped licensing with no
+ability to sublicense.
+
+Adding ARMv3 support to a modern compiler might not be so hard given
+ARMv4 is still supported by but adding AIF and AOF to modern linkers
+would likely be a decent amount of work and maintenance. There are
+other ideas ranging from an ELF to relocatable AIF converter to
+transpiling ARMv4 assembly to `armasm` compatible assembly.
 
 
 ## Thanks
