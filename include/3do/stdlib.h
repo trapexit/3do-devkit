@@ -1,13 +1,4 @@
-#pragma include_only_once
-
-/******************************************************************************
-**
-**  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.
-**  This material contains confidential information that is the property of The 3DO Company.
-**  Any unauthorized duplication, disclosure or use is prohibited.
-**  $Id: stdlib.h,v 1.16 1994/09/10 01:22:35 peabody Exp $
-**
-******************************************************************************/
+#pragma once
 
 #include "extern_c.h"
 
@@ -28,7 +19,7 @@ void *reallocDebug(void *oldBlock, size_t newSize, const char *sourceFile, uint3
 
 #else
 
-void *malloc(int32);	/* not changed to size_t for src compatibility */
+void *malloc(long size);
 void free(void *);
 void *calloc(size_t nelem, size_t elsize);
 void *realloc(void *oldBlock, size_t newSize);
@@ -39,21 +30,21 @@ void *realloc(void *oldBlock, size_t newSize);
 
 #endif
 
-
 extern void exit(int status);
 
-extern int32 rand(void);
-extern void srand(int32);
-extern uint32 urand(void);
+/* rand() is just urand() & 0x7FFFFFFF */
+extern void srand(unsigned int);
+extern int rand(void);
+extern unsigned int urand(void);
 
 extern int _ANSI_rand(void);
 extern int _ANSI_srand(unsigned int seed);
 
-extern int32 atoi(const char *nptr);
-extern long int atol(const char *nptr);
+extern int  atoi(const char *nptr);
+extern long atol(const char *nptr);
 
-extern ulong strtoul(const char *nsptr, char **endptr, int base);
-extern long strtol(const char *nsptr, char **endptr, int base);
+extern long          strtol(const char *nptr, char **endptr, int base);
+extern unsigned long strtoul(const char *nptr, char **endptr, int base);
 
 extern void qsort(void *base, size_t nmemb, size_t size,
                   int (*compar)(const void *, const void *));
@@ -62,10 +53,11 @@ extern void *bsearch(const void *key, const void *base,
                      size_t nmemb, size_t size,
                      int (*compar)(const void *, const void *));
 
-extern int system(const char *cmdString);
-/* The system() function currently does not return the exit value produced
- * by the program being run. It will return an error code if the program
- * couldn't be started, and will otherwise always return 0.
- */
+/*
+  The system() function currently does not return the exit value produced
+  by the program being run. It will return an error code if the program
+  couldn't be started, and will otherwise always return 0.
+*/
+extern int system(const char *cmd);
 
 EXTERN_C_END
