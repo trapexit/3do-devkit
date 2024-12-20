@@ -225,7 +225,6 @@ void FreeMemToMemList(MemList *ml, void *p, int32 size);
 boolean IsMemReadable(const void *p, int32 size);
 boolean IsMemWritable(const void *p, int32 size);
 
-
 /****************************************************************************/
 
 

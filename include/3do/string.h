@@ -6,30 +6,31 @@
 
 EXTERN_C_BEGIN
 
-#define bcopy(Src,Dest,Len) memcpy(Dest,Src,Len)
-#define bzero(Dest,Len) memset(Dest,0,Len)
+extern void *memcpy(void *dst, const void *src, size_t n);
+extern void *memmove(void *dst, const void *src, size_t n);
+extern void *memchr(void *src, int c,size_t n);
+extern int   memcmp(const void *s1, const void *s2, size_t n);
+extern void *memset(void *s, int c, size_t n);
 
-extern void *memchr(void *Src, int Char,size_t n);
-extern void *memcpy(void *s1, const void *s2, size_t n);
-extern int memcmp(char *Str1, char *Str2,size_t n);
-extern void *memmove(void *s1, const void *s2, size_t n);
-extern void *memset(void *Dest, int FillChar, size_t Len);
-extern char *strcpy(char *s1, const char *s2);
-extern char *strncpy(char *s1, const char *s2, size_t n);
-extern char *strcat(char *s1, const char *s2);
-extern char *strncat(char *s1, const char *s2, size_t n);
-extern int strcmp(const char *s1, const char *s2);
-extern int stricmp(const char *s1, const char *s2);
-extern int strcasecmp(const char *s1, const char *s2);
-extern int strncmp(const char *s1, const char *s2, size_t n);
-extern size_t strlen(const char *s1);
+extern void bzero(void *s, size_t n);
+extern void bcopy(const void *src, void *dst, size_t n);
 
-extern const char *strstr(const char *str, const char *substring);
-extern char *strchr(const char *s, int c);
-extern ulong strtoul(const char *nsptr, char **endptr, int base);
-extern long strtol(const char *nsptr, char **endptr, int base);
+extern char   *strcat(char *dst, const char *src);
+extern char   *strchr(const char *s, int c);
+extern char   *strcpy(char *dst, const char *src);
+extern char   *strerror(int errnum);
+extern char   *strncat(char *dst, const char *src, size_t n);
+extern char   *strncpy(char *dst, const char *src, size_t n);
+extern char   *strpbrk(const char *s, const char *accept);
+extern char   *strrchr(const char *s, int c);
+extern char   *strstr(const char *haystack, const char *needle);
+extern char   *strtok(char *str, const char *delim);
+extern int     strcmp(const char *s1, const char *s2);
+extern int     strncmp(const char *s1, const char *s2, size_t n);
+extern size_t  strcspn(const char *s, const char *reject);
+extern size_t  strlen(const char *s);
+extern size_t  strspn(const char *s, const char *accept);
 
-#define CopyMem(a,b,c) memcpy(a,b,c)
-#define SetMem(a,b,c) memset(a,b,c)
+extern int ffs(int i);
 
 EXTERN_C_END
