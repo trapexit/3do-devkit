@@ -97,6 +97,10 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
   including privileged calls, however multiprocess development is rare
   so of limited use except for getting privileged access for
   interacting with hardware.
+* `CreateBitmap()` has a bug in it where it sets REGCTL1 (which
+  controls the clipping width and height) to the bitmap width and
+  height rather than the clip values if provided. When/if we rebuild
+  the library this can be fixed.
 
 
 ### Programming Do's and Don'ts
