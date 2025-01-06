@@ -40,6 +40,14 @@ main(int   argc_,
          foo.b,
          &bar,
          bar);
+
+  &foo[0]
+  printf("&foo = %p (%x,%x); &bar = %p (%x);\n",
+         &foo,
+         foo.a,
+         foo.b,
+         &bar,
+         bar);
   
   while(true);
   return 0;
