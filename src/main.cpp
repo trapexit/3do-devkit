@@ -31,7 +31,7 @@ int
 main(int   argc_,
      char *argv_)
 {
-  printf("&foo = %p; &bar = %p;\n",
+  printf("&foo = %p (%d,%d); &bar = %p (%d);\n",
          &foo,
          foo.a,
          foo.b,
