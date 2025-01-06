@@ -31,6 +31,9 @@ int
 main(int   argc_,
      char *argv_)
 {
+  foo.a = 0xa5a5a5a5;
+  foo.b = 0x5a5a5a5a;
+  
   printf("&foo = %p (%d,%d); &bar = %p (%x);\n",
          &foo,
          foo.a,
