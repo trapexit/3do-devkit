@@ -33,7 +33,10 @@ main(int   argc_,
 {
   printf("&foo = %p; &bar = %p;\n",
          &foo,
-         &bar);
+         foo.a,
+         foo.b,
+         &bar,
+         bar);
   
   while(true);
   return 0;
