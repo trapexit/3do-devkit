@@ -25,7 +25,7 @@
 #include "stdio.h"
 
 static struct { int a; int b; } foo;
-int bar = 1;
+extern int bar = 1;
 
 int
 main(int   argc_,
