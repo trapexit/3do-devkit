@@ -25,13 +25,13 @@
 #include "stdio.h"
 
 static struct { int a; int b; } foo;
-extern int bar = 1;
+extern int bar = 0xdeadbeef;
 
 int
 main(int   argc_,
      char *argv_)
 {
-  printf("&foo = %p (%d,%d); &bar = %p (%d);\n",
+  printf("&foo = %p (%d,%d); &bar = %p (%x);\n",
          &foo,
          foo.a,
          foo.b,
