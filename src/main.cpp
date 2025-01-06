@@ -22,10 +22,7 @@
   just move the function to the top which you wish to use.
 */
 
-#include "hardware.h"
-
-extern     int main_cel_rotation();
-extern "C" int main_3d_3do_logo();
+#include "stdio.h"
 
 static struct { int a; int b; } foo;
 int bar = 1;
@@ -34,13 +31,9 @@ int
 main(int   argc_,
      char *argv_)
 {
-  u32 rnd;
-
-  rnd = ReadHardwareRandomNumber();
-  if(rnd & 1)
-    main_3d_3do_logo();
-  else
-    main_cel_rotation();
-
+  print
+  
+  
+  while(true);
   return 0;
 }
