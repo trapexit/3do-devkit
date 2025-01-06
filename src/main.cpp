@@ -41,7 +41,7 @@ main(int   argc_,
          &bar,
          bar);
 
-  (&foo)[0];
+  (&foo)[1].a = 0x8badfood;
   printf("&foo = %p (%x,%x); &bar = %p (%x);\n",
          &foo,
          foo.a,
