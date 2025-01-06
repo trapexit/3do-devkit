@@ -31,8 +31,9 @@ int
 main(int   argc_,
      char *argv_)
 {
-  print
-  
+  printf("&foo = %p; &bar = %p;\n",
+         &foo,
+         &bar);
   
   while(true);
   return 0;
