@@ -34,7 +34,7 @@ main(int   argc_,
   foo.a = 0xa5a5a5a5;
   foo.b = 0x5a5a5a5a;
   
-  printf("&foo = %p (%d,%d); &bar = %p (%x);\n",
+  printf("&foo = %p (%x,%x); &bar = %p (%x);\n",
          &foo,
          foo.a,
          foo.b,
