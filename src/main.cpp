@@ -24,6 +24,8 @@
 
 #include "stdio.h"
 
+typedef void (*funcptr)(int,int);
+
 static struct { int a; int b; } foo;
 extern int bar = 0xdeadbeef;
 
