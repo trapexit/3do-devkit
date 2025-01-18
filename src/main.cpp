@@ -36,24 +36,7 @@ int
 main(int   argc_,
      char *argv_)
 {
-  foo.a = 0xa5a5a5a5;
-  foo.b = 0x5a5a5a5a;
+  main_cel_rotation();
   
-  printf("&foo = %p (%x,%x); &bar = %p (%x);\n",
-         &foo,
-         foo.a,
-         foo.b,
-         &bar,
-         bar);
-
-  (&foo)[1].a = 0x8badf00d;
-  printf("&foo = %p (%x,%x); &bar = %p (%x);\n",
-         &foo,
-         foo.a,
-         foo.b,
-         &bar,
-         bar);
-  
-  while(true);
   return 0;
 }
