@@ -87,18 +87,18 @@ main_cel_rotation()
 
   while(true)
     {
-      ZoomRotateCel(logo,x,y,zoom,angle);
-      angle += Convert32_F16(1);
-      zoom  += dzoom;
-      if(clamp(min_zoom,max_zoom,zoom))
-        {
-          dzoom = -dzoom;
-          x = Convert32_F16(ReadHardwareRandomNumber() % display.sc->sc_BitmapWidth);
-          y = Convert32_F16(ReadHardwareRandomNumber() % display.sc->sc_BitmapHeight);
-          kprintf("x,y: %d, %d\n",
-                  ConvertF16_32(x),
-                  ConvertF16_32(y));
-        }
+      // ZoomRotateCel(logo,x,y,zoom,angle);
+      // angle += Convert32_F16(1);
+      // zoom  += dzoom;
+      // if(clamp(min_zoom,max_zoom,zoom))
+      //   {
+      //     dzoom = -dzoom;
+      //     x = Convert32_F16(ReadHardwareRandomNumber() % display.sc->sc_BitmapWidth);
+      //     y = Convert32_F16(ReadHardwareRandomNumber() % display.sc->sc_BitmapHeight);
+      //     kprintf("x,y: %d, %d\n",
+      //             ConvertF16_32(x),
+      //             ConvertF16_32(y));
+      //   }
 
       display.clear();
       display.draw_cels(logo);
