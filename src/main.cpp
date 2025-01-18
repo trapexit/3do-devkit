@@ -30,6 +30,8 @@ typedef void (*funcptr2)(funcptr);
 static struct { int a; int b; } foo;
 extern int bar = 0xdeadbeef;
 
+extern int main_cel_rotation(void);
+
 int
 main(int   argc_,
      char *argv_)
