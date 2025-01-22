@@ -103,7 +103,6 @@ main_cel_rotation()
       //             ConvertF16_32(y));
       //   }
 
-      display.clear();
       display.draw_cels(logo);
       display.sc->sc_Bitmaps[display.screen()]->bm_Buffer += 320;
       display.draw_cels(logo);
