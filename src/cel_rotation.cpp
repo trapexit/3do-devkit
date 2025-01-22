@@ -88,6 +88,8 @@ main_cel_rotation()
   const frac16 min_zoom = (Convert32_F16(1) >> 6);
 
   SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],160,0);
+  SetClipWidth(display.sc->sc_BitmapItems[display.screen()],32);
+  SetClipHeight(display.sc->sc_BitmapItems[display.screen()],32);  
 
   while(true)
     {
