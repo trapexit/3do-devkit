@@ -37,6 +37,8 @@ BasicDisplay::BasicDisplay()
       DisableVAVG(sc->sc_Screens[i]);
     }
 
+  sc->sc_Bitmaps[0]->bm_Buffer += 160;
+
   _vram_ioreq = CreateVRAMIOReq();
   _vbl_ioreq  = CreateVBLIOReq();
   _screen     = 0;
