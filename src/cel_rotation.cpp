@@ -76,6 +76,7 @@ main_cel_rotation()
   logo = LoadCel("art/packed.cel",MEMTYPE_CEL);  
 
   display.clear();
+  display.display();
   //  display.swap();
 
   frac16       x        = display.sc->sc_BitmapWidth >> 1;
