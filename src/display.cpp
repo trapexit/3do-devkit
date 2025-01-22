@@ -95,7 +95,11 @@ BasicDisplay::display_and_swap()
 Err
 BasicDisplay::draw_cels(CCB *ccb_)
 {
-  return DrawCels(sc->sc_BitmapItems[_screen],ccb_);
+  sc->sc_Bitmaps[_screen]->bm_Buffer += 160;
+  DrawCels(sc->sc_BitmapItems[_screen],ccb_);
+  sc->sc_Bitmaps[_screen]->bm_Buffer -= 160;
+
+  return 0;
 }
 
 Err
