@@ -88,10 +88,6 @@ main_cel_rotation()
   const frac16 min_zoom = (Convert32_F16(1) >> 6);
   int rv;
 
-  SetClipWidth(display.sc->sc_BitmapItems[display.screen()],160);
-  SetClipHeight(display.sc->sc_BitmapItems[display.screen()],240);  
-  SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],160,0);
-
   while(true)
     {
       // ZoomRotateCel(logo,x,y,zoom,angle);
@@ -112,8 +108,17 @@ main_cel_rotation()
       //      display.sc->sc_Bitmaps[display.screen()]->bm_Buffer +=
       //      320;
       display.clear();
+      
+      SetClipWidth(display.sc->sc_BitmapItems[display.screen()],160);
+      SetClipHeight(display.sc->sc_BitmapItems[display.screen()],240);  
+      SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],0,0);
       display.draw_cels(logo);
-      logo->ccb_XPos += 1 << 16;
+
+      SetClipWidth(display.sc->sc_BitmapItems[display.screen()],160);
+      SetClipHeight(display.sc->sc_BitmapItems[display.screen()],240);  
+      SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],160,0);
+      display.draw_cels(logo);      
+
       //      logo->ccb_XPos -= 1 << 16;      
       //      display.sc->sc_Bitmaps[display.screen()]->bm_Buffer -= 320;      
       //      display.draw_printf(16,16,"x: %d",ConvertF16_32(x));
