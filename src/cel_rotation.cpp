@@ -108,14 +108,15 @@ main_cel_rotation()
       display.draw_cels(logo);
       //      display.sc->sc_Bitmaps[display.screen()]->bm_Buffer +=
       //      320;
-      SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],160,0);      
+      SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],160,0);
+      logo->ccb_XPos += 1 << 16;
       display.draw_cels(logo);
       //      display.sc->sc_Bitmaps[display.screen()]->bm_Buffer -= 320;      
       display.draw_printf(16,16,"x: %d",ConvertF16_32(x));
       display.draw_printf(16,24,"y: %d",ConvertF16_32(y));
       //      display.display_and_swap();
 
-      //display.waitvbl();
+      display.waitvbl();
     }
 
   UnloadCel(logo);
