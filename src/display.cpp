@@ -40,8 +40,8 @@ BasicDisplay::BasicDisplay()
   printf("%p %p\n",
          sc->sc_Bitmaps[0]->bm_Buffer,
          sc->sc_Bitmaps[1]->bm_Buffer);
-  sc->sc_Bitmaps[0]->bm_Buffer += 160;
-  sc->sc_Bitmaps[1]->bm_Buffer += 160;  
+  sc->sc_Bitmaps[0]->bm_Buffer += 1024;
+  sc->sc_Bitmaps[1]->bm_Buffer += 1024;  
 
   _vram_ioreq = CreateVRAMIOReq();
   _vbl_ioreq  = CreateVBLIOReq();
