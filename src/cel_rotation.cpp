@@ -110,6 +110,7 @@ main_cel_rotation()
       //      display.draw_cels(logo);
       //      display.sc->sc_Bitmaps[display.screen()]->bm_Buffer +=
       //      320;
+      display.clear();
       display.draw_cels(logo);
       logo->ccb_XPos += 1 << 16;
       //      logo->ccb_XPos -= 1 << 16;      
