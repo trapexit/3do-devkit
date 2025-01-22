@@ -86,6 +86,7 @@ main_cel_rotation()
   frac16       dzoom    = DivSF16(Convert32_F16(1),Convert32_F16(200));
   const frac16 max_zoom = Convert32_F16(3);
   const frac16 min_zoom = (Convert32_F16(1) >> 6);
+  int rv;
 
   rv = SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],160,0);
   printf("%x\n",rv);
