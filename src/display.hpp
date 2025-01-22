@@ -51,9 +51,9 @@ public:
 
 public:
   ScreenContext *sc;
-
-private:
   int  _screen;
+  
+private:
   Item _vram_ioreq;
   Item _vbl_ioreq;
 };
