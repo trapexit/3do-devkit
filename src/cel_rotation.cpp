@@ -109,7 +109,7 @@ main_cel_rotation()
       display.draw_printf(16,24,"y: %d",ConvertF16_32(y));
       //      display.display_and_swap();
 
-      display.waitvbl();
+      //display.waitvbl();
     }
 
   UnloadCel(logo);
