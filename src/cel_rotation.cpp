@@ -89,7 +89,9 @@ main_cel_rotation()
   int rv;
 
   rv = SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],160,0);
+  PrintfSysErr(rv);
   printf("%x\n",rv);
+  PrintfSysErr(rv);  
   SetClipWidth(display.sc->sc_BitmapItems[display.screen()],64);
   SetClipHeight(display.sc->sc_BitmapItems[display.screen()],64);  
 
