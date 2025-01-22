@@ -72,6 +72,7 @@ BasicDisplay::waitvbl()
 Err
 BasicDisplay::display()
 {
+  sc->sc_Bitmaps[_screen]->bm_Buffer += 160;
   return DisplayScreen(sc->sc_Screens[_screen],0);
 }
 
