@@ -48,12 +48,14 @@ public:
                    const char *fmt,
                    va_list     args);
 
+  int screen(void) { return _screen; }
+
 
 public:
   ScreenContext *sc;
-  int  _screen;
-  
+
 private:
+  int  _screen;
   Item _vram_ioreq;
   Item _vbl_ioreq;
 };
