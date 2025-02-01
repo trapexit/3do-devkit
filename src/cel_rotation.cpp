@@ -72,12 +72,10 @@ main_cel_rotation()
 
   OpenMathFolio();
 
-  //  logo = LoadCel("art/3do_logo_unpacked.cel",MEMTYPE_CEL);
   logo = LoadCel("art/blue_square.png.cel",MEMTYPE_CEL);
 
   display.clear();
-  display.display();
-  //  display.swap();
+  display.swap();
 
   frac16       x        = display.sc->sc_BitmapWidth >> 1;
   frac16       y        = display.sc->sc_BitmapHeight >> 1;
@@ -86,44 +84,27 @@ main_cel_rotation()
   frac16       dzoom    = DivSF16(Convert32_F16(1),Convert32_F16(200));
   const frac16 max_zoom = Convert32_F16(3);
   const frac16 min_zoom = (Convert32_F16(1) >> 6);
-  int rv;
 
   while(true)
     {
-      // ZoomRotateCel(logo,x,y,zoom,angle);
-      // angle += Convert32_F16(1);
-      // zoom  += dzoom;
-      // if(clamp(min_zoom,max_zoom,zoom))
-      //   {
-      //     dzoom = -dzoom;
-      //     x = Convert32_F16(ReadHardwareRandomNumber() % display.sc->sc_BitmapWidth);
-      //     y = Convert32_F16(ReadHardwareRandomNumber() % display.sc->sc_BitmapHeight);
-      //     kprintf("x,y: %d, %d\n",
-      //             ConvertF16_32(x),
-      //             ConvertF16_32(y));
-      //   }
+      ZoomRotateCel(logo,x,y,zoom,angle);
+      angle += Convert32_F16(1);
+      zoom  += dzoom;
+      if(clamp(min_zoom,max_zoom,zoom))
+        {
+          dzoom = -dzoom;
+          x = Convert32_F16(ReadHardwareRandomNumber() % display.sc->sc_BitmapWidth);
+          y = Convert32_F16(ReadHardwareRandomNumber() % display.sc->sc_BitmapHeight);
+          kprintf("x,y: %d, %d\n",
+                  ConvertF16_32(x),
+                  ConvertF16_32(y));
+        }
 
-      //      SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],0,0);
-      //      display.draw_cels(logo);
-      //      display.sc->sc_Bitmaps[display.screen()]->bm_Buffer +=
-      //      320;
       display.clear();
-      
-      SetClipWidth(display.sc->sc_BitmapItems[display.screen()],160);
-      SetClipHeight(display.sc->sc_BitmapItems[display.screen()],240);  
-      SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],0,0);
       display.draw_cels(logo);
-
-      SetClipWidth(display.sc->sc_BitmapItems[display.screen()],160);
-      SetClipHeight(display.sc->sc_BitmapItems[display.screen()],240);  
-      SetClipOrigin(display.sc->sc_BitmapItems[display.screen()],160,0);
-      display.draw_cels(logo);      
-
-      //      logo->ccb_XPos -= 1 << 16;      
-      //      display.sc->sc_Bitmaps[display.screen()]->bm_Buffer -= 320;      
-      //      display.draw_printf(16,16,"x: %d",ConvertF16_32(x));
-      //      display.draw_printf(16,24,"y: %d",ConvertF16_32(y));
-      //      display.display_and_swap();
+      display.draw_printf(16,16,"x: %d",ConvertF16_32(x));
+      display.draw_printf(16,24,"y: %d",ConvertF16_32(y));
+      display.display_and_swap();
 
       display.waitvbl();
     }
