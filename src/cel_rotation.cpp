@@ -8,6 +8,7 @@
 #include "item.h"
 #include "mem.h"
 #include "operamath.h"
+#include "hardware.h"
 #include "stdio.h"
 #include "string.h"
 
@@ -91,7 +92,7 @@ main_cel_rotation()
       p[i] |= (i&3) << 5;
     }
 
-  ccb->ccb_PIXC = ccb->ccb_PIXC & (PPMPC_MS_PIN << 16);
+  ccb->ccb_PIXC = ccb->ccb_PIXC | (PPMPC_MS_PIN << 16);
   
   while(true)
     {
