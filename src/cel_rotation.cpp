@@ -88,7 +88,7 @@ main_cel_rotation()
   for(int i = 0; i < 32*32; i++)
     {
       u8 *p = (u8*)logo->ccb_SourcePtr;
-      p[i] |= (i&1);
+      p[i] |= (i&3) << 5;
     }
 
   
