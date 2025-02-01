@@ -87,9 +87,9 @@ main_cel_rotation()
 
   while(true)
     {
-      ZoomRotateCel(logo,x,y,zoom,angle);
-      angle += Convert32_F16(1);
-      zoom  += dzoom;
+      //      ZoomRotateCel(logo,x,y,zoom,angle);
+      //      angle += Convert32_F16(1);
+      //      zoom  += dzoom;
       if(clamp(min_zoom,max_zoom,zoom))
         {
           dzoom = -dzoom;
