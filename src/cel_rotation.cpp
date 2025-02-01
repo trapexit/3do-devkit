@@ -102,8 +102,8 @@ main_cel_rotation()
 
       display.clear();
       display.draw_cels(logo);
-      display.draw_printf(16,16,"x: %d",ConvertF16_32(x));
-      display.draw_printf(16,24,"y: %d",ConvertF16_32(y));
+      //      display.draw_printf(16,16,"x: %d",ConvertF16_32(x));
+      //      display.draw_printf(16,24,"y: %d",ConvertF16_32(y));
       display.display_and_swap();
 
       display.waitvbl();
