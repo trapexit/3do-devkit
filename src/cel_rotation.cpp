@@ -92,7 +92,7 @@ main_cel_rotation()
       p[i] |= (i&3) << 5;
     }
 
-  logo->ccb_PIXC = logo->ccb_PIXC | (PPMPC_MS_PIN << 16);
+  logo->ccb_PIXC = logo->ccb_PIXC | 0x20002000;
   
   while(true)
     {
