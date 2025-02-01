@@ -74,10 +74,6 @@ main_cel_rotation()
 
   //  logo = LoadCel("art/3do_logo_unpacked.cel",MEMTYPE_CEL);
   logo = LoadCel("art/blue_square.png.cel",MEMTYPE_CEL);
-
-
-  
-
   
 
   display.clear();
