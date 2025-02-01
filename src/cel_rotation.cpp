@@ -85,6 +85,9 @@ main_cel_rotation()
   const frac16 max_zoom = Convert32_F16(3);
   const frac16 min_zoom = (Convert32_F16(1) >> 6);
 
+  for(int i = 0; i < 32*32; i++)
+    logo->ccb_SourcePtr[i] |= (i&3) << 5;
+  
   while(true)
     {
       //      ZoomRotateCel(logo,x,y,zoom,angle);
