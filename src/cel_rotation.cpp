@@ -86,7 +86,11 @@ main_cel_rotation()
   const frac16 min_zoom = (Convert32_F16(1) >> 6);
 
   for(int i = 0; i < 32*32; i++)
-    logo->ccb_SourcePtr[i] |= (i&3) << 5;
+    {
+      u8 *p = logo->ccb_SourcePtr;
+      p[i] |= (i&3) << 5;      
+    }
+
   
   while(true)
     {
