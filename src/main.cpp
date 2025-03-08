@@ -27,6 +27,8 @@
 extern     int main_cel_rotation();
 extern "C" int main_3d_3do_logo();
 
+struct foo {};
+
 int
 main(int   argc_,
      char *argv_)
