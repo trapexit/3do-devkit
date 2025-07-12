@@ -1,0 +1,8 @@
+#pragma once
+
+/* === Some typical PIXC / PPMP modes === */
+
+#define PPMP_MODE_NORMAL  0x01F40L
+#define PIXC_MODE_NORMAL  PPMP_MODE_NORMAL
+#define PPMP_MODE_AVERAGE 0x01F81L
+#define PIXC_MODE_AVERAGE PPMP_MODE_AVERAGE

@@ -259,12 +259,23 @@ manually and place them into the RetroArch `system` folder.
 * takeme/: Directory storing all CDROM artifacts. Target for final
   "Launchme" executable. The name "takeme" originates from the
   original 3DO SDK.
-* art/: 3DO artwork. Currently only original 3DO SDK art.
-* docs/: Misc documentation from the original SDK and compiler suites.
-* include/: All include files from original SDK and community projects.
+* [art/](art/): 3DO artwork. Currently only original 3DO SDK art.
+* [docs/](docs/): Documentation from the original SDK, compiler
+  suites, related hardware, and development notes.
+* [include/](include/): All include files from original SDK and
+  community projects.
+   * 3do: The main headers for Portfolio, Lib3DO, and other original
+     SDK libraries. Cleaned and restructured for 3DO-DevKit.
+   * 3dosdk: The original headers from different SDKS. Unused. For
+     reference.
+   * community: Headers for any included modern community libraries.
+   * ttl: "trapexit's template library". A simple work in progress
+     replacement for C++ STL.
+   * rwstl: Original RogueWave STL headers from ARM C++
+     compiler. Unused. For reference.
 * lib/: All libraries from original SDK and community projects.
-* examples/: Examples from all available original 3DO SDK releases as
-  well as new and reworked examples.
+* [examples/](examples/): Examples from all available original 3DO SDK
+  releases as well as new and reworked examples.
 * build/: Automatically created directory during build to store object
   files.
 * iso/: Automatically created directory during build to store ISO file.

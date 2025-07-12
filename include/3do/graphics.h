@@ -25,6 +25,7 @@
 #include "graphics_ccb.h"
 #include "graphics_celdata.h"
 #include "graphics_coord.h"
+#include "graphics_pixc.h"
 #include "graphics_point.h"
 #include "graphics_rect.h"
 
@@ -56,11 +57,6 @@
  */
 #define ONE_12_20 (1<<20)
 #define ONE_16_16 (1<<16)
-
-
-/* === Some typical PPMP modes === */
-#define PPMP_MODE_NORMAL   0x01F40L
-#define PPMP_MODE_AVERAGE  0x01F81L
 
 
 /* When setting up your own VDL, this constant defines a reasonable
