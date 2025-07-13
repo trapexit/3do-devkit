@@ -14,6 +14,7 @@
 #include "extern_c.h"
 
 #include "types.h"
+#include "hardware_pixc.h"
 
 /* === VDL DMA control === */
 /* Bit fields 0xF8000000 are reserved */
@@ -151,6 +152,7 @@
 #define CCB_LDSIZE      0x04000000
 #define CCB_LDPRS       0x02000000
 #define CCB_LDPPMP      0x01000000
+#define CCB_LDPIXC      CCB_LDPPMP
 #define CCB_LDPLUT      0x00800000
 #define CCB_CCBPRE      0x00400000
 #define CCB_YOXY        0x00200000
@@ -256,6 +258,7 @@
 #define B0POS_0     0x00000000
 #define B0POS_1     0x10000000
 #define B0POS_PPMP  0x20000000
+#define B0POS_PIXC  B0POS_PPMP
 #define B0POS_PDC   0x30000000
 
 /* CFBDLSB_MASK definitions */
@@ -276,82 +279,6 @@
 #define PACK_LITERAL      0x00000001
 #define PACK_TRANSPARENT  0x00000002
 #define PACK_PACKED       0x00000003
-
-
-/* === PPMPC control word flags === */
-/* You compose a PPMP value by building up PPMPC definitions and then
- * using the PPMP_0_SHIFT or PPMP_1_SHIFT values to build up the
- * value to be used for the CCB's PPMP
- */
-
-/* These define the shifts required to get your PPMPC value into either
- * the 0 half or the 1 half of the PPMP
- */
-#define PPMP_0_SHIFT 0
-#define PPMP_1_SHIFT 16
-
-#define PPMPC_1S_MASK  0x00008000
-#define PPMPC_MS_MASK  0x00006000
-#define PPMPC_MF_MASK  0x00001C00
-#define PPMPC_SF_MASK  0x00000300
-#define PPMPC_2S_MASK  0x000000C0
-#define PPMPC_AV_MASK  0x0000003E
-#define PPMPC_2D_MASK  0x00000001
-
-#define PPMPC_MS_SHIFT  13
-#define PPMPC_MF_SHIFT  10
-#define PPMPC_SF_SHIFT  8
-#define PPMPC_2S_SHIFT  6
-#define PPMPC_AV_SHIFT  1
-
-/* PPMPC_1S_MASK definitions */
-#define PPMPC_1S_PDC   0x00000000
-#define PPMPC_1S_CFBD  0x00008000
-
-/* PPMPC_MS_MASK definitions */
-#define PPMPC_MS_CCB         0x00000000
-#define PPMPC_MS_PIN         0x00002000
-#define PPMPC_MS_PDC         0x00004000
-#define PPMPC_MS_PDC_MFONLY  0x00006000
-
-/* PPMPC_MF_MASK definitions */
-#define PPMPC_MF_1  0x00000000
-#define PPMPC_MF_2  0x00000400
-#define PPMPC_MF_3  0x00000800
-#define PPMPC_MF_4  0x00000C00
-#define PPMPC_MF_5  0x00001000
-#define PPMPC_MF_6  0x00001400
-#define PPMPC_MF_7  0x00001800
-#define PPMPC_MF_8  0x00001C00
-
-/* PPMPC_SF_MASK definitions */
-#define PPMPC_SF_2   0x00000100
-#define PPMPC_SF_4   0x00000200
-#define PPMPC_SF_8   0x00000300
-#define PPMPC_SF_16  0x00000000
-
-/* PPMPC_2S_MASK definitions */
-#define PPMPC_2S_0     0x00000000
-#define PPMPC_2S_CCB   0x00000040
-#define PPMPC_2S_CFBD  0x00000080
-#define PPMPC_2S_PDC   0x000000C0
-
-/* PPMPC_AV_MASK definitions (only valid if CCB_USEAV set in ccb_Flags) */
-#define	PPMPC_AV_SF2_1		0x00000000
-#define	PPMPC_AV_SF2_2		0x00000010
-#define	PPMPC_AV_SF2_4		0x00000020
-#define	PPMPC_AV_SF2_PDC	0x00000030
-
-#define	PPMPC_AV_SF2_MASK	0x00000030
-
-#define	PPMPC_AV_DOWRAP		0x00000008
-#define	PPMPC_AV_SEX_2S		0x00000004	/*  Sign-EXtend, okay?  */
-#define	PPMPC_AV_INVERT_2S	0x00000002
-
-/* PPMPC_2D_MASK definitions */
-#define PPMPC_2D_1  0x00000000
-#define PPMPC_2D_2  0x00000001
-
 
 /* === JOYSTICK/JOYSTICK1 flags === */
 #define JOYSTART  0x00000080

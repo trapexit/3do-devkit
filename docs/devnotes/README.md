@@ -8,7 +8,7 @@
   [ARM60](../cpu/arm60_datasheet_-_zarlink_semiconductor.pdf) of the
   ARMv3 architecture.
 * 12.5Mhz, ~10MIPS, big endian, 16 32bit registers, 32bit data bus,
-32bit address bus
+32bit address bus.
 * No integer division instructions, uses C library functions
 `__rt_sdiv` and `__rt_udiv` for signed and unsigned division
 respectively. Can take 20-140 cycles. See
@@ -34,7 +34,12 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
 * 2MiB DRAM
 * 1MiB VRAM
 * Different parts of the system have limits on what RAM they can
-  use. See the developer docs for specific functions for details.
+  use. See the developer docs for specific functions for
+  details. However, VRAM is generally accessible just as DRAM and DRAM
+  is valid (and preferred) location for CEL data.
+* The system could technically handle upto 16MiB of total RAM in a
+  number of combinations including 14MiB DRAM and 2MiB VRAM. This is
+  only available via the Opera emulator.
 
 
 ### Audio
@@ -44,10 +49,21 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
   filesystem.
 * You will read details about a "free running" mode for the DSP in the
   original developer docs but no such ability was made available in
-  the original SDK. 
+  the original SDK.
 * There is currently no tooling to write DSP programs. There are
   remnants of a PForth based assembler in the Portfolio M2 repo but
   has not been reworked for modern systems.
+
+
+### CDROM
+
+* 2x CDROM drive
+* Abstracted behind drivers and IO library.
+* Primary way to access data is via the Opera Filesystem APIs.
+* Is possible to access raw blocks rather than using the filesystem
+  but not terribly useful. Perhaps if you wished to remove uncertainty
+  regarding the filesystem from loading data. Could use the filesystem
+  to find the file's data block address and perform raw reads.
 
 
 ### CEL Engine
@@ -68,7 +84,21 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
   data size.
 * No hardware mip-mapping.
 * Does support backface culling and clipping.
-
+* CEL Engines are pipelined and work on rows. This means that every
+  row of CEL data must be word aligned and a minimum of 2 words (8
+  bytes) even if not used. Not the width and height or related. Just
+  the data.
+* The "Pixel Processor" (also referred to as PIXC and PPMP) provides
+  fixed function color arithmetic but has a large number of settings
+  making it a bit complex to use.
+    * [The Pixel
+      Processor](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/3gpgd)
+    * [Working With a CCB: The PIXC
+      Word](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/5gpgc?s[]=pixc#the_pixc_word)
+    * [Working with special
+      effects](https://3dodev.com/documentation/development/opera/pf25/tktfldr/anifldr/1anif)
+    * [The Cel Control Block](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/5gpgl)
+    * [CrossFadeCels](https://github.com/trapexit/portfolio_os/blob/master/src/libs/lib3DO/CelUtils/CrossFadeCels.c#L118)
 
 ### Math Engine
 
@@ -101,6 +131,18 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
   controls the clipping width and height) to the bitmap width and
   height rather than the clip values if provided. When/if we rebuild
   the library this can be fixed.
+
+
+## Text and Fonts
+
+* The [Lib3DO TextLib and
+  FontLib](https://github.com/trapexit/portfolio_os/tree/master/src/libs/lib3DO/TextLib)
+  provide decent, flexible functions for fonts and text
+  generation. TextLib provides a “TextCel” object which has a Cel CCB
+  which can then be used to render to a Bitmap. No documentation but
+  look at “DrawTextString()” for an example.
+* Unless doing a lot of text it is probably better/easier to do bitmap
+  based fonts.
 
 
 ### Programming Do's and Don'ts
