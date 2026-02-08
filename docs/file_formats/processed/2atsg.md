@@ -1,0 +1,3 @@
+# The Identification Chunk (OBJ_IDFN)
+
+This chunk should contain a string of printable characters (codes 10-13 and 32-126) terminated by a NUL (0) byte, which gives information about the name and version of the tool which generated the object file. Use of codes in the range 128-255 is discouraged, as the interpretation of these values is host dependent.
