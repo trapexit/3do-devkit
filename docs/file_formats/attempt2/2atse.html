@@ -1,0 +1,100 @@
+<TITLE>Format of the symbol table chunk (OBJ_SYMT) </TITLE>
+<H1>Format of the symbol table chunk (OBJ_SYMT) </H1><HR>
+The Number of Symbols field in the fixed part of the AOF header (OBJ_HEAD chunk) defines how many entries there are in the symbol table. Each symbol table entry has the following format:<P>
+<UL>
+<LI><CODE>Name</CODE>
+<LI><CODE>Attributes</CODE>
+<LI><CODE>Value</CODE>
+<LI><CODE>Area Name (</CODE>4 words per entry)
+</UL>
+Name<I> </I>is the offset in the string table (in chunk OBJ_STRT) of the character string name of the symbol.<P>
+Value<I> </I>is only meaningful if the symbol is a defining occurrence (bit 0 of Attributes set), or a common symbol (bit 6 of Attributes set):<P>
+<UL>
+<LI>if the symbol is absolute (bits 0,2 of Attributes set), this field contains the value of the symbol;
+<p>
+<LI>if the symbol is a common symbol (bit 6 of Attributes set), this field contains the byte-length of the referenced common area;
+<p>
+<LI>otherwise, Value is interpreted as an offset from the base address of the area named by Area Name, which must be an area defined in this object file.
+</UL>
+Area Name is meaningful only if the symbol is a non-absolute defining occurrence (bit 0 of<I> </I>Attributes set, bit 2 unset). In this case it gives the index into the string table for the name of the area in which the symbol is defined (which must be an area in this object file).<P>
+<H2>Symbol attributes </H2>
+The <I>S</I>ymbol Attributes word is interpreted as follows:<P>
+Bit 0 denotes that the symbol is defined in this object file.<P>
+Bit 1 denotes that the symbol has global scope and can be matched by the linker to a similarly named symbol from another object file. Specifically:<P>
+<PRE>
+--------------------------------------------------------
+01    |(bit 1 unset, bit 0 set) denotes that the symbol 
+      |is defined in this object file and has scope     
+      |limited to this object file, (when resolving     
+      |symbol references, the linker will only match    
+      |this symbol to references from within the same   
+      |object file).                                    
+--------------------------------------------------------
+10    |(bit 1 set, bit 0 unset) denotes that the symbol 
+      |is a reference to a symbol defined in another    
+      |object file. If no defining instance of the      
+      |symbol is found the linker attempts to match the 
+      |name of the symbol to the names of common blocks.
+      |If a match is found it is as if there were       
+      |defined an identically-named symbol of global    
+      |scope, having as its value the base address of   
+      |the common area.                                 
+--------------------------------------------------------
+11    |denotes that the symbol is defined in this object
+      |file with global scope (when attempting to       
+      |resolve unresolved references, the linker will   
+      |match this definition to a reference from another
+      |object file).                                    
+--------------------------------------------------------
+00    |is reserved.                                     
+--------------------------------------------------------
+</PRE>
+<P>
+Bit 2<I> </I>encodes the absolute attribute which is meaningful only if the symbol is a defining occurrence (bit 0 set). If set, it denotes that the symbol has an absolute value, for example, a constant. If unset, the symbol's value is relative to the base address of the area defined by the Area Name field of the symbol.<P>
+Bit 3 encodes the case insensitive reference attribute which is meaningful only if bit 0 is unset (that is, if the symbol is an external reference). If set, the linker will ignore the case of the symbol names it tries to match when attempting to resolve this reference.<P>
+Bit 4 encodes the weak attribute which is meaningful only if the symbol is an external reference, (bits 1,0 = 10). It denotes that it is acceptable for the reference to remain unsatisfied and for any fields relocated via it to remain unrelocated. The linker ignores weak references when deciding which members to load from an object library.<P>
+Bit 5 encodes the strong attribute which is meaningful only if the symbol is an external defining occurrence (if bits 1,0 = 11). In turn, this attribute only has meaning if there is a non-strong, external definition of the same symbol in another object file. In this case, references to the symbol from outside of the file containing the strong definition, resolve to the strong definition, while those within the file containing the strong definition resolve to the non-strong definition.<P>
+This attribute allows a kind of link-time indirection to be enforced. Usually, a strong definition will be absolute, and will be used to implement an operating system's entry vector having the forever binary property.<P>
+Bit 6 encodes the common attribute, which is meaningful only if the symbol is an external reference (bits 1,0 = 10). If set, the symbol is a reference to a common area with the symbol's name. The length of the common area is given by the symbol's <I>Value</I> field (see above). The linker treats common symbols much as it treats areas having the Common Reference attribute - all symbols with the same name are assigned the same base address, and the length allocated is the maximum of all specified lengths.<P>
+If the name of a common symbol matches the name of a common area, then these are merged and the symbol identifies the base of the area.<P>
+All common symbols for which there is no matching common area (reference or definition) are collected into an anonymous, linker-created, pseudo-area.<P>
+Bit 7<I> </I>is reserved and shall be set to 0.<P>
+Bits 8-11<I> </I>encode additional attributes of symbols defined in code areas.<P>
+Bit 8<I> </I>encodes the code datum attribute which is meaningful only if this symbol defines a location within an area having the Code attribute. It denotes that the symbol identifies a (usually read-only) datum, rather than an executable instruction.<P>
+Bit 9 encodes the floating-point arguments in floating-point registers attribute. This is meaningful only if the symbol identifies a function entry point. A symbolic reference with this attribute cannot be matched by the linker to a symbol definition which lacks the attribute.<P>
+Bit 10 is reserved and shall be set to 0.<P>
+Bit 11<I> </I>is the simple leaf function attribute which is meaningful only if this symbol defines the entry point of a sufficiently simple leaf function (a leaf function is one which calls no other function). For a reentrant leaf function it denotes that the function's inter-link-unit entry point is the same as its intra-link-unit entry point. For details of the significance of this attribute to the linker refer to <A HREF="../arrfldr/3arre.html#XREF41042">Forcing use of an inter-link-unit entry point</A>.<P>
+Bits 12-31 are reserved and shall be set to 0.<P>
+<H2>Symbol attribute summary</H2>
+
+<PRE>
+----------------------------------------------------------
+Bit |Mask       |Attribute Description    |               
+----------------------------------------------------------
+0   |0x00000001 |Symbol is defined in this|               
+    |           |file                     |               
+----------------------------------------------------------
+1   |0x00000002 |Symbol has a global scope|               
+----------------------------------------------------------
+2   |0x00000004 |Absolute attribute       |               
+----------------------------------------------------------
+3   |0x00000008 |Case-sensitive attribute |               
+----------------------------------------------------------
+4   |0x00000010 |Weak attribute           |               
+----------------------------------------------------------
+5   |0x00000020 |Strong attribute         |               
+----------------------------------------------------------
+6   |0x00000040 |Common attribute         |               
+----------------------------------------------------------
+    |           |                         |               
+----------------------------------------------------------
+8   |0x00000010 |Code area datum attribute|Code symbols   
+    |           |                         |only           
+----------------------------------------------------------
+9   |0x00000020 |FP args in FP regs       |Code symbols   
+    |           |attribute                |only           
+----------------------------------------------------------
+11  |0x00000080 |Simple leaf function     |Code symbols   
+    |           |attribute                |only           
+----------------------------------------------------------
+</PRE>

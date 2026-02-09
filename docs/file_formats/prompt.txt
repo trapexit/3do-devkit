@@ -1,0 +1,4 @@
+read through all files in this directory. Write a document for each
+file format (AIF (ARM Image Format), AOF (ARM Object Format), and ALF
+(ARM Library Format)) laying out details about the file formats in
+extreme detail. Complete and thorough file format specifications.

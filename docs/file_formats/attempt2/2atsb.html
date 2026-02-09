@@ -1,0 +1,49 @@
+<TITLE>The overall structure of an AOF file</TITLE>
+<H1>The overall structure of an AOF file</H1><HR>
+An AOF file contains a number of separate but related pieces of data. To simplify access to these data, and to give a degree of extensibility to tools which process AOF, the object file format is itself layered on another format called <I>Chunk File Format</I>, which provides a simple and efficient means of accessing and updating distinct chunks of data within a single file. The object file format defines five chunks:<P>
+<UL>
+<LI>the AOF header
+<LI>the AOF areas
+<LI>the producer's identification
+<LI>the symbol table
+<LI>the string table
+</UL>
+These are described in detail after the description of chunk file format.<P>
+<A NAME="XREF31035"><H2>Chunk file format</A></H2>
+A chunk is accessed via a header at the start of the file. The header contains the number, size, location and identity of each chunk in the file.<P>
+The size of the header may vary between different chunk files, but is fixed for each file. Not all entries in a header need be used, thus limited expansion of the number of chunks is permitted without a wholesale copy.<P>
+A chunk file can be copied without knowledge of the contents of its chunks.<P>
+Pictorially, the layout of a chunk file is as follows<P>
+<UL>
+
+<IMG SRC="Figures/ChunkLayout.gif" ALT="Graphic cannot be displayed">
+<P>
+<LI>ChunkFileId-marks the file as a chunk file. Its value is 0xC3CBC6C5. The endian-ness of the chunk file can be deduced from this value (if, when read as a word, it appears to be 0xC5C6CBC3 then each word value must be byte- reversed before use).
+<p>
+<LI>maxChunks-defines the number of the entries in the header, fixed when the file is created. 
+<p>
+<LI>numChunks-defines how many chunks are currently used in the file, which can vary from 0 to maxChunks. numChunks is redundant in that it can be found by scanning the entries.
+</UL>
+Each entry in the chunk file header consists of four words in order:<P>
+<PRE>
+--------------------------------------------------------
+chunkId |8-byte field identifying what data the chunk   
+        |contains; (note that this is an 8-byte field,  
+        |not a 2-word field, so it has the same byte    
+        |order independent of endian-ness);             
+--------------------------------------------------------
+fileOffs|is a one word field defining the byte offset   
+et      |within the file of the start of the chunk. All 
+        |chunks are word-aligned, so it must be         
+        |divisible by four. A value of zero indicates   
+        |that the chunk entry is unused;                
+--------------------------------------------------------
+size    |is a one word field defining the exact byte    
+        |size of the chunk's contents (which need not be
+        |a multiple of four).                           
+--------------------------------------------------------
+</PRE>
+<P>
+The chunkId field provides a conventional way of identifying what type of data a chunk contains. It is split into two parts. The first four characters contain a unique name allocated by a central authority. The remaining four characters can be used to identify component chunks within this domain. The 8 characters are stored in ascending address order, as if they formed part of a NUL-terminated string, independently of endian-ness.<P>
+For AOF files, the first part of each chunk's name is "OBJ_"; the second components are defined in the next section.<P>
+<P>

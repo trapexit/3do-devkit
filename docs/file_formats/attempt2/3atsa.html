@@ -1,0 +1,40 @@
+<TITLE>About the library format</TITLE>
+<H1>About the library format</H1><HR>
+A library file contains a number of separate but related pieces of data. In order to simplify access to these data, and to provide for a degree of extensibility, the library file format is itself layered on another format called <I>Chunk File Format</I>. This provides a simple and efficient means of accessing and updating distinct chunks of data within a single file. For a description of the Chunk File Format, see <A HREF="./2atsb.html#XREF31035">Chunk file format</A>.<P>
+The Library format defines four chunk classes: Directory, Time stamp, Version and Data. There may be many Data chunks in a library.<P>
+The Object Library Format defines two additional chunks: Symbol table and Symbol table time stamp.<P>
+These chunks are described in detail later in this document.<P>
+<H2>Terminology</H2>
+The terms <I>byte, half word, word,</I> and <I>string</I><I> </I>are used to mean:<P>
+<PRE>
+--------------------------------------------------------
+byte     |8 bits, considered unsigned unless otherwise  
+         |stated, usually used to store flag bits or    
+         |characters;                                   
+--------------------------------------------------------
+half word|16 bits, or 2 bytes, usually considered       
+         |unsigned;                                     
+--------------------------------------------------------
+word     |32 bits, or 4 bytes, usually considered       
+         |unsigned;                                     
+--------------------------------------------------------
+string   |a sequence of bytes terminated by a NUL (0x00)
+         |byte. The NUL byte is part of the string but  
+         |is not counted in the string's length.        
+--------------------------------------------------------
+</PRE>
+<P>
+<H2>Byte sex or endian-ness</H2>
+There are two sorts of ALF: <I>little-endian</I> and <I>big-endian</I><I>.</I><P>
+<UL>
+<LI>In little-endian ALF, the least significant byte of a word or half-word has the lowest address of any byte in the (half-)word. Used by DEC, Intel and Acorn, amongst others.
+<p>
+<LI>In big-endian ALF, the most significant byte of a (half-)word has the lowest address. This byte sex is used by IBM, Motorola and Apple, amongst others.
+</UL>
+For data in a file, address means offset from the start of the file.<P>
+There is no guarantee that the endian-ness of an ALF file will be the same as the endian-ness of the system used to process it, (the endian-ness of the file is always the same as the endian-ness of the target ARM system).<P>
+The two sorts of ALF cannot, meaningfully, be mixed (the target system cannot have mixed endian-ness: it must have one or the other). Thus the ARM linker will accept inputs of either sex and produce an output of the same sex, but will reject inputs of mixed endian-ness.<P>
+<H2>Alignment</H2>
+Strings and bytes may be aligned on any byte boundary.<P>
+ALF fields defined in this document do not use half-words, and align words on 4-byte boundaries.<P>
+Within the contents of an ALF file (within the data contained in OBJ_AREA chunks - see below), the alignment of words and half-words is defined by the use to which ALF is being put. For all current ARM-based systems, alignment is strict, as described immediately above.<P>

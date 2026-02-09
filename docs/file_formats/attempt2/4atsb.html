@@ -1,0 +1,49 @@
+<TITLE>APCS variants</TITLE>
+<H1><LINK NAME="XREF35590">APCS variants</LINK></H1><HR>
+There are, currently, 2 x 2 x 2 x 2 = 16 APCS variants, derived from four independent choices.<P>
+The first choice - 32-bit PC vs 26-bit PC - is fixed by your ARM CPU.<P>
+The second choice - implicit vs explicit stack-limit checking - is fixed by a combination of memory-management hardware and operating system software: if your ARM-based environment supports implicit stack-limit checking then use it; otherwise use explicit stack-limit checking.<P>
+The third choice - of how to pass floating-point arguments - supports efficient argument passing in both of the following circumstances:<P>
+<UL>
+<LI>the floating point instruction set is emulated by software and floating point operations are dynamically very rare;
+<LI>the floating point instruction set is supported by hardware or floating point operations are dynamically common.
+</UL>
+In each case, code conforming to one variant is not compatible with code conforming to the other.<P>
+Only the choice between reentrant and non-reentrant variants is a true user level choice. Further, as the alternatives are compatible, each may be used where appropriate.<P>
+<A NAME="XREF34877"><H2>32-bit PC vs 26-bit PC</A></H2>
+Older ARM CPUs and the 26-bit compatibility mode of newer CPUs use a 24-bit, word-address program counter, and pack the 4 status flags (NZCV) and 2 interrupt-enable flags (IF) into the top 6 bits of r15, and the 2 mode bits (m0, m1) into the least-significant bits of r15. Thus r15 implements a combined PC + PSR.<P>
+Newer ARM CPUs use a 32-bit program counter (in r15) and a separate PSR.<P>
+In 26-bit CPU modes, the PC + PSR is written to r14 by an ARM branch with link instruction, so it is natural for the APCS to require the reinstatement of the caller's PSR at function exit (a caller's PSR is preserved across a function call).<P>
+In 32-bit CPU modes this reinstatement would be unacceptably expensive in comparison to the gain from it, so the APCS does not require it and a caller's PSR flags may be corrupted by a function call.<P>
+<H2>Implicit vs explicit stack-limit checking</H2>
+ARM-based systems vary widely in the sophistication of their memory management hardware. Some can easily support multiple, auto-extending stacks, while others have no memory management hardware at all.<P>
+Safe programming practices demand that stack overflow be detected.<P>
+The APCS defines conventions for software stack-limit checking sufficient to support efficiently most requirements (including those of multiple threads and chunked stacks).<P>
+The majority of ARM-based systems are expected to require software stack-limit checking.<P>
+<H2>Floating-point arguments in floating-point registers</H2>
+Historically, many ARM-based systems have made no use of the floating point instruction set, or they used a software emulation of it.<P>
+On systems using a slow software emulation and making little use of floating-point, there is a small disadvantage to passing floating-point arguments in floating-point registers: all variadic functions (such as printf) become slower, while only function calls which actually take floating-point arguments become faster.<P>
+If your system has no floating-point hardware and is expected to make little use of floating point, then it is better not to pass floating-point arguments in floating-point registers. Otherwise, the opposite choice is best.<P>
+<A NAME="XREF29588"><H2>Reentrant vs non-reentrant code</A></H2>
+The reentrant variant of the APCS supports the generation of code free of relocation directives (position independent and addressing all data (indirectly) via a static base register). Such code is ideal for placement in ROM and can be multiply threaded (shared between several client processes). See <A HREF="../arrfldr/3arrj.html#XREF31382">ARM shared library format</A> for further details.<P>
+In general, code to be placed in ROM or loaded into a shared library is expected to be reentrant, while applications are expected not to be.<P>
+See also<I> </I><A HREF="./4atsc.html#XREF36070">C language calling conventions</A>.<P>
+<H2>APCS-2 compatibility</H2>
+(APCS-2 - the second definition of The ARM Procedure Call Standard - is recorded in Technical Memorandum <I>PLG-APCS, issue 4.00, 18-Apr-89</I>, reproduced in the following Acorn publications: <I>RISC OS Programmer's Reference Manual, vol IV, 1989</I>, (Acorn part number 0483,023); <I>ANSI C Release 3, September 1989</I>, (Acorn part number 0470,101)).<P>
+APCS-R (APCS-2 for Acorn's RISC OS) is the following variant of APCS-3:<P>
+<UL>
+<LI>26-bit PC; 
+<LI>explicit stack-limit checking; 
+<LI>no passing of floating-point arguments in floating-point registers; 
+<LI>non-reentrant code;
+</UL>
+with the Acorn-specific constraints on the use of sl noted in APCS-2. <P>
+APCS-U (APCS-2 for Acorn's RISCiX) is the following variant of APCS-3: <P>
+<UL>
+<LI>26-bit PC; 
+<LI>implicit stack-limit checking (with sl reserved to Acorn); 
+<LI>no passing of floating-point arguments in floating-point registers; 
+<LI>non-reentrant code.
+</UL>
+The (in APCS-2) obsolescent APCS-A has no equivalent in APCS-3.<P>
+<P>

@@ -1,0 +1,226 @@
+<TITLE>The ARM procedure call standard</TITLE>
+<H1><LINK NAME="XREF17932">The ARM procedure call standard</LINK></H1><HR>
+This section defines the ARM Procedure Call Standard. Explanatory text, not itself part of the standard, is bracketed by "(Aside:" and ")".<P>
+(Aside:<B> </B>This explanation may help you to understand the APCS but is not, itself, part of the APCS. If an explanation appears to conflict with the standard then the standard should be considered definitive and the narrative merely an indication of intent).<P>
+A program fragment which conforms to the APCS while making a call to an external function (one which is visible between compilation units) is said to be <I>conforming</I>. A program which conforms to the APCS at all instants of execution is said to be <I>strictly conforming</I> or to <I>conform strictly</I>.<P>
+(Aside: In general, compiled code is expected to be strictly conforming; hand-written code merely conforming).<P>
+Whether or not, and when program fragments for a particular ARM-based environment are required to conform strictly to the APCS is part of the definition of that environment.<P>
+In the following sections, clauses following <I>shall</I> and <I>shall not</I> are obligations which must be met in order to conform to the APCS.<P>
+<H2>Register names</H2>
+The ARM has 15 visible general registers, a program counter register and 8 floating-point registers.<P>
+(Aside: In non-user machine modes, some general registers are shadowed. In all modes, the availability of the floating-point instruction set depends on the processor model, hardware and operating system).<P>
+<H2>General registers</H2>
+
+<PRE>
+--------------------------------------------------------
+Name        |Number  |APCS Role                         
+--------------------------------------------------------
+a1          |0       |argument1 / integer result /      
+            |        |scratch register                  
+--------------------------------------------------------
+a2          |1       |argument 2 / scratch register     
+--------------------------------------------------------
+a3          |2       |argument 3/ scratch register      
+--------------------------------------------------------
+a4          |3       |argument 4/ scratch register      
+--------------------------------------------------------
+            |        |                                  
+--------------------------------------------------------
+v1          |4       |register variable                 
+--------------------------------------------------------
+v2          |5       |register variable                 
+--------------------------------------------------------
+v3          |6       |register variable                 
+--------------------------------------------------------
+v4          |7       |register variable                 
+--------------------------------------------------------
+v5          |8       |register variable                 
+--------------------------------------------------------
+            |        |                                  
+--------------------------------------------------------
+sb/v6       |9       |static base / register variable   
+--------------------------------------------------------
+sl/v7       |10      |stack limit / stack chunk handle /
+            |        |reg. variable                     
+--------------------------------------------------------
+fp          |11      |frame pointer                     
+--------------------------------------------------------
+ip          |12      |scratch register / new-sb in      
+            |        |inter-link-unit calls             
+--------------------------------------------------------
+sp          |13      |lower end of current stack frame  
+--------------------------------------------------------
+lr          |14      |link address / scratch register   
+--------------------------------------------------------
+pc          |15      |program counter                   
+--------------------------------------------------------
+</PRE>
+(Aside: The 16 integer registers are divided into 3 sets:<P>
+<UL>
+<LI>4 argument registers which can also be used as scratch registers or as caller-saved register variables;
+<LI>5 callee-saved registers, conventionally used as register variables;
+<LI>7 registers which have a dedicated role, at least some of the time, in at least one variant of APCS-3 (see <A HREF="./4atsb.html#XREF35590">APCS variants</A>).
+</UL>
+The 5 frame registers fp, ip, sp, lr and pc have dedicated roles in all variants of the APCS.<P>
+The ip register has a dedicated role only during function call; at other times it may be used as a scratch register.<P>
+(Aside: Conventionally, ip is used by compiler code generators as the/a local code generator temporary register).<P>
+There are dedicated roles for sb and sl in some variants of the APCS; in other variants they may be used as callee-saved registers.<P>
+The APCS permits lr to be used as a register variable when not in use during a function call. It further permits an ARM system specification to forbid such use in some, or all, non-user ARM processor modes.<P>
+<H2>Floating point registers</H2>
+(Aside: Each ARM floating-point (FP) register holds one FP value of single, double, extended or internal precision. A single-precision value occupies 1 machine word; a double-precision value 2 words; an extended precision value occupies 3 words, as does an internal precision value).<P>
+<PRE>
+---------------------------------------------------------
+Name   |Number    |APCS Role                             
+---------------------------------------------------------
+f0     |0         |FP argument 1 / FP result / FP scratch
+       |          |register                              
+---------------------------------------------------------
+f1     |1         |FP argument 2 / FP scratch register   
+---------------------------------------------------------
+f2     |2         |FP argument 3/ FP scratch register    
+---------------------------------------------------------
+f3     |3         |FP argument 4/ FP scratch register    
+---------------------------------------------------------
+       |          |                                      
+---------------------------------------------------------
+f4     |4         |floating point register variable      
+---------------------------------------------------------
+f5     |5         |floating point register variable      
+---------------------------------------------------------
+f6     |6         |floating point register variable      
+---------------------------------------------------------
+f7     |7         |floating point register variable      
+---------------------------------------------------------
+</PRE>
+<P>
+(Aside: The floating-point (FP) registers are divided into two sets, analogous to the subsets a1-a4 and v1-v5/v7 of the general registers:<P>
+<UL>
+<LI>registers f0-f3 need not be preserved by called functions; f0 is the FP result register and f0-f3 may hold the first four FP arguments (see <A HREF="#XREF17958">Data representation and argument passing</A> and <A HREF="./4atsb.html#XREF35590">APCS variants</A>);
+<LI>registers f4-f7, the so called `variable' registers, preserved by callees.)
+</UL>
+<A NAME="XREF37800"><H2>The stack</A></H2>
+The stack is a singly-linked list of <I>activation records</I>, linked through a <I>stack backtrace data structure</I> (see below), stored at the high-address end of each activation record.<P>
+The stack shall be readable and writable by the executing program.<P>
+Each contiguous chunk of the stack shall be allocated to activation records in descending address order. At all instants of execution, sp shall point to the lowest used address of the most recently allocated activation record.<P>
+There may be multiple stack chunks, and there are no constraints on the ordering of these chunks in the address space.<P>
+Associated with sp is a possibly-implicit stack chunk limit, below which sp shall not be decremented. (See <A HREF="./4atsb.html#XREF35590">APCS variants</A>).<P>
+At all instants of execution, the memory between sp and the stack chunk limit shall contain nothing of value to the executing program: it may be modified unpredictably by the execution environment.<P>
+The stack chunk limit is said to be implicit if chunk overflow is detected and handled by the execution environment. Otherwise it is explicit.<P>
+If the stack chunk limit is implicit, sl may be used as v7, an additional callee-saved variable register.<P>
+If the conditions of the remainder of this subsection hold at all instants of execution, then the program conforms strictly to the APCS; otherwise, if they hold at and during external (inter-compilation-unit-visible) function calls, the program merely conforms to the APCS.<P>
+If the stack chunk limit is explicit, then:<P>
+<UL>
+<LI>sl shall point at least 256 bytes above it; 
+<LI>sl shall identify the current stack chunk in a system-defined manner; 
+<LI>at all times, sl shall identify the same chunk as sp points into.
+</UL>
+(Aside: sl &gt;= stack chunk limit + 256 allows the most common limit checks to be made very cheaply during function entry).<P>
+(Aside: This final requirement implies that on changing stack chunks, sl and sp must be loaded simultaneously by means of an:<P>
+<CODE>
+<PRE>
+LDM ..., {..., sl, sp}. 
+</CODE>
+</PRE>
+In general, this means that return from a function executing on an extension chunk, to one executing on an earlier-allocated chunk, should be via an intermediate function invocation, specially fabricated when the stack was extended).<P>
+The values of sl, fp and sp shall be multiples of 4.<P>
+<A NAME="XREF24009"><H2>The stack backtrace data structure</A></H2>
+The value in fp shall be zero or shall point to a list of stack backtrace data structures which partially describe the sequence of outstanding function calls.<P>
+(Aside: If this constraint holds when external functions are called, the program is conforming; if it holds at all instants of execution, the program is strictly conforming).<P>
+The stack backtrace data structure has the format shown below:<P>
+<CODE>
+<PRE>
+save code pointer                [fp]        &lt;-fp points to here
+return link value                [fp, #-4]
+return sp value                [fp, #-8]
+return fp value                [fp, #-12]
+[saved v7 value]
+[saved v6 value]
+[saved v5 value}
+[saved v4 value]
+[saved v3 value]
+[saved v2 value]
+[saved v1 value]
+[saved a4 value]
+[saved a3 value}
+[saved a2 value]
+[saved a1 value]
+[saved f7 value]                three words
+[saved f6 value]                three words
+[saved f5 value]                three words
+[saved f4 value]                three words
+</CODE>
+</PRE>
+The above picture shows between four and twenty-seven words, with those words higher on the page being at higher addresses in memory. The values shown in brackets are optional, and their presence need not imply the presence of any other. The floating point values are stored in an internal format, and occupy three words each.<P>
+<A NAME="XREF20741"><H2>Function invocations and backtrace structures</A></H2>
+If function invocation A calls function B, then A is called a <I>direct ancestor</I> of the invocation of B. If invocation A[1] calls invocation A[2] calls... calls B, then each of the A[i] is an ancestor of B and invocation A[i] is<I> </I><I>more recent</I> than invocation A[j] if i &gt; j.<P>
+The <I>return fp value</I> shall be 0, or shall be a pointer to a stack backtrace data structure created by an ancestor of the function invocation which created the backtrace structure pointed to by fp. No more recent ancestor shall have created a backtrace structure.<P>
+(Aside: There may be any number of tail-called invocations between invocations which create backtrace structures).<P>
+The <I>return link value</I>, <I>return sp value</I> and <I>return fp value</I> are, respectively, the values to restore to pc, sp and fp at function exit.<P>
+In the 32-bit PC variant of the APCS, the <I>save code pointer</I> shall point twelve bytes beyond the start of the sequence of instructions that created the stack backtrace data structure.<P>
+In the 26-bit PC variant of the APCS, the <I>save code pointer</I>, when cleared of PSR and mode bits, shall point twelve bytes beyond the start of the sequence of instructions that created the stack backtrace data structure.<P>
+<H2>Control arrival</H2>
+At the instant when control arrives at the target function:<P>
+<UL>
+<LI>pc contains the address of an entry point to the target function; 
+</UL>
+(Aside: reentrant functions may have two entry points).<P>
+<UL>
+<LI>lr shall contain the value to restore to pc on exit from the function (the <I>return link value</I> - see <A HREF="#XREF24009">The stack backtrace data structure</A>); 
+</UL>
+(Aside: In 26-bit variants of the APCS, lr contains the PC + PSR value to restore to pc on exit from the function. See <A HREF="./4atsb.html#XREF35590">APCS variants</A>).<P>
+<UL>
+<LI>sp shall point at or above the current stack chunk limit; if the limit is explicit, it shall point at least 256 bytes above it (see <A HREF="#XREF37800">The stack</A>);
+<LI>fp shall contain 0 or shall point to the most recently created stack backtrace structure (see <A HREF="#XREF24009">The stack backtrace data structure</A>);
+<LI>the space between sp and the stack chunk limit shall be readable, writable memory which can be used by the called function as temporary workspace, and overwritten with any values before the function returns (see <A HREF="#XREF37800">The stack</A>);
+<LI>arguments shall have been marshalled as described below.
+</UL>
+If the target function is reentrant (see <A HREF="./4atsb.html#XREF35590">APCS variants</A>) then it has two entry points and control arrives:<P>
+<UL>
+<LI>at the <I>intra-link-unit entry point</I> if the caller has been directly linked with the callee;
+<LI>at the <I>inter-link-unit entry point</I> if the caller has been separately linked with a <I>stub</I> of the callee.
+</UL>
+(Aside: Sometimes the two entry points are at the same address; usually they will be separated by a single instruction).<P>
+On arrival at the intra-link-unit entry point, sb shall identify the static data of the link unit which contains both the caller and the callee.<P>
+On arrival at the inter-link-unit entry point, ip shall identify the static data of the link unit containing the target function, or the target function shall make neither direct nor indirect use of static data.<P>
+(Aside: In practice this usually means the callee must be a leaf function making no direct use of static data).<P>
+(Aside: The way in which sb <I>identifies</I> the static data of a link unit is not specified by the APCS. See<I> </I> <A HREF="../arrfldr/3arrj.html#XREF31382">ARM shared library format</A> for details of support for reentrant code and shared libraries).<P>
+(Aside: If the call is by tail continuation, <I>calling function</I> means that which would be returned to, were the tail continuation converted to a return).<P>
+(Aside: If code is not required to be reentrant or sharable then sb may be used as v6, an additional variable register).<P>
+<A NAME="XREF17958"><H2>Data representation and argument passing</A></H2>
+Argument passing in the APCS is defined in terms of an ordered list of machine-level values passed from the caller to the callee, and a single word or floating point result passed back from the callee to the caller. Each value in the argument list shall be:<P>
+<UL>
+<LI>a word-sized, integer value;
+<LI>a floating point value (of size 1, 2 or 3 words).
+</UL>
+A callee may corrupt any of its arguments, howsoever passed.<P>
+(Aside: The APCS does not define the layout in store of records, arrays and so forth, used by ARM-targeted compilers for C, Pascal, Fortran-77, etc.; nor does it prescribe the order in which language-level arguments are mapped into their machine-level representations. In other words, the mapping from language-level data types, and arguments to APCS words is defined by each language implementation, not by the APCS. Indeed, there is no formal reason why two ARM-targeted implementations of the same language should not use different mappings and, hence, not support cross-calling. Obviously, it would be very unhelpful to stand by this formal position so implementors are encouraged to adopt not just the letter of the APCS but also the natural mappings of source language objects into argument words. Guidance about this is given in <A HREF="./4atsc.html#XREF36070">C language calling conventions</A>).<P>
+At the instant control arrives at the target function, the argument list shall be allocated as follows:<P>
+<UL>
+<LI>in APCS variants which support the passing of floating-point arguments in floating-point registers (see <A HREF="./4atsb.html#XREF35590">APCS variants</A>), the first 4 floating-point arguments (or fewer if the number of floating-point arguments is less than 4) shall be in machine registers f0-f3;
+<LI>the first 4 remaining argument words (or fewer if there are fewer than 4 argument words remaining in the argument list) shall be in machine registers a1-a4;
+<LI>the remainder of the argument list (if any) shall be in memory, at the location addressed by sp and higher-addressed words thereafter.
+</UL>
+A floating-point value not passed in a floating-point register is treated as 1, 2 or 3 integer values, as appropriate to its precision.<P>
+<H2>Control return</H2>
+When the return link value for a function call is placed in the pc:<P>
+<UL>
+<LI>sp, fp, sl/v7, sb/v6, v1-v5, and f4-f7 shall contain the same values as they did at the instant of control arrival;
+<LI>if the function returns a simple value of size one word or less, then that value shall be in a1;
+</UL>
+(Aside: a language implementation is not obliged to consider <I>all</I> single-word values simple. See<I> </I><A HREF="./4atsc.html#XREF36070">C language calling conventions</A>).<P>
+<UL>
+<LI>if the function returns a simple floating point value then that value shall<I> </I>be in f0.
+</UL>
+(Aside: The values of ip, lr, a2-a4, f1-f3 and any stacked arguments are undefined).<P>
+(Aside: The definition of control return means that this is a <I>callee saves</I> standard).<P>
+(Aside: In 32-bit ARM modes, the caller's PSR flags are not preserved across a function call. In 26-bit ARM modes, the caller's PSR flags are naturally reinstated when the return link pointer is placed in pc. Note that the N, Z, C and V flags from lr at the instant of entry must be reinstated; it is not sufficient merely to preserve the PSR across the call. Consider, a function <CODE>ProcA</CODE> which tail continues to <CODE>ProcB</CODE> as follows:<P>
+<CODE>
+<PRE>
+    CMPS   a1, #0
+    MOVLT  a2, #255
+    MOVGE  a2, #0
+    B      ProcB
+</CODE>
+</PRE>
+If <CODE>ProcB</CODE> merely preserves the flags it sees on entry, rather than restoring those from lr, the wrong flags may be set when <CODE>ProcB</CODE> returns direct to <CODE>ProcA</CODE>'s caller. See <A HREF="#XREF17932">The ARM procedure call standard</A>).<P>
+<P>
