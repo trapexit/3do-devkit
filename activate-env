@@ -12,10 +12,52 @@ script_basepath() {
     echo $(cd "${dirpath}" && pwd)
 }
 
-which armcc > /dev/null
-if [ $? -ne 0 ]; then
-    export PATH="$PATH":"$(script_basepath)/bin/compiler/linux"
-    export PATH="$PATH":"$(script_basepath)/bin/tools/linux"
-    export PATH="$PATH":"$(script_basepath)/bin/buildtools/linux"    
+deactivate-env() {
+    if [ -z "$TDO_DEVKIT_PATH" ]; then
+        echo "3DO development environment not activated."
+        return 1
+    fi
+
+    if [ -n "$MSYSTEM" ] || [[ "$OSTYPE" == *msys* ]]; then
+        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/compiler/win}
+        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/tools/win}
+        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/buildtools/win}
+    else
+        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/compiler/linux}
+        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/tools/linux}
+        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/buildtools/linux}
+    fi
+    export PATH
+    unset TDO_DEVKIT_PATH
+    unset -f deactivate-env
+    echo "3DO development environment deactivated."
+}
+
+if [ -z "$TDO_DEVKIT_PATH" ]; then
+    if [ -f ".devkit-path" ]; then
+        basepath=$(cat .devkit-path)
+    else
+        basepath=$(script_basepath)
+    fi
+    export TDO_DEVKIT_PATH="$basepath"
+
+    if [ -n "$MSYSTEM" ] || [[ "$OSTYPE" == *msys* ]]; then
+        export PATH="$PATH:$basepath/bin/compiler/win"
+        export PATH="$PATH:$basepath/bin/tools/win"
+        export PATH="$PATH:$basepath/bin/buildtools/win"
+    else
+        export PATH="$PATH:$basepath/bin/compiler/linux"
+        export PATH="$PATH:$basepath/bin/tools/linux"
+        export PATH="$PATH:$basepath/bin/buildtools/linux"
+    fi
 fi
-export TDO_DEVKIT_PATH=$(script_basepath)
+
+if command -v armcc >/dev/null 2>&1; then
+    echo "3DO development environment activated. Run 'deactivate-env' to deactivate."
+else
+    echo "Error: Activation failed. armcc not found in PATH."
+    if [ -f ".devkit-path" ]; then
+        echo "Note: .devkit-path contains: $basepath"
+        echo "If this path is wrong, update .devkit-path."
+    fi
+fi

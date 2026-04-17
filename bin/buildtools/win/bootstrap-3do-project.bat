@@ -33,9 +33,12 @@ IF NOT EXIST "%DST_PATH%\src" (
 
 echo "Copying build files"
 xcopy /Q /Y "%SRC_PATH%\activate-env.bat" "%DST_PATH%"
+xcopy /Q /Y "%SRC_PATH%\activate-env.ps1" "%DST_PATH%"
 xcopy /Q /Y "%SRC_PATH%\makefile" "%DST_PATH%"
 xcopy /Q /Y "%SRC_PATH%\make.bat" "%DST_PATH%"
 xcopy /Q /Y "%SRC_PATH%\make-run.bat" "%DST_PATH%"
 xcopy /Q /Y "%SRC_PATH%\make-clean.bat" "%DST_PATH%"
+
+<nul set /p=%SRC_PATH%>"%DST_PATH%\.devkit-path"
 
 if [%arg0:~2,1%]==[:] pause
