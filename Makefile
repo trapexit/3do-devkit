@@ -5,6 +5,33 @@ LAUNCHME   = $(FILESYSTEM)/LaunchMe
 STACKSIZE  = 4096
 BANNER	   = banner.png
 
+ifeq ($(OS),Windows_NT)
+  ifeq ($(origin MSYSTEM),undefined)
+    IS_POSIX_SHELL := 0
+  else
+    IS_POSIX_SHELL := 1
+  endif
+else
+  IS_POSIX_SHELL := 1
+endif
+
+ifeq ($(origin TDO_DEVKIT_PATH),undefined)
+  $(warning WARNING: run "source activate-env" to have access to tooling)
+  $(shell sleep 3)
+  TDO_DEVKIT_PATH := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+  ifeq ($(IS_POSIX_SHELL),1)
+	ifeq ($(OS),Windows_NT)
+		PATH := $(TDO_DEVKIT_PATH)bin/compiler/win:$(TDO_DEVKIT_PATH)bin/tools/win:$(TDO_DEVKIT_PATH)bin/buildtools/win:$(PATH)
+	else
+		PATH := $(TDO_DEVKIT_PATH)bin/compiler/linux:$(TDO_DEVKIT_PATH)bin/tools/linux:$(TDO_DEVKIT_PATH)bin/buildtools/linux:$(PATH)
+	endif
+  else
+    PATH := $(TDO_DEVKIT_PATH)bin\compiler\win;$(TDO_DEVKIT_PATH)bin\tools\win;$(TDO_DEVKIT_PATH)bin\buildtools\win;$(PATH)
+  endif
+endif
+
+$(info PATH=$(PATH))
+
 ## Flag definitions ##
 # -bigend   : Compiles code for an ARM operating with big-endian memory. The most
 #             significant byte has lowest address.
@@ -90,12 +117,12 @@ DEPS = $(OBJS:.o=.d)
 all: launchme modbin iso encrypt-iso
 
 build/.touched:
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_POSIX_SHELL),1)
+	mkdir -p build
+	touch $@
+else
 	if not exist "build" mkdir "build"
 	type nul > $@
-else
-	mkdir -p "build"
-	touch $@
 endif
 
 builddir: build/.touched
@@ -114,12 +141,12 @@ banner:
 	3it to-banner -o "$(FILESYSTEM)/BannerScreen" "$(BANNER)"
 
 iso/.touched:
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_POSIX_SHELL),1)
+	mkdir -p iso
+	touch $@
+else
 	if not exist "iso" mkdir "iso"
 	type nul > $@
-else
-	mkdir -p "iso"
-	touch $@
 endif
 
 isodir: iso/.touched
@@ -142,16 +169,20 @@ build/%.cpp.o: src/%.cpp
 	armcpp $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -c $< -o $@
 
 clean:
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_POSIX_SHELL),1)
+	rm -rvf "build" "iso" "$(LAUNCHME)"
+else
 	if exist "build" rmdir /S /Q "build"
 	if exist "iso" rmdir /S /Q "iso"
 	if exist $(subst /,\,$(LAUNCHME)) del $(subst /,\,$(LAUNCHME))
-else
-	rm -rvf "build" "iso" $(LAUNCHME)
 endif
 
 run:
+ifeq ($(OS),Windows_NT)
+	run-iso.bat "$(ISONAME)"
+else
 	run-iso "$(ISONAME)"
+endif
 
 .PHONY: builddir isodir clean modbin banner iso encrypt-iso run
 

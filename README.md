@@ -90,7 +90,7 @@ double check by visiting the links provided above.
   original form (outside text encoding conversion.) They are not
   buildable without some effort.
 * [3D 3DO Logo](src/3d_3do_logo.c)
-* [CEL rotation and zoom demo](src/cel_rotation.cpp)
+* [3DO Logo CEL rotation and zoom demo](src/cel_rotation.cpp)
 
 
 ### Misc
@@ -99,7 +99,7 @@ double check by visiting the links provided above.
   boot_code from Game Guru.
 
 
-## Install
+## Download and Install
 
 There really isn't a need to "install". You can download the repo and
 start using it in place. See [#Usage](#Usage) below. However, you can
@@ -107,6 +107,8 @@ set things up in a manner similar to a global install.
 
 
 ### Windows
+
+Note: If using WSL or MSYS you can follow the Linux instructions.
 
 * [Download](https://github.com/trapexit/3do-devkit/archive/refs/heads/master.zip)
 the dev kit.
@@ -165,9 +167,14 @@ See below for OS specific workflows.
   * Run `make-clean.bat` to remove build files
 
 
-#### WSL2
+#### WSL
 
 Same as Linux
+
+
+#### MSYS
+
+Same as Linux (when in the MSYS bash shell).
 
 
 ### Linux
@@ -255,7 +262,7 @@ manually and place them into the RetroArch `system` folder.
 
 * bin/: All core binaries such as compilers, linkers, media
   conversion tools, and misc tooling.
-* src/: Directory storing all application source.
+* [src/](src/): Directory storing all application source.
 * takeme/: Directory storing all CDROM artifacts. Target for final
   "Launchme" executable. The name "takeme" originates from the
   original 3DO SDK.

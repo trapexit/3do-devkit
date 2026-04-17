@@ -1,11 +1,10 @@
 #!/bin/sh
 
-which flatpak
-if [ $? -eq 0 ]; then
+if which flatpak >/dev/null 2>&1; then
     flatpak run org.libretro.RetroArch --verbose -L opera_libretro.so "$@"
-fi
-
-which retroarch
-if [ $? -eq 0 ]; then
+elif which retroarch >/dev/null 2>&1; then
     retroarch --verbose -L opera_libretro.so "$@"
+else
+    echo "Unable to find RetroArch. Install via flatpak or your package manager."
+    exit 1
 fi
