@@ -38,7 +38,10 @@
  */
 
 #include "celutils.h"
+#include "abort.h"
+#include "controlpad.h"
 #include "displayutils.h"
+#include "event.h"
 #include "mem.h"
 #include "operamath.h"
 #include "stdio.h"
@@ -530,6 +533,48 @@ create_objects(void)
 
 static
 void
+delete_object(objectPtr obj_,
+              boolean   owns_cels_)
+{
+  u32 i;
+
+  if(obj_ == NULL)
+    return;
+
+  if(owns_cels_)
+    for(i = 0; i < obj_->numQuads; i++)
+      obj_->quads[i].ccb = DeleteCel(obj_->quads[i].ccb);
+
+  FreeMem(obj_, sizeof(object));
+}
+
+static
+void
+delete_objects(void)
+{
+  u32 i;
+
+  for(i = 0; i < SIZEOF_ARRAY(wire_objs_left); i++)
+    {
+      delete_object(wire_objs_left[i], FALSE);
+      wire_objs_left[i] = NULL;
+    }
+
+  for(i = 0; i < SIZEOF_ARRAY(wire_objs_right); i++)
+    {
+      delete_object(wire_objs_right[i], FALSE);
+      wire_objs_right[i] = NULL;
+    }
+
+  for(i = 0; i < SIZEOF_ARRAY(solid_objs); i++)
+    {
+      delete_object(solid_objs[i], TRUE);
+      solid_objs[i] = NULL;
+    }
+}
+
+static
+void
 render_wire_objs(objectPtr objs_[],
                  const u32 objs_count_)
 {
@@ -547,19 +592,62 @@ clear_screen(void)
   SetVRAMPages(sport_ioreq,
                sc->sc_Bitmaps[sc->sc_CurrentScreen]->bm_Buffer,
                0,
-               sc->sc_NumBitmapPages,
-               0xFFFFFFFF);
+                sc->sc_NumBitmapPages,
+                0xFFFFFFFF);
+}
+
+static
+void
+display_cleanup(void)
+{
+  if(vbl_ioreq > 0)
+    DeleteVBLIOReq(vbl_ioreq);
+  if(sport_ioreq > 0)
+    DeleteVRAMIOReq(sport_ioreq);
+  if(sc != NULL)
+    {
+      DeleteBasicDisplay(sc);
+      FreeMem(sc, sizeof(ScreenContext));
+    }
+
+  vbl_ioreq = 0;
+  sport_ioreq = 0;
+  sc = NULL;
+}
+
+static
+boolean
+exit_requested(void)
+{
+  uint32 buttons;
+  Err err;
+
+  buttons = 0;
+  err = DoControlPad(1, &buttons, 0);
+  if(err < 0)
+    abort_err(err);
+
+  return ((buttons & ControlX) ? TRUE : FALSE);
 }
 
 int
 main_3d_3do_logo(void)
 {
+  Err err;
+
   init_demo();
+
+  err = InitControlPad(1);
+  if(err < 0)
+    abort_err(err);
 
   create_objects();
 
   while(TRUE)
     {
+      if(exit_requested())
+        break;
+
       rend_count = 0;
 
       clear_screen();
@@ -587,6 +675,10 @@ main_3d_3do_logo(void)
 
       WaitVBL(vbl_ioreq, 1);
     }
+
+  delete_objects();
+  KillControlPad();
+  display_cleanup();
 
   return(0);
 }

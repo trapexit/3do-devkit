@@ -1,7 +1,10 @@
 #include "display.hpp"
 
+#include "abort.h"
 #include "celutils.h"
+#include "controlpad.h"
 #include "debug.h"
+#include "event.h"
 #include "graphics.h"
 #include "hardware.h"
 #include "io.h"
@@ -69,8 +72,13 @@ main_cel_rotation()
 {
   CCB *logo;
   BasicDisplay display;
+  Err err;
 
   OpenMathFolio();
+
+  err = InitControlPad(1);
+  if(err < 0)
+    abort_err(err);
 
   logo = LoadCel("art/3do_logo_unpacked.cel",MEMTYPE_CEL);
 
@@ -87,6 +95,15 @@ main_cel_rotation()
 
   while(true)
     {
+      uint32 buttons;
+
+      buttons = 0;
+      err = DoControlPad(1, &buttons, 0);
+      if(err < 0)
+        abort_err(err);
+      if(buttons & ControlX)
+        break;
+
       ZoomRotateCel(logo,x,y,zoom,angle);
       angle += Convert32_F16(1);
       zoom  += dzoom;
@@ -110,6 +127,7 @@ main_cel_rotation()
     }
 
   UnloadCel(logo);
+  KillControlPad();
 
   return 0;
 }
