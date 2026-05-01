@@ -46,6 +46,7 @@
 #include "operamath.h"
 #include "stdio.h"
 #include "string.h"
+#include "stdlib.h"
 
 /* ********************************************************************************************* */
 /* ------------------------------------- CONSTANTS / MACROS ------------------------------------ */
@@ -55,7 +56,6 @@
 
 // settings
 #define DEBUG_MODE        0
-#define CULL_BACKFACES    1
 #define POLY_SIZE         4
 #define SOLID_OBJ_COUNT   3
 #define WIRE_OBJ_COUNT    3
@@ -87,13 +87,12 @@
 #define PDV_0_MASK 0x300
 #define PMV_0_SHIFT 10
 #define PDV_0_SHIFT 8
+#define LIGHT_STATE_UNSET 0xFFFFFFFF
 
 /* ********************************************************************************************* */
 /* ------------------------------------------- TYPES ------------------------------------------- */
 /* ********************************************************************************************* */
 
-typedef frac16 mat4x4[4][4];
-typedef frac16 vector4[4];
 typedef frac16 vector3[3];
 typedef vector3 angle3;
 
@@ -108,12 +107,11 @@ typedef struct
 typedef struct
 {
   u32     vertIndex[POLY_SIZE];
-  vertex  local[POLY_SIZE];
-  vertex  world[POLY_SIZE];
   Point   screen[POLY_SIZE]; 	// Point is a 3DO lib type, handy for MapCel()
   u32     flags;
   CCB    *ccb;			// Used if not using wireframe mode
   frac16  dp;			// Holds dot product of quad normal to pov
+  u32     lightState;
 } quad, *quadPtr;
 
 // Models
@@ -124,8 +122,11 @@ typedef struct
   u32    numQuads;		// number of quads
   point  worldPos;		// object center world position
   vertex verts[MAX_OBJECT_VERTS];
+  vertex worldVerts[MAX_OBJECT_VERTS];
+  Point  screenVerts[MAX_OBJECT_VERTS];
   quad   quads[MAX_OBJECT_QUADS]; // quad/polygon vertex data
   angle3 angles;		// xyz rotation angles
+  angle3 spin_velocity;		// per-axis angular velocity
 } object, *objectPtr;
 
 /* ************************************************************************* */
@@ -305,16 +306,6 @@ static void set_object_pos(objectPtr obj, frac16 x, frac16 y, frac16 z);
 static void update_solid_objs(void);
 static void update_wire_objs(void);
 
-
-/**
- * @brief Rebase prestine vertex data to model
- */
-static void to_local(objectPtr obj);
-
-/**
- * @brief Transform model local space to world space
- * @param obj
- */
 static void local_to_world(objectPtr obj);
 
 /**
@@ -330,41 +321,9 @@ static void world_to_screen(objectPtr obj);
  */
 static void render_wire_obj(objectPtr obj, const u16 color);
 
-/**
- * @brief Rotate model about any axis or combination of them
- * @param obj
- * @param xangle
- * @param yangle
- * @param zangle
- */
-static void rotate_object(objectPtr obj, frac16 xangle, frac16 yangle, frac16 zangle);
+static void rotate_object_y_to_world(objectPtr obj, frac16 ycos, frac16 ysin);
 
-/**
- * @brief Simple matrix helper
- * @param mat
- */
-static void make_identity_mat4x4(mat4x4 mat);
-
-/**
- * @brief Simple matrix helper
- * @param mat
- */
-static void zero_mat4x4(mat4x4 mat);
-
-/**
- * @brief Simple matrix helper
- * @param dest
- * @param source
- */
-static void copy_mat4x4(mat4x4 dest, mat4x4 source);
-
-/**
- * @brief Create a vector from two points in 3D space
- * @param vector
- * @param initial
- * @param terminal
- */
-static void point_to_vector(vector3 vector, vertex *initial, vertex *terminal);
+static void rotate_object_xyz_to_world(objectPtr obj);
 
 /**
  * @brief Test quad for backface removal. This check will set the quad's cull
@@ -373,35 +332,14 @@ static void point_to_vector(vector3 vector, vertex *initial, vertex *terminal);
  * @param qptr
  * @return TRUE if cull was set
  */
-static boolean cull_backface(quadPtr qptr);
+static boolean cull_backface(objectPtr optr, quadPtr qptr);
+
+static u32 pmv_from_dp(frac16 dp, u32 quad_idx);
 
 /**
  * @brief Prep to render each quad as a linked cel
  */
 static void prepare_renderables(void);
-
-/**
- * @brief Set pixc pmv value
- * @param ccb
- * @param pmv
- */
-static void set_pixc_PMV(CCB *ccb, u32 pmv);
-
-/**
- * @brief Set pixc pdv value
- * @param ccb
- * @param pmv
- */
-static void set_pixc_PDV(CCB *ccb, u32 pdv);
-
-/**
- * @brief Cel creation helper
- * @param width
- * @param height
- * @param alloc TRUE to have function allocate source space for you
- * @return CCB*
- */
-static CCB *create_coded_cel8(u32 width, u32 height, boolean alloc);
 
 /**
  * @brief Cel creation helper
@@ -487,6 +425,19 @@ create_objects(void)
                  Convert32_F16(0),
                  Convert32_F16(-2),
                  Convert32_F16(18));
+
+  {
+    u32 s, a;
+
+    for(s = 0; s < SOLID_OBJ_COUNT; s++)
+      for(a = 0; a < 3; a++)
+        {
+          signed int r = ((signed int)urand() & 7) - 3; /* -3..+4 */
+          if(r == 0)
+            r = 1;
+          solid_objs[s]->spin_velocity[a] = (frac16)((int32)r * 0x4000);
+        }
+  }
 
   // "3" model
   wire_objs_left[0] = clone_obj(solid_objs[0]);
@@ -663,11 +614,13 @@ main_3d_3do_logo(void)
       if(rend_count > 0)
         DrawCels(sc->sc_BitmapItems[sc->sc_CurrentScreen], renderables[0]);
 
+#if DEBUG_MODE
       {
         int i;
         for(i = 0; i < SIZEOF_ARRAY(solid_objs); i++)
           render_wire_obj(solid_objs[i], RGB15_BLACK);
       }
+#endif
 
       DisplayScreen(sc->sc_ScreenItems[sc->sc_CurrentScreen], NULL);
       // flip current screen
@@ -716,56 +669,50 @@ init_demo(void)
 }
 
 static
-void
-update_obj(objectPtr obj_,
-           frac16    x_rot_,
-           frac16    y_rot_,
-           frac16    z_rot_)
+frac16
+clamp_angle(frac16 angle_)
 {
-  // copy prestine verts into local data
-  to_local(obj_);
+  if(angle_ >= ANG_256_F16)
+    angle_ -= ANG_256_F16;
 
-  // you can play with rotations here to create complex rotations
-  obj_->angles[0] += x_rot_;    // x rot
-  obj_->angles[1] += y_rot_;    // y rot
-  obj_->angles[2] += z_rot_;    // z rot
+  return angle_;
+}
 
-  // clamp angles
-  if(obj_->angles[0] >= ANG_256_F16)
-    obj_->angles[0] -= ANG_256_F16;
-  if(obj_->angles[1] >= ANG_256_F16)
-    obj_->angles[1] -= ANG_256_F16;
-  if(obj_->angles[2] >= ANG_256_F16)
-    obj_->angles[2] -= ANG_256_F16;
+static
+void
+update_obj_y_group(objectPtr objs_[],
+                   u32       objs_count_,
+                   frac16    y_rot_)
+{
+  u32 i;
+  frac16 yangle;
+  frac16 ycos;
+  frac16 ysin;
 
-  // rotate only after local transform above
-  rotate_object(obj_,
-                obj_->angles[0],  // x rot
-                obj_->angles[1],  // y rot
-                obj_->angles[2]); // z rot
+  yangle = clamp_angle(objs_[0]->angles[1] + y_rot_);
+  ycos = CosF16(yangle);
+  ysin = SinF16(yangle);
 
-  local_to_world(obj_);
-
-  world_to_screen(obj_);
+  for(i = 0; i < objs_count_; i++)
+    {
+      objs_[i]->angles[1] = yangle;
+      rotate_object_y_to_world(objs_[i], ycos, ysin);
+      local_to_world(objs_[i]);
+      world_to_screen(objs_[i]);
+    }
 }
 
 static
 void
 update_wire_objs(void)
 {
-  u32 i;
+  update_obj_y_group(wire_objs_left,
+                     SIZEOF_ARRAY(wire_objs_left),
+                     Convert32_F16(1));
 
-  for(i = 0; i < SIZEOF_ARRAY(wire_objs_left); i++)
-    update_obj(wire_objs_left[i],
-               Convert32_F16(0),
-               Convert32_F16(1),
-               Convert32_F16(0));
-
-  for(i = 0; i < SIZEOF_ARRAY(wire_objs_right); i++)
-    update_obj(wire_objs_right[i],
-               Convert32_F16(0),
-               Convert32_F16(-1),
-               Convert32_F16(0));
+  update_obj_y_group(wire_objs_right,
+                     SIZEOF_ARRAY(wire_objs_right),
+                     Convert32_F16(-1));
 }
 
 
@@ -776,10 +723,19 @@ update_solid_objs(void)
   u32 i;
 
   for(i = 0; i < SIZEOF_ARRAY(solid_objs); i++)
-    update_obj(solid_objs[i],
-               Convert32_F16(0),
-               Convert32_F16(-1)>>3,
-               Convert32_F16(0));
+    {
+      objectPtr obj;
+
+      obj = solid_objs[i];
+
+      obj->angles[0] = clamp_angle(obj->angles[0] + obj->spin_velocity[0]);
+      obj->angles[1] = clamp_angle(obj->angles[1] + obj->spin_velocity[1]);
+      obj->angles[2] = clamp_angle(obj->angles[2] + obj->spin_velocity[2]);
+
+      rotate_object_xyz_to_world(obj);
+      local_to_world(obj);
+      world_to_screen(obj);
+    }
 }
 
 static
@@ -798,10 +754,8 @@ prepare_renderables(void)
         {
           qptr = &optr->quads[j];
 
-#if CULL_BACKFACES
           if(qptr->flags & CULL_MASK)
             continue;
-#endif
 
           if(rend_count >= MAX_RENDERABLES)
             {
@@ -809,17 +763,19 @@ prepare_renderables(void)
               goto hard_stop;
             }
 
-          // quick and dirty lighting just to see the shapes..
-          if(qptr->dp < 6)
-            {
-              set_pixc_PMV(qptr->ccb, 4);
-              set_pixc_PDV(qptr->ccb, 3);
-            }
-          else
-            {
-              set_pixc_PMV(qptr->ccb, 7);
-              set_pixc_PDV(qptr->ccb, 3);
-            }
+          // shade based on face angle to pov
+          {
+            const u32 pmv = pmv_from_dp(qptr->dp, j);
+
+            if(qptr->lightState != pmv)
+              {
+                qptr->ccb->ccb_PIXC =
+                  (qptr->ccb->ccb_PIXC & ~(PMV_0_MASK | PDV_0_MASK)) |
+                  (pmv << PMV_0_SHIFT) |
+                  (3 << PDV_0_SHIFT);
+                qptr->lightState = pmv;
+              }
+          }
 
           MapCel(qptr->ccb, qptr->screen);
           renderables[rend_count++] = qptr->ccb;
@@ -843,51 +799,15 @@ prepare_renderables(void)
 
 static
 void
-to_local(objectPtr obj)
-{
-  u32 i, j;
-  quadPtr qptr;
-
-  for (i = 0; i < obj->numQuads; i++)
-    {
-      qptr = &obj->quads[i];
-
-      for (j = 0; j < POLY_SIZE; j++)
-        {
-          qptr->local[j].x = obj->verts[qptr->vertIndex[j]].x;
-          qptr->local[j].y = obj->verts[qptr->vertIndex[j]].y;
-          qptr->local[j].z = obj->verts[qptr->vertIndex[j]].z;
-        }
-    }
-}
-
-static
-void
 local_to_world(objectPtr obj)
 {
-  u32 i, j;
+  u32 i;
   quadPtr qptr;
 
   for (i = 0; i < obj->numQuads; i++)
     {
       qptr = &obj->quads[i];
-
-      // remove prior cull flag
-#if CULL_BACKFACES
-      qptr->flags &= ~CULL_MASK;
-#endif
-
-      for (j = 0; j < POLY_SIZE; j++)
-        {
-          qptr->world[j].x = obj->worldPos.x + qptr->local[j].x;
-          qptr->world[j].y = obj->worldPos.y + qptr->local[j].y;
-          qptr->world[j].z = obj->worldPos.z + qptr->local[j].z;
-
-#if CULL_BACKFACES
-          if(cull_backface(qptr))
-            qptr->flags |= CULL_MASK;
-#endif
-        }
+      qptr->flags = cull_backface(obj, qptr) ? CULL_MASK : 0;
     }
 }
 
@@ -895,23 +815,35 @@ static
 void
 world_to_screen(objectPtr obj)
 {
-  u32 i, j, z;
+  u32 i, j;
+  u32 idx;
+  frac16 z;
   quadPtr qptr;
+  boolean projected[MAX_OBJECT_VERTS];
+
+  memset(projected, FALSE, sizeof(projected));
 
   for (i = 0; i < obj->numQuads; i++)
     {
       qptr = &obj->quads[i];
 
-#if CULL_BACKFACES
       if(qptr->flags & CULL_MASK)
         continue;
-#endif
 
       for (j = 0; j < POLY_SIZE; j++)
         {
-          z = (qptr->world[j].z == 0) ? 1 : qptr->world[j].z; // avoid divide by zero
-          qptr->screen[j].pt_X = (DivSF16(qptr->world[j].x << VIEW_DIST_SHIFT, z) + HALF_SCREEN_W_F16) >> FRACBITS_16;
-          qptr->screen[j].pt_Y = (DivSF16(-qptr->world[j].y << VIEW_DIST_SHIFT, z) + HALF_SCREEN_H_F16) >> FRACBITS_16;
+          idx = qptr->vertIndex[j];
+
+          if(!projected[idx])
+            {
+              z = (obj->worldVerts[idx].z == 0) ? 1 : obj->worldVerts[idx].z; // avoid divide by zero
+              obj->screenVerts[idx].pt_X = (DivSF16(obj->worldVerts[idx].x << VIEW_DIST_SHIFT, z) + HALF_SCREEN_W_F16) >> FRACBITS_16;
+              obj->screenVerts[idx].pt_Y = (DivSF16(-obj->worldVerts[idx].y << VIEW_DIST_SHIFT, z) + HALF_SCREEN_H_F16) >> FRACBITS_16;
+              projected[idx] = TRUE;
+            }
+
+          qptr->screen[j].pt_X = obj->screenVerts[idx].pt_X;
+          qptr->screen[j].pt_Y = obj->screenVerts[idx].pt_Y;
         }
     }
 }
@@ -922,8 +854,11 @@ render_wire_obj(objectPtr obj_,
                 const u16 color_)
 {
   static GrafCon gcon;
+  Item bitmapItem;
   u32 i, j;
   quadPtr qptr;
+
+  bitmapItem = sc->sc_BitmapItems[sc->sc_CurrentScreen];
 
   SetFGPen(&gcon, color_);
 
@@ -931,21 +866,19 @@ render_wire_obj(objectPtr obj_,
     {
       qptr = &obj_->quads[i];
 
-#if CULL_BACKFACES
       if(qptr->flags & CULL_MASK)
         continue;
-#endif
 
       gcon.gc_PenX = qptr->screen[0].pt_X;
       gcon.gc_PenY = qptr->screen[0].pt_Y;
 
       for (j = 1; j < POLY_SIZE; j++)
-        DrawTo(sc->sc_BitmapItems[sc->sc_CurrentScreen],
+        DrawTo(bitmapItem,
                &gcon,
                qptr->screen[j].pt_X,
                qptr->screen[j].pt_Y);
 
-      DrawTo(sc->sc_BitmapItems[sc->sc_CurrentScreen],
+      DrawTo(bitmapItem,
              &gcon,
              qptr->screen[0].pt_X,
              qptr->screen[0].pt_Y);
@@ -978,7 +911,6 @@ create_object(const vertex *verts,
               u16           color)
 {
   u32 i;
-  u32 j;
   objectPtr obj;
 
   obj = (objectPtr) AllocMem(sizeof(object), MEMTYPE_DRAM);
@@ -987,24 +919,16 @@ create_object(const vertex *verts,
   obj->numQuads  = numQuads;
   obj->color     = color;
   obj->angles[0] = obj->angles[1] = obj->angles[2] = 0;
+  obj->spin_velocity[0] = obj->spin_velocity[1] = obj->spin_velocity[2] = 0;
 
-  // copy verts into proper vertex format
-  for (i = 0; i < numVerts; i++)
-    {
-      obj->verts[i].x = verts[i].x;
-      obj->verts[i].y = verts[i].y;
-      obj->verts[i].z = verts[i].z;
-    }
+  memcpy(obj->verts, verts, numVerts * sizeof(vertex));
 
-  // copy quad luts
-  for (i = 0, j = 0; i < numQuads; i++, j+=4)
+  for (i = 0; i < numQuads; i++)
     {
-      obj->quads[i].vertIndex[0] = quads[j+0];
-      obj->quads[i].vertIndex[1] = quads[j+1];
-      obj->quads[i].vertIndex[2] = quads[j+2];
-      obj->quads[i].vertIndex[3] = quads[j+3];
+      memcpy(obj->quads[i].vertIndex, &quads[i * 4], 4 * sizeof(u32));
       obj->quads[i].flags = 0;
       obj->quads[i].dp = 0;
+      obj->quads[i].lightState = LIGHT_STATE_UNSET;
 
       obj->quads[i].ccb = create_coded_colored_cel8(16, 16, color);
     }
@@ -1027,180 +951,121 @@ set_object_pos(objectPtr obj,
 /* ----------------------------------------- CORE MATH ----------------------------------------- */
 /* --------------------------------------------------------------------------------------------- */
 
-// This uses many local vars which should be trimmed down for better
-// performance
 static
 void
-rotate_object(objectPtr obj,
-              frac16    xangle,
-              frac16    yangle,
-              frac16    zangle)
+rotate_object_y_to_world(objectPtr obj,
+                         frac16    ycos,
+                         frac16    ysin)
 {
-  u32 i, j;
-  quadPtr qptr;
-  mat4x4 rot, xrot, yrot, zrot, temp;
-  frac16 cos, sin;
-  u32 flags = 0;
+  u32 i;
+  frac16 x, z;
 
-  // figure out the rotations we are doing
-  if(xangle != 0)
+  for (i = 0; i < obj->numVerts; i++)
     {
-      cos = CosF16(xangle);
-      sin = SinF16(xangle);
-      make_identity_mat4x4(xrot);
-      xrot[1][1] = cos;
-      xrot[1][2] = sin;
-      xrot[2][1] = -sin;
-      xrot[2][2] = cos;
-      flags |= 1;
-    }
-
-  if(yangle != 0)
-    {
-      cos = CosF16(yangle);
-      sin = SinF16(yangle);
-      make_identity_mat4x4(yrot);
-      yrot[0][0] = cos;
-      yrot[0][2] = -sin;
-      yrot[2][0] = sin;
-      yrot[2][2] = cos;
-      flags |= 2;
-    }
-
-  if(zangle != 0)
-    {
-      cos = CosF16(zangle);
-      sin = SinF16(zangle);
-      make_identity_mat4x4(zrot);
-      zrot[0][0] = cos;
-      zrot[0][1] = sin;
-      zrot[1][0] = -sin;
-      zrot[1][1] = cos;
-      flags |= 4;
-    }
-
-  // set up the final rotation matrix (rot) based on the flags set
-
-  switch (flags)
-    {
-    case 0: // this should not happen
-      break;
-
-    case 1: // x rotation
-      copy_mat4x4(rot,xrot);
-      break;
-
-    case 2: // y rotation
-      copy_mat4x4(rot,yrot);
-      break;
-
-    case 4: // z rotation
-      copy_mat4x4(rot,zrot);
-      break;
-
-    case 3: // x y rotations
-      MulMat44Mat44_F16(rot, xrot, yrot);
-      break;
-
-    case 5: // x z rotations
-      MulMat44Mat44_F16(rot, xrot, zrot);
-      break;
-
-    case 6: // y z rotations
-      MulMat44Mat44_F16(rot, yrot, zrot);
-      break;
-
-    case 7: // x y z rotations (most expensive case)
-      {
-        MulMat44Mat44_F16(temp, xrot, yrot);
-        MulMat44Mat44_F16(rot, temp, zrot);
-      }
-      break;
-
-    default: // this should never happen
-      break;
-    }
-
-  if(flags) // just in case
-    {
-      vector4 prevVertex, newVertex;
-
-      for (i = 0; i < obj->numQuads; i++)
-        {
-          qptr = &obj->quads[i];
-
-          // for each vertex
-          for (j = 0; j < POLY_SIZE; j++)
-            {
-              prevVertex[0] = qptr->local[j].x;
-              prevVertex[1] = qptr->local[j].y;
-              prevVertex[2] = qptr->local[j].z;
-              prevVertex[3] = ONE_F16;
-
-              MulVec4Mat44_F16(newVertex, prevVertex, rot);
-
-              qptr->local[j].x = newVertex[0];
-              qptr->local[j].y = newVertex[1];
-              qptr->local[j].z = newVertex[2];
-            }
-        }
+      x = obj->verts[i].x;
+      z = obj->verts[i].z;
+      obj->worldVerts[i].x = obj->worldPos.x + MulSF16(x, ycos) + MulSF16(z, ysin);
+      obj->worldVerts[i].y = obj->worldPos.y + obj->verts[i].y;
+      obj->worldVerts[i].z = obj->worldPos.z + MulSF16(-x, ysin) + MulSF16(z, ycos);
     }
 }
 
 static
 void
-make_identity_mat4x4(mat4x4 mat)
+rotate_object_xyz_to_world(objectPtr obj)
 {
-  zero_mat4x4(mat);
-  mat[0][0] = mat[1][1] = mat[2][2] = mat[3][3] = ONE_F16;
+  u32 i;
+  frac16 sx, cx, sy, cy, sz, cz;
+  frac16 sxsy, cxsy;
+  frac16 r00, r01, r02;
+  frac16 r10, r11, r12;
+  frac16 r20, r21, r22;
+
+  cx = CosF16(obj->angles[0]);
+  sx = SinF16(obj->angles[0]);
+  cy = CosF16(obj->angles[1]);
+  sy = SinF16(obj->angles[1]);
+  cz = CosF16(obj->angles[2]);
+  sz = SinF16(obj->angles[2]);
+
+  sxsy = MulSF16(sx, sy);
+  cxsy = MulSF16(cx, sy);
+
+  r00 = MulSF16(cy, cz);
+  r01 = MulSF16(cy, sz);
+  r02 = -sy;
+  r10 = MulSF16(sxsy, cz) - MulSF16(cx, sz);
+  r11 = MulSF16(sxsy, sz) + MulSF16(cx, cz);
+  r12 = MulSF16(sx, cy);
+  r20 = MulSF16(cxsy, cz) + MulSF16(sx, sz);
+  r21 = MulSF16(cxsy, sz) - MulSF16(sx, cz);
+  r22 = MulSF16(cx, cy);
+
+  for(i = 0; i < obj->numVerts; i++)
+    {
+      frac16 x, y, z;
+
+      x = obj->verts[i].x;
+      y = obj->verts[i].y;
+      z = obj->verts[i].z;
+
+      obj->worldVerts[i].x = obj->worldPos.x + MulSF16(x, r00) + MulSF16(y, r10) + MulSF16(z, r20);
+      obj->worldVerts[i].y = obj->worldPos.y + MulSF16(x, r01) + MulSF16(y, r11) + MulSF16(z, r21);
+      obj->worldVerts[i].z = obj->worldPos.z + MulSF16(x, r02) + MulSF16(y, r12) + MulSF16(z, r22);
+    }
 }
 
 static
-void
-zero_mat4x4(mat4x4 mat)
+u32
+pmv_from_dp(frac16 dp, u32 quad_idx)
 {
-  const size_t nbytes = (sizeof(frac16) * 16); // 4x4 = 16 = 64 bytes
-  memset(mat, 0, nbytes);
-}
+  u32 base;
 
-static
-void
-copy_mat4x4(mat4x4 dest,
-            mat4x4 source)
-{
-  const size_t nbytes = (sizeof(frac16) * 16); // 4x4 = 16 = 64 bytes
-  memcpy(dest, source, nbytes);
-}
+  if(dp < 2)       base = 1;
+  else if(dp < 4)  base = 2;
+  else if(dp < 8)  base = 3;
+  else if(dp < 14) base = 4;
+  else if(dp < 22) base = 5;
+  else if(dp < 34) base = 6;
+  else             base = 7;
 
-static
-void
-point_to_vector(vector3  vector,
-                vertex  *initial,
-                vertex  *terminal)
-{
-  vector[0] = terminal->x - initial->x;
-  vector[1] = terminal->y - initial->y;
-  vector[2] = terminal->z - initial->z;
+  base += ((quad_idx * 3) & 1);
+
+  if(base > 7) base = 7;
+  if(base < 1) base = 1;
+
+  return base;
 }
 
 static
 boolean
-cull_backface(quadPtr qptr)
+cull_backface(objectPtr optr,
+              quadPtr   qptr)
 {
-  vec3f16 povVector;
-  vector3 normal, v1, v2;
+  frac16 v1x, v1y, v1z;
+  frac16 v2x, v2y, v2z;
+  frac16 nx, ny, nz;
+  vertex *v0;
+  vertex *v1ptr;
+  vertex *v3ptr;
 
-  // no real camera in this demo
-  povVector[0] = 0 - qptr->world[0].x;
-  povVector[1] = 0 - qptr->world[0].y;
-  povVector[2] = 0 - qptr->world[0].z;
+  v0    = &optr->worldVerts[qptr->vertIndex[0]];
+  v1ptr = &optr->worldVerts[qptr->vertIndex[1]];
+  v3ptr = &optr->worldVerts[qptr->vertIndex[3]];
 
-  // calc normal
-  point_to_vector(v1, &qptr->world[0], &qptr->world[1]);
-  point_to_vector(v2, &qptr->world[0], &qptr->world[3]);
-  Cross3_F16(normal, v2, v1);
+  v1x = v1ptr->x - v0->x;
+  v1y = v1ptr->y - v0->y;
+  v1z = v1ptr->z - v0->z;
+  v2x = v3ptr->x - v0->x;
+  v2y = v3ptr->y - v0->y;
+  v2z = v3ptr->z - v0->z;
 
-  qptr->dp = Dot3_F16(normal, povVector) >> FRACBITS_16;
+  nx = MulSF16(v2y, v1z) - MulSF16(v2z, v1y);
+  ny = MulSF16(v2z, v1x) - MulSF16(v2x, v1z);
+  nz = MulSF16(v2x, v1y) - MulSF16(v2y, v1x);
+
+  // no real camera in this demo, so POV vector is -v0.
+  qptr->dp = (MulSF16(nx, -v0->x) + MulSF16(ny, -v0->y) + MulSF16(nz, -v0->z)) >> FRACBITS_16;
 
   if(qptr->dp < 0)
     return(TRUE);
@@ -1211,24 +1076,6 @@ cull_backface(quadPtr qptr)
 /* ------------------------------------------------------------------------- */
 /* ----------------------------- CEL HELPERS ------------------------------- */
 /* ------------------------------------------------------------------------- */
-
-static
-void
-set_pixc_PMV(CCB *ccb,
-             u32  pmv)
-{
-  ccb->ccb_PIXC &= ~PMV_0_MASK;           // wipe
-  ccb->ccb_PIXC |= (pmv << PMV_0_SHIFT);  // set
-}
-
-static
-void
-set_pixc_PDV(CCB *ccb,
-             u32  pdv)
-{
-  ccb->ccb_PIXC &= ~PDV_0_MASK;          // wipe
-  ccb->ccb_PIXC |= (pdv << PDV_0_SHIFT); // set
-}
 
 /*  Passing (void*)1 into CreateCel() will prevent a data buffer from being allocated.
     Passing CREATECEL_UNCODED to CreateCel() will prevent a PLUT from being allocated.
@@ -1360,7 +1207,7 @@ get_cel_bpp(CCB *cel)
 
 static
 void
-dumpObject(objectPtr obj)
+dump_object(objectPtr obj)
 {
   u32 i;
 
