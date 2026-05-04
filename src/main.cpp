@@ -52,7 +52,13 @@ static const Example examples[] =
   {
     { "Cel rotation",      "$boot/cel_rotation" },
     { "3D 3DO logo",       "$boot/3d_3do_logo" },
-    { "Rotating cube",     "$boot/rotating_cube" }
+    { "Rotating cube",     "$boot/rotating_cube" },
+    { "Bounce",            "$boot/bounce" },
+    { "Orbit",             "$boot/orbit" },
+    { "Color Echo",        "$boot/colorecho" },
+    { "24-bit Slide Show", "$boot/slide_show_24bit" },
+    { "AA Player",         "$boot/aaplayer" },
+    { "LR Extract",        "$boot/lrex" }
   };
 
 static const int example_count = sizeof(examples) / sizeof(examples[0]);
