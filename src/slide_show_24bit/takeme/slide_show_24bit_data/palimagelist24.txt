@@ -1,0 +1,4 @@
+slide_show_24bit_data/PALImages24/gradientpal.imag
+slide_show_24bit_data/PALImages24/gradientpal_1vdl.imag
+slide_show_24bit_data/PALImages24/gradientpal_xvdl.imag
+slide_show_24bit_data/PALImages24/gradientpal_z24.imag
