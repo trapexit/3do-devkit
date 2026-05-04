@@ -58,7 +58,12 @@ static const Example examples[] =
     { "Color Echo",        "$boot/colorecho" },
     { "24-bit Slide Show", "$boot/slide_show_24bit" },
     { "AA Player",         "$boot/aaplayer" },
-    { "LR Extract",        "$boot/lrex" }
+    { "LR Extract",        "$boot/lrex" },
+    { "NVRAM"     ,        "$boot/nvram" },
+    { "Messages",          "$boot/msgpassing" },
+    { "File Walker",       "$boot/walker" },
+    { "Font Library",      "$boot/fontlibexample" },
+    { "Drum Box",          "$boot/drumbox" }
   };
 
 static const int example_count = sizeof(examples) / sizeof(examples[0]);
