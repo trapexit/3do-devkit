@@ -685,7 +685,7 @@ check_control_pad(void)
 }
 
 int
-main_rotating_cube(void)
+main(void)
 {
   frac16 xangle = 0;
   frac16 yangle = 0;

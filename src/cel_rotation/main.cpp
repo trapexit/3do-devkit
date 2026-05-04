@@ -68,7 +68,7 @@ clamp(const frac16  min_,
 }
 
 int
-main_cel_rotation()
+main()
 {
   CCB *logo;
   BasicDisplay display;
