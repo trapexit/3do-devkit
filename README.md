@@ -89,8 +89,29 @@ double check by visiting the links provided above.
   from the original 3DO Portfolio and Toolkit releases in their
   original form (outside text encoding conversion.) They are not
   buildable without some effort.
-* [3D 3DO Logo](src/3d_3do_logo.c)
-* [3DO Logo CEL rotation and zoom demo](src/cel_rotation.cpp)
+* [src/main.cpp](src/main.cpp): The built-in LaunchMe menu for
+  selecting and launching the bundled example apps in `src/`.
+
+The main `src/` tree includes a runnable example disc menu plus
+standalone apps under `src/<app>/main.*`. Each app is linked as its
+own executable and launched from the menu with `LoadProgram()`.
+
+| App | Source | Description |
+|-----|--------|-------------|
+| Cel rotation | [src/cel_rotation](src/cel_rotation) | C++ cel rotation and zoom demo. |
+| 3D 3DO logo | [src/3d_3do_logo](src/3d_3do_logo) | 3D logo rendering demo. |
+| Rotating cube | [src/rotating_cube](src/rotating_cube) | Simple rotating 3D cube demo. |
+| Bounce | [src/bounce](src/bounce) | 3DO logo components bouncing in a room with animation and sound. |
+| Orbit | [src/orbit](src/orbit) | Animated 3DO logo elements orbiting over a background with sound effects. |
+| Color Echo | [src/colorecho](src/colorecho) | Recursive video feedback and color pattern demo. |
+| 24-bit Slide Show | [src/slide_show_24bit](src/slide_show_24bit) | Slideshow comparing 3DO 24-bit image and VDL modes. |
+| AA Player | [src/aaplayer](src/aaplayer) | Anti-aliased animation player with frame and cel controls. |
+| LR Extract | [src/lrex](src/lrex) | Sub-cel extraction and frame buffer redraw example. |
+| NVRAM | [src/nvram](src/nvram) | NVRAM file create, read, write, and delete example. |
+| Messages | [src/msgpassing](src/msgpassing) | Kernel message passing example. |
+| File Walker | [src/walker](src/walker) | File system traversal example. |
+| Font Library | [src/fontlibexample](src/fontlibexample) | Font loading and text rendering example. |
+| Drum Box | [src/drumbox](src/drumbox) | Interactive audio drum sequencer example. |
 
 
 ### Misc
@@ -138,9 +159,16 @@ install required. Just download, activate environment, and build.
 
 * Modify `Makefile` to change the project `NAME`. Not much else should
   need to be modified in the `Makefile` for basic usage.
-* The makefile handles assembly source files (`*.s`), C files (`*.c`),
-  and C++ files (`*.cpp`) in the root of `src/`.
-* Add and/or remove files from `src/` as needed for your project.
+* The makefile builds assembly source files (`*.s`), C files (`*.c`),
+  and C++ files (`*.cpp`) in the root of `src/` into the LaunchMe boot
+  binary.
+* Each `src/<name>/main.c`, `src/<name>/main.cpp`, or
+  `src/<name>/main.s` directory is built as a separate executable named
+  `<name>` in the disc filesystem.
+* Optional app data can be placed under `src/<name>/takeme/`; its
+  contents are copied into `takeme/` before the ISO is generated.
+* The included [src/main.cpp](src/main.cpp) program is a LaunchMe menu
+  that starts the bundled app executables with `LoadProgram()`.
 * Run `make` to build object files, link executable, build ISO, and
   sign ISO for retail system usage.
 
@@ -262,10 +290,12 @@ manually and place them into the RetroArch `system` folder.
 
 * [bin/](bin/): All core binaries such as compilers, linkers, media
   conversion tools, and misc tooling.
-* [src/](src/): Directory storing all application source.
+* [src/](src/): Directory storing application source. Root-level
+  sources build into LaunchMe, while `src/<name>/main.*` directories
+  build into standalone executable programs for the disc.
 * takeme/: Directory storing all CDROM artifacts. Target for final
-  "Launchme" executable. The name "takeme" originates from the
-  original 3DO SDK.
+  "Launchme" executable, standalone app executables, and copied app
+  data. The name "takeme" originates from the original 3DO SDK.
 * [art/](art/): 3DO artwork. Currently only original 3DO SDK art.
 * [docs/](docs/): Documentation from the original SDK, compiler
   suites, related hardware, and development notes.
