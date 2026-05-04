@@ -260,7 +260,7 @@ manually and place them into the RetroArch `system` folder.
 
 ## DevKit Layout
 
-* bin/: All core binaries such as compilers, linkers, media
+* [bin/](bin/): All core binaries such as compilers, linkers, media
   conversion tools, and misc tooling.
 * [src/](src/): Directory storing all application source.
 * takeme/: Directory storing all CDROM artifacts. Target for final
@@ -282,7 +282,8 @@ manually and place them into the RetroArch `system` folder.
      compiler. Unused. For reference.
 * lib/: All libraries from original SDK and community projects.
 * [examples/](examples/): Examples from all available original 3DO SDK
-  releases as well as new and reworked examples.
+  releases as well as new and reworked examples. Some of them also
+  exist in [src/](src/).
 * build/: Automatically created directory during build to store object
   files.
 * iso/: Automatically created directory during build to store ISO file.
