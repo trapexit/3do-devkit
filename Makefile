@@ -2,7 +2,7 @@ NAME       = helloworld
 ISONAME    = iso/$(NAME).iso
 FILESYSTEM = takeme
 LAUNCHME   = $(FILESYSTEM)/LaunchMe
-STACKSIZE  = 4096
+STACKSIZE  = 8192
 BANNER	   = banner.png
 
 ifeq ($(OS),Windows_NT)
@@ -18,7 +18,11 @@ endif
 ifeq ($(origin TDO_DEVKIT_PATH),undefined)
   $(warning WARNING: run "source activate-env" to have access to tooling)
   $(shell sleep 3)
-  TDO_DEVKIT_PATH := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+  ifeq ($(wildcard .devkit-path),)
+    TDO_DEVKIT_PATH := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+  else
+    TDO_DEVKIT_PATH := $(shell cat .devkit-path)/
+  endif
   ifeq ($(IS_POSIX_SHELL),1)
 	ifeq ($(OS),Windows_NT)
 		PATH := $(TDO_DEVKIT_PATH)bin/compiler/win:$(TDO_DEVKIT_PATH)bin/tools/win:$(TDO_DEVKIT_PATH)bin/buildtools/win:$(PATH)
@@ -31,6 +35,8 @@ ifeq ($(origin TDO_DEVKIT_PATH),undefined)
 endif
 
 $(info PATH=$(PATH))
+
+.DEFAULT_GOAL := all
 
 ## Flag definitions ##
 # -bigend   : Compiles code for an ARM operating with big-endian memory. The most
@@ -103,18 +109,45 @@ LIBS =						\
 #	$(LIBPATH)/3do/memdebug.lib		\
 #	$(LIBPATH)/3do/obsoletelib3do.lib	\
 
+# ===== Flat source files in src/ become the LaunchMe boot binary =====
+LAUNCHME_SRCS_C   = $(wildcard src/*.c)
+LAUNCHME_SRCS_CXX = $(wildcard src/*.cpp)
+LAUNCHME_SRCS_S   = $(wildcard src/*.s)
+LAUNCHME_OBJS     = $(LAUNCHME_SRCS_S:src/%.s=build/%.s.o) $(LAUNCHME_SRCS_C:src/%.c=build/%.c.o) $(LAUNCHME_SRCS_CXX:src/%.cpp=build/%.cpp.o)
 
-SRCS_S   = $(wildcard src/*.s)
-SRCS_C   = $(wildcard src/*.c)
-SRCS_CXX = $(wildcard src/*.cpp)
+# ===== Subdirectory apps (src/<name>/main.*) =====
+APP_DIRS = $(sort $(dir $(wildcard src/*/main.c src/*/main.cpp src/*/main.s)))
+APPS     = $(notdir $(patsubst %/,%,$(APP_DIRS)))
 
-OBJS += $(SRCS_S:src/%.s=build/%.s.o)
-OBJS += $(SRCS_C:src/%.c=build/%.c.o)
-OBJS += $(SRCS_CXX:src/%.cpp=build/%.cpp.o)
+PROGRAMS       = $(APPS)
+PROGRAM_PATHS  = $(PROGRAMS:%=$(FILESYSTEM)/%)
+APP_BUILD_DIRS = $(APPS:%=build/%)
+
+OBJS = $(LAUNCHME_OBJS)
+
+define APP_TEMPLATE
+$(1)_SRCS_S   := $$(wildcard src/$(1)/*.s)
+$(1)_SRCS_C   := $$(wildcard src/$(1)/*.c)
+$(1)_SRCS_CXX := $$(wildcard src/$(1)/*.cpp)
+$(1)_OBJS     := $$($(1)_SRCS_S:src/%.s=build/%.s.o) $$($(1)_SRCS_C:src/%.c=build/%.c.o) $$($(1)_SRCS_CXX:src/%.cpp=build/%.cpp.o)
+OBJS          += $$($(1)_OBJS)
+
+$(FILESYSTEM)/$(1): builddir $$($(1)_OBJS)
+	armlink -o $$@ $$(LDFLAGS) $$(STARTUP) $$(LIBS) $$($(1)_OBJS)
+endef
+
+$(foreach app,$(APPS),$(eval $(call APP_TEMPLATE,$(app))))
+
+OBJS := $(sort $(OBJS))
+
+ifneq ($(strip $(LAUNCHME_OBJS)),)
+$(LAUNCHME): builddir $(LAUNCHME_OBJS)
+	armlink -o $@ $(LDFLAGS) $(STARTUP) $(LIBS) $(LAUNCHME_OBJS)
+endif
 
 DEPS = $(OBJS:.o=.d)
 
-all: launchme modbin iso encrypt-iso
+all: launchme programs modbin iso encrypt-iso
 
 build/.touched:
 ifeq ($(IS_POSIX_SHELL),1)
@@ -125,17 +158,43 @@ else
 	type nul > $@
 endif
 
-builddir: build/.touched
+$(APP_BUILD_DIRS): build/.touched
+ifeq ($(IS_POSIX_SHELL),1)
+	mkdir -p "$@"
+else
+	if not exist "$(subst /,\,$@)" mkdir "$(subst /,\,$@)"
+endif
+
+builddir: build/.touched $(APP_BUILD_DIRS)
 
 objs: builddir $(OBJS)
 
-$(LAUNCHME): objs
-	armlink -o $@ $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJS)
-
+ifneq ($(strip $(LAUNCHME_OBJS)),)
 launchme: $(LAUNCHME)
+else
+launchme:
+endif
 
-modbin:
+programs: $(PROGRAM_PATHS)
+
+copy-data:
+ifeq ($(IS_POSIX_SHELL),1)
+	for d in $(wildcard src/*/takeme); do cp -r "$$d"/* "$(FILESYSTEM)"/; done
+else
+	for %%d in ($(subst /,\,$(wildcard src/*/takeme))) do xcopy /E /Y "%%d\*" "$(subst /,\,$(FILESYSTEM))"
+endif
+
+modbin: modbin-launchme $(PROGRAMS:%=modbin-%)
+
+ifneq ($(strip $(LAUNCHME_OBJS)),)
+modbin-launchme: $(LAUNCHME)
 	modbin --name="$(NAME)" --time --stack=$(STACKSIZE) "$(LAUNCHME)" "$(LAUNCHME)"
+else
+modbin-launchme:
+endif
+
+modbin-%: $(FILESYSTEM)/%
+	modbin --name="$*" --time --stack=$(or $($*_STACKSIZE),$(STACKSIZE)) "$<" "$<"
 
 banner:
 	3it to-banner -o "$(FILESYSTEM)/BannerScreen" "$(BANNER)"
@@ -151,7 +210,7 @@ endif
 
 isodir: iso/.touched
 
-iso: isodir
+iso: isodir copy-data
 	3doiso -in "$(FILESYSTEM)" -out "$(ISONAME)"
 
 encrypt-iso: $(ISONAME)
@@ -170,12 +229,16 @@ build/%.cpp.o: src/%.cpp
 
 clean:
 ifeq ($(IS_POSIX_SHELL),1)
-	rm -rvf "build" "iso" "$(LAUNCHME)"
+	rm -rvf "build" "iso" "$(LAUNCHME)" $(PROGRAM_PATHS:%="%")
 else
 	if exist "build" rmdir /S /Q "build"
 	if exist "iso" rmdir /S /Q "iso"
 	if exist $(subst /,\,$(LAUNCHME)) del $(subst /,\,$(LAUNCHME))
+	for %%f in ($(subst /,\,$(PROGRAM_PATHS))) do if exist "%%f" del "%%f"
 endif
+
+distclean: clean
+	git clean -xfd
 
 run:
 ifeq ($(OS),Windows_NT)
@@ -184,6 +247,6 @@ else
 	run-iso "$(ISONAME)"
 endif
 
-.PHONY: builddir isodir clean modbin banner iso encrypt-iso run
+.PHONY: builddir isodir clean distclean launchme programs copy-data modbin modbin-launchme banner iso encrypt-iso run
 
 -include $(DEPS)
