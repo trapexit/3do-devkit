@@ -582,7 +582,7 @@ exit_requested(void)
 }
 
 int
-main_3d_3do_logo(void)
+main(void)
 {
   Err err;
 

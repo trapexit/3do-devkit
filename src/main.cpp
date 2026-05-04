@@ -22,67 +22,75 @@
 #include "controlpad.h"
 #include "debug.h"
 #include "event.h"
-
-extern     int main_cel_rotation();
-extern "C" int main_3d_3do_logo();
-extern "C" int main_rotating_cube();
-
-typedef int (*ExampleMain)(void);
+#include "filefunctions.h"
+#include "item.h"
+#include "task.h"
 
 typedef struct Example
 {
-  const char  *name;
-  ExampleMain  entry;
+  const char *name;
+  const char *path;
 } Example;
 
 static
 int
-run_cel_rotation(void)
+run_example(const Example &example)
 {
-  return main_cel_rotation();
-}
+  Item task;
 
-static
-int
-run_3d_3do_logo(void)
-{
-  return main_3d_3do_logo();
-}
+  task = LoadProgram((char*)example.path);
+  if(task < 0)
+    abort_err(task);
 
-static
-int
-run_rotating_cube(void)
-{
-  return main_rotating_cube();
+  while(LookupItem(task) != NULL)
+    WaitSignal(SIGF_DEADTASK);
+
+  return 0;
 }
 
 static const Example examples[] =
   {
-    { "Cel rotation",      run_cel_rotation },
-    { "3D 3DO logo",      run_3d_3do_logo },
-    { "Rotating cube",    run_rotating_cube }
+    { "Cel rotation",      "$boot/cel_rotation" },
+    { "3D 3DO logo",       "$boot/3d_3do_logo" },
+    { "Rotating cube",     "$boot/rotating_cube" }
   };
 
 static const int example_count = sizeof(examples) / sizeof(examples[0]);
+static const int visible_example_count = 10;
+static const int scroll_marker_x = 48;
+static const int scroll_down_marker_y = 224;
+static const char *scroll_down_marker = "v";
 
 static
 void
 draw_menu(BasicDisplay &display,
-          int           selected)
+          int           selected,
+          int           top)
 {
   int i;
+  int count;
 
   display.clear();
   display.draw_text8(48, 36, "Select an example");
-  display.draw_text8(48, 52, "Up/Down moves, A or Start runs");
+  display.draw_text8(48, 48, "Up/Down moves, A or Start runs");
+  display.draw_text8(48, 60, "X to return to this menu");
 
-  for(i = 0; i < example_count; i++)
+  count = example_count - top;
+  if(count > visible_example_count)
+    count = visible_example_count;
+
+  for(i = 0; i < count; i++)
     {
+      const int index = top + i;
       const int y = 84 + (i * 14);
 
-      display.draw_text8(48, y, (i == selected) ? "*" : " ");
-      display.draw_text8(64, y, examples[i].name);
+      display.draw_text8(48, y, (index == selected) ? "*" : " ");
+      display.draw_text8(64, y, examples[index].name);
     }
+
+  if((top + count) < example_count)
+    display.draw_text8(scroll_marker_x, scroll_down_marker_y,
+                       scroll_down_marker);
 
   display.display_and_swap();
 }
@@ -112,6 +120,7 @@ select_example(int selected)
 {
   BasicDisplay display;
   Err err;
+  int top;
 
   err = InitControlPad(1);
   if(err < 0)
@@ -119,6 +128,9 @@ select_example(int selected)
 
   display.clear();
   display.swap();
+  top = selected - visible_example_count + 1;
+  if(top < 0)
+    top = 0;
 
   while(true)
     {
@@ -134,7 +146,12 @@ select_example(int selected)
       else if(buttons & ControlDown)
         selected = (selected + 1) % example_count;
 
-      draw_menu(display, selected);
+      if(selected < top)
+        top = selected;
+      else if(selected >= (top + visible_example_count))
+        top = selected - visible_example_count + 1;
+
+      draw_menu(display, selected, top);
 
       if(buttons & (ControlA | ControlStart))
         break;
@@ -161,7 +178,7 @@ main(int   argc_,
     {
       selected = select_example(selected);
       kprintf("launching example: %s\n", examples[selected].name);
-      examples[selected].entry();
+      run_example(examples[selected]);
     }
 
   return 0;
