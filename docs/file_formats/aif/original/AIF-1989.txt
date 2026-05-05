@@ -1,0 +1,447 @@
+                T E C H N I C A L  M E M O R A N D U M
+
+
+
+Subject:        RISC OS Application Image Format
+                (previously Arthur Image Format)
+
+Reference:      PLG-AIF
+
+Issue:          1.00
+
+Author:         Lee Smith, 2nd September 1987
+                Lionel Haines, 26th October 1988
+                Lee Smith, 23rd January 1989
+
+Distribution:   Not restricted.
+
+
+-----------------------------------------------------------------------------
+Programming Languages Group, Acorn Computers Limited,
+Fulbourn Road, Cherry Hinton, Cambridge, CB1 4JN, England.
+-----------------------------------------------------------------------------
+
+
+
+
+Copyright Acorn Computers Limited 1989
+
+
+
+
+
+Neither the whole nor any part of the information contained in this technical
+memorandum may be adapted or reproduced in any material form except with the
+prior written approval of Acorn Computers Limited (Acorn).
+
+The information contained in this technical memorandum relates to ongoing
+developments. Whilst it is given in good faith by Acorn, it is acknowledged
+that there may be errors or omissions.
+
+
+
+
+
+                H I S T O R Y
+
+
+    14-Aug-87   First written & shown to Roger Wilson
+    14-Aug-87   Limited circulation for comment (RWilson, RCownie, MJordan,
+                NRaine, PFellows, JThackray, HMeekings, SWoodward); support
+                for Dbug continues to worry LDS...
+    19-Aug-87   Released to Richard Evans of TopExpress for comment.
+    02-Sep-87   Major revision following further thought.
+    26-Oct-88   Corrections and modifications.
+    17-Jan-89   Major revision:-
+                  - improved support for relocatable images
+                  - improved support for ASD/Dbug
+                  - editorial review
+    23-Jan-89   More minor editing and clarification
+    02-Feb-89   Removed final restriction on circulation of issue 1.00
+
+
+
+
+Properties of AIF
+-----------------
+
+1.  An AIF image is loaded into memory at its load address and entered at its
+    first word (compatible with old-style Arthur/Brazil ADFS images).
+
+2.  An AIF image may be compressed and can be self-decompressing (to support
+    faster loading from floppy disks, and better use of floppy-disk space).
+
+3.  If created with suitable linker options, an AIF image may relocate itself |
+    at load time. Self-relocation is supported in two, distinct senses:-      |
+
+    a.  One-time Position-Independence: A relocatable image can be loaded     |
+        at any address (not just its load address) and will execute there     |
+        (compatible with version 0.03 of AIF).
+
+    b.  Specified Working Space Relocation: A suitably created relocatable    |
+        image will copy itself from where it is loaded to the high address    |
+        end of applications memory, leaving space above the copied image      |
+        as noted in the AIF header (see below).                               |
+
+    In addition, similar relocation code and similar linker options support   |
+    many-time position independence of RISC OS Relocatable Modules. This is   |
+    explained further in a later section and in document PLG-AMF.             |
+
+4.  AIF images support being debugged by the Arthur Symbolic Debugger (ASD),  |
+    for C, Fortran and Pascal. Version 0.04 of AIF (and later) together with  |
+    version 3.00 (or later) of ASD, and version 3.00 (or later) of link,      |
+    supports debugging at the symbolic assembler level (hitherto done by      |
+    Dbug). Low-level and source-level debugging support are orthogonal        |
+    (capabilities of debuggers notwithstanding, both, either, or neither      |
+     kind of debugging  support may be present in an AIF image).              |
+
+    A separate document (PLG-DEBUG) describes the format of debugger tables.  |
+
+    Debugging tables have the property that all references from them to code
+    and data (if any) are in the form of relocatable addresses. After loading |
+    an image at its load address these values are effectively absolute. All   |
+    references between debugger table entries are in the form of offsets from
+    the beginning of the debugging data area. Thus, following relocation of a
+    whole image, the debugging data area itself is position independent and
+    can be copied by the debugger.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The Layout of an AIF Image
+--------------------------
+
+The layout of an AIF image is as follows:-
+
+    +----------------------+
+    | Header               |
+    +----------------------+
+    | Compressed image     |
+    +----------------------+
+    | Decompression data   |    This data is position-independent
+    +----------------------+
+    | Decompression code   |    This code is position-independent
+    +----------------------+
+
+The Header is small, fixed in size, and described below. In a compressed
+AIF image, the header is NOT compressed.
+
+Once an image has been decompressed---or if it is uncompressed in the first
+place---it has the following layout:-
+
+    +----------------------+
+    | Header               |
+    +----------------------+
+    | Read-Only area       |
+    +----------------------+
+    | Read-Write area      |
+    +----------------------+
+    | Debugging data       |    (optional)
+    +----------------------+
+    | Self-relocation code |    MUST be position independent                  |
+    +----------------------+                                                  |
+    | Relocation list      |    List of words to relocate, terminated by -1   |
+    +----------------------+
+
+Debugging data are absent unless the image has been linked appropriately      |
+and, in the case of source-level debugging, unless the constituent components |
+of the image have been compiled appropriately.                                |
+
+The relocation list is a list of byte offsets from the beginning of the AIF   |
+header, of words to be relocated, followed by a word containing -1.           |
+The relocation of non-word values is not supported.                           |
+
+After the execution of the self-relocation code---or if the image is not
+self-relocating---the image has the following layout:-
+
+    +----------------------+
+    | Header               |
+    +----------------------+
+    | Read-Only area       |
+    +----------------------+
+    | Read-Write area      |
+    +----------------------+
+    | Debugging data       |    (optional)
+    +----------------------+
+
+At this stage a debugger is expected to copy the debugging data (if present)  |
+somewhere safe, otherwise they will be overwritten by the zero-initialised    |
+data and/or the heap/stack data of the program. A debugger can seize control  |
+at the appropriate moment by copying, then modifying, the third word of the   |
+AIF header (see below).                                                       |
+
+
+
+AIF Header Layout
+-----------------
+
+    +----------------------+
+00: | BL DecompressCode    |    BLNV 0 if the image is not compressed.
+    +----------------------+
+04: | BL SelfRelocCode     |    BLNV 0 if the image is not self-relocating.
+    +----------------------+
+08: | BL ZeroInitCode      |    BLNV 0 if the image has none.
+    +----------------------+
+0C: | BL ImageEntryPoint   |    BL to make header addressable via R14.
+    +----------------------+
+10: | SWI Exit             |    Just in case silly enough to return...
+    +----------------------+
+14: | Image ReadOnly size  |    Includes header size and any padding
+    +----------------------+
+18: | Image ReadWrite size |    Exact size - a multiple of 4 bytes
+    +----------------------+
+1C: | Image Debug size     |    Exact size - a multiple of 4 bytes
+    +----------------------+
+20: | Image zero-init size |    Exact size - a multiple of 4 bytes
+    +----------------------+
+24: | Image debug type     |    0, 1, 2, or 3 (see note below).               |
+    +----------------------+
+28: | Image base           |    Address of the AIF header - set by link       |
+    +----------------------+ 
+2C: | Work Space           |    Min work space - in bytes - to be reserved    |
+    |                      |    by a self-moving relocatable image.           |
+    +----------------------+
+30: | Four reserved words  |
+    | ...initially 0...    |
+    +----------------------+
+40: | Zero-init code       |
+    | (16 words as below)  |    Header is 32 words long.
+    +----------------------+
+
+
+BL is used everywhere to make the header addressable via R14 (but beware the
+PSR bits) in a position-independent manner and to ensure that the header will
+be position-independent.
+
+It is required that an image be re-enterable at its first instruction.
+Therefore, after decompression, the decompression code must reset the first
+word of the header to BLNV 0. Similarly, following self-relocation, the       |
+second word of the header must be reset to BLNV 0. This causes no additional  |
+problems with the read-only nature of the code segment - both decompression   |
+and relocation code must write to it anyway. So, on systems with memory       |
+protection, both the decompression code and the self-relocation code must     |
+be bracketed by system calls to change the access status of the read-only     |
+section (first to writable, then back to read-only).                          |
+
+The image debug type has the following meaning:-                              |
+
+0:  No debugging data are present.                                            |
+1:  Low-level debugging data are present.                                     |
+2:  Source level (ASD) debugging data are present.                            |
+3:  1 and 2 are present together.                                             |
+
+All other values are reserved to Acorn.                                       |
+
+
+
+
+
+Zero-Initialisation Code
+------------------------
+
+The Zero-initialisation code is as follows:-
+
+    BIC     IP, LR, #&FC000003  ; clear status bits -> header + &C
+    ADD     IP, IP, #8          ; -> Image ReadOnly size
+    LDMIA   IP, {R0,R1,R2,R3}   ; various sizes
+    CMPS    R3, #0
+    MOVLES  PC, LR              ; nothing to do
+    SUB     IP, IP, #&14        ; image base
+    ADD     IP, IP, R0          ; + RO size
+    ADD     IP, IP, R1          ; + RW size = base of 0-init area
+    MOV     R0, #0
+    MOV     R1, #0
+    MOV     R2, #0
+    MOV     R4, #0
+ZeroLoop
+    STMIA   IP!, {R0,R1,R2,R4}
+    SUBS    R3, R3, #16
+    BGT     ZeroLoop
+    MOVS    PC, LR              ; 16 words in total.
+
+
+Relationship between Header Sizes and Linker Pre-defined Symbols
+----------------------------------------------------------------
+
+AIFHeader.ImageBase            = Image$$RO$$Base
+
+AIFHeader.ImageBase + 
+  AIFHeader.ROSize             = Image$$RW$$Base
+
+AIFHeader.ImageBase +
+  AIFHeader.ROSize +
+    AIFHeader.RWSize           = Image$$ZI$$Base
+
+AIFHeader.ImageBase +
+  AIFHeader.ROSize +
+    AIFHeader.RWSize +
+      AIFHeader.ZeroInitSize   = Image$$RW$$Limit
+
+
+Self Relocation
+---------------
+
+Two kinds of self-relocation are supported by AIF and one by AMF; for         |
+completeness, all three are described here.                                   |
+
+One-time position independence is supported by relocatable AIF images.        |
+Many-time position independence is required for AMF Relocatable Modules.      |
+And only AIF images can self-move to a location which leaves a requested      |
+amount of workspace.                                                          |
+
+Why are there three different kinds of self-relocation?                       |
+
+1.  The rules for constructing RISC OS applications do not forbid acquired    |
+    position-dependence. Once an application has begun to run, it is not, in  |
+    general, possible to move it, as it isn't possible to find all the data   |
+    locations which are being used as position-dependent pointers. So, AIF    |
+    images can be relocated only once. Afterwards, the relocation table is    |
+    over-written by the application's zero-initialised data, heap, or stack.  |
+
+
+
+2.  In contrast, the rules for constructing a RISC OS Relocatable Modules     |
+    (RM) require that it be prepared to shut itelf down, be moved in memory,  |
+    and start itself up again. Shut-down and start-up are notified to a RM    |
+    by special service calls to it. Clearly, a RM must be relocatable many    |
+    times so its relocation table is not overwritten after first use.         |
+
+3.  Relocatable Modules are loaded under the control of a Relocatable Module  |
+    Area (RMA) manager which decides where to load a module initially and     |
+    where to  move each module to whenever the RMA is reorganised.            |
+    In contrast, an application is loaded at its load address and is then     |
+    on its own until it exits or faults. An application can only be moved     |
+    by itself (and then only once, before it begins execution proper).        |
+
+
+Self-Relocation Code for RMF Modules
+------------------------------------
+
+In this case there is no AIF header, the code must be executable many times,  |
+and it must be symbolically addressable from the Relocatable Module header.   |
+The code below must be the last area of the RMF image, following the          |
+relocation list. Note that it is best thought of as an additional area.       |
+
+    IMPORT  |Image$$RO$$Base|       ; where the image is linked at...
+    EXPORT  |__RelocCode|           ; referenced from the RM header
+;
+; The module image has already been loaded at/moved to its target address.    |
+; It only remains to relocate location-dependent addresses. The list of       |
+; offsets to be relocated, terminated by (-1), immediately follows End.       |
+; Note that the address values here (e.g. |__RelocCode|) will appear in the   |
+; list of places to be relocated, allowing the code to be re-executed.        |
+;
+|__RelocCode|
+    LDR     R1, RelocCode           ; value of __RelocCode (before relocation)
+    SUB     IP, PC, #12             ; value of __RelocCode now
+    SUBS    R1, IP, R1              ; relocation offset
+    MOVEQS  PC, LR                  ; relocate by 0 so nothing to do
+    LDR     IP, ImageBase           ; image base prior to relocation...
+    ADD     IP, IP, R1              ; ...where the image really is
+    ADR     R2, End
+RelocLoop
+    LDR     R0, [R2], #4
+    CMNS    R0, #1                  ; got list terminator?
+    MOVLES  PC, LR                  ; yes => return
+    LDR     R3, [IP, R0]            ; word to relocate
+    ADD     R3, R3, R1              ; relocate it
+    STR     R3, [IP, R0]            ; store it back
+    B       RelocLoop               ; and do the next one
+RelocCode   DCD    |__RelocCode|
+ImageBase   DCD    |Image$$RO$$Base|
+End                                 ; the list of locations to relocate starts
+                                    ; here (each is an offset from the base of
+                                    ; the module) and is terminated by -1.
+
+Note that this code, and the associated list of locations to relocate, is
+added automatically to a relocatable module image by the linker (as a
+consequence of issuing the command "link -module...").
+
+
+
+
+
+
+
+
+Self-Move and Self-Relocation Code for AIF
+------------------------------------------
+
+This code is added to the end of an AIF image by the linker, immediately      |
+before the list of relocations (terminated by -1). Note that the code is      |
+entered via a BL from the second word of the AIF header so, on entry,         |
+R14 -> AIFHeader + 8.                                                         |
+
+RelocCode
+    BIC     IP, LR, #&FC000003      ; clear flag bits; -> AIF header + &08
+    SUB     IP, IP, #8              ; -> header address
+    MOV     R0, #&FB000000          ; BLNV #0
+    STR     R0, [IP, #4]            ; won't be called again on image re-entry
+; does the code need to be moved?
+    LDR     R9, [IP, #&2C]          ; min free space requirement
+    CMPS    R9, #0                  ; 0 => no move, just relocate
+    BEQ     RelocateOnly
+; calculate the amount to move by...
+    LDR     R0, [IP, #&20]          ; image zero-init size
+    ADD     R9, R9, R0              ; space to leave = min free + zero init
+    SWI     GetEnv                  ; MemLimit -> R1
+    ADR     R2, End                 ; -> End
+01  LDR     R0, [R2], #4            ; load relocation offset, increment R2
+    CMNS    R0, #1                  ; terminator?
+    BNE     %B01                    ; No, so loop again
+    SUB     R3, R1, R9              ; MemLimit - freeSpace
+    SUBS    R0, R3, R2              ; amount to move by
+    BLE     RelocateOnly            ; not enough space to move...
+    BIC     R0, R0, #15             ; a multiple of 16...
+    ADD     R3, R2, R0              ; End + shift
+    ADR     R8, %F01                ; intermediate limit for copy-up
+;
+; copy everything up memory, in descending address order, branching
+; to the copied copy loop as soon as it has been copied.
+;
+01  LDMDB   R2!, {R4-R7}
+    STMDB   R3!, {R4-R7}
+    CMP     R2, R8                  ; copied the copy loop?
+    BGT     %B01                    ; not yet
+    ADD     R4, PC, R0
+    MOV     PC, R4                  ; jump to copied copy code
+01  LDMDB   R2!, {R4-R7}
+    STMDB   R3!, {R4-R7}
+    CMP     R2, IP                  ; copied everything?
+    BGT     %B01                    ; not yet
+    ADD     IP, IP, R0              ; load address of code
+    ADD     LR, LR, R0              ; relocated return address
+RelocateOnly
+    LDR     R1, [IP, #&28]          ; header + &28 = code base set by Link
+    SUBS    R1, IP, R1              ; relocation offset
+    MOVEQ   PC, LR                  ; relocate by 0 so nothing to do
+    STR     IP, [IP, #&28]          ; new image base = actual load address
+    ADR     R2, End                 ; start of reloc list
+RelocLoop
+    LDR     R0, [R2], #4            ; offset of word to relocate
+    CMNS    R0, #1                  ; terminator?
+    MOVEQS  PC, LR                  ; yes => return
+    LDR     R3, [IP, R0]            ; word to relocate
+    ADD     R3, R3, R1              ; relocate it
+    STR     R3, [IP, R0]            ; store it back
+    B       RelocLoop               ; and do the next one
+End                                 ; The list of offsets of locations to re-
+                                    ; locate starts here; terminated by -1.

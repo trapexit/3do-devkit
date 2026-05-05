@@ -1,0 +1,1447 @@
+<html>
+<head>
+<title>RISC OS PRMs: Volume 4: Chapter 89: Appendix D: Code file formats</title>
+</head>
+<body bgcolor="white" text="black" link="blue" alink="red" vlink="darkred">
+
+<P><table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="663" id="AutoNumber2" height="80">
+<tr><td width="163" height="80" valign="middle"><img src="../../../images/tech_support_sh.gif" alt="RISCOS.com" WIDTH="143" HEIGHT="70"></td>
+    <td width="500" height="80" valign="middle"><h3>www.riscos.com Technical Support:<BR>Programmer's Reference Manual</h3></td>
+</tr><tr>
+<td width="163" height="1" bgcolor="#000000"></td><td width="500" height="1" bgcolor="#000000"></td>
+</tr></table></P><P>&nbsp;</P>
+
+<h1><a name="idx-7166"></a>Appendix D: Code file formats</h1>
+<hr>
+<dl>
+<dd>
+<dl>
+<dd>
+<p>This appendix defines three file formats used to store processed code and the format of debugging data used by debuggers:</p>
+<ul>
+<li><a name="marker-379146"></a>AOF - Arm Object Format
+<li><a name="marker-379147"></a>ALF - Acorn Library Format
+<li><a name="marker-379151"></a>AIF - RISC OS Application Image Format
+<li>ASD - ARM Symbolic Debugging Format.
+</ul>
+<p>Language processors such as CC and ObjAsm generate processed code output as AOF files. An ALF file is a collection of AOF files constructed from a set of AOF files by the LibFile tool. The Link tool accepts a set of AOF and ALF files as input, and by default produces an executable program file as output in AIF.</p>
+</dl>
+
+<dt>
+<h4><a name="idx-7167"></a>Terminology</h4>
+<dd>
+<dl>
+<dd>
+<p>Throughout this appendix the terms <i>byte</i>, <i>half word</i>, <i>word</i>, and <i>string</i> are used to mean the following:</p>
+<p><i>Byte</i><a name="marker-379153"></a>: 8 bits, considered unsigned unless otherwise stated, usually used to store flag bits or characters.</p>
+<p><i>Half word</i><a name="marker-379154"></a>:16 bits, or 2 bytes, usually unsigned. The least significant byte has the lowest address (DEC/Intel <i>byte sex</i>, sometimes called <i>little endian</i>). The address of a half word (ie of its least significant byte) must be divisible by 2.</p>
+<p><i>Word</i>: 32 bits, or 4 bytes, usually used to store a non-negative value. The least significant byte has the lowest address (DEC/Intel <a name="marker-379155"></a>byte sex, sometimes called<a name="marker-379156"></a> little endian). The address of a word (ie of its least significant byte) must be divisible by 4.</p>
+<p><i>String</i><a name="marker-379157"></a>: A sequence of bytes terminated by a NUL (0X00) byte. The NUL is part of the string but is not counted in the string's length. Strings may be aligned on any byte boundary.</p>
+<p>For emphasis: a word consists of 32 bits, 4-byte aligned; within a word, the least significant byte has the lowest address. This is DEC/Intel, or little endian, byte sex, <b>not</b> IBM/Motorola byte sex.</p>
+</dl>
+
+<dt>
+<h4><a name="idx-7168"></a>Undefined Fields</h4>
+<dd>
+<dl>
+<dd>
+<p>Fields not explicitly defined by this appendix are implicitly reserved to Acorn. It is required that all such fields be zeroed. Acorn may ascribe meaning to such fields at any time, but will usually do so in a manner which gives no new meaning to zeroes.</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379158"></a>Overall structure of <a name="marker-379159"></a>AOF and ALF files</h4>
+<dd>
+<dl>
+<dd>
+<p>An object or library file contains a number of separate but related pieces of data. In order to simplify access to these data, and to provide for a degree of extensibility, the object and library file formats are themselves <a name="marker-379160"></a>layered on another format called <a name="marker-379161"></a><b>Chunk File Format</b>, which provides a simple and efficient means of accessing and updating distinct chunks of data within a single file. The object file format defines five <a name="marker-379162"></a>chunks:</p>
+<ul>
+<li>header
+<li>areas
+<li>identification
+<li>symbol table
+<li>string table.
+</ul>
+<p>The library file format defines four chunks:<a name="marker-379163"></a> </p>
+<ul>
+<li>directory
+<li>time-stamp
+<li>version
+<li>data.
+</ul>
+<p>There may be many data chunks in a library.</p>
+<p>The minimum size of a piece of data in both formats is four bytes or one word. Each word is stored in a file in little-endian format; that is the least significant byte of the word is stored first.</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379164"></a>Chunk file format</h4>
+<dd>
+<dl>
+<dd>
+<!-- Hidden cookie -->
+<!-- Hobnob -->
+<p>A chunk is accessed via a header at the start of the file. The header contains the number, size, location and identity of each chunk in the file. The size of the header may vary between different chunk files but is fixed for each file. Not all entries in a header need be used, thus limited expansion of the number of chunks is permitted without a wholesale copy. A chunk file can be copied without knowledge of the contents of the individual chunks.</p>
+<p>Graphically<a name="marker-379165"></a>, the layout of a chunk file is as follows:</p>
+<dl>
+<dd>
+<p><a href="objectformat-2.draw"><img src="objectformat-2.png"  border=0></a></p>
+</dl>
+<p><tt>ChunkFileId</tt> marks the file as a chunk file. Its value is C3CBC6C5 hex. The <tt>maxChunks</tt> field defines the number of the entries in the header, fixed when the file is created. The <tt>numChunks</tt> field defines how many chunks are currently used in the file, which can vary from 0 to <tt>maxChunks</tt>. The value of <tt>numChunks</tt> is redundant as it can be found by scanning the entries.</p>
+<p>Each entry in the <a name="marker-379167"></a>header comprises four words in the following order:</p>
+<table>
+<tr>
+<td align="left" valign="top"><a name="marker-379168"></a><tt>chunkId</tt>
+<td align="left" valign="top">a two word field identifying what data the chunk file contains
+<tr>
+<td align="left" valign="top"><a name="marker-379169"></a><tt>Offset</tt>
+<td align="left" valign="top">a one word field defining the byte offset within the file of the chunk (which must be divisible by four); an entry of zero indicates that the corresponding chunk is unused
+<tr>
+<td align="left" valign="top"><tt>size</tt>
+<td align="left" valign="top">a one word field defining the exact byte size of the chunk (which need not be a multiple of four).
+</table>
+<p>The <tt>chunkId</tt> field provides a conventional way of identifying what type of data a chunk contains. It is split into two parts. The first four characters (in the first word) contain a universally unique name allocated by a central authority (Acorn). The remaining four characters (in the second word) can be used to identify component chunks within this universal domain. In each part, the first character of the name is stored first in the file, and so on.</p>
+<p>For <a name="marker-379170"></a>AOF files, the first part of each chunk's name is <a name="marker-379171"></a><tt>OBJ_</tt>; the second components are defined later. For ALF files, the first part is <a name="marker-379172"></a><tt>LIB_</tt>.</p>
+</dl>
+
+<dt>
+<h2><a name="77819"></a>AOF</h2>
+<dd>
+<dl>
+<dd>
+<p><a name="marker-379174"></a>ARM object format files are output by language processors such as CC and ObjAsm.</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379175"></a>Object file format</h4>
+<dd>
+<dl>
+<dd>
+<p>Each piece of an object file is stored in a separate, identifiable, chunk. AOF defines five chunks as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<th align="left" valign="top">Chunk
+<th align="left" valign="top">Chunk Name
+<tr>
+<td align="left" valign="top">Header
+<td align="left" valign="top">OBJ_HEAD
+<tr>
+<td align="left" valign="top">Areas
+<td align="left" valign="top">OBJ_AREA
+<tr>
+<td align="left" valign="top">Identification
+<td align="left" valign="top">OBJ_IDFN
+<tr>
+<td align="left" valign="top">Symbol Table
+<td align="left" valign="top">OBJ_SYMT
+<tr>
+<td align="left" valign="top">String Table
+<td align="left" valign="top">OBJ_STRT
+</table>
+</dl>
+<p>Only the <tt>header</tt> and <tt>areas</tt> chunks must be present, but a typical object file will contain all five of the above chunks.</p>
+<p>A feature of chunk file format is that chunks may appear in any order in the file. However, language processors which must also generate other object formats - such as UNIX's <a name="marker-379176"></a><tt>a.out</tt> format - should use this flexibility cautiously.</p>
+<p>A language translator or other system utility may add additional chunks to an object file, for example a language-specific symbol table or language-specific debugging data, so it is conventional to allow space in the chunk header for additional chunks; space for eight chunks is conventional when the AOF file is produced by a language processor which generates all five chunks described here.</p>
+<p>The <tt>header</tt> chunk should not be confused with the chunk file's header.</p>
+
+<dt>
+<h5>Format of the <a name="marker-379177"></a>AOF header chunk</h5>
+<dd>
+<p>The AOF header is logically in two parts, though these appear contiguously in the header chunk. The first part is of fixed size and describes the contents and nature of the object file. The second part is variable in length (specified in the fixed part) and is a sequence of <tt>area</tt> declarations defining the code and data areas within the OBJ_AREA chunk.</p>
+<p>The AOF header chunk has the following format:</p>
+<dl>
+<dd>
+<p><a href="objectformat-3.draw"><img src="objectformat-3.png"  border=0></a></p>
+</dl>
+
+<dt>
+<h5><a name="marker-379179"></a>Object file type</h5>
+<dd>
+<p>C5E2D080 (hex) marks an object file as being in relocatable object format</p>
+
+<dt>
+<h5><a name="marker-379180"></a>Version ID</h5>
+<dd>
+<p>This word encodes the version of AOF to which the object file complies: AOF 1.xx is denoted by 150 decimal; AOF 2.xx by 200 decimal.</p>
+
+<dt>
+<h5><a name="idx-7169"></a>Number of areas</h5>
+<dd>
+<p>The code and data of the object file is presented as a number of separate areas, in the OBJ_AREA chunk, each with a name and some attributes (see below). Each area is declared in the (variable-length) part of the header which immediately follows the fixed part. The value of the <a name="marker-379181"></a><tt>Number of Areas</tt> field defines the number of areas in the file and consequently the number of area declarations which follow the fixed part of the header.</p>
+
+<dt>
+<h5><a name="idx-7170"></a>Number of symbols</h5>
+<dd>
+<p>If the object file contains a symbol table chunk OBJ_SYMT, then this field defines the number of symbols in the <a name="marker-379182"></a>symbol table.</p>
+
+<dt>
+<h5><a name="marker-379183"></a>Entry address area/ entry address offset</h5>
+<dd>
+<p>One of the areas in an object file may be designated as containing the start address for any program which is linked to include this file. If so, the entry address is specified as an <tt>&lt;area-index, offset&gt;</tt> pair, where <tt>area-index</tt> is in the range 1 to <tt>Number of Areas</tt>, specifying the nth area declared in the area declarations part of the header. The entry address is defined to be the base address of this area plus <tt>offset</tt>.</p>
+<p>A value of 0 for <tt>area-index</tt> signifies that no program entry address is defined by this AOF file.</p>
+
+<dt>
+<h5><a name="marker-379184"></a>Format of area headers</h5>
+<dd>
+<p>The area headers follow the fixed part of the AOF header. Each area header has the following form:</p>
+<dl>
+<dd>
+<p><a href="objectformat-4.draw"><img src="objectformat-4.png"  border=0></a></p>
+</dl>
+
+<dt>
+<h5><a name="marker-379186"></a>Area name</h5>
+<dd>
+<p>Each name in an object file is encoded as an offset into the string table, which stored in the OBJ_STRT chunk. This allows the variable-length characteristics of names to be factored out from primary data formats. Each area within an object file must be given a name which is unique amongst all the areas in that object file.</p>
+
+<dt>
+<h5><a name="idx-7171"></a>AL</h5>
+<dd>
+<p>This byte must be set to 2; all other values are reserved to Acorn.</p>
+
+<dt>
+<h5>AT (<a name="marker-379187"></a>Area attributes)</h5>
+<dd>
+<p>Each area has a set of attributes encoded in the AT byte. The least-significant bit of AT is numbered 0.</p>
+<p>Link orders areas in a generated image first by attributes, then by the (case-significant) lexicographic order of area names, then by position of the containing object module in the link-list. The position in the link-list of an object module loaded from a library is not predictable.</p>
+<p>When ordered by attributes, Read-Only areas precede Read-Write areas which precede Debug areas; within Read-Only and Read-Write Areas, Code precedes Data which precedes Zero-Initialised data. Zero-Initialised data may not have the Read-Only attribute.</p>
+
+<h6><a name="idx-7172"></a>Bit 0</h6>
+<p>This bit must be set to 0.</p>
+
+<h6><a name="idx-7173"></a>Bit 1</h6>
+<p>If this bit is set, the area contains code, otherwise it contains data.</p>
+
+<h6><a name="idx-7174"></a>Bit 2</h6>
+<p>Bit 2 specifies that the area is a common block definition.</p>
+
+<h6><a name="idx-7175"></a>Bit 3</h6>
+<p>Bit 3 defines the area to be a (reference to a) common block and precludes the area having initialising data (see Bit 4, below). In effect, the setting of Bit 3 implies the setting of Bit 4.</p>
+<p>Common areas with the same name are overlaid on each other by Link. The <tt>Size</tt> field of a common definition defines the size of a common block. All other references to this common block must specify a size which is smaller or equal to the definition size. In a link step there may be at most one area of the given name with bit 2 set. If none of these have bit 2 set, the actual size of the common area will be size of the largest common block reference (see also <A HREF="#99380">Linker defined symbols</a>).</p>
+
+<h6><a name="idx-7176"></a>Bit 4</h6>
+<p>This bit specifies that the area has no initialising data in this object file and that the area contents are missing from the OBJ_AREA chunk. This bit is typically used to denote large uninitialised data areas. When an uninitialised area is included in an image, Link either includes a read-write area of binary zeroes of appropriate size or maps a read-write area of appropriate size that will be zeroed at image start-up time. This attribute is incompatible with the read-only attribute (see the section on Bit 5, below).</p>
+<p><b>Note:</b> Whether or not a zero-initialised area is re-zeroed if the image is re-entered is a property of Link and the relevant image format. The definition of AOF neither requires nor precludes re-zeroing.</p>
+
+<h6><a name="idx-7177"></a>Bit 5</h6>
+<p>This bit specifies that the area is read-only. Link groups read-only areas together so that they may be write protected at run-time, hardware permitting. Code areas and debugging tables should have this bit set. The setting of this bit is incompatible with the setting of bit 4.</p>
+
+<h6><a name="idx-7178"></a>Bit 6</h6>
+<p>This bit must be set to 0.</p>
+
+<h6><a name="idx-7179"></a>Bit 7</h6>
+<p>This bit specifies that the area contains symbolic debugging tables. Link groups these areas together so they can be accessed as a single contiguous chunk at run-time. It is usual for debugging tables to be read-only and, therefore, to have bit 5 set too. If bit 7 is set, bit 1 is ignored.</p>
+
+<dt>
+<h5><a name="marker-379191"></a>Area size</h5>
+<dd>
+<p>This field specifies the size of the area in bytes, which must be a multiple of 4. Unless the <tt>Not Initialised</tt> bit (bit 4) is set in the area attributes, there must be this number of bytes for this area in the OBJ_AREA chunk.</p>
+
+<dt>
+<h5><a name="marker-379192"></a>Number of relocations</h5>
+<dd>
+<p>This specifies the number of relocation directives which apply to this area.</p>
+
+<dt>
+<h5><a name="marker-379193"></a>Format of the areas chunk</h5>
+<dd>
+<p>The areas chunk (<a name="marker-379194"></a>OBJ_AREA) contains the actual areas (code, data, zero- initialised data, debugging data, etc.) plus any associated relocation information. Its chunkId is OBJ_AREA. Both an area's contents and its relocation data must be word-aligned. Graphically, the layout of the areas chunk is:</p>
+<dl>
+<dd>
+<p><a href="objectformat-5.draw"><img src="objectformat-5.png"  border=0></a></p>
+</dl>
+<p>An area is simply a sequence of byte values, the order following that of the addressing rules of the ARM, that is the least significant byte of a word is first. An area is followed by its associated relocation table (if any). An area is either completely initialised by the values from the file or not initialised at all (ie it is initialised to zero in any loaded program image, as specified by bit 4 of the area attributes).</p>
+
+<dt>
+<h5><a name="55823"></a><a name="marker-379197"></a>Relocation directives</h5>
+<dd>
+<p>If no relocation is specified, the value of a byte/half word/word in the preceding area is exactly the value that will appear in the final image.</p>
+<p>Bytes and half words may only be relocated by constant values of suitably small size. They may not be relocated by an area's base address.</p>
+<p>A field may be subject to more than one relocation.</p>
+<p>There are 2 types of relocation directive, termed here type-1 and type-2. Type-2 relocation directives occur only in AOF versions 1.50 and later.</p>
+<p>Relocation can take two basic forms: <a name="marker-379198"></a><i>Additive</i> and <i>PCRelative</i>.</p>
+<p>Additive relocation specifies the modification of a byte/half word/word, typically containing a data value (ie constant or address).</p>
+<p>PCRelative relocation always specifies the modification of a branch (or branch with link) instruction and involves the generation of a program- counter-relative, signed, 24-bit word-displacement.</p>
+<p>Additive relocation directives and type-2 PC-relative relocation directives have two variants: <tt>Internal</tt> and <tt>Symbol</tt>.</p>
+<p>Additive internal relocation involves adding the allocated base address of an area to the field to be relocated. With Type-1 <a name="marker-379199"></a>internal relocation directives, the value by which a location is relocated is always the base of the area with which the relocation directive is associated (the Symbol IDentification field (SID) is ignored). In a type-2 relocation directive, the SID field specifies the index of the area relative to which relocation is to be performed. These relocation directives are analogous to the TEXT-, DATA- and BSS-relative relocation directives found in the <tt>a.out</tt> object format.</p>
+<p>Symbol relocation involves adding the value of the symbol quoted.</p>
+<p>A type-1 PCRelative relocation directive always references a symbol. The relocation offset added to any pre-existing in the instruction is the offset of the target symbol from the PC current at the instruction making the PCRelative reference. Link takes into account the fact that the PC is eight bytes beyond that instruction.</p>
+<p>In a type-2 PC-relative relocation directive (only in AOF version 1.50 and later) the offset bits of the instruction are initialised to the offset from the base of the area of the PC value current at the instruction making the reference - thus the language translator, not Link, compensates for the difference between the address of the instruction and the PC value current at it. This variant is introduced in direct support of compilers that must also generate UNIX's <tt>a.out</tt> format.</p>
+<p>For a type-2 PC-relative symbol-type relocation directive, the offset added into the instruction making the PC-relative reference is the offset of the target symbol from the base of the area containing the instruction. For a type-2, PC-relative, internal relocation directive, the offset added into the instruction is the offset of the base of the area identified by the SID field from the base of the area containing the instruction.</p>
+<p>Link itself may generate type-2, PC-relative, internal relocation directives during the process of partially linking a set of object modules.</p>
+
+<dt>
+<h5><a name="marker-379200"></a>Format of Type 1 relocation directives</h5>
+<dd>
+<p>Diagrammatically:</p>
+<dl>
+<dd>
+<p><a href="objectformat-6.draw"><img src="objectformat-6.png"  border=0></a></p>
+</dl>
+
+<h6><a name="idx-7180"></a>Offset</h6>
+<p>Offset is the byte offset in the preceding area of the field to be relocated.</p>
+
+<h6><a name="idx-7181"></a>SID</h6>
+<p>If a symbol is involved in the relocation, this 16-bit field specifies the index within the symbol table (see below) of the symbol in question.</p>
+
+<h6><a name="idx-7182"></a>FT (Field Type)</h6>
+<p>This 2-bit field (bits 16 - 17) specifies the size of the field to be relocated:</p>
+<table>
+<tr>
+<td align="left" valign="top">00
+<td align="left" valign="top">byte
+<tr>
+<td align="left" valign="top">01
+<td align="left" valign="top">half word
+<tr>
+<td align="left" valign="top">10
+<td align="left" valign="top">word
+<tr>
+<td align="left" valign="top">11
+<td align="left" valign="top"><i>illegal value</i>
+</table>
+
+<h6><a name="idx-7183"></a>R (relocation type)</h6>
+<p>This field (bit 18) has the following interpretation:</p>
+<table>
+<tr>
+<td align="left" valign="top">0
+<td align="left" valign="top">Additive relocation
+<tr>
+<td align="left" valign="top">1
+<td align="left" valign="top">PC-Relative relocation
+</table>
+
+<h6><a name="idx-7184"></a>A (Additive type)</h6>
+<p>In a type-1 relocation directive, this 1-bit field (bit 19) is only interpreted if bit 18 is a zero.</p>
+<p>A=0 specifies Internal relocation, meaning that the base address of the area (with which this relocation directive is associated) is added into the field to be relocated. A=1 specifies Symbol relocation, meaning that the value of the given symbol is added to the field being relocated.</p>
+
+<h6><a name="idx-7185"></a>Bits 20 - 31</h6>
+<p>Bits 20-31 are reserved by Acorn and should be written as zeroes.</p>
+
+<dt>
+<h5><a name="marker-379202"></a>Format of Type 2 relocation directives</h5>
+<dd>
+<p>These are available from AOF 1.50 onwards.</p>
+<dl>
+<dd>
+<p><a href="objectformat-7.draw"><img src="objectformat-7.png"  border=0></a></p>
+</dl>
+<p>The interpretation of Offset, FT and SID is exactly the same as for type-1 relocation directives except that SID is increased from 16 to 24 bits and has a different meaning - described below - if A=0).</p>
+<p>The second word of a type-2 relocation directive contains 1 in its most significant bit; bits 28 - 30 must be written as 0, as shown.</p>
+<p>The different interpretation of the R bit in type-2 directives has already been described in <A HREF="#55823">Relocation directives</a>.</p>
+<p>If A=0 (internal relocation type) then SID is the index of the area, in the OBJ_AREA chunk, relative to which the value at Offset in the current area is to be relocated. Areas are indexed from 0.</p>
+
+<dt>
+<h5><a name="marker-379210"></a>Format of the symbol table chunk</h5>
+<dd>
+<p>The <tt>Number of Symbols</tt> field in the header defines how many entries there are in the symbol table. Each symbol table entry has the following format:</p>
+<dl>
+<dd>
+<p><a href="objectformat-8.draw"><img src="objectformat-8.png"  border=0></a></p>
+</dl>
+
+<h6><a name="idx-7186"></a>Name</h6>
+<p>This value is an index into the string table (in chunk OBJ_STRT) and thus locates the character string representing the symbol.</p>
+
+<h6><a name="idx-7187"></a>AT</h6>
+<p>This is a 7 bit field specifying the attributes of a symbol as follows:</p>
+
+<h6><a name="idx-7188"></a>Bits 1 and 0</h6>
+<p>(10 means bit 1 set, bit 0 unset).</p>
+<table>
+<tr>
+<th align="left" valign="top">01
+<td align="left" valign="top">The symbol is defined in this object file and has scope limited to this object file (when resolving symbol references, Link will only match this symbol to references from other areas within the same object file).
+<tr>
+<th align="left" valign="top">10
+<td align="left" valign="top">The symbol is a reference to a symbol defined in another area or another object file. If no defining instance of the symbol is found then Link attempts to match the name of the symbol to the names of common blocks. If a match is found it is as if there were defined an identically-named symbol of global scope, having as value the base address of the common area.
+<tr>
+<th align="left" valign="top">11
+<td align="left" valign="top">The symbol is defined in this object file and has global scope (ie when attempting to resolve unresolved references, Link will match this symbol to references from other object files).
+<tr>
+<th align="left" valign="top">00
+<td align="left" valign="top">Reserved by Acorn.
+</table>
+
+<h6><a name="idx-7189"></a>Bit 2</h6>
+<p>This attribute is only meaningful if the symbol is a defining occurrence (bit 0 set). It specifies that the symbol has an absolute value, for example, a constant. Otherwise its value is relative to the base address of the area defined by the <tt>Area Name</tt> field of the symbol table entry.</p>
+
+<h6><a name="idx-7190"></a>Bit 3</h6>
+<p>This bit is only meaningful if bit 0 is unset (that is, the symbol is an external reference). Bit 3 denotes that the reference is case-insensitive. When attempting to resolve such an external reference, Link will ignore character case when performing the match.</p>
+
+<h6><a name="idx-7191"></a>Bit 4</h6>
+<p>This bit is only meaningful if the symbol is an external reference (bits 1,0 = 10). It denotes that the reference is <b>weak</b>, that is that it is acceptable for the reference to remain unsatisfied and for any fields relocated via it to remain unrelocated.</p>
+<p><b>Note:</b> A weak reference still causes a library module satisfying that reference to be auto-loaded.</p>
+
+<h6><a name="idx-7192"></a>Bit 5</h6>
+<p>This bit is only meaningful if the symbol is a defining, external occurrence (ie if bits 1,0 = 11). It denotes that the definition is <b>strong</b> and, in turn, this is only meaningful if there is a non-strong, external definition of the same symbol in another object file. In this scenario, all references to the symbol from outside of the file containing the strong definition are resolved to the strong definition. Within the file containing the strong definition, references to the symbol resolve to the non-strong definition.</p>
+<p>This attribute allows a kind of link-time indirection to be enforced. Usually, strong definitions will be absolute and will be used to implement an operating system's <a name="marker-379212"></a>entry vector which must have the <b>forever binary</b> property.</p>
+
+<h6><a name="idx-7193"></a>Bit 6</h6>
+<p>This bit is only meaningful if bits 1,0 = 10. Bit 6 denotes that the symbol is a common symbol - in effect, a reference to a common area with the symbol's name. The length of the common area is given by the symbol's value field (see below). Link treats common symbols much as it treats areas having the common reference bit set - all symbols with the same name are assigned the same base address and the length allocated is the maximum of all specified lengths.</p>
+<p>If the name of a common symbol matches the name of a common area then these are merged and symbol identifies the base of the area. </p>
+<p>All common symbols for which there is no matching common area (reference or definition) are collected into an anonymous linker pseudo-area. </p>
+
+<h6><a name="idx-7194"></a>Value</h6>
+<p>This field is only meaningful if the symbol is a defining occurrence (ie bit 0 of AT set) or a common symbol (ie bit 6 of AT set). If the symbol is absolute (bit 2 of AT set), this field contains the value of the symbol. Otherwise, it is interpreted as an offset from the base address of the area defined by <tt>Area Name</tt>, which must be an area defined in this object file.</p>
+
+<h6><a name="idx-7195"></a>Area name</h6>
+<p>This field is only meaningful if the symbol is not absolute (ie if bit 2 of AT is unset) and the symbol is a defining occurrence (ie bit 0 of AT is set). In this case it gives the index into the string table of the character string name of the (logical) area relative to which the symbol is defined.</p>
+
+<dt>
+<h5><a name="marker-379213"></a>String table chunk (<a name="marker-379214"></a>OBJ_STRT)</h5>
+<dd>
+<p>The string table chunk contains all the print names referred to within the areas and symbol table chunks. The separation is made to factor out the variable length characteristic of print names. A print name is stored in the string table as a sequence of ISO8859 non-control characters terminated by a NUL (0) byte and is identified by an offset from the table's beginning. The first 4 bytes of the string table contain its length (including the length word - so no valid offset into the table is less than 4 and no table has length less than 4). The length stored at the start of the string table itself is identically the length stored in the OBJ_STRT chunk header.</p>
+
+<dt>
+<h5>I<a name="marker-379215"></a>dentification chunk (<a name="marker-379216"></a>OBJ_IDFN)</h5>
+<dd>
+<p>This chunk should contain a printable character string (characters in the range [32 - 126]), terminated by a NUL (0) byte, giving information about the name and version of the language translator which generated the object file.</p>
+</dl>
+
+<dt>
+<h4><a name="99380"></a>Linker defined symbols</h4>
+<dd>
+<dl>
+<dd>
+<p>Though not part of the definition of AOF, the definitions of symbols which the AOF linker defines during the generation of an image file are collected here. These may be referenced from AOF object files, but must not be redefined.</p>
+
+<dt>
+<h5><a name="marker-379219"></a>Linker pre-defined symbols</h5>
+<dd>
+<p>The pre-defined symbols occur in <a name="marker-379220"></a>Base/Limit pairs. A Base value gives the address of the first byte in a region and the corresponding Limit value gives the address of the first byte beyond the end of the region. All pre-defined symbols begin <tt>Image$$</tt> and the space of all such names is reserved by Acorn.</p>
+<p>None of these symbols may be redefined. The pre-defined symbols are:</p>
+<table>
+<tr>
+<td align="left" valign="top"><tt>Image$$RO$$Base</tt>
+<td align="left" valign="top" rowspan="2">Address and limit of the Read-Only section of the image.
+<tr>
+<td align="left" valign="top"><tt>Image$$RO$$Limit</tt>
+<tr>
+<td align="left" valign="top">
+<tr>
+<td align="left" valign="top"><tt>Image$$RW$$Base</tt>
+<td align="left" valign="top" rowspan="2">Address and limit of the Read-Write section of the image.
+<tr>
+<td align="left" valign="top"><tt>Image$$RW$$Limit</tt>
+<tr>
+<td align="left" valign="top">
+<tr>
+<td align="left" valign="top"><tt>Image$$ZI$$Base</tt>
+<td align="left" valign="top" rowspan="2">Address and limit of the Zero-initialised data section of the image (created from areas having bit 4 of their area attributes set and from common symbols which match no area name).
+<tr>
+<td align="left" valign="top"><tt>Image$$ZI$$Limit</tt>
+</table>
+<p>If a section is absent, the Base and Limit values are equal but unpredictable.</p>
+<table>
+<tr>
+<td align="left" valign="top"><tt>Image$$RO$$Base</tt>
+<td align="left" valign="top">includes any image header prepended by Link.
+<tr>
+<td align="left" valign="top"><tt>Image$$RW$$Limit</tt>
+<td align="left" valign="top">includes (at the end of the RW section) any zero-initialised data created at run-time.
+</table>
+<p>The<tt> Image$$xx$${Base,Limit}</tt> values are intended to be used by language run-time systems. Other values which are needed by a debugger or by part of the pre-run-time code associated with a particular image format are deposited into the relevant image header by Link.</p>
+
+<dt>
+<h5><a name="marker-379221"></a>Common area symbols</h5>
+<dd>
+<p>For each common area, Link defines a global symbol having the same name as the area, except where this would clash with the name of an existing global symbol definition (thus a symbol reference may match a common area).</p>
+</dl>
+
+<dt>
+<h4>Obsolescent and obsolete features<a name="marker-379222"></a></h4>
+<dd>
+<dl>
+<dd>
+<p>The following subsections describe features that were part of revision 1.xx of AOF and/or that were supported by the 59x releases of the AOF linker, which are no longer supported. In each case, a brief rationale for the change is given.</p>
+
+<dt>
+<h5><a name="idx-7196"></a>Object file type</h5>
+<dd>
+<p>AOF used to define three image types as well as a relocatable object file type. Image types 2 and 3 were never used under Arthur/RISC OS and are now obsolete. Image type 1 is used only by the obsolete Dbug (DDT has Dbug's functionality and uses Application Image Format).</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">AOF Image type 1
+<td align="left" valign="top">C5E2D081 hex (obsolescent)
+<tr>
+<td align="left" valign="top">AOF Image type 2
+<td align="left" valign="top">C5E2D083 hex (obsolete)
+<tr>
+<td align="left" valign="top">AOF Image type 3
+<td align="left" valign="top">C5E2D087 hex (obsolete)
+</table>
+</dl>
+
+<dt>
+<h5><a name="idx-7197"></a>AL (Area alignment)</h5>
+<dd>
+<p>AOF used to allow the alignment of an area to be any specified power of 2 between 2 and 16. By convention, relocatable object code areas always used minimal alignment (AL=2) and only the obsolete image formats, types 2 and 3, specified values other than 2. From now on, all values other than 2 are reserved by Acorn.</p>
+
+<dt>
+<h5><a name="idx-7198"></a>AT (Area attributes)</h5>
+<dd>
+<p>Two attributes have been withdrawn: the Absolute attribute (bit 0 of AT) and the Position Independent attribute (bit 6 of AT).</p>
+<p>The Absolute attribute was not supported by the RISC OS linker and therefore had no utility. Link in any case allows the effect of the Absolute attribute to be simulated.</p>
+<p>The Position Independent bit used to specify that a code area was position independent, meaning that its base address could change at run-time without any change being required to its contents. Such an area could only contain internal, PC-relative relocations and must make all external references through registers. Thus only code and pure data (containing no address values) could be position-independent.</p>
+<p>Few language processors generated the PI bit which was only significant to the generation of the obsolete image types 2 and 3 (in which it affected AREA placement). Accordingly, its definition has been withdrawn.</p>
+
+<dt>
+<h5><a name="idx-7199"></a>Fragmented areas</h5>
+<dd>
+<p>The concept of fragmented areas was introduced in release 0.04 of AOF, tentatively in support of Fortran compilers. To the best of our knowledge, fragmented areas were never used. (Two warnings against use were given with the original definition on the grounds of: structural incompatibility with UNIX's <tt>a.out</tt> format; and likely inefficient handling by Link. And use was hedged around with curious restrictions). Accordingly, the definition of fragmented areas is withdra<a name="marker-379223"></a>wn.</p>
+</dl>
+
+<dt>
+<h2><a name="marker-379224"></a>ALF</h2>
+<dd>
+<dl>
+<dd>
+<p><a name="marker-379225"></a>ALF is the format of linkable libraries (such as the C RISC OS library RISC_OSLib).</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379226"></a>Library file format types</h4>
+<dd>
+<dl>
+<dd>
+<p>There are two library file formats described here, termed <i>new-style</i> and <i>old-style</i>. Link can read both formats, though no tool will actually generate an old-style library.</p>
+<p>Currently, only the Acorn/Topexpress Fortran-77 compiler generates old-style libraries (which it does instead of generating AOF object files). Link handles these libraries specially, including every member in the output image unless explicitly instructed otherwise.</p>
+<p>Old-style libraries are obsolescent and should no longer be generated.</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379227"></a>Library file chunks</h4>
+<dd>
+<dl>
+<dd>
+<p>Each piece of a library file is stored in a separate, identifiable, chunk, named as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<th align="left" valign="top">Chunk
+<th align="left" valign="top">Chunk Name
+<tr>
+<td align="left" valign="top">Directory
+<td align="left" valign="top"><tt>LIB_DIRY</tt>
+<tr>
+<td align="left" valign="top">Time-stamp
+<td align="left" valign="top"><tt>LIB_TIME</tt>
+<tr>
+<td align="left" valign="top">Version
+<td align="left" valign="top"><tt>LIB_VSRN</tt>
+<td align="left" valign="top">- new-style libraries only
+<tr>
+<td align="left" valign="top">Data
+<td align="left" valign="top"><tt>LIB_DATA</tt>
+<tr>
+<td align="left" valign="top">Symbol table
+<td align="left" valign="top"><tt>OFL_SYMT</tt>
+<td align="left" valign="top">- object code libraries only
+<tr>
+<td align="left" valign="top">Time-stamp
+<td align="left" valign="top"><tt>OFL_TIME</tt>
+<td align="left" valign="top">- object code libraries only
+</table>
+</dl>
+<p>There may be many LIB_DATA chunks in a library, one for each library member.</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379228"></a>LIB_DIRY</h4>
+<dd>
+<dl>
+<dd>
+<p>The LIB_DIRY chunk contains a directory of all modules in the library each of which is stored in a LIB_DATA chunk. The directory size is fixed when the library is created. The directory consists of a sequence of variable length entries, each an integral number of words long. The number of directory entries is determined by the size of the LIB_DIRY chunk.</p>
+<p>This is shown pictorially in the following diagram:</p>
+<dl>
+<dd>
+<p><a href="objectformat-9.draw"><img src="objectformat-9.png"  border=0></a></p>
+</dl>
+
+<dt>
+<h5><a name="marker-379230"></a>ChunkIndex</h5>
+<dd>
+<p>The ChunkIndex is a 0 origin index within the chunk file header of the corresponding LIB_DATA chunk. The LIB_DATA chunk entry gives the offset and size of the library module in the library file. A ChunkIndex of 0 means the directory entry is not in use.</p>
+
+<dt>
+<h5><a name="marker-379231"></a>EntryLength</h5>
+<dd>
+<p>The number of bytes in this LIB_DIRY entry, always a multiple of 4.</p>
+
+<dt>
+<h5><a name="marker-379232"></a>DataLength</h5>
+<dd>
+<p>The number of bytes used in the Data section of this LIB_DIRY entry. This need not be a multiple of 4, though it always is in new-style libraries.</p>
+
+<dt>
+<h5><a name="idx-7200"></a>Data</h5>
+<dd>
+<p>The data section consists of a 0 terminated string followed by any other information relevant to the library module. Strings should contain only ISO-8859 non-control characters (ie codes [0-31], 127 and 128+[0-31] are excluded). The string is the name used by the library management tools to identify this library module. Typically this is the name of the file from which the library member was created.</p>
+<p>In new-style libraries, an 8-byte, word-aligned time-stamp follows the member name. The format of this time-stamp is described in the <A HREF="#60970">LIB_TIME</a>. Its value is (an encoded version of) the time-stamp (ie the last modified time) of the file from which the library member was created.</p>
+<p>Applications which create libraries or library members should ensure that the LIB_DIRY entries they create contain valid time-stamps. Applications which read LIB_DIRY entries should not rely on any data beyond the end of the name-string being present unless the difference between the DataLength field and the name-string length allows for it. Even then, the contents of a time-stamp should be treated cautiously and not assumed to be sensible.</p>
+<p>Applications which write LIB_DIRY or <a name="marker-379236"></a>OFL_SYMT entries should ensure that padding is done with NUL (0) bytes; applications which read LIB_DIRY or OFL_SYMT entries should make no assumptions about the values of padding bytes beyond the first, string-terminating NUL byte.</p>
+</dl>
+
+<dt>
+<h4><a name="60970"></a>LIB_TIME</h4>
+<dd>
+<dl>
+<dd>
+<p>The LIB_TIME chunk contains a 64 bit time-stamp recording when the library was last modified, in the following format:</p>
+<dl>
+<dd>
+<p><a href="objectformat-10.draw"><img src="objectformat-10.png"  border=0></a></p>
+</dl>
+</dl>
+
+<dt>
+<h4><a name="marker-379239"></a>LIB_VSRN</h4>
+<dd>
+<dl>
+<dd>
+<p>In new-style libraries, this chunk contains a 4-byte version number. The current version number is 1. Old-style libraries do not contain this chunk.</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379240"></a>LIB_DATA</h4>
+<dd>
+<dl>
+<dd>
+<p>A LIB_DATA chunk contains one of the library members indexed by the LIB_DIRY chunk. No interpretation is placed on the contents of a member by the library management tools. A member could itself be a file in chunk file format or even another library.</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379241"></a>Object code libraries</h4>
+<dd>
+<dl>
+<dd>
+<p>An object code library is a library file whose members are files in AOF. All libraries you are likely to use with the DDE are object code libraries.</p>
+<p>Additional information is stored in two extra chunks, <a name="marker-379242"></a>OFL_SYMT and <a name="marker-379243"></a>OFL_TIME.</p>
+<p>OFL_SYMT contains an entry for each external symbol defined by members of the library, together with the index of the chunk containing the member defining that symbol.</p>
+<p>The OFL_SYMT chunk has exactly the same format as the LIB_DIRY chunk except that the Data section of each entry contains only a string, the name of an external symbol (and between 1 and 4 bytes of NUL padding). OFL_SYMT entries do not contain time-stamps.</p>
+<p>The <a name="marker-379244"></a>OFL_TIME chunk records when the OFL_SYMT chunk was last modified and has the same format as the LIB_TIME chunk (see above).<a name="marker-379245"></a></p>
+</dl>
+
+<dt>
+<h2><a name="41076"></a><a name="marker-379218"></a>AIF<a name="marker-379246"></a></h2>
+<dd>
+<dl>
+<dd>
+<p>AIF is the format of executable program files produced by linking AOF files. Example AIF files are !RunImage files of applications coded in C or assembler.</p>
+</dl>
+
+<dt>
+<h4><a name="idx-7201"></a>Properties of AIF</h4>
+<dd>
+<dl>
+<dd>
+<ul>
+<li>An AIF image is loaded into memory at its load address and entered at its first word (compatible with old-style Arthur/Brazil ADFS images).
+<li>An AIF image may be compressed and can be self-decompressing (to support faster loading from floppy discs, and better use of floppy-disc space).
+<li>If created with suitable linker options, an AIF image may <a name="marker-379247"></a>relocate itself at load time. Self-relocation is supported in two, distinct senses:
+<ul>
+<li>One-time Position-Independence: A relocatable image can be loaded at any address (not just its load address) and will execute there (compatible with version 0.03 of AIF).
+<li>Specified Working Space Relocation: A suitably created relocatable image will copy itself from where it is loaded to the high address end of applications memory, leaving space above the copied image as noted in the AIF header (see below).
+</ul>
+<li>AIF images support being debugged by the <a name="marker-379248"></a>Desktop Debugging Tool (<a name="marker-379249"></a>DDT), for C, assembler and other languages. Version 0.04 of AIF (and later) supports debugging at the symbolic assembler level (hitherto done by Dbug). Low-level and source-level debugging support are orthogonal (capabilities of debuggers notwithstanding, both, either, or neither kind of debugging support may be present in an AIF image).
+<p>Debugging tables have the property that all references from them to code and data (if any) are in the form of relocatable addresses. After loading an image at its load address these values are effectively absolute. All references between debugger table entries are in the form of offsets from the beginning of the debugging data area. Thus, following relocation of a whole image, the debugging data area itself is position independent and can be copied by the debugger.</p>
+</ul>
+</dl>
+
+<dt>
+<h4><a name="marker-379250"></a>Layout of an AIF image</h4>
+<dd>
+<dl>
+<dd>
+<p>The layout of an AIF image is as follows:</p>
+<dl>
+<dd>
+<p><a href="objectformat-11.draw"><img src="objectformat-11.png"  border=0></a></p>
+</dl>
+<p>The header is small, fixed in size, and described below. In a compressed AIF image, the header is NOT compressed.</p>
+<p>Once an image has been <a name="marker-379252"></a>decompressed - or if it is uncompressed in the first place - it has the following layout:</p>
+<dl>
+<dd>
+<p><a href="objectformat-12.draw"><img src="objectformat-12.png"  border=0></a></p>
+</dl>
+<p>Debugging data are absent unless the image has been linked appropriately and, in the case of source-level debugging, unless the constituent components of the image have been compiled appropriately.</p>
+<p>The relocation list is a list of byte offsets from the beginning of the AIF header, of words to be relocated, followed by a word containing -1. The relocation of non-word values is not supported.</p>
+<p>After the execution of the self-relocation code - or if the image is not self-relocating - the image has the following layout:</p>
+<dl>
+<dd>
+<p><a href="objectformat-13.draw"><img src="objectformat-13.png"  border=0></a></p>
+</dl>
+<p>At this stage a debugger is expected to copy the debugging data (if present) somewhere safe, otherwise they will be overwritten by the zero-initialised data and/or the heap/stack data of the program. A debugger can seize control at the appropriate moment by copying, then modifying, the third word of the AIF header (see below).</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379255"></a>AIF header layout</h4>
+<dd>
+<dl>
+<dd>
+<dl>
+<dd>
+<p><a href="objectformat-14.draw"><img src="objectformat-14.png"  border=0></a></p>
+</dl>
+<p>BL is used everywhere to make the header addressable via R14 (but beware the PSR bits) in a position-independent manner and to ensure that the header will be position-independent.</p>
+<p>It is required that an image be re-enterable at its first instruction. Therefore, after decompression, the decompression code must reset the first word of the header to BLNV 0. Similarly, following self-relocation, the second word of the header must be reset to BLNV 0. This causes no additional problems with the read-only nature of the code segment - both decompression and relocation code must write to it anyway. So, on systems with memory protection, both the decompression code and the self-relocation code must be bracketed by system calls to change the access status of the read-only section (first to writable, then back to read-only).</p>
+<p>The image debug type has the following meaning:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">0:
+<td align="left" valign="top">No debugging data are present.
+<tr>
+<td align="left" valign="top">1:
+<td align="left" valign="top">Low-level debugging data are present.
+<tr>
+<td align="left" valign="top">2:
+<td align="left" valign="top">Source level (ASD) debugging data are present.
+<tr>
+<td align="left" valign="top">3:
+<td align="left" valign="top">1 and 2 are present together.
+</table>
+</dl>
+<p>All other values are reserved by Acorn.</p>
+</dl>
+
+<dt>
+<h4><a name="marker-379257"></a>Zero-initialisation code</h4>
+<dd>
+<dl>
+<dd>
+<p>The Zero-initialisation code is as follows:</p>
+<p><pre>        BIC     r11, lr, #&amp;FC000003   ; clear status bits -&gt; header + &amp;C
+        ADD     r11, r11, #8          ; -&gt; Image ReadOnly size
+        LDMIA   r11, {r0, r1, r2, r3} ; various sizes
+        CMPS    r3, #0
+        MOVLES  pc, lr                ; nothing to do
+        SUB     r11, r11, #&amp;14        ; image base
+        ADD     r11, r11, r0          ; + RO size
+        ADD     r11, r11, r1          ; + RW size = base of 0-init area
+        MOV     r0, #0
+        MOV     r1, #0
+        MOV     r2, #0
+        MOV     r4, #0
+ZeroLoop
+        STMIA   r11!, {r0, r1, r2, r4}
+        SUBS    r3, r3, #16
+        BGT     ZeroLoop
+        MOVS    pc, lr                ; 16 words in total.</pre></p>
+
+<dt>
+<h5><a name="idx-7202"></a>Relationship between header sizes and linker pre-defined symbols</h5>
+<dd>
+<p><pre>AIFHeader.ImageBase = Image$$RO$$Base
+AIFHeader.ImageBase + AIFHeader.ROSize = Image$$RW$$Base
+AIFHeader.ImageBase + AIFHeader.ROSize + AIFHeader.RWSize = Image$$ZI$$Base
+AIFHeader.ImageBase + AIFHeader.ROSize + AIFHeader.RWSize + AIFHeader.ZeroInitSize = Image$$RW$$Limit</pre></p>
+</dl>
+
+<dt>
+<h4><a name="marker-379258"></a>Self relocation</h4>
+<dd>
+<dl>
+<dd>
+<p>Two kinds of self-relocation are supported by AIF and one by AMF; for completeness, all three are described here. </p>
+<p>One-time position independence is supported by relocatable AIF images. Many-time position independence is required for AMF Relocatable Modules. And only AIF images can self-move to a location which leaves a requested amount of workspace.</p>
+<p>Why are there three different kinds of self-relocation?</p>
+<ul>
+<li>The rules for constructing RISC OS applications do not forbid acquired position-dependence. Once an application has begun to run, it is not, in general, possible to move it, as it isn't possible to find all the data locations which are being used as position-dependent pointers. So, AIF images can be relocated only once. Afterwards, the relocation table is over-written by the application's zero-initialised data, heap, or stack.
+<li>In contrast, the rules for constructing a RISC OS Relocatable Modules (RM) require that it be prepared to shut itself down, be moved in memory, and start itself up again. Shut-down and start-up are notified to a RM by special service calls to it. Clearly, a RM must be relocatable many times so its relocation table is not overwritten after first use.
+<li>Relocatable Modules are loaded under the control of a Relocatable Module Area (RMA) manager which decides where to load a module initially and where to move each module to whenever the RMA is reorganised. In contrast, an application is loaded at its load address and is then on its own until it exits or faults. An application can only be moved by itself (and then only once, before it begins execution proper).
+</ul>
+
+<dt>
+<h5><a name="idx-7203"></a>Self-relocation code for relocatable modules</h5>
+<dd>
+<p>In this case there is no AIF header, the code must be executable many times, and it must be symbolically addressable from the Relocatable Module header. The code below must be the last area of the RMF image, following the relocation list. Note that it is best thought of as an additional area.</p>
+<p>When the following code is executed, the module image has already been loaded at/moved to its target address. It only remains to relocate location-dependent addresses. The list of offsets to be relocated, terminated by (-1), immediately follows <tt>End</tt>. Note that the address values here (eg <tt>|__RelocCode|</tt>) will appear in the list of places to be relocated, allowing the code to be re-executed.</p>
+<p><pre>        IMPORT  |Image$$RO$$Base| ; where the image is linked at...
+        EXPORT  |__RelocCode|     ; referenced from the RM header
+|__RelocCode|
+        LDR     r1, RelocCode     ; value of __RelocCode (before relocation)
+        SUB     r11, pc, #12      ; value of __RelocCode now
+        SUBS    r1, r11, r1       ; relocation offset
+        MOVEQS  pc, lr            ; relocate by 0 so nothing to do
+        LDR     r11, ImageBase    ; image base prior to relocation...
+        ADD     r11, r11, r1      ; ...where the image really is
+        ADR     r2, End
+RelocLoop
+        LDR     r0, [r2], #4
+        CMNS    r0, #1            ; got list terminator?
+        MOVLES  pc, lr            ; yes =&gt; return
+        LDR     r3, [r11, r0]     ; word to relocate
+        ADD     r3, r3, r1        ; relocate it
+        STR     r3, [r11, r0]     ; store it back
+        B       RelocLoop         ; and do the next one
+RelocCode
+        DCD     |__RelocCode|
+ImageBase
+        DCD     |Image$$RO$$Base|
+End                               ; the list of locations to relocate
+                                  ; starts here (each is an offset from the
+                                  ; base of the module) and is terminated
+                                  ; by -1.</pre></p>
+<p>Note that this code, and the associated list of locations to relocate, is added automatically to a relocatable module image by Link (as a consequence of using Link with the SetUp option Module enabled).</p>
+
+<dt>
+<h5><a name="idx-7204"></a>Self-move and self-relocation code for AIF</h5>
+<dd>
+<p>This code is added to the end of an AIF image by Link, immediately before the list of relocations (terminated by -1). Note that the code is entered via a BL from the second word of the AIF header so, on entry, R14 points to AIFHeader + 8.</p>
+<p><pre>RelocCode ROUT
+        BIC     r11, lr, #&amp;FC000003 ; clear flag bits; -&gt; AIF header + &amp;08
+        SUB     r11, r11, #8        ; -&gt; header address
+        MOV     r0, #&amp;FB000000      ; BLNV #0
+        STR     r0, [r11, #4]       ; won't be called again on image re-entry
+;does the code need to be moved?
+        LDR     r9, [r11, #&amp;2C]     ; min free space requirement
+        CMPS    r9, #0              ; 0 =&gt; no move, just relocate
+        BEQ     RelocateOnly
+;calculate the amount to move by...
+        LDR     r0, [r11, #&amp;20]     ; image zero-init size
+        ADD     r9, r9, r0          ; space to leave = min free + zero init
+        SWI     GetEnv              ; MemLimit -&gt; R1
+        ADR     r2, End             ; -&gt; End 
+01      LDR     r0, [r2], #4        ; load relocation offset, increment R2
+        CMNS    r0, #1              ; terminator?
+        BNE     %B01                ; No, so loop again
+        SUB     r3, r1, r9          ; MemLimit - freeSpace
+        SUBS    r0, r3, r2          ; amount to move by
+        BLE     RelocateOnly        ; not enough space to move...
+        BIC     r0, r0, #15         ; a multiple of 16...
+        ADD     r3, r2, r0          ; End + shift
+        ADR     r8, %F01            ; intermediate limit for copy-up 
+; 
+; copy everything up memory, in descending address order, branching 
+; to the copied copy loop as soon as it has been copied. 
+; 
+02      LDMDB   r2!, {r4-r7}
+        STMDB   r3!, {r4-r7}
+        CMP     r2, r8              ; copied the copy loop?
+        BGT     %B02                ; not yet
+        ADD     r4, pc, r0
+        MOV     pc, r4              ; jump to copied copy code 
+03      LDMDB   r2!, {r4-r7}
+        STMDB   r3!, {r4-r7}
+        CMP     r2, r11             ; copied everything?
+        BGT     %B03                ; not yet
+        ADD     r11, r11, r0        ; load address of code
+        ADD     lr, lr, r0          ; relocated return address 
+RelocateOnly
+        LDR     r1, [r11, #&amp;28]     ; header + &amp;28 = code base set by Link
+        SUBS    r1, r11, r1         ; relocation offset
+        MOVEQ   pc, lr              ; relocate by 0 so nothing to do
+        STR     r11, [r11, #&amp;28]    ; new image base = actual load address
+        ADR     r2, End             ; start of reloc list 
+RelocLoop
+        LDR     r0, [r2], #4        ; offset of word to relocate
+        CMNS    R0, #1              ; terminator?
+        MOVEQS  pc, lr              ; yes =&gt; return
+        LDR     r3, [r11, r0]       ; word to relocate
+        ADD     r3, r3, r1          ; relocate it
+        STR     r3, [r11, r0]       ; store it back
+        B       RelocLoop           ; and do the next one
+        End                         ; The list of offsets of locations to relocate
+                                    ; starts here; terminated by -1.<a name="marker-379259"></a></pre></p>
+</dl>
+
+<dt>
+<h2><a name="marker-379260"></a>ASD</h2>
+<dd>
+<dl>
+<dd>
+<p>Acknowledgement: This design is based on work originally done for Acorn Computers by Topexpress Ltd.</p>
+<p>T<a name="marker-379261"></a>his section describes the format of symbolic debugging data generated by ARM compilers and assemblers running under RISC OS and used by the desktop debugger DDT.</p>
+<p>For each separate compilation unit (called a <i>section</i>) the compiler produces debugging data in a special AREA of the object code (see the chapter entitled <A HREF="#77819">AOF</a> for an explanation of AREAs and their attributes). Debugging data are position independent, containing only relative references to other debugging data within the same section and relocatable references to other compiler-generated AREAs.</p>
+<p>Debugging data AREAs are combined by the linker into a single contiguous section of a program image (see the chapter entitled <A HREF="#41076">AIF</a> for a description of Application Image Format). Because the debugging section is position-independent, the debugger can move it to a safe location before the image starts executing. If the image is not executed under debugger control the debugging data is simply overwritten. </p>
+<p>The format of debugging data allows for a variable amount of detail. This potentially allows the user to trade off among memory used, disc space used, execution time, and debugging detail.</p>
+<p>Assembly-language level debugging is also supported, though in this case the debugging tables are generated by the linker, not by language processors. These low-level debugging tables appear in an extra section item, as if generated by an independent compilation. Low-level and high-level debugging are orthogonal facilities, though DDT allows the user to move smoothly between levels if both sets of debugging data are present in an image.</p>
+</dl>
+
+<dt>
+<h4><a name="idx-7205"></a>Order of Debugging Data</h4>
+<dd>
+<dl>
+<dd>
+<p><a name="marker-379268"></a>A debug data <a name="marker-379269"></a>AREA consists of a series of <i>items</i>. The arrangement of these items mimics the structure of the high-level language program itself.</p>
+<p>For each debug AREA, the first item is a section item, giving global information about the compilation, including a code identifying the language and flags indicating the amount of detail included in the debugging tables.</p>
+<p>Each data, function, procedure, etc., definition in the source program has a corresponding debug data item and these items appear in an order corresponding to the order of definitions in the source. This means that any nested structure in the source program is preserved in the debugging data and the debugger can use this structure to make deductions about the scope of various source-level objects. Of course, for procedure definitions, two debug items are needed: a <b>procedure</b> item to mark the definition itself and an <b>endproc</b> item to mark the end of the procedure's body and the end of any nested definitions. If procedure definitions are nested then the procedure - endproc brackets are also nested. Variable and type definitions made at the outermost level, of course, appear outside of all procedure/endproc items.</p>
+<p>Information about the relationship between the executable code and source files is collected together and appears as a <b>fileinfo</b> item, which is always the final item in a debugging AREA. Because of the C language's #include facility, the executable code produced from an outer-level source file may be separated into disjoint pieces interspersed with that produced from the included files. Therefore, source files are considered to be collections of 'fragments', each corresponding to a contiguous area of executable code and the fileinfo item is a list with an entry for each file, each in turn containing a list with an entry for each fragment. The fileinfo field in the section item addresses the fileinfo item itself. In each procedure item there is a 'file entry' field which refers to the file-list entry for the source file containing the procedure's start; there is a separate one in the endproc item because it may possibly not be in the same source file.</p>
+</dl>
+
+<dt>
+<h4><a name="idx-7206"></a>Representation of Data Types</h4>
+<dd>
+<dl>
+<dd>
+<p>Several of the debugging data items (eg procedure and variable) have a <b>type</b> word field to identify their <a name="marker-379270"></a>data type. This field contains, in the most significant 3 bytes, a code to identify a base type and, in the least significant byte, a pointer count: 0 to denote the type itself; 1 to denote a pointer to the type; 2 to denote a pointer to a pointer to...; etc.</p>
+<p>For simple types the code is a positive integer as follows:</p>
+<table>
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">void
+<td align="left" valign="top">0
+<td align="left" valign="top">(all codes are decimal)
+<tr>
+<td align="left" valign="top">signed integers
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">single byte
+<td align="left" valign="top">10
+<td align="left" valign="top">
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">half-word
+<td align="left" valign="top">11
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">word
+<td align="left" valign="top">12
+<tr>
+<td align="left" valign="top">unsigned integers
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">single byte
+<td align="left" valign="top">20
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">half-word
+<td align="left" valign="top">21
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">word
+<td align="left" valign="top">22
+<tr>
+<td align="left" valign="top">floating point
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">float
+<td align="left" valign="top">30
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">double
+<td align="left" valign="top">31
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">long double
+<td align="left" valign="top">32
+<tr>
+<td align="left" valign="top">complex
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">single complex
+<td align="left" valign="top">41
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">double complex
+<td align="left" valign="top">42
+<tr>
+<td align="left" valign="top">functions
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">functions
+<td align="left" valign="top">100
+</table>
+<p>For compound types (arrays, structures, etc.) there is a special kind of debug data item (<b>array</b>, <b>struct</b>, etc.) to give details of the type such as array bounds and field types. The type code for such types is negative being the negation of the (byte) offset of the special item from the start of the debugging AREA.</p>
+<p>If a type has been given a name in a source program, it will give rise to a <b>type</b> debugging data item which contains the name and a type word as defined above. If necessary, there will also be a debugging data item such as an array or struct to define the type itself. In that case, the type word will refer to this item.</p>
+<p>Enumerated types in C and scalars in Pascal are treated simply as integer sub-ranges of an appropriate size, the name information is not available in the this version of the debugging format. Set types in Pascal are not treated in detail: the only information recorded for them is the total size occupied by the object in bytes.</p>
+<p>Fortran character types are supported by a special kind of debugging data item the format of which is yet to be defined.</p>
+</dl>
+
+<dt>
+<h4><a name="idx-7207"></a>Representation of Source File Positions</h4>
+<dd>
+<dl>
+<dd>
+<p>S<a name="marker-379271"></a>everal of the debugging data items have a <a name="marker-379272"></a><b>sourcepos</b> field to identify a position in the source file. This field contains a line number and character position within the line packed into a single word. The most significant 10 bits encode the character offset (0-based) from the start of the line and the least- significant 22 bits give the line number.</p>
+</dl>
+
+<dt>
+<h4><a name="idx-7208"></a>Debugging Data Items in Detail</h4>
+<dd>
+<dl>
+<dd>
+<p>The first word of each debugging data item contains the byte length of the item (encoded in the most significant 16 bits) and a code identifying the kind of item (in the least significant 16 bits). The following codes are defined:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">1
+<td align="left" valign="top">section
+<tr>
+<td align="left" valign="top">2
+<td align="left" valign="top">procedure
+<tr>
+<td align="left" valign="top">3
+<td align="left" valign="top">endproc
+<tr>
+<td align="left" valign="top">4
+<td align="left" valign="top">variable
+<tr>
+<td align="left" valign="top">5
+<td align="left" valign="top">type
+<tr>
+<td align="left" valign="top">6
+<td align="left" valign="top">struct
+<tr>
+<td align="left" valign="top">7
+<td align="left" valign="top">array
+<tr>
+<td align="left" valign="top">8
+<td align="left" valign="top">subrange
+<tr>
+<td align="left" valign="top">9
+<td align="left" valign="top">set
+<tr>
+<td align="left" valign="top">10
+<td align="left" valign="top">fileinfo
+</table>
+</dl>
+<p>The meaning of the second and subsequent words of each item is defined below.</p>
+<p>Where items include a string field, the string is packed into successive bytes beginning with a length byte, and padded at the end to a word boundary (the padding value is immaterial, but NUL or ' ' is preferred). The length of a string is in the range [0 - 255] bytes.</p>
+<p>Where an item contains a field giving an offset in the debugging data area (usually to address another item), this means a byte offset from the start of the debugging data for the whole section (in other words, from the start of the section item).</p>
+
+<dt>
+<h5>S<a name="marker-379273"></a>ection</h5>
+<dd>
+<p>A section item is the first item of each section of the debugging data. The first five fields are held in a single word:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">language
+<td align="left" valign="top">one byte code identifying the source language
+<tr>
+<td align="left" valign="top">debuglines
+<td align="left" valign="top">1 bit: set <img src="../symbols/entities/8658.png" alt="=&GT;"> tables contain line numbers
+<tr>
+<td align="left" valign="top">debugvars
+<td align="left" valign="top">1 bit: set <img src="../symbols/entities/8658.png" alt="=&GT;"> tables contain data about local variables
+<tr>
+<td align="left" valign="top">spare
+<td align="left" valign="top">14 reserved bits (must be zero)
+<tr>
+<td align="left" valign="top">debugversion
+<td align="left" valign="top">one byte version number of the debugging data
+<tr>
+<td align="left" valign="top">codeaddr
+<td align="left" valign="top">pointer to start of executable code in this section
+<tr>
+<td align="left" valign="top">dataaddr
+<td align="left" valign="top">pointer to start of static data for this section
+<tr>
+<td align="left" valign="top">codesize
+<td align="left" valign="top">byte size of executable code in this section
+<tr>
+<td align="left" valign="top">datasize
+<td align="left" valign="top">byte size of the static data in this section
+<tr>
+<td align="left" valign="top">fileinfo
+<td align="left" valign="top">offset in the debugging data of the file information for this section (or 0 if no fileinfo is present)
+<tr>
+<td align="left" valign="top">debugsize
+<td align="left" valign="top">total byte length of debugging data for this section
+<tr>
+<td align="left" valign="top">name or nsyms
+<td align="left" valign="top">string or integer
+</table>
+</dl>
+<p>The name field contains the program name for Pascal and Fortran programs. For C programs it contains a name derived by the compiler from the main file name (notionally a module name). Its syntax is similar to that for a variable name in the source language. For a low-level debugging section (language = 0) the field is treated as a 4 byte integer giving the number of symbols following.</p>
+<p>The following language byte codes are defined:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">0
+<td align="left" valign="top">Low-level debugging data (notionally, assembler)
+<tr>
+<td align="left" valign="top">1
+<td align="left" valign="top">C
+<tr>
+<td align="left" valign="top">2
+<td align="left" valign="top">Pascal
+<tr>
+<td align="left" valign="top">3
+<td align="left" valign="top">Fortran77
+<tr>
+<td align="left" valign="top">other
+<td align="left" valign="top">reserved to Acorn.
+</table>
+</dl>
+<p>The fileinfo field is 0 if no source file information is present.</p>
+<p>The debugversion field was defined to be 1; the new debugversion for the extended debugging data format (encompassing low-level debugging data) is 2. For low-level debugging data, other fields have the following values:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">language
+<td align="left" valign="top">0
+<tr>
+<td align="left" valign="top">codeaddr
+<td align="left" valign="top">Image$$RO$$Base
+<tr>
+<td align="left" valign="top">dataaddr
+<td align="left" valign="top">Image$$RW$$Base
+<tr>
+<td align="left" valign="top">codesize
+<td align="left" valign="top">Image$$RO$$Limit - Image$$RO$$Base
+<tr>
+<td align="left" valign="top">datasize
+<td align="left" valign="top">Image$$RW$$Limit - Image$$RW$$Base
+<tr>
+<td align="left" valign="top">fileinfo
+<td align="left" valign="top">0
+<tr>
+<td align="left" valign="top">nsyms
+<td align="left" valign="top">number of symbols within the following debugging data
+<tr>
+<td align="left" valign="top">debugsize
+<td align="left" valign="top">total size of the low-level debugging data including the size of the section item
+</table>
+</dl>
+<p>The section item is immediately followed by nsyms symbols, each having the following format:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">stridx:24
+<td align="left" valign="top">byte offset in string table of symbol name
+<tr>
+<td align="left" valign="top">flags:8
+<td align="left" valign="top">(see below)
+<tr>
+<td align="left" valign="top">value
+<td align="left" valign="top">the value of the symbol
+</table>
+</dl>
+<p>The flags field has the following values:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">0/1
+<td align="left" valign="top">the symbol is a local/global symbol
+<tr>
+<td align="left" valign="top">+
+<td align="left" valign="top">(there may be many local symbols with the same name)
+<tr>
+<td align="left" valign="top">0/2/4/6
+<td align="left" valign="top">symbol names an absolute/code/data/zero-init value
+</table>
+</dl>
+<p>Note that the linker reduces all symbol values to absolute values. The flags field records the history, or origin, of the symbol in the image.</p>
+<p>The string table is in standard AOF format. It consists of a length word followed by the strings themselves, each terminated by a NUL (0). The length word includes the length of the length word, so no offset into the string table is less than 4. The end of the string table is padded to the next word boundary.</p>
+
+<dt>
+<h5><a name="marker-379274"></a>Procedure</h5>
+<dd>
+<p>A procedure item appears once for each procedure or function definition in the source program. Any definitions with the procedure have their related debugging data items between the procedure item and the matching endproc item. The format of procedure items is as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">type
+<td align="left" valign="top">the return type if this is a function, else 0
+<tr>
+<td align="left" valign="top">args
+<td align="left" valign="top">the number of arguments
+<tr>
+<td align="left" valign="top">sourcepos
+<td align="left" valign="top">a word encoding the source position of the start of the procedure
+<tr>
+<td align="left" valign="top">startaddr
+<td align="left" valign="top">pointer to the first instruction of the procedure
+<tr>
+<td align="left" valign="top">bodyaddr
+<td align="left" valign="top">pointer to the first instruction of the procedure body (see below)
+<tr>
+<td align="left" valign="top">endproc
+<td align="left" valign="top">offset of the related endproc item
+<tr>
+<td align="left" valign="top">fileentry
+<td align="left" valign="top">offset of the file list entry for the source file
+<tr>
+<td align="left" valign="top">name
+<td align="left" valign="top">string
+</table>
+</dl>
+<p>The bodyaddr field points to the first instruction after the procedure entry sequence, that is the first address at which a high-level breakpoint could sensibly be set. The startaddr field points to the beginning of the entry sequence, that is the address at which control actually arrives when the procedure is called.</p>
+<p>A label in a source program is represented by a special procedure item with no matching endproc (the endproc field is 0 to denote this). Pascal and Fortran numerical labels are converted by the compiler into strings prefixed by '<tt>$n</tt>'.</p>
+<p>For Fortran77, multiple entry points to the same procedure each give rise to a separate procedure item but they all have the same endproc offset referring to a single endproc item.</p>
+
+<dt>
+<h5>E<a name="marker-379275"></a>ndproc</h5>
+<dd>
+<p>This item marks the end of the debugging data items belonging to a particular procedure. It also contains information relating to the procedure's return. Its format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">sourcepos
+<td align="left" valign="top">a word encoding the position in the source file of the end of the procedure
+<tr>
+<td align="left" valign="top">endaddr
+<td align="left" valign="top">a pointer to the code byte AFTER the compiled code for the procedure
+<tr>
+<td align="left" valign="top">filentry
+<td align="left" valign="top">offset of the file list entry for the procedure's end
+<tr>
+<td align="left" valign="top">nreturns
+<td align="left" valign="top">number of procedure return points (may be 0)
+<tr>
+<td align="left" valign="top">retaddrs...
+<td align="left" valign="top">pointers to the procedure-return code
+</table>
+</dl>
+<p>If the procedure body is an infinite loop, there will be no return point so nreturns will be 0. Otherwise the retaddrs should each point to a suitable location at which a breakpoint may be set 'at the exit of the procedure'. When execution reaches this point, the current stack frame should still be in this procedure.</p>
+
+<dt>
+<h5>V<a name="marker-379276"></a>ariable</h5>
+<dd>
+<p>This item contains debugging data relating to a source program variable or a formal argument to a procedure (the first variable items in a procedure always describe its arguments). Its format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">type
+<td align="left" valign="top">a type word
+<tr>
+<td align="left" valign="top">sourcepos
+<td align="left" valign="top">a word encoding the source position of the variable
+<tr>
+<td align="left" valign="top">class
+<td align="left" valign="top">a word encoding the variable's storage class
+<tr>
+<td align="left" valign="top">location
+<td align="left" valign="top">see explanation below
+<tr>
+<td align="left" valign="top">name
+<td align="left" valign="top">string
+</table>
+</dl>
+<p>The following codes define the storage classes of variables:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">1
+<td align="left" valign="top">external variables (or Fortran common)
+<tr>
+<td align="left" valign="top">2
+<td align="left" valign="top">static variables private to one section
+<tr>
+<td align="left" valign="top">3
+<td align="left" valign="top">automatic variables
+<tr>
+<td align="left" valign="top">4
+<td align="left" valign="top">register variables
+<tr>
+<td align="left" valign="top">5
+<td align="left" valign="top">Pascal <tt>var</tt> arguments
+<tr>
+<td align="left" valign="top">6
+<td align="left" valign="top">Fortran arguments
+<tr>
+<td align="left" valign="top">7
+<td align="left" valign="top">Fortran character arguments
+</table>
+</dl>
+<p>The meaning of the location field of a variable item depends on the storage class: it contains an absolute address for static and external variables (relocated by the linker); a stack offset (ie an offset from the frame- pointer) for automatic and var-type arguments; an offset into the argument list for Fortran arguments; and a register number for register variables (the 8 floating point registers are numbered 16 - 23). </p>
+<p>No account is taken of variables which ought to be addressed by +ve offsets from the stack-pointer rather than -ve offsets from the frame-pointer.</p>
+<p>The sourcepos field is used by the debugger to distinguish between different definitions having the same name (eg identically named variables in disjoint source-level naming scopes such as nested block in C).</p>
+
+<dt>
+<h5>T<a name="marker-379277"></a>ype</h5>
+<dd>
+<p>This item is used to describe a named type in the source language (eg a typedef in C). The format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">type
+<td align="left" valign="top">a type word (described earlier)
+<tr>
+<td align="left" valign="top">name
+<td align="left" valign="top">string
+</table>
+</dl>
+
+<dt>
+<h5>Str<a name="marker-379278"></a>uct</h5>
+<dd>
+<p>This item is used to describe a structured data type (eg a struct in C or a record in Pascal). Its format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">fields
+<td align="left" valign="top" colspan="2">the number of fields in the structure
+<tr>
+<td align="left" valign="top">size
+<td align="left" valign="top" colspan="2">total byte size of the structure
+<tr>
+<td align="left" valign="top">fieldtable...
+<td align="left" valign="top" colspan="2">a table of fields entries in the following format:
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">offset
+<td align="left" valign="top">byte offset of this field within the structure
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">type
+<td align="left" valign="top">a type word (interpretation as described earlier)
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">name
+<td align="left" valign="top">string
+</table>
+</dl>
+<p>Union types are described by struct items in which all fields have 0 offsets.</p>
+<p>C bit fields are not treated in full detail: a bit field is simply represented by an integer starting on the appropriate word boundary (so that the word contains the whole field).</p>
+
+<dt>
+<h5>Ar<a name="marker-379279"></a>ray</h5>
+<dd>
+<p>This item is used to describe a one-dimensional array. Multi-dimensional arrays are described as arrays of arrays. Which dimension comes first is dependent on the source language (different for C and Fortran). The format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">size
+<td align="left" valign="top">total byte size of each element
+<tr>
+<td align="left" valign="top">arrayflags
+<td align="left" valign="top">(see below)
+<tr>
+<td align="left" valign="top">basetype
+<td align="left" valign="top">a type word
+<tr>
+<td align="left" valign="top">lowerbound
+<td align="left" valign="top">constant value or stack offset of variable
+<tr>
+<td align="left" valign="top">upperbound
+<td align="left" valign="top">constant value or stack offset of variable
+</table>
+</dl>
+<p>If the size field is zero, debugger operations affecting the whole array, rather than individual elements of it, are forbidden.</p>
+<p>The following bit numbers in the arrayflags field are defined:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">0
+<td align="left" valign="top">lower bound is undefined
+<tr>
+<td align="left" valign="top">1
+<td align="left" valign="top">lower bound is a constant
+<tr>
+<td align="left" valign="top">2
+<td align="left" valign="top">upper bound is undefined
+<tr>
+<td align="left" valign="top">3
+<td align="left" valign="top">upper bound is a constant
+</table>
+</dl>
+<p>If a bound is defined and not constant then it is an integer variable on the stack and the boundvalue field contains the stack offset of the variable (from the frame-pointer).</p>
+
+<dt>
+<h5>Su<a name="marker-379280"></a>brange</h5>
+<dd>
+<p>This item is used to describe subrange typed in Pascal. It also serves to describe enumerated types in C and scalars in Pascal (in which case the base type is understood to be an unsigned integer of appropriate size). Its format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">size
+<td align="left" valign="top">half-word: 1, 2, or 4 to indicate byte size of object
+<tr>
+<td align="left" valign="top">typecode
+<td align="left" valign="top">half-word: simple type code
+<tr>
+<td align="left" valign="top">lwb
+<td align="left" valign="top">lower bound of subrange
+<tr>
+<td align="left" valign="top">upb
+<td align="left" valign="top">upper bound of subrange
+</table>
+</dl>
+
+<dt>
+<h5>S<a name="marker-379281"></a>et</h5>
+<dd>
+<p>This item is used to describe a Pascal set type. Currently, the description is only partial. The format is:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">size
+<td align="left" valign="top">byte size of the object
+</table>
+</dl>
+
+<dt>
+<h5>Fil<a name="marker-379282"></a>einfo</h5>
+<dd>
+<p>This item appears once per section after all other debugging data items. The half of the header word which would usually give the item length is not required and should be set to 0.</p>
+<p>Each source file is described by a sequence of 'fragments', each of which describes a contiguous region of the file within which the addresses of compiled code increase monotonically with source-file position. The order in which fragments appear in the sequence is not necessarily related to the source file positions to which they refer.</p>
+<p>Note that for compilations that make no use of the #include facility, the list of fragments will have only one entry and all line-number information will be contiguous.</p>
+<p>The item is a list of entries each with the following format:</p>
+<dl>
+<dd>
+<table>
+<tr>
+<td align="left" valign="top">length
+<td align="left" valign="top" colspan="2">length of this entry in bytes (0 marks the final entry)
+<tr>
+<td align="left" valign="top">date
+<td align="left" valign="top" colspan="2">date and time when the file was last modified
+<tr>
+<td align="left" valign="top">filename
+<td align="left" valign="top" colspan="2">string (or null if the name is not known)
+<tr>
+<td align="left" valign="top">n
+<td align="left" valign="top" colspan="2">number of fragments following
+<tr>
+<td align="left" valign="top">fragments...
+<td align="left" valign="top" colspan="2">n fragments with the following structure...
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">fragmentsize
+<td align="left" valign="top">length of this entry in bytes
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">firstline
+<td align="left" valign="top">linenumber
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">lastline
+<td align="left" valign="top">linenumber
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">codeaddr
+<td align="left" valign="top">pointer to the start of the fragment's executab
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">codesize
+<td align="left" valign="top">byte size of the code in the fragment
+<tr>
+<td align="left" valign="top">
+<td align="left" valign="top">lineinfo...
+<td align="left" valign="top">a variable number of line number data
+</table>
+</dl>
+<p>There is one lineinfo half-word for each statement of the source file fragment which gives rise to executable code. Exactly what constitutes an executable statement may be defined by the language implementation; the definition may for instance include some declarations. The half-word can be regarded as 2 bytes: the first contains the number of bytes of code generated from the statement and cannot be zero; the second contains the number of source lines occupied by the statement (ie the difference between the line number of the start of the statement and the line number of the next statement). This may be zero if there are multiple statements on the same source line.</p>
+<p>If the whole half-word is zero, this indicates that one of the quantities is too large to fit into a byte and that the following 2 half-words contain (in order) the number of lines followed by the number of bytes of code generated from the statement.</p>
+</dl>
+</dl>
+<P><center><small><b>This edition Copyright &copy; 3QD Developments Ltd 2015<br>
+Last Edit: Tue,03 Nov 2015</b></small></center></p>
+</body></html>
