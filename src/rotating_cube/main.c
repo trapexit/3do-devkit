@@ -3,8 +3,8 @@
 
   The program renders a perspective-projected cube by mapping one cel onto each
   visible face, sorting faces back-to-front, and redrawing the animation each
-  VBL. Press A, B, or C to cycle between 3DO logo colors, solid red, solid blue,
-  solid yellow, and a textured 3DO logo cube.
+  VBL. Press A, B, or C to cycle between 3DO logo CELs, red, blue,
+  yellow, a 3DO logo CEL, and a Jaguar CEL.
 */
 
 #include "abort.h"
@@ -27,20 +27,11 @@
 #define VIEW_SHIFT   9
 #define SWITCH_BUTTONS (ControlA | ControlB | ControlC)
 
-#define CALC_WOFFSET_BPP8(width) (((width) % 4 == 0) ? ((width) / 4) : ((width) / 4 + 1))
-#define CLEAR_CEL_PREAMBLES(ccb) ((ccb)->ccb_PRE0 = (ccb)->ccb_PRE1 = 0)
-#define SET_CEL_BPP8(ccb) ((ccb)->ccb_PRE0 |= (PRE0_BPP_8 << PRE0_BPP_SHIFT))
-#define SET_CEL_WOFFSET10(ccb, width) ((ccb)->ccb_PRE1 |= (((width) - PRE1_WOFFSET_PREFETCH) << PRE1_WOFFSET10_SHIFT))
-#define SET_CEL_TLHPCNT(ccb, width) ((ccb)->ccb_PRE1 |= (((width) - PRE1_TLHPCNT_PREFETCH) << PRE1_TLHPCNT_SHIFT))
-#define SET_CEL_VCNT(ccb, height) ((ccb)->ccb_PRE0 |= (((height) - PRE0_VCNT_PREFETCH) << PRE0_VCNT_SHIFT))
-
 #define PMV_0_MASK  0x1C00
 #define PDV_0_MASK  0x0300
 #define PMV_0_SHIFT 10
 #define PDV_0_SHIFT 8
 
-typedef frac16 mat4x4[4][4];
-typedef frac16 vector4[4];
 typedef frac16 vector3[3];
 
 typedef struct Vertex
@@ -50,10 +41,16 @@ typedef struct Vertex
   frac16 z;
 } Vertex;
 
+typedef struct Rotation
+{
+  frac16 m00, m01, m02;
+  frac16 m10, m11, m12;
+  frac16 m20, m21, m22;
+} Rotation;
+
 typedef struct Face
 {
   u32    indices[FACE_VERTS];
-  Vertex world[FACE_VERTS];
   Point  screen[FACE_VERTS];
   CCB   *ccb;
   u32    pmv;
@@ -91,41 +88,75 @@ static const u32 cube_faces[FACE_COUNT][FACE_VERTS] =
     { 5, 4, 0, 1 }
   };
 
-enum CubeColorScheme
+enum CubeCelSet
 {
-  CUBE_COLORS_3DO_LOGO,
-  CUBE_COLORS_ALL_RED,
-  CUBE_COLORS_ALL_BLUE,
-  CUBE_COLORS_ALL_YELLOW,
-  CUBE_TEXTURED_3DO_LOGO,
-  CUBE_COLOR_SCHEME_COUNT
+  CUBE_CELS_3DO_LOGO,
+  CUBE_CELS_ALL_RED,
+  CUBE_CELS_ALL_BLUE,
+  CUBE_CELS_ALL_YELLOW,
+  CUBE_CELS_TEXTURED_3DO_LOGO,
+  CUBE_CELS_TEXTURED_JAG,
+  CUBE_CEL_SET_COUNT
 };
 
-/* Opposite faces share the same color in the 3DO logo scheme. */
-static const u16 face_colors_3do_logo[FACE_COUNT] =
+/* PMV values shade each face so cube sides stay visually distinct. */
+static const u32 face_pmv[FACE_COUNT] = { 7, 4, 5, 6, 3, 2 };
+
+static const char *cube_face_cel_paths[CUBE_CEL_SET_COUNT][FACE_COUNT] =
   {
-    (u16)MakeRGB15(31, 0, 0),
-    (u16)MakeRGB15(31, 0, 0),
-    (u16)MakeRGB15(0, 0, 31),
-    (u16)MakeRGB15(0, 0, 31),
-    (u16)MakeRGB15(31, 31, 0),
-    (u16)MakeRGB15(31, 31, 0)
+    {
+      "cels/red_16x16.cel",
+      "cels/red_16x16.cel",
+      "cels/blue_16x16.cel",
+      "cels/blue_16x16.cel",
+      "cels/yellow_16x16.cel",
+      "cels/yellow_16x16.cel"
+    },
+    {
+      "cels/red_16x16.cel",
+      "cels/red_16x16.cel",
+      "cels/red_16x16.cel",
+      "cels/red_16x16.cel",
+      "cels/red_16x16.cel",
+      "cels/red_16x16.cel"
+    },
+    {
+      "cels/blue_16x16.cel",
+      "cels/blue_16x16.cel",
+      "cels/blue_16x16.cel",
+      "cels/blue_16x16.cel",
+      "cels/blue_16x16.cel",
+      "cels/blue_16x16.cel"
+    },
+    {
+      "cels/yellow_16x16.cel",
+      "cels/yellow_16x16.cel",
+      "cels/yellow_16x16.cel",
+      "cels/yellow_16x16.cel",
+      "cels/yellow_16x16.cel",
+      "cels/yellow_16x16.cel"
+    },
+    {
+      "Art/3do_logo_unpacked.cel",
+      "Art/3do_logo_unpacked.cel",
+      "Art/3do_logo_unpacked.cel",
+      "Art/3do_logo_unpacked.cel",
+      "Art/3do_logo_unpacked.cel",
+      "Art/3do_logo_unpacked.cel"
+    },
+    {
+      "cels/jag_128x128.cel",
+      "cels/jag_128x128.cel",
+      "cels/jag_128x128.cel",
+      "cels/jag_128x128.cel",
+      "cels/jag_128x128.cel",
+      "cels/jag_128x128.cel"
+    }
   };
 
-static const u16 solid_cube_colors[CUBE_COLOR_SCHEME_COUNT] =
-  {
-    0,
-    (u16)MakeRGB15(31, 0, 0),
-    (u16)MakeRGB15(0, 0, 31),
-    (u16)MakeRGB15(31, 31, 0),
-    0
-  };
-
-/* PMV values shade single-color and textured cubes so each side is visible. */
-static const u32 solid_face_pmv[FACE_COUNT] = { 7, 4, 5, 6, 3, 2 };
-
-static Cube cubes[CUBE_COLOR_SCHEME_COUNT];
+static Cube cubes[CUBE_CEL_SET_COUNT];
 static Vertex world_vertices[VERT_COUNT];
+static Point screen_vertices[VERT_COUNT];
 static Face *renderables[FACE_COUNT];
 static frac16 renderable_z[FACE_COUNT];
 static u32 renderable_count;
@@ -203,11 +234,11 @@ control_pad_init(void)
 
 static
 void
-display_clear(int color)
+display_clear(int value)
 {
   SetVRAMPages(vram_ioreq,
                sc->sc_Bitmaps[current_screen]->bm_Buffer,
-               color,
+               value,
                sc->sc_NumBitmapPages,
                0xFFFFFFFF);
 }
@@ -260,117 +291,22 @@ set_pixc_pdv(CCB *ccb,
 }
 
 static
-size_t
-cel_row_bytes(CCB *cel)
-{
-  u32 pre1;
-  size_t woffset;
-
-  pre1 = CEL_PRE1WORD(cel);
-  woffset = (size_t)(pre1 & PRE1_WOFFSET10_MASK) >> PRE1_WOFFSET10_SHIFT;
-
-  return ((woffset + PRE1_WOFFSET_PREFETCH) * sizeof(i32));
-}
-
-static
-size_t
-cel_source_bytes(CCB *cel)
-{
-  return ((size_t)cel->ccb_Height * cel_row_bytes(cel));
-}
-
-static
-void
-set_cel_plut_color(CCB *ccb,
-                   u16  color)
-{
-  u32 i;
-  u16 *plut;
-
-  plut = (u16*)ccb->ccb_PLUTPtr;
-
-  for(i = 0; i < 32; i++)
-    plut[i] = color;
-}
-
-static
 CCB*
-create_colored_face_cel(u16  color,
-                        CCB *shared_data_cel)
+create_face_cel(const char *path,
+                CCB        *shared_data_cel)
 {
   CCB *cel;
 
   if(shared_data_cel == NULL)
-    {
-      cel = CreateCel(16, 16, 8, CREATECEL_CODED, NULL);
-      if(cel == NULL)
-        abort("unable to create face cel");
-
-      /*
-        The cel engine reads the CCB to decide how to fetch pixels, how to map
-        them onto the destination bitmap, and which optional CCB fields to load.
-        These flags make each cube face a small 8bpp cel that can be mapped by
-        MapCel().
-      */
-      cel->ccb_Flags =
-        CCB_NPABS  |  /* ccb_NextPtr is an absolute pointer for our linked list. */
-        CCB_SPABS  |  /* ccb_SourcePtr is an absolute pointer to cel pixel data. */
-        CCB_PPABS  |  /* ccb_PLUTPtr is an absolute pointer to this face's PLUT. */
-        CCB_LDSIZE |  /* Load HDX/HDY/VDX/VDY; MapCel() writes these for scaling. */
-        CCB_LDPRS  |  /* Load DDX/DDY; MapCel() writes these for perspective. */
-        CCB_CCBPRE |  /* Use PRE0/PRE1 from the CCB instead of source data. */
-        CCB_YOXY   |  /* Use X/Y position from the CCB; MapCel() writes it. */
-        CCB_ACW    |  /* Draw clockwise-mapped pixels. */
-        CCB_ACCW   |  /* Draw counter-clockwise-mapped pixels too. */
-        CCB_ACE    |  /* Enable both corner engines. */
-        CCB_LDPLUT |  /* Load this cel's palette before drawing it. */
-        CCB_ALSC   |  /* Clip mapped faces cleanly at the screen edges. */
-        CCB_LDPPMP;   /* Load PIXC so PMV/PDV affect the face color. */
-
-      /* Do not treat pixel value 0 as an opaque background pixel. */
-      cel->ccb_Flags &= ~CCB_BGND;
-      cel->ccb_Width = 16;
-      cel->ccb_Height = 16;
-
-      UNLAST_CEL(cel);
-
-      CLEAR_CEL_PREAMBLES(cel);
-      SET_CEL_BPP8(cel);
-      SET_CEL_WOFFSET10(cel, CALC_WOFFSET_BPP8(cel->ccb_Width));
-      SET_CEL_TLHPCNT(cel, cel->ccb_Width);
-      SET_CEL_VCNT(cel, cel->ccb_Height);
-
-      memset(cel->ccb_SourcePtr, 0, cel_source_bytes(cel));
-    }
-  else
-    {
-      cel = CloneCel(shared_data_cel, CLONECEL_COPY_PLUT);
-      if(cel == NULL)
-        abort("unable to clone face cel");
-    }
-
-  set_cel_plut_color(cel, color);
-  set_pixc_pmv(cel, 7);
-  set_pixc_pdv(cel, 3);
-
-  return cel;
-}
-
-static
-CCB*
-create_textured_face_cel(CCB *shared_data_cel)
-{
-  CCB *cel;
-
-  if(shared_data_cel == NULL)
-    cel = LoadCel("Art/3do_logo_unpacked.cel", MEMTYPE_CEL);
+    cel = LoadCel((char*)path, MEMTYPE_CEL);
   else
     cel = CloneCel(shared_data_cel, CLONECEL_CCB_ONLY);
 
   if(cel == NULL)
-    abort("unable to load Art/3do_logo_unpacked.cel");
+    abort("unable to load cube cel");
 
-  cel->ccb_Flags |= CCB_LDPPMP;
+  cel->ccb_Flags |= CCB_ALSC | CCB_LDPPMP | CCB_NPABS;
+  cel->ccb_NextPtr = NULL;
   set_pixc_pdv(cel, 3);
 
   return cel;
@@ -378,81 +314,54 @@ create_textured_face_cel(CCB *shared_data_cel)
 
 static
 void
-zero_mat4x4(mat4x4 mat)
+build_rotation(Rotation *rot,
+               frac16    xangle,
+               frac16    yangle,
+               frac16    zangle)
 {
-  memset(mat, 0, sizeof(frac16) * 16);
-}
+  frac16 cx, sx;
+  frac16 cy, sy;
+  frac16 cz, sz;
+  frac16 sxsy;
+  frac16 cxsy;
 
-static
-void
-identity_mat4x4(mat4x4 mat)
-{
-  zero_mat4x4(mat);
-  mat[0][0] = mat[1][1] = mat[2][2] = mat[3][3] = ONE_F16;
-}
+  cx = CosF16(xangle);
+  sx = SinF16(xangle);
+  cy = CosF16(yangle);
+  sy = SinF16(yangle);
+  cz = CosF16(zangle);
+  sz = SinF16(zangle);
 
-static
-void
-build_rotation_matrix(mat4x4 rot,
-                      frac16 xangle,
-                      frac16 yangle,
-                      frac16 zangle)
-{
-  frac16 c;
-  frac16 s;
-  mat4x4 xrot;
-  mat4x4 yrot;
-  mat4x4 zrot;
-  mat4x4 xyrot;
+  sxsy = MulSF16(sx, sy);
+  cxsy = MulSF16(cx, sy);
 
-  identity_mat4x4(xrot);
-  identity_mat4x4(yrot);
-  identity_mat4x4(zrot);
+  rot->m00 = MulSF16(cy, cz);
+  rot->m01 = MulSF16(cy, sz);
+  rot->m02 = -sy;
 
-  c = CosF16(xangle);
-  s = SinF16(xangle);
-  xrot[1][1] = c;
-  xrot[1][2] = s;
-  xrot[2][1] = -s;
-  xrot[2][2] = c;
+  rot->m10 = MulSF16(sxsy, cz) - MulSF16(cx, sz);
+  rot->m11 = MulSF16(sxsy, sz) + MulSF16(cx, cz);
+  rot->m12 = MulSF16(sx, cy);
 
-  c = CosF16(yangle);
-  s = SinF16(yangle);
-  yrot[0][0] = c;
-  yrot[0][2] = -s;
-  yrot[2][0] = s;
-  yrot[2][2] = c;
-
-  c = CosF16(zangle);
-  s = SinF16(zangle);
-  zrot[0][0] = c;
-  zrot[0][1] = s;
-  zrot[1][0] = -s;
-  zrot[1][1] = c;
-
-  MulMat44Mat44_F16(xyrot, xrot, yrot);
-  MulMat44Mat44_F16(rot, xyrot, zrot);
+  rot->m20 = MulSF16(cxsy, cz) + MulSF16(sx, sz);
+  rot->m21 = MulSF16(cxsy, sz) - MulSF16(sx, cz);
+  rot->m22 = MulSF16(cx, cy);
 }
 
 static
 void
 transform_vertex(Vertex       *out,
                  const Vertex *in,
-                 mat4x4        rot,
+                 const Rotation *rot,
                  frac16        world_z)
 {
-  vector4 src, dst;
+  const frac16 x = in->x;
+  const frac16 y = in->y;
+  const frac16 z = in->z;
 
-  src[0] = in->x;
-  src[1] = in->y;
-  src[2] = in->z;
-  src[3] = ONE_F16;
-
-  MulVec4Mat44_F16(dst, src, rot);
-
-  out->x = dst[0];
-  out->y = dst[1];
-  out->z = dst[2] + world_z;
+  out->x = MulSF16(x, rot->m00) + MulSF16(y, rot->m10) + MulSF16(z, rot->m20);
+  out->y = MulSF16(x, rot->m01) + MulSF16(y, rot->m11) + MulSF16(z, rot->m21);
+  out->z = MulSF16(x, rot->m02) + MulSF16(y, rot->m12) + MulSF16(z, rot->m22) + world_z;
 }
 
 static
@@ -468,16 +377,18 @@ point_to_vector(vector3       out,
 
 static
 boolean
-cull_face(Face *face)
+cull_face_vertices(const Vertex *v0,
+                   const Vertex *v1,
+                   const Vertex *v3)
 {
   vector3 pov, edge1, edge2, normal;
 
-  pov[0] = -face->world[0].x;
-  pov[1] = -face->world[0].y;
-  pov[2] = -face->world[0].z;
+  pov[0] = -v0->x;
+  pov[1] = -v0->y;
+  pov[2] = -v0->z;
 
-  point_to_vector(edge1, &face->world[0], &face->world[1]);
-  point_to_vector(edge2, &face->world[0], &face->world[3]);
+  point_to_vector(edge1, v0, v1);
+  point_to_vector(edge2, v0, v3);
   Cross3_F16(normal, edge2, edge1);
 
   return ((Dot3_F16(normal, pov) > 0) ? TRUE : FALSE);
@@ -485,25 +396,17 @@ cull_face(Face *face)
 
 static
 void
-project_face(Face   *face,
-             frac16  half_width,
-             frac16  half_height)
+project_vertex(Point        *screen,
+               const Vertex *world,
+               frac16        half_width,
+               frac16        half_height)
 {
-  u32 i;
-  frac16 zsum = 0;
+  frac16 z;
 
-  for(i = 0; i < FACE_VERTS; i++)
-    {
-      frac16 z;
+  z = world->z == 0 ? ONE_F16 : world->z;
 
-      z = face->world[i].z == 0 ? ONE_F16 : face->world[i].z;
-
-      face->screen[i].pt_X = (DivSF16(face->world[i].x << VIEW_SHIFT, z) + half_width) >> FRACBITS_16;
-      face->screen[i].pt_Y = (DivSF16(-face->world[i].y << VIEW_SHIFT, z) + half_height) >> FRACBITS_16;
-      zsum += face->world[i].z;
-    }
-
-  face->z = zsum >> 2;
+  screen->pt_X = (DivSF16(world->x << VIEW_SHIFT, z) + half_width) >> FRACBITS_16;
+  screen->pt_Y = (DivSF16(-world->y << VIEW_SHIFT, z) + half_height) >> FRACBITS_16;
 }
 
 static
@@ -539,41 +442,53 @@ update_cube(Cube   *cube,
   const frac16 half_width = Convert32_F16(sc->sc_BitmapWidth >> 1);
   const frac16 half_height = Convert32_F16(sc->sc_BitmapHeight >> 1);
   const frac16 world_z = Convert32_F16(6);
-  mat4x4 rot;
+  Rotation rot;
   u32 face_index;
   u32 vert_index;
 
   renderable_count = 0;
-  build_rotation_matrix(rot, xangle, yangle, zangle);
+  build_rotation(&rot, xangle, yangle, zangle);
 
-  /* 1. Rotate the 8 unique cube vertices into world space. */
+  /* 1. Rotate and project the 8 unique cube vertices. */
   for(vert_index = 0; vert_index < VERT_COUNT; vert_index++)
-    transform_vertex(&world_vertices[vert_index],
-                     &cube_vertices[vert_index],
-                     rot,
-                     world_z);
+    {
+      transform_vertex(&world_vertices[vert_index],
+                       &cube_vertices[vert_index],
+                       &rot,
+                       world_z);
+      project_vertex(&screen_vertices[vert_index],
+                     &world_vertices[vert_index],
+                     half_width,
+                     half_height);
+    }
 
-  /* 2. For each face, cull, project to screen coordinates, then MapCel(). */
+  /* 2. Cull faces, then copy projected points for only the visible ones. */
   for(face_index = 0; face_index < FACE_COUNT; face_index++)
     {
       Face *face;
+      const u32 *indices;
+      frac16 zsum;
 
       face = &cube->faces[face_index];
+      indices = face->indices;
 
-      for(vert_index = 0; vert_index < FACE_VERTS; vert_index++)
-        {
-          Vertex *src;
-
-          src = &world_vertices[face->indices[vert_index]];
-          face->world[vert_index].x = src->x;
-          face->world[vert_index].y = src->y;
-          face->world[vert_index].z = src->z;
-        }
-
-      if(cull_face(face))
+      if(cull_face_vertices(&world_vertices[indices[0]],
+                            &world_vertices[indices[1]],
+                            &world_vertices[indices[3]]))
         continue;
 
-      project_face(face, half_width, half_height);
+      zsum = 0;
+      for(vert_index = 0; vert_index < FACE_VERTS; vert_index++)
+        {
+          u32 index;
+
+          index = indices[vert_index];
+          face->screen[vert_index].pt_X = screen_vertices[index].pt_X;
+          face->screen[vert_index].pt_Y = screen_vertices[index].pt_Y;
+          zsum += world_vertices[index].z;
+        }
+
+      face->z = zsum >> 2;
       insert_renderable(face);
     }
 }
@@ -584,58 +499,68 @@ draw_cube(void)
 {
   u32 i;
 
+  if(renderable_count == 0)
+    return;
+
   for(i = 0; i < renderable_count; i++)
     {
       Face *face;
+      CCB *ccb;
 
       face = renderables[i];
-      MapCel(face->ccb, face->screen);
-      LAST_CEL(face->ccb);
-      display_draw_cels(face->ccb);
+      ccb = face->ccb;
+
+      MapCel(ccb, face->screen);
+      if(i + 1 < renderable_count)
+        {
+          ccb->ccb_NextPtr = renderables[i + 1]->ccb;
+          UNLAST_CEL(ccb);
+        }
+      else
+        {
+          ccb->ccb_NextPtr = NULL;
+          LAST_CEL(ccb);
+        }
     }
+
+  display_draw_cels(renderables[0]->ccb);
 }
 
 static
 void
 init_cube(Cube *cube,
-          u32   color_scheme)
+          u32   cel_set)
 {
   u32 face_index;
-  CCB *shared_data_cel;
-
-  shared_data_cel = NULL;
 
   for(face_index = 0; face_index < FACE_COUNT; face_index++)
     {
       Face *face;
       u32 vert_index;
-      u16 color;
+      CCB *shared_data_cel;
+      const char *path;
 
       face = &cube->faces[face_index];
+      path = cube_face_cel_paths[cel_set][face_index];
 
       for(vert_index = 0; vert_index < FACE_VERTS; vert_index++)
         face->indices[vert_index] = cube_faces[face_index][vert_index];
 
-      if(color_scheme == CUBE_COLORS_3DO_LOGO)
+      shared_data_cel = NULL;
+      for(vert_index = 0; vert_index < face_index; vert_index++)
         {
-          color = face_colors_3do_logo[face_index];
-          face->ccb = create_colored_face_cel(color, shared_data_cel);
-          face->pmv = 7;
-        }
-      else if(color_scheme == CUBE_TEXTURED_3DO_LOGO)
-        {
-          face->ccb = create_textured_face_cel(shared_data_cel);
-          face->pmv = solid_face_pmv[face_index];
-        }
-      else
-        {
-          color = solid_cube_colors[color_scheme];
-          face->ccb = create_colored_face_cel(color, shared_data_cel);
-          face->pmv = solid_face_pmv[face_index];
+          if(strcmp(path, cube_face_cel_paths[cel_set][vert_index]) == 0)
+            {
+              shared_data_cel = cube->faces[vert_index].ccb;
+              break;
+            }
         }
 
-      if(shared_data_cel == NULL)
-        shared_data_cel = face->ccb;
+      face->ccb = create_face_cel(path, shared_data_cel);
+      if(cel_set == CUBE_CELS_3DO_LOGO)
+        face->pmv = 7;
+      else
+        face->pmv = face_pmv[face_index];
 
       set_pixc_pmv(face->ccb, face->pmv);
       face->z = 0;
@@ -646,24 +571,24 @@ static
 void
 init_cubes(void)
 {
-  u32 color_scheme;
+  u32 cel_set;
 
-  for(color_scheme = 0; color_scheme < CUBE_COLOR_SCHEME_COUNT; color_scheme++)
-    init_cube(&cubes[color_scheme], color_scheme);
+  for(cel_set = 0; cel_set < CUBE_CEL_SET_COUNT; cel_set++)
+    init_cube(&cubes[cel_set], cel_set);
 
-  active_cube = CUBE_COLORS_3DO_LOGO;
+  active_cube = CUBE_CELS_3DO_LOGO;
 }
 
 static
 void
 cleanup_cubes(void)
 {
-  u32 color_scheme;
+  u32 cel_set;
   u32 face_index;
 
-  for(color_scheme = 0; color_scheme < CUBE_COLOR_SCHEME_COUNT; color_scheme++)
+  for(cel_set = 0; cel_set < CUBE_CEL_SET_COUNT; cel_set++)
     for(face_index = 0; face_index < FACE_COUNT; face_index++)
-      cubes[color_scheme].faces[face_index].ccb = DeleteCel(cubes[color_scheme].faces[face_index].ccb);
+      cubes[cel_set].faces[face_index].ccb = DeleteCel(cubes[cel_set].faces[face_index].ccb);
 }
 
 static
@@ -679,7 +604,7 @@ check_control_pad(void)
     abort_err(err);
 
   if(buttons & SWITCH_BUTTONS)
-    active_cube = (active_cube + 1) % CUBE_COLOR_SCHEME_COUNT;
+    active_cube = (active_cube + 1) % CUBE_CEL_SET_COUNT;
 
   return ((buttons & ControlX) ? TRUE : FALSE);
 }
