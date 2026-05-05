@@ -1,0 +1,1352 @@
+<html data-darkreader-mode=dynamic data-darkreader-scheme=dark><!--
+ Page saved with SingleFile 
+ url: http://www.riscos.com/support/developers/prm/objectformat.html 
+ saved date: Tue May 05 2026 10:27:25 GMT-0500 (Central Daylight Time)
+--><meta charset=utf-8><style>:root{--sf-img-15: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAOCAAAAAAQk4OiAAAAAnRSTlMAAQGU/a4AAACCSURBVHjaY2RkQAPfuBgYGBgYmNDF76legzAY0YGLxntGRkZGTInnEja/GRkZGfYzYIKQ34yMLBrzMcQfNrBgs4ORkbGGoYARq8RnCZbT2CR+B7CsZmS83olhx5MDy8MYWH48QBe/8mZ+GDbLT7O0Y/XgZ4UURqwSzxN+MzIyMjICAN+vHbZMWh02AAAAAElFTkSuQmCC")}</style><style class="darkreader darkreader--user-agent" media=screen>@layer{html{background-color:var(--darkreader-background-ffffff,#181a1b)!important}html{color-scheme:dark!important}html,body{border-color:var(--darkreader-border-4c4c4c,#736b5e);color:var(--darkreader-text-000000,#e8e6e3)}a{color:var(--darkreader-text-0040ff,#3391ff)}table{border-color:var(--darkreader-border-808080,#545b5e)}::placeholder{color:var(--darkreader-text-a9a9a9,#b2aba1)}input:-webkit-autofill,textarea:-webkit-autofill,select:-webkit-autofill{background-color:var(--darkreader-background-faffbd,#404400)!important;color:var(--darkreader-text-000000,#e8e6e3)!important}::selection{background-color:var(--darkreader-background-0060d4,#004daa)!important;color:var(--darkreader-text-ffffff,#e8e6e3)!important}::-moz-selection{background-color:var(--darkreader-background-0060d4,#004daa)!important;color:var(--darkreader-text-ffffff,#e8e6e3)!important}}</style><style class="darkreader darkreader--inline" media=screen>[data-darkreader-inline-bgcolor]{background-color:var(--darkreader-inline-bgcolor)!important}</style><style class="darkreader darkreader--variables" media=screen>:root{--darkreader-neutral-background:var(--darkreader-background-ffffff,#181a1b);--darkreader-neutral-text:var(--darkreader-text-000000,#e8e6e3);--darkreader-selection-background:var(--darkreader-background-0060d4,#004daa);--darkreader-selection-text:var(--darkreader-text-ffffff,#e8e6e3)}</style>
+<title>RISC OS PRMs: Volume 4: Chapter 89: Appendix D: Code file formats</title>
+<meta name=darkreader content=7ede07f36e4c0a65d69e57e839808df6><style class="darkreader darkreader--override" media=screen>::placeholder{opacity:0.5!important}:host{--d2l-border-color:var(--darkreader-bg--d2l-color-gypsum)!important;--d2l-button-icon-background-color-hover:var(--darkreader-bg--d2l-color-gypsum)!important;--d2l-color-ferrite:var(--darkreader-neutral-text)!important;--d2l-color-sylvite:var(--darkreader-bg--d2l-color-sylvite)!important;--d2l-dropdown-background-color:var(--darkreader-neutral-background)!important;--d2l-dropdown-border-color:var(--darkreader-border--d2l-color-mica)!important;--d2l-input-backgroud-color:var(--darkreader-neutral-background)!important;--d2l-menu-border-color:var(--darkreader-bg--d2l-color-gypsum)!important;--d2l-tooltip-background-color:var(--darkreader-neutral-background)!important;--d2l-tooltip-border-color:var(--darkreader-bg--d2l-color-gypsum)!important}:host([_floating]) .d2l-floating-buttons-container{background-color:var(--darkreader-neutral-background)!important;border-top-color:var(--darkreader-border--d2l-color-mica)!important;opacity:0.88!important}.d2l-label-text:has(.d2l-button-subtle-content):hover,.d2l-label-text:has(.d2l-button-subtle-content):focus,.d2l-label-text:has(.d2l-button-subtle-content):active{background-color:var(--darkreader-bg--d2l-color-gypsum)!important}.d2l-le-TreeAccordionItem-anchor::before{background:var(--darkreader-bg--d2l-color-corundum)!important}</style><meta name=referrer content=no-referrer><link rel=canonical href=http://www.riscos.com/support/developers/prm/objectformat.html><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"></head>
+<body bgcolor=white text=black link=blue alink=red vlink=darkred style=--darkreader-inline-bgcolor:var(--darkreader-background-ffffff,#181a1b) data-darkreader-inline-bgcolor>
+<p><table border=0 cellpadding=0 cellspacing=0 style=border-collapse:collapse width=663 id=AutoNumber2 height=80>
+<tbody><tr><td width=163 height=80 valign=middle><img src=data:image/gif;base64,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 alt=RISCOS.com width=143 height=70></td>
+ <td width=500 height=80 valign=middle><h3>www.riscos.com Technical Support:<br>Programmer's Reference Manual</h3></td>
+<tr>
+<td width=163 height=1 bgcolor=#000000 style=--darkreader-inline-bgcolor:var(--darkreader-background-000000,#000000) data-darkreader-inline-bgcolor><td width=500 height=1 bgcolor=#000000 style=--darkreader-inline-bgcolor:var(--darkreader-background-000000,#000000) data-darkreader-inline-bgcolor></td>
+</table><p>&nbsp;</p>
+<h1><a name=idx-7166></a>Appendix D: Code file formats</h1>
+<hr>
+<dl>
+<dd>
+<dl>
+<dd>
+<p>This appendix defines three file formats used to store processed code and the format of debugging data used by debuggers:</p>
+<ul>
+<li><a name=marker-379146></a>AOF - Arm Object Format
+<li><a name=marker-379147></a>ALF - Acorn Library Format
+<li><a name=marker-379151></a>AIF - RISC OS Application Image Format
+<li>ASD - ARM Symbolic Debugging Format.
+</ul>
+<p>Language processors such as CC and ObjAsm generate processed code output as AOF files. An ALF file is a collection of AOF files constructed from a set of AOF files by the LibFile tool. The Link tool accepts a set of AOF and ALF files as input, and by default produces an executable program file as output in AIF.</p>
+</dl>
+<dt>
+<h4><a name=idx-7167></a>Terminology</h4>
+<dd>
+<dl>
+<dd>
+<p>Throughout this appendix the terms <i>byte</i>, <i>half word</i>, <i>word</i>, and <i>string</i> are used to mean the following:</p>
+<p><i>Byte</i><a name=marker-379153></a>: 8 bits, considered unsigned unless otherwise stated, usually used to store flag bits or characters.</p>
+<p><i>Half word</i><a name=marker-379154></a>:16 bits, or 2 bytes, usually unsigned. The least significant byte has the lowest address (DEC/Intel <i>byte sex</i>, sometimes called <i>little endian</i>). The address of a half word (ie of its least significant byte) must be divisible by 2.</p>
+<p><i>Word</i>: 32 bits, or 4 bytes, usually used to store a non-negative value. The least significant byte has the lowest address (DEC/Intel <a name=marker-379155></a>byte sex, sometimes called<a name=marker-379156></a> little endian). The address of a word (ie of its least significant byte) must be divisible by 4.</p>
+<p><i>String</i><a name=marker-379157></a>: A sequence of bytes terminated by a NUL (0X00) byte. The NUL is part of the string but is not counted in the string's length. Strings may be aligned on any byte boundary.</p>
+<p>For emphasis: a word consists of 32 bits, 4-byte aligned; within a word, the least significant byte has the lowest address. This is DEC/Intel, or little endian, byte sex, <b>not</b> IBM/Motorola byte sex.</p>
+</dl>
+<dt>
+<h4><a name=idx-7168></a>Undefined Fields</h4>
+<dd>
+<dl>
+<dd>
+<p>Fields not explicitly defined by this appendix are implicitly reserved to Acorn. It is required that all such fields be zeroed. Acorn may ascribe meaning to such fields at any time, but will usually do so in a manner which gives no new meaning to zeroes.</p>
+</dl>
+<dt>
+<h4><a name=marker-379158></a>Overall structure of <a name=marker-379159></a>AOF and ALF files</h4>
+<dd>
+<dl>
+<dd>
+<p>An object or library file contains a number of separate but related pieces of data. In order to simplify access to these data, and to provide for a degree of extensibility, the object and library file formats are themselves <a name=marker-379160></a>layered on another format called <a name=marker-379161></a><b>Chunk File Format</b>, which provides a simple and efficient means of accessing and updating distinct chunks of data within a single file. The object file format defines five <a name=marker-379162></a>chunks:</p>
+<ul>
+<li>header
+<li>areas
+<li>identification
+<li>symbol table
+<li>string table.
+</ul>
+<p>The library file format defines four chunks:<a name=marker-379163></a> </p>
+<ul>
+<li>directory
+<li>time-stamp
+<li>version
+<li>data.
+</ul>
+<p>There may be many data chunks in a library.</p>
+<p>The minimum size of a piece of data in both formats is four bytes or one word. Each word is stored in a file in little-endian format; that is the least significant byte of the word is stored first.</p>
+</dl>
+<dt>
+<h4><a name=marker-379164></a>Chunk file format</h4>
+<dd>
+<dl>
+<dd>
+<p>A chunk is accessed via a header at the start of the file. The header contains the number, size, location and identity of each chunk in the file. The size of the header may vary between different chunk files but is fixed for each file. Not all entries in a header need be used, thus limited expansion of the number of chunks is permitted without a wholesale copy. A chunk file can be copied without knowledge of the contents of the individual chunks.</p>
+<p>Graphically<a name=marker-379165></a>, the layout of a chunk file is as follows:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-2.draw><img src="data:image/png;base64,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" border=0></a></p>
+</dl>
+<p><tt>ChunkFileId</tt> marks the file as a chunk file. Its value is C3CBC6C5 hex. The <tt>maxChunks</tt> field defines the number of the entries in the header, fixed when the file is created. The <tt>numChunks</tt> field defines how many chunks are currently used in the file, which can vary from 0 to <tt>maxChunks</tt>. The value of <tt>numChunks</tt> is redundant as it can be found by scanning the entries.</p>
+<p>Each entry in the <a name=marker-379167></a>header comprises four words in the following order:</p>
+<table>
+<tbody><tr>
+<td align=left valign=top><a name=marker-379168></a><tt>chunkId</tt>
+<td align=left valign=top>a two word field identifying what data the chunk file contains
+<tr>
+<td align=left valign=top><a name=marker-379169></a><tt>Offset</tt>
+<td align=left valign=top>a one word field defining the byte offset within the file of the chunk (which must be divisible by four); an entry of zero indicates that the corresponding chunk is unused
+<tr>
+<td align=left valign=top><tt>size</tt>
+<td align=left valign=top>a one word field defining the exact byte size of the chunk (which need not be a multiple of four).
+</table>
+<p>The <tt>chunkId</tt> field provides a conventional way of identifying what type of data a chunk contains. It is split into two parts. The first four characters (in the first word) contain a universally unique name allocated by a central authority (Acorn). The remaining four characters (in the second word) can be used to identify component chunks within this universal domain. In each part, the first character of the name is stored first in the file, and so on.</p>
+<p>For <a name=marker-379170></a>AOF files, the first part of each chunk's name is <a name=marker-379171></a><tt>OBJ_</tt>; the second components are defined later. For ALF files, the first part is <a name=marker-379172></a><tt>LIB_</tt>.</p>
+</dl>
+<dt>
+<h2><a name=77819></a>AOF</h2>
+<dd>
+<dl>
+<dd>
+<p><a name=marker-379174></a>ARM object format files are output by language processors such as CC and ObjAsm.</p>
+</dl>
+<dt>
+<h4><a name=marker-379175></a>Object file format</h4>
+<dd>
+<dl>
+<dd>
+<p>Each piece of an object file is stored in a separate, identifiable, chunk. AOF defines five chunks as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<th align=left valign=top>Chunk
+<th align=left valign=top>Chunk Name
+<tr>
+<td align=left valign=top>Header
+<td align=left valign=top>OBJ_HEAD
+<tr>
+<td align=left valign=top>Areas
+<td align=left valign=top>OBJ_AREA
+<tr>
+<td align=left valign=top>Identification
+<td align=left valign=top>OBJ_IDFN
+<tr>
+<td align=left valign=top>Symbol Table
+<td align=left valign=top>OBJ_SYMT
+<tr>
+<td align=left valign=top>String Table
+<td align=left valign=top>OBJ_STRT
+</table>
+</dl>
+<p>Only the <tt>header</tt> and <tt>areas</tt> chunks must be present, but a typical object file will contain all five of the above chunks.</p>
+<p>A feature of chunk file format is that chunks may appear in any order in the file. However, language processors which must also generate other object formats - such as UNIX's <a name=marker-379176></a><tt>a.out</tt> format - should use this flexibility cautiously.</p>
+<p>A language translator or other system utility may add additional chunks to an object file, for example a language-specific symbol table or language-specific debugging data, so it is conventional to allow space in the chunk header for additional chunks; space for eight chunks is conventional when the AOF file is produced by a language processor which generates all five chunks described here.</p>
+<p>The <tt>header</tt> chunk should not be confused with the chunk file's header.</p>
+<dt>
+<h5>Format of the <a name=marker-379177></a>AOF header chunk</h5>
+<dd>
+<p>The AOF header is logically in two parts, though these appear contiguously in the header chunk. The first part is of fixed size and describes the contents and nature of the object file. The second part is variable in length (specified in the fixed part) and is a sequence of <tt>area</tt> declarations defining the code and data areas within the OBJ_AREA chunk.</p>
+<p>The AOF header chunk has the following format:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-3.draw><img src=data:image/png;base64,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 border=0></a></p>
+</dl>
+<dt>
+<h5><a name=marker-379179></a>Object file type</h5>
+<dd>
+<p>C5E2D080 (hex) marks an object file as being in relocatable object format</p>
+<dt>
+<h5><a name=marker-379180></a>Version ID</h5>
+<dd>
+<p>This word encodes the version of AOF to which the object file complies: AOF 1.xx is denoted by 150 decimal; AOF 2.xx by 200 decimal.</p>
+<dt>
+<h5><a name=idx-7169></a>Number of areas</h5>
+<dd>
+<p>The code and data of the object file is presented as a number of separate areas, in the OBJ_AREA chunk, each with a name and some attributes (see below). Each area is declared in the (variable-length) part of the header which immediately follows the fixed part. The value of the <a name=marker-379181></a><tt>Number of Areas</tt> field defines the number of areas in the file and consequently the number of area declarations which follow the fixed part of the header.</p>
+<dt>
+<h5><a name=idx-7170></a>Number of symbols</h5>
+<dd>
+<p>If the object file contains a symbol table chunk OBJ_SYMT, then this field defines the number of symbols in the <a name=marker-379182></a>symbol table.</p>
+<dt>
+<h5><a name=marker-379183></a>Entry address area/ entry address offset</h5>
+<dd>
+<p>One of the areas in an object file may be designated as containing the start address for any program which is linked to include this file. If so, the entry address is specified as an <tt>&lt;area-index, offset&gt;</tt> pair, where <tt>area-index</tt> is in the range 1 to <tt>Number of Areas</tt>, specifying the nth area declared in the area declarations part of the header. The entry address is defined to be the base address of this area plus <tt>offset</tt>.</p>
+<p>A value of 0 for <tt>area-index</tt> signifies that no program entry address is defined by this AOF file.</p>
+<dt>
+<h5><a name=marker-379184></a>Format of area headers</h5>
+<dd>
+<p>The area headers follow the fixed part of the AOF header. Each area header has the following form:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-4.draw><img src="data:image/png;base64,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" border=0></a></p>
+</dl>
+<dt>
+<h5><a name=marker-379186></a>Area name</h5>
+<dd>
+<p>Each name in an object file is encoded as an offset into the string table, which stored in the OBJ_STRT chunk. This allows the variable-length characteristics of names to be factored out from primary data formats. Each area within an object file must be given a name which is unique amongst all the areas in that object file.</p>
+<dt>
+<h5><a name=idx-7171></a>AL</h5>
+<dd>
+<p>This byte must be set to 2; all other values are reserved to Acorn.</p>
+<dt>
+<h5>AT (<a name=marker-379187></a>Area attributes)</h5>
+<dd>
+<p>Each area has a set of attributes encoded in the AT byte. The least-significant bit of AT is numbered 0.</p>
+<p>Link orders areas in a generated image first by attributes, then by the (case-significant) lexicographic order of area names, then by position of the containing object module in the link-list. The position in the link-list of an object module loaded from a library is not predictable.</p>
+<p>When ordered by attributes, Read-Only areas precede Read-Write areas which precede Debug areas; within Read-Only and Read-Write Areas, Code precedes Data which precedes Zero-Initialised data. Zero-Initialised data may not have the Read-Only attribute.</p>
+<h6><a name=idx-7172></a>Bit 0</h6>
+<p>This bit must be set to 0.</p>
+<h6><a name=idx-7173></a>Bit 1</h6>
+<p>If this bit is set, the area contains code, otherwise it contains data.</p>
+<h6><a name=idx-7174></a>Bit 2</h6>
+<p>Bit 2 specifies that the area is a common block definition.</p>
+<h6><a name=idx-7175></a>Bit 3</h6>
+<p>Bit 3 defines the area to be a (reference to a) common block and precludes the area having initialising data (see Bit 4, below). In effect, the setting of Bit 3 implies the setting of Bit 4.</p>
+<p>Common areas with the same name are overlaid on each other by Link. The <tt>Size</tt> field of a common definition defines the size of a common block. All other references to this common block must specify a size which is smaller or equal to the definition size. In a link step there may be at most one area of the given name with bit 2 set. If none of these have bit 2 set, the actual size of the common area will be size of the largest common block reference (see also <a href=#99380>Linker defined symbols</a>).</p>
+<h6><a name=idx-7176></a>Bit 4</h6>
+<p>This bit specifies that the area has no initialising data in this object file and that the area contents are missing from the OBJ_AREA chunk. This bit is typically used to denote large uninitialised data areas. When an uninitialised area is included in an image, Link either includes a read-write area of binary zeroes of appropriate size or maps a read-write area of appropriate size that will be zeroed at image start-up time. This attribute is incompatible with the read-only attribute (see the section on Bit 5, below).</p>
+<p><b>Note:</b> Whether or not a zero-initialised area is re-zeroed if the image is re-entered is a property of Link and the relevant image format. The definition of AOF neither requires nor precludes re-zeroing.</p>
+<h6><a name=idx-7177></a>Bit 5</h6>
+<p>This bit specifies that the area is read-only. Link groups read-only areas together so that they may be write protected at run-time, hardware permitting. Code areas and debugging tables should have this bit set. The setting of this bit is incompatible with the setting of bit 4.</p>
+<h6><a name=idx-7178></a>Bit 6</h6>
+<p>This bit must be set to 0.</p>
+<h6><a name=idx-7179></a>Bit 7</h6>
+<p>This bit specifies that the area contains symbolic debugging tables. Link groups these areas together so they can be accessed as a single contiguous chunk at run-time. It is usual for debugging tables to be read-only and, therefore, to have bit 5 set too. If bit 7 is set, bit 1 is ignored.</p>
+<dt>
+<h5><a name=marker-379191></a>Area size</h5>
+<dd>
+<p>This field specifies the size of the area in bytes, which must be a multiple of 4. Unless the <tt>Not Initialised</tt> bit (bit 4) is set in the area attributes, there must be this number of bytes for this area in the OBJ_AREA chunk.</p>
+<dt>
+<h5><a name=marker-379192></a>Number of relocations</h5>
+<dd>
+<p>This specifies the number of relocation directives which apply to this area.</p>
+<dt>
+<h5><a name=marker-379193></a>Format of the areas chunk</h5>
+<dd>
+<p>The areas chunk (<a name=marker-379194></a>OBJ_AREA) contains the actual areas (code, data, zero- initialised data, debugging data, etc.) plus any associated relocation information. Its chunkId is OBJ_AREA. Both an area's contents and its relocation data must be word-aligned. Graphically, the layout of the areas chunk is:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-5.draw><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAACnBAMAAAC86O6sAAAABGdBTUEAANkE3LLaAgAAADBQTFRF////3d3du7u7mZmZd3d3VVVVMzMzAAAAAESZ7u4AAMwA3QAA7u67VYgA/7sAALv/DCje9wAAAA50RVh0VGl0bGUAYXJ0dG9zcHKZRTiqAAAAK3RFWHRTb2Z0d2FyZQAhUG5nMlNwciAxLjI0ICgzMXN0IERlY2VtYmVyIDE5OTcpUyeBQwAAAjFJREFUeNrtmk1v2kAQhmd3jbg6pOYMItArbVm4tqQlVwdKco0bRK9t+fDf79pOJGwZ2dg7QUTvCFmaQeLRglg9Gr1EKBQKhUKhUO+xmiFzGcQf5iMAAcSlIwQ/4nF4+K7j2keI0D880rhjH+GsnuTovr/ryN9zIi9kQLQ//1K77vN1MOg+RC0DYuB+V4G6v1q0aMaEuFuur/1GGG68/ZoHIVZfJj3f8ak7c8c8CBVQ49aXgQx+CqZTNIYkF19psh8O9tE/xHPZLhA3fuEaBAIITgTxOy29wSmAAOKiEcecVlBl8c0ijjmtPgB0dB3EUac9+FQZtOogcpw26TX1tx35ODVzb9uLmt74uRIix2mTXotVP2hPH8z8wyZuJt9mbhVEjtMmvXaexHxMLTOXQdxoaldC5Ditinvd8GmxNN/dfm0QUVMRkee0Ku6144vFD7ox8+gUpqmIyHNaFfda/lN/P3aXZv7SVETkOa2K+1H0cMK5mX9aj5KJ59a4QLJO6748xOvzFOXFTQsEEOdyWqyCgQACCCCAAAIIIIC4eAScFgggzo5483gDByK9CmZBpFfBpbe9pyDSq+DS295TEOlVcOkl5imI9CqYA5FZBXMgMqtgDkRmFTyykm9AvAEIIOC0+C2AAOIM2lwvQVFKm+slKEppc70ERYE220hQFGizjQRFgTbbSFAUaLONBEWBNttIUBRos40ERYE220hQNPkTFLhpgYDT5kR2mQnMX1JS/wH7NFAu3WjNmAAAAABJRU5ErkJggg==" border=0></a></p>
+</dl>
+<p>An area is simply a sequence of byte values, the order following that of the addressing rules of the ARM, that is the least significant byte of a word is first. An area is followed by its associated relocation table (if any). An area is either completely initialised by the values from the file or not initialised at all (ie it is initialised to zero in any loaded program image, as specified by bit 4 of the area attributes).</p>
+<dt>
+<h5><a name=55823></a><a name=marker-379197></a>Relocation directives</h5>
+<dd>
+<p>If no relocation is specified, the value of a byte/half word/word in the preceding area is exactly the value that will appear in the final image.</p>
+<p>Bytes and half words may only be relocated by constant values of suitably small size. They may not be relocated by an area's base address.</p>
+<p>A field may be subject to more than one relocation.</p>
+<p>There are 2 types of relocation directive, termed here type-1 and type-2. Type-2 relocation directives occur only in AOF versions 1.50 and later.</p>
+<p>Relocation can take two basic forms: <a name=marker-379198></a><i>Additive</i> and <i>PCRelative</i>.</p>
+<p>Additive relocation specifies the modification of a byte/half word/word, typically containing a data value (ie constant or address).</p>
+<p>PCRelative relocation always specifies the modification of a branch (or branch with link) instruction and involves the generation of a program- counter-relative, signed, 24-bit word-displacement.</p>
+<p>Additive relocation directives and type-2 PC-relative relocation directives have two variants: <tt>Internal</tt> and <tt>Symbol</tt>.</p>
+<p>Additive internal relocation involves adding the allocated base address of an area to the field to be relocated. With Type-1 <a name=marker-379199></a>internal relocation directives, the value by which a location is relocated is always the base of the area with which the relocation directive is associated (the Symbol IDentification field (SID) is ignored). In a type-2 relocation directive, the SID field specifies the index of the area relative to which relocation is to be performed. These relocation directives are analogous to the TEXT-, DATA- and BSS-relative relocation directives found in the <tt>a.out</tt> object format.</p>
+<p>Symbol relocation involves adding the value of the symbol quoted.</p>
+<p>A type-1 PCRelative relocation directive always references a symbol. The relocation offset added to any pre-existing in the instruction is the offset of the target symbol from the PC current at the instruction making the PCRelative reference. Link takes into account the fact that the PC is eight bytes beyond that instruction.</p>
+<p>In a type-2 PC-relative relocation directive (only in AOF version 1.50 and later) the offset bits of the instruction are initialised to the offset from the base of the area of the PC value current at the instruction making the reference - thus the language translator, not Link, compensates for the difference between the address of the instruction and the PC value current at it. This variant is introduced in direct support of compilers that must also generate UNIX's <tt>a.out</tt> format.</p>
+<p>For a type-2 PC-relative symbol-type relocation directive, the offset added into the instruction making the PC-relative reference is the offset of the target symbol from the base of the area containing the instruction. For a type-2, PC-relative, internal relocation directive, the offset added into the instruction is the offset of the base of the area identified by the SID field from the base of the area containing the instruction.</p>
+<p>Link itself may generate type-2, PC-relative, internal relocation directives during the process of partially linking a set of object modules.</p>
+<dt>
+<h5><a name=marker-379200></a>Format of Type 1 relocation directives</h5>
+<dd>
+<p>Diagrammatically:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-6.draw><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAA9BAMAAAD/kqlCAAAABGdBTUEAANkE3LLaAgAAADBQTFRF////3d3du7u7mZmZd3d3VVVVMzMzAAAAAESZ7u4AAMwA3QAA7u67VYgA/7sAALv/DCje9wAAAA50RVh0VGl0bGUAYXJ0dG9zcHKZRTiqAAAAK3RFWHRTb2Z0d2FyZQAhUG5nMlNwciAxLjI0ICgzMXN0IERlY2VtYmVyIDE5OTcpUyeBQwAAAgJJREFUeNrt2UFv2jAUAODnENTrc7Nk13AgXA1T6TVoE1zZWJezl2i5tqHBf392sq0kZh0zmxwJP5BQjCAfzy+x/ABw8acQgwoJehxSdm4cyIEc6NpBAQNA+RgKKKxLFvKQt0e31kHkG472CSY/MpSgbdDoCWCVrbJ0WeC0nmSpbZC/BZhs5ptFnqzygG+YbdBYgmZyyoKvJPhId/anTGVoqWpoU0+F2NsHeRXAgwTdYlJsYWIfBFk8riTozdb/xD0+ANBI1HGIIS0P8f2BRdz+nZrgr5f26dYyB3IgB7pG0ND29jevZUho/N8d9X7oo3mGHMiBHMiBhgUK2CkQHhEIpdgH0SbwBChYAIHOW38HUt0GHTTeH4EiuWPrgUgpnrKfwx2QX2fbaF6KGs1ATbdBB72tj0EM7rEHyttxHZQgqaJ5DlFqBlLdhrUOWq+7oFl8LmiJsFAgj5uB1F66sz0U7fmSuAO662eooPQ0KComoEAN2QDUdBviPsjjftqpoUqvoefTIHIn0ktATbdBy5Bff+FHoBV9gHOnDIE8XwJqug1aDUXv31WdKVueXdQf5Pcp0MiwhppugwaS5/9sCJoxT15lBZ0xQ5DqNmigHcD0hRAySPpX2a4d10FeeWDhPBO58Z2a4L9dOgheuHS4xdWBHOgaQIP73/5VsOln/xfIQnwH0wVtOCVelGQAAAAASUVORK5CYII=" border=0></a></p>
+</dl>
+<h6><a name=idx-7180></a>Offset</h6>
+<p>Offset is the byte offset in the preceding area of the field to be relocated.</p>
+<h6><a name=idx-7181></a>SID</h6>
+<p>If a symbol is involved in the relocation, this 16-bit field specifies the index within the symbol table (see below) of the symbol in question.</p>
+<h6><a name=idx-7182></a>FT (Field Type)</h6>
+<p>This 2-bit field (bits 16 - 17) specifies the size of the field to be relocated:</p>
+<table>
+<tbody><tr>
+<td align=left valign=top>00
+<td align=left valign=top>byte
+<tr>
+<td align=left valign=top>01
+<td align=left valign=top>half word
+<tr>
+<td align=left valign=top>10
+<td align=left valign=top>word
+<tr>
+<td align=left valign=top>11
+<td align=left valign=top><i>illegal value</i>
+</table>
+<h6><a name=idx-7183></a>R (relocation type)</h6>
+<p>This field (bit 18) has the following interpretation:</p>
+<table>
+<tbody><tr>
+<td align=left valign=top>0
+<td align=left valign=top>Additive relocation
+<tr>
+<td align=left valign=top>1
+<td align=left valign=top>PC-Relative relocation
+</table>
+<h6><a name=idx-7184></a>A (Additive type)</h6>
+<p>In a type-1 relocation directive, this 1-bit field (bit 19) is only interpreted if bit 18 is a zero.</p>
+<p>A=0 specifies Internal relocation, meaning that the base address of the area (with which this relocation directive is associated) is added into the field to be relocated. A=1 specifies Symbol relocation, meaning that the value of the given symbol is added to the field being relocated.</p>
+<h6><a name=idx-7185></a>Bits 20 - 31</h6>
+<p>Bits 20-31 are reserved by Acorn and should be written as zeroes.</p>
+<dt>
+<h5><a name=marker-379202></a>Format of Type 2 relocation directives</h5>
+<dd>
+<p>These are available from AOF 1.50 onwards.</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-7.draw><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAA9BAMAAAD/kqlCAAAABGdBTUEAANkE3LLaAgAAADBQTFRF////3d3du7u7mZmZd3d3VVVVMzMzAAAAAESZ7u4AAMwA3QAA7u67VYgA/7sAALv/DCje9wAAAA50RVh0VGl0bGUAYXJ0dG9zcHKZRTiqAAAAK3RFWHRTb2Z0d2FyZQAhUG5nMlNwciAxLjI0ICgzMXN0IERlY2VtYmVyIDE5OTcpUyeBQwAAApRJREFUeNrt2c1zojAUAPAXgtNrkE16jTMLXmG72it2Z+qVisq1Ebdeq5by7+8L9gPsYj92OrjTRJ1oBvTHy0uYRABTXivFURUE3R5TdE4MyIAM6KuD3ACA4eNYQDxfBVxxtfvUbR1Ebhjd+sx/iJDP2gbRNcAoHaXRcMm8vJdGbYPsGKA3Dsc/Mn+UuWoctA3qIKiPXeYuiHvlJO13mY7QUOfQOPeKYts+yNoAzBDUZf4yhl77IEhlZ4Ogb7E9UZY6AhAtcskZd1b38vw+EKr9mZqwp2r3NPcyAzIgA/qKoGNb258cilDxgt/0ae9Cbz8eIQMyIAMyoP8BxCoE4jhsH+SUhb0BhMeQ8lvOJL6pnfMCZDNrHoKXlVUN1NlWQAJXbHsgsirW6WPzX0HefQC2xFUErvwGehNjPMtBhKsiZ40gMpTi4jdZ+jFWddBpXgUFcM72QNmuvRFElt/XoFfmGtTF5ZWl4FSKMAMRNYJ4IQfgu7GlBs/7HjvQ5WUd1JfvBFEFiXWjQdNc6k0MbKAlyFLNXSbkDASPicKqBiKZL2ugwX6Elo5zOEKSJGKoQbmnQgwVublgoEHltTSCpsC9iEywklWQpeyolkOblzl0dxCESXSdiMBhVJHFQMffTe/eAMLQeDFZYFUD2flcVUAjZwbv7DLgd+6VH423mEOJBuFIO41eBzXkkPh1tql12fDdST1ldjkK6TWZaBCGvBNrED2YQ6I3Jwt+jVVtlOHvT/8NRBVOOPoAuqVKg6wtjgwRLp1+0AzijBYTOM+lrqqgBFPgmcAD8PdHWbJrbwRheNblAXReBD/1JoZfZMDDtMgOz9SkMpd+0q2DPbwcc3M1IAMyoCfQ0f1vfxD80XM/C9RC+QOgH491rc0dRQAAAABJRU5ErkJggg==" border=0></a></p>
+</dl>
+<p>The interpretation of Offset, FT and SID is exactly the same as for type-1 relocation directives except that SID is increased from 16 to 24 bits and has a different meaning - described below - if A=0).</p>
+<p>The second word of a type-2 relocation directive contains 1 in its most significant bit; bits 28 - 30 must be written as 0, as shown.</p>
+<p>The different interpretation of the R bit in type-2 directives has already been described in <a href=#55823>Relocation directives</a>.</p>
+<p>If A=0 (internal relocation type) then SID is the index of the area, in the OBJ_AREA chunk, relative to which the value at Offset in the current area is to be relocated. Areas are indexed from 0.</p>
+<dt>
+<h5><a name=marker-379210></a>Format of the symbol table chunk</h5>
+<dd>
+<p>The <tt>Number of Symbols</tt> field in the header defines how many entries there are in the symbol table. Each symbol table entry has the following format:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-8.draw><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAACLBAMAAADMhivhAAAABGdBTUEAANkE3LLaAgAAADBQTFRF////3d3du7u7mZmZd3d3VVVVMzMzAAAAAESZ7u4AAMwA3QAA7u67VYgA/7sAALv/DCje9wAAAA50RVh0VGl0bGUAYXJ0dG9zcHKZRTiqAAAAK3RFWHRTb2Z0d2FyZQAhUG5nMlNwciAxLjI0ICgzMXN0IERlY2VtYmVyIDE5OTcpUyeBQwAAAjtJREFUeNrt2k1v2kAQBuDZXaNe14TdXp1G7NkO2FwtpfjsEBRfs3aBa4oB//36o5WiOq0qh5FCM3NAiMsjL2h4dzQAVFRUVFRUVFT/Y32qkKsmnpEfgQgiiPgHgklgyIS2oH1k4oBPZJ72zfHL12/TAni2wiDmVt/mqtir70bqIJIIRLDRgecU6SjVXugqH4HwjQmybUdkVYVCiN3cio5YAsc4KB+qMNYdYaRBIOrDX9zuNmXsxEqKqsBqIKz3htogER+MuIxM+4x/UEQQQcRfCAmu60pMYlSyOheVmMTnI/QS8ZmJJMEmWGE8ZIJbJ0YmnOOjRSb03WyPTNSXkTUy8QAwlcqnHkUEEe+EoFEwEUS8A8L9Ob6ReETS/suDSPEI7dUpApcYxZDz3UqkNzCB6dFDIITlT+b6UaQhaLe4sggEyx1/DElLXN27Dxg/2rWR6rRtCfX7deRMRJRAIqOGMJMUrjEIfYA1q58icrOx5RjfBTg5mFM2i3W1lIuTj9VA5K8XeaE9iggiLoCgTEsEER+FkOjEqEQnmnEuMpEkcLMcZyswdWbms61fh2j+hmWHVzJtYbzFSgfROFdPIA4T24ToNyw79IlmnBvJ0FWB59REymwboocvO/SJZpwbQlZVQbbtiDZED192eOWWdDfbh7AEPrGiI9oQPXzZoU8049w6lEujYt0RbYgevuzQJ5px7hxEVfDdpgQRs/s2RA9fdvhjA2EvVhvkiw+pDRJBmfZMmRaQBeRD6uoHPquwNbeJbkwAAAAASUVORK5CYII=" border=0></a></p>
+</dl>
+<h6><a name=idx-7186></a>Name</h6>
+<p>This value is an index into the string table (in chunk OBJ_STRT) and thus locates the character string representing the symbol.</p>
+<h6><a name=idx-7187></a>AT</h6>
+<p>This is a 7 bit field specifying the attributes of a symbol as follows:</p>
+<h6><a name=idx-7188></a>Bits 1 and 0</h6>
+<p>(10 means bit 1 set, bit 0 unset).</p>
+<table>
+<tbody><tr>
+<th align=left valign=top>01
+<td align=left valign=top>The symbol is defined in this object file and has scope limited to this object file (when resolving symbol references, Link will only match this symbol to references from other areas within the same object file).
+<tr>
+<th align=left valign=top>10
+<td align=left valign=top>The symbol is a reference to a symbol defined in another area or another object file. If no defining instance of the symbol is found then Link attempts to match the name of the symbol to the names of common blocks. If a match is found it is as if there were defined an identically-named symbol of global scope, having as value the base address of the common area.
+<tr>
+<th align=left valign=top>11
+<td align=left valign=top>The symbol is defined in this object file and has global scope (ie when attempting to resolve unresolved references, Link will match this symbol to references from other object files).
+<tr>
+<th align=left valign=top>00
+<td align=left valign=top>Reserved by Acorn.
+</table>
+<h6><a name=idx-7189></a>Bit 2</h6>
+<p>This attribute is only meaningful if the symbol is a defining occurrence (bit 0 set). It specifies that the symbol has an absolute value, for example, a constant. Otherwise its value is relative to the base address of the area defined by the <tt>Area Name</tt> field of the symbol table entry.</p>
+<h6><a name=idx-7190></a>Bit 3</h6>
+<p>This bit is only meaningful if bit 0 is unset (that is, the symbol is an external reference). Bit 3 denotes that the reference is case-insensitive. When attempting to resolve such an external reference, Link will ignore character case when performing the match.</p>
+<h6><a name=idx-7191></a>Bit 4</h6>
+<p>This bit is only meaningful if the symbol is an external reference (bits 1,0 = 10). It denotes that the reference is <b>weak</b>, that is that it is acceptable for the reference to remain unsatisfied and for any fields relocated via it to remain unrelocated.</p>
+<p><b>Note:</b> A weak reference still causes a library module satisfying that reference to be auto-loaded.</p>
+<h6><a name=idx-7192></a>Bit 5</h6>
+<p>This bit is only meaningful if the symbol is a defining, external occurrence (ie if bits 1,0 = 11). It denotes that the definition is <b>strong</b> and, in turn, this is only meaningful if there is a non-strong, external definition of the same symbol in another object file. In this scenario, all references to the symbol from outside of the file containing the strong definition are resolved to the strong definition. Within the file containing the strong definition, references to the symbol resolve to the non-strong definition.</p>
+<p>This attribute allows a kind of link-time indirection to be enforced. Usually, strong definitions will be absolute and will be used to implement an operating system's <a name=marker-379212></a>entry vector which must have the <b>forever binary</b> property.</p>
+<h6><a name=idx-7193></a>Bit 6</h6>
+<p>This bit is only meaningful if bits 1,0 = 10. Bit 6 denotes that the symbol is a common symbol - in effect, a reference to a common area with the symbol's name. The length of the common area is given by the symbol's value field (see below). Link treats common symbols much as it treats areas having the common reference bit set - all symbols with the same name are assigned the same base address and the length allocated is the maximum of all specified lengths.</p>
+<p>If the name of a common symbol matches the name of a common area then these are merged and symbol identifies the base of the area. </p>
+<p>All common symbols for which there is no matching common area (reference or definition) are collected into an anonymous linker pseudo-area. </p>
+<h6><a name=idx-7194></a>Value</h6>
+<p>This field is only meaningful if the symbol is a defining occurrence (ie bit 0 of AT set) or a common symbol (ie bit 6 of AT set). If the symbol is absolute (bit 2 of AT set), this field contains the value of the symbol. Otherwise, it is interpreted as an offset from the base address of the area defined by <tt>Area Name</tt>, which must be an area defined in this object file.</p>
+<h6><a name=idx-7195></a>Area name</h6>
+<p>This field is only meaningful if the symbol is not absolute (ie if bit 2 of AT is unset) and the symbol is a defining occurrence (ie bit 0 of AT is set). In this case it gives the index into the string table of the character string name of the (logical) area relative to which the symbol is defined.</p>
+<dt>
+<h5><a name=marker-379213></a>String table chunk (<a name=marker-379214></a>OBJ_STRT)</h5>
+<dd>
+<p>The string table chunk contains all the print names referred to within the areas and symbol table chunks. The separation is made to factor out the variable length characteristic of print names. A print name is stored in the string table as a sequence of ISO8859 non-control characters terminated by a NUL (0) byte and is identified by an offset from the table's beginning. The first 4 bytes of the string table contain its length (including the length word - so no valid offset into the table is less than 4 and no table has length less than 4). The length stored at the start of the string table itself is identically the length stored in the OBJ_STRT chunk header.</p>
+<dt>
+<h5>I<a name=marker-379215></a>dentification chunk (<a name=marker-379216></a>OBJ_IDFN)</h5>
+<dd>
+<p>This chunk should contain a printable character string (characters in the range [32 - 126]), terminated by a NUL (0) byte, giving information about the name and version of the language translator which generated the object file.</p>
+</dl>
+<dt>
+<h4><a name=99380></a>Linker defined symbols</h4>
+<dd>
+<dl>
+<dd>
+<p>Though not part of the definition of AOF, the definitions of symbols which the AOF linker defines during the generation of an image file are collected here. These may be referenced from AOF object files, but must not be redefined.</p>
+<dt>
+<h5><a name=marker-379219></a>Linker pre-defined symbols</h5>
+<dd>
+<p>The pre-defined symbols occur in <a name=marker-379220></a>Base/Limit pairs. A Base value gives the address of the first byte in a region and the corresponding Limit value gives the address of the first byte beyond the end of the region. All pre-defined symbols begin <tt>Image$$</tt> and the space of all such names is reserved by Acorn.</p>
+<p>None of these symbols may be redefined. The pre-defined symbols are:</p>
+<table>
+<tbody><tr>
+<td align=left valign=top><tt>Image$$RO$$Base</tt>
+<td align=left valign=top rowspan=2>Address and limit of the Read-Only section of the image.
+<tr>
+<td align=left valign=top><tt>Image$$RO$$Limit</tt>
+<tr>
+<td align=left valign=top>
+<tr>
+<td align=left valign=top><tt>Image$$RW$$Base</tt>
+<td align=left valign=top rowspan=2>Address and limit of the Read-Write section of the image.
+<tr>
+<td align=left valign=top><tt>Image$$RW$$Limit</tt>
+<tr>
+<td align=left valign=top>
+<tr>
+<td align=left valign=top><tt>Image$$ZI$$Base</tt>
+<td align=left valign=top rowspan=2>Address and limit of the Zero-initialised data section of the image (created from areas having bit 4 of their area attributes set and from common symbols which match no area name).
+<tr>
+<td align=left valign=top><tt>Image$$ZI$$Limit</tt>
+</table>
+<p>If a section is absent, the Base and Limit values are equal but unpredictable.</p>
+<table>
+<tbody><tr>
+<td align=left valign=top><tt>Image$$RO$$Base</tt>
+<td align=left valign=top>includes any image header prepended by Link.
+<tr>
+<td align=left valign=top><tt>Image$$RW$$Limit</tt>
+<td align=left valign=top>includes (at the end of the RW section) any zero-initialised data created at run-time.
+</table>
+<p>The<tt> Image$$xx$${Base,Limit}</tt> values are intended to be used by language run-time systems. Other values which are needed by a debugger or by part of the pre-run-time code associated with a particular image format are deposited into the relevant image header by Link.</p>
+<dt>
+<h5><a name=marker-379221></a>Common area symbols</h5>
+<dd>
+<p>For each common area, Link defines a global symbol having the same name as the area, except where this would clash with the name of an existing global symbol definition (thus a symbol reference may match a common area).</p>
+</dl>
+<dt>
+<h4>Obsolescent and obsolete features<a name=marker-379222></a></h4>
+<dd>
+<dl>
+<dd>
+<p>The following subsections describe features that were part of revision 1.xx of AOF and/or that were supported by the 59x releases of the AOF linker, which are no longer supported. In each case, a brief rationale for the change is given.</p>
+<dt>
+<h5><a name=idx-7196></a>Object file type</h5>
+<dd>
+<p>AOF used to define three image types as well as a relocatable object file type. Image types 2 and 3 were never used under Arthur/RISC OS and are now obsolete. Image type 1 is used only by the obsolete Dbug (DDT has Dbug's functionality and uses Application Image Format).</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>AOF Image type 1
+<td align=left valign=top>C5E2D081 hex (obsolescent)
+<tr>
+<td align=left valign=top>AOF Image type 2
+<td align=left valign=top>C5E2D083 hex (obsolete)
+<tr>
+<td align=left valign=top>AOF Image type 3
+<td align=left valign=top>C5E2D087 hex (obsolete)
+</table>
+</dl>
+<dt>
+<h5><a name=idx-7197></a>AL (Area alignment)</h5>
+<dd>
+<p>AOF used to allow the alignment of an area to be any specified power of 2 between 2 and 16. By convention, relocatable object code areas always used minimal alignment (AL=2) and only the obsolete image formats, types 2 and 3, specified values other than 2. From now on, all values other than 2 are reserved by Acorn.</p>
+<dt>
+<h5><a name=idx-7198></a>AT (Area attributes)</h5>
+<dd>
+<p>Two attributes have been withdrawn: the Absolute attribute (bit 0 of AT) and the Position Independent attribute (bit 6 of AT).</p>
+<p>The Absolute attribute was not supported by the RISC OS linker and therefore had no utility. Link in any case allows the effect of the Absolute attribute to be simulated.</p>
+<p>The Position Independent bit used to specify that a code area was position independent, meaning that its base address could change at run-time without any change being required to its contents. Such an area could only contain internal, PC-relative relocations and must make all external references through registers. Thus only code and pure data (containing no address values) could be position-independent.</p>
+<p>Few language processors generated the PI bit which was only significant to the generation of the obsolete image types 2 and 3 (in which it affected AREA placement). Accordingly, its definition has been withdrawn.</p>
+<dt>
+<h5><a name=idx-7199></a>Fragmented areas</h5>
+<dd>
+<p>The concept of fragmented areas was introduced in release 0.04 of AOF, tentatively in support of Fortran compilers. To the best of our knowledge, fragmented areas were never used. (Two warnings against use were given with the original definition on the grounds of: structural incompatibility with UNIX's <tt>a.out</tt> format; and likely inefficient handling by Link. And use was hedged around with curious restrictions). Accordingly, the definition of fragmented areas is withdra<a name=marker-379223></a>wn.</p>
+</dl>
+<dt>
+<h2><a name=marker-379224></a>ALF</h2>
+<dd>
+<dl>
+<dd>
+<p><a name=marker-379225></a>ALF is the format of linkable libraries (such as the C RISC OS library RISC_OSLib).</p>
+</dl>
+<dt>
+<h4><a name=marker-379226></a>Library file format types</h4>
+<dd>
+<dl>
+<dd>
+<p>There are two library file formats described here, termed <i>new-style</i> and <i>old-style</i>. Link can read both formats, though no tool will actually generate an old-style library.</p>
+<p>Currently, only the Acorn/Topexpress Fortran-77 compiler generates old-style libraries (which it does instead of generating AOF object files). Link handles these libraries specially, including every member in the output image unless explicitly instructed otherwise.</p>
+<p>Old-style libraries are obsolescent and should no longer be generated.</p>
+</dl>
+<dt>
+<h4><a name=marker-379227></a>Library file chunks</h4>
+<dd>
+<dl>
+<dd>
+<p>Each piece of a library file is stored in a separate, identifiable, chunk, named as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<th align=left valign=top>Chunk
+<th align=left valign=top>Chunk Name
+<tr>
+<td align=left valign=top>Directory
+<td align=left valign=top><tt>LIB_DIRY</tt>
+<tr>
+<td align=left valign=top>Time-stamp
+<td align=left valign=top><tt>LIB_TIME</tt>
+<tr>
+<td align=left valign=top>Version
+<td align=left valign=top><tt>LIB_VSRN</tt>
+<td align=left valign=top>- new-style libraries only
+<tr>
+<td align=left valign=top>Data
+<td align=left valign=top><tt>LIB_DATA</tt>
+<tr>
+<td align=left valign=top>Symbol table
+<td align=left valign=top><tt>OFL_SYMT</tt>
+<td align=left valign=top>- object code libraries only
+<tr>
+<td align=left valign=top>Time-stamp
+<td align=left valign=top><tt>OFL_TIME</tt>
+<td align=left valign=top>- object code libraries only
+</table>
+</dl>
+<p>There may be many LIB_DATA chunks in a library, one for each library member.</p>
+</dl>
+<dt>
+<h4><a name=marker-379228></a>LIB_DIRY</h4>
+<dd>
+<dl>
+<dd>
+<p>The LIB_DIRY chunk contains a directory of all modules in the library each of which is stored in a LIB_DATA chunk. The directory size is fixed when the library is created. The directory consists of a sequence of variable length entries, each an integral number of words long. The number of directory entries is determined by the size of the LIB_DIRY chunk.</p>
+<p>This is shown pictorially in the following diagram:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-9.draw><img src=data:image/png;base64,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 border=0></a></p>
+</dl>
+<dt>
+<h5><a name=marker-379230></a>ChunkIndex</h5>
+<dd>
+<p>The ChunkIndex is a 0 origin index within the chunk file header of the corresponding LIB_DATA chunk. The LIB_DATA chunk entry gives the offset and size of the library module in the library file. A ChunkIndex of 0 means the directory entry is not in use.</p>
+<dt>
+<h5><a name=marker-379231></a>EntryLength</h5>
+<dd>
+<p>The number of bytes in this LIB_DIRY entry, always a multiple of 4.</p>
+<dt>
+<h5><a name=marker-379232></a>DataLength</h5>
+<dd>
+<p>The number of bytes used in the Data section of this LIB_DIRY entry. This need not be a multiple of 4, though it always is in new-style libraries.</p>
+<dt>
+<h5><a name=idx-7200></a>Data</h5>
+<dd>
+<p>The data section consists of a 0 terminated string followed by any other information relevant to the library module. Strings should contain only ISO-8859 non-control characters (ie codes [0-31], 127 and 128+[0-31] are excluded). The string is the name used by the library management tools to identify this library module. Typically this is the name of the file from which the library member was created.</p>
+<p>In new-style libraries, an 8-byte, word-aligned time-stamp follows the member name. The format of this time-stamp is described in the <a href=#60970>LIB_TIME</a>. Its value is (an encoded version of) the time-stamp (ie the last modified time) of the file from which the library member was created.</p>
+<p>Applications which create libraries or library members should ensure that the LIB_DIRY entries they create contain valid time-stamps. Applications which read LIB_DIRY entries should not rely on any data beyond the end of the name-string being present unless the difference between the DataLength field and the name-string length allows for it. Even then, the contents of a time-stamp should be treated cautiously and not assumed to be sensible.</p>
+<p>Applications which write LIB_DIRY or <a name=marker-379236></a>OFL_SYMT entries should ensure that padding is done with NUL (0) bytes; applications which read LIB_DIRY or OFL_SYMT entries should make no assumptions about the values of padding bytes beyond the first, string-terminating NUL byte.</p>
+</dl>
+<dt>
+<h4><a name=60970></a>LIB_TIME</h4>
+<dd>
+<dl>
+<dd>
+<p>The LIB_TIME chunk contains a 64 bit time-stamp recording when the library was last modified, in the following format:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-10.draw><img src="data:image/png;base64,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" border=0></a></p>
+</dl>
+</dl>
+<dt>
+<h4><a name=marker-379239></a>LIB_VSRN</h4>
+<dd>
+<dl>
+<dd>
+<p>In new-style libraries, this chunk contains a 4-byte version number. The current version number is 1. Old-style libraries do not contain this chunk.</p>
+</dl>
+<dt>
+<h4><a name=marker-379240></a>LIB_DATA</h4>
+<dd>
+<dl>
+<dd>
+<p>A LIB_DATA chunk contains one of the library members indexed by the LIB_DIRY chunk. No interpretation is placed on the contents of a member by the library management tools. A member could itself be a file in chunk file format or even another library.</p>
+</dl>
+<dt>
+<h4><a name=marker-379241></a>Object code libraries</h4>
+<dd>
+<dl>
+<dd>
+<p>An object code library is a library file whose members are files in AOF. All libraries you are likely to use with the DDE are object code libraries.</p>
+<p>Additional information is stored in two extra chunks, <a name=marker-379242></a>OFL_SYMT and <a name=marker-379243></a>OFL_TIME.</p>
+<p>OFL_SYMT contains an entry for each external symbol defined by members of the library, together with the index of the chunk containing the member defining that symbol.</p>
+<p>The OFL_SYMT chunk has exactly the same format as the LIB_DIRY chunk except that the Data section of each entry contains only a string, the name of an external symbol (and between 1 and 4 bytes of NUL padding). OFL_SYMT entries do not contain time-stamps.</p>
+<p>The <a name=marker-379244></a>OFL_TIME chunk records when the OFL_SYMT chunk was last modified and has the same format as the LIB_TIME chunk (see above).<a name=marker-379245></a></p>
+</dl>
+<dt>
+<h2><a name=41076></a><a name=marker-379218></a>AIF<a name=marker-379246></a></h2>
+<dd>
+<dl>
+<dd>
+<p>AIF is the format of executable program files produced by linking AOF files. Example AIF files are !RunImage files of applications coded in C or assembler.</p>
+</dl>
+<dt>
+<h4><a name=idx-7201></a>Properties of AIF</h4>
+<dd>
+<dl>
+<dd>
+<ul>
+<li>An AIF image is loaded into memory at its load address and entered at its first word (compatible with old-style Arthur/Brazil ADFS images).
+<li>An AIF image may be compressed and can be self-decompressing (to support faster loading from floppy discs, and better use of floppy-disc space).
+<li>If created with suitable linker options, an AIF image may <a name=marker-379247></a>relocate itself at load time. Self-relocation is supported in two, distinct senses:
+<ul>
+<li>One-time Position-Independence: A relocatable image can be loaded at any address (not just its load address) and will execute there (compatible with version 0.03 of AIF).
+<li>Specified Working Space Relocation: A suitably created relocatable image will copy itself from where it is loaded to the high address end of applications memory, leaving space above the copied image as noted in the AIF header (see below).
+</ul>
+<li>AIF images support being debugged by the <a name=marker-379248></a>Desktop Debugging Tool (<a name=marker-379249></a>DDT), for C, assembler and other languages. Version 0.04 of AIF (and later) supports debugging at the symbolic assembler level (hitherto done by Dbug). Low-level and source-level debugging support are orthogonal (capabilities of debuggers notwithstanding, both, either, or neither kind of debugging support may be present in an AIF image).
+<p>Debugging tables have the property that all references from them to code and data (if any) are in the form of relocatable addresses. After loading an image at its load address these values are effectively absolute. All references between debugger table entries are in the form of offsets from the beginning of the debugging data area. Thus, following relocation of a whole image, the debugging data area itself is position independent and can be copied by the debugger.</p>
+</ul>
+</dl>
+<dt>
+<h4><a name=marker-379250></a>Layout of an AIF image</h4>
+<dd>
+<dl>
+<dd>
+<p>The layout of an AIF image is as follows:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-11.draw><img src=data:image/png;base64,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 border=0></a></p>
+</dl>
+<p>The header is small, fixed in size, and described below. In a compressed AIF image, the header is NOT compressed.</p>
+<p>Once an image has been <a name=marker-379252></a>decompressed - or if it is uncompressed in the first place - it has the following layout:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-12.draw><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbAAAAFPBAMAAADepIbVAAAABGdBTUEAANkE3LLaAgAAADBQTFRF////3d3du7u7mZmZd3d3VVVVMzMzAAAAAESZ7u4AAMwA3QAA7u67VYgA/7sAALv/DCje9wAAAA50RVh0VGl0bGUAYXJ0dG9zcHKZRTiqAAAAK3RFWHRTb2Z0d2FyZQAhUG5nMlNwciAxLjI0ICgzMXN0IERlY2VtYmVyIDE5OTcpUyeBQwAAC1hJREFUeNrt3cFDqkoXAPAzA95vO6jwtphKW24KbsmXtgW76jbEcPvd1Pj33wyghnorikq8x4UoGfUDZpjBM2cA8FG2R/RZj++G/f+zdhjCEIYwhJUf1tSBbN+IV4qikM1rVl6Y9rRm1vYdf0UW0ZOVvoZRaWHkgf1wsrAAoFp+mOQDdaxh0IQ67YSmBTcC1oT2WrfAmJcXJrv8qXc9tECrreq+pY7IXFEsEtR8i8zbj6WFVdz4pNMEzCW+NRZlbGVJnnJnyfdkVuYjRq53sF7IxKloVaJoaXF0eU9F+psXsxhmxEdM9WIY9zb4EykvDCbKJa8yNFuZxjAyj2HUp75FH+XyljFQoyV0QdWiQc0hXhds5Q74it6TyZ/WXolbHkqy2G9jMMjd8MC2IsIQhrCSws729hveV8QyhjCEIeyvhtGr5w16cjYwslh4krt9a50NTPNgfjYwejNvB2Cs9SZ0bAYt6Vdo7u4xSuF1WWHSo/rbqM7Ue605G4j34ubi9h6jcTUvLcytuFpDl++lUB/H74m/u8do60q5YdPwHh6AH7F6bQfrhUyORqWGtXxJHLFLBnYC29xjbNCw1LC2o4kyVvGrS3Eq7u4xDsRRLCnMkR21unhY3sCATCNTcoi3u8eoRbOywjKNDJI2O3atj1x1B7YVEYYwhJUUhrff8FREGMIQ9nfDMiF+eb9afwVGvhGWDfF7dsPqHTA63et8V/Rvg+2F+H0MpvWn7DthtBNemcRpDfsTcxPiR/mKph1IruzYc/ZOmAWaTq5pn5rtld4cVMOBnm9jH+1Br+qBuHHTmFb9TYhffCeHL7zxRWA474QR0mMQVFaV63nb7434Acy5sQ/f8yBBfP9mTGabEL/NnaqxK83Ie48Y9J4ABupEa92Tkc2GoDXzbaxA2CbEbwN78uF2rb+7VlR1MNqGrbpwxzfPy1i+jRUBowlsE+JXi1do/FSsMuP+nbAbqJigjetj2SUcNgD1It/GCoD56u8Ytgnxq8UruE+7cWX3nTCb2QzkpbSkjxLf2qV+28q3sY/CHOItVl4Xboi3CfFT4hVqzZH8xdN7T0U5CnidO+O7K44QlKKxkm9jBVzHdm0CZX9FvuKeKWNKtgVD8m4M24oIQxjCvuyBYX14XzF5/A9hCEMYwhCGMIQhDGEIQxjCEIaw5FFNlzL7PBj7DpiR/FVi68XB5L1t/SFumuifA2uvLzrhz6nTHFxBXY0KhN2ab4JR/1NgJKgFq7p/a/ZGIrJZKw5GQxPqrKU36bRPu54xH8XjLprDkUjv0hyweGEH6op273TiFAwTGUlc4hvMZoYSFAnTbBN+mFPnl9af1NaNefsxHnfR60+UoOb3RmKfim+E60tpXdQ3TM8zsETRMoZZoHW8ImF3mgmyN/ZnQ1CbvsjmEo+7sJnW5DvTZvE+5X+16ks+9TWzYBjfU80UJk/MAmGSZzhAZ6PAH0Ol44psLvG4CwsqlkjvkuzTBOaSwGIFw6hPgxRGI1YgTOb/NpAHb+AOQO24IptLPO7CBrUr0rvE+7SRwmAQFF4r9p46YgyB3wXCS4Ba4HVMnF28UjIv9V7NFdlc4nEXPbNXFeld4n3qb2CXv4u/jrHNc86URq/CVA4zdE2XokByRDaXeNyFvQiSL28hWahKWHNAc4qH7a5ofrGw3SVls+vEt7fWs5RybPvjjxWBV2Bd/ZNgmcfRAZJ0wj4R9jWN4OaxlVIfW/cIQxjCEIYwhCEMYQhDGMIQVmYYhvXhqYgwhCEMYQhDGMIQhjCEIQxhCENY5pHGK9JpcGawNF5R69+yc4Fl4hVtVjHPBJaNV6zG4TRnAduLV6STcylj2XhFMr0+F1g2XlH9kOukYNl4RVtRzgWWjVe8jaKzqe4/L17xZJpUnxav+N2wr4lXxEYwwhCGMIQhDGEIQxjCEIYwhJ0hDMP68FREGMIQhjCEIQxhCMO2Ip6KCEMYwhCGMIQhDGEnCVMUZZcpLFlkZpz8Y9BWNZ4dahut9pYpMNkXwsgiipz4VTIdI5mwbBaxbeZP2Ww/m0quT7pM+w30Kf1nj06B2dn7w6OvhG3jwROYSFV6HKYq8/Y2WZ+8pAtPW4Kcwo5PgbmfVPCrYbQTmjQc6ECnfXXFYcNAJC6lixEY8xGdjmjXA7iR3DjwLv5njYCMTe0B1El1MaKm1Dk6BaZ8ND3qF8HmiiKt6r7Wn+qg9Sf1ZTyVpchfajQmZN5+1H7aNXEOjoDVfqdRhSQIgDFtyIyh+NTMbh2dApO6x9Kjfl0Z6/D/ZihSDA5BvfCTqSw95a4KQ5HS1FJUfjyA+CBF9yms8lOcwZpl3tj8U2D/YQpM/jtH0qPmgdGr5xURyXkq8nNMZDDVxWSTVwlMjaKl+hSKlKZTIU8KHxkBHa/v+CeqYs9rHW9m80/BD/f4FJh8JxxJj/pSymqwMllSyWLhPZuy1jrykddgAzGfJn9KYXUXGkNmi5SmA6A1Vxwx2YE7IJ0V34m3UWRy2M+5a/NP8SN2fApMfsSOpEd9YQgIAN/es9WaB/MDWPYjL5UxsZsv9VsdLvVeNYGJ/KW/SChSmhrMiGEzyZf8TeRuXJlqvPzY/FPiFDs6BaY4yofpUV8YAgLQasXz8YKx1pvQsRm0pF+h2YS6qOEsXoOF163Wm05Ffqb96xBPisaMF6KA8Pqvy+vp3pNpPE3N3tpLcpsCP1q3T/wwiQ/w5ztRm5uGbvFPdR3ZPToFptjZh+lRX0pZLaogMR8vnan3WnMmVoiqTewrsVBHafWTo0lF9konS0ot267s/mEeynTlsSkwt1MwZ9KjvjQEJD7fxmRGdPleCvUxJAVlU3rHkFY/RbYV35HCt/56W3EvZfUWNg3v4UEcwnptB+uFLK1+ioRRPfevXL0O20tZvYHJviSO2CUDO4EZ8UL10urn9Fv3eymrN7CKo4kyVvGrS3Eq2so0hpF5WhBL0G3JpqyOy/IN8ejiYXkDA161mWKaXi0a1PiiC3Za/bwBRjr6K9XIYa1SaH/s+BAQsq2B9v6o8tb+2O14TRLaZhFnOY4rtOrepfFZw/0TOprFDgHh19B/LvzNy90ihm3bA18CK3YICG9MSOqK91BoV/RY0o6L6MQY68bUEV0XsfKgR3LytwZI2Gf1Je97SGvRY0k7LrwTczFTeXuA/yBeedAjOf17HrXpivq87yEmVoBNx4V3Yhr82m8w0SkBG6oHPZLTP2IA//R93veQ4iZr2nHhiwa/9htMdEr4OzjokZw8jPdFKiOf9z0SWNpx4YsWv/YbTHRK+LvWQY/k5GF0CZcXooeSwNKOC+/EtPm132D8B/xdY3zQIzn9MmbwrkrI+x78+h9uOy68E1Pl137NF10X4A3Pgx5JCe4EK6Kgsc3VPnvblO1+sNcjwVvcCEMYwhCGMISdG+xsw/owXhHLGMIQhjCEIQxhCEMYwhCGMIQh7B2wtwcklgt2ELd3faaw2uwsYO1VMxOQCGT6eA4wMm8HmYDEjyRpPamU1fekmQlIPBdYxX0eadkL2bnAZJf+mwlIPBcYfVTvMgGJ5wKD23UzE5DI0nDq8l/H2F7rA9uKCEMYwhCGMIQhDGEIQxjCEIYwhKUPDOvDsD4sYwhDGMIQhjCEIQzbithWxDKGMIQhDGEIQxjCEIYwhCEMYQj7i2Evj23JkY77tIeASHeZmOA86bhPHDbPpPzMk477tMe20L5IvCnyb8ZZufOk4z7xsS27GQFEVu486bhPfGzLszSVYzLLk477xMe2ZGF50nGf+NiWFEYTWJ503Cc+tiWBxfk3RVbuHOm4T3xsC+xmBLghXp503KUY27JtYuRIx41tRYQhDGEIQxjCEIYwhCEMYQj7S2FnG/2Gj3I9/gMnNOZdu+iE9gAAAABJRU5ErkJggg==" border=0></a></p>
+</dl>
+<p>Debugging data are absent unless the image has been linked appropriately and, in the case of source-level debugging, unless the constituent components of the image have been compiled appropriately.</p>
+<p>The relocation list is a list of byte offsets from the beginning of the AIF header, of words to be relocated, followed by a word containing -1. The relocation of non-word values is not supported.</p>
+<p>After the execution of the self-relocation code - or if the image is not self-relocating - the image has the following layout:</p>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-13.draw><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASgAAACSBAMAAAAED0qNAAAABGdBTUEAANkE3LLaAgAAADBQTFRF////3d3du7u7mZmZd3d3VVVVMzMzAAAAAESZ7u4AAMwA3QAA7u67VYgA/7sAALv/DCje9wAAAA50RVh0VGl0bGUAYXJ0dG9zcHKZRTiqAAAAK3RFWHRTb2Z0d2FyZQAhUG5nMlNwciAxLjI0ICgzMXN0IERlY2VtYmVyIDE5OTcpUyeBQwAABIRJREFUeNrtnM9z2jgUx59ksnuVCfZZCcW5moDwlWZLcjWmwVeECVwbfsT//j7ZKYYkZNuSGnfnaRjz1ZNGfMaWJfzlDQCVLGlp5dsPM/1dSahvpV0TgiIogiIogiIoLCJ7FZUqQLEE+HJbiwjqfSgeR3wRgTeLjOoOTw41s+tLt93zLsZs1jLqfCNPDrVI06WynTrc1iZsiqqjq3H54jR1nuZnIUSoOmE1oAbAb0WvFrII1XlFoDzhfWVzvqwZVQWoETBtpYn3FPvBZojK6ldkm2H5Yi4yRXsfQREUQREUQRHUb4Yie5GgCIqgCIqgCMq27aIidh9PT/jYvkhTf1srnDx1YoPDeqwg1K69iJHW+rIz95UlWR/A28jmoB5HRpR7poaFvWj8xlaybmhVC2sh8KkzCSJsrqMod07Jwl60BR5HIdOKa9cHJmuTnsDmNooSoWa2Exb24t0KjxkUS5QAFs8nCrC5jaLcy6cLexEAjxkUDBKsaAuhsLmBomSowl4EnPbWKoO6wpvyrO8iFDY7KEqEGuFsLuxFjARPnT4bdsHFm48vHlZdwGYjyt5mCnuxWNZduV3Y2S+s8L9l7+NjcbLF82CxbuhbAkERFEERFEH9JBSlVNKcIiiCIiiCIqhKQv1RnieTJ4Q64HnWuT4p1L7n2RCfZLM5aDprjBrfxeRYPnco80zteZ5/+XH/axCpxgqjAjBubWTeodQ5te95Du/1tCcU1xj1AeOWhrxDeVAvPU8+jRKtAKFicwtg3Aoh71Dq5dvzPNnDcBBmUBgVgHGEyjuUC7XrecKdH/gZFEYFYByh8g7lQb3yPD3pyi502fw8TbD2FHf68Nyh3G1mz/PcxlixyLOfTqCnDZmgCIqgCIqgCOogFNmLBEVQBEVQBEVQti2enzb3H07f1B8B9WrsN62gjaHaz1bcrZ1JPNSPhao9P/MzuTu26hwyOEyi1Auo+ksoTxwJ5TwPwPXu2MqE37YXNY8jdRdxn/X5+ItozT43eWfuGw18PpDe5iLuH2kvfoHWWjZvI2fdzFQvMVmaypzAN6FY4rZ7QTQ+D5l2R/HFg1oqa90wWoJ7E19OHX3nH2kvRmzW0sHNuLFSmfp8a7I0FQ8PQinb6Qm3iVDmTbOpsnIt4RbcC1mbeOI4e5Hp2oRFOOKlVkYpcG0cVjF9ECpOUwVnHQS5h7NWCFEGdW+mEx4u4jlCHWcvcm1SNfFDrrXKlWubdE02fc9e7IHTDI2l6HwKWQ6FWoIJaAuhjrMX8UyFbIQfcm1ybZmBMlmah87UzL7yPeEFfu9cO49XMrhcWssMCrWEK3nX6rsIdZy9yKZ8aT0GflDXyiiEMlmair8NFaeJcQ/VYsUW66GVjmWwmXatPss0Nt3XFw8rVx9pL44gePJ7i4TNu0Z1wTHDdq3wXXsxfzVtt962819AUIttOqU40l7smiHUdrDvy7lZBP9z73P/mbNZb/Jdf9ze57zeNkxp/MiGzO/b0BqJrf4wKG72hearXtf01YWgCIqgCOr/BFVFe7GSf51ZxfIvsbgQyplUCI0AAAAASUVORK5CYII=" border=0></a></p>
+</dl>
+<p>At this stage a debugger is expected to copy the debugging data (if present) somewhere safe, otherwise they will be overwritten by the zero-initialised data and/or the heap/stack data of the program. A debugger can seize control at the appropriate moment by copying, then modifying, the third word of the AIF header (see below).</p>
+</dl>
+<dt>
+<h4><a name=marker-379255></a>AIF header layout</h4>
+<dd>
+<dl>
+<dd>
+<dl>
+<dd>
+<p><a href=http://www.riscos.com/support/developers/prm/objectformat-14.draw><img src="data:image/png;base64,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" border=0></a></p>
+</dl>
+<p>BL is used everywhere to make the header addressable via R14 (but beware the PSR bits) in a position-independent manner and to ensure that the header will be position-independent.</p>
+<p>It is required that an image be re-enterable at its first instruction. Therefore, after decompression, the decompression code must reset the first word of the header to BLNV 0. Similarly, following self-relocation, the second word of the header must be reset to BLNV 0. This causes no additional problems with the read-only nature of the code segment - both decompression and relocation code must write to it anyway. So, on systems with memory protection, both the decompression code and the self-relocation code must be bracketed by system calls to change the access status of the read-only section (first to writable, then back to read-only).</p>
+<p>The image debug type has the following meaning:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>0:
+<td align=left valign=top>No debugging data are present.
+<tr>
+<td align=left valign=top>1:
+<td align=left valign=top>Low-level debugging data are present.
+<tr>
+<td align=left valign=top>2:
+<td align=left valign=top>Source level (ASD) debugging data are present.
+<tr>
+<td align=left valign=top>3:
+<td align=left valign=top>1 and 2 are present together.
+</table>
+</dl>
+<p>All other values are reserved by Acorn.</p>
+</dl>
+<dt>
+<h4><a name=marker-379257></a>Zero-initialisation code</h4>
+<dd>
+<dl>
+<dd>
+<p>The Zero-initialisation code is as follows:</p>
+<p><pre>        BIC     r11, lr, #&amp;FC000003   ; clear status bits -&gt; header + &amp;C
+        ADD     r11, r11, #8          ; -&gt; Image ReadOnly size
+        LDMIA   r11, {r0, r1, r2, r3} ; various sizes
+        CMPS    r3, #0
+        MOVLES  pc, lr                ; nothing to do
+        SUB     r11, r11, #&amp;14        ; image base
+        ADD     r11, r11, r0          ; + RO size
+        ADD     r11, r11, r1          ; + RW size = base of 0-init area
+        MOV     r0, #0
+        MOV     r1, #0
+        MOV     r2, #0
+        MOV     r4, #0
+ZeroLoop
+        STMIA   r11!, {r0, r1, r2, r4}
+        SUBS    r3, r3, #16
+        BGT     ZeroLoop
+        MOVS    pc, lr                ; 16 words in total.</pre><p></p>
+<dt>
+<h5><a name=idx-7202></a>Relationship between header sizes and linker pre-defined symbols</h5>
+<dd>
+<p><pre>AIFHeader.ImageBase = Image$$RO$$Base
+AIFHeader.ImageBase + AIFHeader.ROSize = Image$$RW$$Base
+AIFHeader.ImageBase + AIFHeader.ROSize + AIFHeader.RWSize = Image$$ZI$$Base
+AIFHeader.ImageBase + AIFHeader.ROSize + AIFHeader.RWSize + AIFHeader.ZeroInitSize = Image$$RW$$Limit</pre><p></p>
+</dl>
+<dt>
+<h4><a name=marker-379258></a>Self relocation</h4>
+<dd>
+<dl>
+<dd>
+<p>Two kinds of self-relocation are supported by AIF and one by AMF; for completeness, all three are described here. </p>
+<p>One-time position independence is supported by relocatable AIF images. Many-time position independence is required for AMF Relocatable Modules. And only AIF images can self-move to a location which leaves a requested amount of workspace.</p>
+<p>Why are there three different kinds of self-relocation?</p>
+<ul>
+<li>The rules for constructing RISC OS applications do not forbid acquired position-dependence. Once an application has begun to run, it is not, in general, possible to move it, as it isn't possible to find all the data locations which are being used as position-dependent pointers. So, AIF images can be relocated only once. Afterwards, the relocation table is over-written by the application's zero-initialised data, heap, or stack.
+<li>In contrast, the rules for constructing a RISC OS Relocatable Modules (RM) require that it be prepared to shut itself down, be moved in memory, and start itself up again. Shut-down and start-up are notified to a RM by special service calls to it. Clearly, a RM must be relocatable many times so its relocation table is not overwritten after first use.
+<li>Relocatable Modules are loaded under the control of a Relocatable Module Area (RMA) manager which decides where to load a module initially and where to move each module to whenever the RMA is reorganised. In contrast, an application is loaded at its load address and is then on its own until it exits or faults. An application can only be moved by itself (and then only once, before it begins execution proper).
+</ul>
+<dt>
+<h5><a name=idx-7203></a>Self-relocation code for relocatable modules</h5>
+<dd>
+<p>In this case there is no AIF header, the code must be executable many times, and it must be symbolically addressable from the Relocatable Module header. The code below must be the last area of the RMF image, following the relocation list. Note that it is best thought of as an additional area.</p>
+<p>When the following code is executed, the module image has already been loaded at/moved to its target address. It only remains to relocate location-dependent addresses. The list of offsets to be relocated, terminated by (-1), immediately follows <tt>End</tt>. Note that the address values here (eg <tt>|__RelocCode|</tt>) will appear in the list of places to be relocated, allowing the code to be re-executed.</p>
+<p><pre>        IMPORT  |Image$$RO$$Base| ; where the image is linked at...
+        EXPORT  |__RelocCode|     ; referenced from the RM header
+|__RelocCode|
+        LDR     r1, RelocCode     ; value of __RelocCode (before relocation)
+        SUB     r11, pc, #12      ; value of __RelocCode now
+        SUBS    r1, r11, r1       ; relocation offset
+        MOVEQS  pc, lr            ; relocate by 0 so nothing to do
+        LDR     r11, ImageBase    ; image base prior to relocation...
+        ADD     r11, r11, r1      ; ...where the image really is
+        ADR     r2, End
+RelocLoop
+        LDR     r0, [r2], #4
+        CMNS    r0, #1            ; got list terminator?
+        MOVLES  pc, lr            ; yes =&gt; return
+        LDR     r3, [r11, r0]     ; word to relocate
+        ADD     r3, r3, r1        ; relocate it
+        STR     r3, [r11, r0]     ; store it back
+        B       RelocLoop         ; and do the next one
+RelocCode
+        DCD     |__RelocCode|
+ImageBase
+        DCD     |Image$$RO$$Base|
+End                               ; the list of locations to relocate
+                                  ; starts here (each is an offset from the
+                                  ; base of the module) and is terminated
+                                  ; by -1.</pre><p></p>
+<p>Note that this code, and the associated list of locations to relocate, is added automatically to a relocatable module image by Link (as a consequence of using Link with the SetUp option Module enabled).</p>
+<dt>
+<h5><a name=idx-7204></a>Self-move and self-relocation code for AIF</h5>
+<dd>
+<p>This code is added to the end of an AIF image by Link, immediately before the list of relocations (terminated by -1). Note that the code is entered via a BL from the second word of the AIF header so, on entry, R14 points to AIFHeader + 8.</p>
+<p><pre>RelocCode ROUT
+        BIC     r11, lr, #&amp;FC000003 ; clear flag bits; -&gt; AIF header + &amp;08
+        SUB     r11, r11, #8        ; -&gt; header address
+        MOV     r0, #&amp;FB000000      ; BLNV #0
+        STR     r0, [r11, #4]       ; won't be called again on image re-entry
+;does the code need to be moved?
+        LDR     r9, [r11, #&amp;2C]     ; min free space requirement
+        CMPS    r9, #0              ; 0 =&gt; no move, just relocate
+        BEQ     RelocateOnly
+;calculate the amount to move by...
+        LDR     r0, [r11, #&amp;20]     ; image zero-init size
+        ADD     r9, r9, r0          ; space to leave = min free + zero init
+        SWI     GetEnv              ; MemLimit -&gt; R1
+        ADR     r2, End             ; -&gt; End 
+01      LDR     r0, [r2], #4        ; load relocation offset, increment R2
+        CMNS    r0, #1              ; terminator?
+        BNE     %B01                ; No, so loop again
+        SUB     r3, r1, r9          ; MemLimit - freeSpace
+        SUBS    r0, r3, r2          ; amount to move by
+        BLE     RelocateOnly        ; not enough space to move...
+        BIC     r0, r0, #15         ; a multiple of 16...
+        ADD     r3, r2, r0          ; End + shift
+        ADR     r8, %F01            ; intermediate limit for copy-up 
+; 
+; copy everything up memory, in descending address order, branching 
+; to the copied copy loop as soon as it has been copied. 
+; 
+02      LDMDB   r2!, {r4-r7}
+        STMDB   r3!, {r4-r7}
+        CMP     r2, r8              ; copied the copy loop?
+        BGT     %B02                ; not yet
+        ADD     r4, pc, r0
+        MOV     pc, r4              ; jump to copied copy code 
+03      LDMDB   r2!, {r4-r7}
+        STMDB   r3!, {r4-r7}
+        CMP     r2, r11             ; copied everything?
+        BGT     %B03                ; not yet
+        ADD     r11, r11, r0        ; load address of code
+        ADD     lr, lr, r0          ; relocated return address 
+RelocateOnly
+        LDR     r1, [r11, #&amp;28]     ; header + &amp;28 = code base set by Link
+        SUBS    r1, r11, r1         ; relocation offset
+        MOVEQ   pc, lr              ; relocate by 0 so nothing to do
+        STR     r11, [r11, #&amp;28]    ; new image base = actual load address
+        ADR     r2, End             ; start of reloc list 
+RelocLoop
+        LDR     r0, [r2], #4        ; offset of word to relocate
+        CMNS    R0, #1              ; terminator?
+        MOVEQS  pc, lr              ; yes =&gt; return
+        LDR     r3, [r11, r0]       ; word to relocate
+        ADD     r3, r3, r1          ; relocate it
+        STR     r3, [r11, r0]       ; store it back
+        B       RelocLoop           ; and do the next one
+        End                         ; The list of offsets of locations to relocate
+                                    ; starts here; terminated by -1.<a name=marker-379259></a></pre><p></p>
+</dl>
+<dt>
+<h2><a name=marker-379260></a>ASD</h2>
+<dd>
+<dl>
+<dd>
+<p>Acknowledgement: This design is based on work originally done for Acorn Computers by Topexpress Ltd.</p>
+<p>T<a name=marker-379261></a>his section describes the format of symbolic debugging data generated by ARM compilers and assemblers running under RISC OS and used by the desktop debugger DDT.</p>
+<p>For each separate compilation unit (called a <i>section</i>) the compiler produces debugging data in a special AREA of the object code (see the chapter entitled <a href=#77819>AOF</a> for an explanation of AREAs and their attributes). Debugging data are position independent, containing only relative references to other debugging data within the same section and relocatable references to other compiler-generated AREAs.</p>
+<p>Debugging data AREAs are combined by the linker into a single contiguous section of a program image (see the chapter entitled <a href=#41076>AIF</a> for a description of Application Image Format). Because the debugging section is position-independent, the debugger can move it to a safe location before the image starts executing. If the image is not executed under debugger control the debugging data is simply overwritten. </p>
+<p>The format of debugging data allows for a variable amount of detail. This potentially allows the user to trade off among memory used, disc space used, execution time, and debugging detail.</p>
+<p>Assembly-language level debugging is also supported, though in this case the debugging tables are generated by the linker, not by language processors. These low-level debugging tables appear in an extra section item, as if generated by an independent compilation. Low-level and high-level debugging are orthogonal facilities, though DDT allows the user to move smoothly between levels if both sets of debugging data are present in an image.</p>
+</dl>
+<dt>
+<h4><a name=idx-7205></a>Order of Debugging Data</h4>
+<dd>
+<dl>
+<dd>
+<p><a name=marker-379268></a>A debug data <a name=marker-379269></a>AREA consists of a series of <i>items</i>. The arrangement of these items mimics the structure of the high-level language program itself.</p>
+<p>For each debug AREA, the first item is a section item, giving global information about the compilation, including a code identifying the language and flags indicating the amount of detail included in the debugging tables.</p>
+<p>Each data, function, procedure, etc., definition in the source program has a corresponding debug data item and these items appear in an order corresponding to the order of definitions in the source. This means that any nested structure in the source program is preserved in the debugging data and the debugger can use this structure to make deductions about the scope of various source-level objects. Of course, for procedure definitions, two debug items are needed: a <b>procedure</b> item to mark the definition itself and an <b>endproc</b> item to mark the end of the procedure's body and the end of any nested definitions. If procedure definitions are nested then the procedure - endproc brackets are also nested. Variable and type definitions made at the outermost level, of course, appear outside of all procedure/endproc items.</p>
+<p>Information about the relationship between the executable code and source files is collected together and appears as a <b>fileinfo</b> item, which is always the final item in a debugging AREA. Because of the C language's #include facility, the executable code produced from an outer-level source file may be separated into disjoint pieces interspersed with that produced from the included files. Therefore, source files are considered to be collections of 'fragments', each corresponding to a contiguous area of executable code and the fileinfo item is a list with an entry for each file, each in turn containing a list with an entry for each fragment. The fileinfo field in the section item addresses the fileinfo item itself. In each procedure item there is a 'file entry' field which refers to the file-list entry for the source file containing the procedure's start; there is a separate one in the endproc item because it may possibly not be in the same source file.</p>
+</dl>
+<dt>
+<h4><a name=idx-7206></a>Representation of Data Types</h4>
+<dd>
+<dl>
+<dd>
+<p>Several of the debugging data items (eg procedure and variable) have a <b>type</b> word field to identify their <a name=marker-379270></a>data type. This field contains, in the most significant 3 bytes, a code to identify a base type and, in the least significant byte, a pointer count: 0 to denote the type itself; 1 to denote a pointer to the type; 2 to denote a pointer to a pointer to...; etc.</p>
+<p>For simple types the code is a positive integer as follows:</p>
+<table>
+<tbody><tr>
+<td align=left valign=top>
+<td align=left valign=top>void
+<td align=left valign=top>0
+<td align=left valign=top>(all codes are decimal)
+<tr>
+<td align=left valign=top>signed integers
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>single byte
+<td align=left valign=top>10
+<td align=left valign=top>
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>half-word
+<td align=left valign=top>11
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>word
+<td align=left valign=top>12
+<tr>
+<td align=left valign=top>unsigned integers
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>single byte
+<td align=left valign=top>20
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>half-word
+<td align=left valign=top>21
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>word
+<td align=left valign=top>22
+<tr>
+<td align=left valign=top>floating point
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>float
+<td align=left valign=top>30
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>double
+<td align=left valign=top>31
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>long double
+<td align=left valign=top>32
+<tr>
+<td align=left valign=top>complex
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>single complex
+<td align=left valign=top>41
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>double complex
+<td align=left valign=top>42
+<tr>
+<td align=left valign=top>functions
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>functions
+<td align=left valign=top>100
+</table>
+<p>For compound types (arrays, structures, etc.) there is a special kind of debug data item (<b>array</b>, <b>struct</b>, etc.) to give details of the type such as array bounds and field types. The type code for such types is negative being the negation of the (byte) offset of the special item from the start of the debugging AREA.</p>
+<p>If a type has been given a name in a source program, it will give rise to a <b>type</b> debugging data item which contains the name and a type word as defined above. If necessary, there will also be a debugging data item such as an array or struct to define the type itself. In that case, the type word will refer to this item.</p>
+<p>Enumerated types in C and scalars in Pascal are treated simply as integer sub-ranges of an appropriate size, the name information is not available in the this version of the debugging format. Set types in Pascal are not treated in detail: the only information recorded for them is the total size occupied by the object in bytes.</p>
+<p>Fortran character types are supported by a special kind of debugging data item the format of which is yet to be defined.</p>
+</dl>
+<dt>
+<h4><a name=idx-7207></a>Representation of Source File Positions</h4>
+<dd>
+<dl>
+<dd>
+<p>S<a name=marker-379271></a>everal of the debugging data items have a <a name=marker-379272></a><b>sourcepos</b> field to identify a position in the source file. This field contains a line number and character position within the line packed into a single word. The most significant 10 bits encode the character offset (0-based) from the start of the line and the least- significant 22 bits give the line number.</p>
+</dl>
+<dt>
+<h4><a name=idx-7208></a>Debugging Data Items in Detail</h4>
+<dd>
+<dl>
+<dd>
+<p>The first word of each debugging data item contains the byte length of the item (encoded in the most significant 16 bits) and a code identifying the kind of item (in the least significant 16 bits). The following codes are defined:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>1
+<td align=left valign=top>section
+<tr>
+<td align=left valign=top>2
+<td align=left valign=top>procedure
+<tr>
+<td align=left valign=top>3
+<td align=left valign=top>endproc
+<tr>
+<td align=left valign=top>4
+<td align=left valign=top>variable
+<tr>
+<td align=left valign=top>5
+<td align=left valign=top>type
+<tr>
+<td align=left valign=top>6
+<td align=left valign=top>struct
+<tr>
+<td align=left valign=top>7
+<td align=left valign=top>array
+<tr>
+<td align=left valign=top>8
+<td align=left valign=top>subrange
+<tr>
+<td align=left valign=top>9
+<td align=left valign=top>set
+<tr>
+<td align=left valign=top>10
+<td align=left valign=top>fileinfo
+</table>
+</dl>
+<p>The meaning of the second and subsequent words of each item is defined below.</p>
+<p>Where items include a string field, the string is packed into successive bytes beginning with a length byte, and padded at the end to a word boundary (the padding value is immaterial, but NUL or ' ' is preferred). The length of a string is in the range [0 - 255] bytes.</p>
+<p>Where an item contains a field giving an offset in the debugging data area (usually to address another item), this means a byte offset from the start of the debugging data for the whole section (in other words, from the start of the section item).</p>
+<dt>
+<h5>S<a name=marker-379273></a>ection</h5>
+<dd>
+<p>A section item is the first item of each section of the debugging data. The first five fields are held in a single word:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>language
+<td align=left valign=top>one byte code identifying the source language
+<tr>
+<td align=left valign=top>debuglines
+<td align=left valign=top>1 bit: set <img src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="14"><rect fill-opacity="0"/></svg>' alt="=>" style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"> tables contain line numbers
+<tr>
+<td align=left valign=top>debugvars
+<td align=left valign=top>1 bit: set <img src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="14"><rect fill-opacity="0"/></svg>' alt="=>" style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"> tables contain data about local variables
+<tr>
+<td align=left valign=top>spare
+<td align=left valign=top>14 reserved bits (must be zero)
+<tr>
+<td align=left valign=top>debugversion
+<td align=left valign=top>one byte version number of the debugging data
+<tr>
+<td align=left valign=top>codeaddr
+<td align=left valign=top>pointer to start of executable code in this section
+<tr>
+<td align=left valign=top>dataaddr
+<td align=left valign=top>pointer to start of static data for this section
+<tr>
+<td align=left valign=top>codesize
+<td align=left valign=top>byte size of executable code in this section
+<tr>
+<td align=left valign=top>datasize
+<td align=left valign=top>byte size of the static data in this section
+<tr>
+<td align=left valign=top>fileinfo
+<td align=left valign=top>offset in the debugging data of the file information for this section (or 0 if no fileinfo is present)
+<tr>
+<td align=left valign=top>debugsize
+<td align=left valign=top>total byte length of debugging data for this section
+<tr>
+<td align=left valign=top>name or nsyms
+<td align=left valign=top>string or integer
+</table>
+</dl>
+<p>The name field contains the program name for Pascal and Fortran programs. For C programs it contains a name derived by the compiler from the main file name (notionally a module name). Its syntax is similar to that for a variable name in the source language. For a low-level debugging section (language = 0) the field is treated as a 4 byte integer giving the number of symbols following.</p>
+<p>The following language byte codes are defined:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>0
+<td align=left valign=top>Low-level debugging data (notionally, assembler)
+<tr>
+<td align=left valign=top>1
+<td align=left valign=top>C
+<tr>
+<td align=left valign=top>2
+<td align=left valign=top>Pascal
+<tr>
+<td align=left valign=top>3
+<td align=left valign=top>Fortran77
+<tr>
+<td align=left valign=top>other
+<td align=left valign=top>reserved to Acorn.
+</table>
+</dl>
+<p>The fileinfo field is 0 if no source file information is present.</p>
+<p>The debugversion field was defined to be 1; the new debugversion for the extended debugging data format (encompassing low-level debugging data) is 2. For low-level debugging data, other fields have the following values:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>language
+<td align=left valign=top>0
+<tr>
+<td align=left valign=top>codeaddr
+<td align=left valign=top>Image$$RO$$Base
+<tr>
+<td align=left valign=top>dataaddr
+<td align=left valign=top>Image$$RW$$Base
+<tr>
+<td align=left valign=top>codesize
+<td align=left valign=top>Image$$RO$$Limit - Image$$RO$$Base
+<tr>
+<td align=left valign=top>datasize
+<td align=left valign=top>Image$$RW$$Limit - Image$$RW$$Base
+<tr>
+<td align=left valign=top>fileinfo
+<td align=left valign=top>0
+<tr>
+<td align=left valign=top>nsyms
+<td align=left valign=top>number of symbols within the following debugging data
+<tr>
+<td align=left valign=top>debugsize
+<td align=left valign=top>total size of the low-level debugging data including the size of the section item
+</table>
+</dl>
+<p>The section item is immediately followed by nsyms symbols, each having the following format:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>stridx:24
+<td align=left valign=top>byte offset in string table of symbol name
+<tr>
+<td align=left valign=top>flags:8
+<td align=left valign=top>(see below)
+<tr>
+<td align=left valign=top>value
+<td align=left valign=top>the value of the symbol
+</table>
+</dl>
+<p>The flags field has the following values:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>0/1
+<td align=left valign=top>the symbol is a local/global symbol
+<tr>
+<td align=left valign=top>+
+<td align=left valign=top>(there may be many local symbols with the same name)
+<tr>
+<td align=left valign=top>0/2/4/6
+<td align=left valign=top>symbol names an absolute/code/data/zero-init value
+</table>
+</dl>
+<p>Note that the linker reduces all symbol values to absolute values. The flags field records the history, or origin, of the symbol in the image.</p>
+<p>The string table is in standard AOF format. It consists of a length word followed by the strings themselves, each terminated by a NUL (0). The length word includes the length of the length word, so no offset into the string table is less than 4. The end of the string table is padded to the next word boundary.</p>
+<dt>
+<h5><a name=marker-379274></a>Procedure</h5>
+<dd>
+<p>A procedure item appears once for each procedure or function definition in the source program. Any definitions with the procedure have their related debugging data items between the procedure item and the matching endproc item. The format of procedure items is as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>type
+<td align=left valign=top>the return type if this is a function, else 0
+<tr>
+<td align=left valign=top>args
+<td align=left valign=top>the number of arguments
+<tr>
+<td align=left valign=top>sourcepos
+<td align=left valign=top>a word encoding the source position of the start of the procedure
+<tr>
+<td align=left valign=top>startaddr
+<td align=left valign=top>pointer to the first instruction of the procedure
+<tr>
+<td align=left valign=top>bodyaddr
+<td align=left valign=top>pointer to the first instruction of the procedure body (see below)
+<tr>
+<td align=left valign=top>endproc
+<td align=left valign=top>offset of the related endproc item
+<tr>
+<td align=left valign=top>fileentry
+<td align=left valign=top>offset of the file list entry for the source file
+<tr>
+<td align=left valign=top>name
+<td align=left valign=top>string
+</table>
+</dl>
+<p>The bodyaddr field points to the first instruction after the procedure entry sequence, that is the first address at which a high-level breakpoint could sensibly be set. The startaddr field points to the beginning of the entry sequence, that is the address at which control actually arrives when the procedure is called.</p>
+<p>A label in a source program is represented by a special procedure item with no matching endproc (the endproc field is 0 to denote this). Pascal and Fortran numerical labels are converted by the compiler into strings prefixed by '<tt>$n</tt>'.</p>
+<p>For Fortran77, multiple entry points to the same procedure each give rise to a separate procedure item but they all have the same endproc offset referring to a single endproc item.</p>
+<dt>
+<h5>E<a name=marker-379275></a>ndproc</h5>
+<dd>
+<p>This item marks the end of the debugging data items belonging to a particular procedure. It also contains information relating to the procedure's return. Its format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>sourcepos
+<td align=left valign=top>a word encoding the position in the source file of the end of the procedure
+<tr>
+<td align=left valign=top>endaddr
+<td align=left valign=top>a pointer to the code byte AFTER the compiled code for the procedure
+<tr>
+<td align=left valign=top>filentry
+<td align=left valign=top>offset of the file list entry for the procedure's end
+<tr>
+<td align=left valign=top>nreturns
+<td align=left valign=top>number of procedure return points (may be 0)
+<tr>
+<td align=left valign=top>retaddrs...
+<td align=left valign=top>pointers to the procedure-return code
+</table>
+</dl>
+<p>If the procedure body is an infinite loop, there will be no return point so nreturns will be 0. Otherwise the retaddrs should each point to a suitable location at which a breakpoint may be set 'at the exit of the procedure'. When execution reaches this point, the current stack frame should still be in this procedure.</p>
+<dt>
+<h5>V<a name=marker-379276></a>ariable</h5>
+<dd>
+<p>This item contains debugging data relating to a source program variable or a formal argument to a procedure (the first variable items in a procedure always describe its arguments). Its format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>type
+<td align=left valign=top>a type word
+<tr>
+<td align=left valign=top>sourcepos
+<td align=left valign=top>a word encoding the source position of the variable
+<tr>
+<td align=left valign=top>class
+<td align=left valign=top>a word encoding the variable's storage class
+<tr>
+<td align=left valign=top>location
+<td align=left valign=top>see explanation below
+<tr>
+<td align=left valign=top>name
+<td align=left valign=top>string
+</table>
+</dl>
+<p>The following codes define the storage classes of variables:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>1
+<td align=left valign=top>external variables (or Fortran common)
+<tr>
+<td align=left valign=top>2
+<td align=left valign=top>static variables private to one section
+<tr>
+<td align=left valign=top>3
+<td align=left valign=top>automatic variables
+<tr>
+<td align=left valign=top>4
+<td align=left valign=top>register variables
+<tr>
+<td align=left valign=top>5
+<td align=left valign=top>Pascal <tt>var</tt> arguments
+<tr>
+<td align=left valign=top>6
+<td align=left valign=top>Fortran arguments
+<tr>
+<td align=left valign=top>7
+<td align=left valign=top>Fortran character arguments
+</table>
+</dl>
+<p>The meaning of the location field of a variable item depends on the storage class: it contains an absolute address for static and external variables (relocated by the linker); a stack offset (ie an offset from the frame- pointer) for automatic and var-type arguments; an offset into the argument list for Fortran arguments; and a register number for register variables (the 8 floating point registers are numbered 16 - 23). </p>
+<p>No account is taken of variables which ought to be addressed by +ve offsets from the stack-pointer rather than -ve offsets from the frame-pointer.</p>
+<p>The sourcepos field is used by the debugger to distinguish between different definitions having the same name (eg identically named variables in disjoint source-level naming scopes such as nested block in C).</p>
+<dt>
+<h5>T<a name=marker-379277></a>ype</h5>
+<dd>
+<p>This item is used to describe a named type in the source language (eg a typedef in C). The format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>type
+<td align=left valign=top>a type word (described earlier)
+<tr>
+<td align=left valign=top>name
+<td align=left valign=top>string
+</table>
+</dl>
+<dt>
+<h5>Str<a name=marker-379278></a>uct</h5>
+<dd>
+<p>This item is used to describe a structured data type (eg a struct in C or a record in Pascal). Its format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>fields
+<td align=left valign=top colspan=2>the number of fields in the structure
+<tr>
+<td align=left valign=top>size
+<td align=left valign=top colspan=2>total byte size of the structure
+<tr>
+<td align=left valign=top>fieldtable...
+<td align=left valign=top colspan=2>a table of fields entries in the following format:
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>offset
+<td align=left valign=top>byte offset of this field within the structure
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>type
+<td align=left valign=top>a type word (interpretation as described earlier)
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>name
+<td align=left valign=top>string
+</table>
+</dl>
+<p>Union types are described by struct items in which all fields have 0 offsets.</p>
+<p>C bit fields are not treated in full detail: a bit field is simply represented by an integer starting on the appropriate word boundary (so that the word contains the whole field).</p>
+<dt>
+<h5>Ar<a name=marker-379279></a>ray</h5>
+<dd>
+<p>This item is used to describe a one-dimensional array. Multi-dimensional arrays are described as arrays of arrays. Which dimension comes first is dependent on the source language (different for C and Fortran). The format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>size
+<td align=left valign=top>total byte size of each element
+<tr>
+<td align=left valign=top>arrayflags
+<td align=left valign=top>(see below)
+<tr>
+<td align=left valign=top>basetype
+<td align=left valign=top>a type word
+<tr>
+<td align=left valign=top>lowerbound
+<td align=left valign=top>constant value or stack offset of variable
+<tr>
+<td align=left valign=top>upperbound
+<td align=left valign=top>constant value or stack offset of variable
+</table>
+</dl>
+<p>If the size field is zero, debugger operations affecting the whole array, rather than individual elements of it, are forbidden.</p>
+<p>The following bit numbers in the arrayflags field are defined:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>0
+<td align=left valign=top>lower bound is undefined
+<tr>
+<td align=left valign=top>1
+<td align=left valign=top>lower bound is a constant
+<tr>
+<td align=left valign=top>2
+<td align=left valign=top>upper bound is undefined
+<tr>
+<td align=left valign=top>3
+<td align=left valign=top>upper bound is a constant
+</table>
+</dl>
+<p>If a bound is defined and not constant then it is an integer variable on the stack and the boundvalue field contains the stack offset of the variable (from the frame-pointer).</p>
+<dt>
+<h5>Su<a name=marker-379280></a>brange</h5>
+<dd>
+<p>This item is used to describe subrange typed in Pascal. It also serves to describe enumerated types in C and scalars in Pascal (in which case the base type is understood to be an unsigned integer of appropriate size). Its format is as follows:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>size
+<td align=left valign=top>half-word: 1, 2, or 4 to indicate byte size of object
+<tr>
+<td align=left valign=top>typecode
+<td align=left valign=top>half-word: simple type code
+<tr>
+<td align=left valign=top>lwb
+<td align=left valign=top>lower bound of subrange
+<tr>
+<td align=left valign=top>upb
+<td align=left valign=top>upper bound of subrange
+</table>
+</dl>
+<dt>
+<h5>S<a name=marker-379281></a>et</h5>
+<dd>
+<p>This item is used to describe a Pascal set type. Currently, the description is only partial. The format is:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>size
+<td align=left valign=top>byte size of the object
+</table>
+</dl>
+<dt>
+<h5>Fil<a name=marker-379282></a>einfo</h5>
+<dd>
+<p>This item appears once per section after all other debugging data items. The half of the header word which would usually give the item length is not required and should be set to 0.</p>
+<p>Each source file is described by a sequence of 'fragments', each of which describes a contiguous region of the file within which the addresses of compiled code increase monotonically with source-file position. The order in which fragments appear in the sequence is not necessarily related to the source file positions to which they refer.</p>
+<p>Note that for compilations that make no use of the #include facility, the list of fragments will have only one entry and all line-number information will be contiguous.</p>
+<p>The item is a list of entries each with the following format:</p>
+<dl>
+<dd>
+<table>
+<tbody><tr>
+<td align=left valign=top>length
+<td align=left valign=top colspan=2>length of this entry in bytes (0 marks the final entry)
+<tr>
+<td align=left valign=top>date
+<td align=left valign=top colspan=2>date and time when the file was last modified
+<tr>
+<td align=left valign=top>filename
+<td align=left valign=top colspan=2>string (or null if the name is not known)
+<tr>
+<td align=left valign=top>n
+<td align=left valign=top colspan=2>number of fragments following
+<tr>
+<td align=left valign=top>fragments...
+<td align=left valign=top colspan=2>n fragments with the following structure...
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>fragmentsize
+<td align=left valign=top>length of this entry in bytes
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>firstline
+<td align=left valign=top>linenumber
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>lastline
+<td align=left valign=top>linenumber
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>codeaddr
+<td align=left valign=top>pointer to the start of the fragment's executab
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>codesize
+<td align=left valign=top>byte size of the code in the fragment
+<tr>
+<td align=left valign=top>
+<td align=left valign=top>lineinfo...
+<td align=left valign=top>a variable number of line number data
+</table>
+</dl>
+<p>There is one lineinfo half-word for each statement of the source file fragment which gives rise to executable code. Exactly what constitutes an executable statement may be defined by the language implementation; the definition may for instance include some declarations. The half-word can be regarded as 2 bytes: the first contains the number of bytes of code generated from the statement and cannot be zero; the second contains the number of source lines occupied by the statement (ie the difference between the line number of the start of the statement and the line number of the next statement). This may be zero if there are multiple statements on the same source line.</p>
+<p>If the whole half-word is zero, this indicates that one of the quantities is too large to fit into a byte and that the following 2 half-words contain (in order) the number of lines followed by the number of bytes of code generated from the statement.</p>
+</dl>
+</dl>
+<p></p><center><small><b>This edition Copyright © 3QD Developments Ltd 2015<br>
+Last Edit: Tue,03 Nov 2015</b></small></center><p></p>
