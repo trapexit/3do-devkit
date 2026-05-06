@@ -1,0 +1,889 @@
+                T E C H N I C A L  M E M O R A N D U M
+
+
+
+Subject:        ARM Object Format
+
+Reference:      PLG-AOF
+
+Issue:          2.00/C    (replaces: 1.02 26-Oct-88,
+                                     1.01 20-May-88,
+                                     0.05 17-Sep-87,
+                                     0.04 11-Sep-87,
+                                     0.03 03-Sep-87,
+                                     0.02 26-Aug-87,
+                                     0.01 19-Aug-87,
+                                     undated "AOFText")
+
+Author:         Lee Smith, 2nd February 1989
+
+Distribution:   Not restricted.
+
+
+-----------------------------------------------------------------------------
+Programming Languages Group, Acorn Computers Limited,
+Fulbourn Road, Cherry Hinton, Cambridge, CB1 4JN, England.
+-----------------------------------------------------------------------------
+
+
+Copyright Acorn Computers Limited 1989
+
+
+Neither the whole nor any part of the information contained in this technical
+memorandum may be adapted or reproduced in any material form except with the
+prior written approval of Acorn Computers Limited (Acorn).
+
+The information contained in this technical memorandum relates to ongoing
+developments. Whilst it is given in good faith by Acorn, it is acknowledged
+that there may be errors or omissions.
+
+
+
+                H I S T O R Y
+
+19-Aug-87       Limited circulation for comment
+26-Aug-87       Major editing of fine details; some descriptions improved;
+                some errors corrected; descriptions of weak and strong
+                attributes added.
+31-Aug-87       Another major hack.
+03-Sep-87       Version 0.03 released for review.
+11-Sep-87       Minor bug fix to size of chunk-file header.
+17-Sep-87 1.00  Fix 16 bits or 4 bytes...
+20-May-88       Minor fixes to usage of symbol attributes and the definition
+                of the common area attribute.
+26-Oct-88       Clarification of linker-defined symbols.
+19-Jan-89 2.00  Add 'global bss' symbol type; revise presentation
+27-Jan-89       Clean out obsolete and obsolescent features
+31-Jan-89       Revise semantics of type-2 relocations in line with a.out
+02-Feb-89       Further revision of type-2, PC-relative relocations
+
+Change bars draw attention to items changed between issues 1.00 and 2.00.
+
+
+
+
+Acknowledgement
+===============
+
+This document is based on an undated original by Mick Jordan of Acorn
+Research Centre. Most of the ideas contained herein are his. Mick Jordan was
+also responsible for implementing the first AOF linker referred to herein.
+
+
+Introduction
+============
+
+This document defines a file format called ARM Object Format, which is used   |
+by language processors for ARM-based systems. The AOF linker accepts input    |
+files in this format and generates output in the same format or in RISC OS    |
+Application Image Format (defined in Technical Memorandum PLG-AIF). In the    |
+rest of this document, the term "object file" is used to denote a file in     |
+ARM Object Format and the term "linker" is used to denote the AOF linker.     |
+
+
+Assumed Terminology
+===================
+
+Throughout this document the terms "byte", "half word", "word", and "string"
+are used to mean the following:
+
+Byte
+----
+8 bits, considered unsigned unless otherwise stated, usually used to store
+flag bits or characters.
+
+Half Word
+---------
+16 bits, or 2 bytes, usually unsigned. The least significant byte has the
+lowest address (DEC/Intel "byte sex", sometimes called "little endian"). The
+address of a half word (i.e. of its least significant byte) must be divisible
+by 2.
+
+Word
+----
+32 bits, or 4 bytes, usually used to store a non-negative value. The least
+significant byte has the lowest address (DEC/Intel "byte sex", sometimes
+called "little endian"). The address of a word (i.e. of its least significant
+byte) must be divisible by 4.
+
+String
+------
+A sequence of bytes terminated by a NUL (0x00) byte. The NUL is part of the
+string but is not counted in the string's length. Strings may be aligned on
+any byte boundary.
+
+For emphasis: a word consists of 32 bits, 4-byte aligned; within a word, the
+least significant byte has the lowest address. This is DEC/Intel, or "little
+endian", "byte sex", *not* IBM/Motorolla "byte sex".
+
+
+Undefined Fields
+================
+
+Fields not explicitly defined by this document are implicitly reserved to     |
+Acorn. It is required that all such fields be zeroed. Acorn may ascribe       |
+meaning to such fields at any time, but will usually do so in a manner        |
+which gives no new meaning to zeroes.                                         |
+
+
+Overall Structure of an AOF File
+================================
+
+An object file contains a number of separate but related pieces of data. In
+order to simplify access to these data, and to provide for a degree of
+extensibility, the object file format is itself layered on another format
+called "Chunk File Format", which provides a simple and efficient means of
+accessing and updating distinct chunks of data within a single file. The
+object file format defines five chunks: "header", "areas", "identification",
+"symbol table", and "string table".
+
+The minimum size of a piece of data in both formats is four bytes or one
+word. Each word is stored in a file in "litle-endian" format; that is the
+least significant byte of the word is stored first.
+
+
+Chunk File Format
+=================
+
+A chunk is accessed via a header at the start of the file. The header contains
+the number, size, location and identity of each chunk in the file. The size of
+the header may vary between different chunk files but is fixed for each file.
+Not all entries in a header need be used, thus limited expansion of the number
+of chunks is permitted without a wholesale copy. A chunk file can be copied
+without knowledge of the contents of the individual chunks.
+
+Graphically, the layout of a chunk file is as follows:-
+
+             ----------------------------
+             |       ChunkFileId        |
+             ----------------------------
+             |       maxChunks          |
+             ----------------------------
+             |       numChunks          |  3 words
+             ============================
+             |        entry1            |  4 words per entry
+             |                          |
+             ----------------------------
+             |        entry2            |
+             |                          |
+             ----------------------------
+                       ...
+             ----------------------------
+             |     entry "maxChunks"    |  End of Header
+             |                          |  (3 + 4*maxChunks words)
+             ============================
+             |        chunk  1          |  Start of Data Chunks
+             |                          |
+             ----------------------------
+                       ...
+             ----------------------------
+             |    chunk  "numChunks"    |
+             |                          |
+             ----------------------------
+
+ChunkFileId marks the file as a chunk file. Its value is C3CBC6C5 hex.
+The "maxChunks" field defines the number of the entries in the header, fixed
+when the file is created. The "numChunks" field defines how many chunks are
+currently used in the file, which can vary from 0 to "maxChunks". The value
+of "numChunks" is redundant as it can be found by scanning the entries.
+
+
+
+
+Each entry in the header comprises four words in the following order:
+
+chunkId     a two word field identifying what data the chunk contains;
+
+fileOffset  a one word field defining the byte offset within the file of
+            the chunk (which must be divisible by four); an entry of zero
+            indicates that the corresponding chunk is unused;
+
+size        a one word field defining the exact byte size of the chunk
+            (which need not be a multiple of four).
+
+The "chunkId" field provides a conventional way of identifying what type of
+data a chunk contains. It is split into two parts. The first four characters
+(in the first word) contain a universally unique name allocated by a central
+authority (Acorn). The remaining four characters (in the second word) can
+be used to identify component chunks within this universal domain. In each
+part, the first character of the name is stored first in the file, and so on.
+
+For AOF files, the first part of each chunk's name is "OBJ_"; the second
+components are defined in the next section entitled "Object File Format".
+
+
+Object File Format
+==================
+
+Each piece of an object file is stored in a separate, identifiable, chunk. 
+AOF defines five chunks as follows:
+
+    Chunk          |  Chunk Name
+    ---------------+------------
+    Header         |  OBJ_HEAD
+    Areas          |  OBJ_AREA
+    Identification |  OBJ_IDFN
+    Symbol Table   |  OBJ_SYMT
+    String Table   |  OBJ_STRT
+
+Only the "header" and "areas" chunks must be present, but a typical object file
+will contain all five of the above chunks.
+
+A feature of chunk file format is that chunks may appear in any order in
+the file. However, language processors which must also generate other object
+formats---such as Unix's a.out format---should use this flexibility cautiously.
+
+A language translator or other system utility may add additional chunks to an
+object file, for example a language-specific symbol table or language-specific
+debugging data, so it is conventional to allow space in the chunk header for
+additional chunks; space for eight chunks is conventional when the AOF file is
+produced a language processor which generates all five chunks described here.
+
+The "header chunk" should not be confused with the chunk file's header.
+
+Format of the AOF Header Chunk
+------------------------------
+
+The AOF header is logically in two parts, though these appear contiguously in
+the header chunk. The first part is of fixed size and describes the contents
+and nature of the object file. The second part is variable in length (specified
+in the fixed part) and is a sequence of "area" declarations defining the code
+and data areas within the OBJ_AREA chunk.
+
+
+
+
+
+The AOF header chunk has the following format:
+
+             ----------------------------
+             |    Object File Type      |
+             ----------------------------
+             |       Version Id         |
+             ----------------------------
+             |    Number of Areas       |
+             ----------------------------
+             |    Number of Symbols     |
+             ----------------------------
+             |    Entry Address Area    |
+             ----------------------------
+             |    Entry Address Offset  |  6 words in the fixed part
+             ============================
+             |    1st Area Header       |  5 words per area header
+             |                          |
+             ----------------------------
+             |    2nd Area Header       |
+             |                          |
+             ----------------------------
+                  ... ...  ...
+             ----------------------------
+             |    nth Area Header       |  (6 + (5*Number_of_Areas)) words
+             |                          |  in the AOF header.
+             ----------------------------
+
+Object File Type
+----------------
+C5E2D080 (hex) marks an object file as being in relocatable object format.    |
+
+Version Id
+----------
+This word encodes the version of AOF to which the object file complies.       |
+AOF 1.xx is denoted by 150 decimal; AOF 2.xx by 200 decimal.                  |
+
+Number of Areas
+---------------
+The code and data of the object file is presented as a number of separate
+"areas", in the OBJ_AREA chunk, each with a name and some attributes (see
+below). Each area is declared in the (variable-length) part of the header
+which immediately follows the fixed part. The value of the "Number of Areas"
+field defines the number of areas in the file and consequently the number of
+area declarations which follow the fixed part of the header.
+
+Number of Symbols
+-----------------
+If the object file contains a symbol table chunk "OBJ_SYMT", then this field
+defines the number of symbols in the symbol table.
+
+Entry Address Area/Entry Address Offset
+--------------------------------------- 
+One of the areas in an object file may be designated as containing the start
+address for any program which is linked to include this file. If so, the
+entry address is specified as an <area-index, offset> pair, where "area-index"
+is in the range 1 to "Number of Areas", specifying the n'th area declared in
+the area declarations part of the header. The entry address is defined to be
+the base address of this area plus "offset".
+
+A value of 0 for "area-index" signifies that no program entry address is
+defined by this AOF file.
+
+
+
+Format of Area Headers
+----------------------
+The area headers follow the fixed part of the AOF header.
+Each area header has the following form:-
+
+             ----------------------------
+             |        Area Name         |    (offset into string table)
+             ----------------------------
+             |   zeroes   |  AT  |  AL  |
+             ----------------------------
+             |        Area Size         |
+             ----------------------------
+             |   Number of Relocations  |
+             ----------------------------
+             |   Unused - must be 0     |    5 words in total                 |
+             ----------------------------
+
+Area Name
+---------
+Each name in an object file is encoded as an offset into the string table,
+which stored in the OBJ_STRT chunk. This allows the variable-length
+characteristics of names to be factored out from primary data formats.
+Each area within an object file must be given a name which is unique
+amongst all the areas in that object file.
+
+AL
+--
+This byte must be set to 2; all other values are reserved to Acorn.           |
+
+AT (Area Attributes)
+--------------------
+Each area has a set of attributes encoded in the AT byte.
+The least-significant bit of AT is numbered 0.
+
+The linker orders areas in a generated image first by attributes, then by     |
+the (case-significant) lexicographic order of area names, then by position    |
+of the containing object module in the link-list. The position in the link-
+list of an object module loaded from a library is not predictable.
+
+When ordered by attributes, Read-Only areas precede Read-Write areas which
+precede Debug areas; within Read-Only and Read-Write Areas, Code precedes Data
+which precedes Zero-Initialised data. Zero-Initialised data may not have the
+Read-Only attribute.
+
+Bit 0
+-----
+This bit must be set to 0.                                                    |
+
+Bit 1
+-----
+If this bit is set, the area contains code, otherwise it contains data.
+
+Bits 2, 3
+---------
+Bit 2 specifies that the area is a common block definition.
+
+Bit 3 defines the area to be a (reference to a) common block and precludes
+the area having initialising data (see Bit 4, below). In effect, the setting
+of Bit 3 implies the setting of Bit 4.
+
+
+
+
+
+Common areas with the same name are overlaid on each other by the linker.
+The "Size" field of a common definition defines the size of a common block.
+All other references to this common block must specify a size which is smaller
+or equal to the definition size. In a link step there may be at most one area
+of the given name with bit 2 set. If none of these have bit 2 set, the actual
+size of the common area will be size of the largest common block reference
+(see also linker-defined symbols section).
+
+Bit 4
+-----
+This bit specifies that the area has no initialising data in this object
+file and that the area contents are missing from the OBJ_AREA chunk.
+This bit is typically used to denote large uninitialised data areas.
+When an uninitialised area is included in an image, the linker either includes
+a read-write area of binary zeroes of appropriate size or maps a read-write
+area of appropriate size that will be zeroed at image start-up time. This
+attribute is incompatible with the read-only attribute (see "Bit 5", below).
+
+NOTE: Whether or not a zero-initialised area is re-zeroed if the image is
+      re-entered is a property of the linker and the relevant image format.
+      The definition of AOF neither requires nor precludes re-zeroing.
+
+Bit 5
+------
+This bit specifies that the area is read-only. The linker groups read-only
+areas together so that they may be write protected at run-time, hardware
+permitting. Code areas and debugging tables should have this bit set.
+The setting of this bit is incompatible with the setting of bit 4.
+
+Bit 6
+-----
+This bit must be set to 0.                                                    |
+
+Bit 7
+-----
+This bit specifies that the area contains symbolic debugging tables.
+The linker groups these areas together so they can be accessed as a single
+continguous chunk at run-time. It is usual for debugging tables to be read-
+only and, therefore, to have bit 5 set too. If bit 7 is set, bit 1 is ignored.
+
+Area Size
+---------
+This field specifies the size of the area in bytes, which must be a multiple
+of 4. Unless the "Not Initialised" bit (bit 4) is set in the area attributes,
+there must be this number of bytes for this area in the OBJ_AREA chunk.
+
+Number of Relocations
+---------------------
+This specifies the number of relocation records which apply to this area.
+
+
+Format of the Areas chunk
+-------------------------
+
+The areas chunk (OBJ_AREA) contains the actual areas (code, data, zero-
+initialised data, debugging data, etc.) plus any associated relocation
+information. Its chunkId is "OBJ_AREA". Both an area's contents and its
+relocation data must be word-aligned. Graphically, an area's layout is:
+
+
+
+
+
+
+             -----------------------
+             |       Area 1        |
+             -----------------------
+             |  Area 1 Relocation  |
+             -----------------------
+                      ...
+             -----------------------
+             |       Area n        |
+             -----------------------
+             |  Area n Relocation  |
+             -----------------------
+
+An area is simply a sequence of byte values, the order following that of the
+addressing rules of the ARM, that is the least significant byte of a word is
+first. An area is followed by its associated relocation table (if any). An
+area is either completely initialised by the values from the file or not
+initialised at all (i.e. it is initialised to zero in any loaded program
+image, as specified by bit 4 of the area attributes).
+
+
+Relocation Directives
+---------------------
+
+If no relocation is specified, the value of a byte/halfword/word in the
+preceding area is exactly the value that will appear in the final image.
+
+Bytes and halfwords may only be relocated by constant values of suitably      |
+small size. They may not be relocated by an area's base address.              |
+
+A field may be subject to more than one relocation.
+
+There are 2 types of relocation directive, termed here type-1 and type-2.
+Type-2 relocation directives occur only in AOF versions 150 and later.
+
+Relocation can take two basic forms: "Additive" and "PCRelative".
+
+Additive relocation specifies the modification of a byte/halfword/word,
+typically containing a data value (i.e. constant or address).
+
+PCRelative relocation always specifies the modification of a branch (or
+branch with link) instruction and involves the generation of a program-
+counter-relative, signed, 24-bit word-displacement.
+
+Additive relocation directives and type-2 PC-relative relocation directives
+have two variants: "Internal" and "Symbol".
+
+Aditive internal relocation involves adding the allocated base address of an
+area to the field to be relocated. With Type-1 internal relocation directives,
+the value by which a location is relocated is always the base of the area
+with which the relocation directive is associated (the SID field is ignored).
+In a type-2 relocation directive, the SID field specifies the index of the
+area relative to which relocation is to be performed. These relocation
+directives are analogous to the TEXT-, DATA- and BSS-relative relocation
+directives found in the a.out object format.
+
+Symbol relocation involves adding the value of the symbol quoted.
+
+A type-1 PCRelative relocation directive always references a symbol.
+The relocation offset added to any pre-existing in the instruction is the
+offset of the target symbol from the PC current at the instruction making
+the PCRelative reference. The linker takes into account the fact that the
+PC is eight bytes beyond that instruction.
+
+
+In a type-2 PC-relative relocation directive (only in AOF vsn 150 and later)
+the offset bits of the instruction are initialised to the offset of the base
+of the area from the PC value current at the instruction making the reference
+(thus the language translator, not the linker, compensates for the difference
+between the address of the instruction and the PC value current at it). This
+variant is introduced in direct support of compilers that must also generate
+Unix's  a.out format.
+
+For a type-2 PC-relative symbol-type relocation directive, the offset added
+into the instruction making the PC-relative reference is the offset of the
+target symbol from the base of the area containing the instruction. For a
+type-2, PC-relative, internal relocation directive, the offset added into
+the instruction is the offset of the base of the area identifed by the SID
+field from the base of the area containing the instruction.
+
+The linker itself may generate type-2, PC-relative, internal relocation
+directives during the process of partially linking a set of object modules.
+
+
+The Format of Type-1 Relocation Directives
+------------------------------------------
+
+             -----------------------
+             |       Offset        |
+             -----------------------
+             | 0 |A|R|FT|   SID    |
+             -----------------------
+
+Offset
+------
+Offset is the byte offset in the preceding area of the field to be relocated.
+
+SID
+---
+If a symbol is involved in the relocation, this 16-bit field specifies the
+index within the symbol table (see below) of the symbol in question.
+
+FT (Field Type)
+---------------
+This 2-bit field (bits 16-17) specifies the size of the field to be relocated:
+
+    00        byte
+    01        halfword
+    10        word
+    11        --- illegal value ---
+
+R (Relocation Type)
+-------------------
+This field (bit 18) has the following interpretation:
+
+    0         Additive relocation
+    1         PC-Relative relocation
+
+
+A (Additive Type)
+----------------
+In a type-1 relocation directive, this 1-bit field (bit 19) is only interpreted
+if bit 18 is a zero.
+
+A==0 specifies "Internal" relocation, meaning that the base address of the area
+(with which this relocation directive is associated) is added into the field to
+be relocated. A==1 specifies "Symbol" relocation, meaning that the value of the
+given symbol is added to the field being relocated.
+
+Bits 20-31
+----------
+Bits 20-31 are reserved to Acorn and should be written as zeroes.
+
+
+Type-2 Relocation Directives (AOF versions 150 and later)
+---------------------------------------------------------
+
+             ----------------------------
+             |         Offset           |
+             ----------------------------
+             | 1000 |A|R|FT| 24-bit SID |
+             ----------------------------
+
+The interpretation of Offset, FT and SID is exactly the same as for type-1
+relocation directives except that SID is increased from 16 to 24 bits and
+has a different meaning---described below---if A==0).
+
+The second word of a type-2 relocation directive contains 1 in its most
+significant bit; bits 28..30 must be written as 0, as shown.
+
+The different interpretation of the R bit in type-2 directives has already
+been described in the earlier section entitled "Relocation".
+
+If A==0 ('internal' relocation type) then SID is the index of the area, in
+the OBJ_AREA chunk, relative to which the value at Offset in the current area
+is to be relocated. Areas are indexed from 0.
+
+
+Format of the Symbol Table chunk (OBJ_SYMT)
+-------------------------------------------
+
+The "Number of Symbols" field in the header defines how many entries there
+are in the symbol table. Each symbol table entry has the following format:
+
+             -----------------------
+             |         Name        |
+             -----------------------
+             |              |  AT  |
+             -----------------------
+             |        Value        |
+             -----------------------
+             |      Area Name      |  4 words per entry
+             -----------------------
+
+Name
+----
+This value is an index into the string table (in chunk OBJ_STRT) and thus
+locates the character string representing the symbol.
+
+AT
+--
+This is a 7 bit field specifying the attributes of a symbol as follows:-      |
+
+Bits 1,0
+---------
+    (10 means bit 1 set, bit 0 unset).
+
+01  The symbol is defined in this object file and has scope limited to this
+    object file (when resolving symbol references, the linker will only match
+    this symbol to references from other areas within the same object file).
+     
+
+
+10  The symbol is a reference to a symbol defined in another area or
+    another object file. If no defining instance of the symbol is found       |
+    then the linker attempts to match the name of the symbol to the names     |
+    of common blocks. If a match is found it is as if there were defined      |
+    an identically-named symbol of global scope, having as value the base     |
+    address of the common area.                                               |
+
+11  The symbol is defined in this object file and has global scope (i.e. when
+    attempting to resolve unresolved references, the linker will match this
+    symbol to references from other object files).
+
+00  Reserved to Acorn
+
+Bit 2
+-----
+This attribute is only meaningful if the symbol is a defining occurrence
+(bit 0 set). It specifies that the symbol has an absolute value, for example,
+a constant.  Otherwise its value is relative to the base address of the area
+defined by the "Area Name" field of the symbol table entry.
+
+Bit 3
+-----
+This bit is only meaningful if bit 0 is unset (that is, the symbol is an
+external reference). Bit 3 denotes that the reference is case-insensitive.
+When attempting to resolve such an external reference, the linker will ignore
+character case when performing the match.
+
+Bit 4
+-----
+This bit is only meaningful if the symbol is an external reference (bits 1,0
+= 10). It denotes that the reference is "weak", that is that it is acceptable
+for the reference to remain unsatisfied and for any fields relocated via it
+to remain unrelocated.
+
+NOTE: A weak reference still causes a library module satisfying that reference
+      to be auto-loaded.
+
+Bit 5
+-----
+This bit is only meaningful if the symbol is a defining, external occurrence
+(i.e. if bits 1,0 = 11). It denotes that the definition is "strong" and, in
+turn, this is only meaningful if there is a non-strong, external definition
+of the same symbol in another object file. In this scenario, all references
+to the symbol from outside of the file containing the strong definition are
+resolved to the strong definition. Within the file containing the strong
+definition, references to the symbol resolve to the non-strong definition.
+
+This attribute allows a kind of link-time indirection to be enforced. Usually,
+strong definitions will be absolute and will be used to implement an operating
+system's entry vector which must have the "forever binary" property.
+
+Bit 6
+-----
+This bit is only meaningful if bits 1,0 = 10. Bit 6 denotes that the symbol   |
+is a "common symbol"---in effect, a reference to a common area with the       |
+symbol's name. The length of the common area is given by the symbol's value   |
+field (see below). The linker treats common symbols much as it treats areas   |
+having the "common reference" bit set---all symbols with the same name are    |
+assigned the same base address and the length allocated is the maximum of all |
+specified lengths.
+
+If the name of a common symbol matches the name of a common area then these   |
+are 'merged' and symbol identifies the base of the area.                      |
+
+All common symbols for which there is no matching common area (reference or   |
+definition) are collected into an anonymous linker pseudo-area.               |
+
+Value
+-----
+This field is only meaningful if the symbol is a defining occurrence (i.e.
+bit 0 of AT set) or a common symbol (i.e. bit 6 of AT set). If the symbol     |
+is absolute (bit 2 of AT set), this field contains the value of the symbol.
+Otherwise, it is interpreted as an offset from the base address of the area
+defined by "Area Name", which must be an area defined in this object file
+(if the named area is fragmented then the offset is from the base of the
+logical area rather than from the base of any particular fragment).
+
+Area Name
+---------
+This field is only meaningful if the symbol is not absolute (i.e. if bit 2 of
+AT is unset) and the symbol is a defining occurrence (i.e. bit 0 of AT is set).
+In this case it gives the index into the string table of the character string
+name of the (logical) area relative to which the symbol is defined.
+
+
+The String Table chunk (OBJ_STRT)
+---------------------------------
+
+The string table chunk contains all the print names referred to within the
+"areas" and "symbol table" chunks. The separation is made to factor out the
+variable length characteristic of print names. A print name is stored in the
+string table as a sequence of ISO8859 non-control characters terminated by a
+NUL (0) byte and is identified by an offset from the table's beginning. The
+first 4 bytes of the string table contain its length (including the length
+word---so no valid offset into the table is less than 4 and no table has
+length less than 4). The length stored at the start of the string table
+itself is identically the length stored in the OBJ_STRT chunk header.
+
+
+The Identification chunk (OBJ_IDFN)
+-----------------------------------
+
+This chunk should contain a character string (excluding non-whitespace codes
+in the ranges [0..31] and 128+[0..31]), terminated by a NUL (0) byte, giving
+information about the name and version of the language translator which
+generated the object file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Linker-Defined Symbols
+======================
+
+Though not part of the definition of AOF, the definitions of symbols which the
+AOF linker defines during the generation of an image file are collected here.
+These may be referenced from AOF object files, but must not be redefined.
+
+Linker Pre-Defined Symbols
+--------------------------
+The pre-defined symbols occur in Base, Limit pairs. A Base value gives the
+address of the first byte in a region and the corresponding Limit value gives
+the address of the first byte beyond the end of the region. All pre-defined
+symbols begin "Image$$" and the space of all such names is reserved to Acorn.
+None of these symbols may be redefined. The pre-defined symbols are:-
+
+Image$$RO$$Base         Address and limit of the Read-Only section
+Image$$RO$$Limit        of the image.
+
+Image$$RW$$Base         Address and limit of the Read-Write section
+Image$$RW$$Limit        of the image.
+
+Image$$ZI$$Base         Address and limit of the Zero-initialised data
+Image$$ZI$$Limit        section of the image (created from areas having
+                        bit 4 of their area attributes set and from           |
+                        "common symbols" which match no area name).           |
+
+If a section is absent, the Base and Limit values are equal but unpredictable.
+
+Image$$RO$$Base includes any image header prepended by the linker (see, e.g.
+Technical Memorandum PLG-AIF which describes Application Image Format).
+
+Image$$RW$$Limit includes (at the end of the RW section) any zero-initialised
+data created at run-time.
+
+The Image$$xx$${Base,Limit} values are intended to be used by language run-time
+systems. Other values which are needed by a debugger or by part of the pre-run-
+time code associated with a particular image format are deposited into the
+relevant image header by the Linker.
+
+
+
+Common Area Symbols
+-------------------
+
+For each common area, the linker defines a global symbol having the same name
+as the area, except where this would clash with the name of an existing global
+symbol definition (thus a symbol reference may match a common area).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Obsolescent and Obsolete Features
+=================================
+
+The following sub-sections describe features that were part of revison 1.xx of
+AOF and/or that were supported by the 59x releases of the AOF linker, which are
+no longer supported. In each case, a brief rationale for the change is given.
+
+
+Object File Type
+----------------
+AOF used to define three image types as well as a relocatable object file type.
+Image types 2 and 3 were never used under Arthur/RISC OS and are now obsolete.
+Image type 1 is used only by the obsolescent Dbug (new releases of a debugger
+having Dbug's functionality will use Application Image Format).
+
+    AOF Image type 1                C5E2D081 hex          (obsolescent)
+    AOF Image type 2                C5E2D083 hex          (obsolete)
+    AOF Image type 3                C5E2D087 hex          (obsolete)
+
+AL (Area Alignment)
+-------------------
+AOF used to allow the alignment of an area to be any specified power of 2
+between 2 and 16. By convention, relocatable object code areas always used
+minimal alignment (AL=2) and only the obsolete image formats, types 2 and 3,
+specified values other than 2. From now on, all values other than 2 are
+reserved to Acorn.
+
+AT (Area Attributes)
+--------------------
+Two attributes have been withdrawn: the Absolute attribute (bit 0 of AT) and
+the Position Independent attribute (bit 6 of AT).
+
+The Absolute attribute was not supported by the RISC OS linker and therefore
+had no utility. The next linker release will, in any case, allow the effect
+of the absolute attribute to be simulated.
+
+The Position Independent bit used to specify that a code area was position
+independent, meaning that its base address could change at run-time without
+any change being required to its contents. Such an area could only contain
+internal, PC-relative relocations and must make all external references
+through registers. Thus only code and "pure data" (containing no address
+values) could be position-independent.
+
+Few language processors generated the PI bit which was only significant
+to the generation of the obsolete image types 2 and 3 (in which it affected
+AREA placement). Accordingly, its definition has been withdrawn.
+
+
+Fragmented Areas
+----------------
+The concept of fragmented areas was introduced in release 0.04 of AOF,
+tentatively in support of Fortran compilers. To the best of our knowledge,
+fragmented areas were never used. (Two warnings against use were given with
+the original definition on the grounds of: structural incompatibility with
+Unix's a.out format; and likely inefficient handling by the linker. And use
+was hedged around with curious restrictions). Accordingly, the defintion of
+fragmented areas is withdrawn.
