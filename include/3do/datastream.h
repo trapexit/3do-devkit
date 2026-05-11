@@ -153,7 +153,7 @@ typedef struct StreamChunk StreamChunk, *StreamChunkPtr;
   void*	link;		/* user defined -- for linking msg into lists */
 
 typedef struct GenericMsg {
-  DS_MSG_HEADER;
+  DS_MSG_HEADER
 } GenericMsg, *GenericMsgPtr;
 
 /*******************************************************************************************
@@ -190,7 +190,7 @@ enum StreamOpcode
 /**************************************/
 typedef struct SubscriberMsg
 {
-  DS_MSG_HEADER;
+  DS_MSG_HEADER
 
   union {
     struct {								/* kStreamOpData */
@@ -261,7 +261,7 @@ enum DataAcqOpcode
 
 typedef struct DataAcqMsg
 {
-  DS_MSG_HEADER;
+  DS_MSG_HEADER
 
   union {
     struct {								/* kAcqOpGetData */
@@ -345,7 +345,7 @@ enum DSRequestOpcode
 
 typedef struct DSRequestMsg
 {
-  DS_MSG_HEADER;
+  DS_MSG_HEADER
 
   union {
     struct {								/* kDSOpSubscribe */

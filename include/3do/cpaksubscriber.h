@@ -36,7 +36,7 @@ struct ImageDesc_Tag
 
 };
 
-typedef ImageDesc *ImageDescPtr;
+typedef ImageDesc_Tag *ImageDescPtr;
 
 typedef struct CPakChannel CPakChannel;
 typedef CPakChannel* CPakChannelPtr;
@@ -46,7 +46,7 @@ struct CPakChannel
   SubsQueue	dataQueue;	/* queue of waiting data chunks */
   Item		dataQueueSem;	/* semaphore to manage access to data list */
   boolean	fFlushOnSync;	/* flag: if true, flush all chunks from channel on sync */
-  ImageDesc	imageData;    	/* this structure contains the LR form buffer and
+  ImageDesc_Tag	imageData;    	/* this structure contains the LR form buffer and
                                    dimension fields for the unpacked Cinepak data */
 };
 
@@ -91,7 +91,7 @@ typedef struct CPakChunkMsg CPakChunkMsg;
 typedef CPakChunkMsg* CPakChunkMsgPtr;
 struct CPakChunkMsg
 {
-  DS_MSG_HEADER;
+  DS_MSG_HEADER
   void*	buffer;			/* ptr to the data */
 };
 
@@ -150,6 +150,6 @@ void  FlushCPakChannel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, int32 channel);
 int32 SendFreeCPakSignal(CPakContextPtr ctx);
 
 void CPakSubscriberThread(int32 notUsed, CPakContextPtr ctx);
-void FreeMovieBuff(ImageDesc *imagePtr);
+void FreeMovieBuff(ImageDesc_Tag *imagePtr);
 
 EXTERN_C_END
