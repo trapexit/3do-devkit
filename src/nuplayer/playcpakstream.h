@@ -6,7 +6,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright Â© 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/25/93		jb		Add userContext to user function

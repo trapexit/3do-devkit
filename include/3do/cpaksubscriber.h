@@ -7,6 +7,7 @@
 #include "codec.h"
 #include "datastreamlib.h"
 
+#undef FILM_CHUNK_TYPE
 #define	FILM_CHUNK_TYPE	CHAR4LITERAL('F','I','L','M') /* chunk data type for this subscriber */
 #define	FHDR_CHUNK_TYPE	CHAR4LITERAL('F','H','D','R') /* chunk data type for this subscriber */
 #define	FRME_CHUNK_TYPE	CHAR4LITERAL('F','R','M','E') /* chunk data type for this subscriber */

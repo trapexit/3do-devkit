@@ -7,6 +7,7 @@
 #include "itempool.h"
 #include "datastreamlib.h"
 
+#undef CTRL_CHUNK_TYPE
 #define	CTRL_CHUNK_TYPE    CHAR4LITERAL('C','T','R','L') /* chunk type for this subscriber */
 #define	GOTO_CHUNK_SUBTYPE CHAR4LITERAL('G','O','T','O') /* GOTO chunk sub-type */
 #define	SYNC_CHUNK_SUBTYPE CHAR4LITERAL('S','Y','N','C') /* SYNC chunk sub-type */

@@ -2,7 +2,7 @@
 
 #include "extern_c.h"
 
-#include "satastream.h"
+#include "datastream.h"
 #include "subscriberutils.h"
 #include "sastreamchunks.h"
 #include "sachannel.h"
@@ -12,6 +12,7 @@
 
 #define SAUDIO_STREAM_VERSION 0	/* stream version supported by subscriber */
 
+#undef SNDS_CHUNK_TYPE
 #define	SNDS_CHUNK_TYPE	CHAR4LITERAL('S','N','D','S') /* subscriber data type */
 #define	SHDR_CHUNK_TYPE	CHAR4LITERAL('S','H','D','R') /* header subchunk type */
 #define	SSMP_CHUNK_TYPE	CHAR4LITERAL('S','S','M','P') /* sample subchunk type */

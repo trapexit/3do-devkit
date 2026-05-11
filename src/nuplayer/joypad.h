@@ -3,7 +3,7 @@
  *
  *	Routines to read the joypad settings.
  *
- *	Copyright © 1993 The 3DO Company
+ *	Copyright Â© 1993 The 3DO Company
  *
  *	All rights reserved. This material constitutes confidential and
  *proprietary information of the 3DO Company and shall not be used by any

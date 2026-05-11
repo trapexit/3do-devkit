@@ -6,7 +6,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright Ð¹ 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/05/94		dtc		Fix - Bug #3325: Notify user if
@@ -133,7 +133,7 @@ FindAndLoadStreamHeader (DSHeaderChunkPtr headerPtr, char *fileName)
   blockFile.fDevice = 0;
 
   /* Search the buffer for the header information */
-  /* NOTE: ¥¥¥ FOR NOW, WE ASSUME THE HEADER IS THE FIRST DATA IN THE FILE ¥¥¥
+  /* NOTE: ÐµÐµÐµ FOR NOW, WE ASSUME THE HEADER IS THE FIRST DATA IN THE FILE ÐµÐµÐµ
    */
   pLong = (long *)buffer;
 
