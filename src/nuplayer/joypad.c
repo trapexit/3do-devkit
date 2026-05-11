@@ -33,9 +33,9 @@
 #endif
 
 // private static variables
-Boolean gPadInitialized = false;
+bool gPadInitialized = false;
 static ControlPadEventData gCPadData;
-static Boolean gLeftHandedPad[kDefaultCtrlPadCount] = { 0, 0, 0, 0 };
+static bool gLeftHandedPad[kDefaultCtrlPadCount] = { 0, 0, 0, 0 };
 static int32 gJoyContinuousBtns[kDefaultCtrlPadCount] = { 0, 0, 0, 0 };
 static uint32 gLastJoySettings[kDefaultCtrlPadCount] = { 0, 0, 0, 0 };
 
@@ -141,7 +141,7 @@ GetJoyPadContinuous (int32 padNum)
  *  handed orientation.
  */
 void
-SetJoyPadLeftHanded (Boolean playLeftHanded, int32 padNum)
+SetJoyPadLeftHanded (bool playLeftHanded, int32 padNum)
 {
   gLeftHandedPad[padNum - 1] = playLeftHanded;
 }
@@ -182,7 +182,7 @@ _GetJoyPadState (int32 padNum)
  *
  * Returns true if the START button is depressed.
  */
-Boolean
+bool
 GetJoyPad (JoyPadStatePtr joyStatePtr, int32 padNum)
 {
   uint32 joyBits;

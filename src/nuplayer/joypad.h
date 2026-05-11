@@ -60,8 +60,8 @@ typedef JoyPadState *JoyPadStatePtr;
 int32 KillJoypad (void);
 int32 GetJoyPadContinuous (int32 padNum);
 int32 SetJoyPadContinuous (int32 continuousBtnFlags, int32 padNum);
-void SetJoyPadLeftHanded (Boolean playLeftHanded, int32 padNum);
-Boolean GetJoyPad (JoyPadState *joyState, int32 padNum);
+void SetJoyPadLeftHanded (bool playLeftHanded, int32 padNum);
+bool GetJoyPad (JoyPadState *joyState, int32 padNum);
 
-extern Boolean gPadInitialized;
+extern bool gPadInitialized;
 #endif

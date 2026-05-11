@@ -37,13 +37,13 @@ ScreenContext gScreenContext;
 /******************************/
 /* Utility routine prototypes */
 /******************************/
-static Boolean StartUp (void);
+static bool StartUp (void);
 static void EraseScreen (ScreenContext *sc, int32 screenNum);
 
 /*********************************************************************************************
  * Routine to perform any one-time initializations
  *********************************************************************************************/
-static Boolean
+static bool
 StartUp (void)
 {
   gScreenContext.sc_nScreens = 2;

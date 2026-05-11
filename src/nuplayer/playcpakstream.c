@@ -187,7 +187,7 @@ InitCPakPlayerFromStreamHeader (PlayerPtr ctx, char *streamFileName)
   long channelNum;
   SAudioCtlBlock ctlBlock;
   DSHeaderSubsPtr subsPtr;
-  Boolean fStreamHasAudio;
+  bool fStreamHasAudio;
 
   /* Assume no audio */
   fStreamHasAudio = false;

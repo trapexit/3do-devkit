@@ -58,6 +58,7 @@ static const Example examples[] =
     { "Color Echo",        "$boot/colorecho" },
     { "24-bit Slide Show", "$boot/slide_show_24bit" },
     { "AA Player",         "$boot/aaplayer" },
+	{ "NuPlayer",          "$boot/nuplayer" },
     { "LR Extract",        "$boot/lrex" },
     { "NVRAM"     ,        "$boot/nvram" },
     { "Messages",          "$boot/msgpassing" },
