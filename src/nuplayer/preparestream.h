@@ -35,6 +35,8 @@
  */
 #define FIND_HEADER_BUFFER_SIZE 2048
 
+#undef CTRL_CHUNK_TYPE
+#undef SNDS_CHUNK_TYPE
 #define CTRL_CHUNK_TYPE                                                       \
   CHAR4LITERAL ('C', 'T', 'R', 'L') /* chunk type for this subscriber */
 #define SNDS_CHUNK_TYPE                                                       \
