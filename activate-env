@@ -1,63 +1,444 @@
-script_basepath() {
-    if test -n "$BASH" ; then filepath=$BASH_SOURCE
-    elif test -n "$TMOUT"; then filepath=${.sh.file}
-    elif test -n "$ZSH_NAME" ; then filepath=${(%):-%x}
-    elif test ${0##*/} = dash; then x=$(lsof -p $$ -Fn0 | tail -1); filepath=${x#n}
-    else filepath=$0
+#!/usr/bin/env bash
+# 3DO development environment activation script.
+#
+# Usage:
+#   source ./activate-env
+#   deactivate-env
+#
+# This file is source-only because it modifies the current shell environment.
+# It supports Bash, Zsh, and POSIX-compatible shells (dash, ksh, sh).
+
+# Stop early if this file is executed instead of sourced.
+if ! (return 0 2>/dev/null); then
+    echo "Error: this script must be sourced, e.g.: source ./activate-env" >&2
+    exit 1
+fi
+
+_tdo_canonical_dir() {
+    local dir resolved
+    dir=$1
+
+    if [ -z "$dir" ]; then
+        return 1
     fi
 
-    filepath=$(readlink -f "${filepath}")
-    dirpath=$(dirname "${filepath}")
+    if command -v realpath >/dev/null 2>&1; then
+        if resolved=$(realpath "$dir" 2>/dev/null); then
+            printf '%s\n' "$resolved"
+            return 0
+        fi
+    fi
 
-    echo $(cd "${dirpath}" && pwd)
+    if [ -d "$dir" ]; then
+        (cd "$dir" 2>/dev/null && pwd -P)
+    else
+        # Preserve the unresolved path for clearer diagnostics later.
+        printf '%s\n' "$dir"
+    fi
 }
 
-deactivate-env() {
-    if [ -z "$TDO_DEVKIT_PATH" ]; then
+_tdo_script_basepath() {
+    local filepath dirpath resolved
+
+    if [ -n "${BASH_VERSION:-}" ]; then
+        filepath=${BASH_SOURCE[0]}
+    elif [ -n "${ZSH_VERSION:-}" ]; then
+        filepath=${(%):-%x}
+    else
+        # POSIX fallback: $0 may contain the path in some shells
+        case "${0:-}" in
+            */*)
+                if [ -f "$0" ]; then
+                    filepath=$0
+                fi
+                ;;
+        esac
+    fi
+
+    if [ -z "$filepath" ]; then
+        # Cannot determine script path — fall back to current directory.
+        _tdo_canonical_dir "$PWD"
+        return $?
+    fi
+
+    if command -v realpath >/dev/null 2>&1; then
+        if resolved=$(realpath "$filepath" 2>/dev/null); then
+            filepath=$resolved
+        fi
+    elif command -v readlink >/dev/null 2>&1; then
+        if resolved=$(readlink -f "$filepath" 2>/dev/null); then
+            filepath=$resolved
+        fi
+    fi
+
+    dirpath=$(dirname "$filepath") || return 1
+    _tdo_canonical_dir "$dirpath"
+}
+
+_tdo_is_windows_shell() {
+    if [ -n "${MSYSTEM:-}" ]; then
+        return 0
+    fi
+
+    case "${OSTYPE:-}" in
+        *msys*|*mingw*|*cygwin*|*win32*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+_tdo_read_devkit_path_file() {
+    local path_file path_file_dir basepath
+    path_file=$1
+
+    if ! IFS= read -r basepath < "$path_file"; then
+        basepath=
+    fi
+
+    # Tolerate CRLF line endings.
+    basepath=${basepath%$'\r'}
+
+    if [ -z "$basepath" ]; then
+        echo "Error: $path_file is empty." >&2
+        return 1
+    fi
+
+    case "$basepath" in
+        '~')
+            if [ -z "${HOME:-}" ]; then
+                echo "Error: $path_file uses '~', but HOME is not set." >&2
+                return 1
+            fi
+            basepath=$HOME
+            ;;
+        '~/'*)
+            if [ -z "${HOME:-}" ]; then
+                echo "Error: $path_file uses '~/', but HOME is not set." >&2
+                return 1
+            fi
+            basepath=$HOME/${basepath#~/}
+            ;;
+    esac
+
+    # Treat relative paths as relative to the .devkit-path file location, not
+    # the user's current working directory.
+    case "$basepath" in
+        /*|[A-Za-z]:/*|[A-Za-z]:\\*) ;;
+        *)
+            path_file_dir=$(_tdo_canonical_dir "$(dirname "$path_file")") || return 1
+            basepath=$path_file_dir/$basepath
+            ;;
+    esac
+
+    _tdo_canonical_dir "$basepath"
+}
+
+_tdo_path_has_entry() {
+    local needle remaining part
+    needle=$1
+    remaining=${PATH:-}:
+
+    while [ -n "$remaining" ]; do
+        part=${remaining%%:*}
+        remaining=${remaining#*:}
+
+        if [ "$part" = "$needle" ]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+_tdo_entries_contains() {
+    local entries needle entry remaining_entries
+    entries=$1
+    needle=$2
+    remaining_entries=$entries:
+
+    while [ -n "$remaining_entries" ]; do
+        entry=${remaining_entries%%:*}
+        remaining_entries=${remaining_entries#*:}
+
+        if [ "$entry" = "$needle" ]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+_tdo_remove_path_entries() {
+    local entries remaining part new_path have_part
+
+    entries=$1
+    remaining=${PATH:-}:
+    new_path=
+    have_part=0
+
+    while [ -n "$remaining" ]; do
+        part=${remaining%%:*}
+        remaining=${remaining#*:}
+
+        if ! _tdo_entries_contains "$entries" "$part"; then
+            if [ "$have_part" -eq 0 ]; then
+                new_path=$part
+                have_part=1
+            else
+                new_path=$new_path:$part
+            fi
+        fi
+    done
+
+    PATH=$new_path
+}
+
+_tdo_prepend_path_entries() {
+    local entries
+    entries=$1
+
+    _tdo_remove_path_entries "$entries"
+
+    if [ -n "${PATH:-}" ]; then
+        PATH=$entries:$PATH
+    else
+        PATH=$entries
+    fi
+}
+
+_tdo_cleanup_helpers() {
+    if [ -n "${ZSH_VERSION:-}" ]; then
+        unfunction \
+            _tdo_canonical_dir \
+            _tdo_script_basepath \
+            _tdo_is_windows_shell \
+            _tdo_read_devkit_path_file \
+            _tdo_path_has_entry \
+            _tdo_entries_contains \
+            _tdo_remove_path_entries \
+            _tdo_prepend_path_entries \
+            _tdo_activate_env \
+            _tdo_cleanup_helpers \
+            _tdo_finish 2>/dev/null || true
+    else
+        unset -f \
+            _tdo_canonical_dir \
+            _tdo_script_basepath \
+            _tdo_is_windows_shell \
+            _tdo_read_devkit_path_file \
+            _tdo_path_has_entry \
+            _tdo_entries_contains \
+            _tdo_remove_path_entries \
+            _tdo_prepend_path_entries \
+            _tdo_activate_env \
+            _tdo_cleanup_helpers \
+            _tdo_finish 2>/dev/null || true
+    fi
+}
+
+deactivate() {
+    local entries
+    local entry remaining remaining_entries part new_path have_part skip
+
+    if [ -z "${TDO_DEVKIT_PATH:-}" ]; then
         echo "3DO development environment not activated."
         return 1
     fi
 
-    if [ -n "$MSYSTEM" ] || [[ "$OSTYPE" == *msys* ]]; then
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/compiler/win}
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/tools/win}
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/buildtools/win}
+    if [ -n "${TDO_DEVKIT_OLD_PATH+x}" ]; then
+        PATH=$TDO_DEVKIT_OLD_PATH
     else
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/compiler/linux}
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/tools/linux}
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/buildtools/linux}
+        entries=$TDO_DEVKIT_PATH_ENTRIES
+
+        remaining=${PATH:-}:
+        new_path=
+        have_part=0
+
+        while [ -n "$remaining" ]; do
+            part=${remaining%%:*}
+            remaining=${remaining#*:}
+            skip=0
+
+            remaining_entries=$entries:
+            while [ -n "$remaining_entries" ]; do
+                entry=${remaining_entries%%:*}
+                remaining_entries=${remaining_entries#*:}
+
+                if [ "$part" = "$entry" ]; then
+                    skip=1
+                    break
+                fi
+            done
+
+            if [ "$skip" -eq 0 ]; then
+                if [ "$have_part" -eq 0 ]; then
+                    new_path=$part
+                    have_part=1
+                else
+                    new_path=$new_path:$part
+                fi
+            fi
+        done
+
+        PATH=$new_path
     fi
+
     export PATH
     unset TDO_DEVKIT_PATH
-    unset -f deactivate-env
+    unset TDO_DEVKIT_OLD_PATH
+    unset TDO_DEVKIT_PATH_ENTRIES
+    hash -r 2>/dev/null || true
+
     echo "3DO development environment deactivated."
+    unset -f deactivate 2>/dev/null || unfunction deactivate 2>/dev/null || true
 }
 
-if [ -z "$TDO_DEVKIT_PATH" ]; then
-    if [ -f ".devkit-path" ]; then
-        basepath=$(cat .devkit-path)
-    else
-        basepath=$(script_basepath)
-    fi
-    export TDO_DEVKIT_PATH="$basepath"
+_tdo_activate_env() {
+    local script_dir devkit_path_file basepath basepath_source platform
+    local compiler_path tools_path buildtools_path entries
+    local original_devkit_path original_devkit_path_was_set path_was_saved_this_run
+    local found_armcc entries_present needs_path_update _tdo_dir
 
-    if [ -n "$MSYSTEM" ] || [[ "$OSTYPE" == *msys* ]]; then
-        export PATH="$PATH:$basepath/bin/compiler/win"
-        export PATH="$PATH:$basepath/bin/tools/win"
-        export PATH="$PATH:$basepath/bin/buildtools/win"
-    else
-        export PATH="$PATH:$basepath/bin/compiler/linux"
-        export PATH="$PATH:$basepath/bin/tools/linux"
-        export PATH="$PATH:$basepath/bin/buildtools/linux"
-    fi
-fi
+    original_devkit_path_was_set=0
+    original_devkit_path=
+    path_was_saved_this_run=0
 
-if command -v armcc >/dev/null 2>&1; then
-    echo "3DO development environment activated. Run 'deactivate-env' to deactivate."
-else
-    echo "Error: Activation failed. armcc not found in PATH."
-    if [ -f ".devkit-path" ]; then
-        echo "Note: .devkit-path contains: $basepath"
-        echo "If this path is wrong, update .devkit-path."
+    if [ -n "${TDO_DEVKIT_PATH+x}" ]; then
+        original_devkit_path_was_set=1
+        original_devkit_path=$TDO_DEVKIT_PATH
     fi
-fi
+
+    script_dir=$(_tdo_script_basepath) || {
+        echo "Error: could not determine this script's directory." >&2
+        return 1
+    }
+
+    if [ -n "${TDO_DEVKIT_PATH:-}" ]; then
+        basepath=$(_tdo_canonical_dir "$TDO_DEVKIT_PATH") || return 1
+        basepath_source=TDO_DEVKIT_PATH
+    else
+        devkit_path_file=${TDO_DEVKIT_PATH_FILE:-$script_dir/.devkit-path}
+
+        if [ -f "$devkit_path_file" ]; then
+            basepath=$(_tdo_read_devkit_path_file "$devkit_path_file") || return 1
+            basepath_source=$devkit_path_file
+        else
+            basepath=$script_dir
+            basepath_source="script directory"
+        fi
+    fi
+
+    if [ ! -d "$basepath" ]; then
+        echo "Error: devkit path does not exist: $basepath" >&2
+        echo "Path source: $basepath_source" >&2
+        return 1
+    fi
+
+    if _tdo_is_windows_shell; then
+        platform=win
+    else
+        platform=linux
+    fi
+
+    compiler_path=$basepath/bin/compiler/$platform
+    tools_path=$basepath/bin/tools/$platform
+    buildtools_path=$basepath/bin/buildtools/$platform
+    entries=$compiler_path:$tools_path:$buildtools_path
+
+    if [ ! -d "$compiler_path" ] || [ ! -d "$tools_path" ] || [ ! -d "$buildtools_path" ]; then
+        echo "Error: devkit path does not contain the expected $platform tool directories." >&2
+        echo "Checked:" >&2
+        echo "  $compiler_path" >&2
+        echo "  $tools_path" >&2
+        echo "  $buildtools_path" >&2
+        echo "Path source: $basepath_source" >&2
+        return 1
+    fi
+
+    entries_present=1
+    for _tdo_dir in "$compiler_path" "$tools_path" "$buildtools_path"; do
+        if ! _tdo_path_has_entry "$_tdo_dir"; then
+            entries_present=0
+            break
+        fi
+    done
+
+    found_armcc=$(command -v armcc 2>/dev/null || true)
+    needs_path_update=1
+    case "$found_armcc" in
+        "$compiler_path"/*)
+            if [ "$entries_present" -eq 1 ]; then
+                needs_path_update=0
+            fi
+            ;;
+    esac
+
+    export TDO_DEVKIT_PATH=$basepath
+    TDO_DEVKIT_PATH_ENTRIES=$entries
+
+    if [ "$needs_path_update" -eq 1 ]; then
+        if [ -z "${TDO_DEVKIT_OLD_PATH+x}" ]; then
+            TDO_DEVKIT_OLD_PATH=${PATH:-}
+            path_was_saved_this_run=1
+        fi
+
+        _tdo_prepend_path_entries "$entries"
+        export PATH
+        hash -r 2>/dev/null || true
+    fi
+
+    found_armcc=$(command -v armcc 2>/dev/null || true)
+    case "$found_armcc" in
+        "$compiler_path"/*)
+            if [ "$needs_path_update" -eq 1 ]; then
+                echo "3DO development environment activated: $TDO_DEVKIT_PATH"
+            else
+                echo "3DO development environment already activated: $TDO_DEVKIT_PATH"
+            fi
+            echo "Run 'deactivate' to deactivate."
+            return 0
+            ;;
+        "")
+            echo "Error: activation failed. armcc not found in PATH." >&2
+            ;;
+        *)
+            echo "Error: activation failed. armcc resolved outside the selected devkit: $found_armcc" >&2
+            ;;
+    esac
+
+    echo "Selected devkit path: $basepath" >&2
+    echo "Path source: $basepath_source" >&2
+
+    if [ "$path_was_saved_this_run" -eq 1 ]; then
+        PATH=$TDO_DEVKIT_OLD_PATH
+        export PATH
+        unset TDO_DEVKIT_OLD_PATH
+    fi
+
+    if [ "$original_devkit_path_was_set" -eq 1 ]; then
+        TDO_DEVKIT_PATH=$original_devkit_path
+        export TDO_DEVKIT_PATH
+    else
+        unset TDO_DEVKIT_PATH
+    fi
+
+    unset TDO_DEVKIT_PATH_ENTRIES
+    hash -r 2>/dev/null || true
+    return 1
+}
+
+_tdo_finish() {
+    local _tdo_finish_rc
+    _tdo_finish_rc=$1
+
+    if [ "$_tdo_finish_rc" -ne 0 ]; then
+        unset -f deactivate 2>/dev/null || unfunction deactivate 2>/dev/null || true
+    fi
+
+    _tdo_cleanup_helpers
+    unset _tdo_status _tdo_dir
+    return "$_tdo_finish_rc"
+}
+
+_tdo_activate_env
+_tdo_status=$?
+_tdo_finish "$_tdo_status"
