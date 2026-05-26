@@ -7,7 +7,7 @@
 #   . .\activate-env.ps1
 #
 # Dot-sourcing keeps the intent explicit. The script also keeps its helper
-# functions private and defines only deactivate-env in the global session.
+# functions private and defines only deactivate in the global session.
 
 $__tdoActivationScriptDir = if ($PSScriptRoot) {
     $PSScriptRoot
@@ -272,7 +272,7 @@ try {
 
         function Get-GlobalDeactivateEnvFunction {
             try {
-                return Get-Item -LiteralPath 'Function:\Global:deactivate-env' -ErrorAction Stop
+                return Get-Item -LiteralPath 'Function:\Global:deactivate' -ErrorAction Stop
             }
             catch {
                 return $null
@@ -286,10 +286,10 @@ try {
             )
 
             if ($State.HadOriginalDeactivateFunction) {
-                Set-Item -LiteralPath 'Function:\Global:deactivate-env' -Value $State.OriginalDeactivateFunctionScriptBlock -Force
+                Set-Item -LiteralPath 'Function:\Global:deactivate' -Value $State.OriginalDeactivateFunctionScriptBlock -Force
             }
             else {
-                Remove-Item -LiteralPath 'Function:\Global:deactivate-env' -ErrorAction SilentlyContinue
+                Remove-Item -LiteralPath 'Function:\Global:deactivate' -ErrorAction SilentlyContinue
             }
         }
 
@@ -437,16 +437,16 @@ try {
             $snapshot.ExpectedArmccPath = $expectedArmcc
             Set-Variable -Name $stateVariableName -Scope Global -Value $snapshot
 
-            function global:deactivate-env {
-                $stateVariable = Get-Variable -Name '__TDO_DEVKIT_ACTIVATION_STATE' -Scope Global -ErrorAction SilentlyContinue
+            function global:deactivate {
+                $stateVariable = Get-Variable -Name $stateVariableName -Scope Global -ErrorAction SilentlyContinue
 
                 if (
                     -not $stateVariable -or
                     -not $stateVariable.Value -or
-                    $stateVariable.Value.Marker -ne 'TDO_DEVKIT_ACTIVATE_ENV_STATE_V2'
+                    $stateVariable.Value.Marker -ne $stateMarker
                 ) {
                     Write-Host '3DO development environment not activated.'
-                    Remove-Item -LiteralPath 'Function:\Global:deactivate-env' -ErrorAction SilentlyContinue
+                    Remove-Item -LiteralPath 'Function:\Global:deactivate' -ErrorAction SilentlyContinue
                     return
                 }
 
@@ -466,19 +466,19 @@ try {
                     Remove-Item -LiteralPath Env:\TDO_DEVKIT_PATH -ErrorAction SilentlyContinue
                 }
 
-                Remove-Variable -Name '__TDO_DEVKIT_ACTIVATION_STATE' -Scope Global -ErrorAction SilentlyContinue
+                Remove-Variable -Name $stateVariableName -Scope Global -ErrorAction SilentlyContinue
 
                 if ($state.HadOriginalDeactivateFunction) {
-                    Set-Item -LiteralPath 'Function:\Global:deactivate-env' -Value $state.OriginalDeactivateFunctionScriptBlock -Force
+                    Set-Item -LiteralPath 'Function:\Global:deactivate' -Value $state.OriginalDeactivateFunctionScriptBlock -Force
                 }
                 else {
-                    Remove-Item -LiteralPath 'Function:\Global:deactivate-env' -ErrorAction SilentlyContinue
+                    Remove-Item -LiteralPath 'Function:\Global:deactivate' -ErrorAction SilentlyContinue
                 }
 
                 Write-Host '3DO development environment deactivated.'
             }
 
-            Write-Host "3DO development environment activated. Run 'deactivate-env' to deactivate."
+            Write-Host "3DO development environment activated. Run 'deactivate' to deactivate."
         }
         catch {
             Restore-TdoEnvironmentSnapshot -Snapshot $snapshot
