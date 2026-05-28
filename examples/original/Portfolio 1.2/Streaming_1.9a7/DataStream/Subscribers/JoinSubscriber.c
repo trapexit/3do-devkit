@@ -11,7 +11,7 @@
  *
  *	Written by:		Neil Cormia
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	12/1/93		jb		Version 1.4

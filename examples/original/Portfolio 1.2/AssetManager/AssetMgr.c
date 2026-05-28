@@ -4,7 +4,7 @@
  *	Contains:		simple read-only asset management database for 3DO
  *applications
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	9/15/93		jb		New today

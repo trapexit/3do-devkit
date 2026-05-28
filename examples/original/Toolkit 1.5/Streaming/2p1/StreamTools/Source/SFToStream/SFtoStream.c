@@ -6,7 +6,7 @@
  *
  *	Written by: 	Darren Gibbs
  *
- *	Copyright © 1993-94 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993-94 The 3DO Company. All Rights Reserved.
  *
  *	Notes:			This tool will convert AIFF and AIFC soundfiles
  *into chunk format Does NOT write fully qualified stream blocks, it only

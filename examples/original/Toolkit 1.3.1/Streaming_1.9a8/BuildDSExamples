@@ -8,7 +8,7 @@
 #					"clean"		deletes all object files before
 #								building everything
 #
-#	Copyright © 1992 The 3DO Company
+#	Copyright (c) 1992 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -50,14 +50,14 @@
 			Set Exit 0
 
 			For ExampleDir in `Files -d`
-				Delete -i "{ExampleDir}Objects:"Å.o
+				Delete -i "{ExampleDir}Objects:"A.o
 			End
 		
 			# Restore the state of {Exit}
 			Set Exit {saveExit}
 			Unset saveExit
 	
-		End ·· Dev:Null
+		End ** Dev:Null
 	End
 
 #
@@ -68,13 +68,13 @@
 
 		# Get the example name with version number
 
-		(Evaluate "{ExampleDir}" =~ /Å:(Å)¨1:/ ) ·· Dev:Null
-		Set ExampleName "{¨1}"
+		(Evaluate "{ExampleDir}" =~ /A:(A)"1:/ ) ** Dev:Null
+		Set ExampleName "{"1}"
 
 		# Get the example name without version number
 
-		(Evaluate "{ExampleDir}" =~ /Å:(Å)¨1_Å:/ ) ·· Dev:Null
-		Set ExampleRootName "{¨1}"
+		(Evaluate "{ExampleDir}" =~ /A:(A)"1_A:/ ) ** Dev:Null
+		Set ExampleRootName "{"1}"
 
 		# Build the example
 

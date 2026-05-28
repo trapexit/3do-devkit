@@ -8,7 +8,7 @@
                                         based on some code I found on Neil's
    disk... (oh the wonder of file sharing)
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -78,7 +78,7 @@ Leaks_Off ()
 /*
  * _Leaks_Dump
  *	Private function to dump the current contents of the leak tracking
- *table. Use can 'call' Leaks_Dump and end up here via the “Leaks_Dump” macro
+ *table. Use can 'call' Leaks_Dump and end up here via the OLeaks_DumpO macro
  */
 void
 _Leaks_Dump (int32 lineNum, char *fileName)

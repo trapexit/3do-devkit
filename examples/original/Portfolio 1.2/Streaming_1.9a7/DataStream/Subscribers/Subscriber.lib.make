@@ -3,7 +3,7 @@
 #
 #	Contains:	make file for building Subscriber
 #
-#	Copyright © 1992 The 3DO Company
+#	Copyright (c) 1992 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -43,52 +43,52 @@ LOptions		= -o
 #####################################
 #		Object files
 #####################################
-OBJECTS			=	"{ObjectDir}ControlSubscriber.c.o"		¶
-					"{ObjectDir}CPakSubscriber.c.o"			¶
-					"{ObjectDir}JoinSubscriber.c.o"			¶
-					"{ObjectDir}SAnimSubscriber.c.o"		¶
-					"{ObjectDir}SAMain.c.o"					¶
-					"{ObjectDir}SAChannel.c.o"				¶
-					"{ObjectDir}SAFolioInterface.c.o"		¶
-					"{ObjectDir}SATemplates.c.o"			¶
-					"{ObjectDir}SATrace.c.o"				¶
+OBJECTS			=	"{ObjectDir}ControlSubscriber.c.o"		--
+					"{ObjectDir}CPakSubscriber.c.o"			--
+					"{ObjectDir}JoinSubscriber.c.o"			--
+					"{ObjectDir}SAnimSubscriber.c.o"		--
+					"{ObjectDir}SAMain.c.o"					--
+					"{ObjectDir}SAChannel.c.o"				--
+					"{ObjectDir}SAFolioInterface.c.o"		--
+					"{ObjectDir}SATemplates.c.o"			--
+					"{ObjectDir}SATrace.c.o"				--
 					"{ObjectDir}SubscriberUtils.c.o"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Library}.lib
+All				A	{Library}.lib
 
-{ObjectDir}		Ä	: {AudioDir}
+{ObjectDir}		A	: {AudioDir}
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 #####################################
 #	Target build rules
 #####################################
-{Library}.lib		ÄÄ	{Library}.lib.make {OBJECTS}
-	{LIBRARIAN}	{LOptions}			¶
-				-c {Library}.lib	¶
+{Library}.lib		AA	{Library}.lib.make {OBJECTS}
+	{LIBRARIAN}	{LOptions}			--
+				-c {Library}.lib	--
 				{OBJECTS}
 
 #####################################
 #	Include file dependencies
 #####################################
-ControlSubscriber.c				Ä	ControlSubscriber.h
-CPakSubscriber.c				Ä	CPakSubscriber.h
-JoinSubscriber.c				Ä	JoinSubscriber.h
-SAnimSubscriber.c				Ä	SAnimSubscriber.h
-SubscriberUtils.c				Ä	SubscriberUtils.h
-{AudioDir}SAMain.c				Ä	SAudioSubscriber.h SAErrors.h SATemplates.h ¶
+ControlSubscriber.c				A	ControlSubscriber.h
+CPakSubscriber.c				A	CPakSubscriber.h
+JoinSubscriber.c				A	JoinSubscriber.h
+SAnimSubscriber.c				A	SAnimSubscriber.h
+SubscriberUtils.c				A	SubscriberUtils.h
+{AudioDir}SAMain.c				A	SAudioSubscriber.h SAErrors.h SATemplates.h --
 									SAControlMsgs.h SAFolioInterface.h
-{AudioDir}SAChannel.c			Ä	SAChannel.h SAErrors.h SAudioSubscriber.h ¶
+{AudioDir}SAChannel.c			A	SAChannel.h SAErrors.h SAudioSubscriber.h --
 									SAStreamChunks.h SAFolioInterface.h
-{AudioDir}SAFolioInterface.c	Ä	SAFolioInterface.h ¶
+{AudioDir}SAFolioInterface.c	A	SAFolioInterface.h --
 									SAudioSubscriber.h SAErrors.h
-{AudioDir}SATemplates.c			Ä	SATemplates.h SAErrors.h ¶
+{AudioDir}SATemplates.c			A	SATemplates.h SAErrors.h --
 									SAStreamChunks.h
-{AudioDir}SATrace.c				Ä	SATrace.h
+{AudioDir}SATrace.c				A	SATrace.h

@@ -5,10 +5,10 @@ NAME
                                                 to a 3DO DataStream chunk file.
 
 SYNOPSIS
-      MovieToStream [flags] [movieFile(s)É]
+      MovieToStream [flags] [movieFile(s)E]
 
 COPYRIGHT
-          Copyright © 1993 The 3DO Company. All Rights Reserved.
+          Copyright (c) 1993 The 3DO Company. All Rights Reserved.
 
 HISTORY:
         10/10/94	dtc		Version 2.0b1
@@ -643,7 +643,7 @@ DumpMovie (Movie theMovie, Str255 filmFileName, Str255 keyFileName)
 
   currentSoundTime = 0;
 
-  /*	¥¥¥ TEMP TEMP TEMP ¥¥¥	*/
+  /*	*** TEMP TEMP TEMP ***	*/
   /*		Defeat the Sound	*/
 
   SoundMedia[0] = nil;
@@ -804,7 +804,7 @@ DumpMovie (Movie theMovie, Str255 filmFileName, Str255 keyFileName)
               SSndC.subChunkType = kSoundSampleType;
               SSndC.channel = gChannel;
               SSndC.time = CvtTo3DOTime (currentSoundTime, SSndH.sampleRate);
-              /* SSndC.numSamples	= numberOfSamples; ¥¥¥ might need this
+              /* SSndC.numSamples	= numberOfSamples; *** might need this
                * someday... */
 
               writeSize = sizeof (StreamSoundChunk);
@@ -849,7 +849,7 @@ DumpMovie (Movie theMovie, Str255 filmFileName, Str255 keyFileName)
           currentSoundTime += 44100;
         }
 
-      //	LOOP UNTIL WE HAVE WRITTEN ONE SECOND OF VIDEO ¥¥¥
+      //	LOOP UNTIL WE HAVE WRITTEN ONE SECOND OF VIDEO ***
       do
         {
 
@@ -1070,7 +1070,7 @@ static void
 Usage (char *toolName)
 {
   fprintf (stderr, "# Version %s\n", PROGRAM_VERSION_STRING);
-  fprintf (stderr, "usage: %s flags movieFile(s)É \n", toolName);
+  fprintf (stderr, "usage: %s flags movieFile(s)E \n", toolName);
   fprintf (stderr, "		[-b <size>] blocking size\n");
   fprintf (stderr, "		[-c <channel>]\n");
   fprintf (stderr, "		[-d <outputDirectory>]\n");
@@ -1078,7 +1078,7 @@ Usage (char *toolName)
   fprintf (stderr, "		[-m <rate>] marker rate (sec)\n");
   fprintf (stderr, "		[-o <outputfilename>]\n");
   fprintf (stderr, "		[-v] toggle verbose diagnostic output\n");
-  fprintf (stderr, "		[movieFile(s)É].\n");
+  fprintf (stderr, "		[movieFile(s)E].\n");
 }
 
 // Do the conversion
@@ -1110,8 +1110,8 @@ main (int argc, char *argv[])
   // Check to see if QuickTime is installed
   if ((status = Gestalt (gestaltQuickTime, &result)) != noErr)
     {
-      fprintf (stderr, "QuickTimeª is not installed.\n");
-      fprintf (stderr, "Please place the QuickTimeª extension in your system "
+      fprintf (stderr, "QuickTimea is not installed.\n");
+      fprintf (stderr, "Please place the QuickTimea extension in your system "
                        "folder and restart your Machintosh.\n");
       exit (status);
     }

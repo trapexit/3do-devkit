@@ -16,20 +16,20 @@ ObjectDir		=	:Objects:
 
 OBJECTS			= {ObjectDir}{Program}.c.o  {ObjectDir}MFToText.c.o {ObjectDir}ParseMF.c.o
 
-{Program} ÄÄ {Program}.make {OBJECTS}
+{Program} AA {Program}.make {OBJECTS}
 	Rez  -o {Program} {Program}.r -a -ov
-	Link -d -c 'MPS ' -t MPST ¶
-		{DEBUG_FLAGS} ¶
-		{OBJECTS} ¶
-		#"{CLibraries}"CSANELib.o ¶
-		#"{CLibraries}"Math.o ¶
-		#"{CLibraries}"Complex.o ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"MacRuntime.o ¶
-		"{Libraries}"IntEnv.o ¶
-		"{Libraries}"Interface.o ¶
-		"{Libraries}"ToolLibs.o ¶
+	Link -d -c 'MPS ' -t MPST --
+		{DEBUG_FLAGS} --
+		{OBJECTS} --
+		#"{CLibraries}"CSANELib.o --
+		#"{CLibraries}"Math.o --
+		#"{CLibraries}"Complex.o --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"MacRuntime.o --
+		"{Libraries}"IntEnv.o --
+		"{Libraries}"Interface.o --
+		"{Libraries}"ToolLibs.o --
 		-o {Program}
 	if not `exists {AppsDir}`
 		newFolder {AppsDir}
@@ -39,11 +39,11 @@ OBJECTS			= {ObjectDir}{Program}.c.o  {ObjectDir}MFToText.c.o {ObjectDir}ParseMF
 		move -y {Program}.sym {AppsDir}{Program}.sym
 	end
 
-{ObjectDir}{Program}.c.o 		Ä		{Program}.make {Program}.c
+{ObjectDir}{Program}.c.o 		A		{Program}.make {Program}.c
 	 C {DEBUG_FLAGS} -r  {Program}.c -o {ObjectDir}{Program}.c.o
 
-{ObjectDir}MFToText.c.o 	Ä		{Program}.make MFToText.c
+{ObjectDir}MFToText.c.o 	A		{Program}.make MFToText.c
 	 C {DEBUG_FLAGS} -r  MFToText.c -o {ObjectDir}MFToText.c.o
 
-{ObjectDir}ParseMF.c.o 	Ä		{Program}.make ParseMF.c
+{ObjectDir}ParseMF.c.o 	A		{Program}.make ParseMF.c
 	 C {DEBUG_FLAGS} -r  ParseMF.c -o {ObjectDir}ParseMF.c.o

@@ -4,7 +4,7 @@
  *	Contains:		routine to generate a unique name for use with
  *kernel services
  *
- *	Copyright © 1992-93 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1992-93 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/10/93		jb		New today

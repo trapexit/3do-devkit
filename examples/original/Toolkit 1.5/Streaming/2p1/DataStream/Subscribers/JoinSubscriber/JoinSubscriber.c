@@ -11,7 +11,7 @@
  *
  *	Written by:		Neil Cormia
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  * 	  7/29/94	dtc		Version 2.0.1d2

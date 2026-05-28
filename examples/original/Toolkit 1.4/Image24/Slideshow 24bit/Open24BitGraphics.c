@@ -6,7 +6,7 @@
  *	Written by:		Stephen Landrum, George Mitsuoka, Neil Day,
  *Steve Hayes and friends.
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	4/29/94			jhm		Commented out #define

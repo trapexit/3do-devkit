@@ -6,7 +6,7 @@
 
         Written by:	Charlie Eckhaus (tip o' the hat to Mike Ramirez)
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -104,13 +104,13 @@ ShowHelp ()
 /* Show Help for this tool */
 /* HINTS:
 
-        • Incorporate your tool name, your name, additional options, all of the
+        * Incorporate your tool name, your name, additional options, all of the
    category's call names
 */
 {
   kprintf (
       "\n#################################################################\n");
-  kprintf ("Version Checker %s Help…\n", kVersionStr);
+  kprintf ("Version Checker %s HelpE\n", kVersionStr);
   kprintf ("Written by Charlie Eckhaus for The 3DO Company\n");
   kprintf (
       "#################################################################\n");
@@ -440,7 +440,7 @@ main (int argc, char **argv)
 
       kprintf ("##############################################################"
                "###\n");
-      kprintf ("Version Checker - End…\n");
+      kprintf ("Version Checker - EndE\n");
       kprintf ("##############################################################"
                "###\n");
     }

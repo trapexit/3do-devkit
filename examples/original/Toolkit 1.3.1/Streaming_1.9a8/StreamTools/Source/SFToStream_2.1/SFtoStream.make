@@ -9,19 +9,19 @@ OBJECTS = SFtoStream.c.o
 DEBUG_FLAGS = 
 
 
-SFtoStream ÄÄ SFtoStream.make {OBJECTS}
+SFtoStream AA SFtoStream.make {OBJECTS}
 	Rez  -o SFtoStream SFtoStream.r -a -ov
-	Link -d -c 'MPS ' -t MPST ¶
-		{DEBUG_FLAGS} ¶
-		{OBJECTS} ¶
-		#"{CLibraries}"CSANELib.o ¶
-		#"{CLibraries}"Math.o ¶
-		#"{CLibraries}"Complex.o ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"Runtime.o ¶
-		"{Libraries}"Interface.o ¶
-		"{Libraries}"ToolLibs.o ¶
+	Link -d -c 'MPS ' -t MPST --
+		{DEBUG_FLAGS} --
+		{OBJECTS} --
+		#"{CLibraries}"CSANELib.o --
+		#"{CLibraries}"Math.o --
+		#"{CLibraries}"Complex.o --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"Runtime.o --
+		"{Libraries}"Interface.o --
+		"{Libraries}"ToolLibs.o --
 		-o SFtoStream
-SFtoStream.c.o Ä SFtoStream.make SFtoStream.c
+SFtoStream.c.o A SFtoStream.make SFtoStream.c
 	 C {DEBUG_FLAGS} -r  SFtoStream.c

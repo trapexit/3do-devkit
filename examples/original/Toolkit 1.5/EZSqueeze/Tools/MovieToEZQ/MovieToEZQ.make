@@ -13,7 +13,7 @@ COPYTODESTINATION	= Duplicate -y {PROGRAM} "{Destination}"{PROGRAM}
 #COPYTODESTINATION	= 
 
 
-#OBJECTS = MovieToEZQ.c.o Display.c.o GWorlds.a.o writeVideo.c.o ¶
+#OBJECTS = MovieToEZQ.c.o Display.c.o GWorlds.a.o writeVideo.c.o --
 	
 OBJECTS = MovieToEZQ.c.o Display.c.o GWorlds.a.o writeVideo.c.o 
 
@@ -25,29 +25,29 @@ MathLibs = "{CLibraries}"Math881.o "{CLibraries}"Clib881.o "{CLibraries}"CSANELi
 #MathLibs = "{CLibraries}"CSANELib.o "{CLibraries}"Math.o
 
 	
-{PROGRAM}		Ä "{Destination}"{PROGRAM}
-"{Destination}"{PROGRAM} Ä {PROGRAM}.make {PROGRAM}.r {OBJECTS}
+{PROGRAM}		A "{Destination}"{PROGRAM}
+"{Destination}"{PROGRAM} A {PROGRAM}.make {PROGRAM}.r {OBJECTS}
 	Rez  -o MovieToEZQ MovieToEZQ.r -a -ov
-	Link -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		{MathLibs}¶
-		Squeeze.lib  ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"MacRunTime.o ¶
-		"{Libraries}"IntEnv.o ¶
-		"{Libraries}"Interface.o ¶
-		"{Libraries}"ToolLibs.o ¶
+	Link -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		{MathLibs}--
+		Squeeze.lib  --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"MacRunTime.o --
+		"{Libraries}"IntEnv.o --
+		"{Libraries}"Interface.o --
+		"{Libraries}"ToolLibs.o --
 		-o MovieToEZQ
 	{COPYTODESTINATION}
 
 
-MovieToEZQ.c.o Ä MovieToEZQ.make MovieToEZQ.c EZQ_Defs.h
+MovieToEZQ.c.o A MovieToEZQ.make MovieToEZQ.c EZQ_Defs.h
 	 C {COptions}  MovieToEZQ.c
-Display.c.o Ä MovieToEZQ.make Display.c myGWorld.h
+Display.c.o A MovieToEZQ.make Display.c myGWorld.h
 	 C {COptions}  Display.c
-writeVideo.c.o Ä MovieToEZQ.make writeVideo.c myGWorld.h
+writeVideo.c.o A MovieToEZQ.make writeVideo.c myGWorld.h
 	 C {COptions}  writeVideo.c
-GWorlds.a.o Ä GWorlds.a
+GWorlds.a.o A GWorlds.a
 	Asm GWorlds.a
 

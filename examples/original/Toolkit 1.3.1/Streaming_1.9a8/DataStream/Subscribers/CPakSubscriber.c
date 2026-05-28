@@ -5,7 +5,7 @@
  *
  *	Written by:		Neil Cormia
  *
- *	Copyright й 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	03/15/94	MPH		Changed GetDstStuff() to handle
@@ -159,7 +159,7 @@ AllocMovieBuff (ImageDesc *imagePtr, CinePakHeaderPtr pCPHeader)
 
   imagePtr->rowBytes = imagePtr->width * BYTES_PER_PIXEL;
 
-  /* еее We need to make sure that we have an even number of rows */
+  /* *** We need to make sure that we have an even number of rows */
   movieFrameBuff = (ubyte *)NewPtr (imagePtr->rowBytes * imagePtr->height,
                                     MEMTYPE_ANY | (MEMTYPE_FILL | 0x00));
 
@@ -921,7 +921,7 @@ DoData (CPakContextPtr ctx, SubscriberMsgPtr subMsg)
   int32 *channelPtr;
 
   chunkData = (SubsChunkDataPtr)subMsg->msg.data.buffer;
-  channelPtr = &chunkData->channel; /*еее HACK FOR COMPILER PROBLEM еее*/
+  channelPtr = &chunkData->channel; /**** HACK FOR COMPILER PROBLEM ****/
   channelNumber = *channelPtr;
 
   if (channelNumber < ctx->numChannels)

@@ -7,7 +7,7 @@
  *
  *	Written by:		Donn Denman
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	07/07/94		dtc		Changed haltPart and subsPart to streamerChunk and

@@ -138,9 +138,9 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
 * The [Lib3DO TextLib and
   FontLib](https://github.com/trapexit/portfolio_os/tree/master/src/libs/lib3DO/TextLib)
   provide decent, flexible functions for fonts and text
-  generation. TextLib provides a “TextCel” object which has a Cel CCB
+  generation. TextLib provides a "TextCel" object which has a Cel CCB
   which can then be used to render to a Bitmap. No documentation but
-  look at “DrawTextString()” for an example.
+  look at "DrawTextString()" for an example.
 * Unless doing a lot of text it is probably better/easier to do bitmap
   based fonts.
 

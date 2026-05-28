@@ -5,7 +5,7 @@
  *
  *	Written by:		Neil Cormia
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	3/14/94		lla		Added SetCpakScreen() to locate the

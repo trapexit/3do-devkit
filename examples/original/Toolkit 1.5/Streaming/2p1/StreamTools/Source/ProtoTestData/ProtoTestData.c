@@ -6,7 +6,7 @@
  *
  *	Written by:		Darren Gibbs
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/7/94		rdg		v1.1 modified to support creation of

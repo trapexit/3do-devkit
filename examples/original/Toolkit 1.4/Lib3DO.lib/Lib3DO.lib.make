@@ -5,7 +5,7 @@
 #
 #	Written by:	Joe Buczek
 #
-#	Copyright:	© 1992 by The 3DO Company. All rights reserved.
+#	Copyright:	(c) 1992 by The 3DO Company. All rights reserved.
 #				This material constitutes confidential and proprietary
 #				information of the 3DO Company and shall not be used by
 #				any Person or for any purpose except as expressly
@@ -55,88 +55,88 @@ LOptions		= -c -o
 #####################################
 #		Object files
 #####################################
-OBJECTS			=	"{ObjectDir}OpenGraphics.c.o" ¶
-					"{ObjectDir}OpenMacLink.c.o" ¶
-					"{ObjectDir}OpenSPORT.c.o" ¶
-					"{ObjectDir}OpenAudio.c.o" ¶
-					"{ObjectDir}ShutDown.c.o" ¶
-					"{ObjectDir}GetFileSize.c.o" ¶
-					"{ObjectDir}ReadFile.c.o" ¶
-					"{ObjectDir}FindChunk.c.o" ¶
-					"{ObjectDir}GetChunk.c.o" ¶
-					"{ObjectDir}setCCBPLUTPtr.c.o" ¶
-					"{ObjectDir}setCCBDataPtr.c.o" ¶
-					"{ObjectDir}LoadCel.c.o" ¶
-					"{ObjectDir}OldLoadCel.c.o" ¶
-					"{ObjectDir}FreeAnimFrames.c.o" ¶
-					"{ObjectDir}LoadAnim.c.o" ¶
-					"{ObjectDir}OldLoadAnim.c.o" ¶
-					"{ObjectDir}LoadImage.c.o" ¶
-					"{ObjectDir}LoadSoundFX.c.o" ¶
-					"{ObjectDir}LoadSoundEffect.c.o" ¶
-					"{ObjectDir}BlockFile.c.o" ¶
-					"{ObjectDir}CenterCelOnScreen.c.o" ¶
-					"{ObjectDir}CenterRectf16.c.o" ¶
-					"{ObjectDir}DrawAnimCel.c.o" ¶
-					"{ObjectDir}DrawImage.c.o" ¶
-					"{ObjectDir}FadeFromBlack.c.o" ¶
-					"{ObjectDir}FadeInCel.c.o" ¶
-					"{ObjectDir}FadeOutCel.c.o" ¶
-					"{ObjectDir}FadeToBlack.c.o" ¶
-					"{ObjectDir}FrameBufferToCel.c.o" ¶
-					"{ObjectDir}FreeBuffer.c.o" ¶
-					"{ObjectDir}GetAnimCel.c.o" ¶
-					"{ObjectDir}LinkCel.c.o" ¶
-					"{ObjectDir}LoadFile.c.o" ¶
-					"{ObjectDir}MakeNewCel.c.o" ¶
-					"{ObjectDir}MakeNewDupCCB.c.o" ¶
-					"{ObjectDir}MapP2Cel.c.o" ¶
-					"{ObjectDir}MoveCel.c.o" ¶
-					"{ObjectDir}OffsetCel.c.o" ¶
-					"{ObjectDir}ParseAnim.c.o" ¶
-					"{ObjectDir}ParseCel.c.o" ¶
-					"{ObjectDir}PreMoveCel.c.o" ¶
-					"{ObjectDir}ReadControlPad.c.o" ¶
-					"{ObjectDir}SetCelScale.c.o" ¶
-					"{ObjectDir}SetChannel.c.o" ¶
-					"{ObjectDir}SetFadeInCel.c.o" ¶
-					"{ObjectDir}SetFadeOutCel.c.o" ¶
-					"{ObjectDir}SetMixer.c.o" ¶
-					"{ObjectDir}SetMixerChannel.c.o" ¶
-					"{ObjectDir}SetQuad.c.o" ¶
-					"{ObjectDir}SetRectf16.c.o" ¶
-					"{ObjectDir}UMemory.c.o" ¶
-					"{ObjectDir}UMemoryDebug.c.o" ¶
-					"{ObjectDir}WriteMacFile.c.o" ¶
-					¶
-					"{ObjectDir}taTextLib.c.o" ¶
-					"{ObjectDir}TextLib.c.o" ¶
-					"{ObjectDir}FontLib.c.o" ¶
-					"{ObjectDir}FontBlit3To8_.s.o" ¶
-					"{ObjectDir}FontBlit5To8_.s.o" ¶
-					"{ObjectDir}DeleteCelMagic.c.o" ¶
-					"{ObjectDir}ChainCels.c.o" ¶
+OBJECTS			=	"{ObjectDir}OpenGraphics.c.o" --
+					"{ObjectDir}OpenMacLink.c.o" --
+					"{ObjectDir}OpenSPORT.c.o" --
+					"{ObjectDir}OpenAudio.c.o" --
+					"{ObjectDir}ShutDown.c.o" --
+					"{ObjectDir}GetFileSize.c.o" --
+					"{ObjectDir}ReadFile.c.o" --
+					"{ObjectDir}FindChunk.c.o" --
+					"{ObjectDir}GetChunk.c.o" --
+					"{ObjectDir}setCCBPLUTPtr.c.o" --
+					"{ObjectDir}setCCBDataPtr.c.o" --
+					"{ObjectDir}LoadCel.c.o" --
+					"{ObjectDir}OldLoadCel.c.o" --
+					"{ObjectDir}FreeAnimFrames.c.o" --
+					"{ObjectDir}LoadAnim.c.o" --
+					"{ObjectDir}OldLoadAnim.c.o" --
+					"{ObjectDir}LoadImage.c.o" --
+					"{ObjectDir}LoadSoundFX.c.o" --
+					"{ObjectDir}LoadSoundEffect.c.o" --
+					"{ObjectDir}BlockFile.c.o" --
+					"{ObjectDir}CenterCelOnScreen.c.o" --
+					"{ObjectDir}CenterRectf16.c.o" --
+					"{ObjectDir}DrawAnimCel.c.o" --
+					"{ObjectDir}DrawImage.c.o" --
+					"{ObjectDir}FadeFromBlack.c.o" --
+					"{ObjectDir}FadeInCel.c.o" --
+					"{ObjectDir}FadeOutCel.c.o" --
+					"{ObjectDir}FadeToBlack.c.o" --
+					"{ObjectDir}FrameBufferToCel.c.o" --
+					"{ObjectDir}FreeBuffer.c.o" --
+					"{ObjectDir}GetAnimCel.c.o" --
+					"{ObjectDir}LinkCel.c.o" --
+					"{ObjectDir}LoadFile.c.o" --
+					"{ObjectDir}MakeNewCel.c.o" --
+					"{ObjectDir}MakeNewDupCCB.c.o" --
+					"{ObjectDir}MapP2Cel.c.o" --
+					"{ObjectDir}MoveCel.c.o" --
+					"{ObjectDir}OffsetCel.c.o" --
+					"{ObjectDir}ParseAnim.c.o" --
+					"{ObjectDir}ParseCel.c.o" --
+					"{ObjectDir}PreMoveCel.c.o" --
+					"{ObjectDir}ReadControlPad.c.o" --
+					"{ObjectDir}SetCelScale.c.o" --
+					"{ObjectDir}SetChannel.c.o" --
+					"{ObjectDir}SetFadeInCel.c.o" --
+					"{ObjectDir}SetFadeOutCel.c.o" --
+					"{ObjectDir}SetMixer.c.o" --
+					"{ObjectDir}SetMixerChannel.c.o" --
+					"{ObjectDir}SetQuad.c.o" --
+					"{ObjectDir}SetRectf16.c.o" --
+					"{ObjectDir}UMemory.c.o" --
+					"{ObjectDir}UMemoryDebug.c.o" --
+					"{ObjectDir}WriteMacFile.c.o" --
+					--
+					"{ObjectDir}taTextLib.c.o" --
+					"{ObjectDir}TextLib.c.o" --
+					"{ObjectDir}FontLib.c.o" --
+					"{ObjectDir}FontBlit3To8_.s.o" --
+					"{ObjectDir}FontBlit5To8_.s.o" --
+					"{ObjectDir}DeleteCelMagic.c.o" --
+					"{ObjectDir}ChainCels.c.o" --
 
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	Lib3DO.lib
+All				A	Lib3DO.lib
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 #####################################
 #	Target build rules
 #####################################
-Lib3DO.lib		ÄÄ	Lib3DO.lib.make {OBJECTS}
-	{LIBRARIAN}	{LOptions}		¶
-				Lib3DO.lib		¶
+Lib3DO.lib		AA	Lib3DO.lib.make {OBJECTS}
+	{LIBRARIAN}	{LOptions}		--
+				Lib3DO.lib		--
 				{OBJECTS}
 	Duplicate -y Lib3DO.lib "{3DOLibs}Lib3DO.lib"
 

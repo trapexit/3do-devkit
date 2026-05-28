@@ -5,7 +5,7 @@
  *
  *	Written by:		Darren Gibbs.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	3/29/94		rdg		Version 1.4
@@ -65,7 +65,7 @@
  * don't do truncation.  SO DON'T FORGET TO TAKE YOUR OLD TRACE DUMPS OUT
  * OF /remote!!!!  Or you'll get confusing junk.
  *
- * ¥¥¥¥¥¥IMPORTANT¥¥¥¥¥¥
+ * ******IMPORTANT******
  *
  * The DumpEventCompletionStats() function finds a match by searching
  * for an event which...

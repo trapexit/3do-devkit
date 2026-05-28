@@ -14,7 +14,7 @@
 
 #include "ktextbox_error.h"
 
-#define justLeft 0    /* ¶‘µ‚¦ */
+#define justLeft 0    /* --‘µ‚¦ */
 #define justRight 1   /* ’†‰›‘µ‚¦ */
 #define justCenter 2  /* ‰E‘µ‚¦ */
 #define justJustify 3 /* ‹Ï“™‘µ‚¦ */
@@ -26,8 +26,8 @@
 #define SJIS_KANJI_LEVEL2(c) ((0x989f <= (c)) && ((c) <= 0xeafc))
 #define NUM_KANJI_LEVEL1 3760
 
-#define fg_Opaque 0x01 /* •¶šF‚É•s“§–¾‘®«‚ğİ’è */
-#define bg_Opaque 0x02 /* ”wŒiF‚É•s“§–¾‘®«‚ğİ’è */
+#define fg_Opaque 0x01 /* •--šF‚E•s“§–¾‘(r)"‚ğİ’è */
+#define bg_Opaque 0x02 /* ”wŒiF‚E•s“§–¾‘(r)"‚ğİ’è */
 
 typedef struct Rectf16
 {
@@ -39,17 +39,17 @@ typedef struct Rectf16
 
 typedef struct
 {
-  short align; /* ¶Šñ‚¹A’†‰›A‰EŠñ‚¹*/
+  short align; /* --Šñ‚¹A’†‰›A‰EŠñ‚¹*/
   /* Text alignment (left, right, center). */
-  int32 charPitch; /* šŠÔiƒhƒbƒg’PˆÊj*/
+  int32 charPitch; /* šŠÔiƒhƒbƒg’PˆEj*/
   /* Inter-character spacing. */
-  int32 linePitch; /* sŠÔiƒhƒbƒg’PˆÊj*/
+  int32 linePitch; /* sŠÔiƒhƒbƒg’PˆEj*/
                    /* Spacing bewteen adjactent rows (leading). */
 } TextAlign;
 
 typedef struct
 {
-  Rectf16 celRect;  /* ƒZƒ‹‚Ì‘å‚«‚³‚ğw’è */
+  Rectf16 celRect;  /* ƒZƒ‹‚Ì‘å‚"‚³‚ğw’è */
                     /* Cel bounds. */
   Rectf16 wrapRect; /* ƒeƒLƒXƒg•`‰æ—Ìˆæ‚ğw’è */
                     /* Bounds to wrap text into. */
@@ -59,11 +59,11 @@ typedef struct
                     /* Inter-character spacing. */
   int32 linePitch;  /* sŠÔ‚ğw’è */
                     /* Spacing bewteen adjactent rows (leading). */
-  Color fgColor;    /* •¶šF‚ğw’è */
+  Color fgColor;    /* •--šF‚ğw’è */
                     /* Foreground color (text color). */
   Color bgColor;    /* ”wŒiF‚ğw’è */
                     /* Background color (color beneath text). */
-  uint8 opaqueFlag; /* •s“§–¾‘®«‚ğw’è */
+  uint8 opaqueFlag; /* •s“§–¾‘(r)"‚ğw’è */
                     /* Is the text background opaque? */
   uint8 otherFlags; /* —\\–ñ */
                     /* Reserved.  Set to NULL. */
@@ -73,23 +73,23 @@ typedef struct
 
 typedef struct
 {
-  uint16 nChars;      /* ŠÜ‚Ü‚ê‚é•¶šƒR[ƒh‚Ì”*/
+  uint16 nChars;      /* ŠU‚U‚e‚e•--šƒR[ƒh‚Ì”*/
                       /* Number of characters. */
-  uint16 minCode;     /* Å¬‚Ì•¶šƒR[ƒh*/
+  uint16 minCode;     /* Anot ‚Ì•--šƒR[ƒh*/
                       /* Minimum character code. */
-  uint16 maxCode;     /* Å‘å‚Ì•¶šƒR[ƒh*/
+  uint16 maxCode;     /* A‘å‚Ì•--šƒR[ƒh*/
                       /* Maximum character code. */
-  uint8 charHeight;   /* •¶š‚Ì‚‚³(pixels) */
+  uint8 charHeight;   /* •--š‚Ì‚‚³(pixels) */
                       /* Character height (pixels). */
-  uint8 charWidth;    /* •¶š‚Ì•(pixels) */
+  uint8 charWidth;    /* •--š‚Ì•(pixels) */
                       /* Character width (pixels). */
-  uint32 oneCharSize; /* ‚P•¶š‚ÌƒsƒNƒZƒ‹ƒf[ƒ^‚ÌƒoƒCƒg”(pad byte‚ğŠÜ‚Ş) */
+  uint32 oneCharSize; /* ‚P•--š‚ÌƒsƒNƒZƒ‹ƒf[ƒ^‚ÌƒoƒCƒg”(pad byte‚ğŠU‚Ş) */
   /* Size of one character bitmap in bytes (long-word aligned). */
-  uint16 *codeTbl; /* •¶šƒR[ƒhƒe[ƒuƒ‹‚Ö‚Ìƒ|ƒCƒ“ƒ^ */
+  uint16 *codeTbl; /* •--šƒR[ƒhƒe[ƒuƒ‹‚O‚Ìƒ|ƒCƒ“ƒ^ */
                    /* Optional character code table. */
-  uint8 *widthTbl; /* ‰Â•Ïƒsƒbƒ`‚Ì•¶š•ƒe[ƒuƒ‹‚Ö‚Ìƒ|ƒCƒ“ƒ^ */
+  uint8 *widthTbl; /* ‰Â•Ïƒsƒbƒ`‚Ì•--š•ƒe[ƒuƒ‹‚O‚Ìƒ|ƒCƒ“ƒ^ */
                    /* Optional caracter width table. */
-  char *charData;  /* ƒsƒNƒZƒ‹ƒf[ƒ^‚Ìæ“ªƒ|ƒCƒ“ƒ^*/
+  char *charData;  /* ƒsƒNƒZƒ‹ƒf[ƒ^‚Ìæ“aƒ|ƒCƒ“ƒ^*/
                    /* Character bitmap data. */
 } KFontRec;
 
@@ -97,9 +97,9 @@ typedef struct
 {
   uint8 font_Gpp;           /* Gray scale bits per pixel*/
   uint8 font_Bpp;           /* Bits per pixel */
-  KFontRec font_Hinfo;      /* ”¼Šp•¶š—pFontRec\\‘¢‘Ì */
+  KFontRec font_Hinfo;      /* ”¼Šp•--š—pFontRec\\‘¢‘Ì */
                             /* Hankaku (half-width) character information. */
-  KFontRec font_Zinfo;      /* ‘SŠp•¶š—pFontRec\\‘¢‘Ì */
+  KFontRec font_Zinfo;      /* ‘SŠp•--š—pFontRec\\‘¢‘Ì */
                             /* Zenkaku (full-width) character information. */
   Stream *font_fs;          /* Font file stream */
   Boolean font_FullRead;    /* If true, read whole font image into memory. */

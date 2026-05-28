@@ -1,6 +1,6 @@
 /*
  *  SANMMaker.r
- *	© The 3DO Company 1994
+ *	(c) The 3DO Company 1994
  *	All Rights Reserved.
  *
  */
@@ -15,7 +15,7 @@ resource 'vers' (1) {
 	0x0,
 	verUS,
 	"1.5",
-	"SANMMaker v1.5 ©1993 The 3DO Company"
+	"SANMMaker v1.5 (c)1993 The 3DO Company"
 };
 
 resource 'DLOG' (2008, "Custom Get-File Dialog", purgeable) {
@@ -333,7 +333,7 @@ resource 'BNDL' (128) {
 };
 
 data 'SANM' (0, "Owner resource") {
-	$"15A9 3139 3933 2054 6865 2033 444F 2043"            /* .©1993 The 3DO C */
+	$"15A9 3139 3933 2054 6865 2033 444F 2043"            /* .(c)1993 The 3DO C */
 	$"6F6D 7061 6E79"                                     /* ompany */
 };
 

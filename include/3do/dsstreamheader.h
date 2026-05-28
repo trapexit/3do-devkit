@@ -7,7 +7,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *  6/23/94			rdg	    fixed bug in SubsChunkHeader definition... no trailing semicolon

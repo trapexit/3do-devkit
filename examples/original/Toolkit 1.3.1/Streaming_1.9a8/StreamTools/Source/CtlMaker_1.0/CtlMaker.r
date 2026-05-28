@@ -1,6 +1,6 @@
 /*
  *  CtlMaker.r
- *	© The 3DO Company 1993
+ *	(c) The 3DO Company 1993
  *	All Rights Reserved.
  *
  */
@@ -17,6 +17,6 @@ resource 'vers' (1)
 	0x0,
 	verUS,
 	"1.0",
-	"1.0, © The 3DO Company 1993"
+	"1.0, (c) The 3DO Company 1993"
 };
 

@@ -5,7 +5,7 @@
  *
  *	Written by:		Neil Cormia, Joe Buczek and Ian Lepore
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	09/14/93	ian		Added VERBOSE macro.  Added wrapper braces around

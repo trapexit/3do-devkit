@@ -8,13 +8,13 @@ OBJECTS = ppmto3DO.c.o
 
 
 
-ppmto3do ÄÄ ppmto3do.make {OBJECTS}
-	Link -d -c 'MPS ' -t MPST -sym on -mf ¶
-		{OBJECTS} ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"Runtime.o ¶
-		"{Libraries}"Interface.o ¶
+ppmto3do AA ppmto3do.make {OBJECTS}
+	Link -d -c 'MPS ' -t MPST -sym on -mf --
+		{OBJECTS} --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"Runtime.o --
+		"{Libraries}"Interface.o --
 		-o ppmto3do
-ppmto3DO.c.o Ä ppmto3do.make ppmto3DO.c
+ppmto3DO.c.o A ppmto3do.make ppmto3DO.c
 	 C -r -sym on   ppmto3DO.c

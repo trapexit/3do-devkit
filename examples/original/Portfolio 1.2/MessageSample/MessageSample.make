@@ -34,14 +34,14 @@ LOptions		= -aif -r -b 0x00 -workspace 0x4000 -d
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}music.lib"		¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}clib.lib"			¶
+LIBS			=	"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}music.lib"		--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}clib.lib"			--
 					"{3DOLibs}swi.lib"
 
 # NOTE: Add object files here...
@@ -51,25 +51,25 @@ OBJECTS			=	"{ObjectDir}{Program}.c.o"
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Program}
+All				A	{Program}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Program}		ÄÄ	{Program}.make {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o {Program}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Program}		AA	{Program}.make {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o {Program}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Program} -c 'EaDJ' -t 'PROJ'
 	modbin {program} -debug -stack 0x2000
@@ -79,4 +79,4 @@ All				Ä	{Program}
 #####################################
 #	Include file dependencies
 #####################################
-{Program}.c		Ä	{3DOLibs}Lib3DO.lib {Program}.make
+{Program}.c		A	{3DOLibs}Lib3DO.lib {Program}.make

@@ -6,7 +6,7 @@
 
         Written by:	Neil Cormia
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -22,10 +22,10 @@
    JAY		change code to call ReadControlPad() for getting state of
                                                                         control
    pad. Doing this for red hardware and cardinal (3B1). <3>	 3/29/93
-   JAY		¥ use run to launch this app. launch doesn't understand
+   JAY		* use run to launch this app. launch doesn't understand
                                                                         arguments.
-   ¥ changed call to LoadImage to check for gBackPic being returned instead of
-   0. ¥ rewrote StartUp to match 3DOOrbit startup <2>	 3/18/93	JAY
+   * changed call to LoadImage to check for gBackPic being returned instead of
+   0. * rewrote StartUp to match 3DOOrbit startup <2>	 3/18/93	JAY
    change lists.h to list.h for Cardinal build
                  <1>	 3/18/93	JAY		first checked in
                                  11/16/92	NJC		1.0 release

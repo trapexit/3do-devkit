@@ -7,7 +7,7 @@
 
         Adapted by:		Bill Duvall
 
-        Copyright:	й 1994 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1994 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -1002,7 +1002,7 @@ DumpMovie (Movie theMovie, Str255 filmFileName, Str255 keyFileName)
               SSndC.time = (trackInfo[trackNo].startTime
                             + sampleTime * trackInfo[trackNo].timeBase)
                            / filmTimeBase;
-              /* SSndC.numSamples	= sampleCount; еее might need this
+              /* SSndC.numSamples	= sampleCount; *** might need this
                * someday... */
 
               /* Convert the data if the format is not Twos Complement.
@@ -1317,7 +1317,7 @@ Usage (char *toolName)
   fprintf (stdout, "             [-z R G B Error Thresholds {3 3 3}]\n");
 #endif
 
-  fprintf (stdout, "             [movieFile(s)╔].\n");
+  fprintf (stdout, "             [movieFile(s)E].\n");
   fprintf (stdout, "# Version %s\n", PROGRAM_VERSION_STRING);
 }
 

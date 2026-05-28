@@ -44,41 +44,41 @@ ModbinDebugOptions	= -debug
 #	Object files
 #####################################
 
-OBJECTS			=	{ObjectDir}allocmem.c.o		¶
-					{ObjectDir}memdebug.c.o		¶
-					{ObjectDir}msgpassing.c.o	¶
-					{ObjectDir}signals.c.o		¶
-					{ObjectDir}timerread.c.o	¶
+OBJECTS			=	{ObjectDir}allocmem.c.o		--
+					{ObjectDir}memdebug.c.o		--
+					{ObjectDir}msgpassing.c.o	--
+					{ObjectDir}signals.c.o		--
+					{ObjectDir}timerread.c.o	--
 					{ObjectDir}timersleep.c.o
 					
-LIBS			=	"{3DOLibs}Lib3DO.lib" ¶
-					"{3DOLibs}audio.lib" ¶
-					"{3DOLibs}music.lib" ¶
-					"{3DOLibs}operamath.lib" ¶
-					"{3DOLibs}filesystem.lib" ¶
-					"{3DOLibs}graphics.lib" ¶
-					"{3DOLibs}input.lib" ¶
-					"{3DOLibs}memdebug.lib" ¶
+LIBS			=	"{3DOLibs}Lib3DO.lib" --
+					"{3DOLibs}audio.lib" --
+					"{3DOLibs}music.lib" --
+					"{3DOLibs}operamath.lib" --
+					"{3DOLibs}filesystem.lib" --
+					"{3DOLibs}graphics.lib" --
+					"{3DOLibs}input.lib" --
+					"{3DOLibs}memdebug.lib" --
 					"{3DOLibs}clib.lib"
 					
 #####################################
 #	Default build rules
 #####################################
 
-All				Ä	{App}
+All				A	{App}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o	Ä	.c
+.c.o	A	.c
 	{CC} -i "{3DOIncludes}" {COptions} {CDebugOptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
-	{LINK} {LOptions} {LDebugOptions} ¶
-		{TargDir}{Default}.c.o ¶
-		"{3DOLibs}"cstartup.o ¶
-		{LIBS} ¶
+	{LINK} {LOptions} {LDebugOptions} --
+		{TargDir}{Default}.c.o --
+		"{3DOLibs}"cstartup.o --
+		{LIBS} --
 		-o {TempDir}{Default}.nostrip
 	SetFile {TempDir}{Default}.nostrip -c 'EaDJ' -t 'PROJ'
 	modbin {TempDir}{Default}.nostrip -stack {LStackSize} {ModbinDebugOptions}
 	stripaif {TempDir}{Default}.nostrip -o {ExecutableDir}{Default} -s {ExecutableDir}{Default}.sym
 	delete {TempDir}{Default}.nostrip
 
-{App} Ä {App}.make {OBJECTS}
+{App} A {App}.make {OBJECTS}

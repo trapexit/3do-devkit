@@ -1,12 +1,12 @@
-¾KY CopyrightNotice
-¾C  Copyright The 3DO Company 1993-1994, All rights reserved.
+3/4KY CopyrightNotice
+3/4C  Copyright The 3DO Company 1993-1994, All rights reserved.
 411 - Lib3DOHelp - 3DOToolkit 1.3 Pre-release
 Mon Oct 10 09:11:03 1994
 
 
-¾KY Help
+3/4KY Help
 Lib3DOHelp
-¾KL 
+3/4KL 
 AboutLib3DOHelp
 CopyrightNotice
 
@@ -259,8 +259,8 @@ BlockFile
 FontDescriptor 
 LoadFileInfo 
 TextCel 
-¾KY AboutLib3DOHelp
-¾C
+3/4KY AboutLib3DOHelp
+3/4C
 __________________________________________________________________
 
 Version 1.1 Preliminary  --  3DOToolkit 1.3 Pre-release
@@ -269,12 +269,12 @@ Contains online versions of current 3DO Lib3DOHelp manual pages
 
 __________________________________________________________________
 
-¾KY AbortAsyncLoadFile 
-¾T Function
-¾D
+3/4KY AbortAsyncLoadFile 
+3/4T Function
+3/4D
 Err AbortAsyncLoadFile(LoadFileInfo *lf)
 
-¾C
+3/4C
 
 This function aborts an async load already in progress.  It works even if
 the load operation has already completed.  
@@ -299,19 +299,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 AsyncLoadFile()
 
-¾KY AsyncLoadFile 
-¾T Function
-¾D
+3/4KY AsyncLoadFile 
+3/4T Function
+3/4D
 Err AsyncLoadFile(char *fname, LoadFileInfo *lf)
 
-¾C
+3/4C
 
 This function starts an async load of the specified file, using the
 options in the LoadFileInfo structure.
@@ -352,16 +352,16 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 LoadFile(), LoadFileHere(), UnloadFile()
 
-¾KY BlitFontChar 
-¾T Function
-¾D
+3/4KY BlitFontChar 
+3/4T Function
+3/4D
 int32 BlitFontChar(FontDescriptor
 *fDesc, uint32
 theChar, 
@@ -375,7 +375,7 @@ dstBPR, int32
 dstColorIndex, int32
 dstBPP)
 
-¾C
+3/4C
 
 Blits character pixels from the font data area into a memory buffer,
 performing any font formatspecific data decompression as needed.
@@ -434,19 +434,19 @@ The width of the character, in pixels. Zero indicates no pixels were
 placed in the destination buffer because the character is not within the
 range of characters stored in the font.
 
-¾F
+3/4F
      FontLib.h
      
-¾R
+3/4R
 
 GetFontCharInfo
 
-¾KY CEL_DATAPTR 
-¾T Function
-¾D
+3/4KY CEL_DATAPTR 
+3/4T Function
+3/4D
 CelData * CEL_DATAPTR(ccb)
 
-¾C
+3/4C
 
 This macro evaluates to a pointer to the cel's data buffer.  It takes the
 CCB_SPABS flag into account and always an absolute pointer, even when the
@@ -467,15 +467,15 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY CEL_NEXTPTR 
-¾T Function
-¾D
+3/4KY CEL_NEXTPTR 
+3/4T Function
+3/4D
 CCB * CEL_NEXTPTR(ccb)
 
-¾C
+3/4C
 
 This macro evaluates to a pointer to the next cel.  It takes the CCB_NPABS
 flag into account and always an absolute pointer, even when the CCB
@@ -497,15 +497,15 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY CEL_PLUTPTR 
-¾T Function
-¾D
+3/4KY CEL_PLUTPTR 
+3/4T Function
+3/4D
 uint16 * CEL_PLUTPTR(ccb)
 
-¾C
+3/4C
 
 This macro evaluates to a pointer to the cel's PLUT.  It takes the
 CCB_PPABS flag into account and always an absolute pointer, even when the
@@ -526,15 +526,15 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY CEL_PRE0WORD 
-¾T Function
-¾D
+3/4KY CEL_PRE0WORD 
+3/4T Function
+3/4D
 uint32 CEL_PRE0WORD(ccb)
 
-¾C
+3/4C
 
 This macro evaluates to the Preamble Word 0 value for the cel.  It takes
 the CCB_CCBPRE flag into account and retrieves the preamble word from the
@@ -555,15 +555,15 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY CEL_PRE1WORD 
-¾T Function
-¾D
+3/4KY CEL_PRE1WORD 
+3/4T Function
+3/4D
 uint32 CEL_PRE1WORD(ccb)
 
-¾C
+3/4C
 
 This macro evaluates to the Preamble Word 1 value for the cel.  It takes
 the CCB_CCBPRE flag into account and retrieves the preamble word from the
@@ -584,15 +584,15 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY CenterCelOnScreen 
-¾T Function
-¾D
+3/4KY CenterCelOnScreen 
+3/4T Function
+3/4D
  void CenterCelOnScreen (CCB *ccb)
 
-¾C
+3/4C
 
 Centers the cel named by ccb.This function calls MapCel() to set the
 relevant ccb fields.
@@ -609,18 +609,18 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h  See Also
      
      SetQuad(), SetRectf16(), CenterRectf16(), CenterRectCelInDiplay()
      
-¾KY CenterRectf16 
-¾T Function
-¾D
+3/4KY CenterRectf16 
+3/4T Function
+3/4D
  void CenterRectf16 (Point *q, Rectf16 *rect, Rectf16 
 *frame)
 
-¾C
+3/4C
 
 Sets the coordinates of the four points q[0] through q[3]. Determines
 these coordinates by centering the Rectf16 rectangle within the Rectf16
@@ -640,21 +640,21 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 SetQuad, SetRectf16, CenterCelOnScreen, CenterCRectInCRect, 
 CenterCRectInDisplay, CenterCRectOverIPoint, CenterSRectInSRect, 
 CenterSRectInDisplay, CenterSRectOverIPoint
 
-¾KY CenterCRectInCRect 
-¾T Function
-¾D
+3/4KY CenterCRectInCRect 
+3/4T Function
+3/4D
 CRect * CenterCRectInCRect(CRect *dst, CRect *src)
 
-¾C
+3/4C
 
 This function centers the dst rectangle over or within the src rectangle. 
 If the dst rectangle is smaller than the src rectangle, its values are
@@ -678,19 +678,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterSRectInSRect()
 
-¾KY CenterCRectInDisplay 
-¾T Function
-¾D
+3/4KY CenterCRectInDisplay 
+3/4T Function
+3/4D
 CRect * CenterCRectInDisplay(CRect *dst)
 
-¾C
+3/4C
 
 This function centers the dst rectangle over or within the display.  
 
@@ -707,19 +707,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterSRectInDisplay()
 
-¾KY CenterCRectOverIPoint 
-¾T Function
-¾D
+3/4KY CenterCRectOverIPoint 
+3/4T Function
+3/4D
 CRect * CenterCRectOverIPoint(CRect *dst, IPoint *point)
 
-¾C
+3/4C
 
 This function centers the dst rectangle over the specified point.
 
@@ -739,19 +739,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterSRectOverIPoint()
 
-¾KY CenterFPointInDisplay 
-¾T Function
-¾D
+3/4KY CenterFPointInDisplay 
+3/4T Function
+3/4D
 FPoint* CenterFPointInDisplay(void)
 
-¾C
+3/4C
 
 This function returns the center point of the display.  
 
@@ -767,19 +767,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterIPointInDisplay()
 
-¾KY CenterIPointInCRect 
-¾T Function
-¾D
+3/4KY CenterIPointInCRect 
+3/4T Function
+3/4D
 IPoint* CenterIPointInCRect(IPoint *dst, CRect *rect)
 
-¾C
+3/4C
 
 This function calculates the center point of the specified rectangle and
 stores the result at *dst.
@@ -800,19 +800,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterIPointInSRect()
 
-¾KY CenterIPointInSRect 
-¾T Function
-¾D
+3/4KY CenterIPointInSRect 
+3/4T Function
+3/4D
 IPoint* CenterIPointInSRect(IPoint *dst, SRect *rect)
 
-¾C
+3/4C
 
 This function calculates the center point of the specified rectangle and
 stores the result at *dst.
@@ -833,19 +833,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterIPointInCRect()
 
-¾KY CenterIPointInDisplay 
-¾T Function
-¾D
+3/4KY CenterIPointInDisplay 
+3/4T Function
+3/4D
 IPoint* CenterIPointInDisplay(void)
 
-¾C
+3/4C
 
 This function returns the center point of the display.  
 
@@ -861,19 +861,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterFPointInDisplay()
 
-¾KY CenterRectAACelInCRect 
-¾T Function
-¾D
+3/4KY CenterRectAACelInCRect 
+3/4T Function
+3/4D
 void CenterRectAACelInCRect(CCB *cel, CRect *rect)
 
-¾C
+3/4C
 
 This function centers an anti-aliased cel over or within the specified
 rectangle.  
@@ -898,20 +898,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectAACelInSRect(), CenterRectCelInCRect(), 
 CenterRectCelListInCRect()
 
-¾KY CenterRectAACelInSRect 
-¾T Function
-¾D
+3/4KY CenterRectAACelInSRect 
+3/4T Function
+3/4D
 void CenterRectAACelInSRect(CCB *cel, SRect *rect)
 
-¾C
+3/4C
 
 This function centers an anti-aliased cel over or within the specified
 rectangle.  
@@ -936,20 +936,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectAACelInCRect(), CenterRectCelInSRect(), 
 CenterRectCelListInSRect()
 
-¾KY CenterRectAACelInDisplay 
-¾T Function
-¾D
+3/4KY CenterRectAACelInDisplay 
+3/4T Function
+3/4D
 void CenterRectAACelInDisplay(CCB *cel)
 
-¾C
+3/4C
 
 This function centers an anti-aliased cel over or within the the display. 
 
@@ -970,19 +970,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectCelInDisplay(), CenterRectCelListInDisplay()
 
-¾KY CenterRectAACelOverFPoint 
-¾T Function
-¾D
+3/4KY CenterRectAACelOverFPoint 
+3/4T Function
+3/4D
 void CenterRectAACelOverFPoint(CCB *cel, FPoint *point)
 
-¾C
+3/4C
 
 This function centers an anti-aliased cel over the specified point.  
 
@@ -1006,20 +1006,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectAACelOverIPoint(), CenterRectCelOverFPoint(), 
 CenterCelListOverFPoint()
 
-¾KY CenterRectAACelOverIPoint 
-¾T Function
-¾D
+3/4KY CenterRectAACelOverIPoint 
+3/4T Function
+3/4D
 void CenterRectAACelOverIPoint(CCB *cel, IPoint *point)
 
-¾C
+3/4C
 
 This function centers an anti-aliased cel over the specified point.  
 
@@ -1043,20 +1043,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectAACelOverFPoint(), CenterRectCelOverIPoint(), 
 CenterCelListOverIPoint()
 
-¾KY CenterRectCelInCRect 
-¾T Function
-¾D
+3/4KY CenterRectCelInCRect 
+3/4T Function
+3/4D
 void CenterRectCelInCRect(CCB *cel, CRect *rect)
 
-¾C
+3/4C
 
 This function centers a single cel over or within the specified rectangle.
 
@@ -1080,20 +1080,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectCelInSRect(), CenterRectAACelInCRect(), 
 CenterRectCelListInCRect()
 
-¾KY ChainCelsAtHead 
-¾T Function
-¾D
+3/4KY ChainCelsAtHead 
+3/4T Function
+3/4D
 CCB * ChainCelsAtHead(CCB *existingCels, CCB *newCels)
 
-¾C
+3/4C
 
 This function chains together two lists of cels, puting the new list ahead
 of the existing cels.  The return value is a pointer to the first cel in
@@ -1123,19 +1123,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 ChainCelsAtTail()
 
-¾KY ChainCelsAtTail 
-¾T Function
-¾D
+3/4KY ChainCelsAtTail 
+3/4T Function
+3/4D
 CCB * ChainCelsAtTail(CCB *existingCels, CCB *newCels)
 
-¾C
+3/4C
 
 This function chains together two lists of cels, puting the new list
 behind the existing cels.  The return value is a pointer to the last cel
@@ -1172,19 +1172,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 ChainCelsAtHead()
 
-¾KY CloneCel 
-¾T Function
-¾D
+3/4KY CloneCel 
+3/4T Function
+3/4D
 CCB * CloneCel(CCB *src, int32 options)
 
-¾C
+3/4C
 
 This function makes a copy of a CCB, and optionally of the pixels and/or
 PLUT.  The values in the cloned CCB are identical to the src CCB, except
@@ -1228,22 +1228,22 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CreateCel(), DeleteCel()
 
-¾KY CloneTextCel 
-¾T Function
-¾D
+3/4KY CloneTextCel 
+3/4T Function
+3/4D
 TextCel * CloneTextCel(TextCel
 *templateTextCel, 
 Boolean
 clonePixels)
 
-¾C
+3/4C
 
 Creates a new TextCel using a TextCel that already exists as a template.
 If clonePixels is FALSE, the new TextCel contains no text; if TRUE, the
@@ -1278,19 +1278,19 @@ RETURN VALUE
 A pointer to the newly created TextCel structure; NULL if there isn\xd5 t
 enough memory to create the new TextCel.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 CreateTextCel(), DeleteTextCel
 
-¾KY CenterRectCelInSRect 
-¾T Function
-¾D
+3/4KY CenterRectCelInSRect 
+3/4T Function
+3/4D
 void CenterRectCelInSRect(CCB *cel, SRect *rect)
 
-¾C
+3/4C
 
 This function centers a single cel over or within the specified rectangle.
 
@@ -1314,20 +1314,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectCelInCRect(), CenterRectAACelInSRect(), 
 CenterRectCelListInSRect()
 
-¾KY CenterRectCelInDisplay 
-¾T Function
-¾D
+3/4KY CenterRectCelInDisplay 
+3/4T Function
+3/4D
 void CenterRectCelInDisplay(CCB *cel)
 
-¾C
+3/4C
 
 This function centers a single cel over or within the the display.  
 
@@ -1348,19 +1348,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectAACelInDisplay(), CenterRectCelListInDisplay()
 
-¾KY CenterRectCelListInCRect 
-¾T Function
-¾D
+3/4KY CenterRectCelListInCRect 
+3/4T Function
+3/4D
 void CenterRectCelListInCRect(CCB *cel, CRect *rect)
 
-¾C
+3/4C
 
 This function centers a list of one or more cels over or within the
 specified rectangle.  The list of cels is treated as if it were a single
@@ -1392,20 +1392,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectCelListInSRect(), CenterRectAACelInCRect(), 
 CenterRectCelInCRect()
 
-¾KY CenterRectCelListInSRect 
-¾T Function
-¾D
+3/4KY CenterRectCelListInSRect 
+3/4T Function
+3/4D
 void CenterRectCelListInSRect(CCB *cel, SRect *rect)
 
-¾C
+3/4C
 
 This function centers a list of one or more cels over or within the
 specified rectangle.  The list of cels is treated as if it were a single
@@ -1437,20 +1437,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectCelListInCRect(), CenterRectAACelInSRect(), 
 CenterRectCelInSRect()
 
-¾KY CenterRectCelListInDisplay 
-¾T Function
-¾D
+3/4KY CenterRectCelListInDisplay 
+3/4T Function
+3/4D
 void CenterRectCelListInDisplay(CCB *cel)
 
-¾C
+3/4C
 
 This function centers a list of one or more cels over or within the
 display.  The list of cels is treated as if it were a single logical
@@ -1479,19 +1479,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectAACelInDisplay(), CenterRectCelInDisplay()
 
-¾KY CenterRectCelListOverFPoint 
-¾T Function
-¾D
+3/4KY CenterRectCelListOverFPoint 
+3/4T Function
+3/4D
 void CenterRectCelListOverFPoint(CCB *cel, FPoint *point)
 
-¾C
+3/4C
 
 This function centers a list of one or more cels over the specified point.
 The list of cels is treated as if it were a single logical entity.  The
@@ -1523,20 +1523,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectCelListOverIPoint(), CenterRectAACelOverFPoint(), 
 CenterRectCelOverFPoint()
 
-¾KY CenterRectCelListOverIPoint 
-¾T Function
-¾D
+3/4KY CenterRectCelListOverIPoint 
+3/4T Function
+3/4D
 void CenterRectCelListOverIPoint(CCB *cel, IPoint *point)
 
-¾C
+3/4C
 
 This function centers a list of one or more cels over the specified point.
 The list of cels is treated as if it were a single logical entity.  The
@@ -1568,20 +1568,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRectCelListOverFPoint(), CenterRectAACelOverIPoint(), 
 CenterRectCelOverIPoint()
 
-¾KY CenterRectCelOverFPoint 
-¾T Function
-¾D
+3/4KY CenterRectCelOverFPoint 
+3/4T Function
+3/4D
 void    CenterRectCelOverFPoint(CCB *cel, FPoint *point)
 
-¾C
+3/4C
 
 This function centers a single cel over the specified point.  
 
@@ -1605,20 +1605,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRecCelOverIPoint(), CenterRectAACelOverFPoint(), 
 CenterRectCelListOverFPoint()
 
-¾KY CenterRectCelOverIPoint 
-¾T Function
-¾D
+3/4KY CenterRectCelOverIPoint 
+3/4T Function
+3/4D
 void    CenterRectCelOverIPoint(CCB *cel, IPoint *point)
 
-¾C
+3/4C
 
 This function centers a single cel over the specified point.  
 
@@ -1642,20 +1642,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterRecCelOverFPoint(), CenterRectAACelOverIPoint(), 
 CenterRectCelListOverIPoint()
 
-¾KY CenterSRectInSRect 
-¾T Function
-¾D
+3/4KY CenterSRectInSRect 
+3/4T Function
+3/4D
 SRect * CenterSRectInSRect(SRect *dst, SRect *rect)
 
-¾C
+3/4C
 
 This function centers the dst rectangle over or within the src rectangle. 
 If the dst rectangle is smaller than the src rectangle, its position
@@ -1679,19 +1679,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterCRectInCRect()
 
-¾KY CenterSRectInDisplay 
-¾T Function
-¾D
+3/4KY CenterSRectInDisplay 
+3/4T Function
+3/4D
 SRect * CenterSRectInDisplay(SRect *dst)
 
-¾C
+3/4C
 
 This function centers the dst rectangle over or within the display.  
 
@@ -1707,19 +1707,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterCRectInDisplay()
 
-¾KY CenterSRectOverIPoint 
-¾T Function
-¾D
+3/4KY CenterSRectOverIPoint 
+3/4T Function
+3/4D
 SRect * CenterSRectOverIPoint(SRect *dst, IPoint *point)
 
-¾C
+3/4C
 
 This function centers the dst rectangle over the specified point.
 
@@ -1738,19 +1738,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CenterCRectOverIPoint()
 
-¾KY CheckAsyncLoadFile 
-¾T Function
-¾D
+3/4KY CheckAsyncLoadFile 
+3/4T Function
+3/4D
 Err CheckAsyncLoadFile(LoadFileInfo *lf)
 
-¾C
+3/4C
 
 This function checks the status of an AsyncLoadFile() started earlier.  A
 zero return value means I/O is still in progress.  A negative return value
@@ -1774,19 +1774,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 AsyncLoadFile()
 
-¾KY CleanupMSEvents 
-¾T Function
-¾D
+3/4KY CleanupMSEvents 
+3/4T Function
+3/4D
 void CleanupMSEvents(MSEventHandle mseHandle)
 
-¾C
+3/4C
 
 This function releases all resources acquired internally by
 SetupMSEvents().  Any ports or signals which were allocated by
@@ -1806,20 +1806,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      MsgUtils.h
      
-¾R
+3/4R
 
 SetupMSEvents(), DispatchMSEvents()
 
-¾KY ClearBitmap 
-¾T Function
-¾D
+3/4KY ClearBitmap 
+3/4T Function
+3/4D
 Err ClearBitmap(Item ioreq, Item scr_bm, Bitmap *bmPtr, 
 int32 rgbValue)
 
-¾C
+3/4C
 
 This function sets all pixels in the screen or bitmap to the specified
 rgbValue.  It uses SetVRAMPages() for fast operation.
@@ -1855,15 +1855,15 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      DisplayUtils.h
      
-¾KY CloseGraphics 
-¾T Function
-¾D
+3/4KY CloseGraphics 
+3/4T Function
+3/4D
 void CloseGraphics(ScreenContext *sc)
 
-¾C
+3/4C
 
 This function releases all resources acquired internally by
 OpenGraphics().  If OpenGraphics() failed it is still safe to call this
@@ -1884,20 +1884,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      DisplayUtils.h
      
-¾R
+3/4R
 
 OpenGraphics()
 
-¾KY CreateBackdropCel 
-¾T Function
-¾D
+3/4KY CreateBackdropCel 
+3/4T Function
+3/4D
 CCB * CreateBackdropCel(int32 width, int32 height, int32 
 color, int32 opacityPercent)
 
-¾C
+3/4C
 
 This function creates a single-colored cel which is useful in serving as a
 backdrop and/or control point for other objects.  
@@ -1960,20 +1960,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CreateCel(), DeleteCel()
 
-¾KY CreateCel 
-¾T Function
-¾D
+3/4KY CreateCel 
+3/4T Function
+3/4D
 CCB * CreateCel(int32 width, int32 height, int32 
 bitsPerPixel, int32 options, void *dataBuf)
 
-¾C
+3/4C
 
 This function creates a cel of any arbitrary type.  The parameters provide
 just enough information to create the basic cel.  After the cel is
@@ -2031,20 +2031,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CreateBackdropCel(), DeleteCel()
 
-¾KY CreateLRFormCel 
-¾T Function
-¾D
+3/4KY CreateLRFormCel 
+3/4T Function
+3/4D
 CCB * CreateLRFormCel(CCB *cel, Item screenItem, SRect 
 *subRect)
 
-¾C
+3/4C
 
 This function creates an LRForm cel from a screen or portion of a screen. 
 LRForm cels can be used to 'capture' a screen's pixels and project them to
@@ -2100,19 +2100,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CreateSubrectCel(), DeleteCel()
 
-¾KY CreateSubrectCel 
-¾T Function
-¾D
+3/4KY CreateSubrectCel 
+3/4T Function
+3/4D
 CCB * CreateSubrectCel(CCB *dst, CCB *src, SRect *subRect)
 
-¾C
+3/4C
 
 This function creates a cel from a portion of another cel's data.  The new
 cel projects a subrectangle of the src cel's pixels.
@@ -2171,16 +2171,16 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CreateLRFormCel(), DeleteCel()
 
-¾KY CreateTextCel 
-¾T Function
-¾D
+3/4KY CreateTextCel 
+3/4T Function
+3/4D
 TextCel * CreateTextCel(FontDescriptor
 *fDesc, 
 uint32
@@ -2188,7 +2188,7 @@ formatFlags, int32
 width, int32
 height)
 
-¾C
+3/4C
 
 Creates a TextCel using the specified sizes and formatting options.
 Initially, the cel data buffer is empty; until you place text into the cel
@@ -2220,19 +2220,19 @@ RETURN VALUE
 A pointer to the newly created TextCel structure; NULL if there isn\xd5 t
 enough memory to create the new TextCel.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 CloneTextCel(), DeleteTextCel(), taCreateTextCel()
 
-¾KY CRectFromCelReturn  
-¾T Function
-¾D
+3/4KY CRectFromCelReturn  
+3/4T Function
+3/4D
 CRect * CRectFromCel(CRect *dst, CCB *cel)
 
-¾C
+3/4C
 
 This function calculates a CRect that describes the cel's projection, and
 stores the results into *dst.  If the cel is projected to a
@@ -2253,20 +2253,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 SRectFromCel()
 
-¾KY CRectFromIVal 
-¾T Function
-¾D
+3/4KY CRectFromIVal 
+3/4T Function
+3/4D
 CRect * CRectFromIVal(CRect *dst, int32  tlx, int32  tly, 
 int32  brx, int32  bry)
 
-¾C
+3/4C
 
 This function stores the four specified corner values into the CRect at
 *dst.  
@@ -2292,19 +2292,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CRectFromSRect()
 
-¾KY CRectFromSRect 
-¾T Function
-¾D
+3/4KY CRectFromSRect 
+3/4T Function
+3/4D
 CRect * CRectFromSRect(CRect *dst, SRect *src)
 
-¾C
+3/4C
 
 This function converts an SRect into a CRect that describes the same area.
 
@@ -2323,20 +2323,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CRectFromIVal(), SRectFromCRect()
 
-¾KY CRectIntersection 
-¾T Function
-¾D
+3/4KY CRectIntersection 
+3/4T Function
+3/4D
 CRect * CRectIntersection(CRect *dst, CRect *rect1, CRect 
 *rect2)
 
-¾C
+3/4C
 
 This function calculates the intersection of two rectangles, returning a
 rectangle that describes the common area.  The dst rectangle can be the
@@ -2362,19 +2362,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CRectUnion(), SRectIntersection()
 
-¾KY CRectUnion 
-¾T Function
-¾D
+3/4KY CRectUnion 
+3/4T Function
+3/4D
 CRect * CRectUnion(CRect *dst, CRect *rect1, CRect *rect2)
 
-¾C
+3/4C
 
 This function calculates the union of two rectangles, returning a
 rectangle that encompases all the area described by the two source
@@ -2397,21 +2397,21 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CRectIntersection(), SRectUnion()
 
-¾KY CrossFadeCels 
-¾T Function
-¾D
+3/4KY CrossFadeCels 
+3/4T Function
+3/4D
 CCB * CrossFadeCels(Item screen, int32 step, CCB *oldCel, 
 CCB
 *newCel)
 
-¾C
+3/4C
 
 This function calculates and optionally draws a 16-level crossfade between
 two cels.  The crossfade is accomplished in 16 equal steps by 16 calls to
@@ -2480,20 +2480,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CrossFadeCels8()
 
-¾KY CrossFadeCels8 
-¾T Function
-¾D
+3/4KY CrossFadeCels8 
+3/4T Function
+3/4D
 CCB *   CrossFadeCels8(Item screen, int32 step, CCB 
 *oldCel, CCB *newCel)
 
-¾C
+3/4C
 
 This function calculates and optionally draws an 8-level crossfade between
 two cels.  The crossfade is accomplished in 8 equal steps by 8 calls to
@@ -2562,19 +2562,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CrossFadeCels()
 
-¾KY DeleteCel 
-¾T Function
-¾D
+3/4KY DeleteCel 
+3/4T Function
+3/4D
 CCB * DeleteCel(CCB *cel)
 
-¾C
+3/4C
 
 This function deletes any type of cel created by Lib3DO library functions.
 A NULL pointer is valid as input, and is quietly treated as a no-op.  If
@@ -2614,19 +2614,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 DeleteCelList()
 
-¾KY DeleteCelList 
-¾T Function
-¾D
+3/4KY DeleteCelList 
+3/4T Function
+3/4D
 CCB * DeleteCelList(CCB *celList)
 
-¾C
+3/4C
 
 This function deletes a list of one or more cels.  It walks the
 ccb_NextPtr links calling DeleteCel() on each cel, implying that all the
@@ -2660,19 +2660,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 DeleteCel()
 
-¾KY DeleteTextCel 
-¾T Function
-¾D
+3/4KY DeleteTextCel 
+3/4T Function
+3/4D
 void DeleteTextCel(TextCel *tCel)
 
-¾C
+3/4C
 
 Deletes the specified text cel and all resources it acquired internally
 when it was created.  If SetTextCelFormatBuffer()dynamically allocates a
@@ -2692,19 +2692,19 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 CloneTextCel(), CreateTextCel()
 
-¾KY DetachTextCelCCB  
-¾T Function
-¾D
+3/4KY DetachTextCelCCB  
+3/4T Function
+3/4D
 CCB * DetachTextCelCCB(TextCel *tCel)
 
-¾C
+3/4C
 
 Releases resources required for rendering new text into a cel, but retains
 pixels already rendered.  In addition to freeing resources, this function
@@ -2725,18 +2725,18 @@ RETURN VALUE
 
 A pointer to the CCB, the value that was originally in tCel->tc_CCB.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY DisableMSEvent 
-¾T Function
-¾D
+3/4KY DisableMSEvent 
+3/4T Function
+3/4D
 void DisableMSEvent(MSEventData *theEvent, int32 reserved)
 
-¾C
+3/4C
 
 This function temporarily disables dispatching of the specified event.  If
 a message or signal is pending at the time this function is called that
@@ -2760,20 +2760,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      MsgUtils.h
      
-¾R
+3/4R
 
 EnableMSEvent()
 
-¾KY DispatchMSEvents 
-¾T Function
-¾D
+3/4KY DispatchMSEvents 
+3/4T Function
+3/4D
 int32 DispatchMSEvents(MSEventHandle mseHandle, void 
 *userContext, int32 reserved)
 
-¾C
+3/4C
 
 This function waits for events and dispatches processing to the events'
 handlers.  It loops internally, waiting for messages and signals,
@@ -2808,20 +2808,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      MsgUtils.h
      
-¾R
+3/4R
 
 SetupMSEvents()
 
-¾KY DrawAnimCel 
-¾T Function
-¾D
+3/4KY DrawAnimCel 
+3/4T Function
+3/4D
  void DrawAnimCel (ANIM *pAnim, Item bitmapItem, long 
 xPos, long YPos, frac16 frameIncrement, long hotSpot)
 
-¾C
+3/4C
 
 Determines the next cel to draw in the animation specified by pAnim and
 draws it. Lets you draw a hotspot on that frame.
@@ -2865,20 +2865,20 @@ The cel is positioned with the hotspot at xPos, YPos.  Return Value
 
 void
 
-¾F
+3/4F
      AnimUtils.h
      
-¾R
+3/4R
 
 GetAnimCel(), LoadAnim()
 
-¾KY DrawImage 
-¾T Function
-¾D
+3/4KY DrawImage 
+3/4T Function
+3/4D
  bool DrawImage (Item iScreen, ubyte* pbImage, 
 ScreenContext *sc)
 
-¾C
+3/4C
 
 Uses the fast SPORT mechanism, CopyVRAMPages(), to project an image into a
 frame buffer. The image must be stored in page aligned VRAM. The function 
@@ -2898,15 +2898,15 @@ RETURN VALUE
 
 TRUE if successful, FALSE if not.
 
-¾F
+3/4F
      DisplayUtils.h
      
-¾R
+3/4R
 
 
-¾KY DrawTextChar 
-¾T Function
-¾D
+3/4KY DrawTextChar 
+3/4T Function
+3/4D
 void 
 DrawTextChar(FontDescriptor
 *fDesc, GrafCon
@@ -2915,7 +2915,7 @@ Item
 bitmapItem, uint32
 character)
 
-¾C
+3/4C
 
 Draws a character directly into a bitmap, using the colors and x/y
 coordinates specified in the GrafCon.  
@@ -2951,20 +2951,20 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 DrawTextString()
 
-¾KY DrawTextString 
-¾T Function
-¾D
+3/4KY DrawTextString 
+3/4T Function
+3/4D
 void DrawTextString(FontDescriptor *fDesc, GrafCon *gcon, 
 Item bitmapItem, char *text, ...)
 
-¾C
+3/4C
 
 Draws a text string directly into a bitmap, using the colors and x/y
 coordinates specified in the GrafCon. The text string can be a simple
@@ -3014,19 +3014,19 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 DrawTextChar()
 
-¾KY EnableMSEvent 
-¾T Function
-¾D
+3/4KY EnableMSEvent 
+3/4T Function
+3/4D
 void EnableMSEvent(MSEventData *theEvent, int32 reserved)
 
-¾C
+3/4C
 
 This function re-enables dispatching of an event previously disabled by 
 DisableMSEvent().  If a message or signal was pending at the time you
@@ -3049,19 +3049,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      MsgUtils.h
      
-¾R
+3/4R
 
 DisableMSEvent()
 
-¾KY EraseTextInCel 
-¾T Function
-¾D
+3/4KY EraseTextInCel 
+3/4T Function
+3/4D
 void EraseTextInCel(TextCel *tCel)
 
-¾C
+3/4C
 
 Clears existing pixels from a text cel's data buffer.  All pixels are set
 to zero.
@@ -3074,15 +3074,15 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY FadeFromBlack 
-¾T Function
-¾D
+3/4KY FadeFromBlack 
+3/4T Function
+3/4D
  void FadeFromBlack (ScreenContext *sc, int32 frameCount)
 
-¾C
+3/4C
 
 Fades all the screens in the ScreenContext from black over frameCount. 
 
@@ -3098,15 +3098,15 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      DisplayUtils.h
      
-¾KY FadeInCel 
-¾T Function
-¾D
+3/4KY FadeInCel 
+3/4T Function
+3/4D
  bool FadeInCel (CCB *ccb, CCB *maskccb, int32 *stepValue)
 
-¾C
+3/4C
 
 Calls SetCelScale() to set up the parameters for the next step in the
 fade-in of the cel and then increments stepValue. To fade in a cel, call 
@@ -3128,20 +3128,20 @@ RETURN VALUE
 TRUE if successful, FALSE if not. Returns FALSE when stepValue reaches 
 MAX_SCALE. 
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 SetCelScale(), SetFadeInCel(), SetFadeOutCel(), FadeOutCel()
 
-¾KY FadeOutCel 
-¾T Function
-¾D
+3/4KY FadeOutCel 
+3/4T Function
+3/4D
  bool FadeOutCel (CCB *ccb, CCB *maskccb, int32 
 *stepValue)
 
-¾C
+3/4C
 
 Calls SetCelScale() to set up the parameters for the next step in the
 fade-out of the cel and then increments stepValue. To fade out a cel, call
@@ -3162,19 +3162,19 @@ RETURN VALUE
 
 TRUE if successful, FALSE if not.
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 SetCelScale(), SetFadeInCel(), FadeInCel(), SetFadeOutCel()
 
-¾KY FadeToBlack 
-¾T Function
-¾D
+3/4KY FadeToBlack 
+3/4T Function
+3/4D
  void FadeToBlack (ScreenContext *sc, int32 nFrames)
 
-¾C
+3/4C
 
 Fades all the screens in the nFrames to black over nFrames. 
 
@@ -3190,20 +3190,20 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      DisplayUtils.h
      
-¾R
+3/4R
 
 FadeFromBlack()
 
-¾KY FindChunk 
-¾T Function
-¾D
+3/4KY FindChunk 
+3/4T Function
+3/4D
 char *FindChunk (ulong chunk_ID, char **buffer, long 
 *bufLen)
 
-¾C
+3/4C
 
 Searches buffer until it finds chunk_ID. On exit, updates the buffer
 pointer that is to point to the next chunk and bufLen to contain the
@@ -3222,12 +3222,12 @@ RETURN VALUE
 
 Returns NULL or a pointer to the chunk.
 
-¾KY FinishAsyncLoadFile 
-¾T Function
-¾D
+3/4KY FinishAsyncLoadFile 
+3/4T Function
+3/4D
 Err FinishAsyncLoadFile(LoadFileInfo *lf, Err loadStatus)
 
-¾C
+3/4C
 
 This function releases resources no longer needed after completion of an
 async file load, leaving just the file data in the buffer (if the load was
@@ -3260,19 +3260,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 AsyncLoadFile()
 
-¾KY FPointFromFVal 
-¾T Function
-¾D
+3/4KY FPointFromFVal 
+3/4T Function
+3/4D
 FPoint* FPointFromFVal(FPoint *dst, frac16 x, frac16 y)
 
-¾C
+3/4C
 
 This function stores the specified x and y values into *dst.  It is useful
 for writing inline calls such as:FPoint    wrk;OffsetCelListByFDelta(cel,
@@ -3295,19 +3295,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 FPointFromIVal()
 
-¾KY FPointFromIPoint 
-¾T Function
-¾D
+3/4KY FPointFromIPoint 
+3/4T Function
+3/4D
 FPoint * FPointFromIPoint(FPoint *dst, IPoint *src)
 
-¾C
+3/4C
 
 This function converts an IPoint to an FPoint.
 
@@ -3326,19 +3326,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPointFromFPoint()
 
-¾KY FPointFromIVal 
-¾T Function
-¾D
+3/4KY FPointFromIVal 
+3/4T Function
+3/4D
 FPoint * FPointFromIVal(FPoint *dst, int32 x, int32 y)
 
-¾C
+3/4C
 
 This function converts the specified values from integer to frac16 and
 stores them in *dst.  It is useful for writing inline calls such as:FPoint
@@ -3361,19 +3361,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 FPointFromFVal()
 
-¾KY FrameBufferToCel 
-¾T Function
-¾D
+3/4KY FrameBufferToCel 
+3/4T Function
+3/4D
  bool FrameBufferToCel (Item iScreen, CCB* cel)
 
-¾C
+3/4C
 
 TRUE if successful, FALSE if not.
 
@@ -3382,18 +3382,18 @@ CAVEATS
 This function is extremely inefficient and should be avoided. Use 
 CreateLRFormCel() instead. 
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 
-¾KY Free 
-¾T Function
-¾D
+3/4KY Free 
+3/4T Function
+3/4D
  void* Free (void *block)
 
-¾C
+3/4C
 
 Frees a block of memory previously allocated via Malloc(). Do not use this
 function to free blocks of memory allocated by any method other than 
@@ -3407,19 +3407,19 @@ RETURN VALUE
 
 Always returns NULL.
 
-¾F
+3/4F
      UMemory.h
      
-¾R
+3/4R
 
 Malloc(), MemBlockSize()
 
-¾KY FreeBuffer 
-¾T Function
-¾D
+3/4KY FreeBuffer 
+3/4T Function
+3/4D
  void FreeBuffer (char *filename, long *fileBuffer)
 
-¾C
+3/4C
 
 This function is obsolete 
 
@@ -3436,19 +3436,19 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 LoadAnim(), LoadCel(), LoadImage()
 
-¾KY GetAnimCel 
-¾T Function
-¾D
+3/4KY GetAnimCel 
+3/4T Function
+3/4D
 CCB* GetAnimCel (ANIM *pAnim, frac16 frameIncrement)
 
-¾C
+3/4C
 
 Returns a pointer to the CCB of the next cel in an animation sequence.
 Adds frameIncrement to the current frame counter within the ANIM. Does not
@@ -3472,19 +3472,19 @@ RETURN VALUE
 Pointer to the CCB that was found at the specified position in the
 animation. 
 
-¾F
+3/4F
      AnimUtils.h
      
-¾R
+3/4R
 
 DrawAnimCel, LinkCel
 
-¾KY GetCelBitsPerPixel 
-¾T Function
-¾D
+3/4KY GetCelBitsPerPixel 
+3/4T Function
+3/4D
 int32 GetCelBitsPerPixel(CCB *cel)
 
-¾C
+3/4C
 
 This function returns the bits-per-pixel value for the cel, determined by 
 examining the cel's preamble data.
@@ -3504,15 +3504,15 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY GetCelBytesPerRow 
-¾T Function
-¾D
+3/4KY GetCelBytesPerRow 
+3/4T Function
+3/4D
 int32 GetCelBytesPerRow(CCB *cel)
 
-¾C
+3/4C
 
 This function returns the bytes-per-row value for the cel, determined by
 examing the cel's preamble data.  The calculations take into account the
@@ -3534,15 +3534,15 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY GetCelDataBufferSize 
-¾T Function
-¾D
+3/4KY GetCelDataBufferSize 
+3/4T Function
+3/4D
 int32 GetCelDataBufferSize(CCB *cel)
 
-¾C
+3/4C
 
 This function calculates the size needed for a cel data buffer based on
 the values found in the cel's preamble words.  The calculations take into
@@ -3574,16 +3574,16 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY GetFontCharInfo 
-¾T Function
-¾D
+3/4KY GetFontCharInfo 
+3/4T Function
+3/4D
 int32 GetFontCharInfo(FontDescriptor *fDesc, int32 
 character, void **blitInfo)
 
-¾C
+3/4C
 
 Returns information about the specified character. The return value is the
 width of the character (not including intercharacter spacing). The void
@@ -3611,21 +3611,21 @@ RETURN VALUE
 The width of the character; zero if the character is not present in the
 font.
 
-¾F
+3/4F
      FontLib.h
      
-¾R
+3/4R
 
 BlitFontChar(), GetFontCharWidth()
 
-¾KY GetFontCharWidest 
-¾T Function
-¾D
+3/4KY GetFontCharWidest 
+3/4T Function
+3/4D
 int32 GetFontCharWidest(FontDescriptor *fDesc, 
 char
 *string)
 
-¾C
+3/4C
 
 Returns the width in pixels of the widest character in the string.
 
@@ -3640,19 +3640,19 @@ RETURN VALUE
 
 The width of the widest character.
 
-¾F
+3/4F
      FontLib.h
      
-¾R
+3/4R
 
 
-¾KY GetFontCharWidth 
-¾T Function
-¾D
+3/4KY GetFontCharWidth 
+3/4T Function
+3/4D
 int32 GetFontCharWidth(FontDescriptor *fDesc, int32 
 character)
 
-¾C
+3/4C
 
 Retrieves the width of the specified character in the font. The return
 value is the width of the character (not including intercharacter
@@ -3669,20 +3669,20 @@ RETURN VALUE
 The width of the character; zero if the character is not present in the
 font.
 
-¾F
+3/4F
      FontLib.h
      
-¾R
+3/4R
 
 GetFontStringWidth()
 
-¾KY GetFontStringWidth 
-¾T Function
-¾D
+3/4KY GetFontStringWidth 
+3/4T Function
+3/4D
 int32 GetFontStringWidth(FontDescriptor *fDesc, char 
 *string)
 
-¾C
+3/4C
 
 Calculates the  width of the specified string.  The return value is the
 sum of the widths of the characters in the string.  The sum includes the
@@ -3698,19 +3698,19 @@ RETURN VALUE
 
 The width of the string.
 
-¾F
+3/4F
      FontLib.h
      
-¾R
+3/4R
 
 GetFontCharWidth()
 
-¾KY GetHSecTime 
-¾T Function
-¾D
+3/4KY GetHSecTime 
+3/4T Function
+3/4D
 int32 GetHSecTime(Item ioreq)
 
-¾C
+3/4C
 
 This function obtains the current value of the system microsecond timer,
 converts the seconds and microseconds into a single hundreths-of-a-second
@@ -3737,21 +3737,21 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY GetTextCelColor 
-¾T Function
-¾D
+3/4KY GetTextCelColor 
+3/4T Function
+3/4D
 void GetTextCelColor(TextCel *tCel, int32 *bgColor, 
 int32
 *fgColor0)
 
-¾C
+3/4C
 
 Retrieves the background and foreground colors used when the cel is drawn.
 
@@ -3769,21 +3769,21 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 GetTextCelColors()
 
-¾KY GetTextCelColors 
-¾T Function
-¾D
+3/4KY GetTextCelColors 
+3/4T Function
+3/4D
 void GetTextCelColors(TextCel *tCel, int32 bgColor, 
 int32
 fgColors[4])
 
-¾C
+3/4C
 
 Retrieves the background and foreground colors used when the cel is drawn.
 This function gets all four foreground colors; use it with the features
@@ -3804,20 +3804,20 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 GetTextCelColor()
 
-¾KY GetTextCelCoords 
-¾T Function
-¾D
+3/4KY GetTextCelCoords 
+3/4T Function
+3/4D
 void GetTextCelCoords(TextCel *tCel, Coord *ccbX, Coord 
 *ccbY)
 
-¾C
+3/4C
 
 Retrieves the TextCel CCB coordinates (ccb_XPos and ccb_YPos).    
 
@@ -3842,20 +3842,20 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY GetTextCelFormatBuffer 
-¾T Function
-¾D
+3/4KY GetTextCelFormatBuffer 
+3/4T Function
+3/4D
 void GetTextCelFormatBuffer(TextCel *tCel, char **buffer, 
 uint32
 *bufSize)
 
-¾C
+3/4C
 
 Retrieves the cel\xd5 s formatting buffer and size. The format buffer is
 used for printf-style formatting of text during rendering. If the buffer
@@ -3875,18 +3875,18 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY GetTextCelFormatFlags 
-¾T Function
-¾D
+3/4KY GetTextCelFormatFlags 
+3/4T Function
+3/4D
 uint32 GetTextCelFormatFlags(TextCel *tCel, uint32 *flags)
 
-¾C
+3/4C
 
 Retrieves the cel\xd5 s formatting flags.
 
@@ -3901,17 +3901,17 @@ RETURN VALUE
 
 The format flags.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY GetTextCelLeadingAdjust 
-¾T Function
-¾D
+3/4KY GetTextCelLeadingAdjust 
+3/4T Function
+3/4D
 void GetTextCelLeadingAdjust(TextCel *tCel, 
 int32
 *adjustLeading)
 
-¾C
+3/4C
 
 Retrieves the leading adjustment for text rendered in the cel. (Leading is
 the extra vertical space between lines of text.) 
@@ -3928,17 +3928,17 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY GetTextCelMargins 
-¾T Function
-¾D
+3/4KY GetTextCelMargins 
+3/4T Function
+3/4D
 void GetTextCelMargins(TextCel *tCel, int32 *leftMargin, 
 int32
 *topMargin)
 
-¾C
+3/4C
 
 Retrieves the top and left margins within the cel data buffer.  
 
@@ -3956,18 +3956,18 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY GetTextCelPenNumber 
-¾T Function
-¾D
+3/4KY GetTextCelPenNumber 
+3/4T Function
+3/4D
 void GetTextCelPenNumber(TextCel *tCel, int32 *penNumber)
 
-¾C
+3/4C
 
 Retrieves pen number used for text rendering.  
 
@@ -3982,16 +3982,16 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY GetTextCelSize 
-¾T Function
-¾D
+3/4KY GetTextCelSize 
+3/4T Function
+3/4D
 void GetTextCelSize(TextCel *tCel, int32 *width, int32 
 *height)
 
-¾C
+3/4C
 
 Retrieves the current size for the text cel. You can also obtain the
 current size of a cel by reading the ccb_Width and ccb_Height fields in
@@ -4013,17 +4013,17 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY GetTextCelSpacingAdjust 
-¾T Function
-¾D
+3/4KY GetTextCelSpacingAdjust 
+3/4T Function
+3/4D
 void GetTextCelSpacingAdjust(TextCel *tCel, 
 int32
 *adjustSpacing)
 
-¾C
+3/4C
 
 Retrieves the spacing adjustment for text rendered in the cel. Spacing is
 the extra horizontal space between characters in the text.  
@@ -4040,19 +4040,19 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY GetTextCelTabStops 
-¾T Function
-¾D
+3/4KY GetTextCelTabStops 
+3/4T Function
+3/4D
 void GetTextCelTabStops(TextCel *tCel, uint16 
 tabStops[16])
 
-¾C
+3/4C
 
 Retrieves the tab stops table for the text cel.  A full table of 16 values
 is stored even if some of the values are unused.  The end of the valid
@@ -4069,20 +4069,20 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY GetTextExtent 
-¾T Function
-¾D
+3/4KY GetTextExtent 
+3/4T Function
+3/4D
 char * GetTextExtent(TextCel *tCel, int32 *pWidth, 
 int32
 *pHeight, char *fmtString, ...)
 
-¾C
+3/4C
 
 Calculates the on-screen extent that would be used by the formatted text. 
 GetTextExtent formats text (if necessary), calculates the pixel width and
@@ -4121,19 +4121,19 @@ RETURN VALUE
 
 A pointer to the formatted text.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 vGetTextExtent()
 
-¾KY GetTimerIOReq 
-¾T Function
-¾D
+3/4KY GetTimerIOReq 
+3/4T Function
+3/4D
 Item GetTimerIOReq(void)
 
-¾C
+3/4C
 
 This function obtains an IOReq item for use with the other timer utilties
 that take an IOReq parm.  Use DeleteItem() to release the IOReq item when
@@ -4155,18 +4155,18 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 
-¾KY GetTSecTime 
-¾T Function
-¾D
+3/4KY GetTSecTime 
+3/4T Function
+3/4D
 int32 GetTSecTime(Item ioreq)
 
-¾C
+3/4C
 
 This function obtains the current value of the system microsecond timer,
 converts the seconds and microseconds into a single tenths-of-a-second
@@ -4190,19 +4190,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY GetTime 
-¾T Function
-¾D
+3/4KY GetTime 
+3/4T Function
+3/4D
 int32 GetTime(Item ioreq)
 
-¾C
+3/4C
 
 This function obtains the current value of the system microsecond timer
 and returns just the seconds portion.
@@ -4221,20 +4221,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY GetVBLTime 
-¾T Function
-¾D
+3/4KY GetVBLTime 
+3/4T Function
+3/4D
 int32 GetVBLTime(Item ioreq, uint32 *hiorder, uint32 
 *loworder)
 
-¾C
+3/4C
 
 This function obtains the current value of the system VBL timer and stores
 the results at *hiorder and *loworder.  Either pointer can be NULL if you
@@ -4265,20 +4265,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY GetUSecTime 
-¾T Function
-¾D
+3/4KY GetUSecTime 
+3/4T Function
+3/4D
 int32 GetUSecTime(Item ioreq, uint32 *seconds, uint32 
 *useconds)
 
-¾C
+3/4C
 
 This function obtains the current value of the system microsecond timer
 and stores the results at *seconds and *useconds.  Either pointer can be
@@ -4307,19 +4307,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY HZ_TO_USEC 
-¾T Function
-¾D
+3/4KY HZ_TO_USEC 
+3/4T Function
+3/4D
 int32 HZ_TO_USEC(value)
 
-¾C
+3/4C
 
 This macro converts a value expressed in hertz (cycles or ticks per
 second) to the equivelent number of microseconds for each tick.  True
@@ -4342,18 +4342,18 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 
-¾KY ICornerFromSRect 
-¾T Function
-¾D
+3/4KY ICornerFromSRect 
+3/4T Function
+3/4D
 IPoint * ICornerFromSRect(IPoint *dst, SRect *src)
 
-¾C
+3/4C
 
 This function calculates the opposite corner of the area described by the
 src rectangle, and stores the results at *dst.
@@ -4373,19 +4373,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 XCORNERFROMSRECT(), YCORNERFROMSRECT(), ISizeFromCRect()
 
-¾KY IPointFromFPoint 
-¾T Function
-¾D
+3/4KY IPointFromFPoint 
+3/4T Function
+3/4D
 IPoint * IPointFromFPoint(IPoint *dst, FPoint *src)
 
-¾C
+3/4C
 
 This function converts an FPoint to an IPoint.
 
@@ -4404,19 +4404,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 FPointFromIPoint()
 
-¾KY IPointFromFVal 
-¾T Function
-¾D
+3/4KY IPointFromFVal 
+3/4T Function
+3/4D
 IPoint * IPointFromFVal(IPoint *dst, frac16 x, frac16 y)
 
-¾C
+3/4C
 
 This functions converts the specified values from frac16 to integer and
 stores them at *dst.  It is useful for writing inline calls such as:IPoint
@@ -4439,19 +4439,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPointFromIVal(), FPointFromFVal()
 
-¾KY IPointFromIVal 
-¾T Function
-¾D
+3/4KY IPointFromIVal 
+3/4T Function
+3/4D
 IPoint * IPointFromIVal(IPoint *dst, int32 x, int32 y)
 
-¾C
+3/4C
 
 This functions stores the specified values at *dst.  It is useful for
 writing inline calls such as:IPoint    wrk;OffsetCelListByIDelta(cel,
@@ -4474,19 +4474,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPointFromFVal(), FPointFromIVal()
 
-¾KY IPointIsInCRect 
-¾T Function
-¾D
+3/4KY IPointIsInCRect 
+3/4T Function
+3/4D
 Boolean IPointIsInCRect(IPoint *point, CRect *rect)
 
-¾C
+3/4C
 
 This function determines whether the point is within the rectangle. 
 Points on the edge are considered within the rectange.
@@ -4505,19 +4505,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPointIsInSRect()
 
-¾KY IPointIsInSRect 
-¾T Function
-¾D
+3/4KY IPointIsInSRect 
+3/4T Function
+3/4D
 Boolean IPointIsInSRect(IPoint *point, SRect *rect)
 
-¾C
+3/4C
 
 This function determines whether the point is within the rectangle. 
 Points on the edge are considered within the rectange.
@@ -4536,19 +4536,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPointIsInCRect()
 
-¾KY IS_LASTCEL 
-¾T Function
-¾D
+3/4KY IS_LASTCEL 
+3/4T Function
+3/4D
 Boolean IS_LASTCEL(CCB *ccb)
 
-¾C
+3/4C
 
 This macro evaluates to TRUE if no cels are linked to ccb, or FALSE if
 other cels are linked to ccb.  
@@ -4569,19 +4569,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 LastCelInList()
 
-¾KY ISizeFromCRect 
-¾T Function
-¾D
+3/4KY ISizeFromCRect 
+3/4T Function
+3/4D
 IPoint * ISizeFromCRect(IPoint *dst, CRect *src)
 
-¾C
+3/4C
 
 This function calculates the width and height of the area described by the
 src rectangle and stores the results at *dst.
@@ -4601,19 +4601,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 XSIZEFROMCRECT(), YSIZEFROMCRECT(), ICornerFromSRect()
 
-¾KY InsetCRect 
-¾T Function
-¾D
+3/4KY InsetCRect 
+3/4T Function
+3/4D
 CRect * InsetCRect(CRect *dst, IPoint *delta)
 
-¾C
+3/4C
 
 This function shrinks or enlarges the amount of area described by the dst 
 rectangle.  Positive delta values shrink the area, negative values enlarge
@@ -4634,19 +4634,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 InsetSRect()
 
-¾KY InsetSRect 
-¾T Function
-¾D
+3/4KY InsetSRect 
+3/4T Function
+3/4D
 SRect * InsetSRect(SRect *dst, IPoint *delta)
 
-¾C
+3/4C
 
 This function shrinks or enlarges the amount of area described by the dst 
 rectangle.  Positive delta values shrink the area, negative values enlarge
@@ -4667,19 +4667,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 InsetCRect()
 
-¾KY LastCelInList 
-¾T Function
-¾D
+3/4KY LastCelInList 
+3/4T Function
+3/4D
 CCB * LastCelInList(CCB *list)
 
-¾C
+3/4C
 
 This function returns a pointer to the last cel in a list of one or more
 cels.
@@ -4697,19 +4697,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IS_LASTCEL()
 
-¾KY LinkCel 
-¾T Function
-¾D
+3/4KY LinkCel 
+3/4T Function
+3/4D
  void LinkCel( CCB *ccb, CCB *nextCCB )
 
-¾C
+3/4C
 
 Links nextCCB to ccb by setting ccb\xd5 s NextPtr field to nextCCBturning
 off the CCB_LAST flag in ccb\xd5 s ccb_Flags field by setting CCB_LAST to
@@ -4728,18 +4728,18 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 
-¾KY LoadAnim 
-¾T Function
-¾D
+3/4KY LoadAnim 
+3/4T Function
+3/4D
  ANIM * LoadAnim (char *fileName, uint32 memTypeBits)
 
-¾C
+3/4C
 
 Loads an animation file from disk. Parses the cels within the animation
 into an ANIM structure and returns a pointer to the ANIM.
@@ -4788,19 +4788,19 @@ RETURN VALUE
 
 A pointer to an ANIM structure, or NULL if an error occurred.
 
-¾F
+3/4F
      AnimUtils.h
      
-¾R
+3/4R
 
 UnloadAnim(), GetAnimCel(), DrawAnimCel()
 
-¾KY LoadCel  
-¾T Function
-¾D
+3/4KY LoadCel  
+3/4T Function
+3/4D
 CCB * LoadCel (char *filename, uint32 memTypeBits)
 
-¾C
+3/4C
 
 This function loads a cel or related group of  cels from a file.  Memory
 for the file is allocated according to memTypeBits, then the entire file
@@ -4853,20 +4853,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 ParseCel(), DeleteCel, DeleteCelList, UnloadCel
 
-¾KY LoadFile 
-¾T Function
-¾D
+3/4KY LoadFile 
+3/4T Function
+3/4D
  void* LoadFile (char *fileName, long *fileSizePtr,  
 uint32 memTypeBits)
 
-¾C
+3/4C
 
 Loads an entire file into a buffer in memory. This function allocates a
 buffer, loads the file into it, and returns a pointer to the allocated
@@ -4905,20 +4905,20 @@ RETURN VALUE
 
 A pointer to loaded file in memory, or NULL if an error occurred.
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 UnloadFile, LoadFileHere, AsyncLoadFile, 
 
-¾KY LoadFileHere 
-¾T Function
-¾D
+3/4KY LoadFileHere 
+3/4T Function
+3/4D
 void * LoadFileHere(char *fname, int32 *pfsize, void 
 *buffer, int32 bufsize)
 
-¾C
+3/4C
 
 This function loads a file into a buffer you allocate.  It is identical to
 LoadFile() except that it lets you allocate the buffer.  If the bufsize
@@ -4955,21 +4955,21 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 LoadFile(), AsyncLoadFile()
 
-¾KY LoadFont 
-¾T Function
-¾D
+3/4KY LoadFont 
+3/4T Function
+3/4D
 FontDescriptor * LoadFont(char *fileName, 
 uint32
 memTypeBits)
 
-¾C
+3/4C
 
 Loads a font from the specified file and prepares it for use.
 
@@ -4988,20 +4988,20 @@ A pointer to a FontDescriptor structure that describes the font; returns
 NULL if the file is not found, is not a valid font file, or there is not
 enough memory to process the file.
 
-¾F
+3/4F
      FontLib.h
      
-¾R
+3/4R
 
 UnloadFont(), ParseFont()
 
-¾KY LoadImage 
-¾T Function
-¾D
+3/4KY LoadImage 
+3/4T Function
+3/4D
  ubyte* LoadImage (char *name, ubyte* dest, VdlChunk 
 **rawVDLPtr, ScreenContext *sc)
 
-¾C
+3/4C
 
 Loads a 3DO file format image file specified by name into the buffer
 pointed to by dest. May optionally return a VDL (Video Display List) if
@@ -5031,19 +5031,19 @@ Returns a pointer to the destination buffer if successful, NULL if not.
 Note that the returned buffer may have been allocated by LoadImage() if
 the dest input parameter was NULL.
 
-¾F
+3/4F
      DisplayUtils.h
      
-¾R
+3/4R
 
 UnloadImage
 
-¾KY LoadSoundEffect 
-¾T Function
-¾D
+3/4KY LoadSoundEffect 
+3/4T Function
+3/4D
  Item LoadSoundEffect (char* sFilename, int nNumVoices)
 
-¾C
+3/4C
 
 Loads a sound effect from the specified file and assigns it nNumVoices. It
 does this by loading the Instrument template \xd2 sampler.ofx\xd3 ,
@@ -5074,15 +5074,15 @@ CAVEATS
 
  This function will not appear in future releases. 
 
-¾F
+3/4F
      Parse3DO.h
      
-¾KY MakeNewCel 
-¾T Function
-¾D
+3/4KY MakeNewCel 
+3/4T Function
+3/4D
  CCB* MakeNewCel (Rectf16 *r)
 
-¾C
+3/4C
 
 Creates a new cel with default CCB values and fills it with white pixels. 
 
@@ -5118,21 +5118,21 @@ CAVEATS
 
 This function is obsolete. Use CloneCel()
 
-¾F
+3/4F
      Utils3DO.h
      
      Utils3DO.h
      
-¾R
+3/4R
 
 CloneCel()
 
-¾KY Malloc 
-¾T Function
-¾D
+3/4KY Malloc 
+3/4T Function
+3/4D
  void* Malloc (uint32 size, uint32 memTypeBits)
 
-¾C
+3/4C
 
 Allocates a block of memory of the requested size and type.
 
@@ -5160,19 +5160,19 @@ RETURN VALUE
 A pointer to the allocated block, or NULL if the memory couldn\xd5 t be
 allocated.
 
-¾F
+3/4F
      UMemory.h
      
-¾R
+3/4R
 
 Free(), MemBlockSize()
 
-¾KY MapAACelToCQuad 
-¾T Function
-¾D
+3/4KY MapAACelToCQuad 
+3/4T Function
+3/4D
 void MapAACelToCQuad(CCB *aacel, CQuad *quad)
 
-¾C
+3/4C
 
 This function maps an anti-aliased cel to the specified quad.  It is
 effectively a standard MapCel() call that stores its results into both the
@@ -5194,19 +5194,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapCelToCQuad(), MapCelListToCQuad()
 
-¾KY MapAACelToCRect 
-¾T Function
-¾D
+3/4KY MapAACelToCRect 
+3/4T Function
+3/4D
 void MapAACelToCRect(CCB *aacel, CRect *rect)
 
-¾C
+3/4C
 
 This function maps an anti-aliased cel to the specified rectangle.  It is
 much faster than a standard MapCel() call because it only has to calculate
@@ -5229,19 +5229,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapAACelToSRect(), MapCelToCRect(), MapCelListToCRect()
 
-¾KY MapAACelToFPoint 
-¾T Function
-¾D
+3/4KY MapAACelToFPoint 
+3/4T Function
+3/4D
 void MapAACelToFPoint(CCB *aacel, FPoint *newPosition)
 
-¾C
+3/4C
 
 This function sets an anti-aliased cel's location to the given
 coordinates.  It stores the coordinates into both the data and
@@ -5264,19 +5264,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapAACelToIPoint(), MapCelToFPoint(), MapCelListToFPoint()
 
-¾KY MapAACelToIPoint 
-¾T Function
-¾D
+3/4KY MapAACelToIPoint 
+3/4T Function
+3/4D
 void MapAACelToIPoint(CCB *aacel, IPoint *newPosition)
 
-¾C
+3/4C
 
 This function sets an anti-aliased cel's location to the given
 coordinates.  It stores the coordinates into both the data and
@@ -5299,19 +5299,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapAACelToFPoint(), MapCelToIPoint(), MapCelListToIPoint()
 
-¾KY MapAACelToSRect 
-¾T Function
-¾D
+3/4KY MapAACelToSRect 
+3/4T Function
+3/4D
 void MapAACelToSRect(CCB *aacel, SRect *rect)
 
-¾C
+3/4C
 
 This function maps an anti-aliased cel to the specified rectangle.  It is
 much faster than a standard MapCel() call because it only has to calculate
@@ -5334,19 +5334,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapAACelToCRect(), MapCelToSRect(), MapCelListToSRect()
 
-¾KY MapCelListToCQuad 
-¾T Function
-¾D
+3/4KY MapCelListToCQuad 
+3/4T Function
+3/4D
 void MapCelListToCQuad(CCB *list, CQuad *quad)
 
-¾C
+3/4C
 
 This function maps a list of cels to the specified quad.  It performs a
 standard MapCel() on the first cel in the list.  It then adjusts the X/Y
@@ -5373,19 +5373,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapAACelToCQuad(), MapCelToCQuad()
 
-¾KY MapCelListToCRect 
-¾T Function
-¾D
+3/4KY MapCelListToCRect 
+3/4T Function
+3/4D
 void MapCelListToCRect(CCB *list, CRect *rect)
 
-¾C
+3/4C
 
 This function maps a list of cels to the specified rectangle.  It is much
 faster than a standard MapCel() call because it only has to calculate a
@@ -5413,20 +5413,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapAACelToCRect(), MapCelToCRect()
 
-¾KY MapCelListToFPoint 
-¾T Function
-¾D
+3/4KY MapCelListToFPoint 
+3/4T Function
+3/4D
 void MapCelListToFPoint(CCB *list, FPoint *newPosition, 
 Boolean copyPerspective)
 
-¾C
+3/4C
 
 This function sets a list of cels to the given coordinates.  It sets the
 X/Y coordinates of the first cel to the specified values.  It then adjusts
@@ -5462,20 +5462,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapCelListToIPoint(), MapAACelToFPoint(), MapCelToFPoint()
 
-¾KY MapCelListToIPoint 
-¾T Function
-¾D
+3/4KY MapCelListToIPoint 
+3/4T Function
+3/4D
 void MapCelListToIPoint(CCB *list, IPoint *newPosition, 
 Boolean copyPerspective)
 
-¾C
+3/4C
 
 This function sets a list of cels to the given coordinates.  It then
 adjusts the X/Y coordinates of the rest of the cels in the list such that
@@ -5510,19 +5510,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapCelListToFPoint(), MapAACelToIPoint, MapCelToIPoint()
 
-¾KY MapCelListToSRect 
-¾T Function
-¾D
+3/4KY MapCelListToSRect 
+3/4T Function
+3/4D
 void MapCelListToSRect(CCB *list, SRect *rect)
 
-¾C
+3/4C
 
 This function maps a list of cels to the specified rectangle.  It is much
 faster than a standard MapCel() call because it only has to calculate a
@@ -5550,19 +5550,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapCelListToCRect(), MapAACelToSRect(), MapCelToSRect()
 
-¾KY MapCelToCQuad 
-¾T Function
-¾D
+3/4KY MapCelToCQuad 
+3/4T Function
+3/4D
 void MapCelToCQuad(CCB *cel, CQuad *quad)
 
-¾C
+3/4C
 
 This function performs a standard MapCel() on a single cel.  It differs
 from the standard MapCel() call only in that it accepts a CQuad* datatype.
@@ -5582,19 +5582,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapAACelToCQuad(), MapCelListToCQuad()
 
-¾KY MapCelToCRect 
-¾T Function
-¾D
+3/4KY MapCelToCRect 
+3/4T Function
+3/4D
 void MapCelToCRect(CCB *cel, CRect *rect)
 
-¾C
+3/4C
 
 This function maps a single cel to the specified rectangle.  It is much
 faster than a standard MapCel() call because it only has to calculate a
@@ -5615,19 +5615,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapCelToSRect(), MapAACelToCRect(), MapCelListToCRect()
 
-¾KY MapCelToFPoint 
-¾T Function
-¾D
+3/4KY MapCelToFPoint 
+3/4T Function
+3/4D
 void MapCelToFPoint(CCB *cel, FPoint *newPosition)
 
-¾C
+3/4C
 
 This function sets a single cel to the specified coordinates.  It simply
 stores the coordinates in the CCB X/Y position fields.
@@ -5647,19 +5647,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapCelToIPoint(), MapAACelToFPoint(), MapCelListToFPoint()
 
-¾KY MapCelToIPoint 
-¾T Function
-¾D
+3/4KY MapCelToIPoint 
+3/4T Function
+3/4D
 void MapCelToIPoint(CCB *cel, IPoint *newPosition)
 
-¾C
+3/4C
 
 This function sets a single cel to the specified coordinates.  It converts
 the coordinates to frac16 and stores them in the CCB X/Y position fields.
@@ -5679,19 +5679,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapCelToFPoint(), MapAACelToIPoint(), MapCelListToIPoint()
 
-¾KY MapCelToSRect 
-¾T Function
-¾D
+3/4KY MapCelToSRect 
+3/4T Function
+3/4D
 void MapCelToSRect(CCB *cel, SRect *rect)
 
-¾C
+3/4C
 
 This function maps a single cel to the specified rectangle.  It is much
 faster than a standard MapCel() call because it only has to calculate a
@@ -5712,19 +5712,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 MapCelToCRect(), MapAACelToSRect(), MapCelListToSRect()
 
-¾KY MapP2Cel 
-¾T Function
-¾D
+3/4KY MapP2Cel 
+3/4T Function
+3/4D
 void MapP2Cel (Point *q, CCB *ccb)
 
-¾C
+3/4C
 
 Sets the CCB fields of a cel to draw that cel with its four corners
 specified by the array of four points addressed by q. Assumes that both 
@@ -5751,19 +5751,19 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 MapCel()
 
-¾KY MoveCel 
-¾T Function
-¾D
+3/4KY MoveCel 
+3/4T Function
+3/4D
  void MoveCel (CCB *ccb, MoveRec *pMove)
 
-¾C
+3/4C
 
 Moves a cel from beginQuad to endQuad over numberOfFrames, using the 
 MoveRec structure defined by PreMoveCel(). Each time MoveCel() is called, 
@@ -5795,19 +5795,19 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 PreMoveCel()
 
-¾KY MSEC_TO_USEC 
-¾T Function
-¾D
+3/4KY MSEC_TO_USEC 
+3/4T Function
+3/4D
 int32 MSEC_TO_USEC(value)
 
-¾C
+3/4C
 
 This macro converts a number of milliseconds to the equivelent number of 
 microseconds.  True floating point constant values are legal, for example 
@@ -5831,18 +5831,18 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 
-¾KY OffsetAACelByFDelta 
-¾T Function
-¾D
+3/4KY OffsetAACelByFDelta 
+3/4T Function
+3/4D
 void OffsetAACelByFDelta(CCB *aacel, FPoint *deltaXY)
 
-¾C
+3/4C
 
 This function adjusts an anti-aliased cel's location by the specified
 delta.  It adds the delta values to the X/Y coordinates in both the data
@@ -5864,19 +5864,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 OffsetAACelByIDelta(), OffsetCelByFDelta(), OffsetCelListByFDelta()
 
-¾KY OffsetAACelByIDelta 
-¾T Function
-¾D
+3/4KY OffsetAACelByIDelta 
+3/4T Function
+3/4D
 void OffsetAACelByIDelta(CCB *aacel, IPoint *deltaXY)
 
-¾C
+3/4C
 
 This function adjusts an anti-aliased cel's location by the specified
 delta.  It adds the delta values to the X/Y coordinates in both the data
@@ -5898,19 +5898,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 OffsetAACelByFDelta(), OffsetCelByIDelta(), OffsetCelListByIDelta()
 
-¾KY OffsetCel 
-¾T Function
-¾D
+3/4KY OffsetCel 
+3/4T Function
+3/4D
  void OffsetCel (CCB *ccb, int32 xOffset, int32 yOffset)
 
-¾C
+3/4C
 
 Adds the specified offsets to the position fields of the CCB identified by
 ccb. 
@@ -5927,18 +5927,18 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 
-¾KY OffsetCRect 
-¾T Function
-¾D
+3/4KY OffsetCRect 
+3/4T Function
+3/4D
 CRect * OffsetCRect(CRect *dst, IPoint *deltaXY)
 
-¾C
+3/4C
 
 This function adjusts the location described by the dst rectangle by
 adding the specified delta values to the rectangle's corner values.
@@ -5958,19 +5958,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 OffsetSRect(), InsetCRect()
 
-¾KY OffsetCelByFDelta 
-¾T Function
-¾D
+3/4KY OffsetCelByFDelta 
+3/4T Function
+3/4D
 void OffsetCelByFDelta(CCB *cel, FPoint *deltaXY)
 
-¾C
+3/4C
 
 This function adjusts a single cel's location by the specified delta.  It
 adds the delta values to the X/Y coordinates in the CCB.  
@@ -5990,19 +5990,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 OffsetCelByIDelta(), OffsetAACelByFDelta(), OffsetCelListByFDelta()
 
-¾KY OffsetCelByIDelta 
-¾T Function
-¾D
+3/4KY OffsetCelByIDelta 
+3/4T Function
+3/4D
 void OffsetCelByIDelta(CCB *cel, IPoint *deltaXY)
 
-¾C
+3/4C
 
 This function adjusts a single cel's location by the specified delta.  It
 adds the delta values to the X/Y coordinates in the CCB.  
@@ -6022,20 +6022,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 OffsetCelByFDelta(), OffsetAACelByIDelta(), OffsetCelListByIDelta()
 
-¾KY OffsetCelListByFDelta 
-¾T Function
-¾D
+3/4KY OffsetCelListByFDelta 
+3/4T Function
+3/4D
 void OffsetCelListByFDelta(CCB *list, FPoint *deltaXY, 
 Boolean copyPerspective)
 
-¾C
+3/4C
 
 This function adjusts the location of all the cels in a list by adding the
 delta values to the X/Y coordinates in cels' CCBs.  
@@ -6067,20 +6067,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 OffsetCelListByIDelta(), OffsetAACelByFDelta(), OffsetCelByFDelta()
 
-¾KY OffsetCelListByIDelta 
-¾T Function
-¾D
+3/4KY OffsetCelListByIDelta 
+3/4T Function
+3/4D
 void OffsetCelListByIDelta(CCB *list, IPoint *deltaXY, 
 Boolean copyPerspective)
 
-¾C
+3/4C
 
 This function adjusts the location of all the cels in a list by adding the
 delta values to the X/Y coordinates in cels' CCBs.  
@@ -6112,19 +6112,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 OffsetCelListByFDelta(), OffsetAACelByIDelta(), OffsetCelByIDelta()
 
-¾KY OffsetSRect 
-¾T Function
-¾D
+3/4KY OffsetSRect 
+3/4T Function
+3/4D
 SRect * OffsetSRect(SRect *dst, IPoint *deltaXY)
 
-¾C
+3/4C
 
 This function adjusts the location described by the dst rectangle by
 adding the specified delta values to the rectangle's position values.
@@ -6144,19 +6144,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 OffsetCRect(), InsetSRect()
 
-¾KY OpenAudio 
-¾T Function
-¾D
+3/4KY OpenAudio 
+3/4T Function
+3/4D
  bool OpenAudio( void )
 
-¾C
+3/4C
 
 OpenAudio() initializes the audio folio, opening it and loading a default
 mixer.It initializes the global variable TheMixer to make it accessible by
@@ -6180,12 +6180,12 @@ None  Caveats
 This function is obsolete. Use OpenAudioFolio() to initialize the audio
 folio for your application.
 
-¾KY OpenGraphics 
-¾T Function
-¾D
+3/4KY OpenGraphics 
+3/4T Function
+3/4D
  Boolean OpenGraphics (ScreenContext *sc, int nScreens)
 
-¾C
+3/4C
 
 OpenGraphics() opens the graphics folio and sets up the specified screen 
 context.You can allocate more than one screen buffer. 
@@ -6204,19 +6204,19 @@ RETURN VALUE
 
 TRUE if successful, FALSE if not.
 
-¾F
+3/4F
      DisplayUtils.h
      
-¾R
+3/4R
 
 CloseGraphics
 
-¾KY OpenMacLink 
-¾T Function
-¾D
+3/4KY OpenMacLink 
+3/4T Function
+3/4D
 bool OpenMacLink (void)
 
-¾C
+3/4C
 
 This function is no longer needed. The actions it used to perform with the
 help of global variables are now all contained within the WriteMacFile()
@@ -6233,19 +6233,19 @@ CAVEATS
 
 This function is obsolete. 
 
-¾F
+3/4F
      Init3DO.h
      
-¾R
+3/4R
 
 WriteMacFile
 
-¾KY OpenSPORT 
-¾T Function
-¾D
+3/4KY OpenSPORT 
+3/4T Function
+3/4D
 bool OpenSPORT (void)
 
-¾C
+3/4C
 
 This function is no longer needed. The actions it used to perform with the
 help of global variables are now all contained within the library routines
@@ -6258,19 +6258,19 @@ none  Return Value
 
 TRUE if successful, FALSE if not.
 
-¾F
+3/4F
      Init3DO.h
      
-¾R
+3/4R
 
 GetVRAMIOReq()
 
-¾KY ParseCel 
-¾T Function
-¾D
+3/4KY ParseCel 
+3/4T Function
+3/4D
 CCB * ParseCel(void *inBuf, long inBufSize)
 
-¾C
+3/4C
 
 This function parses cel(s) in a memory buffer.  It is useful when you
 have loaded a cel file using some method other than LoadCel() and you need
@@ -6307,19 +6307,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 LoadCel()
 
-¾KY ParseFont 
-¾T Function
-¾D
+3/4KY ParseFont 
+3/4T Function
+3/4D
 FontDescriptor * ParseFont(void *fontImage)
 
-¾C
+3/4C
 
 Parses an in-memory image of a font file, creating a FontDescriptor for it
 and preparing it for use. Use this function when you\xd5 ve loaded a font
@@ -6341,20 +6341,20 @@ A pointer to a FontDescriptor structure that describes the font; NULL if
 the image is not a valid font file, or there is not enough memory to
 create a FontDescriptor structure.
 
-¾F
+3/4F
      FontLib.h
      
-¾R
+3/4R
 
 LoadFont(), UnloadFont()
 
-¾KY PreMoveCel 
-¾T Function
-¾D
+3/4KY PreMoveCel 
+3/4T Function
+3/4D
  void PreMoveCel (CCB *ccb, Point *beginQuad, Point 
 *endQuad, int32 numberOfFrames, MoveRec *pMove)
 
-¾C
+3/4C
 
 Calculates the increments for each corner of a cel you want to move from
 the quadrilateral defined by beginQuad to the quadrilateral defined by
@@ -6390,19 +6390,19 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 MoveCel()
 
-¾KY ReadControlPad 
-¾T Function
-¾D
+3/4KY ReadControlPad 
+3/4T Function
+3/4D
  long ReadControlPad (long lControlMask)
 
-¾C
+3/4C
 
 Returns the state of the first control pad:Returns the current state of
 the button for all bits that have a 1 in the corresponding position of the
@@ -6425,19 +6425,19 @@ RETURN VALUE
 
 None
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 
-¾KY ReadFile 
-¾T Function
-¾D
+3/4KY ReadFile 
+3/4T Function
+3/4D
 int ReadFile (char *filename, int32 size, long *buffer, 
 long offset)
 
-¾C
+3/4C
 
 ReadFile() uses the file system to read a file or a portion of a file into
 memory. It performs up to four retries on each block read if the file
@@ -6468,19 +6468,19 @@ RETURN VALUE
 
 The number of bytes read, or -1 if an error occurred. 
 
-¾F
+3/4F
      Parse3DO.h
      
-¾R
+3/4R
 
 LoadFile
 
-¾KY ReportMemoryUsage 
-¾T Function
-¾D
+3/4KY ReportMemoryUsage 
+3/4T Function
+3/4D
  void ReportMemoryUsage (void)
 
-¾C
+3/4C
 
 Reports (via printf()) current system and task memory usage. This can be 
 useful in finding memory leaks and other allocation-related problems in
@@ -6507,16 +6507,16 @@ lists during the walk, resulting in crashes or other problems. While this
 is an acceptable risk during debugging, it is absolutely unsafe for final
 production code. 
 
-¾F
+3/4F
      UMemory.h
      
-¾KY RenderCelFillRect 
-¾T Function
-¾D
+3/4KY RenderCelFillRect 
+3/4T Function
+3/4D
 void RenderCelFillRect(CCB *cel, int32 pixel, int32 x, 
 int32 y, int32 w, int32 h)
 
-¾C
+3/4C
 
 This function renders a filled rectangle into the cel's data buffer.
 
@@ -6557,17 +6557,17 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY RenderCelHLine 
-¾T Function
-¾D
+3/4KY RenderCelHLine 
+3/4T Function
+3/4D
 void RenderCelHLine(CCB *cel, int32 pixel, int32 x, int32 
 y, int32
 w)
 
-¾C
+3/4C
 
 This function renders a horizontal line into the cel's data buffer.
 
@@ -6605,16 +6605,16 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY RenderCelOutlineRect 
-¾T Function
-¾D
+3/4KY RenderCelOutlineRect 
+3/4T Function
+3/4D
 void RenderCelOutlineRect(CCB *cel, int32 pixel, int32 x, 
 int32 y, int32 w, int32 h)
 
-¾C
+3/4C
 
 This function renders an outline (unfilled) rectangle into the cel's data
 buffer.
@@ -6651,16 +6651,16 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY RenderCelPixel 
-¾T Function
-¾D
+3/4KY RenderCelPixel 
+3/4T Function
+3/4D
 void RenderCelPixel(CCB *cel, int32 pixel, int32 x, int32 
 y)
 
-¾C
+3/4C
 
 This function renders a single pixel into the cel's data buffer.
 
@@ -6689,17 +6689,17 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY RenderCelVLine 
-¾T Function
-¾D
+3/4KY RenderCelVLine 
+3/4T Function
+3/4D
 void RenderCelVLine(CCB *cel, int32 pixel, int32 x, int32 
 y, int32
 h)
 
-¾C
+3/4C
 
 This function renders a vertical line into the cel's data buffer.
 
@@ -6732,15 +6732,15 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY ReturnCelPixel 
-¾T Function
-¾D
+3/4KY ReturnCelPixel 
+3/4T Function
+3/4D
 int32 ReturnCelPixel(CCB *cel, int32 x, int32 y)
 
-¾C
+3/4C
 
 This function returns the value of the specified pixel from the cel's data
 buffer.
@@ -6773,16 +6773,16 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾KY SaveFile 
-¾T Function
-¾D
+3/4KY SaveFile 
+3/4T Function
+3/4D
 Err SaveFile(char *filename, void *buffer, int32 bufsize, 
 int32 extrabytes)
 
-¾C
+3/4C
 
 This function stores the contents of a buffer to the named file. 
 Currently the file has to be in NVRAM (IE, the filename must start with
@@ -6823,19 +6823,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 LoadFile()
 
-¾KY SEC_TO_USE 
-¾T Function
-¾D
+3/4KY SEC_TO_USE 
+3/4T Function
+3/4D
 int32 SEC_TO_USEC(value)
 
-¾C
+3/4C
 
 This macro converts a number of seconds to the equivelent number of 
 microseconds.  True floating point constant values are legal, for example 
@@ -6859,19 +6859,19 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 
-¾KY SetCelScale 
-¾T Function
-¾D
+3/4KY SetCelScale 
+3/4T Function
+3/4D
  void SetCelScale (CCB *ccb, CCB *maskccb, int32 
 stepValue)
 
-¾C
+3/4C
 
 SetCelScale() sets up the multipliers and dividers of both ccb and maskccb
 to the level determined by stepValue. This provides a finer grained fade
@@ -6901,19 +6901,19 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 SetFadeInCel(), SetFadeInCel(), SetFadeOutCel(), FadeOutCel()
 
-¾KY SetChannel 
-¾T Function
-¾D
+3/4KY SetChannel 
+3/4T Function
+3/4D
  bool SetChannel (Item iInstrument, int nChannel)
 
-¾C
+3/4C
 
 Assigns an instrument to an audio channel.
 
@@ -6935,20 +6935,20 @@ RETURN VALUE
 
 TRUE if successful, FALSE if not. 
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 LoadSoundEffect()
 
-¾KY SetFadeInCel 
-¾T Function
-¾D
+3/4KY SetFadeInCel 
+3/4T Function
+3/4D
  void SetFadeInCel (CCB *ccb, CCB *maskccb, int32 
 *stepValue)
 
-¾C
+3/4C
 
 Sets up a cel for a FadeInCel() call as follows:copies the CCB data from
 ccb into maskccbinitializes the relevant CCB control fields in ccb and
@@ -6971,20 +6971,20 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 SetCelScale(), FadeInCel(), SetFadeOutCel(), FadeOutCel()
 
-¾KY SetFadeOutCel 
-¾T Function
-¾D
+3/4KY SetFadeOutCel 
+3/4T Function
+3/4D
  void SetFadeOutCel (CCB *ccb, CCB *maskccb, int32 
 *stepValue)
 
-¾C
+3/4C
 
 Sets up the cel ccb points to for the FadeOutCel() function:copies the CCB
 data from ccb into maskccbsets up the proper CCB control fields in the two
@@ -7007,20 +7007,20 @@ RETURN VALUE
 
 TRUE if successful, FALSE if not.
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 SetCelScale(), SetFadeInCel(), FadeInCel(), FadeOutCel()
 
-¾KY SetMixer 
-¾T Function
-¾D
+3/4KY SetMixer 
+3/4T Function
+3/4D
  bool SetMixer (int nChannel, int32 nVolume, int32 
 nBalance)
 
-¾C
+3/4C
 
 Sets the overall volume and balance of a given audio channel.
 
@@ -7046,19 +7046,19 @@ RETURN VALUE
 
 TRUE if successful, FALSE if not. 
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 
-¾KY SetQuad 
-¾T Function
-¾D
+3/4KY SetQuad 
+3/4T Function
+3/4D
  void SetQuad (Point *r, Coord left, Coord top, Coord 
 right, Coord bottom)
 
-¾C
+3/4C
 
 Set an array of four points (a quad) to conform to the rectangle defined
 by the values of left, top, right, and bottom.
@@ -7083,20 +7083,20 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 SetRect()
 
-¾KY SetRectf16 
-¾T Function
-¾D
+3/4KY SetRectf16 
+3/4T Function
+3/4D
  void SetRectf16 (Rectf16 *r, Coord left, Coord top, Coord 
 right, Coord bottom)
 
-¾C
+3/4C
 
 Sets the four corners of the specified rectangle to be fixed point 16.16
 conversions of the four integer coordinates passed to the function. The
@@ -7120,21 +7120,21 @@ RETURN VALUE
 
 void
 
-¾F
+3/4F
      Utils3DO.h
      
-¾R
+3/4R
 
 SetQuad()
 
-¾KY SetTextCelColor 
-¾T Function
-¾D
+3/4KY SetTextCelColor 
+3/4T Function
+3/4D
 void SetTextCelColor(TextCel *tCel, int32 bgColor, 
 int32
 fgColor0)
 
-¾C
+3/4C
 
 Sets the background and foreground colors to use when the cel is drawn.
 Because of special internal logic that calculates scaled colors for
@@ -7165,21 +7165,21 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 SetTextCelColors()
 
-¾KY SetTextCelColors 
-¾T Function
-¾D
+3/4KY SetTextCelColors 
+3/4T Function
+3/4D
 void SetTextCelColors(TextCel *tCel, int32 bgColor, 
 int32
 fgColors[4])
 
-¾C
+3/4C
 
 Sets the background and foreground colors to  use when the cel is drawn.
 This Function sets all four foreground colors; use it with features that
@@ -7216,16 +7216,16 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY SetTextCelCoords 
-¾T Function
-¾D
+3/4KY SetTextCelCoords 
+3/4T Function
+3/4D
 void SetTextCelCoords(TextCel *tCel, Coord ccbX, Coord 
 ccbY)
 
-¾C
+3/4C
 
 Sets the TextCel CCB coordinates (ccb_XPos and ccb_YPos).  Use this call
 as a convenience so that you don\xd5 t need to dereference through two
@@ -7256,17 +7256,17 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY SetTextCelFormatBuffer 
-¾T Function
-¾D
+3/4KY SetTextCelFormatBuffer 
+3/4T Function
+3/4D
 Err SetTextCelFormatBuffer(TextCel *tCel, char *buffer, 
 uint32
 bufSize)
 
-¾C
+3/4C
 
 Attaches a text-formatting buffer to a TextCel. The buffer is used for
 printf-style formatting of text during rendering. If a text cel has a
@@ -7319,16 +7319,16 @@ RETURN VALUE
 Zero if successful, or -1 if dynamic buffer allocation fails; that is, if
 there is not enough memory.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY SetTextCelFormatFlags 
-¾T Function
-¾D
+3/4KY SetTextCelFormatFlags 
+3/4T Function
+3/4D
 void SetTextCelFormatFlags(TextCel *tCel, uint32 
 formatFlags)
 
-¾C
+3/4C
 
 Set the text formatting options used for subsequent rendering.
 
@@ -7357,19 +7357,19 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY SetTextCelLeadingAdjust 
-¾T Function
-¾D
+3/4KY SetTextCelLeadingAdjust 
+3/4T Function
+3/4D
 void SetTextCelLeadingAdjust(TextCel *tCel, int32 
 adjustLeading)
 
-¾C
+3/4C
 
 Sets a leading adjustment for text rendered in the cel. Leading is the
 extra vertical space between lines of text. The base leading value comes
@@ -7388,20 +7388,20 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY SetTextCelMargins 
-¾T Function
-¾D
+3/4KY SetTextCelMargins 
+3/4T Function
+3/4D
 void SetTextCelMargins(TextCel *tCel, int32 leftMargin, 
 int32
 topMargin)
 
-¾C
+3/4C
 
 Sets the top and left margins within the cel data buffer. When you erase
 the text in a cel, the pen returns to the top and left margin values. When
@@ -7423,18 +7423,18 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY SetTextCelPenNumber 
-¾T Function
-¾D
+3/4KY SetTextCelPenNumber 
+3/4T Function
+3/4D
 void SetTextCelPenNumber(TextCel *tCel, int32 penNumber)
 
-¾C
+3/4C
 
 Sets the pen number used for subsequent text rendering. The pen number,
 which must be in the range of 0 through 3, indexes to one of the four
@@ -7456,19 +7456,19 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY SetTextCelSize 
-¾T Function
-¾D
+3/4KY SetTextCelSize 
+3/4T Function
+3/4D
 Err SetTextCelSize(TextCel *tCel, int32 width, int32 
 height)
 
-¾C
+3/4C
 
 Sets a new size for the text cel. If width and/or height are zero, the cel
 is set to a 1 x 1 pixel size initially, and each time text is placed into
@@ -7492,19 +7492,19 @@ RETURN VALUE
 Non-negative if successful, or negative if a new cel  data buffer can\xd5
 t be allocated.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY SetTextCelSpacingAdjust 
-¾T Function
-¾D
+3/4KY SetTextCelSpacingAdjust 
+3/4T Function
+3/4D
 void SetTextCelSpacingAdjust(TextCel *tCel, int32 
 adjustSpacing)
 
-¾C
+3/4C
 
 Sets a spacing adjustment for text rendered in the cel. Spacing is the
 extra horizontal space between characters in the text. The base spacing
@@ -7524,19 +7524,19 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 
-¾KY SetTextCelTabStops 
-¾T Function
-¾D
+3/4KY SetTextCelTabStops 
+3/4T Function
+3/4D
 void SetTextCelTabStops(TextCel *tCel, uint16 
 tabStops[16], ...)
 
-¾C
+3/4C
 
 Sets the tab stops table for the text cel.  The tabStops parameter is a
 pointer to an array of up to 16 uint16 values, or it is NULL to indicate
@@ -7565,16 +7565,16 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      TextLib.h
      
-¾KY SetupMSEvents 
-¾T Function
-¾D
+3/4KY SetupMSEvents 
+3/4T Function
+3/4D
 MSEventHandle SetupMSEvents(MSEventData eventData[], int32 
 numEvents, int32 reserved)
 
-¾C
+3/4C
 
 This function creates resources needed to dispatch message and signal
 events.  It uses the array of MSEventData structures you pass in to decide
@@ -7646,19 +7646,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      MsgUtils.h
      
-¾R
+3/4R
 
 CleanupMSEvents(), DispatchMSEvents()
 
-¾KY Sleep 
-¾T Function
-¾D
+3/4KY Sleep 
+3/4T Function
+3/4D
 Err Sleep(Item ioreq, uint32 seconds)
 
-¾C
+3/4C
 
 This function puts the calling task in a wait state for the specified
 number of seconds.  The function does not return until the time has
@@ -7680,19 +7680,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY SleepHSec 
-¾T Function
-¾D
+3/4KY SleepHSec 
+3/4T Function
+3/4D
 Err SleepHSec(Item ioreq, uint32 hseconds)
 
-¾C
+3/4C
 
 This function puts the calling task in a wait state for the specified
 number of hundreths-of-a-second. The function does not return until the
@@ -7715,19 +7715,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY SleepMSec 
-¾T Function
-¾D
+3/4KY SleepMSec 
+3/4T Function
+3/4D
 Err SleepMSec(Item ioreq, uint32 mseconds)
 
-¾C
+3/4C
 
 This function puts the calling task in a wait state for the specified
 number of milliseconds. The function does not return until the time has
@@ -7750,19 +7750,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY SleepTSec 
-¾T Function
-¾D
+3/4KY SleepTSec 
+3/4T Function
+3/4D
 Err SleepTSec(Item ioreq, uint32 tseconds)
 
-¾C
+3/4C
 
 This function puts the calling task in a wait state for the specified
 number of tenths-of-a-second.  The function does not return until the time
@@ -7785,19 +7785,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY SleepUSec 
-¾T Function
-¾D
+3/4KY SleepUSec 
+3/4T Function
+3/4D
 Err SleepUSec(Item ioreq, uint32 seconds, uint32 useconds)
 
-¾C
+3/4C
 
 This function puts the calling task in a wait state for the specified
 period of time.  The function does not return until the time has passed.
@@ -7820,19 +7820,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 GetTimerIOReq()
 
-¾KY SRectFromCRect 
-¾T Function
-¾D
+3/4KY SRectFromCRect 
+3/4T Function
+3/4D
 SRect * SRectFromCRect(SRect *dst, CRect *src)
 
-¾C
+3/4C
 
 This function converts a CRect to an SRect that describes the same area.
 
@@ -7852,19 +7852,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CRectFromSRect()
 
-¾KY SRectFromCel 
-¾T Function
-¾D
+3/4KY SRectFromCel 
+3/4T Function
+3/4D
 SRect * SRectFromCel(SRect *dst, CCB *cel)
 
-¾C
+3/4C
 
 This function calculates the rectangle occupied by a cel as projected and
 stores the results into *dst.  If the cel is projected to a
@@ -7885,20 +7885,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 CRectFromCel()
 
-¾KY SRectFromIVal 
-¾T Function
-¾D
+3/4KY SRectFromIVal 
+3/4T Function
+3/4D
 SRect * SRectFromIVal(SRect *dst, int32 x, int32 y, int32 
 w, int32 h)
 
-¾C
+3/4C
 
 This function stores the specified position and size value into *dst.  
 
@@ -7923,20 +7923,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 SRectFromCRect()
 
-¾KY SRectIntersection 
-¾T Function
-¾D
+3/4KY SRectIntersection 
+3/4T Function
+3/4D
 SRect * SRectIntersection(SRect *dst, SRect *rect1, SRect 
 *rect2)
 
-¾C
+3/4C
 
 This function calculates the intersection of two rectangles, returning a
 rectangle that describes the common area.  The dst rectangle can be the
@@ -7962,19 +7962,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 SRectUnion(), CRectIntersection()
 
-¾KY SRectUnion 
-¾T Function
-¾D
+3/4KY SRectUnion 
+3/4T Function
+3/4D
 SRect * SRectUnion(SRect *dst, SRect *rect1, SRect *rect2)
 
-¾C
+3/4C
 
 This function calculates the union of two rectangles, returning a
 rectangle that encompases all the area described by the two source
@@ -7997,19 +7997,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 SRectIntersection(), CRectUnion()
 
-¾KY ShutDown 
-¾T Function
-¾D
+3/4KY ShutDown 
+3/4T Function
+3/4D
  void ShutDown (void)
 
-¾C
+3/4C
 
 This function calls CloseAudioFolio(). The fucntion is being phased out
 and will not appear in future releases of the library.  You should just
@@ -8025,19 +8025,19 @@ CAVEATS
 
 This function is obsolete. Use CloseAudioFolio() instead. 
 
-¾F
+3/4F
      Init3DO.h
      
-¾R
+3/4R
 
 CloseAudioFolio()
 
-¾KY taCreateTextCel 
-¾T Function
-¾D
+3/4KY taCreateTextCel 
+3/4T Function
+3/4D
 TextCel * taCreateTextCel(TagArg *tags)
 
-¾C
+3/4C
 
 Creates a new text cel.  Specifying appropriate tags and values during cel
 creation sets all configurable attributes of the text cel.   If you
@@ -8060,19 +8060,19 @@ A pointer to the newly created TextCel structure; returns NULL if there
 isn\xd5 t enough memory to create the new TextCel, which indicates that
 invalid tags are present.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 CreateTextCel()
 
-¾KY taModifyTextCel 
-¾T Function
-¾D
+3/4KY taModifyTextCel 
+3/4T Function
+3/4D
 TextCel * taModifyTextCel(TextCel *tCel, TagArg *tags)
 
-¾C
+3/4C
 
 Changes attributes already in a text cel.  You can set all configurable
 attributes of the text cel by specifying appropriate tags and values.   If
@@ -8098,19 +8098,19 @@ RETURN VALUE
 
 Negative on error, non-negative if successful.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 SetTextCel...() functions
 
-¾KY TimerCancel 
-¾T Function
-¾D
+3/4KY TimerCancel 
+3/4T Function
+3/4D
 Err TimerCancel(TimerHandle thandle)
 
-¾C
+3/4C
 
 This function cancels a timer (if active) and releases all resources
 acquired when it was created.  The timer's handle is no longer valid after
@@ -8141,20 +8141,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerSuspend()
 
-¾KY TimerChangeUserdata 
-¾T Function
-¾D
+3/4KY TimerChangeUserdata 
+3/4T Function
+3/4D
 Err TimerChangeUserdata(TimerHandle thandle, uint32 
 userdata1, uint32 userdata2)
 
-¾C
+3/4C
 
 This function changes the user data associated with a timer.  The user
 data is delivered to you as part of the notification message for
@@ -8182,19 +8182,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 
-¾KY TimerReset 
-¾T Function
-¾D
+3/4KY TimerReset 
+3/4T Function
+3/4D
 Err TimerReset(TimerHandle thandle, uint32 seconds, uint32 
 usecs_or_fields)
 
-¾C
+3/4C
 
 This function restarts a timer using new time values.  If the timer was
 suspended, this reactivates it.  If the timer was active, this stops the
@@ -8230,19 +8230,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerRestart()
 
-¾KY TimerRestart 
-¾T Function
-¾D
+3/4KY TimerRestart 
+3/4T Function
+3/4D
 Err TimerRestart(TimerHandle thandle)
 
-¾C
+3/4C
 
 This function restarts a timer using the same time values as the last time
 the timer was active.  If the timer was suspended, this reactivates it. 
@@ -8271,19 +8271,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerReset()
 
-¾KY TimerServicesClose 
-¾T Function
-¾D
+3/4KY TimerServicesClose 
+3/4T Function
+3/4D
 void TimerServicesClose(void)
 
-¾C
+3/4C
 
 This function closes your task's connection to a TimerServices thread
 started by some other task.  Before calling this function, ensure that
@@ -8300,19 +8300,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerServicesShutdown()
 
-¾KY TimerServicesOpen 
-¾T Function
-¾D
+3/4KY TimerServicesOpen 
+3/4T Function
+3/4D
 Err TimerServicesOpen(void)
 
-¾C
+3/4C
 
 This function establishes your task's connection to a TimerServices thread
 started by some other task.  After a successful return from this function
@@ -8328,19 +8328,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerServicesStartup()
 
-¾KY TimerServicesShutdown 
-¾T Function
-¾D
+3/4KY TimerServicesShutdown 
+3/4T Function
+3/4D
 void TimerServicesShutdown(void)
 
-¾C
+3/4C
 
 This function shuts down the TimerServices thread.  Before calling this
 function, ensure that your task and all its child threads have called
@@ -8358,19 +8358,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerServicesClose()
 
-¾KY TimerServicesStartup 
-¾T Function
-¾D
+3/4KY TimerServicesStartup 
+3/4T Function
+3/4D
 Err TimerServicesStartup(int32 delta_priority)
 
-¾C
+3/4C
 
 This function starts the timer services thread.  The thread's priority is
 set to your task's priority plus the delta_priority.  After calling this
@@ -8399,19 +8399,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerServicesOpen()
 
-¾KY TimerServicesVerify 
-¾T Function
-¾D
+3/4KY TimerServicesVerify 
+3/4T Function
+3/4D
 Err TimerServicesVerify(void)
 
-¾C
+3/4C
 
 This function causes the TimerServices thread to check all outstanding
 timers to make sure the tasks and threads that created them are still
@@ -8443,18 +8443,18 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 
-¾KY TimerSuspend 
-¾T Function
-¾D
+3/4KY TimerSuspend 
+3/4T Function
+3/4D
 Err TimerSuspend(TimerHandle thandle)
 
-¾C
+3/4C
 
 This function suspends an active timer but does not release resources
 associated with the timer.  If the timer was already suspended this
@@ -8486,21 +8486,21 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerCancel()
 
-¾KY TimerMsgAfterDelay 
-¾T Function
-¾D
+3/4KY TimerMsgAfterDelay 
+3/4T Function
+3/4D
 TimerHandle TimerMsgAfterDelay(Item msgport, uint32 
 seconds, uint32 microseconds, uint32 userdata1, uint32 
 userdata2)
 
-¾C
+3/4C
 
 This function creates a timer that notifies you by message after the
 specified delay.  The timer is a one-shot; after sending a notification
@@ -8537,20 +8537,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerMsgAtTime(), TimerMsgHeartbeat()
 
-¾KY TimerMsgAfterDelayVBL 
-¾T Function
-¾D
+3/4KY TimerMsgAfterDelayVBL 
+3/4T Function
+3/4D
 TimerHandle TimerMsgAfterDelayVBL(Item msgport, uint32 
 fields, uint32 userdata1, uint32 userdata2)
 
-¾C
+3/4C
 
 This function creates a timer that notifies you by message after the
 specified number of VBLs have occurred.  The timer is a one-shot; after
@@ -8585,20 +8585,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerMsgAtTimeVBL(), TimerMsgHeartbeatVBL()
 
-¾KY TimerMsgAtTime 
-¾T Function
-¾D
+3/4KY TimerMsgAtTime 
+3/4T Function
+3/4D
 TimerHandle TimerMsgAtTime(Item msgport, uint32 seconds, 
 uint32 microseconds, uint32 userdata1, uint32 userdata2) 
 
-¾C
+3/4C
 
 This function creates a timer that notifies you by message at the
 specified time.  The timer is a one-shot; after sending a notification
@@ -8641,20 +8641,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerMsgAfterDelay(), TimerMsgHeartbeat()
 
-¾KY TimerMsgAtTimeVBL 
-¾T Function
-¾D
+3/4KY TimerMsgAtTimeVBL 
+3/4T Function
+3/4D
 TimerHandle TimerMsgAtTimeVBL(Item msgport, uint32 fields, 
 uint32 userdata1, uint32 userdata2)
 
-¾C
+3/4C
 
 This function creates a timer that notifies you by message at the
 specified VBL time.  The timer is a one-shot; after sending a notification
@@ -8691,21 +8691,21 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerMsgAfterDelayVBL(), TimerMsgHeartbeatVBL()
 
-¾KY TimerMsgHeartbeat 
-¾T Function
-¾D
+3/4KY TimerMsgHeartbeat 
+3/4T Function
+3/4D
 TimerHandle TimerMsgHeartbeat(Item msgport, uint32 
 seconds, uint32 microseconds, uint32 userdata1, uint32 
 userdata2)
 
-¾C
+3/4C
 
 This function creates a timer that repeatedly notifies you by message at
 the specified interval.  The timer continues sending notifications on a
@@ -8747,20 +8747,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerMsgAtTime(), TimerMsgAfterDelay(), HZ_TO_USEC()
 
-¾KY TimerMsgHeartbeatVBL 
-¾T Function
-¾D
+3/4KY TimerMsgHeartbeatVBL 
+3/4T Function
+3/4D
 TimerHandle TimerMsgHeartbeatVBL(Item msgport, uint32 
 fields, uint32 userdata1, uint32 userdata2)
 
-¾C
+3/4C
 
 This function creates a timer that repeatedly notifies you by message
 after the specified number of VBLs have occurred.  The timer continues
@@ -8798,20 +8798,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerMsgAtTimeVBL(), TimerMsgAfterDelayVBL()
 
-¾KY TimerSignalAfterDelay 
-¾T Function
-¾D
+3/4KY TimerSignalAfterDelay 
+3/4T Function
+3/4D
 TimerHandle TimerSignalAfterDelay(int32 signal, uint32 
 seconds, uint32 microseconds)
 
-¾C
+3/4C
 
 This function creates a timer that notifies you by signal after the
 specified delay.  The timer is a one-shot; after sending a notification
@@ -8839,20 +8839,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerSignalAtTime(), TimerSignalHeartbeat()
 
-¾KY TimerSignalAfterDelayVBL 
-¾T Function
-¾D
+3/4KY TimerSignalAfterDelayVBL 
+3/4T Function
+3/4D
 TimerHandle TimerSignalAfterDelayVBL(int32 signal, uint32 
 fields)
 
-¾C
+3/4C
 
 This function creates a timer that notifies you by signal after the
 specified number of VBLs have occurred.  The timer is a one-shot; after
@@ -8878,20 +8878,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerSignalAtTimeVBL(), TimerSignalHeartbeatVBL()
 
-¾KY TimerSignalAtTime 
-¾T Function
-¾D
+3/4KY TimerSignalAtTime 
+3/4T Function
+3/4D
 TimerHandle TimerSignalAtTime(int32 signal, uint32 
 seconds, uint32 microseconds)
 
-¾C
+3/4C
 
 This function creates a timer that notifies you by signal at the specified
 time.  The timer is a one-shot; after sending a notification message the
@@ -8921,20 +8921,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerSignalAfterDelay(), TimerSignalHeartbeat()
 
-¾KY TimerSignalAtTimeVBL 
-¾T Function
-¾D
+3/4KY TimerSignalAtTimeVBL 
+3/4T Function
+3/4D
 TimerHandle TimerSignalAtTimeVBL(int32 signal, uint32 
 fields)
 
-¾C
+3/4C
 
 This function creates a timer that notifies you by signal at the specified
 VBL time.  The timer is a one-shot; after sending a notification message
@@ -8958,20 +8958,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerSignalAfterDelayVBL(), TimerSignalHeartbeatVBL()
 
-¾KY TimerSignalHeartbeat 
-¾T Function
-¾D
+3/4KY TimerSignalHeartbeat 
+3/4T Function
+3/4D
 TimerHandle TimerSignalHeartbeat(int32 signal, uint32 
 seconds, uint32 microseconds)
 
-¾C
+3/4C
 
 This function creates a timer that repeatedly notifies you by signal at
 the specified intervals..  The timer continues sending notifications on a
@@ -9002,20 +9002,20 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerSignalAtTime(), TimerSignalAfterDelay(), HZ_TO_USEC()
 
-¾KY TimerSignalHeartbeatVBL 
-¾T Function
-¾D
+3/4KY TimerSignalHeartbeatVBL 
+3/4T Function
+3/4D
 TimerHandle TimerSignalHeartbeatVBL(int32 signal, uint32 
 fields)
 
-¾C
+3/4C
 
 This function creates a timer that repeatedly notifies you by signal after
 the specified number of VBLs have occurred.  The timer continues sending 
@@ -9044,19 +9044,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      TimerUtils.h
      
-¾R
+3/4R
 
 TimerSignalAtTimeVBL(), TimerSignalAfterDelayVBL()
 
-¾KY UnloadAnim 
-¾T Function
-¾D
+3/4KY UnloadAnim 
+3/4T Function
+3/4D
  void UnloadAnim (ANIM * animPtr)
 
-¾C
+3/4C
 
 Unloads an animation file previously loaded with LoadAnim(), and frees all
 resources acquired during the load process.
@@ -9070,19 +9070,19 @@ RETURN VALUE
 
 Nothing
 
-¾F
+3/4F
      Parse3DO.h
      
-¾R
+3/4R
 
 LoadAnim()
 
-¾KY UnloadCel 
-¾T Function
-¾D
+3/4KY UnloadCel 
+3/4T Function
+3/4D
 void UnloadCel(CCB *cel)
 
-¾C
+3/4C
 
 This function releases all resources acquired when a cel was loaded via
 LoadCel().  A NULL pointer is valid as input, and is quietly treated as a
@@ -9106,19 +9106,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 LoadCel(), DeleteCel()
 
-¾KY UnloadFile 
-¾T Function
-¾D
+3/4KY UnloadFile 
+3/4T Function
+3/4D
  void UnloadFile (void *buffer)
 
-¾C
+3/4C
 
 Unloads a file previously loaded with LoadFile(), and frees all resources 
 acquired during the load process.
@@ -9132,19 +9132,19 @@ RETURN VALUE
 
 Nothing
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 LoadFile()
 
-¾KY UnloadFont 
-¾T Function
-¾D
+3/4KY UnloadFont 
+3/4T Function
+3/4D
 void UnloadFont(FontDescriptor * fDesc)
 
-¾C
+3/4C
 
 Releases resources acquired during LoadFont() or ParseFont() processing.
 If the font was loaded via LoadFont(), releases the FontDescriptor and 
@@ -9165,19 +9165,19 @@ RETURN VALUE
 
 Nothing.
 
-¾F
+3/4F
      FontLib.h
      
-¾R
+3/4R
 
 LoadFont(), ParseFont()
 
-¾KY UnloadImage 
-¾T Function
-¾D
+3/4KY UnloadImage 
+3/4T Function
+3/4D
  void UnloadImage (void *imageBuffer)
 
-¾C
+3/4C
 
 Unloads an image file previously loaded with LoadImage(), and frees all 
 resources acquired during the load process.
@@ -9196,21 +9196,21 @@ RETURN VALUE
 
 Nothing
 
-¾F
+3/4F
      Parse3DO.h
      
-¾R
+3/4R
 
 LoadImage()
 
-¾KY UpdateTextInCel 
-¾T Function
-¾D
+3/4KY UpdateTextInCel 
+3/4T Function
+3/4D
 Err UpdateTextInCel(TextCel *tCel, Boolean 
 replaceExisting, char
 *fmtString, ...)
 
-¾C
+3/4C
 
 Renders text into a cel.  If the cel has a format buffer attached to it,
 the fmtString and related arguments pass first through sprintf() for
@@ -9259,41 +9259,41 @@ clipped, negative if a bigger data buffer could not be allocated for an
 autosize cel. If the cel is not an autosize type, it can\xd5 t return a
 negative value.
 
-¾F
+3/4F
      TextLib.h
      
-¾R
+3/4R
 
 vUpdateTextInCel()
 
-¾KY vGetTextExtent 
-¾T Function
-¾D
+3/4KY vGetTextExtent 
+3/4T Function
+3/4D
 char * vGetTextExtent(TextCel *tCel, int32 *pWidth, int32 
 *pHeight, char *fmtString, va_list fmtArgs)
 
-¾C
+3/4C
 
 Identical to GetTextExtent() except that it takes a va_list rather than a 
 variable argument list for printf-style formatting.
 
-¾KY vUpdateTextInCel 
-¾T Function
-¾D
+3/4KY vUpdateTextInCel 
+3/4T Function
+3/4D
 Err vUpdateTextInCel(TextCel *tCel, Boolean 
 replaceExisting, char *fmtString, va_list fmtArgs)
 
-¾C
+3/4C
 
 Identical to UpdateTextInCel() except that it takes a va_list rather than
 a variable argument list for printf-style formatting.
 
-¾KY WaitAsyncLoadFile 
-¾T Function
-¾D
+3/4KY WaitAsyncLoadFile 
+3/4T Function
+3/4D
 Err WaitAsyncLoadFile(LoadFileInfo *lf)
 
-¾C
+3/4C
 
 This function waits for completion of an async file load started earlier. 
 
@@ -9313,19 +9313,19 @@ IMPLEMENTATION
 
 Lib3DO function
 
-¾F
+3/4F
      BlockFile.h
      
-¾R
+3/4R
 
 AsyncLoadFile()
 
-¾KY WriteMacFile 
-¾T Function
-¾D
+3/4KY WriteMacFile 
+3/4T Function
+3/4D
  long WriteMacFile (char *filename, char *buf, long count)
 
-¾C
+3/4C
 
 Writes count bytes from the specified buffer into the file named by
 filename, creating the MAC file, writing the specified number of bytes,
@@ -9345,15 +9345,15 @@ RETURN VALUE
 
 The number of bytes written to the Macintosh file.
 
-¾F
+3/4F
      Utils3DO.h
      
-¾KY XCORNERFROMSRECT 
-¾T Function
-¾D
+3/4KY XCORNERFROMSRECT 
+3/4T Function
+3/4D
 int32 XCORNERFROMSRECT(SRect *rect)
 
-¾C
+3/4C
 
 This macro evaluates to the X location for the corner opposite to the
 corner described by rect->pos.
@@ -9373,19 +9373,19 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 ICornerFromSRect(), YCORNERFROMSRECT()
 
-¾KY XSIZEFROMCRECT 
-¾T Function
-¾D
+3/4KY XSIZEFROMCRECT 
+3/4T Function
+3/4D
 CCB * XSIZEFROMCRECT(CRect *rect)
 
-¾C
+3/4C
 
 This macro evaluates to the size in the X dimension of the area described
 by rect.  
@@ -9405,19 +9405,19 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 ISizeFromCRect(), YSIZEFROMCRECT()
 
-¾KY YCORNERFROMSRECT 
-¾T Function
-¾D
+3/4KY YCORNERFROMSRECT 
+3/4T Function
+3/4D
 CCB * YCORNERFROMSRECT(SRect *rect)
 
-¾C
+3/4C
 
 This macro evaluates to the Y location for the corner opposite to the
 corner described by rect->pos.  
@@ -9437,19 +9437,19 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 ICornerFromSRect(), XCORNERFROMSRECT()
 
-¾KY YSIZEFROMCRECT 
-¾T Function
-¾D
+3/4KY YSIZEFROMCRECT 
+3/4T Function
+3/4D
 CCB * YSIZEFROMCRECT(CRect *rect)
 
-¾C
+3/4C
 
 This macro evaluates to the size in the Y dimension of the area described
 by rect.  
@@ -9469,22 +9469,22 @@ IMPLEMENTATION
 
 Macro
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 ISizeFromCRect(), XSIZEFROMCRECT()
 
-¾KY FPoint 
-¾T Function
-¾D
+3/4KY FPoint 
+3/4T Function
+3/4D
 typedef struct FPoint {
 frac16 x;
 frac16 y;
 } FPoint;
 
-¾C
+3/4C
 
 This structure bundles together a pair of related X/Y values in frac16
 format.  It is most often used to express screen locations.  It can also
@@ -9497,22 +9497,22 @@ x                            X value.
 
 y                            Y value.
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPoint
 
-¾KY IPoint 
-¾T Function
-¾D
+3/4KY IPoint 
+3/4T Function
+3/4D
 typedef struct IPoint {
 int32 x;
 int32 y;
 } IPoint;
 
-¾C
+3/4C
 
 This structure bundles together a pair of related X/Y values in int32
 format.  It is most often used to express screen locations.  It can also
@@ -9525,22 +9525,22 @@ x                            The X value.
 
 y                            The Y value.
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 FPoint, SRect, CRect, CQuad
 
-¾KY CRect 
-¾T Function
-¾D
+3/4KY CRect 
+3/4T Function
+3/4D
 typedef struct CRect {
 IPoint tl;
 IPoint br;
 } CRect;
 
-¾C
+3/4C
 
 This structure describes a rectangular area by specifying the X/Y
 coordinates of opposing corners.  By convention the top left and bottom
@@ -9558,22 +9558,22 @@ tl                           The X/Y location of the top left corner of
 br                           The X/Y location of the bottom right corner
                              of the area.
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPoint, SRect, CQuad
 
-¾KY SRect 
-¾T Function
-¾D
+3/4KY SRect 
+3/4T Function
+3/4D
 typedef struct SRect {
 IPoint pos;
 IPoint size;
 } SRect;
 
-¾C
+3/4C
 
 This structure describes a rectangular area by specifying the X/Y
 coordinates of the top left corner and the X/Y sizes of the area. 
@@ -9588,16 +9588,16 @@ pos                          The X/Y location of the top left corner of
 
 size                         The X/Y sizes of the area.
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPoint, CRect, CQuad
 
-¾KY CQuad 
-¾T Function
-¾D
+3/4KY CQuad 
+3/4T Function
+3/4D
 typedef struct CQuad {
 IPoint tl;
 IPoint tr;
@@ -9605,7 +9605,7 @@ IPoint br;
 IPoint bl;
 } CQuad;
 
-¾C
+3/4C
 
 This structure describes an arbitrary quadrangle by specifying the X/Y 
 coordinates of all four corners.  Negative values are allowed in any of
@@ -9628,22 +9628,22 @@ br                           The X/Y location of the bottom right corner
 bl                           The X/Y location of the bottom left corner
                              of the area.
 
-¾F
+3/4F
      CelUtils.h
      
-¾R
+3/4R
 
 IPoint, SRect, CRect
 
-¾KY BlockFile 
-¾T Function
-¾D
+3/4KY BlockFile 
+3/4T Function
+3/4D
 typedef struct BlockFile {
 Item fDevice;
 FileStatus fStatus;
 } BlockFile;
 
-¾C
+3/4C
 
 This structure holds information about a file opened by the
 OpenBlockFile() function.
@@ -9657,16 +9657,16 @@ fStatus                      Information provided by the filesystem folio
                              describing the file and device
                              characteristics.
 
-¾F
+3/4F
      BlockFile.h, filesystem.h
      
-¾R
+3/4R
 
 OpenBlockFile()
 
-¾KY FontDescriptor 
-¾T Function
-¾D
+3/4KY FontDescriptor 
+3/4T Function
+3/4D
 typedef struct FontDescriptor {
 uint32
 fd_fontFlags;
@@ -9700,7 +9700,7 @@ void *
 fd_charData;
 } FontDescriptor;
 
-¾C
+3/4C
 
 The FontDescriptor structure contains values that describe the font, and
 values used by the font library routines to render characters.  Never
@@ -9777,12 +9777,12 @@ FFLAG_UNDERLINED             Underlined font.
 
 FFLAG_TWOCOLOR               Font contains two-color characters. 
 
-¾F
+3/4F
      Fontlib.h
      
-¾KY LoadFileInfo 
-¾T Function
-¾D
+3/4KY LoadFileInfo 
+3/4T Function
+3/4D
 typedef struct LoadFileInfo {
 void *userData;
 void *buffer;
@@ -9799,7 +9799,7 @@ uint32 reserved2[2];
 BlockFile
 } LoadFileInfo;
 
-¾C
+3/4C
 
 This structure is the interface between your code and the AsyncLoadFile()
 family of functions.  You fill in some of the fields and call
@@ -9856,23 +9856,23 @@ internalFlags                Used internally; don't touch.
 
 reserved2                    Reserved for future expansion; don't touch.
 
-¾F
+3/4F
      BlockFile.h, filesystem.h
      
-¾R
+3/4R
 
 BlockFile, AsyncLoadFile()
 
-¾KY TextCel 
-¾T Function
-¾D
+3/4KY TextCel 
+3/4T Function
+3/4D
 typedef struct TextCel {
 CCB *tc_CCB;
 void *tc_userData;
 /* private fields appear here */
 } TextCel;
 
-¾C
+3/4C
 
 The TextCel structure contains values used by the text library routines to
 manage a text cel.  The only fields you can reference are tc_CCB and

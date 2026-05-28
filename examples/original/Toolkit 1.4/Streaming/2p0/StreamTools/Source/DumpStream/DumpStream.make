@@ -4,7 +4,7 @@
 #   Sources:    DumpStream.c
 #   Created:    Monday, May 17, 1993 11:35:23 PM
 #
-#	Copyright © 1993-4 The 3DO Company
+#	Copyright (c) 1993-4 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -33,21 +33,21 @@ OBJECTS = {PROGRAM}.c.o
 DEBUGOPTIONS = 
 
 
-{PROGRAM}		Ä "{Destination}"{PROGRAM}
-"{Destination}"{PROGRAM} Ä {PROGRAM}.make {PROGRAM}.r {OBJECTS}
+{PROGRAM}		A "{Destination}"{PROGRAM}
+"{Destination}"{PROGRAM} A {PROGRAM}.make {PROGRAM}.r {OBJECTS}
 	Rez  -o {PROGRAM} {PROGRAM}.r -a -ov
-	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		#"{CLibraries}"CSANELib.o ¶
-		#"{CLibraries}"Math.o ¶
-		#"{CLibraries}"Complex.o ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"Runtime.o ¶
-		"{Libraries}"Interface.o ¶
-		"{Libraries}"ToolLibs.o ¶
+	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		#"{CLibraries}"CSANELib.o --
+		#"{CLibraries}"Math.o --
+		#"{CLibraries}"Complex.o --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"Runtime.o --
+		"{Libraries}"Interface.o --
+		"{Libraries}"ToolLibs.o --
 		-o {PROGRAM}
 	{COPYTODESTINATION}
 
-{PROGRAM}.c.o Ä {PROGRAM}.make {PROGRAM}.c WeaveStream.h
+{PROGRAM}.c.o A {PROGRAM}.make {PROGRAM}.c WeaveStream.h
 	 C {DEBUGOPTIONS} -r  {PROGRAM}.c

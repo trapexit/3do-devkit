@@ -17,7 +17,7 @@
  *
  *	Written by:		Darren Gibbs
  *
- *	Copyright й 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/03/94		dtc		Version 1.2d1
@@ -40,7 +40,7 @@
    have been allocated for the channel to be freed.  This allows
    you to change data types on the fly without having to keep DSP
    instruments loaded that you no longer need.
-   ее NOTE: This option can sometimes cause audible pops because
+   ** NOTE: This option can sometimes cause audible pops because
                         the instruments are freed before the envelope can
                         ramp all the way to zero.
  */

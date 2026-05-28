@@ -22,7 +22,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	12/2/93		jb		Add addition new arg to NewDataStream()
@@ -123,7 +123,7 @@
  */
 #define CLOSE_AUDIO_ON_SWITCH 0
 
-/* ¥¥¥TEMPORARY¥¥¥ Compile switch to turn on/off whether we explicitly
+/* ***TEMPORARY*** Compile switch to turn on/off whether we explicitly
  * free Cinepak buffers. Should be set to zero for testing new automatic
  * memory freeing scheme.
  */

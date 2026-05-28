@@ -7,7 +7,7 @@
  *	Written by:		3DO Software Attic
  *					Chris McFall
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	9/26/94		crm		Reduced stream I/O expression causing

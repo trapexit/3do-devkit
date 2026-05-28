@@ -6,7 +6,7 @@
  *	Written by:		Neil Cormia (variations on a theme by Joe
  *Buczek)
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	6/15/93		jb		Changed MARKER_CHUNK_TYPE to 'GOTO'

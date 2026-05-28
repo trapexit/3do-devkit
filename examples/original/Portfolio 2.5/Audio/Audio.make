@@ -52,60 +52,60 @@ ModbinDebugOptions	= -debug
 #	Object files
 #####################################
 
-OBJECTS			=	 {ObjectDir}:beep.c.o ¶
-					 {ObjectDir}:capture_audio.c.o ¶
-					 {ObjectDir}:minmax_audio.c.o ¶
-					 {ObjectDir}:playmf.c.o ¶
-					 {ObjectDir}:playsample.c.o ¶
-					 {ObjectDir}:playsoundfile.c.o ¶
-					 {ObjectDir}:simple_envelope.c.o ¶
-					 {ObjectDir}:spoolsoundfile.c.o ¶
-					 {ObjectDir}:ta_attach.c.o ¶
-					 {ObjectDir}:ta_customdelay.c.o ¶
-					 {ObjectDir}:ta_envelope.c.o ¶
-					 {ObjectDir}:ta_pitchnotes.c.o ¶
-					 {ObjectDir}:ta_spool.c.o ¶
-					 {ObjectDir}:ta_sweeps.c.o ¶
-					 {ObjectDir}:ta_timer.c.o ¶
-					 {ObjectDir}:ta_tuning.c.o ¶
-					 {ObjectDir}:ta_tweakknobs.c.o ¶
-					 {ObjectDir}:tsc_soundfx.c.o ¶
+OBJECTS			=	 {ObjectDir}:beep.c.o --
+					 {ObjectDir}:capture_audio.c.o --
+					 {ObjectDir}:minmax_audio.c.o --
+					 {ObjectDir}:playmf.c.o --
+					 {ObjectDir}:playsample.c.o --
+					 {ObjectDir}:playsoundfile.c.o --
+					 {ObjectDir}:simple_envelope.c.o --
+					 {ObjectDir}:spoolsoundfile.c.o --
+					 {ObjectDir}:ta_attach.c.o --
+					 {ObjectDir}:ta_customdelay.c.o --
+					 {ObjectDir}:ta_envelope.c.o --
+					 {ObjectDir}:ta_pitchnotes.c.o --
+					 {ObjectDir}:ta_spool.c.o --
+					 {ObjectDir}:ta_sweeps.c.o --
+					 {ObjectDir}:ta_timer.c.o --
+					 {ObjectDir}:ta_tuning.c.o --
+					 {ObjectDir}:ta_tweakknobs.c.o --
+					 {ObjectDir}:tsc_soundfx.c.o --
 
 # OBJECTS			=	 {ObjectDir}:beep.c.o 	
 				 
-ADVANCED_SOUND_PLAYER_OBJECTS	=	¶
-					{Advanced_Sound_PlayerDir}{ObjectDir}:tsp_algorithmic.c.o ¶
-					{Advanced_Sound_PlayerDir}{ObjectDir}:tsp_rooms.c.o ¶
-					{Advanced_Sound_PlayerDir}{ObjectDir}:tsp_spoolsoundfile.c.o ¶
-					{Advanced_Sound_PlayerDir}{ObjectDir}:tsp_switcher.c.o ¶
+ADVANCED_SOUND_PLAYER_OBJECTS	=	--
+					{Advanced_Sound_PlayerDir}{ObjectDir}:tsp_algorithmic.c.o --
+					{Advanced_Sound_PlayerDir}{ObjectDir}:tsp_rooms.c.o --
+					{Advanced_Sound_PlayerDir}{ObjectDir}:tsp_spoolsoundfile.c.o --
+					{Advanced_Sound_PlayerDir}{ObjectDir}:tsp_switcher.c.o --
 										
-COAL_RIVER_OBJECTS	=	¶
+COAL_RIVER_OBJECTS	=	--
 					{Coal_RiverDir}{ObjectDir}:CoalRiver.c.o
 					
 
-DRUMBOX_OBJECTS		= 	¶
+DRUMBOX_OBJECTS		= 	--
 					{DrumBoxDir}{ObjectDir}:drumbox.c.o
 					
 
-JUGGLER_OBJECTS		= 	¶
-					{JugglerDir}{ObjectDir}:tj_canon.c.o ¶
-					{JugglerDir}{ObjectDir}:tj_multi.c.o ¶
+JUGGLER_OBJECTS		= 	--
+					{JugglerDir}{ObjectDir}:tj_canon.c.o --
+					{JugglerDir}{ObjectDir}:tj_multi.c.o --
 					{JugglerDir}{ObjectDir}:tj_simple.c.o
 					
-LIBS			=	"{3DOLibs}lib3DO.lib"		¶
-					"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}music.lib"		¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}filesystem.lib"		¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}clib.lib"		¶
-					"{3DOLibs}swi.lib"		¶
+LIBS			=	"{3DOLibs}lib3DO.lib"		--
+					"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}music.lib"		--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}filesystem.lib"		--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}clib.lib"		--
+					"{3DOLibs}swi.lib"		--
 					"{3DOLibs}cstartup.o" 
-#					"{3DOLibs}copyright.o" ¶
-#					"{3DOLibs}exampleslib.lib" ¶
-#					"{3DOLibs}compression.lib" ¶
-#					"{3DOLibs}memdebug.lib" ¶
+#					"{3DOLibs}copyright.o" --
+#					"{3DOLibs}exampleslib.lib" --
+#					"{3DOLibs}compression.lib" --
+#					"{3DOLibs}memdebug.lib" --
 
 									
 
@@ -113,10 +113,10 @@ LIBS			=	"{3DOLibs}lib3DO.lib"		¶
 #	Default build rules
 #####################################
 
-All				Ä	{App}
+All				A	{App}
 
 
-.c.o	Ä	.c		
+.c.o	A	.c		
 	{CC} -i "{3DOIncludes}" {COptions} {CDebugOptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 	set AudioLinkOK 1
 	# The ExecutableDir business here gets around an MPW 3.3 and earlier make bug
@@ -124,9 +124,9 @@ All				Ä	{App}
 	if {ExecutableDir} == "Apps_Data"
 		set ExecutableDir ":Apps_Data"
 	end
-	{LINK} {LOptions} {LDebugOptions} ¶
-		{TargDir}{Default}.c.o ¶
-		{LIBS} ¶
+	{LINK} {LOptions} {LDebugOptions} --
+		{TargDir}{Default}.c.o --
+		{LIBS} --
 		-o {Default}.nostrip || (delete {TargDir}{Default}.c.o; set AudioLinkOK 0)
 	if {AudioLinkOK} == 1
 		SetFile {TempDir}{Default}.nostrip -c 'EaDJ' -t PROJ
@@ -145,20 +145,20 @@ All				Ä	{App}
 # Directory and subdirectory dependencies
 ###########################################
 
-{ObjectDir}:									Ä	{MainDir}
+{ObjectDir}:									A	{MainDir}
 
-{Advanced_Sound_PlayerDir}{ObjectDir}:			Ä	{Advanced_Sound_PlayerDir}:
+{Advanced_Sound_PlayerDir}{ObjectDir}:			A	{Advanced_Sound_PlayerDir}:
 
-{Coal_RiverDir}{ObjectDir}:						Ä	{Coal_RiverDir}:
+{Coal_RiverDir}{ObjectDir}:						A	{Coal_RiverDir}:
 
-{DrumBoxDir}{ObjectDir}:						Ä	{DrumBoxDir}:
+{DrumBoxDir}{ObjectDir}:						A	{DrumBoxDir}:
 
-{JugglerDir}{ObjectDir}:						Ä	{JugglerDir}:
+{JugglerDir}{ObjectDir}:						A	{JugglerDir}:
 
-{App} Ä {App}.make {OBJECTS} ¶
-			{ADVANCED_SOUND_PLAYER_OBJECTS} ¶
-			{COAL_RIVER_OBJECTS} ¶
-			{DRUMBOX_OBJECTS} ¶
+{App} A {App}.make {OBJECTS} --
+			{ADVANCED_SOUND_PLAYER_OBJECTS} --
+			{COAL_RIVER_OBJECTS} --
+			{DRUMBOX_OBJECTS} --
 			{JUGGLER_OBJECTS} 
 	echo 'Make of audio examples completed.'
 	beep 2C,15 1G,5 1Gb,5 1G,5 1Ab,15 1G,30 1B,15 2C,15 

@@ -3,7 +3,7 @@
  *
  *	Contains:		Routines to report errors.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	07/25/94  Ian	Added logic to ensure that the semaphore we create is

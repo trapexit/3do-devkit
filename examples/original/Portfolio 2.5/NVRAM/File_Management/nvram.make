@@ -45,28 +45,28 @@ ModbinDebugOptions	= -debug
 
 OBJECTS			=	 {ObjectDir}nvram.c.o "{3DOLibs}"cstartup.o
 
-LIBS			=	 ¶
-					"{3DOLibs}clib.lib" ¶
+LIBS			=	 --
+					"{3DOLibs}clib.lib" --
 
 #####################################
 #	Default build rules
 #####################################
 
-All				Ä	{App}
+All				A	{App}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o	Ä	.c
+.c.o	A	.c
 	{CC} -i "{3DOIncludes}" {COptions} {CDebugOptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
 #####################################
 #	Target build rules
 #####################################
 
-{App} Ä {App}.make {OBJECTS}
-	{LINK} {LOptions} {LDebugOptions} ¶
-		{OBJECTS} ¶
-		{LIBS} ¶
+{App} A {App}.make {OBJECTS}
+	{LINK} {LOptions} {LDebugOptions} --
+		{OBJECTS} --
+		{LIBS} --
 		-o "{WorkingDisk}"{Targ}
 	SetFile "{WorkingDisk}"{Targ} -c 'EaDJ' -t 'PROJ'
 	modbin "{WorkingDisk}"{Targ} -stack {nvramtackSize} {ModbinDebugOptions}
@@ -78,4 +78,4 @@ All				Ä	{App}
 #	Additional Target Dependencies
 #####################################
 
-{ObjectDir}nvram.c.o			Ä	{App}.make
+{ObjectDir}nvram.c.o			A	{App}.make

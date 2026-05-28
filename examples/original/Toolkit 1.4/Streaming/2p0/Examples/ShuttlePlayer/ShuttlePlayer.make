@@ -3,7 +3,7 @@
 #
 #	Contains:	make file for building ShuttlePlayer
 #
-#	Copyright © 1993 The 3DO Company
+#	Copyright (c) 1993 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -56,53 +56,53 @@ SOptions		= -bi -g -i "{3DOIncludes}"
 #		Object files
 #####################################
 
-LIBS			=	¶
-					"{SubscriberDir}subscriberShuttle.lib"		¶
-					"{StreamDir}dataacqShuttle.lib"	¶
-					"{StreamDir}dsShuttle.lib"	¶
-					"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}music.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}codec.lib"		¶
-					"{3DOLibs}clib.lib"			¶
+LIBS			=	--
+					"{SubscriberDir}subscriberShuttle.lib"		--
+					"{StreamDir}dataacqShuttle.lib"	--
+					"{StreamDir}dsShuttle.lib"	--
+					"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}music.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}codec.lib"		--
+					"{3DOLibs}clib.lib"			--
 					"{3DOLibs}swi.lib" 			
 
-OBJECTS			=	"{ObjectDir}{Program}.c.o"		¶
-					"{ObjectDir}PlayCPakStream.c.o"	¶
-					"{ObjectDir}PrepareStream.c.o"	¶
-					"{ObjectDir}PlaySSNDStream.c.o"	¶
-					"{ObjectDir}JoyPad.c.o"			¶
-					"{ObjectDir}UserControls.c.o"	¶
-					"{ObjectDir}Screens.c.o"		¶
-					"{ObjectDir}elkabong.c.o"		¶
+OBJECTS			=	"{ObjectDir}{Program}.c.o"		--
+					"{ObjectDir}PlayCPakStream.c.o"	--
+					"{ObjectDir}PrepareStream.c.o"	--
+					"{ObjectDir}PlaySSNDStream.c.o"	--
+					"{ObjectDir}JoyPad.c.o"			--
+					"{ObjectDir}UserControls.c.o"	--
+					"{ObjectDir}Screens.c.o"		--
+					"{ObjectDir}elkabong.c.o"		--
 					"{ObjectDir}Menus.c.o"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Program}
+All				A	{Program}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {DepDir}{Default}.c -o {TargDir}{Default}.c.o  {COptions}
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Program}		Ä	{Program}.make {OBJECTS} {LIBS}
-	{LINK}	{LOptions}					¶
-			-o {Program}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Program}		A	{Program}.make {OBJECTS} {LIBS}
+	{LINK}	{LOptions}					--
+			-o {Program}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Program} -c 'EaDJ' -t 'PROJ'
 	modbin {program} -stack 0x4000 -debug
@@ -115,7 +115,7 @@ All				Ä	{Program}
 #####################################
 #	Include file dependencies
 #####################################
-{ObjectDir}PlayCPakStream.c.o		Ä  "PlayCPakStream.h"
-{ObjectDir}PlaySSNDStream.c.o		Ä  "PlaySSNDStream.h"
-{ObjectDir}PrepareStream.c.o		Ä  "PrepareStream.h"
-{ObjectDir}JoyPad.c.o				Ä  "JoyPad.h"
+{ObjectDir}PlayCPakStream.c.o		A  "PlayCPakStream.h"
+{ObjectDir}PlaySSNDStream.c.o		A  "PlaySSNDStream.h"
+{ObjectDir}PrepareStream.c.o		A  "PrepareStream.h"
+{ObjectDir}JoyPad.c.o				A  "JoyPad.h"

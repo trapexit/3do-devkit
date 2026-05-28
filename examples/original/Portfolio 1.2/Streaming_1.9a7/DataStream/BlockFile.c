@@ -3,7 +3,7 @@
  *
  *	Contains:		utility routines for block oriented file access
  *
- *	Copyright й 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/5/93		jb		Fix day-1 "GetBlockFIleBlockSize" typeo
@@ -122,7 +122,7 @@ AsynchReadBlockFile (BlockFilePtr bf, Item ioreqItem, void *buffer, long count,
   Info.ioi_CmdOptions = 0;
   Info.ioi_Recv.iob_Buffer = buffer;
   Info.ioi_Recv.iob_Len
-      = count; /* ееее is this a block count or BYTE count ? */
+      = count; /* **** is this a block count or BYTE count ? */
   Info.ioi_Send.iob_Buffer = 0;
   Info.ioi_Send.iob_Len = 0;
   Info.ioi_Offset = offset / bf->fStatus.fs.ds_DeviceBlockSize;

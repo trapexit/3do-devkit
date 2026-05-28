@@ -1,7 +1,7 @@
 THIS README FILE COVERS THE FOLLOWING TOPICS:
 
-		¥		RUNNING DATA STREAMING EXAMPLES
-		¥		CREATING STREAMED OUTPUTS
+		*		RUNNING DATA STREAMING EXAMPLES
+		*		CREATING STREAMED OUTPUTS
 
 
 All folders referenced in this document are subfolders of 'Examples' folder in the main Data Stream folder unless otherwise indicated.
@@ -12,7 +12,7 @@ RUNNING DATA STREAMING EXAMPLES
 
  Data Streaming examples included in the Examples Folder are:
 
-		¥		NuPlayer
+		*		NuPlayer
 					This example uses high level Cinepak movie playback.  This application
 					requires a streamed output with a header.  To run this 	example, use
 					the following streamed output:
@@ -26,7 +26,7 @@ RUNNING DATA STREAMING EXAMPLES
 							Down Arrow:     go backward in the stream
 							Left Arrow:     rewind to the beginning of the stream
 
-		¥		TestDS (Removed from DataStream 2.1)
+		*		TestDS (Removed from DataStream 2.1)
 					This example is a simple 3DO stream player application that plays streamed
 					Cinepak, ANIM, and sound.    To run this example, use the following streamed
 					output:
@@ -54,7 +54,7 @@ RUNNING DATA STREAMING EXAMPLES
 
 		KNOWN PROBLEMS:	"B" button doesn't work.
 
-		¥		PALTestDS (PAL Compatible)
+		*		PALTestDS (PAL Compatible)
 					This example is a simple 3DO stream player application that plays streamed
 					Cinepak, ANIM, and sound.   It has the same functionality as TestDs, but
 					provides an output that conforms to the PAL and handles PAL sized images.
@@ -83,7 +83,7 @@ RUNNING DATA STREAMING EXAMPLES
 
 		KNOWN PROBLEMS:	"B" button doesn't work.
 
-		¥		PlaySAnim
+		*		PlaySAnim
 					This is an example of a multi-channel streamed animation file player.  To
 					run this example, use the following streamed output:
 							NewSanm.Stream
@@ -103,7 +103,7 @@ RUNNING DATA STREAMING EXAMPLES
 							Left Arrow:       Pans the current channel to the left (Mono only)
 							Right Arrow:      Pans the current channel to the right (Mono only)
 
-		¥		PlaySA
+		*		PlaySA
 					This is an example of using high level stream playback routines for audio.  To
 					run this example, use the following streamed output:
 							Bach_M.Stream
@@ -129,7 +129,7 @@ RUNNING DATA STREAMING EXAMPLES
 		NOTE:	You will get "Error sending control message", status = -6998 error message if
 							you hit the mute button on a channel that is not the current channel.
 
-		¥		SlideStream
+		*		SlideStream
 					This is an example of using JoinSubscriber.c to implement a slide show with
 					audio.  To run this example, use the following streamed output:
 							SlideStream
@@ -137,7 +137,7 @@ RUNNING DATA STREAMING EXAMPLES
 					Usage:	slideStream <streamFile>
 							"Start" button:	exits the program
 
-		¥		TestSA
+		*		TestSA
 					This is a simple 3DO streamed audio player application.  To run this example,
 					use the following streamed output:
 							Bach_M.Stream
@@ -156,7 +156,7 @@ RUNNING DATA STREAMING EXAMPLES
 							Left Arrow:     Pans the current channel to the left (Mono only)
 							Right Arrow:    Pans the current channel to the right (Mono only)
 
-¥		ShuttlePlayer
+*		ShuttlePlayer
 					This example demonstrates fast forward, fast reverse, and step forward
 					by using high level Cinepak movie playback.  This application requires a 
 					streamed output with a header.  To run this example, put the following
@@ -176,7 +176,7 @@ RUNNING DATA STREAMING EXAMPLES
 					Restriction:  If you hit play (A button) and fast forward (right arrow)/ fast reverse
 					(left arrow) at the same time, the stream has problems in synchronizing.
 
-¥	ProtoPlayer
+*	ProtoPlayer
 			This is a simple example of playing test data through the Prototype Subscriber.
 			Read the ProtoPlayerDocs in ProtoPlayer Folder for usage.
 
@@ -193,43 +193,43 @@ CREATING STREAMED OUTPUT
 
 'Tools and Data' folder contains scripts and data for producing streamed output for the aforementioned examples.   Scripts included in this folders are:
 
-		¥		ALRM_Chunk
+		*		ALRM_Chunk
 					This data chunk writes a CTRL-ALRM chunk to the end of the stream to loop
 					streamed animation or movie.
 
-		¥		bach_44K_16B_M.script
+		*		bach_44K_16B_M.script
 					This script produces Bach_M.Stream. 
 
-		¥		bach_44K_16B_S.script
+		*		bach_44K_16B_S.script
 					This script produces Bach_S.Stream. 
 
-		¥		BuildStreamAudio
+		*		BuildStreamAudio
 					This script builds the audio stream file to be used with the Data Stream
 					example programs. 
 
-		¥		Cphdrtest.Weave
+		*		Cphdrtest.Weave
 					This script writes a stream header to CPakTestStream output.  It produces
 					a streamed output that is used with NuPlayer.
 
-		¥		GanymedeWeaveScript
+		*		GanymedeWeaveScript
 					This script produces CPakTestStream output.
 
-		¥		SAnimWithAudioScript
+		*		SAnimWithAudioScript
 					This script produces SAnimWithAudio.Stream output.
 
-		¥		SAnmWeaveScript
+		*		SAnmWeaveScript
 					This script produces  NewSAnm.Stream output.
 
-		¥		ShuttleWeaveScript
+		*		ShuttleWeaveScript
 			    This script writes a stream header to ShuttleTestStream output.  It produces 
 					a streamed output that is used with ShuttlePlayer.
 
 Data included in this folder are:
 
-		¥		Images
+		*		Images
 					This folder contains image files for SlideStream.
 
-		¥		SANM.CELS
+		*		SANM.CELS
 					This folder contains CEL files used to create NewSAnmStream. To produce the
 					streamed output, first launch SanmMaker to produce streamed animation file
 					called NewSANM.  Then execute the following from MPW to weave the
@@ -240,31 +240,31 @@ Data included in this folder are:
 					Data Stream folder for detailed information on SanmMaker and other
 					streaming tools.
 					
-		¥		bach_44K_16B_M.aiff
+		*		bach_44K_16B_M.aiff
 					This 16 bit mono, 44KHz raw audio file produces Bach.Stream output when used
 					in conjunction with bach_44K_16B_M.script.  To produce the output,
 					execute the following:
 								Weaver -o bach_M.Stream < bach_44K_16B_M.script
 
-		¥		bach_44K_16B_S.aiff
+		*		bach_44K_16B_S.aiff
 					This 16 bit stereo, 44KHz raw audio file produces Bach.Stream output when
 					used in conjunction with bach_44K_16B_S.script. To produce the output,
 					execute the following:
 								Weaver -o bach_S.Stream < bach_44K_16B_S.script
 
-		¥		Ganymede.cv.MooV
+		*		Ganymede.cv.MooV
 					This is a QuickTime Movie used in GanymedeWeaveScript to produce
 					CPakTestStream output. To produce the streamed output, execute the
 					following:
 								Weaver -o CPakTestStream < GanymedeWeaveScript
 
-		¥		Ganymede22.aiff
+		*		Ganymede22.aiff
 					This raw audio file is used to produce the compressed, chunkified audio
 					stream file Ganymede22.saudio, used in GanymedeWeaveScript to produce
 					CPakTestStream output.  To produce the  audio stream, execute the following:
 								BuildStreamAudio Ganymede22.aiff
 
-			¥	NewSAnm
+			*	NewSAnm
 					This is a streamed animation file of cels from the SANM.CELs folder.
 					This streamed output is produced by SanmMaker.
 
@@ -273,15 +273,15 @@ Scripts for creating streamed animation output are located in 'PlaySAnim:Apps & 
 Scripts for creating SlideStream output are located 
 'SlideStream:MPW Scripts For Building Data' folder.  MPW Scripts included in 'MPW Scripts For Building Data' folder are:
 
-		¥		BuildSlideStream
+		*		BuildSlideStream
 					This is a script to build the output stream to be used with the SlideStream
 					example program.
 
-		¥		BuildSlideStreamAudio
+		*		BuildSlideStreamAudio
 					This is a script to build the audio stream file to be used with the SlideStream
 					example program. 
 
-		¥		Example_Script
+		*		Example_Script
 					This script combines sound with a slideshow by building an audio stream from
 					the raw AIFF file, and by converting all image files to streamed format for use
 					with the SlideStream example program.   'Tools and Data' and

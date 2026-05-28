@@ -8,7 +8,7 @@
 #					"clean"		deletes all object files before
 #								building everything
 #
-#	Copyright © 1992 The 3DO Company
+#	Copyright (c) 1992 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -40,13 +40,13 @@
 			# Delete object files in each directory.
 
 			For toolDir in `Files -d`
-				Delete -i "{toolDir}"Å.o
+				Delete -i "{toolDir}"A.o
 			End
 		
 			# Restore the state of {Exit}
 			Set Exit {saveExit}
 	
-		End ·· Dev:Null
+		End ** Dev:Null
 	End
 
 #
@@ -57,13 +57,13 @@
 
 		# Get the tool name with version number
 
-		(Evaluate "{ToolDir}" =~ /Å:(Å)¨1:/ ) ·· Dev:Null
-		Set ToolName "{¨1}"
+		(Evaluate "{ToolDir}" =~ /A:(A)"1:/ ) ** Dev:Null
+		Set ToolName "{"1}"
 
 		Set ToolRootName "{ToolName}"
-		(Evaluate "{ToolName}" =~ /¶¥(Å)¨1/ ) ·· Dev:Null
-		if {¨1} != 
-			Set ToolRootName "{¨1}"
+		(Evaluate "{ToolName}" =~ /--*(A)"1/ ) ** Dev:Null
+		if {"1} != 
+			Set ToolRootName "{"1}"
 		end
 		# Build the tool
 

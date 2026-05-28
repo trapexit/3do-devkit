@@ -28,7 +28,7 @@
  *
  *	Written by:		Software Attic
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *

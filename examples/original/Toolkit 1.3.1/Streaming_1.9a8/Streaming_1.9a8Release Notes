@@ -7,20 +7,20 @@
 ===	Release 1.9a8 ===
 =====================
 
-¥	A minor change to the Cinepak Subscriber was made to enable centering
+*	A minor change to the Cinepak Subscriber was made to enable centering
     of a movie stream within a PAL-sized framebuffer.  In fact, it will now
 	center within ANY sized framebuffer that is handed to it.  Since there are
 	now three sizes available (320x240, 320x288, and 384x288) we have to be
 	a little more flexible.
 	
-¥	Changed the link order of files to make it a little more kosher.  Occasionally,
+*	Changed the link order of files to make it a little more kosher.  Occasionally,
 	errors would be generated in the example apps ue to ordering problems and
 	dependencies.
 	
-¥	Changed the example code makefiles to reflect the new home of codec.lib,
+*	Changed the example code makefiles to reflect the new home of codec.lib,
 	in the {3DOLibraries} folder.
 
-¥	Added a new program, PALTestDS, which is functionally the same as TestDS,
+*	Added a new program, PALTestDS, which is functionally the same as TestDS,
 	but uses a PAL-sized screen (384x288) instead of an NTSC one like TestDS.
 	
 =====================
@@ -37,15 +37,15 @@ Every effort has been made to remove memory leaks.
 === Example code changes ===
 ============================
 
-¥	All example code has been moved into a folder called 'Examples' in
+*	All example code has been moved into a folder called 'Examples' in
 	the main data stream folder. A build script, BuildDSExamples, has
 	been added to build all example programs in the Examples folder.
 
-¥	A new Cinepak player example, NuPlayer, illustrates the use of the
+*	A new Cinepak player example, NuPlayer, illustrates the use of the
 	user interface callback procedure and the time based positioning
 	feature new in this release. NuPlayer replaces TestPlayCPAK.
 
-¥	A new Join subscriber example illustrates the use of the Join
+*	A new Join subscriber example illustrates the use of the Join
 	subscriber by implementing a simple slide show with audio. MPW scripts
 	to build the slide show data are included which show how to automate
 	the data building process.
@@ -55,22 +55,22 @@ Every effort has been made to remove memory leaks.
 === Streamer changes ===
 ========================
 
-¥	A check for zero or negative chunk sizes was added to the streamer's
+*	A check for zero or negative chunk sizes was added to the streamer's
 	DeliverData() routine which should prevent unexpected results
 	when attempting to stream poorly formed stream data.
 
-¥	All data stream error codes are now explicitly coded in the include
+*	All data stream error codes are now explicitly coded in the include
 	file "DataStream.h" to facilitate easier diagnosis of errors.
 	In addition, an MPW tool has been added to the release which will
 	output the error text for any data stream error (see below).
 
-¥	A symbol, SOPT_NOFLUSH, was added to DataStream.h for use with the
+*	A symbol, SOPT_NOFLUSH, was added to DataStream.h for use with the
 	DSStartStream() and DSStopStream() routines' option value to specify
 	that no data flushing should take place. Previously, this was 
 	specified with a literal value "0". The symbol was added for better
 	readability of user code.
 
-¥	A problem with flushing normally done as a result of branching
+*	A problem with flushing normally done as a result of branching
 	has been fixed. Time based branching required that the actual
 	destination stream time be "remembered" in the stream control
 	block. Conditional flushing done by CTRL/SYNC chunks now works 
@@ -80,7 +80,7 @@ Every effort has been made to remove memory leaks.
 === Data Acquisition changes ===
 ================================
 
-¥	DataAcq.c now supports time based branching. A number of new 'options'
+*	DataAcq.c now supports time based branching. A number of new 'options'
 	values for use with DSGoMarker() have been added. These are:
 
 	Option				Meaning of DSGoMarker() value
@@ -108,7 +108,7 @@ Every effort has been made to remove memory leaks.
 === Subscriber changes ===
 ==========================
 
-¥	"CloseXXX" routines were added for each subscriber which balance the
+*	"CloseXXX" routines were added for each subscriber which balance the
 	allocation of resources done by their one-time "InitXXX" routines. This 
 	addition was required to remove known remaining memory leaks. 
 	NOTE: You must call these routines after all other destroy/dispose
@@ -120,12 +120,12 @@ Every effort has been made to remove memory leaks.
 	as well. Missing from this example are examples of calling the
 	"Close" routines for the SAnimSubscriber and JoinSubscriber.
 
-¥	The Join subscriber, which apparently never worked as released, has
+*	The Join subscriber, which apparently never worked as released, has
 	been fixed, and an example program was developed to illustrate its use.
 	See the "SlideStream_1.0" folder, which implements a stream based
 	slide show with audio.
 
-¥	A bug in the SAudioSubscriber was fixed which could result in incorrect
+*	A bug in the SAudioSubscriber was fixed which could result in incorrect
 	handling of subscriber requests when several requests were delivered
 	to the subscriber in rapid succession, or back to back, such as might
 	occur when rapidly starting and stopping a stream.
@@ -134,7 +134,7 @@ Every effort has been made to remove memory leaks.
 === Stream Tool Changes ===
 ===========================
 
-¥	Weaver_2.1
+*	Weaver_2.1
 
 	The Weaver has been updated to write out a time-to-position mapping
 	chunk at the beginning of a stream if the "writemarkertable"
@@ -176,7 +176,7 @@ Every effort has been made to remove memory leaks.
 						NumSubsMessages		200
 
 
-¥	MovieToStream_1.6
+*	MovieToStream_1.6
 
 	A bug which caused the truncation of stream time for longer movies
 	has been fixed. Also, a "-v" verbose option was added to the tool 
@@ -203,7 +203,7 @@ Every effort has been made to remove memory leaks.
 	directly to a "difference frame".
 
 
-¥	GetDSErrorText_1.1
+*	GetDSErrorText_1.1
 
 	A new MPW tool has been added to the release which will output the 
 	error text for any data stream error given an error code. The usage
@@ -217,7 +217,7 @@ Every effort has been made to remove memory leaks.
 	converted to both decimal and hex are written to standard output.
 
 
-¥	AnimToSanim_1.0
+*	AnimToSanim_1.0
 
 	A new MPW tool has been added to convert the output of 3DO Animator
 	to SAnimSubscriber compatible animation streams.

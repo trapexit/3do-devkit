@@ -25,23 +25,23 @@ OBJECTS = Weaver.c.o WeaveStream.c.o
 DEBUGOPTIONS	= 
 #DEBUGOPTIONS	= -sym full 
 
-COPTIONS		=	-i "::::DataStream:Subscribers:" ¶
-					-i "::::DataStream:" ¶
+COPTIONS		=	-i "::::DataStream:Subscribers:" --
+					-i "::::DataStream:" --
 					{DEBUGOPTIONS} 
 
-Weaver ÄÄ Weaver.make Weaver.r {OBJECTS}
+Weaver AA Weaver.make Weaver.r {OBJECTS}
 	Rez  -o Weaver Weaver.r -a -ov
-	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"Runtime.o ¶
-		"{Libraries}"Interface.o ¶
-		"{Libraries}"ToolLibs.o ¶
+	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"Runtime.o --
+		"{Libraries}"Interface.o --
+		"{Libraries}"ToolLibs.o --
 		-o Weaver
 
-Weaver.c.o Ä Weaver.make Weaver.c
+Weaver.c.o A Weaver.make Weaver.c
 	 C {COPTIONS} -r  Weaver.c
 
-WeaveStream.c.o Ä Weaver.make WeaveStream.c
+WeaveStream.c.o A Weaver.make WeaveStream.c
 	 C {COPTIONS} -r  WeaveStream.c

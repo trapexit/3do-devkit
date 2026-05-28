@@ -3,7 +3,7 @@
 #
 #	Contains:	Script for building the SubscriberShuttle library
 #
-#	Copyright © 1994 The 3DO Company
+#	Copyright (c) 1994 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -82,9 +82,9 @@ End
 		# Delete object files in each directory.
 		Begin
 				For SubsDir in `Files -d`
-				Delete -y -i "{SubsDir}"Å.o
+				Delete -y -i "{SubsDir}"A.o
 			End
-		End ·· Dev:Null
+		End ** Dev:Null
 	End
 
 #####################################
@@ -96,39 +96,39 @@ End
 	
 		# Get the Subscriber name
 	
-		(Evaluate "{SubsDir}" =~ /Å:(Å)¨1:/ ) ·· Dev:Null
-		Set SubsName "{¨1}"
+		(Evaluate "{SubsDir}" =~ /A:(A)"1:/ ) ** Dev:Null
+		Set SubsName "{"1}"
 	
 		# Build the Subscribers and utilities
 	
-		If "{SubsName}" != "Includes" AND  "{SubsName}" != "Objects"	 ¶
-			AND "{SubsName}" != "CPakSubscriber"	¶
+		If "{SubsName}" != "Includes" AND  "{SubsName}" != "Objects"	 --
+			AND "{SubsName}" != "CPakSubscriber"	--
 			AND "{SubsName}" != For_InControl_User
 		
 			Directory "{SubsDir}"
-			If `exists "{SubsName}".make ³³ Dev:Null`
+			If `exists "{SubsName}".make 33 Dev:Null`
 				Echo "Building {SubsName} ..."
 		
-				make {SubsName} -f {SubsName}.make -d GlobalCOptions="{GlobalCOptions}" ¶
+				make {SubsName} -f {SubsName}.make -d GlobalCOptions="{GlobalCOptions}" --
 							-d RelBranchSwitch="{RelBranchSwitch}" > {SubsName}.makeout
 				{SubsName}.makeout
 				Delete -y {SubsName}.makeout
 
 			End #If make file exits
 
-			For HdrFile in `Files Å.h ³³ Dev:Null`
+			For HdrFile in `Files A.h 33 Dev:Null`
 				If "{status}" != 0
 					Continue
 				End
 				
 				# Make sure there's a copy of the header file in the
 				# includes folder
-				If ! `exists "::Includes:{HdrFile}" ³³ Dev:Null`
+				If ! `exists "::Includes:{HdrFile}" 33 Dev:Null`
 					echo "Copying {HdrFile} into '::Includes:' ..."
 					Duplicate -y "{HdrFile}" "::Includes:"
 					
 				# Make sure no one modified the public copy of the header files
-				Else If `newer ::Includes:{HdrFile} {HdrFile} ³³ Dev:Null` 
+				Else If `newer ::Includes:{HdrFile} {HdrFile} 33 Dev:Null` 
 
 					# Make sure the files are really different
 					equal -d -q "::Includes:{HdrFile}" "{HdrFile}"
@@ -136,8 +136,8 @@ End
 					
 						# The files are the same, reset the modifacation date
 						# of the public copy
-						(Evaluate "`files -n -x m {HdrFile}`" =~ /Å.h[ ]+(Å)¨1/ ) ·· Dev:Null
-						setfile "::Includes:{HdrFile}" -m "{¨1}"
+						(Evaluate "`files -n -x m {HdrFile}`" =~ /A.h[ ]+(A)"1/ ) ** Dev:Null
+						setfile "::Includes:{HdrFile}" -m "{"1}"
 					Else
 						# Files are different, exit
 						beep C,60 C,60
@@ -151,12 +151,12 @@ End
 
 				# Make sure a newer version of the header files are copied into
 				# the public folder.
-				Else If `newer {HdrFile} ::Includes:{HdrFile}  ³³ Dev:Null` 
+				Else If `newer {HdrFile} ::Includes:{HdrFile}  33 Dev:Null` 
 					Duplicate -y "{HdrFile}" "::Includes:"
 
 				End
 
-			End ³³ Dev:Null # end for
+			End 33 Dev:Null # end for
 			
 			# Reset directory	
 			Directory "::"
@@ -175,14 +175,14 @@ End
 
 	echo -n OBJECTS		=										> {Library}.lib.make
 	
-	For ObjFiles in `Files -s {ObjectDir}Å.o`
-		echo "	" {ObjectDir}{ObjFiles} "			"'¶'		>> {Library}.lib.make
+	For ObjFiles in `Files -s {ObjectDir}A.o`
+		echo "	" {ObjectDir}{ObjFiles} "			"'--'		>> {Library}.lib.make
 	End
 
 	echo  "		"												>> {Library}.lib.make
 	echo  "		"												>> {Library}.lib.make
 	
-	echo {Library}.lib		ÄÄ	'{OBJECTS}' 					>> {Library}.lib.make
+	echo {Library}.lib		AA	'{OBJECTS}' 					>> {Library}.lib.make
 	echo "	"	armlib	-c -o	{Library}.lib	'{OBJECTS}'		>> {Library}.lib.make
 
 	make {Library}.lib -f {Library}.lib.make 					> {Library}.lib.makeout

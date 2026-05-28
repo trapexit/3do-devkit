@@ -3,7 +3,7 @@
  *
  *	Contains:		definitions for MsgUtils.c
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	4/16/93		jb		Switch to using "Item.h" from

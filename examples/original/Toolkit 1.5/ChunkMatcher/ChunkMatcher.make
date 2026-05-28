@@ -1,6 +1,6 @@
 #	ChunkMatcher.make
 #
-#	Copyright © 1994 The 3DO Company. All Rights Reserved.
+#	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
 #
 #	10/25/94	ec		move tool to 'apps & data:chunkmatcher:' when built.
 #	10/11/94	ec		move tool to 'apps & data' when built.
@@ -39,45 +39,45 @@ LOptions		= {NormLOptions}
 #		Object files
 #####################################
 
-LIBS		=												¶
-				"{MPW}Libraries:Libraries:MacRuntime.o"		¶
-	 			"{MPW}Libraries:Libraries:IntEnv.o"			¶
-	 			"{MPW}Libraries:CLibraries:CPluslib.o"		¶
-				"{MPW}Libraries:CLibraries:StdCLib.o"		¶
-	 			"{MPW}Libraries:Libraries:Interface.o"		¶
+LIBS		=												--
+				"{MPW}Libraries:Libraries:MacRuntime.o"		--
+	 			"{MPW}Libraries:Libraries:IntEnv.o"			--
+	 			"{MPW}Libraries:CLibraries:CPluslib.o"		--
+				"{MPW}Libraries:CLibraries:StdCLib.o"		--
+	 			"{MPW}Libraries:Libraries:Interface.o"		--
 				"{MPW}Libraries:Libraries:ToolLibs.o"
 
 
-OBJECTS		=												¶
-				"{ObjectDir}Options.cp.o"					¶
-				"{ObjectDir}Main.cp.o"						¶
-				"{ObjectDir}TypeID.cp.o"					¶
-				"{ObjectDir}AnimExtractor.cp.o"				¶
-				"{ObjectDir}Chunk.cp.o"						¶
-				"{ObjectDir}ChunkFile.cp.o"					¶
-				"{ObjectDir}ChunkQueue.cp.o"				¶
-				"{ObjectDir}ChunkSequence.cp.o"				¶
-				"{ObjectDir}ChunkSequenceHandler.cp.o"		¶
-				"{ObjectDir}Form3DOChunks.cp.o"				¶
-				"{ObjectDir}MultiPartFileName.cp.o"			¶
-				"{ObjectDir}SAAAnimExtractor.cp.o"			¶
-				"{ObjectDir}SAnimExtractor.cp.o"			¶
-				"{ObjectDir}SCelExtractor.cp.o"				¶
-				"{ObjectDir}StreamChunks.cp.o"				¶
+OBJECTS		=												--
+				"{ObjectDir}Options.cp.o"					--
+				"{ObjectDir}Main.cp.o"						--
+				"{ObjectDir}TypeID.cp.o"					--
+				"{ObjectDir}AnimExtractor.cp.o"				--
+				"{ObjectDir}Chunk.cp.o"						--
+				"{ObjectDir}ChunkFile.cp.o"					--
+				"{ObjectDir}ChunkQueue.cp.o"				--
+				"{ObjectDir}ChunkSequence.cp.o"				--
+				"{ObjectDir}ChunkSequenceHandler.cp.o"		--
+				"{ObjectDir}Form3DOChunks.cp.o"				--
+				"{ObjectDir}MultiPartFileName.cp.o"			--
+				"{ObjectDir}SAAAnimExtractor.cp.o"			--
+				"{ObjectDir}SAnimExtractor.cp.o"			--
+				"{ObjectDir}SCelExtractor.cp.o"				--
+				"{ObjectDir}StreamChunks.cp.o"				--
 				"{ObjectDir}StreamAnalyzer.cp.o"
 
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Program}
+All				A	{Program}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.cp.o			Ä	.cp
+.cp.o			A	.cp
 	{CC} {COptions} -o {TargDir}{Default}.cp.o {DepDir}{Default}.cp
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
@@ -85,28 +85,28 @@ All				Ä	{Program}
 #	Target build rules
 #####################################
 
-Options.cp				Ä	 Options.h
-TypeID.cp				Ä	 TypeID.h
-AnimExtractor.cp		Ä	 AnimExtractor.h
-Chunk.cp				Ä	 Chunk.h
-ChunkFile.cp			Ä	 ChunkFile.h
-ChunkQueue.cp			Ä	 ChunkQueue.h
-ChunkSequence.cp		Ä	 ChunkSequence.h
-ChunkSequenceHandler.cp	Ä	 ChunkSequenceHandler.h
-Form3DOChunks.cp		Ä	 Form3DOChunks.h
-MultiPartFileName.cp	Ä	 MultiPartFileName.h
-SAAAnimExtractor.cp		Ä	 SAAAnimExtractor.h
-SAnimExtractor.cp		Ä	 SAnimExtractor.h
-SCelExtractor.cp		Ä	 SCelExtractor.h
-StreamChunks.cp			Ä	 StreamChunks.h
-StreamAnalyzer.cp		Ä	 StreamAnalyzer.h
+Options.cp				A	 Options.h
+TypeID.cp				A	 TypeID.h
+AnimExtractor.cp		A	 AnimExtractor.h
+Chunk.cp				A	 Chunk.h
+ChunkFile.cp			A	 ChunkFile.h
+ChunkQueue.cp			A	 ChunkQueue.h
+ChunkSequence.cp		A	 ChunkSequence.h
+ChunkSequenceHandler.cp	A	 ChunkSequenceHandler.h
+Form3DOChunks.cp		A	 Form3DOChunks.h
+MultiPartFileName.cp	A	 MultiPartFileName.h
+SAAAnimExtractor.cp		A	 SAAAnimExtractor.h
+SAnimExtractor.cp		A	 SAnimExtractor.h
+SCelExtractor.cp		A	 SCelExtractor.h
+StreamChunks.cp			A	 StreamChunks.h
+StreamAnalyzer.cp		A	 StreamAnalyzer.h
 
 
-{Program}		ÄÄ	{Program}.make {Program}.r {OBJECTS}
+{Program}		AA	{Program}.make {Program}.r {OBJECTS}
 	Rez  -o {Program} {Program}.r -a -ov
-	{LINK}	{LOptions}						¶
-			-o {Program}					¶
-			{OBJECTS}						¶
+	{LINK}	{LOptions}						--
+			-o {Program}					--
+			{OBJECTS}						--
 			{LIBS}
 	if not `exists {AppsDir}`
 		newFolder {AppsDir}

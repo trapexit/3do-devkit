@@ -3,7 +3,7 @@
  *
  *	Contains:		definitions for MakeName.c
  *
- *	Copyright © 1992-93 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1992-93 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/10/93		jb		New today

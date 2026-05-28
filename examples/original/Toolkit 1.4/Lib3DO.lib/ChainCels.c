@@ -3,7 +3,7 @@
  *
  *	Contains:		Routines to chain together lists of cels.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	02/15/94  Ian	Changed all routines so that NULL pointers are no

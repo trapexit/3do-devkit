@@ -4,7 +4,7 @@
  *	Contains:		wrapper routines for kernel message related
  *services
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	6/1/93		jb		Version 1.2.3

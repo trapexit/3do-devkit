@@ -6,7 +6,7 @@
  *
  *	Written by:		Darren Gibbs
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/27/94		rdg		Version 2.9.6
@@ -386,7 +386,7 @@ StartSAudioChannel (SAudioContextPtr ctx, long channelNumber, Boolean doFlush)
     {
       if (doFlush)
         {
-          /* ¥¥¥ UNSPEAKABLE HACK¥¥¥
+          /* *** UNSPEAKABLE HACK***
            * If we were in the paused state and now are being flushed
            * we have to call ResumeInstrument() first so that the
            * instruments attachments can be properly stopped when.
@@ -584,7 +584,7 @@ StopSAudioChannel (SAudioContextPtr ctx, long channelNumber, Boolean doFlush)
     {
       if (doFlush)
         {
-          /* ¥¥¥ UNSPEAKABLE HACK¥¥¥
+          /* *** UNSPEAKABLE HACK***
            * If we were in the paused state and now are being flushed
            * we have to call ResumeInstrument() first so that the
            * instruments attachments can be properly stopped when.

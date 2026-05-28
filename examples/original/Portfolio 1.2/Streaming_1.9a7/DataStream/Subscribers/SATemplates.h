@@ -7,7 +7,7 @@
  *	Written by:		Darren Gibbs, adapted from the prototype
  *subscriber by Joe Buczek.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	1/20/94		rdg		make C++ compatible

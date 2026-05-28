@@ -6,7 +6,7 @@
  *	Written by:		Neil Cormia (variations on a theme by Joe
  *Buczek)
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	1/20/94		rdg		make C++ compatible

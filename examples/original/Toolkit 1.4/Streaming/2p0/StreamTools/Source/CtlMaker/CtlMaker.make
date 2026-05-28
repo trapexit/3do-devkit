@@ -3,7 +3,7 @@
 #   Sources:    CtlMaker.c
 #   Created:    Saturday, July 10, 1993 10:56:34 PM
 #
-#	Copyright © 1993-4 The 3DO Company
+#	Copyright (c) 1993-4 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -20,18 +20,18 @@ OBJECTS = CtlMaker.c.o
 DEBUGOPTIONS = 
 
 
-CtlMaker ÄÄ CtlMaker.make CtlMaker.r {OBJECTS}
+CtlMaker AA CtlMaker.make CtlMaker.r {OBJECTS}
 	Rez  -o CtlMaker CtlMaker.r -a -ov
-	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		#"{CLibraries}"CSANELib.o ¶
-		#"{CLibraries}"Math.o ¶
-		#"{CLibraries}"Complex.o ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"Runtime.o ¶
-		"{Libraries}"Interface.o ¶
-		#"{Libraries}"ToolLibs.o ¶
+	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		#"{CLibraries}"CSANELib.o --
+		#"{CLibraries}"Math.o --
+		#"{CLibraries}"Complex.o --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"Runtime.o --
+		"{Libraries}"Interface.o --
+		#"{Libraries}"ToolLibs.o --
 		-o CtlMaker
-CtlMaker.c.o Ä CtlMaker.make CtlMaker.c
+CtlMaker.c.o A CtlMaker.make CtlMaker.c
 	 C {DEBUGOPTIONS} -r  CtlMaker.c

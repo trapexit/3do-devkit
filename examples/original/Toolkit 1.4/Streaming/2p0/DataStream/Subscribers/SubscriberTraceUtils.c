@@ -5,7 +5,7 @@
  *
  *	Written by:		Darren Gibbs.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	3/29/94		rdg		Version 1.4

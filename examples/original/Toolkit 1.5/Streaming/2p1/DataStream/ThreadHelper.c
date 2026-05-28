@@ -4,7 +4,7 @@
  *	Contains:		wrapper routines for kernel thread related
  *services
  *
- *	Copyright © 1992-3 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1992-3 The 3DO Company. All Rights Reserved.
  *
  *	History:
  * 	  7/29/94	dtc		Version 2.0.1d2

@@ -5,7 +5,7 @@
  *
  *	Written by:		Neil Cormia
  *
- *	Copyright й 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	 09/07/94	dtc		Version 2.0.1d4
@@ -173,7 +173,7 @@ AllocMovieBuff (ImageDesc *imagePtr, CinePakHeaderPtr pCPHeader)
 
   imagePtr->rowBytes = imagePtr->width * BYTES_PER_PIXEL;
 
-  /* еее We need to make sure that we have an even number of rows */
+  /* *** We need to make sure that we have an even number of rows */
   movieFrameBuff = (ubyte *)NewPtr (imagePtr->rowBytes * imagePtr->height,
                                     MEMTYPE_ANY | (MEMTYPE_FILL | 0x00));
 

@@ -3,7 +3,7 @@
 #
 #	Contains:	make file for building DS.lib
 #
-#	Copyright © 1993 The 3DO Company
+#	Copyright (c) 1993 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -46,46 +46,46 @@ LOptions		= -c -o
 #####################################
 #		Object files
 #####################################
-OBJECTS			=	"{ObjectDir}DataStream.c.o"		¶
-					"{ObjectDir}DataStreamLib.c.o"	¶
-					"{ObjectDir}DataStreamDebug.c.o"	¶
-					"{ObjectDir}MemPool.c.o"		¶
-					"{ObjectDir}MsgUtils.c.o"		¶
-					"{ObjectDir}ThreadHelper.c.o"	¶
-					"{ObjectDir}SemHelper.c.o"		¶
+OBJECTS			=	"{ObjectDir}DataStream.c.o"		--
+					"{ObjectDir}DataStreamLib.c.o"	--
+					"{ObjectDir}DataStreamDebug.c.o"	--
+					"{ObjectDir}MemPool.c.o"		--
+					"{ObjectDir}MsgUtils.c.o"		--
+					"{ObjectDir}ThreadHelper.c.o"	--
+					"{ObjectDir}SemHelper.c.o"		--
 					"{ObjectDir}MakeName.c.o"
 
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Library}.lib
+All				A	{Library}.lib
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 #####################################
 #	Target build rules
 #####################################
-{Library}.lib		ÄÄ	{Library}.lib.make {OBJECTS}
-	{LIBRARIAN}	{LOptions}			¶
-				{Library}.lib		¶
+{Library}.lib		AA	{Library}.lib.make {OBJECTS}
+	{LIBRARIAN}	{LOptions}			--
+				{Library}.lib		--
 				{OBJECTS}
 
 #####################################
 #	Include file dependencies
 #####################################
 
-{ObjectDir}DataStream.c.o		Ä	DataStream.h MsgUtils.h MemPool.h SemHelper.h ThreadHelper.h
-{ObjectDir}DataStreamLib.c.o	Ä	DataStreamLib.h DataStream.h MsgUtils.h MemPool.h
-{ObjectDir}DataStreamDebug.c.o	Ä	DataStreamDebug.h DataStream.h
-{ObjectDir}MemPool.c.o			Ä	MemPool.h
-{ObjectDir}MsgUtils.c.o			Ä	MsgUtils.h
-{ObjectDir}ThreadHelper.c.o		Ä	ThreadHelper.h MakeName.h
-{ObjectDir}SemHelper.c.o		Ä	SemHelper.h ThreadHelper.h MakeName.h
-{ObjectDir}MakeName.c.o			Ä	MakeName.h
+{ObjectDir}DataStream.c.o		A	DataStream.h MsgUtils.h MemPool.h SemHelper.h ThreadHelper.h
+{ObjectDir}DataStreamLib.c.o	A	DataStreamLib.h DataStream.h MsgUtils.h MemPool.h
+{ObjectDir}DataStreamDebug.c.o	A	DataStreamDebug.h DataStream.h
+{ObjectDir}MemPool.c.o			A	MemPool.h
+{ObjectDir}MsgUtils.c.o			A	MsgUtils.h
+{ObjectDir}ThreadHelper.c.o		A	ThreadHelper.h MakeName.h
+{ObjectDir}SemHelper.c.o		A	SemHelper.h ThreadHelper.h MakeName.h
+{ObjectDir}MakeName.c.o			A	MakeName.h

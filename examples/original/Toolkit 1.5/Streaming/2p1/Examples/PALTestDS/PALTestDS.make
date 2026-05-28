@@ -3,7 +3,7 @@
 #
 #	Contains:	make file for building TestDS
 #
-#	Copyright © 1993-4 The 3DO Company
+#	Copyright (c) 1993-4 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -36,7 +36,7 @@
 #
 #	To regenerate the .c.o -> .h file dependencies, get write access to this
 #	make file and execute the following MPW code:
-#	make Depends -f PALTestDS.make  ·· Dev:Null > temp.makeout; temp.makeout ·· Dev:Null; delete -i temp.makeout
+#	make Depends -f PALTestDS.make  ** Dev:Null > temp.makeout; temp.makeout ** Dev:Null; delete -i temp.makeout
 #
 ##########################################################################
 
@@ -73,19 +73,19 @@ SOptions		= -bi -g -i "{3DOIncludes}"
 #		Object files
 #####################################
 
-LIBS			=	¶
-					"{SubscriberDir}subscriber.lib"		¶
-					"{StreamDir}dataacq.lib"	¶
-					"{StreamDir}ds.lib"			¶
-					"{3DOLibs}codec.lib" ¶
-					"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}music.lib"		¶
-					"{3DOLibs}input.lib"			¶
-					"{3DOLibs}clib.lib"			¶
+LIBS			=	--
+					"{SubscriberDir}subscriber.lib"		--
+					"{StreamDir}dataacq.lib"	--
+					"{StreamDir}ds.lib"			--
+					"{3DOLibs}codec.lib" --
+					"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}music.lib"		--
+					"{3DOLibs}input.lib"			--
+					"{3DOLibs}clib.lib"			--
 					"{3DOLibs}swi.lib"
 
 OBJECTS			=	"{ObjectDir}{Program}.c.o"
@@ -94,55 +94,55 @@ OBJECTDEPENDS			=	"{ObjectDir}{Program}.c.depends"
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Program}
+All				A	{Program}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {DepDir}{Default}.c -o {ObjectDir}{Default}.c.o  {COptions}
 
-.c.depends		Ä	.c
-	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c -M -c ¶
-		| search -q -r "{3DOIncludes}" ¶
-		| StreamEdit -e "1 delete; 1,$ Replace /{ObjectDir}/ '¶"¶{ObjectDir¶}¶"'; Replace /Ä/ '	Ä'" ¶
+.c.depends		A	.c
+	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c -M -c --
+		| search -q -r "{3DOIncludes}" --
+		| StreamEdit -e "1 delete; 1,$ Replace /{ObjectDir}/ '--"--{ObjectDir--}--"'; Replace /A/ '	A'" --
 		>> "{MakeFileName}"
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {ObjectDir}{Default}.s.o {DepDir}{Default}.s
 
 #####################################
 #	Dependency re-building rules
 #	The .c.depends rule asks the compiler to generate source file dependencies, then
 #	removes the first line (.c.o dependency on .c), substitutes a symbolic reference
-#	to "{ObjectDir}", puts in a tab before the Äs, and appends the result to this make
+#	to "{ObjectDir}", puts in a tab before the As, and appends the result to this make
 #	file. The following rules setup and sequence the work.
 #
 #	HOW TO USE IT: Get write access to this make file then make "depends".
 #	This will replace the include file dependencies lines at the end of this makefile.
 #####################################
-Depends					Ä	DeleteOldDependencies {ObjectDepends} SaveNewMakefile
+Depends					A	DeleteOldDependencies {ObjectDepends} SaveNewMakefile
 
-DeleteOldDependencies	Ä
+DeleteOldDependencies	A
 	# This is a workaround to make it work with the latest version of Make Tool (MPW V3.4a4).
 	# Without the next line, find /.../ will break (MakeFileName) isn't resolved.
 	set MakeFileName "{MakeFileName}"
 	Open "{MakeFileName}"
-	Find ¥ "{MakeFileName}"
-	Find /¥#¶tInclude file dependencies ¶(DonÕt change this line or put anything after this section.¶)°/ "{MakeFileName}"
-	Find /¥[Â#]/  "{MakeFileName}"
-	Replace Æ¤:° "¶n" "{MakeFileName}"
+	Find * "{MakeFileName}"
+	Find /*#--tInclude file dependencies --(DonOt change this line or put anything after this section.--) deg/ "{MakeFileName}"
+	Find /*[A#]/  "{MakeFileName}"
+	Replace AE: deg "--n" "{MakeFileName}"
 
-SaveNewMakefile			Ä
+SaveNewMakefile			A
 	Save "{MakeFileName}"
 
 #####################################
 #	Target build rules
 #####################################
-{Program}		Ä	{Program}.make {OBJECTS} {LIBS}
-	{LINK}	{LOptions}					¶
-			-o {Program}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Program}		A	{Program}.make {OBJECTS} {LIBS}
+	{LINK}	{LOptions}					--
+			-o {Program}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Program} -c 'EaDJ' -t 'PROJ'
 	modbin {Program} -stack 0x4000 -debug
@@ -153,42 +153,42 @@ SaveNewMakefile			Ä
 	move -y {Program} "{AppsDir}"{Program}
 
 #####################################
-#	Include file dependencies (DonÕt change this line or put anything after this section.)
+#	Include file dependencies (DonOt change this line or put anything after this section.)
 #####################################
 
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataStreamDebug.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataStream.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:MsgUtils.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:MemPool.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:SubsChunkCommon.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:HaltChunk.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DSStreamHeader.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataStreamLib.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataStream.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataAcq.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:ItemPool.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:MarkerChunk.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SubscriberUtils.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataStreamLib.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:SubsChunkCommon.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SAnimSubscriber.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SubscriberUtils.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataStreamLib.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:CPakSubscriber.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SubscriberUtils.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:codec.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataStreamLib.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SAudioSubscriber.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:DataStream.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SubscriberUtils.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SAStreamChunks.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SubscriberUtils.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SAChannel.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:MemPool.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SubscriberUtils.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SATemplates.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SAStreamChunks.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SAControlMsgs.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:ControlSubscriber.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:Subscribers:Includes:SubscriberUtils.h
-"{ObjectDir}"PALTestDS.c.o	Ä	:::DataStream:ItemPool.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataStreamDebug.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataStream.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:MsgUtils.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:MemPool.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:SubsChunkCommon.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:HaltChunk.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DSStreamHeader.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataStreamLib.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataStream.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataAcq.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:ItemPool.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:MarkerChunk.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SubscriberUtils.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataStreamLib.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:SubsChunkCommon.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SAnimSubscriber.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SubscriberUtils.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataStreamLib.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:CPakSubscriber.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SubscriberUtils.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:codec.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataStreamLib.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SAudioSubscriber.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:DataStream.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SubscriberUtils.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SAStreamChunks.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SubscriberUtils.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SAChannel.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:MemPool.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SubscriberUtils.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SATemplates.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SAStreamChunks.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SAControlMsgs.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:ControlSubscriber.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:Subscribers:Includes:SubscriberUtils.h
+"{ObjectDir}"PALTestDS.c.o	A	:::DataStream:ItemPool.h

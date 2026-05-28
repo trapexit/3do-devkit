@@ -27,7 +27,7 @@
  */
  *							+-------------------+
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	9/14/93		jb		New today

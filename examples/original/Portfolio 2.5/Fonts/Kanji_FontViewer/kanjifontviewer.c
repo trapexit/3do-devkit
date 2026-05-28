@@ -447,8 +447,8 @@ main (int argc, char *argv[])
   Text1_ptr = (uint8 *)" !\"#$%&'()*+,-./"
                        "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
                        "abcdefghijklmnopqrstuvwxyz{|}~";
-  Text2_ptr = (uint8 *)"╕╠╡Ё╢╣тужб╠╡Ё╢╣╤╥╦╧╨╩╪╫╬©юабцдефгхийклмнопярстужвьызшэ"
-                       "щйъйч╒ё╓║л╖л╗лл╙л╚╥╛╥╜╥╝ю╞адч╞д";
+  Text2_ptr = (uint8 *)"╕╠╡Ё'╣туOб╠╡Ё'╣--*,╧o"╪╫╬?юабцAAфгхEEклIноDярOтуOxьыUшU"
+                       "щEъEч╒ё╓!л╖л"ллaл"*not *╜*(r)ю-аAч-A";
 
   if (gIdleTimer)
     GetTime (gIdleTimer, 1, &tv);

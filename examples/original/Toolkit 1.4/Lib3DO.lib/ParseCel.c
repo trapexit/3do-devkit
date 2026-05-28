@@ -4,7 +4,7 @@
  *	Contains:		Routine to parse a cel previously loaded into a
  *buffer, creating a valid CCB with PDAT and PLUT attached to it.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/10/93  Ian	When multiple CCBs/PDATs/PLUTs appear in the input

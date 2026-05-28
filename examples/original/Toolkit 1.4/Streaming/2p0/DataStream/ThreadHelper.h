@@ -3,7 +3,7 @@
  *
  *	Contains:		definitions for ThreadHelper.c
  *
- *	Copyright © 1992-93 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1992-93 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/10/93		jb		Include MakeName.h because we now use

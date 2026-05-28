@@ -7,7 +7,7 @@
 #	Written by:	Joe Buczek
 #				( Freely adapted for JumpStart by Charlie Eckhaus )
 #
-#	Copyright:	© 1993-94 by The 3DO Company. All rights reserved.
+#	Copyright:	(c) 1993-94 by The 3DO Company. All rights reserved.
 #				This material constitutes confidential and proprietary
 #				information of the 3DO Company and shall not be used by
 #				any Person or for any purpose except as expressly
@@ -36,9 +36,9 @@ DebugFlag		=	1
 #####################################
 CDebugOptions	= -g
 #CDebugOptions	=
-COptions		= {CDebugOptions} -fa -zps0 -za1 -i "{3DOIncludes}" ¶
-					-d DEBUG={DebugFlag} ¶
-					-d kBuildDate="¶"`date -a`¶""
+COptions		= {CDebugOptions} -fa -zps0 -za1 -i "{3DOIncludes}" --
+					-d DEBUG={DebugFlag} --
+					-d kBuildDate="--"`date -a`--""
 
 SDebugOptions	= -g
 #SDebugOptions	=
@@ -51,41 +51,41 @@ LOptions		= {LDebugOptions} -aif -r -b 0x00
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}graphics.lib"	¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}filesystem.lib"		¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}clib.lib"		¶
+LIBS			=	"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}graphics.lib"	--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}filesystem.lib"		--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}clib.lib"		--
 					"{3DOLibs}swi.lib"
 
 # NOTE: Add object files here...
-OBJECTS			=	"{ObjectDir}{Application}.c.o"	¶
+OBJECTS			=	"{ObjectDir}{Application}.c.o"	--
 					"{ObjectDir}JSVDLUtil.c.o"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Application}
+All				A	{Application}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {DepDir}{Default}.c {COptions} -o {TargDir}{Default}.c.o 
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {DepDir}{Default}.s {SOptions} -o {TargDir}{Default}.s.o
 
 
 #####################################
 #	Target build rules
 #####################################
-{Application}		ÄÄ	{Application}.make {LIBS} {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o {Application}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Application}		AA	{Application}.make {LIBS} {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o {Application}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Application} -c 'EaDJ' -t 'PROJ'
 	modbin {Application} -stack 4000 -debug
@@ -98,6 +98,6 @@ All				Ä	{Application}
 #####################################
 #	Include file dependencies
 #####################################
-{ObjectDir}JSVDLUtil.c.o	Ä {Application}.make JSVDLUtil.h
+{ObjectDir}JSVDLUtil.c.o	A {Application}.make JSVDLUtil.h
 
-{ObjectDir}{Application}.c.o	Ä {Application}.make "{3DOLibs}"Lib3DO.lib JSVDLUtil.h {Application}.h
+{ObjectDir}{Application}.c.o	A {Application}.make "{3DOLibs}"Lib3DO.lib JSVDLUtil.h {Application}.h

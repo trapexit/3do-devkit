@@ -3,7 +3,7 @@
 #
 #	Contains:	Script for building the Subscriber library
 #
-#	Copyright © 1994 The 3DO Company
+#	Copyright (c) 1994 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -64,9 +64,9 @@
 		# Delete object files in each directory.
 		Begin
 				For SubsDir in `Files -d`
-				Delete -y -i "{SubsDir}"Å.o
+				Delete -y -i "{SubsDir}"A.o
 			End
-		End ·· Dev:Null
+		End ** Dev:Null
 	End
 
 #####################################
@@ -78,31 +78,31 @@
 	
 		# Get the Subscriber name
 	
-		(Evaluate "{SubsDir}" =~ /Å:(Å)¨1:/ ) ·· Dev:Null
-		Set SubsName "{¨1}"
+		(Evaluate "{SubsDir}" =~ /A:(A)"1:/ ) ** Dev:Null
+		Set SubsName "{"1}"
 	
 		# Build the Subscribers and utilities
 	
-		If "{SubsName}" != "Includes" AND  "{SubsName}" != "Objects"	¶
+		If "{SubsName}" != "Includes" AND  "{SubsName}" != "Objects"	--
 			AND "{SubsName}" != CPakSubscriberS
 		
 			Echo "Building {SubsName} ..."
 
 			Directory "{SubsDir}"
-			make {SubsName} -f {SubsName}.make -d GlobalCOptions="{GlobalCOptions}" ¶
+			make {SubsName} -f {SubsName}.make -d GlobalCOptions="{GlobalCOptions}" --
 						-d RelBranchSwitch="{RelBranchSwitch}" > {SubsName}.makeout
 			{SubsName}.makeout
 			Delete -y {SubsName}.makeout
 			
-			For HdrFile in `Files Å.h`
+			For HdrFile in `Files A.h`
 				# Make sure there's a copy of the header file in the
 				# includes folder
-				If ! `exists "::Includes:{HdrFile}" ³³ Dev:Null`
+				If ! `exists "::Includes:{HdrFile}" 33 Dev:Null`
 					echo "Copying {HdrFile} into '::Includes:' ..."
 					Duplicate "{HdrFile}" "::Includes:"
 					
 				# Make sure no one modified the public copy of the header files
-				Else If `newer ::Includes:{HdrFile} {HdrFile} ³³ Dev:Null` 
+				Else If `newer ::Includes:{HdrFile} {HdrFile} 33 Dev:Null` 
 					beep C,60 C,60
 					echo " Warning  error: "
 					echo "   The copy of {HdrFile} in the public Includes folder "
@@ -135,13 +135,13 @@
 	echo -n OBJECTS		=										> {Library}.lib.make
 	
 	For ObjFiles in `Files -s {ObjectDir}`
-		echo "	" {ObjectDir}{ObjFiles} "			"'¶'		>> {Library}.lib.make
+		echo "	" {ObjectDir}{ObjFiles} "			"'--'		>> {Library}.lib.make
 	End
 
 	echo  "		"												>> {Library}.lib.make
 	echo  "		"												>> {Library}.lib.make
 	
-	echo {Library}.lib		ÄÄ	'{OBJECTS}' 					>> {Library}.lib.make
+	echo {Library}.lib		AA	'{OBJECTS}' 					>> {Library}.lib.make
 	echo "	"	armlib	-c -o	{Library}.lib	'{OBJECTS}'		>> {Library}.lib.make
 
 	make {Library}.lib -f {Library}.lib.make 					> {Library}.lib.makeout

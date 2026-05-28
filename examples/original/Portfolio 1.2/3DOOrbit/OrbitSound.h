@@ -5,7 +5,7 @@
 
         Written by:	Jay Moreland,lynn ackler,philippe cassereau
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -24,7 +24,7 @@
  *
  *	Contains:		definitions for Orbit sound support code
  *
- *	Copyright © 1992 The 3DO Company
+ *	Copyright (c) 1992 The 3DO Company
  *
  *	All rights reserved. This material constitutes confidential and
  *proprietary information of the 3DO Company and shall not be used by any

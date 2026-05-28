@@ -13,7 +13,7 @@
  *					 with a few clever ideas courtesy of Phil
  *Burk
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *
@@ -73,7 +73,7 @@ typedef struct MIDIFileParser
 {
   /* Parser context variables
    *
-   * ¥¥THESE ARE PRIVATE!!!!¥¥
+   * **THESE ARE PRIVATE!!!!**
    */
   long bytesLeftInChunk; /* Bytes left in current chunk */
 
@@ -90,7 +90,7 @@ typedef struct MIDIFileParser
 
   /* Callback functions for event processing.
    *
-   * ¥¥THESE ARE PUBLIC!!!!¥¥
+   * **THESE ARE PUBLIC!!!!**
    *
    * IMPORTANT: See the notes at the end of this
    * header file for information about each
@@ -203,7 +203,7 @@ Err TermMIDIFileParser (MIDIFileParserPtr mfp);
  * associated with them and so the comments below explain some
  * of the funkyness of the MIDI data.
  *
- * ¥Callback: cb_Sysex()
+ * *Callback: cb_Sysex()
  *
  *  Comments:
  *   This is called whenever a sysex event is parsed. Both F0 and F7
@@ -211,7 +211,7 @@ Err TermMIDIFileParser (MIDIFileParserPtr mfp);
  *	 are passed the byte so you can do whatever you want with the
  *distinction.
  *
- * ¥Callback: cb_MEv_SeqNum()
+ * *Callback: cb_MEv_SeqNum()
  *
  *  Comments:
  *
@@ -220,7 +220,7 @@ Err TermMIDIFileParser (MIDIFileParserPtr mfp);
  *   This value only applies to format 2 MIDIFiles where it is used to
  *   uniquely identify each MIDI pattern in the file.
  *
- * ¥Callback: cb_MEv_SMPTE()
+ * *Callback: cb_MEv_SMPTE()
  *
  *  Track start time in SMPTE format
  *
@@ -229,7 +229,7 @@ Err TermMIDIFileParser (MIDIFileParserPtr mfp);
  *
  *   hours, minutes, seconds, frames, fractional-frames
  *
- * ¥Callback: cb_MEv_TimeSig()
+ * *Callback: cb_MEv_TimeSig()
  *
  *  Time signature change.
  *
@@ -248,7 +248,7 @@ Err TermMIDIFileParser (MIDIFileParserPtr mfp);
  *   Basically you take the number 2 and shift it left by
  *   the MIDIFile's denominator value - 1. Fun Fun...
  *
- * ¥Callback: cb_MEv_KeySig();
+ * *Callback: cb_MEv_KeySig();
  *
  *  Key Signature change.
  *
@@ -262,7 +262,7 @@ Err TermMIDIFileParser (MIDIFileParserPtr mfp);
  *       0 = Major Key
  *       1 = Minor Key
  *
- * ¥Callback: cb_MEv_SetTempo();
+ * *Callback: cb_MEv_SetTempo();
  *
  *  Set tempo event.
  *
@@ -271,7 +271,7 @@ Err TermMIDIFileParser (MIDIFileParserPtr mfp);
  *
  *   Value is usecs per quarter note.
  *
- * ¥Callback: cb_MEv_Text();
+ * *Callback: cb_MEv_Text();
  *
  *  Text Meta Event.
  *
@@ -283,11 +283,11 @@ Err TermMIDIFileParser (MIDIFileParserPtr mfp);
  *   The string in the MIDIFile doesn't contain a null terminator
  *   so the parser adds one for you to make life a little easier.
  *
- * ¥Callback: cb_RT_Clock();
- * ¥Callback: cb_RT_Start();
- * ¥Callback: cb_RT_Continue();
- * ¥Callback: cb_RT_Stop();
- * ¥Callback: cb_RT_ActiveSense();
+ * *Callback: cb_RT_Clock();
+ * *Callback: cb_RT_Start();
+ * *Callback: cb_RT_Continue();
+ * *Callback: cb_RT_Stop();
+ * *Callback: cb_RT_ActiveSense();
  *
  *  Comments:
  *   These are unlikeley to be found in MIDIFiles but it's possible.

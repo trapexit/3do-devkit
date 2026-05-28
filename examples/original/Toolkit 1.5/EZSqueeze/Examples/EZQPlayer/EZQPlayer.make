@@ -3,7 +3,7 @@
 #
 #	Contains:	make file for building EZQPlayer
 #
-#	Copyright © 1993-4 The 3DO Company
+#	Copyright (c) 1993-4 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -58,50 +58,50 @@ SOptions		= -bi -g -i "{3DOIncludes}"
 #		Object files
 #####################################
 
-LIBS			=	"{SubscriberDir}subscriber.lib"		¶
-					"{StreamDir}dataacq.lib"	¶
-					"{StreamDir}ds.lib"			¶
-					":ezqcodec.lib" 			¶
-					"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}music.lib"		¶
-					"{3DOLibs}input.lib"			¶
-					"{3DOLibs}clib.lib"			¶
+LIBS			=	"{SubscriberDir}subscriber.lib"		--
+					"{StreamDir}dataacq.lib"	--
+					"{StreamDir}ds.lib"			--
+					":ezqcodec.lib" 			--
+					"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}music.lib"		--
+					"{3DOLibs}input.lib"			--
+					"{3DOLibs}clib.lib"			--
 					"{3DOLibs}swi.lib"
 
-OBJECTS			=	"{ObjectDir}{Program}.c.o"	¶
-					"{ObjectDir}PrepareStream.c.o"	¶
-					"{ObjectDir}PlayEZQStream.c.o"	¶
-					"{ObjectDir}EZQTask.c.o"	¶
-					"{ObjectDir}SpawnThread.c.o"	¶
-					"{ObjectDir}UserControls.c.o"	¶
+OBJECTS			=	"{ObjectDir}{Program}.c.o"	--
+					"{ObjectDir}PrepareStream.c.o"	--
+					"{ObjectDir}PlayEZQStream.c.o"	--
+					"{ObjectDir}EZQTask.c.o"	--
+					"{ObjectDir}SpawnThread.c.o"	--
+					"{ObjectDir}UserControls.c.o"	--
 					"{ObjectDir}JoyPad.c.o"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Program}
+All				A	{Program}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {DepDir}{Default}.c -o {ObjectDir}{Default}.c.o  {COptions}
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {ObjectDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Program}		Ä	{Program}.make {OBJECTS} {LIBS}
-	{LINK}	{LOptions}					¶
-			-o {Program}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Program}		A	{Program}.make {OBJECTS} {LIBS}
+	{LINK}	{LOptions}					--
+			-o {Program}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Program} -c 'EaDJ' -t 'PROJ'
 	modbin {program} -stack 0x4000 -debug
@@ -114,6 +114,6 @@ All				Ä	{Program}
 #####################################
 #	Include file dependencies
 #####################################
-{ObjectDir}PrepareStream.c.o		Ä  "PrepareStream.h"
-{ObjectDir}PlayEZQStream.c.o		Ä  "PlayEZQStream.h"
-{ObjectDir}JoyPad.c.o		Ä  "JoyPad.h"
+{ObjectDir}PrepareStream.c.o		A  "PrepareStream.h"
+{ObjectDir}PlayEZQStream.c.o		A  "PlayEZQStream.h"
+{ObjectDir}JoyPad.c.o		A  "JoyPad.h"

@@ -6,7 +6,7 @@
  *
  *	Written by:		Darren Gibbs.
  *
- *	Copyright © 1993-94 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993-94 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/27/94		rdg		Add pause code

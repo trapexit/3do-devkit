@@ -11,7 +11,7 @@
 #					"clean"		deletes all object files before
 #								building everything
 #
-#	Copyright © 1992 The 3DO Company
+#	Copyright (c) 1992 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -59,18 +59,18 @@ If "{1}" == "clean"
 		# Delete all subscriber object files
 		delete -i "{DSFolder}"DataStream:Subscribers:subscriber.lib
 
-		delete -i "{DSFolder}"DataStream:Subscribers:Objects:Å
+		delete -i "{DSFolder}"DataStream:Subscribers:Objects:A
 
 		# Delete all datastream and dataacq object files
 		delete -i "{DSFolder}"DataStream:dataacq.lib
 		delete -i "{DSFolder}"DataStream:ds.lib
 
-		delete -i "{DSFolder}"DataStream:Objects:Å
+		delete -i "{DSFolder}"DataStream:Objects:A
 
 		# Restore the state of {Exit}
 		set Exit {saveExit}
 
-	End ·· Dev:Null
+	End ** Dev:Null
 End
 
 #

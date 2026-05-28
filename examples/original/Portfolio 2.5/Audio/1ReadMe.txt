@@ -9,21 +9,21 @@ in question.
 
 About the AIFF Samples folder
 
-Many of the examples in the Audio folder require sound samples from the “AIFF 
-Samples” folder in order to run.  This folder was most recently distributed on the 
+Many of the examples in the Audio folder require sound samples from the OAIFF 
+SamplesO folder in order to run.  This folder was most recently distributed on the 
 Toolkit 1.5 CD.  To use these samples, it is necessary to copy the AIFF Samples 
 folder from your Toolkit CD to your working /remote folder.  
 
-First, drag the “AIFF Samples” folder to the “remote” folder on your hard disk.  
+First, drag the OAIFF SamplesO folder to the OremoteO folder on your hard disk.  
 Be patient, as the AIFF Samples folder is very large.  Then, rename the copied 
-“AIFF Samples” folder to  “aiff” .  To inform the 3DO Debugger about the 
+OAIFF SamplesO folder to  OaiffO .  To inform the 3DO Debugger about the 
 location of the AIFF samples, type the following line in at the 3DO-> prompt:
 
 alias samples /remote/aiff
 
 You can now move the audio example executables and support files into the 
 /remote folder, and run them.  Each of the example programs will attempt to 
-load the AIFF samples it needs via the alias “$samples”.
+load the AIFF samples it needs via the alias O$samplesO.
 
 To automate this process, insert that line into the AppStartup file, which resides 
 in your remote folder.
@@ -38,9 +38,9 @@ makefile will play a tune when the make is completed.
 
 Talking to us
 
-We’re always interested in improving our examples.  If you have specific 
+WeOre always interested in improving our examples.  If you have specific 
 comments or questions about these example programs, a good way to contact us 
-is via 3DO’s InfoServer BBS.
+is via 3DOOs InfoServer BBS.
 
 Examples:Audio
 

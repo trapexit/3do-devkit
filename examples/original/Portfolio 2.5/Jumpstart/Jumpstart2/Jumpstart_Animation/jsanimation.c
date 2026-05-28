@@ -319,7 +319,7 @@ Cleanup (void)
                 - Disposes the screen context.
                 - Kills the control pad utility.
 
-        All of the Unload… calls check for a NULL parameter.
+        All of the UnloadE calls check for a NULL parameter.
 */
 {
   KillControlPad ();

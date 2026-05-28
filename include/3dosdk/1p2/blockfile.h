@@ -4,7 +4,7 @@
  *	Contains:		definitions for BlockFile.c, block oriented file access routines.
  *					Also, definitions for LoadFile.c, the fast file loader.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/29/93 	ian 	Added LoadFile() and UnloadFile() prototypes.

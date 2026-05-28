@@ -7,7 +7,7 @@
  *
  *	Written by:		Darren Gibbs
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	6/8/94		fyp		Version 2.9.2

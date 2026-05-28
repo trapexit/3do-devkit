@@ -9,7 +9,7 @@
 #
 #	Usage:		BuildDSShuttle { root folder | "" }
 #
-#	Copyright © 1992-1994 The 3DO Company
+#	Copyright (c) 1992-1994 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -60,19 +60,19 @@ Begin
 	# Delete all subscriber object files
 	delete -i "{DSFolder}"DataStream:Subscribers:subscriberShuttle.lib
 
-	delete -i "{DSFolder}"DataStream:Subscribers:Objects:Å
+	delete -i "{DSFolder}"DataStream:Subscribers:Objects:A
 
 	# Delete all datastream and dataacq object files
 	delete -i "{DSFolder}"DataStream:dataacqShuttle.lib
 	delete -i "{DSFolder}"DataStream:dsShuttle.lib
 
 
-	delete -i "{DSFolder}"DataStream:Objects:Å
+	delete -i "{DSFolder}"DataStream:Objects:A
 
 	# Restore the state of {Exit}
 	set Exit {saveExit}
 
-End ·· Dev:Null
+End ** Dev:Null
 
 #
 # Build the ShuttleSubscriber library
@@ -101,9 +101,9 @@ End ·· Dev:Null
 #
 # Clean up the objects folder
 #
-	delete -i "{DSFolder}"DataStream:Subscribers:Objects:Å
+	delete -i "{DSFolder}"DataStream:Subscribers:Objects:A
 
-	delete -i "{DSFolder}"DataStream:Objects:Å
+	delete -i "{DSFolder}"DataStream:Objects:A
 
 
 #

@@ -5,7 +5,7 @@
 #
 #	Written by:	Joe Buczek
 #
-#	Copyright:	© 1993 by The 3DO Company. All rights reserved.
+#	Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
 #				This material constitutes confidential and proprietary
 #				information of the 3DO Company and shall not be used by
 #				any Person or for any purpose except as expressly
@@ -56,37 +56,37 @@ LOptions		= {LDebugOptions} -aif -r -b 0x00
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}clib.lib"		¶
+LIBS			=	"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}clib.lib"		--
 					"{3DOLibs}swi.lib"
 
 # NOTE: Add object files here...
-OBJECTS			=	"{ObjectDir}{Application}.c.o"¶
+OBJECTS			=	"{ObjectDir}{Application}.c.o"--
 					"{ObjectDir}SpawnThread.c.o"
 
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Application}
+All				A	{Application}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	ARMcc {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	ARMAsm {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Application}		ÄÄ	{Application}.make {OBJECTS}
-	ARMlink {LOptions}					¶
-			-o {Application}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Application}		AA	{Application}.make {OBJECTS}
+	ARMlink {LOptions}					--
+			-o {Application}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Application} -c 'EaDJ' -t 'PROJ'
 	modbin {Application} -stack 3000
@@ -96,5 +96,5 @@ All				Ä	{Application}
 #####################################
 #	Include file dependencies
 #####################################
-#{Application}.c		Ä	{Application}.h 
-SpawnThread.c	Ä	SpawnThread.h 
+#{Application}.c		A	{Application}.h 
+SpawnThread.c	A	SpawnThread.h 

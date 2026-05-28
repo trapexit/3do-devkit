@@ -8,18 +8,18 @@ OBJECTS = ppmto3DO.c.o
 
 
 
-ppmto3DO ÄÄ ppmto3DO.make {OBJECTS}
-	Link -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		#"{CLibraries}"CSANELib.o ¶
-		#"{CLibraries}"Math.o ¶
-		#"{CLibraries}"Complex.o ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"Runtime.o ¶
-		"{Libraries}"Interface.o ¶
-		#"{Libraries}"ToolLibs.o ¶
+ppmto3DO AA ppmto3DO.make {OBJECTS}
+	Link -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		#"{CLibraries}"CSANELib.o --
+		#"{CLibraries}"Math.o --
+		#"{CLibraries}"Complex.o --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"Runtime.o --
+		"{Libraries}"Interface.o --
+		#"{Libraries}"ToolLibs.o --
 		-o ppmto3DO
 
-ppmto3DO.c.o Ä ppmto3DO.make ppmto3DO.c
+ppmto3DO.c.o A ppmto3DO.make ppmto3DO.c
 	 C -warnings off -r  ppmto3DO.c

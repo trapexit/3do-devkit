@@ -5,7 +5,7 @@
 
         Written by:	Bill Duvall
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -29,7 +29,7 @@
    to exit the EventBroker gracefully
                  <3>	 3/23/93	JAY		add FindMathFolio() to
    startup for Cardinal <2>	 3/17/93	JAY
-   ¥'lists.h' to 'list.h' for Cardinal build
+   *'lists.h' to 'list.h' for Cardinal build
                  <1>	 3/17/93	JAY		This is the 2B1 version
    being check in for Cardinal build
                  <0>	 1/6/92		WSD		1.0 release

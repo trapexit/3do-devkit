@@ -12,7 +12,7 @@
  *
  *	Written by:		Darren Gibbs
  *
- *	Copyright й 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *  09/01/94	dtc		Replaced kprintf with printf and changed
@@ -355,7 +355,7 @@ main (int argc, char **argv)
   status = CloseProtoSubscriber ();
   CHECK_DS_RESULT ("CloseProtoSubscriber", status);
 
-  /* еее This function returns void for some wierd reason. */
+  /* *** This function returns void for some wierd reason. */
   DisposeDataAcq (dataAcqCtxPtr);
 
   status = CloseDataAcq ();
