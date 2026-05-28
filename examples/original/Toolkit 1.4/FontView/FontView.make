@@ -13,20 +13,20 @@ StackSize		=	4096
 #		Object files
 #####################################
 
-OBJECTS			=	¶
-					"{ObjectDir}{Application}.c.o"		¶
-					"{ObjectDir}JoyPad.c.o"				¶
+OBJECTS			=	--
+					"{ObjectDir}{Application}.c.o"		--
+					"{ObjectDir}JoyPad.c.o"				--
 
 
-LIBS			=	¶
-					"{3DOLibs}Lib3DO.lib"				¶
-					"{3DOLibs}graphics.lib"				¶
-					"{3DOLibs}audio.lib"				¶
-					"{3DOLibs}input.lib"				¶
-					"{3DOLibs}filesystem.lib"			¶
-					"{3DOLibs}operamath.lib"			¶
-					"{3DOLibs}clib.lib"					¶
-					"{3DOLibs}swi.lib"					¶
+LIBS			=	--
+					"{3DOLibs}Lib3DO.lib"				--
+					"{3DOLibs}graphics.lib"				--
+					"{3DOLibs}audio.lib"				--
+					"{3DOLibs}input.lib"				--
+					"{3DOLibs}filesystem.lib"			--
+					"{3DOLibs}operamath.lib"			--
+					"{3DOLibs}clib.lib"					--
+					"{3DOLibs}swi.lib"					--
 
 					
 #####################################
@@ -45,17 +45,17 @@ LINK		= armlink
 
 ObjectDir	= :Objects:
 
-"{ObjectDir}"	Ä	:
+"{ObjectDir}"	A	:
 
 #####################################
 #	Target build rules
 #####################################
 
-{Application} Ä	{LIBS} {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o "{Application}"			¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Application} A	{LIBS} {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o "{Application}"			--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	setfile 	 "{Application}" 	-c 'EaDJ' -t 'PROJ'
 	stripaif 	 "{Application}" 	-o "{Application}" -s "{3DORemote}{Application}.sym" || Set status 0

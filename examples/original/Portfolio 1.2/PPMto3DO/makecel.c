@@ -392,13 +392,13 @@ char *argv[];
     {
       fsetpos (
           outfile,
-          &pdatSizePos); /* еее go back and set the 'PDAT' chunksize to: */
-      j = (longsWritten << 2) + 8; /* еее packed data size + chunk header */
+          &pdatSizePos); /* *** go back and set the 'PDAT' chunksize to: */
+      j = (longsWritten << 2) + 8; /* *** packed data size + chunk header */
 
       if (preInDataflag)
         j += (literalflag)
                  ? 8
-                 : 4; /* еее + preamble size: 4 if packed, 8 if literal */
+                 : 4; /* *** + preamble size: 4 if packed, 8 if literal */
 
       writeword (outfile, j);
     }

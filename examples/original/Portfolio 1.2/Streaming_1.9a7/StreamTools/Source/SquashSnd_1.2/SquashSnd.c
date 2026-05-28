@@ -10,7 +10,7 @@
  **
  ** Contains:		Main code -- AIFF and AIFF-C Form and chunk handling
  **
- **	Copyright © 1993 The 3DO Company
+ **	Copyright (c) 1993 The 3DO Company
  **
  **	All rights reserved. This material constitutes confidential and
  *proprietary *	information of the 3DO Company and shall not be used by any

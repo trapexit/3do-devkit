@@ -5,7 +5,7 @@
 #
 #	Written by:	Gregg Gorsiski and Darren Gibbs
 #
-#	Copyright:	© 1993 by The 3DO Company. All rights reserved.
+#	Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
 #				This material constitutes confidential and proprietary
 #				information of the 3DO Company and shall not be used by
 #				any Person or for any purpose except as expressly
@@ -49,41 +49,41 @@ LOptions		= -aif -r -b 0x00 {LDebugOptions} -workspace 40000
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}graphics.lib"	¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}filesystem.lib"		¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}clib.lib"		¶
+LIBS			=	"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}graphics.lib"	--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}filesystem.lib"		--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}clib.lib"		--
 					"{3DOLibs}swi.lib"
 
 # NOTE: Add object files here...
-OBJECTS			=	"{ObjectDir}PALbounce.c.o" ¶
+OBJECTS			=	"{ObjectDir}PALbounce.c.o" --
 					"{ObjectDir}PALbounce_sound.c.o"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Application}
+All				A	{Application}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Application}		ÄÄ	bounce.make {LIBS} {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o "{Application}"				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Application}		AA	bounce.make {LIBS} {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o "{Application}"				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile "{Application}" -c 'EaDJ' -t 'PROJ'
 	modbin "{Application}" -stack 40000
@@ -93,5 +93,5 @@ All				Ä	{Application}
 #####################################
 #	Include file dependencies
 #####################################
-PALbounce.c		Ä	PALbounce.h 
-PALbounce_sound.c	Ä 	PALbounce_sound.h 
+PALbounce.c		A	PALbounce.h 
+PALbounce_sound.c	A 	PALbounce_sound.h 

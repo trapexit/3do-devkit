@@ -7,19 +7,19 @@ To demonstrate ShuttlePlayer, this folder contains the following data and script
 
 Video
 =====
-¥  TestShuttle.cv  
+*  TestShuttle.cv  
 		This is a one minute cinepak movie compressed at 20fps, with keyframe at 20fps, and 
 		a data rate setting at 270 kb/s.
-¥  TestShuttle.cv.FILM
+*  TestShuttle.cv.FILM
 		This is created using MovieToStream_Shuttle using the source TestShuttle.cv.
 		
 		->  movietostreamshuttle testshuttle.cv
 
 Audio
 =====
-¥  ShuttleAudio.aiff  	(one minute, 44KHz 16Bit Mono)
-¥  ShuttleAudio.aifc	(one minute, 44KHz 16Bit Mono Compressed 2:1)
-¥  ShuttleAudio.saudio
+*  ShuttleAudio.aiff  	(one minute, 44KHz 16Bit Mono)
+*  ShuttleAudio.aifc	(one minute, 44KHz 16Bit Mono Compressed 2:1)
+*  ShuttleAudio.saudio
 
 To create streamed audio (saudio) files, you would use squashsnd to compress and sftostream
 to obtain the final saudio files.  For example.
@@ -28,7 +28,7 @@ to obtain the final saudio files.  For example.
 
 Script
 ======
-¥	ShuttleWeaveScript
+*	ShuttleWeaveScript
 		This script is used to weave the streamed audio and video files.  Please read
 		the script to get the details on the headers used.
 		

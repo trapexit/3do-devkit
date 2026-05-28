@@ -37,38 +37,38 @@ LOptions			= -c -o
 #	Object files
 #####################################
 
-OBJECTS			=	{ObjectDir}controlpad.c.o ¶
-					{ObjectDir}effectshandler.c.o ¶
-					{ObjectDir}vdlutil.c.o ¶
-					{ObjectDir}getvideoinfo.c.o ¶
+OBJECTS			=	{ObjectDir}controlpad.c.o --
+					{ObjectDir}effectshandler.c.o --
+					{ObjectDir}vdlutil.c.o --
+					{ObjectDir}getvideoinfo.c.o --
 					{ObjectDir}loopstereosoundfile.c.o
 
 #####################################
 #	Default build rules
 #####################################
 
-All				Ä	{Library}.lib
+All				A	{Library}.lib
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o	Ä	.c
+.c.o	A	.c
 	{CC} -i "{3DOIncludes}" {COptions} {CDebugOptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
 #####################################
 #	Target build rules
 #####################################
 
-{Library} Ä {Library}.make {OBJECTS}
-	{LIBRARIAN} {LOptions} ¶
-				{Library}.lib	¶
+{Library} A {Library}.make {OBJECTS}
+	{LIBRARIAN} {LOptions} --
+				{Library}.lib	--
 				{OBJECTS}
 
 #####################################
 #	Additional Target Dependencies
 #####################################
 
-{ObjectDir}controlpad.c.o			Ä	"{SourceDir}"controlpad.h
-{ObjectDir}effectshandler.c.o		Ä	"{SourceDir}"effectshandler.h
-{ObjectDir}vdlutil.c.o				Ä	"{SourceDir}"vdlutil.h
-{ObjectDir}getvideoinfo.c.o			Ä	"{SourceDir}"getvideoinfo.h
-{ObjectDir}loopstereosoundfile.c.o	Ä	"{SourceDir}"loopstereosoundfile.h
+{ObjectDir}controlpad.c.o			A	"{SourceDir}"controlpad.h
+{ObjectDir}effectshandler.c.o		A	"{SourceDir}"effectshandler.h
+{ObjectDir}vdlutil.c.o				A	"{SourceDir}"vdlutil.h
+{ObjectDir}getvideoinfo.c.o			A	"{SourceDir}"getvideoinfo.h
+{ObjectDir}loopstereosoundfile.c.o	A	"{SourceDir}"loopstereosoundfile.h

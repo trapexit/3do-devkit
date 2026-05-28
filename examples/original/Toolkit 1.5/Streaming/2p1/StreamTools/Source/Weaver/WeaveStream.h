@@ -5,7 +5,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *  06/30/94	DLD		Added fWriteHaltChunk and HaltChunkList to

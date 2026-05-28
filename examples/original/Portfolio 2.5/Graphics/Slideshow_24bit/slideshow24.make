@@ -42,41 +42,41 @@ ModbinDebugOptions	= -debug
 #	Object files
 #####################################
 
-OBJECTS			=	{ObjectDir}loadfile24.c.o ¶
-					{ObjectDir}vdl24util.c.o ¶
-					{ObjectDir}{App}.c.o ¶
+OBJECTS			=	{ObjectDir}loadfile24.c.o --
+					{ObjectDir}vdl24util.c.o --
+					{ObjectDir}{App}.c.o --
 					"{3DOLibs}"cstartup.o
 
-LIBS			=	¶
-					"{ExamplesLibDir}ExamplesLib.lib"  ¶
-					"{3DOLibs}Lib3DO.lib" ¶
-					"{3DOLibs}audio.lib" ¶
-					"{3DOLibs}music.lib" ¶
-					"{3DOLibs}operamath.lib" ¶
-					"{3DOLibs}filesystem.lib" ¶
-					"{3DOLibs}graphics.lib" ¶
-					"{3DOLibs}input.lib" ¶
+LIBS			=	--
+					"{ExamplesLibDir}ExamplesLib.lib"  --
+					"{3DOLibs}Lib3DO.lib" --
+					"{3DOLibs}audio.lib" --
+					"{3DOLibs}music.lib" --
+					"{3DOLibs}operamath.lib" --
+					"{3DOLibs}filesystem.lib" --
+					"{3DOLibs}graphics.lib" --
+					"{3DOLibs}input.lib" --
 					"{3DOLibs}clib.lib"
 
 #####################################
 #	Default build rules
 #####################################
 
-All				Ä	{App}
+All				A	{App}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o	Ä	.c
+.c.o	A	.c
 	{CC} -i "{3DOIncludes}" {COptions} {CDebugOptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
 #####################################
 #	Target build rules
 #####################################
 
-{App} Ä {App}.make {OBJECTS}
-	{LINK} {LOptions} {LDebugOptions} ¶
-		{OBJECTS} ¶
-		{LIBS} ¶
+{App} A {App}.make {OBJECTS}
+	{LINK} {LOptions} {LDebugOptions} --
+		{OBJECTS} --
+		{LIBS} --
 		-o "{WorkingDisk}"{Targ}
 	SetFile "{WorkingDisk}"{Targ} -c 'EaDJ' -t 'PROJ'
 	modbin "{WorkingDisk}"{Targ} -stack {LStackSize} {ModbinDebugOptions}
@@ -91,6 +91,6 @@ All				Ä	{App}
 #	Additional Target Dependencies
 #####################################
 
-{ObjectDir}{App}.c.o			Ä	{App}.make {App}.h loadfile24.h vdl24util.h
-{ObjectDir}loadfile24.c.o		Ä	{App}.make loadfile24.h
-{ObjectDir}vdl24util.c.o		Ä	{App}.make vdl24util.h
+{ObjectDir}{App}.c.o			A	{App}.make {App}.h loadfile24.h vdl24util.h
+{ObjectDir}loadfile24.c.o		A	{App}.make loadfile24.h
+{ObjectDir}vdl24util.c.o		A	{App}.make vdl24util.h

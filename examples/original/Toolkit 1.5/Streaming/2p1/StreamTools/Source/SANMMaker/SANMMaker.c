@@ -9,7 +9,7 @@
  *
  *	Written by Jay London
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	08/17/94	dtc		Fixed to pass the address of gd.gray  to

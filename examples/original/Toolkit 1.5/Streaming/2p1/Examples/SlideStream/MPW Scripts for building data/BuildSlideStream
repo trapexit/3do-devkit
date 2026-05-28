@@ -31,7 +31,7 @@ set SlideStreamData 	":::tools & data:images:"
 	Set StartTime 0
 	Set TimeIncrement `Evaluate {2}*240`
 
-	For RawFile in `files "{SlideStreamData}"≈.img`
+	For RawFile in `files "{SlideStreamData}"A.img`
 		Echo "	Preparing {RawFile}..."
 		Chunkify -i "{RawFile}" -o Image__Temp{ImageNum} -type IMAG -cs 32000
 		Echo "file Image__Temp{ImageNum} 0 {StartTime}" >>{1}.temp
@@ -46,7 +46,7 @@ set SlideStreamData 	":::tools & data:images:"
 
 	Echo "	Cleaning up temporary files..."
 	Delete {1}.temp
-	Delete Image__Temp≈
+	Delete Image__TempA
 
 	Echo "Done!"
 	Beep

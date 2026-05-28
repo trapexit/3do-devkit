@@ -5,7 +5,7 @@
 #
 #	Written by:	Joe Buczek
 #
-#	Copyright:	© 1992 by The 3DO Company. All rights reserved.
+#	Copyright:	(c) 1992 by The 3DO Company. All rights reserved.
 #				This material constitutes confidential and proprietary
 #				information of the 3DO Company and shall not be used by
 #				any Person or for any purpose except as expressly
@@ -54,28 +54,28 @@ LOptions		= -c -o
 #####################################
 #		Object files
 #####################################
-OBJECTS			=	"{ObjectDir}KTextBox.c.o" ¶
+OBJECTS			=	"{ObjectDir}KTextBox.c.o" --
 
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	KTextBox.lib
+All				A	KTextBox.lib
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 #####################################
 #	Target build rules
 #####################################
-KTextBox.lib		ÄÄ	KTextBox.lib.make {OBJECTS}
-	{LIBRARIAN}	{LOptions}		¶
-				KTextBox.lib		¶
+KTextBox.lib		AA	KTextBox.lib.make {OBJECTS}
+	{LIBRARIAN}	{LOptions}		--
+				KTextBox.lib		--
 				{OBJECTS}
 #	Duplicate -y KTextBox.lib {3DOLibs}KTextBox.lib
 
@@ -84,25 +84,25 @@ KTextBox.lib		ÄÄ	KTextBox.lib.make {OBJECTS}
 #####################################
 
 
-KTextBox.lib.c		Ä types.h 
-					Ä debug.h
-					Ä nodes.h
-					Ä kernelnodes.h
-					Ä list.h
-					Ä folio.h
-					Ä task.h
-					Ä kernel.h
-					Ä mem.h
-					Ä operamath.h
-					Ä audio.h
-					Ä semaphore.h
-					Ä io.h
-					Ä strings.h
-					Ä stdlib.h
-					Ä graphics.h
-					Ä filefunctions.h
-					Ä Form3DO.h
-					Ä Init3DO.h
-					Ä Parse3DO.h
-					Ä Utils3DO.h
-					Ä KTextBox.h
+KTextBox.lib.c		A types.h 
+					A debug.h
+					A nodes.h
+					A kernelnodes.h
+					A list.h
+					A folio.h
+					A task.h
+					A kernel.h
+					A mem.h
+					A operamath.h
+					A audio.h
+					A semaphore.h
+					A io.h
+					A strings.h
+					A stdlib.h
+					A graphics.h
+					A filefunctions.h
+					A Form3DO.h
+					A Init3DO.h
+					A Parse3DO.h
+					A Utils3DO.h
+					A KTextBox.h

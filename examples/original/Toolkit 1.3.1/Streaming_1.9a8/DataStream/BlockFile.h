@@ -4,7 +4,7 @@
  *	Contains:		definitions for BlockFile.c, block oriented file
  *access routines
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	1/20/94		rdg		make C++ compatible

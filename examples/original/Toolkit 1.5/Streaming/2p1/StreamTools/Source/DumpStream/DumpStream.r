@@ -1,6 +1,6 @@
 /*
  *  DumpStream.r
- *	© The 3DO Company 1993
+ *	(c) The 3DO Company 1993
  *	All Rights Reserved.
  *
  */
@@ -17,6 +17,6 @@ resource 'vers' (1)
 	0x0,
 	verUS,
 	"1.6",
-	"1.6, © The 3DO Company 1993"
+	"1.6, (c) The 3DO Company 1993"
 };
 

@@ -12,7 +12,7 @@
  *					 with a few clever ideas courtesy of Phil
  *Burk
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *

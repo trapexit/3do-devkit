@@ -5,7 +5,7 @@
 #
 #	Written by:	pab
 #
-#	Copyright:	© 1993-94 by The 3DO Company. All rights reserved.
+#	Copyright:	(c) 1993-94 by The 3DO Company. All rights reserved.
 #				This material constitutes confidential and proprietary
 #				information of the 3DO Company and shall not be used by
 #				any Person or for any purpose except as expressly
@@ -55,27 +55,27 @@ OBJECTS			=	"{ObjectDir}CPlusRuntime.c.o"
 #####################################
 #	Default build rules
 #####################################
-{Application}		Ä	{Application}.lib
+{Application}		A	{Application}.lib
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
 
-.cp.o			Ä	.cp
+.cp.o			A	.cp
 	{CPLUS} {CPlusOptions} {DepDir}{Default}.cp -o {TargDir}{Default}.cp.o -comp {CC} {COptions}
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Application}.lib		ÄÄ	{Application}.make {OBJECTS}
-	{LIB}	{LIBOptions}		¶
-			{Application}.lib	¶
+{Application}.lib		AA	{Application}.make {OBJECTS}
+	{LIB}	{LIBOptions}		--
+			{Application}.lib	--
 			{OBJECTS}
 	duplicate {Application}.lib "{3DOLibs}"{Application}.lib -y 
 

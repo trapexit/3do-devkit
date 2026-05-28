@@ -7,7 +7,7 @@
  *
  *	Written by:		Lynn Ackler
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	12/13/93		lla		Fix order of args to

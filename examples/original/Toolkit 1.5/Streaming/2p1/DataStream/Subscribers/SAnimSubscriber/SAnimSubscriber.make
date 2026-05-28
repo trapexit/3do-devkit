@@ -3,7 +3,7 @@
 #
 #	Contains:	makefile for building SAnimSubscriber
 #
-#	Copyright © 1994 The 3DO Company
+#	Copyright (c) 1994 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -26,7 +26,7 @@
 #
 #	To regenerate the .c.o -> .h file dependencies, get write access to this
 #	make file and execute the following MPW code:
-#	make Depends -f SAnimSubscriber.make ·· Dev:Null > temp.makeout; temp.makeout ·· Dev:Null; delete -i temp.makeout
+#	make Depends -f SAnimSubscriber.make ** Dev:Null > temp.makeout; temp.makeout ** Dev:Null; delete -i temp.makeout
 #
 ##########################################################################
 
@@ -54,7 +54,7 @@ MakeFileName	=	{Program}.make
 #####################################
 #	Default compiler options
 #####################################
-COptions		=	{GlobalCOptions} -dDEBUG={DebugFlag} -i ":" -i "{UtilsDir}"	¶
+COptions		=	{GlobalCOptions} -dDEBUG={DebugFlag} -i ":" -i "{UtilsDir}"	--
 					-i "{StreamDir}"
 
 #####################################
@@ -69,74 +69,74 @@ OBJECTDEPENDS	=	"{ObjectDir}SAnimSubscriber.c.depends"
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{OBJECTS}
+All				A	{OBJECTS}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	echo "	compiling {Default}.c with {GlobalCOptions} {RelBranchSwitch}"
 	{CC} {COptions} -o {ObjectDir}{Default}.c.o  {Default}.c {RelBranchSwitch}
 
-.c.depends		Ä	.c
-	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c -M -c ¶
-		| search -q -r "{3DOIncludes}" ¶
-		| StreamEdit -e "1 delete; 1,$ Replace /{ObjectDir}/ '¶"¶{ObjectDir¶}¶"'; Replace /Ä/ '	Ä'" ¶
+.c.depends		A	.c
+	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c -M -c --
+		| search -q -r "{3DOIncludes}" --
+		| StreamEdit -e "1 delete; 1,$ Replace /{ObjectDir}/ '--"--{ObjectDir--}--"'; Replace /A/ '	A'" --
 		>> "{MakeFileName}"
 
 #####################################
 #	Dependency re-building rules
 #	The .c.depends rule asks the compiler to generate source file dependencies, then
 #	removes the first line (.c.o dependency on .c), substitutes a symbolic reference
-#	to "{ObjectDir}", puts in a tab before the Äs, and appends the result to this make
+#	to "{ObjectDir}", puts in a tab before the As, and appends the result to this make
 #	file. The following rules setup and sequence the work.
 #
 #	HOW TO USE IT: Get write access to this make file then make "Depends".
 #	This will replace the include file dependencies lines at the end of this makefile.
 #####################################
-Depends					Ä	DeleteOldDependencies {ObjectDepends} SaveNewMakefile
+Depends					A	DeleteOldDependencies {ObjectDepends} SaveNewMakefile
 
-DeleteOldDependencies	Ä
+DeleteOldDependencies	A
 	# This is a workaround to make it work with the latest version of Make Tool (MPW V3.4a4).
 	# Without the next line, find /.../ will break (MakeFileName) isn't resolved.
 	set MakeFileName "{MakeFileName}"
 	Open "{MakeFileName}"
-	Find ¥ "{MakeFileName}"
-	Find /¥#¶tInclude file dependencies ¶(DonÕt change this line or put anything after this section.¶)°/ "{MakeFileName}"
-	Find /¥[Â#]/ "{MakeFileName}"
-	Replace Æ¤:° "¶n" "{MakeFileName}"
+	Find * "{MakeFileName}"
+	Find /*#--tInclude file dependencies --(DonOt change this line or put anything after this section.--) deg/ "{MakeFileName}"
+	Find /*[A#]/ "{MakeFileName}"
+	Replace AE: deg "--n" "{MakeFileName}"
 
-SaveNewMakefile			Ä
+SaveNewMakefile			A
 	Save "{MakeFileName}"
 	
 #####################################
 #	make or build script Dependancies
 #####################################
 # Artifical target to force build of all subscriber object files
-{Program}		Ä	{Objects}
+{Program}		A	{Objects}
 	
 # Target dependancy to rebuild when makefile or build script changes
-#{ObjectDir}{Program}.c.o	Ä	{Program}.make {SubscriberDir}BuildSubscriberLib
-{Objects}					Ä	{Program}.make {SubscriberDir}BuildSubscriberLib
-{Objects}					Ä	{Program}.make {SubscriberDir}BuildSubscriberLib
+#{ObjectDir}{Program}.c.o	A	{Program}.make {SubscriberDir}BuildSubscriberLib
+{Objects}					A	{Program}.make {SubscriberDir}BuildSubscriberLib
+{Objects}					A	{Program}.make {SubscriberDir}BuildSubscriberLib
 
 #####################################
-#	Include file dependencies (DonÕt change this line or put anything after this section.)
+#	Include file dependencies (DonOt change this line or put anything after this section.)
 #####################################
 
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::DataStreamLib.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::MsgUtils.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::HaltChunk.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::DSStreamHeader.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::MsgUtils.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::ThreadHelper.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::MakeName.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::DataStreamLib.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:SAnimSubscriber.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAnimSubscriber.c.o	Ä	:::DataStreamLib.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::DataStreamLib.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::DataStream.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::MsgUtils.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::MemPool.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::HaltChunk.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::DSStreamHeader.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::MsgUtils.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::MemPool.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::ThreadHelper.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::MakeName.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::DataStreamLib.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:SAnimSubscriber.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAnimSubscriber.c.o	A	:::DataStreamLib.h

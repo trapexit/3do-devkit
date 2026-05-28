@@ -36,34 +36,34 @@ ModbinDebugOptions	= -debug
 
 OBJECTS			=	 {ObjectDir}colorecho.c.o {ObjectDir}colorecho_tools.c.o "{3DOLibs}"cstartup.o
 
-LIBS			=	 ¶
-					"{3DOLibs}Lib3DO.lib" ¶
-					"{3DOLibs}music.lib" ¶
-					"{3DOLibs}audio.lib" ¶
-					"{3DOLibs}operamath.lib" ¶
-					"{3DOLibs}graphics.lib" ¶
-					"{3DOLibs}input.lib" ¶
+LIBS			=	 --
+					"{3DOLibs}Lib3DO.lib" --
+					"{3DOLibs}music.lib" --
+					"{3DOLibs}audio.lib" --
+					"{3DOLibs}operamath.lib" --
+					"{3DOLibs}graphics.lib" --
+					"{3DOLibs}input.lib" --
 					"{3DOLibs}clib.lib"
 
 #####################################
 #	Default build rules
 #####################################
 
-All				Ä	{App}
+All				A	{App}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o	Ä	.c
+.c.o	A	.c
 	{CC} -i "{3DOIncludes}" {COptions} {CDebugOptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
 #####################################
 #	Target build rules
 #####################################
 
-{App} Ä {App}.make {OBJECTS}
-	{LINK} {LOptions} {LDebugOptions} ¶
-		{OBJECTS} ¶
-		{LIBS} ¶
+{App} A {App}.make {OBJECTS}
+	{LINK} {LOptions} {LDebugOptions} --
+		{OBJECTS} --
+		{LIBS} --
 		-o "{WorkingDisk}"{Targ}
 	SetFile "{WorkingDisk}"{Targ} -c 'EaDJ' -t PROJ
 	modbin "{WorkingDisk}"{Targ} -stack {LStackSize} {ModbinDebugOptions}
@@ -78,5 +78,5 @@ All				Ä	{App}
 #	Additional Target Dependencies
 #####################################
 
-{ObjectDir}colorecho.c.o			Ä	{App}.make
-{ObjectDir}colorecho_tools.c.o			Ä	{App}.make
+{ObjectDir}colorecho.c.o			A	{App}.make
+{ObjectDir}colorecho_tools.c.o			A	{App}.make

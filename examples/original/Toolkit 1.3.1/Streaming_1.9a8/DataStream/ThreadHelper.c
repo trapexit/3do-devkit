@@ -4,7 +4,7 @@
  *	Contains:		wrapper routines for kernel thread related
  *services
  *
- *	Copyright © 1992-3 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1992-3 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/19/93	jb		Version 1.5

@@ -44,44 +44,44 @@ ModbinDebugOptions	= -debug
 #	Object files
 #####################################
 
-OBJECTS			=	{ObjectDir}{App}.c.o ¶
+OBJECTS			=	{ObjectDir}{App}.c.o --
 					"{3DOLibs}"cstartup.o
 
-LIBS			=	 ¶
-					"{ExamplesLibDir}ExamplesLib.lib"  ¶
-					"{3DOLibs}Lib3DO.lib" ¶
-					"{3DOLibs}audio.lib" ¶
-					"{3DOLibs}music.lib" ¶
-					"{3DOLibs}operamath.lib" ¶
-					"{3DOLibs}filesystem.lib" ¶
-					"{3DOLibs}graphics.lib" ¶
-					"{3DOLibs}input.lib" ¶
+LIBS			=	 --
+					"{ExamplesLibDir}ExamplesLib.lib"  --
+					"{3DOLibs}Lib3DO.lib" --
+					"{3DOLibs}audio.lib" --
+					"{3DOLibs}music.lib" --
+					"{3DOLibs}operamath.lib" --
+					"{3DOLibs}filesystem.lib" --
+					"{3DOLibs}graphics.lib" --
+					"{3DOLibs}input.lib" --
 					"{3DOLibs}clib.lib"
 
 #####################################
 #	Default build rules
 #####################################
 
-All				Ä	{App}
+All				A	{App}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o	Ä	.c
+.c.o	A	.c
 	{CC} -i "{3DOIncludes}" {COptions} {CDebugOptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
 #####################################
 #	Target build rules
 #####################################
 
-{App} Ä {App}.make {OBJECTS}
-	{LINK} {LOptions} {LDebugOptions} ¶
-		{OBJECTS} ¶
-		{LIBS} ¶
+{App} A {App}.make {OBJECTS}
+	{LINK} {LOptions} {LDebugOptions} --
+		{OBJECTS} --
+		{LIBS} --
 		-o "{WorkingDisk}"{Targ}
 	SetFile "{WorkingDisk}"{Targ} -c 'EaDJ' -t 'PROJ'
 	modbin "{WorkingDisk}"{Targ} -stack {LStackSize} {ModbinDebugOptions}
 	stripaif "{WorkingDisk}"{Targ} -o {Targ} -s {Targ}.sym
-	SetVersion "{WorkingDisk}"{Targ} -t vers -i 1 -sv 2 -sr 0  -verstring ' ^, © 3DO Company 1994'
+	SetVersion "{WorkingDisk}"{Targ} -t vers -i 1 -sv 2 -sr 0  -verstring ' ^, (c) 3DO Company 1994'
 	if not `exists "{AppsDir}"`
 		newFolder "{AppsDir}"
 	end
@@ -93,5 +93,5 @@ All				Ä	{App}
 #	Additional Target Dependencies
 #####################################
 
-{ObjectDir}{App}.c.o			Ä	{App}.make
+{ObjectDir}{App}.c.o			A	{App}.make
 

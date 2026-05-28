@@ -25,18 +25,18 @@ COPYTODESTINATION	= Move -y {PROGRAM} "{Destination}"{PROGRAM}
 
 OBJECTS = {PROGRAM}.c.o
 
-{PROGRAM}		Ä "{Destination}"{PROGRAM}
-"{Destination}"{PROGRAM} Ä {PROGRAM}.make {OBJECTS}
+{PROGRAM}		A "{Destination}"{PROGRAM}
+"{Destination}"{PROGRAM} A {PROGRAM}.make {OBJECTS}
 	Rez  -o ProtoTestData ProtoTestData.r -a -ov
-	Link -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		"{CLibraries}StdCLib.o" ¶
-		"{Libraries}Interface.o" ¶
-		"{Libraries}ToolLibs.o" ¶
-		"{Libraries}MacRuntime.o" ¶
-		"{Libraries}"IntEnv.o ¶
+	Link -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		"{CLibraries}StdCLib.o" --
+		"{Libraries}Interface.o" --
+		"{Libraries}ToolLibs.o" --
+		"{Libraries}MacRuntime.o" --
+		"{Libraries}"IntEnv.o --
 		-o {PROGRAM}
 	{COPYTODESTINATION}
 
-{PROGRAM}.c.o Ä {PROGRAM}.make {PROGRAM}.c
+{PROGRAM}.c.o A {PROGRAM}.make {PROGRAM}.c
 	 C -r  {PROGRAM}.c

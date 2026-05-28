@@ -6,7 +6,7 @@
  *	Written by:		Neil Cormia (variations on a theme by Joe
  *Buczek)
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	07/08/94	dtc		Version 2.0.1d1

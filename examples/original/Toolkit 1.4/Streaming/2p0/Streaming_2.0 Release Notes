@@ -29,22 +29,22 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 === Example code changes ===
 ============================
 
-¥	A new example, ShuttlePlayer, demonstrates fast forward, fast reverse,
+*	A new example, ShuttlePlayer, demonstrates fast forward, fast reverse,
 	and step forward using the relative stream time branching mechanism.  
 
-¥	The 'Examples' folders have been reorganized to include the application,
+*	The 'Examples' folders have been reorganized to include the application,
 	data, and the DS_Examples_README file. This simplifies the use of Data
 	Streaming examples.
 
-¥	A DS_Examples_README file has been added to 'Examples' in the main
+*	A DS_Examples_README file has been added to 'Examples' in the main
 	data stream folder.  The DS_Examples_README file covers how to run
 	the data streaming examples and how to create streamed output.
 
-¥	A new folder called 'Tools and Data' has been added to 'Examples' in
+*	A new folder called 'Tools and Data' has been added to 'Examples' in
 	the main data stream folder. This folder contains scripts and data for
 	producing streamed output for the examples.
 
-¥	A new folder called 'Apps & Data' has been added to each example folder. 
+*	A new folder called 'Apps & Data' has been added to each example folder. 
 	'Apps & Data' contains the example application and the data to run
 	the example.
 
@@ -53,7 +53,7 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 === Streamer changes ===
 ========================
 
-¥  	The compile option RELATIVE_BRANCHING has been added to the make files
+*  	The compile option RELATIVE_BRANCHING has been added to the make files
 	of the libraries to switch between the relative versus absolute time
 	branching mechanism.  For developers' convenience, the libraries
 	DataAcqShuttle.lib, DSShuttle.lib, and SubscriberShuttle.lib were built
@@ -65,7 +65,7 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 === Data Acquisition changes ===
 ================================
 
-¥	DataAcq.c now supports relative time based branching. A number of new
+*	DataAcq.c now supports relative time based branching. A number of new
 	'options'values for use with DSGoMarker() have been added. These are:
 
 
@@ -89,15 +89,15 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 === Subscriber changes ===
 ==========================
 
-¥	Substantial changes were made to the Cinepak subscriber to support
+*	Substantial changes were made to the Cinepak subscriber to support
 	relative time branching mechanism and step forward mechanism.
 	These changes are in CPakSubscriberS.c and will be folded into
 	cpaksubscriber.c in future release.
 	
-¥	The audio subscriber provides trace codes to allow trace dumps
+*	The audio subscriber provides trace codes to allow trace dumps
 	using an IN CONTROL format as a template.
 	
-¥	Some audio subscriber procedures were made unique to avoid
+*	Some audio subscriber procedures were made unique to avoid
 	clashing with other subscribers such as scel subscriber with
 	the same procedure name.  
 
@@ -106,19 +106,19 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 === Stream Tool Changes ===
 ===========================
 
-¥	The following MPW environment was used to build Stream Tools:
+*	The following MPW environment was used to build Stream Tools:
 
 		MPW Shell Version 3.3.1
 		MPW C Compiler Version 3.3.2
 		MPW Linker Version 3.3.2
 		
-¥	Streaming Tools Notes
+*	Streaming Tools Notes
 
 	A docuement called 'Streaming Tools Notes' was added to StreamTools
 	folder in the main data stream folder.  This docuement provides up to
 	date documentation on the usage of Stream Tools. 
 
-¥	Weaver_2.2
+*	Weaver_2.2
 
 	The Weaver has been updated to allow quoted filenames in the weaver
 	script to allow input filenames with spaces and special characters.
@@ -143,7 +143,7 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 	to weave more than 15 files, portability will be maintained by
 	setting USE_MAC_IO to 0.
 	
-¥	MovieToStream_1.8
+*	MovieToStream_1.8
 
 	Two new options have been added to allow the user to specified the
 	output filename instead of the default and to allow the user to
@@ -163,7 +163,7 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 	LIMITATION:  You cannot convert movies with PAL dimensions (384X288)
 	with MovieToStream.
 	
-¥	MovieToStream_Shuttle1.8
+*	MovieToStream_Shuttle1.8
 	This version of MovieToStream added key frame and diff frame subchunk
 	types and chunkFlags to the chunk header struct to allow flexibility to
 	have other chunk types be "key".  This version was created to be used
@@ -175,11 +175,11 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 	LIMITATION:  You cannot convert movies with PAL dimensions (384X288)
 	with MovieToStreamShuttle.
 	
-¥	AnimToSanm
+*	AnimToSanm
 
 	Fixed code so that the usage is printed if no arguement was specified.
 
-¥	Chunkify
+*	Chunkify
 	CtlMaker
 	DumpStreamCCBs
 	SAudioTool
@@ -195,7 +195,7 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 ==================
 
 
-¥	Streaming bugs from Streaming 1.9a8:
+*	Streaming bugs from Streaming 1.9a8:
 
 	#2166	- ** Priority - InitializeThread in DataAcq sets thread item to 0
 	in context block.  Most of the time, this isn't a problem, but on occassions
@@ -219,11 +219,11 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 	#2183	- CreateItemPool() in ItemPool.c quits allocating items if an item
 	equal to zero is returned.
 	
-	¥  Streaming presently does not conform to the error return numbering system
+	*  Streaming presently does not conform to the error return numbering system
 	of standard 3DO systems and libraries.  This will be fixed in future releases.
 	
 
-¥	Streaming Tools Bugs:
+*	Streaming Tools Bugs:
 
 	Bug# 2077 (SFToStream) - Error in SFToStream when calculating how many
 	samples fit into a single SNDS chunk to make its duration a whole
@@ -236,7 +236,7 @@ Note:  	If you use the installer, the Apps & Data in the Streaming examples
 	
 Future compatibility with QuickTime 2.0
 
-	¥  	Streaming 2.0 has been tested with QuickTime 1.6.2 and has not been
+	*  	Streaming 2.0 has been tested with QuickTime 1.6.2 and has not been
 		tested with Beta Release of QuickTime 2.0. Any compatibility
 		problems between Streaming 2.0 and QuickTime 2.0 will be addressed 
 		when the final version of QuickTime 2.0 becomes available.

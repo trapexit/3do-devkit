@@ -1,4 +1,4 @@
-/*** Copyright © 1993 The 3DO Company ***/
+/*** Copyright (c) 1993 The 3DO Company ***/
 
 /********************************************************************
  * All rights reserved.

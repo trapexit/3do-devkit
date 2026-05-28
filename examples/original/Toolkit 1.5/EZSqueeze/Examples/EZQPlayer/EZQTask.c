@@ -5,7 +5,7 @@
 
         Written by:	 by Bill Duvall
 
-        Copyright:	© 1994 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1994 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the

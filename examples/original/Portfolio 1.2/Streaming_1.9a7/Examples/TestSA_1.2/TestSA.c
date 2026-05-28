@@ -13,7 +13,7 @@
  *
  *	Written by:		Darren Gibbs
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	12/2/93		jb		Add addition new arg to NewDataStream()

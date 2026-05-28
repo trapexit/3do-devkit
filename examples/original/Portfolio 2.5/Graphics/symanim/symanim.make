@@ -41,39 +41,39 @@ LOptions		= {LDebugOptions} -aif -r -b 0x00 -workspace 4096
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}graphics.lib"	¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}input.lib"		¶
+LIBS			=	"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}graphics.lib"	--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}input.lib"		--
 					"{3DOLibs}clib.lib"
 
 # NOTE: Add object files here...
-OBJECTS			=	"{ObjectDir}{Application}.c.o"¶
+OBJECTS			=	"{ObjectDir}{Application}.c.o"--
 					"{ObjectDir}Sprite.c.o"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Application}
+All				A	{Application}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Application}		ÄÄ	{Application}.make {LIBS} {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o {Application}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Application}		AA	{Application}.make {LIBS} {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o {Application}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Application} -c 'EaDJ' -t 'PROJ'
 	modbin {Application} -stack 0x2000 -debug
@@ -87,8 +87,8 @@ All				Ä	{Application}
 #####################################
 #	Include file dependencies
 #####################################
-#{Application}.c		Ä	{Application}.h
+#{Application}.c		A	{Application}.h
 
 
-symanim.c	Ä Sprite.h
-sprite.c Ä Sprite.h
+symanim.c	A Sprite.h
+sprite.c A Sprite.h

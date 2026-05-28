@@ -3,7 +3,7 @@
  *
  *	Contains:		definitions for PlaySAnim.c
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/16/94		dld		Changed NUM_DIRECTOR_CHANNELS to 48 for

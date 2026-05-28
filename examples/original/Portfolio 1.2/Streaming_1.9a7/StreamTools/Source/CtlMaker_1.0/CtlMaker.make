@@ -9,18 +9,18 @@ OBJECTS = CtlMaker.c.o
 DEBUGOPTIONS = 
 
 
-CtlMaker ÄÄ CtlMaker.make {OBJECTS}
+CtlMaker AA CtlMaker.make {OBJECTS}
 	Rez  -o CtlMaker CtlMaker.r -a -ov
-	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		#"{CLibraries}"CSANELib.o ¶
-		#"{CLibraries}"Math.o ¶
-		#"{CLibraries}"Complex.o ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"Runtime.o ¶
-		"{Libraries}"Interface.o ¶
-		#"{Libraries}"ToolLibs.o ¶
+	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		#"{CLibraries}"CSANELib.o --
+		#"{CLibraries}"Math.o --
+		#"{CLibraries}"Complex.o --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"Runtime.o --
+		"{Libraries}"Interface.o --
+		#"{Libraries}"ToolLibs.o --
 		-o CtlMaker
-CtlMaker.c.o Ä CtlMaker.make CtlMaker.c
+CtlMaker.c.o A CtlMaker.make CtlMaker.c
 	 C {DEBUGOPTIONS} -r  CtlMaker.c

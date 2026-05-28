@@ -482,7 +482,7 @@ HandleControlPad (void)
       retValue = -1;
     }
 
-  /* if the A button is pressed É (no action in this interface) */
+  /* if the A button is pressed E (no action in this interface) */
   else if (controlBits & ControlA)
     {
       ;

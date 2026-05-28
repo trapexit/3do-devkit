@@ -3,7 +3,7 @@
 #
 #	Contains:	makefile for building the SAudioSubscriber
 #
-#	Copyright © 1994 The 3DO Company
+#	Copyright (c) 1994 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -26,7 +26,7 @@
 #
 #	To regenerate the .c.o -> .h file dependencies, get write access to this
 #	make file and execute the following MPW code:
-#	make Depends -f SAudioSubscriber.make ·· Dev:Null > temp.makeout; temp.makeout ·· Dev:Null; delete -i temp.makeout
+#	make Depends -f SAudioSubscriber.make ** Dev:Null > temp.makeout; temp.makeout ** Dev:Null; delete -i temp.makeout
 #
 ##########################################################################
 
@@ -44,7 +44,7 @@ ASM				=	armasm
 ObjectDir		=	{SubscriberDir}Objects:
 
 #Objects			=	SAMain.c.o SAChannel.c.o SAFolioInterface.c.o SATemplates.c.o
-#Includes		=	SAChannel.h SAControlMsgs.h SAErrors.h SAFolioInterface.h SAStreamChunks.h ¶
+#Includes		=	SAChannel.h SAControlMsgs.h SAErrors.h SAFolioInterface.h SAStreamChunks.h --
 #						SATemplates.h SAudioSubscriber.h SAudioTraceCodes.h
 
 MakeFileName	=	{Program}.make
@@ -61,14 +61,14 @@ MakeFileName	=	{Program}.make
 #
 #####################################
  
-AudioTraceSwitches  = -dSAUDIO_TRACE_MAIN=0  -dSAUDIO_TRACE_BUFFERS=0 -dSAUDIO_TRACE_CHANNELS=0 ¶
-					-dSAUDIO_TRACE_TEMPLATES=0 -dSAUDIO_DUMP_TRACE_ON_STREAM_CLOSE=0 ¶
+AudioTraceSwitches  = -dSAUDIO_TRACE_MAIN=0  -dSAUDIO_TRACE_BUFFERS=0 -dSAUDIO_TRACE_CHANNELS=0 --
+					-dSAUDIO_TRACE_TEMPLATES=0 -dSAUDIO_DUMP_TRACE_ON_STREAM_CLOSE=0 --
 					-dSAUDIO_DUMP_TRACE_ON_STREAM_ABORT=0 -dSAUDIO_DUMP_TRACE_ON_BUFFER_COMP_ERR=0
 
 #####################################
 #	Default compiler options
 #####################################
-COptions		=	{GlobalCOptions}  -dDEBUG={DebugFlag} -i ":" -i "{StreamDir}" ¶
+COptions		=	{GlobalCOptions}  -dDEBUG={DebugFlag} -i ":" -i "{StreamDir}" --
 					-i "{SubscriberDir}SubscriberUtilities:"
 
 #####################################
@@ -76,184 +76,184 @@ COptions		=	{GlobalCOptions}  -dDEBUG={DebugFlag} -i ":" -i "{StreamDir}" ¶
 #	Be sure to keep these two definitions in synch!
 #####################################
 
-OBJECTS			=	"{ObjectDir}SAMain.c.o"				¶
-					"{ObjectDir}SAChannel.c.o"			¶
-					"{ObjectDir}SAFolioInterface.c.o"	¶
+OBJECTS			=	"{ObjectDir}SAMain.c.o"				--
+					"{ObjectDir}SAChannel.c.o"			--
+					"{ObjectDir}SAFolioInterface.c.o"	--
 					"{ObjectDir}SATemplates.c.o"
 
-OBJECTDEPENDS	=	"{ObjectDir}SAMain.c.depends"			¶
-					"{ObjectDir}SAChannel.c.depends"		¶
-					"{ObjectDir}SAFolioInterface.c.depends"	¶
+OBJECTDEPENDS	=	"{ObjectDir}SAMain.c.depends"			--
+					"{ObjectDir}SAChannel.c.depends"		--
+					"{ObjectDir}SAFolioInterface.c.depends"	--
 					"{ObjectDir}SATemplates.c.depends"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{OBJECTS}
+All				A	{OBJECTS}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	echo "	compiling {Default}.c with {GlobalCOptions} {RelBranchSwitch}"
 	{CC} {COptions} -o {ObjectDir}{Default}.c.o  {Default}.c {RelBranchSwitch} {AudioTraceSwitches}
 	
-.c.depends		Ä	.c
-	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c -M -c ¶
-		| search -q -r "{3DOIncludes}" ¶
-		| StreamEdit -e "1 delete; 1,$ Replace /{ObjectDir}/ '¶"¶{ObjectDir¶}¶"'; Replace /Ä/ '	Ä'" ¶
+.c.depends		A	.c
+	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c -M -c --
+		| search -q -r "{3DOIncludes}" --
+		| StreamEdit -e "1 delete; 1,$ Replace /{ObjectDir}/ '--"--{ObjectDir--}--"'; Replace /A/ '	A'" --
 		>> "{MakeFileName}"
 
 #####################################
 #	Dependency re-building rules
 #	The .c.depends rule asks the compiler to generate source file dependencies, then
 #	removes the first line (.c.o dependency on .c), substitutes a symbolic reference
-#	to "{ObjectDir}", puts in a tab before the Äs, and appends the result to this make
+#	to "{ObjectDir}", puts in a tab before the As, and appends the result to this make
 #	file. The following rules setup and sequence the work.
 #
 #	HOW TO USE IT: Get write access to this make file then make "Depends".
 #	This will replace the include file dependencies lines at the end of this makefile.
 #####################################
-Depends					Ä	DeleteOldDependencies {ObjectDepends} SaveNewMakefile
+Depends					A	DeleteOldDependencies {ObjectDepends} SaveNewMakefile
 
-DeleteOldDependencies	Ä
+DeleteOldDependencies	A
 	# This is a workaround to make it work with the latest version of Make Tool (MPW V3.4a4).
 	# Without the next line, find /.../ will break (MakeFileName) isn't resolved.
 	set MakeFileName "{MakeFileName}"
 	Open "{MakeFileName}"
-	Find ¥ "{MakeFileName}"
-	Find /¥#¶tInclude file dependencies ¶(DonÕt change this line or put anything after this section.¶)°/ "{MakeFileName}"
-	Find /¥[Â#]/ "{MakeFileName}"
-	Replace Æ¤:° "¶n" "{MakeFileName}"
+	Find * "{MakeFileName}"
+	Find /*#--tInclude file dependencies --(DonOt change this line or put anything after this section.--) deg/ "{MakeFileName}"
+	Find /*[A#]/ "{MakeFileName}"
+	Replace AE: deg "--n" "{MakeFileName}"
 
-SaveNewMakefile			Ä
+SaveNewMakefile			A
 	Save "{MakeFileName}"
 	
 #####################################
 #	make or build script Dependancies
 #####################################
 # Artifical target to force build of all subscriber object files
-{Program}		Ä	{Objects}
+{Program}		A	{Objects}
 
 # Target dependancy to rebuild when makefile or build script changes
-#{ObjectDir}SAMain.c.o				Ä	{Program}.make {SubscriberDir}BuildSubscriberLib
+#{ObjectDir}SAMain.c.o				A	{Program}.make {SubscriberDir}BuildSubscriberLib
 
-#{ObjectDir}SAChannel.c.o			Ä	{Program}.make {SubscriberDir}BuildSubscriberLib
+#{ObjectDir}SAChannel.c.o			A	{Program}.make {SubscriberDir}BuildSubscriberLib
 
-#{ObjectDir}SAFolioInterface.c.o	Ä	{Program}.make {SubscriberDir}BuildSubscriberLib
-#{ObjectDir}SATemplates.c.o			Ä	 {Program}.make {SubscriberDir}BuildSubscriberLib
-{Objects}					Ä	{Program}.make {SubscriberDir}BuildSubscriberLib
+#{ObjectDir}SAFolioInterface.c.o	A	{Program}.make {SubscriberDir}BuildSubscriberLib
+#{ObjectDir}SATemplates.c.o			A	 {Program}.make {SubscriberDir}BuildSubscriberLib
+{Objects}					A	{Program}.make {SubscriberDir}BuildSubscriberLib
 
 #####################################
-#	Include file dependencies (DonÕt change this line or put anything after this section.)
+#	Include file dependencies (DonOt change this line or put anything after this section.)
 #####################################
 
-"{ObjectDir}"SAMain.c.o	Ä	:::DataStreamLib.h
-"{ObjectDir}"SAMain.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SAMain.c.o	Ä	:::MsgUtils.h
-"{ObjectDir}"SAMain.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SAMain.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SAMain.c.o	Ä	:::HaltChunk.h
-"{ObjectDir}"SAMain.c.o	Ä	:::DSStreamHeader.h
-"{ObjectDir}"SAMain.c.o	Ä	:::MsgUtils.h
-"{ObjectDir}"SAMain.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SAMain.c.o	Ä	:::ThreadHelper.h
-"{ObjectDir}"SAMain.c.o	Ä	:::MakeName.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAErrors.h
-"{ObjectDir}"SAMain.c.o	Ä	:SATemplates.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SAMain.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAMain.c.o	Ä	:::DataStreamLib.h
-"{ObjectDir}"SAMain.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAControlMsgs.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAFolioInterface.h
-"{ObjectDir}"SAMain.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAChannel.h
-"{ObjectDir}"SAMain.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SAMain.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAudioSubscriber.h
-"{ObjectDir}"SAMain.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SAMain.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAChannel.h
-"{ObjectDir}"SAMain.c.o	Ä	:SATemplates.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAControlMsgs.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAudioSubscriber.h
-"{ObjectDir}"SAMain.c.o	Ä	::SubscriberUtilities:SubscriberTraceUtils.h
-"{ObjectDir}"SAMain.c.o	Ä	:SAudioTraceCodes.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAErrors.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAChannel.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SAChannel.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::DataStreamLib.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::MsgUtils.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::HaltChunk.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::DSStreamHeader.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAudioSubscriber.h
-"{ObjectDir}"SAChannel.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SAChannel.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SAChannel.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAChannel.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SATemplates.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAControlMsgs.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAFolioInterface.h
-"{ObjectDir}"SAChannel.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAChannel.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAudioSubscriber.h
-"{ObjectDir}"SAChannel.c.o	Ä	::SubscriberUtilities:SubscriberTraceUtils.h
-"{ObjectDir}"SAChannel.c.o	Ä	:SAudioTraceCodes.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAErrors.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAFolioInterface.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::DataStreamLib.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::MsgUtils.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::HaltChunk.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::DSStreamHeader.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAChannel.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAudioSubscriber.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAChannel.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SATemplates.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAControlMsgs.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAudioSubscriber.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	::SubscriberUtilities:SubscriberTraceUtils.h
-"{ObjectDir}"SAFolioInterface.c.o	Ä	:SAudioTraceCodes.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SAErrors.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SATemplates.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SATemplates.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::DataStreamLib.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::MsgUtils.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::HaltChunk.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::DSStreamHeader.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::SubsChunkCommon.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SAudioSubscriber.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::DataStream.h
-"{ObjectDir}"SATemplates.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SAStreamChunks.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SAChannel.h
-"{ObjectDir}"SATemplates.c.o	Ä	:::MemPool.h
-"{ObjectDir}"SATemplates.c.o	Ä	::SubscriberUtilities:SubscriberUtils.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SATemplates.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SAControlMsgs.h
-"{ObjectDir}"SATemplates.c.o	Ä	::SubscriberUtilities:SubscriberTraceUtils.h
-"{ObjectDir}"SATemplates.c.o	Ä	:SAudioTraceCodes.h
+"{ObjectDir}"SAMain.c.o	A	:::DataStreamLib.h
+"{ObjectDir}"SAMain.c.o	A	:::DataStream.h
+"{ObjectDir}"SAMain.c.o	A	:::MsgUtils.h
+"{ObjectDir}"SAMain.c.o	A	:::MemPool.h
+"{ObjectDir}"SAMain.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SAMain.c.o	A	:::HaltChunk.h
+"{ObjectDir}"SAMain.c.o	A	:::DSStreamHeader.h
+"{ObjectDir}"SAMain.c.o	A	:::MsgUtils.h
+"{ObjectDir}"SAMain.c.o	A	:::MemPool.h
+"{ObjectDir}"SAMain.c.o	A	:::ThreadHelper.h
+"{ObjectDir}"SAMain.c.o	A	:::MakeName.h
+"{ObjectDir}"SAMain.c.o	A	:SAErrors.h
+"{ObjectDir}"SAMain.c.o	A	:SATemplates.h
+"{ObjectDir}"SAMain.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SAMain.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAMain.c.o	A	:::DataStreamLib.h
+"{ObjectDir}"SAMain.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SAMain.c.o	A	:SAControlMsgs.h
+"{ObjectDir}"SAMain.c.o	A	:SAFolioInterface.h
+"{ObjectDir}"SAMain.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAMain.c.o	A	:SAChannel.h
+"{ObjectDir}"SAMain.c.o	A	:::MemPool.h
+"{ObjectDir}"SAMain.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAMain.c.o	A	:SAudioSubscriber.h
+"{ObjectDir}"SAMain.c.o	A	:::DataStream.h
+"{ObjectDir}"SAMain.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAMain.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SAMain.c.o	A	:SAChannel.h
+"{ObjectDir}"SAMain.c.o	A	:SATemplates.h
+"{ObjectDir}"SAMain.c.o	A	:SAControlMsgs.h
+"{ObjectDir}"SAMain.c.o	A	:SAudioSubscriber.h
+"{ObjectDir}"SAMain.c.o	A	::SubscriberUtilities:SubscriberTraceUtils.h
+"{ObjectDir}"SAMain.c.o	A	:SAudioTraceCodes.h
+"{ObjectDir}"SAChannel.c.o	A	:SAErrors.h
+"{ObjectDir}"SAChannel.c.o	A	:SAChannel.h
+"{ObjectDir}"SAChannel.c.o	A	:::MemPool.h
+"{ObjectDir}"SAChannel.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAChannel.c.o	A	:::DataStreamLib.h
+"{ObjectDir}"SAChannel.c.o	A	:::DataStream.h
+"{ObjectDir}"SAChannel.c.o	A	:::MsgUtils.h
+"{ObjectDir}"SAChannel.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SAChannel.c.o	A	:::HaltChunk.h
+"{ObjectDir}"SAChannel.c.o	A	:::DSStreamHeader.h
+"{ObjectDir}"SAChannel.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SAChannel.c.o	A	:SAudioSubscriber.h
+"{ObjectDir}"SAChannel.c.o	A	:::DataStream.h
+"{ObjectDir}"SAChannel.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAChannel.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SAChannel.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAChannel.c.o	A	:SAChannel.h
+"{ObjectDir}"SAChannel.c.o	A	:SATemplates.h
+"{ObjectDir}"SAChannel.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SAChannel.c.o	A	:SAControlMsgs.h
+"{ObjectDir}"SAChannel.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SAChannel.c.o	A	:SAFolioInterface.h
+"{ObjectDir}"SAChannel.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAChannel.c.o	A	:SAChannel.h
+"{ObjectDir}"SAChannel.c.o	A	:SAudioSubscriber.h
+"{ObjectDir}"SAChannel.c.o	A	::SubscriberUtilities:SubscriberTraceUtils.h
+"{ObjectDir}"SAChannel.c.o	A	:SAudioTraceCodes.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAErrors.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAFolioInterface.h
+"{ObjectDir}"SAFolioInterface.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::DataStreamLib.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::DataStream.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::MsgUtils.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::MemPool.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::HaltChunk.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::DSStreamHeader.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAChannel.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::MemPool.h
+"{ObjectDir}"SAFolioInterface.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAudioSubscriber.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:::DataStream.h
+"{ObjectDir}"SAFolioInterface.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SAFolioInterface.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAChannel.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SATemplates.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAControlMsgs.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAudioSubscriber.h
+"{ObjectDir}"SAFolioInterface.c.o	A	::SubscriberUtilities:SubscriberTraceUtils.h
+"{ObjectDir}"SAFolioInterface.c.o	A	:SAudioTraceCodes.h
+"{ObjectDir}"SATemplates.c.o	A	:SAErrors.h
+"{ObjectDir}"SATemplates.c.o	A	:SATemplates.h
+"{ObjectDir}"SATemplates.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SATemplates.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SATemplates.c.o	A	:::DataStreamLib.h
+"{ObjectDir}"SATemplates.c.o	A	:::DataStream.h
+"{ObjectDir}"SATemplates.c.o	A	:::MsgUtils.h
+"{ObjectDir}"SATemplates.c.o	A	:::MemPool.h
+"{ObjectDir}"SATemplates.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SATemplates.c.o	A	:::HaltChunk.h
+"{ObjectDir}"SATemplates.c.o	A	:::DSStreamHeader.h
+"{ObjectDir}"SATemplates.c.o	A	:::SubsChunkCommon.h
+"{ObjectDir}"SATemplates.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SATemplates.c.o	A	:SAudioSubscriber.h
+"{ObjectDir}"SATemplates.c.o	A	:::DataStream.h
+"{ObjectDir}"SATemplates.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SATemplates.c.o	A	:SAStreamChunks.h
+"{ObjectDir}"SATemplates.c.o	A	:SAChannel.h
+"{ObjectDir}"SATemplates.c.o	A	:::MemPool.h
+"{ObjectDir}"SATemplates.c.o	A	::SubscriberUtilities:SubscriberUtils.h
+"{ObjectDir}"SATemplates.c.o	A	:SATemplates.h
+"{ObjectDir}"SATemplates.c.o	A	:SAControlMsgs.h
+"{ObjectDir}"SATemplates.c.o	A	::SubscriberUtilities:SubscriberTraceUtils.h
+"{ObjectDir}"SATemplates.c.o	A	:SAudioTraceCodes.h

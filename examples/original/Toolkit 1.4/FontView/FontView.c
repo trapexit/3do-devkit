@@ -3,7 +3,7 @@
  *
  *	Contains:		A program to display antialiased fonts.
  *
- *	Copyright:		© 1993-1994 The 3DO Company. All Rights
+ *	Copyright:		(c) 1993-1994 The 3DO Company. All Rights
  *Reserved.
  *
  *	History:

@@ -1,6 +1,6 @@
 /*
  *  MovieToStream.r
- *	© The 3DO Company 1993
+ *	(c) The 3DO Company 1993
  *	All Rights Reserved.
  *
  */
@@ -17,6 +17,6 @@ resource 'vers' (1)
 	0x0,
 	verUS,
 	"2.0",
-	"2.0, © The 3DO Company 1993"
+	"2.0, (c) The 3DO Company 1993"
 };
 

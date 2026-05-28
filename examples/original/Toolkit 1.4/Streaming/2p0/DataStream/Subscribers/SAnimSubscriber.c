@@ -5,7 +5,7 @@
  *
  *	Written by:		Neil Cormia
  *
- *	Copyright й 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	05/24/94	DLD		Changed CCB and POS chunk definitions!
@@ -233,7 +233,7 @@ SetupNextSAFrame (CCB *ccb, StreamAnimFramePtr pSAFrame)
   int32 *pchunkSize;
 
   tempBuf = ((char *)pSAFrame) + sizeof (StreamAnimFrame);
-  pchunkSize = &(pSAFrame->chunkSize); /*еее HACK FOR COMPILER PROBLEM еее*/
+  pchunkSize = &(pSAFrame->chunkSize); /**** HACK FOR COMPILER PROBLEM ****/
   tempSize = *pchunkSize - sizeof (StreamAnimFrame);
 
   while ((pChunk = GetChunk (&chunk_ID, &tempBuf, &tempSize)) != NULL)

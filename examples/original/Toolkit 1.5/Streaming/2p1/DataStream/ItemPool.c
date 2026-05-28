@@ -4,7 +4,7 @@
  *	Contains:		Routines for managing a pool of preallocated
  *items
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *

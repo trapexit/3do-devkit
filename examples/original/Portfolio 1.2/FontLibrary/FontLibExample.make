@@ -28,45 +28,45 @@ LOptions		= -aif -r -b 0x00 -d -workspace 0x10000
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}clib.lib"			¶
+LIBS			=	"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}clib.lib"			--
 					"{3DOLibs}swi.lib"
 
 
 # NOTE: Add object files here...
-OBJECTS			=	"{ObjectDir}FontLib.c.o"	¶
-					"{ObjectDir}TextLib.c.o"	¶
-					"{ObjectDir}FontLibExample.c.o"	¶
-					"{ObjectDir}FontBlit3To8_.s.o"	¶
+OBJECTS			=	"{ObjectDir}FontLib.c.o"	--
+					"{ObjectDir}TextLib.c.o"	--
+					"{ObjectDir}FontLibExample.c.o"	--
+					"{ObjectDir}FontBlit3To8_.s.o"	--
 
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{App}
+All				A	{App}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{App}		ÄÄ	{App}.make {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o {App}					¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{App}		AA	{App}.make {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o {App}					--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {App} -c 'EaDJ' -t 'PROJ'
 	modbin "{App}" -stack 0x10000 -debug
@@ -79,6 +79,6 @@ All				Ä	{App}
 #	Include file dependencies
 #####################################
 
-#FontLib.c		Ä FontLib.h 
-#textbox.c		Ä textbox.h  TextBox3DO.h
+#FontLib.c		A FontLib.h 
+#textbox.c		A textbox.h  TextBox3DO.h
 

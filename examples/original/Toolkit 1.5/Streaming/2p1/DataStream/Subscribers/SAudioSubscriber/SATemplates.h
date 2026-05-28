@@ -7,7 +7,7 @@
  *	Written by:		Darren Gibbs, adapted from the prototype
  *subscriber by Joe Buczek.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/11/94		rdg		Add support for ADPCM and uncompressed

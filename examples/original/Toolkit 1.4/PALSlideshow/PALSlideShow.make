@@ -5,7 +5,7 @@
 #
 #	Written by:	Joe Buczek
 #
-#	Copyright:	© 1993 by The 3DO Company. All rights reserved.
+#	Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
 #				This material constitutes confidential and proprietary
 #				information of the 3DO Company and shall not be used by
 #				any Person or for any purpose except as expressly
@@ -45,11 +45,11 @@ LINK			=	armlink
 #####################################
 CDebugOptions	= -g
 #CDebugOptions	=			# turn off symbolic information
-COptions		= {CDebugOptions} -zps0 -za1 -i "{3DOIncludes}" ¶
-					-d DEBUG={DebugFlag} ¶
-					-d GREEN_HARDWARE=1 ¶
-					-d RED_HARDWARE=0 ¶
-					-d kBuildDate="¶"`date -a`¶""
+COptions		= {CDebugOptions} -zps0 -za1 -i "{3DOIncludes}" --
+					-d DEBUG={DebugFlag} --
+					-d GREEN_HARDWARE=1 --
+					-d RED_HARDWARE=0 --
+					-d kBuildDate="--"`date -a`--""
 
 SOptions		= -bi -g -i "{3DOIncludes}"
 
@@ -60,41 +60,41 @@ LOptions		= -aif -r -b 0x00 {LDebugOptions}
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}graphics.lib"	¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}filesystem.lib"		¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}clib.lib"		¶
+LIBS			=	"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}graphics.lib"	--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}filesystem.lib"		--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}clib.lib"		--
 					"{3DOLibs}swi.lib"
 
 # NOTE: Add object files here...
-OBJECTS			=	"{ObjectDir}{Application}.c.o"	¶
+OBJECTS			=	"{ObjectDir}{Application}.c.o"	--
 					"{ObjectDir}ourVDL.c.o"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Application}
+All				A	{Application}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {DepDir}{Default}.c {COptions} -o {TargDir}{Default}.c.o 
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {DepDir}{Default}.s {SOptions} -o {TargDir}{Default}.s.o
 
 
 #####################################
 #	Target build rules
 #####################################
-{Application}		ÄÄ	{Application}.make {LIBS} {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o {Application}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Application}		AA	{Application}.make {LIBS} {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o {Application}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Application} -c 'EaDJ' -t 'PROJ'
 	modbin {Application} -stack 3000 -debug
@@ -104,11 +104,11 @@ All				Ä	{Application}
 #####################################
 #	Include file dependencies
 #####################################
-#{Application}.c		Ä	{Application}.h 
+#{Application}.c		A	{Application}.h 
 
-ourVDL.c	Ä ourVDL.h
-{Application}.c	Ä {Application}.h ¶
-				"{3DOIncludes}Utils3DO.h" ¶
-				"{3DOIncludes}Init3DO.h" ¶
-				"{3DOIncludes}Parse3DO.h"¶
+ourVDL.c	A ourVDL.h
+{Application}.c	A {Application}.h --
+				"{3DOIncludes}Utils3DO.h" --
+				"{3DOIncludes}Init3DO.h" --
+				"{3DOIncludes}Parse3DO.h"--
 				ourVDL.h

@@ -5,7 +5,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	5/18/93		jb		Switch to using hexadecimal const for

@@ -5,7 +5,7 @@
  *
  *	Written by:		Lynn Ackler
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	12/10/93		lla		Used Greg's menu screen and hilite

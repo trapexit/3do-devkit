@@ -4,7 +4,7 @@
  *	Contains:		wrapper routines for kernel message related
  *services
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/10/94	dtc		Version 2.1

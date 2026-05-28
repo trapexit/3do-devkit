@@ -8,7 +8,7 @@
 #					"clean"		deletes all object files before
 #								building everything
 #
-#	Copyright © 1992 The 3DO Company
+#	Copyright (c) 1992 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -41,15 +41,15 @@
 			# SANMMaker directory because this is a THINK C application.
 
 			For toolDir in `Files -d`
-				If "{toolDir}" !~ /≈SANMMaker≈/
-					Delete -i "{toolDir}"≈.o
+				If "{toolDir}" !~ /ASANMMakerA/
+					Delete -i "{toolDir}"A.o
 				End
 			End
 		
 			# Restore the state of {Exit}
 			Set Exit {saveExit}
 	
-		End ∑∑ Dev:Null
+		End ** Dev:Null
 	End
 
 #
@@ -57,17 +57,17 @@
 #
 
 	For ToolDir in `Files -d`
-		If "{ToolDir}" !~ /≈SANMMaker≈/
+		If "{ToolDir}" !~ /ASANMMakerA/
 
 			# Get the tool name with version number
 
-			(Evaluate "{ToolDir}" =~ /≈:(≈)®1:/ ) ∑∑ Dev:Null
-			Set ToolName "{®1}"
+			(Evaluate "{ToolDir}" =~ /A:(A)"1:/ ) ** Dev:Null
+			Set ToolName "{"1}"
 
 			# Get the tool name without version number
 
-			(Evaluate "{ToolDir}" =~ /≈:(≈)®1_≈:/ ) ∑∑ Dev:Null
-			Set ToolRootName "{®1}"
+			(Evaluate "{ToolDir}" =~ /A:(A)"1_A:/ ) ** Dev:Null
+			Set ToolRootName "{"1}"
 
 			# Build the tool
 

@@ -5,7 +5,7 @@
  *
  *	Written by: Ian Lepore
  *
- *	Copyright:	© 1994 by The 3DO Company.  All rights reserved.
+ *	Copyright:	(c) 1994 by The 3DO Company.  All rights reserved.
  *
  *	Change History (most recent first):
  *

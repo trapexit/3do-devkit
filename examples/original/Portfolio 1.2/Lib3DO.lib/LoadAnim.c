@@ -5,7 +5,7 @@
  *file into it, using fast block I/O, then parse the anim file into an ANIM
  *structure with attached AnimFrames.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/25/93 	ian Now uses new faster LoadFile() block I/O instead of

@@ -5,7 +5,7 @@
  *
  *	Written by:		Neil Cormia
  *
- *	Copyright й 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	11/23/93	jb		Version 1.2
@@ -228,7 +228,7 @@ SetupNextSAFrame (CCB *ccb, StreamAnimFramePtr pSAFrame)
   int32 *pchunkSize;
 
   tempBuf = ((char *)pSAFrame) + sizeof (StreamAnimFrame);
-  pchunkSize = &(pSAFrame->chunkSize); /*еее HACK FOR COMPILER PROBLEM еее*/
+  pchunkSize = &(pSAFrame->chunkSize); /**** HACK FOR COMPILER PROBLEM ****/
   tempSize = *pchunkSize - sizeof (StreamAnimFrame);
 
   while ((pChunk = GetChunk (&chunk_ID, &tempBuf, &tempSize)) != NULL)
@@ -723,7 +723,7 @@ DoSAnimData (SAnimContextPtr ctx, SubscriberMsgPtr subMsg)
 
   chunkData = (SubsChunkDataPtr)subMsg->msg.data.buffer;
 
-  channelPtr = &chunkData->channel; /*еее HACK FOR COMPILER PROBLEM еее*/
+  channelPtr = &chunkData->channel; /**** HACK FOR COMPILER PROBLEM ****/
   channelNumber = *channelPtr;
 
   /* If the channel number is greater than the max channel

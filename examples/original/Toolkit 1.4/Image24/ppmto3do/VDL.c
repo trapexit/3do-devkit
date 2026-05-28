@@ -6,7 +6,7 @@
 
         Written by:	eric carlson
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -143,7 +143,7 @@ SetDisplayCtlWord (Boolean Hinterp, Boolean Vinterp, Boolean clutBypass)
 }
 
 /*
- * Fill in a ‘simple’ VDL - One CLUT for the screen with CLUTByPass Enabled
+ * Fill in a OsimpleO VDL - One CLUT for the screen with CLUTByPass Enabled
  */
 void
 InitSimpleVDL (SVDL *v, Bitmap *destBitmap)

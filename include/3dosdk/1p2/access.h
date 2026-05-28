@@ -21,10 +21,10 @@
 #ifndef __ACCESS_H
 #define __ACCESS_H
 
-#include "Portfolio.h"
-#include "Init3DO.h"
-#include "Parse3DO.h"
-#include "Utils3DO.h"
+#include "portfolio.h"
+#include "init3do.h"
+#include "parse3do.h"
+#include "utils3do.h"
 
 #include "types.h"
 #include "nodes.h"
@@ -62,7 +62,7 @@
 #define ACCTAG_FG_PEN          12
 #define ACCTAG_BG_PEN          13
 #define ACCTAG_HILITE_PEN      14
-#define ACCTAG_SHADOW_PEN      15	// еее Shadow Pen Tag @NICK
+#define ACCTAG_SHADOW_PEN      15	// ??? Shadow Pen Tag @NICK
 
 #define ACCREQ_LOAD       1
 #define ACCREQ_SAVE       2

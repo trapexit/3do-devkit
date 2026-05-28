@@ -6,7 +6,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright й 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *  08/22/94		dtc		Version 1.1
@@ -145,7 +145,7 @@ FindAndLoadStreamHeader (DSHeaderChunkPtr headerPtr, char *fileName)
   blockFile.fDevice = 0;
 
   /* Search the buffer for the header information */
-  /* NOTE: еее FOR NOW, WE ASSUME THE HEADER IS THE FIRST DATA IN THE FILE еее
+  /* NOTE: *** FOR NOW, WE ASSUME THE HEADER IS THE FIRST DATA IN THE FILE ***
    */
   pLong = (long *)buffer;
 

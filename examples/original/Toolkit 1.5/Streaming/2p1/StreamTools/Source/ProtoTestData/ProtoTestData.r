@@ -1,6 +1,6 @@
 /*
  *  ProtoTestData.r
- *	© The 3DO Company 1993
+ *	(c) The 3DO Company 1993
  *	All Rights Reserved.
  *
  */
@@ -17,7 +17,7 @@ resource 'vers' (1)
 	0x0,
 	verUS,
 	"1.1",
-	"1.1, © The 3DO Company 1994"
+	"1.1, (c) The 3DO Company 1994"
 };
 
 resource 'vers' (2) 

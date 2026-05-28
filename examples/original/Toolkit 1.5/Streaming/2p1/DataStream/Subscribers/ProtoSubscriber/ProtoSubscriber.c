@@ -5,7 +5,7 @@
  *
  *	Written by:		Darren Gibbs
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	7/07/94		rdg		Modify to parse HALT chunks.

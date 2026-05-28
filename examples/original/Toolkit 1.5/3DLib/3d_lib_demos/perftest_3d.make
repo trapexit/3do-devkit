@@ -32,43 +32,43 @@ LOptions		=  -d -aif -r -b 0x00 -workspace 0x400
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}3dlib.lib"		¶
-					"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}swi.lib"			¶
-					"{3DOLibs}clib.lib"			¶
+LIBS			=	"{3DOLibs}3dlib.lib"		--
+					"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}swi.lib"			--
+					"{3DOLibs}clib.lib"			--
 					"{3DOLibs}audio.lib"
 
 # NOTE: Add object files here...
-OBJECTS			=	"{ObjectDir}perftest_core_3d.c.o"	¶
-					"{ObjectDir}perftest_stuff_3d.c.o" ¶
+OBJECTS			=	"{ObjectDir}perftest_core_3d.c.o"	--
+					"{ObjectDir}perftest_stuff_3d.c.o" --
 					"{ObjectDir}framecounthack.c.o"
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Program}
+All				A	{Program}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Program}		ÄÄ	{Program}.make {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o {Program}				¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{Program}		AA	{Program}.make {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o {Program}				--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {Program} -c 'EaDJ' -t 'PROJ'
 	echo modbinning {Program}
@@ -78,4 +78,4 @@ All				Ä	{Program}
 #####################################
 #	Include file dependencies
 #####################################
-{Program}.c		Ä  perftest_3d.make
+{Program}.c		A  perftest_3d.make

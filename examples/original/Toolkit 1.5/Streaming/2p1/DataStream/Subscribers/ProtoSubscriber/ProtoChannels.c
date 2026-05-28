@@ -6,7 +6,7 @@
  *
  *	Written by:		Darren Gibbs
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	09/07/94	dtc		Version 2.0.1d4

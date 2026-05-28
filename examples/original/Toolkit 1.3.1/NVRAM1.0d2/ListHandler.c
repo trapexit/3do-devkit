@@ -5,7 +5,7 @@
 
         Written by:	Randy Carr, Edward Harp
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -352,11 +352,11 @@ LHDisposeAllCells (ListHandler *listP, Boolean disposeCCBs)
 
   while (cellP != NULL)
     {
-      // get the next oneÉ
+      // get the next oneE
       nextCellP = cellP;
       LHGetNextCell (listP, &nextCellP);
 
-      // Ébefore disposing of the current
+      // Ebefore disposing of the current
       (void)LHDisposeCell (cellP, disposeCCBs);
 
       cellP = nextCellP;
@@ -486,8 +486,8 @@ LHAddCell (ListHandler *listP, ListCell *insertBeforeP, ListCell *cellP)
       // make sure that the end of list flag is not set
       cellP->lcn_CellFlags &= ~kIsLastCell;
 
-      // fix the indiciesÉ
-      indCellP = cellP; // Éstarting here
+      // fix the indiciesE
+      indCellP = cellP; // Estarting here
       cellP->lcn_Index = index = insertBeforeP->lcn_Index;
       while (LHGetNextCell (listP, &indCellP))
         indCellP->lcn_Index = ++index;
@@ -498,7 +498,7 @@ LHAddCell (ListHandler *listP, ListCell *insertBeforeP, ListCell *cellP)
       ListCell *lastCellP;
 
       lastCellP = LHGetLastCell (listP);
-      if (lastCellP != NULL) // <-- this shouldn't be necessary, butÉ
+      if (lastCellP != NULL) // <-- this shouldn't be necessary, butE
         {
           lastCellP->lcn_Next = cellP;
           lastCellP->lcn_CellFlags &= ~kIsLastCell;
@@ -1060,7 +1060,7 @@ LHSectRect (const Rect *srcRectP, const Rect *destRectP, Rect *resultRectP)
 {
   bool sected; // was an intersection found
 
-  // efficient piece of boolean logic from SpriteWorldª©¨
+  // efficient piece of boolean logic from SpriteWorlda(c)"
   sected = (!((srcRectP->rect_YTop >= destRectP->rect_YBottom)
               || (srcRectP->rect_YBottom <= destRectP->rect_YTop)
               || (srcRectP->rect_XLeft >= destRectP->rect_XRight)

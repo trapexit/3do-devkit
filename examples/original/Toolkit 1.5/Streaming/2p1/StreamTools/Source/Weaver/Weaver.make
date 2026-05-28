@@ -3,7 +3,7 @@
 #
 #	Contains:		make rules to build the Weaver stream data merging tool
 #
-#	Copyright © 1993-4 The 3DO Company
+#	Copyright (c) 1993-4 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -85,21 +85,21 @@ SWITCHOPTIONS	=	-d FORCE_FIRST_DATA_ONTO_STREAMBLOCK_BOUNDARY -d USE_BIGGER_BUFF
 COPTIONS		= -mc68020 {SWITCHOPTIONS} -i "::::DataStream:Subscribers:Includes:" -i "::::DataStream:"
 
 
-{PROGRAM}		Ä "{Destination}"{PROGRAM}
-"{Destination}"{PROGRAM} Ä {PROGRAM}.make {PROGRAM}.r {OBJECTS}
+{PROGRAM}		A "{Destination}"{PROGRAM}
+"{Destination}"{PROGRAM} A {PROGRAM}.make {PROGRAM}.r {OBJECTS}
 	Rez  -o {PROGRAM} {PROGRAM}.r -a -ov
-	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		"{Libraries}Interface.o" ¶
-		"{Libraries}ToolLibs.o" ¶
-		"{CLibraries}StdCLib.o" ¶
-		"{Libraries}MacRuntime.o" ¶
-		"{Libraries}"IntEnv.o ¶
+	Link {DEBUGOPTIONS} -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		"{Libraries}Interface.o" --
+		"{Libraries}ToolLibs.o" --
+		"{CLibraries}StdCLib.o" --
+		"{Libraries}MacRuntime.o" --
+		"{Libraries}"IntEnv.o --
 		-o {PROGRAM}
 	{COPYTODESTINATION}
 
-{PROGRAM}.c.o Ä {PROGRAM}.make {PROGRAM}.c
+{PROGRAM}.c.o A {PROGRAM}.make {PROGRAM}.c
 	 C {COPTIONS} {DEBUGOPTIONS} -r  {PROGRAM}.c {PROGRAM}.h
 
-WeaveStream.c.o Ä {PROGRAM}.make WeaveStream.c
+WeaveStream.c.o A {PROGRAM}.make WeaveStream.c
 	 C {COPTIONS} {DEBUGOPTIONS} -r  WeaveStream.c WeaveStream.h

@@ -42,14 +42,14 @@ You shall not remove from the Software any copyright notice or other notice and 
 
 3.      Support
 
-If you have purchased the software from ARM, you are entitled to telephone and e-mail support of the Software for the period of one (1)  year, starting on the day of purchase; such support to be provided based upon order of support request, ARM's determination of priority and ARM's support resource availability.  Support supplied by ARM is not to be used as a substitute for employee training nor as additional resource for the purchaser's programming projects.
+If you have purchased the software from ARM, you are entitled to telephone and e-mail support of the Software for the period of one (1)  year, starting on the day of purchase; such support to be provided based upon order of support request, ARM's determination of priority and ARM's support resource availability.  Support supplied by ARM is not to be used as a substitute for employee training nor as additional resource for the purchaser's programming projects.
 
 In the Americas email techsup-usa@arm.com or telephone +1 408 579 2235.
 In Europe email techsup-europe@arm.com or telephone +44 1223 400600.
 In Japan email techsup-asia@arm.com or telephone +81 45 477 5260.
 In the rest of Asia email techsup-asia@arm.com +82 342 712 8234.
 
-If not purchased directly from ARM then this license to use the Software does not provide you with any right to receive support and maintenance from ARM in respect of the Software, except as provided under any claim under the limited warranties provided in Clause 5.  The vendor of the Software may or may not offer support to you for the  Software.
+If not purchased directly from ARM then this license to use the Software does not provide you with any right to receive support and maintenance from ARM in respect of the Software, except as provided under any claim under the limited warranties provided in Clause 5.  The vendor of the Software may or may not offer support to you for the  Software.
 
 4.      Restrictions on Transfer of Licensed Rights
 
@@ -59,7 +59,7 @@ The rights granted to you under this agreement may not be, assigned, sublicensed
 
 For the period of ninety (90) days from the date of receipt by you of the Software, ARM warrants to you that;
 
-* the media on which the Software is provided shall be free from defects in materials and workmanship under normal use;  and
+* the media on which the Software is provided shall be free from defects in materials and workmanship under normal use;  and
 
 * the Software will perform substantially in accordance with the accompanying documentation.
 

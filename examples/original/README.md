@@ -21,7 +21,7 @@ Simple cel/anim player for loading and displaying image files and animations wit
 Tests access to system services through the Access Manager with control pad polling.
 
 ### AnimSample
-Basic cel animation using the Portfolio animation system — loading, playing, and controlling an animation sequence.
+Basic cel animation using the Portfolio animation system -- loading, playing, and controlling an animation sequence.
 
 ### AssetManager
 Block-file based asset management system with a test program demonstrating resource management.
@@ -51,7 +51,7 @@ Joystick/joypad interaction demo reading control pad events and displaying them 
 High-level API examples: **JSAnimation** (play ANIM files), **JSInteractiveMusic** (interactive music), **JSIntMusicThread** (thread-based music), **JSPlayBgndMusic** (background music), **JSInteractiveSound** (sound effects), **JSMoveCel** (sprite movement with D-pad), **JSShowCel** (simple sprite display), **JSBasicSlideShow** (image slideshow), **JSSlideShowVDL** (slideshow with custom VDLs).
 
 ### LREX
-Displays LRForm cels — a pre-rendered 3D animation format using the 3DO graphics pipeline.
+Displays LRForm cels -- a pre-rendered 3D animation format using the 3DO graphics pipeline.
 
 ### MemTest
 Tests available DRAM memory on the 3DO, reporting allocation statistics and memory usage.
@@ -174,93 +174,93 @@ Reads events from the first mouse using the Event Utility Library.
 
 ### Audio
 Extensive audio demos organized by category:
-- **beep** — Plays a synthetic waveform with audio timer delay
-- **capture_audio** — Captures DSP output to a file on the development station
-- **minmax_audio** — Samples DSP output for max/min values to check levels
-- **playmf** — MIDI file player with Juggler and PIMap instrument mapping
-- **playsample** — Interactive AIFF sample player with control pad triggers
-- **playsoundfile** — High-level SoundFilePlayer API for AIFF playback
-- **simple_envelope** — 3-point envelope to ramp sawtooth amplitude cleanly
-- **spoolsoundfile** — Threaded AIFF playback for background streaming
-- **ta_attach** — Paired software-generated samples linked for looped playback
-- **ta_customdelay** — Delay line with knob-controllable mix and decay
-- **ta_envelope** — Two envelopes on sawtooth instruments for dynamic amplitude
-- **ta_pitchnotes** — AIFF sample at different pitches via MIDI note mapping
-- **ta_spool** — Sound spooler filling buffers and signaling tasks
-- **ta_sweeps** — Rapid amplitude/frequency modulation via knob tweaking
-- **ta_timer** — Audio clock rate changes and cue-based task signaling
-- **ta_tuning** — Creating and applying tuning tables for microtonal scales
-- **ta_tweakknobs** — Exploring all DSP knob permutations
-- **tsc_soundfx** — ScoreContext as a sound effects manager with dynamic voice allocation
-- **Advanced_Sound_Player/tsp_algorithmic** — Interactive AIFF branching with static/conditional paths
-- **Advanced_Sound_Player/tsp_rooms** — Adaptive soundtrack that transitions on room changes
-- **Advanced_Sound_Player/tsp_spoolsoundfile** — Threaded streaming audio with loop support
-- **Advanced_Sound_Player/tsp_switcher** — Interactive soundtrack switching between three sound files
-- **Coal_River** — MIDI file playback with special interpreter functions and PIMap mapping
-- **DrumBox** — Loads and plays up to eight rhythm sounds in a 16-beat sequencer
-- **Juggler/tj_canon** — Simple musical canon using Juggler and score routines
-- **Juggler/tj_multi** — Juggler test with non-musical events and software-based timing
-- **Juggler/tj_simple** — Basic Juggler test with two sequences and print function
-- **PatchDemo** — Sample DSP patch files for instrument attachment experimentation
-- **Songs** — MIDI song files and PIMaps (Bobs_Fugue, Coal_River, DrumBox, My_Groove, Zap)
+- **beep** -- Plays a synthetic waveform with audio timer delay
+- **capture_audio** -- Captures DSP output to a file on the development station
+- **minmax_audio** -- Samples DSP output for max/min values to check levels
+- **playmf** -- MIDI file player with Juggler and PIMap instrument mapping
+- **playsample** -- Interactive AIFF sample player with control pad triggers
+- **playsoundfile** -- High-level SoundFilePlayer API for AIFF playback
+- **simple_envelope** -- 3-point envelope to ramp sawtooth amplitude cleanly
+- **spoolsoundfile** -- Threaded AIFF playback for background streaming
+- **ta_attach** -- Paired software-generated samples linked for looped playback
+- **ta_customdelay** -- Delay line with knob-controllable mix and decay
+- **ta_envelope** -- Two envelopes on sawtooth instruments for dynamic amplitude
+- **ta_pitchnotes** -- AIFF sample at different pitches via MIDI note mapping
+- **ta_spool** -- Sound spooler filling buffers and signaling tasks
+- **ta_sweeps** -- Rapid amplitude/frequency modulation via knob tweaking
+- **ta_timer** -- Audio clock rate changes and cue-based task signaling
+- **ta_tuning** -- Creating and applying tuning tables for microtonal scales
+- **ta_tweakknobs** -- Exploring all DSP knob permutations
+- **tsc_soundfx** -- ScoreContext as a sound effects manager with dynamic voice allocation
+- **Advanced_Sound_Player/tsp_algorithmic** -- Interactive AIFF branching with static/conditional paths
+- **Advanced_Sound_Player/tsp_rooms** -- Adaptive soundtrack that transitions on room changes
+- **Advanced_Sound_Player/tsp_spoolsoundfile** -- Threaded streaming audio with loop support
+- **Advanced_Sound_Player/tsp_switcher** -- Interactive soundtrack switching between three sound files
+- **Coal_River** -- MIDI file playback with special interpreter functions and PIMap mapping
+- **DrumBox** -- Loads and plays up to eight rhythm sounds in a 16-beat sequencer
+- **Juggler/tj_canon** -- Simple musical canon using Juggler and score routines
+- **Juggler/tj_multi** -- Juggler test with non-musical events and software-based timing
+- **Juggler/tj_simple** -- Basic Juggler test with two sequences and print function
+- **PatchDemo** -- Sample DSP patch files for instrument attachment experimentation
+- **Songs** -- MIDI song files and PIMaps (Bobs_Fugue, Coal_River, DrumBox, My_Groove, Zap)
 
 ### EventBroker
-- **Control_Port_Peripherals** — Moves a cel with joystick, leaves image on trigger, supports mouse input
-- **EventBroker_Tests** — cpdump, focus, lookie, luckie, maus programs for Event Broker testing
-- **Joystick** — Joystick programming with data filtering, calibration, and cel movement
-- **LightGun** — Lightgun hit detection with coordinate display in Debugger Terminal
+- **Control_Port_Peripherals** -- Moves a cel with joystick, leaves image on trigger, supports mouse input
+- **EventBroker_Tests** -- cpdump, focus, lookie, luckie, maus programs for Event Broker testing
+- **Joystick** -- Joystick programming with data filtering, calibration, and cel movement
+- **LightGun** -- Lightgun hit detection with coordinate display in Debugger Terminal
 
 ### FileSystem
-- **allocate** — File system space pre-allocation and storage management
-- **ls** — Directory listing utility (Unix ls-style)
-- **type** — File content display utility (Unix cat-style)
-- **walker** — Recursive file system directory traversal and enumeration
+- **allocate** -- File system space pre-allocation and storage management
+- **ls** -- Directory listing utility (Unix ls-style)
+- **type** -- File content display utility (Unix cat-style)
+- **walker** -- Recursive file system directory traversal and enumeration
 
 ### Fonts
-- **Font_Library_Example** — Loading and rendering text with the Font Library
-- **FontViewer** — Viewing and inspecting font files with character display
-- **Kanji_FontViewer** — Specialized viewer for Kanji (Japanese) font files
+- **Font_Library_Example** -- Loading and rendering text with the Font Library
+- **FontViewer** -- Viewing and inspecting font files with character display
+- **Kanji_FontViewer** -- Specialized viewer for Kanji (Japanese) font files
 
 ### Graphics
-- **3DO_Bounce** — Interactive bouncing 3DO logo with physics and sound
-- **3DO_Orbit** — Rotating 3DO logo using frame-cycled cel animation
-- **aaplayer** — Simple cel/anim player with speed control
-- **AnimSample** — C++ example demonstrating basic cel animation loading and playback
-- **ColorEcho** — Colorful interactive patterns with color manipulation
-- **lrex** — LRForm cel display — pre-rendered 3D animation format
-- **Performance_Test** — Cel rendering speed benchmark and frame rate measurement
-- **Slideshow_24bit** — 24-bit color slideshow using double-height frame buffer technique
-- **Slideshow** — Image slideshow with VDL support (basic and animation VDL flavors)
-- **symanim** — Symmetric animation effects with mirror/kaleidoscope visuals
+- **3DO_Bounce** -- Interactive bouncing 3DO logo with physics and sound
+- **3DO_Orbit** -- Rotating 3DO logo using frame-cycled cel animation
+- **aaplayer** -- Simple cel/anim player with speed control
+- **AnimSample** -- C++ example demonstrating basic cel animation loading and playback
+- **ColorEcho** -- Colorful interactive patterns with color manipulation
+- **lrex** -- LRForm cel display -- pre-rendered 3D animation format
+- **Performance_Test** -- Cel rendering speed benchmark and frame rate measurement
+- **Slideshow_24bit** -- 24-bit color slideshow using double-height frame buffer technique
+- **Slideshow** -- Image slideshow with VDL support (basic and animation VDL flavors)
+- **symanim** -- Symmetric animation effects with mirror/kaleidoscope visuals
 
 ### Jumpstart
-- **Jumpstart2/Jumpstart_Animation** — Plays ANIM files with high-level API
-- **Jumpstart2/Jumpstart_Interactive_Music** — Interactive background music responding to events
-- **Jumpstart2/JSIntMusicThread** — Thread-based music playback architecture
-- **Jumpstart2/JSPlayBgndMusic** — Simple background music loading and looping
-- **Jumpstart2/Jumpstart_Interactive_Sound** — Event-driven sound effect triggers
-- **Jumpstart2/Jumpstart_Move_Cel** — Sprite movement with D-pad input
-- **Jumpstart2/Jumpstart_Show_Cel** — Simplest sprite display example
-- **Jumpstart2/JSBasicSlideShow** — Sequential image display
-- **Jumpstart2/JSSlideShowVDL** — Slideshow with custom VDL enhanced color
-- **UFO** — UFO-themed game demo with cel animation and background music
+- **Jumpstart2/Jumpstart_Animation** -- Plays ANIM files with high-level API
+- **Jumpstart2/Jumpstart_Interactive_Music** -- Interactive background music responding to events
+- **Jumpstart2/JSIntMusicThread** -- Thread-based music playback architecture
+- **Jumpstart2/JSPlayBgndMusic** -- Simple background music loading and looping
+- **Jumpstart2/Jumpstart_Interactive_Sound** -- Event-driven sound effect triggers
+- **Jumpstart2/Jumpstart_Move_Cel** -- Sprite movement with D-pad input
+- **Jumpstart2/Jumpstart_Show_Cel** -- Simplest sprite display example
+- **Jumpstart2/JSBasicSlideShow** -- Sequential image display
+- **Jumpstart2/JSSlideShowVDL** -- Slideshow with custom VDL enhanced color
+- **UFO** -- UFO-themed game demo with cel animation and background music
 
 ### Kernel
-- **allocmem** — Memory allocation with AllocMem()
-- **memdebug** — Memory debugging library for tracking leaks and usage
-- **msgpassing** — Inter-task message passing with ports and async messaging
-- **signals** — Kernel signal system for task synchronization
-- **timerread** — Reading the system timer for elapsed time measurement
-- **timersleep** — Putting tasks to sleep via kernel timer for scheduling
+- **allocmem** -- Memory allocation with AllocMem()
+- **memdebug** -- Memory debugging library for tracking leaks and usage
+- **msgpassing** -- Inter-task message passing with ports and async messaging
+- **signals** -- Kernel signal system for task synchronization
+- **timerread** -- Reading the system timer for elapsed time measurement
+- **timersleep** -- Putting tasks to sleep via kernel timer for scheduling
 
 ### Miscellaneous
-- **Compression** — Using the compression folio for data compression/decompression
-- **Menu** — Graphical program launcher menu with text rendering and navigation
+- **Compression** -- Using the compression folio for data compression/decompression
+- **Menu** -- Graphical program launcher menu with text rendering and navigation
 
 ### NVRAM
-- **Access** — Low-level NVRAM read/write access for saved data
-- **File_Management** — File-based NVRAM management (create, read, write, delete)
-- **Storage_Tuner** — NVRAM storage performance tuning and analysis utility
+- **Access** -- Low-level NVRAM read/write access for saved data
+- **File_Management** -- File-based NVRAM management (create, read, write, delete)
+- **Storage_Tuner** -- NVRAM storage performance tuning and analysis utility
 
 ---
 
@@ -270,8 +270,8 @@ Extensive audio demos organized by category:
 Font rendering library with example program for loading fonts and displaying text.
 
 ### Image24
-- **ppmto3do** — PPM-to-3DO converter with new -z switch for 24-bit images and custom CLUTs
-- **Slideshow 24bit** — 24-bit slideshow using double-height frame buffers with auto-advance and interpolation
+- **ppmto3do** -- PPM-to-3DO converter with new -z switch for 24-bit images and custom CLUTs
+- **Slideshow 24bit** -- 24-bit slideshow using double-height frame buffers with auto-advance and interpolation
 
 ### NVRAM1.0d2
 Early NVRAM library for reading/writing non-volatile RAM with font and list utilities.
@@ -330,7 +330,7 @@ ppmto3do converter and 24-bit slideshow with double-height frame buffers.
 KFontViewer and KTextBox for Kanji (Japanese) font viewing and text box rendering.
 
 ### PAL Variants
-PALBounceSnd, PALSlideshow, PALsymanim — PAL-compatible versions of bounce/slideshow/animation.
+PALBounceSnd, PALSlideshow, PALsymanim -- PAL-compatible versions of bounce/slideshow/animation.
 
 ### PerfTest / SlideShow
 Performance benchmark and image slideshow with VDL support.

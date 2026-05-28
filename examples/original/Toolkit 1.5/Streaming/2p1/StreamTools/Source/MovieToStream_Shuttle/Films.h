@@ -5,7 +5,7 @@
 
         Written by:	Peter Barrett
 
-        Copyright:	© 1993 by The 3DO Company, all rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company, all rights reserved.
 
         Revision History:
 

@@ -112,14 +112,14 @@ Resource Fork Length : 0
 Dumping Data Fork from offset 0 to 27
 
    0: 43 54 52 4C 00 00 00 1C 00 02 00 00 00 00 00 00 CTRL............
-  10: 50 41 55 53 00 00 00 01 00 00 00 F0             PAUS.......ð
+  10: 50 41 55 53 00 00 00 01 00 00 00 F0             PAUS.......d
 File : test
 Data Fork Length     : 28
 Resource Fork Length : 0
 
 Dumping Data Fork from offset 0 to 27
 
-   0: 43 54 52 4C 00 00 00 1C 00 00 03 E8 00 00 00 00 CTRL.......è....
+   0: 43 54 52 4C 00 00 00 1C 00 00 03 E8 00 00 00 00 CTRL.......e....
   10: 41 4C 52 4D 00 00 00 01 00 00 00 00             ALRM........
 File : test
 Data Fork Length     : 28
@@ -127,7 +127,7 @@ Resource Fork Length : 0
 
 Dumping Data Fork from offset 0 to 27
 
-   0: 43 54 52 4C 00 00 00 1C 00 00 03 E8 00 00 00 00 CTRL.......è....
-  10: 47 4F 54 4F 00 00 00 F0 00 00 00 00             GOTO...ð....
+   0: 43 54 52 4C 00 00 00 1C 00 00 03 E8 00 00 00 00 CTRL.......e....
+  10: 47 4F 54 4F 00 00 00 F0 00 00 00 00             GOTO...d....
 
 

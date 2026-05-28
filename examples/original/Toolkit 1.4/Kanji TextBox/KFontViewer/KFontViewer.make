@@ -5,7 +5,7 @@
 #
 #	Written by:	Jay London
 #
-#	Copyright:	© 1993 by The 3DO Company. All rights reserved.
+#	Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
 #				This material constitutes confidential and proprietary
 #				information of the 3DO Company and shall not be used by
 #				any Person or for any purpose except as expressly
@@ -42,45 +42,45 @@ LOptions		= -aif -r -b 0x00 -d -workspace 0x10000
 #####################################
 #		Object files
 #####################################
-LIBS			=	"::KTextBox.lib"			¶
-					"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}audio.lib"		¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}clib.lib"			¶
+LIBS			=	"::KTextBox.lib"			--
+					"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}audio.lib"		--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}clib.lib"			--
 					"{3DOLibs}swi.lib"			
 					
 
 
 # NOTE: Add object files here...
-OBJECTS			=	"{ObjectDir}KFontViewer.c.o"	 ¶
+OBJECTS			=	"{ObjectDir}KFontViewer.c.o"	 --
 					"{ObjectDir}TimeHelper.c.o"	
 
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{App}
+All				A	{App}
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{App}		ÄÄ	{App}.make {OBJECTS}
-	{LINK}	{LOptions}					¶
-			-o {App}					¶
-			"{3DOLibs}cstartup.o"		¶
-			{OBJECTS}					¶
+{App}		AA	{App}.make {OBJECTS}
+	{LINK}	{LOptions}					--
+			-o {App}					--
+			"{3DOLibs}cstartup.o"		--
+			{OBJECTS}					--
 			{LIBS}
 	SetFile {App} -c 'EaDJ' -t 'PROJ'
 	modbin "{App}" -debug -stack 0x10000

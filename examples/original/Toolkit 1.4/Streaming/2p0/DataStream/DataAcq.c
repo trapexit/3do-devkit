@@ -6,7 +6,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright й 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	5/19/94		fyp		Version 2.0
@@ -826,7 +826,7 @@ _MapMarkerToOffset (AcqContextPtr ctx, unsigned long markerValue,
   /* Search the marker table for the specified target time, as modified
    * by any of the caller specified branching options.
    *
-   * NOTE: еее assumes there is at least one entry in the table еее
+   * NOTE: *** assumes there is at least one entry in the table ***
    */
   marker = markerTable;
   while ((marker < endOfMarkerTable)
@@ -1023,7 +1023,7 @@ DoGetData (AcqContextPtr ctx, DataAcqMsgPtr dataMsg)
       ctx->offset += dataMsg->msg.data.bufferSize;
 
       /* Add buffer to front of in-progress list.
-       * еееееееееее NOTE: fix any I/O ordering problems here ееееееееееее
+       * *********** NOTE: fix any I/O ordering problems here ************
        *		It may be the case that completing I/O does NOT
        *complete in the order it was requested. This can be solved here by
        *		managing the order of the queue.

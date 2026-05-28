@@ -22,7 +22,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	08/22/94	dtc		Version 2.4
@@ -126,7 +126,7 @@
  */
 #define CLOSE_AUDIO_ON_SWITCH 0
 
-/* ¥¥¥TEMPORARY¥¥¥ Compile switch to turn on/off whether we explicitly
+/* ***TEMPORARY*** Compile switch to turn on/off whether we explicitly
  * free Cinepak buffers. Should be set to zero for testing new automatic
  * memory freeing scheme.
  */

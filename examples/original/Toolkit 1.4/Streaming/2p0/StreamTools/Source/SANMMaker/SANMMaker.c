@@ -9,7 +9,7 @@
  *
  *	Written by Jay London
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/19/93	jb		Add gLoopOption and code to handle new

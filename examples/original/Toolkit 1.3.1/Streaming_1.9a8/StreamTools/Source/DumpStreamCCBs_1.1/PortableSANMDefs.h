@@ -4,7 +4,7 @@
  *	Contains:		defintions are needed to write out the streamed
  *animation data files
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	8/23/93		jb		New today

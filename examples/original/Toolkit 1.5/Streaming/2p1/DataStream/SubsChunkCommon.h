@@ -5,7 +5,7 @@
  *
  *	Written by:		Donn Denman
  *
- *	Copyright © 1994 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1994 The 3DO Company. All Rights Reserved.
  *
  *	History:
  * 09/07/94			dtc		Define RELATIVE_BRANCHING to 0 if

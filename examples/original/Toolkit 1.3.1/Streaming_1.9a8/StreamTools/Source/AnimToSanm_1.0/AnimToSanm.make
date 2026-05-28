@@ -8,16 +8,16 @@ OBJECTS = GetOpt.c.o AnimToSanm.c.o
 
 
 
-AnimToSanm ÄÄ AnimToSanm.make AnimToSanm.r {OBJECTS}
+AnimToSanm AA AnimToSanm.make AnimToSanm.r {OBJECTS}
 	Rez  -o AnimToSanm AnimToSanm.r -a -ov
-	Link -d -c 'MPS ' -t MPST ¶
-		{OBJECTS} ¶
-		"{CLibraries}"StdClib.o ¶
-		"{Libraries}"Stubs.o ¶
-		"{Libraries}"Runtime.o ¶
-		"{Libraries}"Interface.o ¶
+	Link -d -c 'MPS ' -t MPST --
+		{OBJECTS} --
+		"{CLibraries}"StdClib.o --
+		"{Libraries}"Stubs.o --
+		"{Libraries}"Runtime.o --
+		"{Libraries}"Interface.o --
 		-o AnimToSanm
-GetOpt.c.o Ä AnimToSanm.make GetOpt.c
+GetOpt.c.o A AnimToSanm.make GetOpt.c
 	 C -r  GetOpt.c
-AnimToSanm.c.o Ä AnimToSanm.make AnimToSanm.c
+AnimToSanm.c.o A AnimToSanm.make AnimToSanm.c
 	 C -r  AnimToSanm.c

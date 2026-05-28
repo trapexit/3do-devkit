@@ -1,12 +1,12 @@
 /*
         File:		NVRAM.c
 
-        Contains:	NVRAM Utility Ñ an application for managing NVRAM
+        Contains:	NVRAM Utility N an application for managing NVRAM
    filesystems
 
         Written by:	Francis Stanbach
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -314,7 +314,7 @@ Initialize (void)
 {
   // long i;
 
-  kprintf ("\n"); // move the debuggerÕs cursor past the 'Mac-->' prompt
+  kprintf ("\n"); // move the debuggerOs cursor past the 'Mac-->' prompt
 
   gVBLIOReq = GetVBLIOReq ();
 

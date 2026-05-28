@@ -3,7 +3,7 @@
 #
 #	Contains:	make file for building DataAcq.lib
 #
-#	Copyright © 1992 The 3DO Company
+#	Copyright (c) 1992 The 3DO Company
 #
 # 	All rights reserved. This material constitutes confidential and proprietary 
 #	information of the 3DO Company and shall not be used by any Person or for any 
@@ -42,42 +42,42 @@ LOptions		= -c -o
 #####################################
 #		Object files
 #####################################
-OBJECTS			=	"{ObjectDir}DataAcq.c.o"		¶
-					"{ObjectDir}BlockFile.c.o"		¶
-					"{ObjectDir}ItemPool.c.o"		¶
+OBJECTS			=	"{ObjectDir}DataAcq.c.o"		--
+					"{ObjectDir}BlockFile.c.o"		--
+					"{ObjectDir}ItemPool.c.o"		--
 					"{ObjectDir}ThreadHelper.c.o"
 
 
 #####################################
 #	Default build rules
 #####################################
-All				Ä	{Library}.lib
+All				A	{Library}.lib
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {DepDir}{Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {DepDir}{Default}.s
 
 #####################################
 #	Target build rules
 #####################################
-{Library}.lib		ÄÄ	{Library}.lib.make {OBJECTS}
-	{LIBRARIAN}	{LOptions}			¶
-				{Library}.lib		¶
+{Library}.lib		AA	{Library}.lib.make {OBJECTS}
+	{LIBRARIAN}	{LOptions}			--
+				{Library}.lib		--
 				{OBJECTS}
 
 #####################################
 #	Include file dependencies
 #####################################
 
-DataAcq.c			Ä	DataAcq.h DataStream.h BlockFile.h MsgUtils.h ¶
+DataAcq.c			A	DataAcq.h DataStream.h BlockFile.h MsgUtils.h --
 						MemPool.h ThreadHelper.h
-BlockFile.c			Ä	BlockFile.h
-ItemPool.c			Ä	ItemPool.h
-ThreadHelper.c		Ä	ThreadHelper.h
+BlockFile.c			A	BlockFile.h
+ItemPool.c			A	ItemPool.h
+ThreadHelper.c		A	ThreadHelper.h
 
 
 

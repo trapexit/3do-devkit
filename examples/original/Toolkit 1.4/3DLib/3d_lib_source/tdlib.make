@@ -33,45 +33,45 @@ LIBOptions		=  -c -o
 #####################################
 #		Object files
 #####################################
-LIBS			=	"{3DOLibs}graphics.lib"		¶
-					"{3DOLibs}filesystem.lib"	¶
-					"{3DOLibs}input.lib"		¶
-					"{3DOLibs}Lib3DO.lib"		¶
-					"{3DOLibs}operamath.lib"	¶
-					"{3DOLibs}swi.lib"			¶
-					"{3DOLibs}clib.lib"			¶
+LIBS			=	"{3DOLibs}graphics.lib"		--
+					"{3DOLibs}filesystem.lib"	--
+					"{3DOLibs}input.lib"		--
+					"{3DOLibs}Lib3DO.lib"		--
+					"{3DOLibs}operamath.lib"	--
+					"{3DOLibs}swi.lib"			--
+					"{3DOLibs}clib.lib"			--
 					"{3DOLibs}audio.lib"
 
 # NOTE: Add object files here...
-OBJECTS			=   "{ObjectDir}render_3d.c.o"       ¶
-					"{ObjectDir}manage_3d.c.o"       ¶
-                    "{ObjectDir}miscasm_3d.s.o"      ¶
-					"{ObjectDir}process_3d.c.o"      ¶
-					"{ObjectDir}misc_3d.c.o"		 ¶
-					"{ObjectDir}utils_3d.c.o"		 ¶
-					"{ObjectDir}math_3d.s.o"		 ¶
+OBJECTS			=   "{ObjectDir}render_3d.c.o"       --
+					"{ObjectDir}manage_3d.c.o"       --
+                    "{ObjectDir}miscasm_3d.s.o"      --
+					"{ObjectDir}process_3d.c.o"      --
+					"{ObjectDir}misc_3d.c.o"		 --
+					"{ObjectDir}utils_3d.c.o"		 --
+					"{ObjectDir}math_3d.s.o"		 --
 					"{ObjectDir}sound_3d.c.o"
 
 ####################################
 #	Default build rules
 #####################################
-All				Ä	{Program}.lib
+All				A	{Program}.lib
 
-{ObjectDir}		Ä	:
+{ObjectDir}		A	:
 
-.c.o			Ä	.c
+.c.o			A	.c
 	{CC} {COptions} -o {TargDir}{Default}.c.o {Default}.c
 
-.s.o			Ä	.s
+.s.o			A	.s
 	{ASM} {SOptions} -o {TargDir}{Default}.s.o {Default}.s
 
 
 #####################################
 #	Target build rules
 #####################################
-{Program}.lib		ÄÄ	{Program}.make {OBJECTS}
-	{LIB}	{LIBOptions}			¶
-			{Program}.lib			¶
+{Program}.lib		AA	{Program}.make {OBJECTS}
+	{LIB}	{LIBOptions}			--
+			{Program}.lib			--
 			-v {LibList}
 	rename {Program}.lib 3dlib.lib
 	duplicate {3DOAutodup} 3dlib.lib "{3DOLibs}" 
@@ -79,4 +79,4 @@ All				Ä	{Program}.lib
 #####################################
 #	Include file dependencies
 #####################################
-3dlib.lib		Ä  tdlib.make
+3dlib.lib		A  tdlib.make

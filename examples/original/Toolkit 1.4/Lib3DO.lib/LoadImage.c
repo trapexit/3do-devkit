@@ -4,7 +4,7 @@
  *	Contains:		Routine to allocate a buffer and load an image
  *					into it, using fast block I/O.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *  05/12/94  ian	Removed reference to GrafBase->gf_ZeroPage.  We now use

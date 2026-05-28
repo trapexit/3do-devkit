@@ -29,52 +29,52 @@
 /*#define isANK(c)		( isprint(c) || isKana(c) )*/
 #define isANK(c) ((0x20 <= (c) && (c) <= 0x7E) || isKana (c))
 
-#define CR 0x0D         /* ‰üs */
+#define CR 0x0D         /* ‰us */
 #define LF 0x0A         /* •œ‹A */
 #define ESC 0x1B        /* ƒGƒXƒP[ƒv */
 #define TAB 0x09        /* ƒ^ƒu */
 #define SPACE 0x20      /* ƒXƒy[ƒX */
 #define KANA_START 0xA0 /* ”¼ŠpƒJƒ^ƒJƒiƒXƒ^[ƒg */
-#define DEL 0x7F        /* ƒfƒŠ[ƒg•¶š */
+#define DEL 0x7F        /* ƒfƒŠ[ƒg•--š */
 
-#define O_VERTICAL 0x01 /* c‘‚« ON */
-#define O_KINSOKU 0x02  /* ‹Ö‘¥ˆ— ON */
+#define O_VERTICAL 0x01 /* c‘‚" ON */
+#define O_KINSOKU 0x02  /* ‹O‘*ˆ— ON */
 
 #define ATTR_STD 0x01    /* •W€‚Ìš‘Ì */
 #define ATTR_BOLD 0x02   /* ƒ{[ƒ‹ƒh‘Ì(‘¾š) */
 #define ATTR_ITARIC 0x04 /* ƒCƒ^ƒŠƒbƒN‘Ì(Î‘Ì) */
-#define ATTR_WHITE 0x08  /* ”’”²‚« */
-#define ATTR_SHADOW 0x10 /* ‰e•t‚« */
+#define ATTR_WHITE 0x08  /* ”’”²‚" */
+#define ATTR_SHADOW 0x10 /* ‰e•t‚" */
 
-#define XXX_UNDERLINE 0x00   /* ‰ºü */
+#define XXX_UNDERLINE 0x00   /* ‰ou */
 #define XXX_RUBI 0x00        /* ƒ‹ƒr */
-#define XXX_SUBSCRIPT 0x00   /* ‰º•t‚« */
-#define XXX_SUPERSCRIPT 0x00 /* ã•t‚« */
+#define XXX_SUBSCRIPT 0x00   /* ‰o•t‚" */
+#define XXX_SUPERSCRIPT 0x00 /* ã•t‚" */
 
-#define TOP_KIN_ZEN "" /* ‘SŠps“ª‹Ö‘¥•¶š */
-#define BTM_KIN_ZEN "" /* ‘SŠps––‹Ö‘¥•¶š */
-#define TOP_KIN_HAN "" /* ”¼Šps“ª‹Ö‘¥•¶š */
-#define BTM_KIN_HAN "" /* ”¼Šps“ª‹Ö‘¥•¶š */
+#define TOP_KIN_ZEN "" /* ‘SŠps“a‹O‘*•--š */
+#define BTM_KIN_ZEN "" /* ‘SŠps––‹O‘*•--š */
+#define TOP_KIN_HAN "" /* ”¼Šps“a‹O‘*•--š */
+#define BTM_KIN_HAN "" /* ”¼Šps“a‹O‘*•--š */
 
-#define FONT_GOTHIC 1  /* •½¬ƒSƒVƒbƒN‘Ì */
-#define FONT_MINCHOU 2 /* •½¬–¾’©‘Ì */
+#define FONT_GOTHIC 1  /* •½not ƒSƒVƒbƒN‘Ì */
+#define FONT_MINCHOU 2 /* •½not –¾’(c)‘Ì */
 
 #define PLUTSIZE_4BIT_CODEDCEL 32 /* 4bitƒZƒ‹‚ÌPLUT‚ÌƒTƒCƒY */
 #define PLUTSIZE_1BIT_CODEDCEL 4  /* 1bitƒZƒ‹‚ÌPLUT‚ÌƒTƒCƒY */
 
-#define FOURBITS_PER_PIXEL 4 /* 4bitƒZƒ‹‚ÌPLUT‚Ìê‡ */
+#define FOURBITS_PER_PIXEL 4 /* 4bitƒZƒ‹‚ÌPLUT‚Ìe‡ */
 #define ONEBITS_PER_PIXEL 1  /* 1bitƒZƒ‹‚ÌPLUT‚ÌƒTƒCƒY */
 
-#define CODE_TABLE_HAN 0x01   /* ”¼ŠpƒR[ƒhƒe[ƒuƒ‹‚ª‘¶İ‚·‚é */
-#define CODE_TABLE_ZEN 0x02   /* ‘SŠpƒR[ƒhƒe[ƒuƒ‹‚ª‘¶İ‚·‚é */
-#define MINMAX_TABLE_HAN 0x04 /* ”¼Šp•¶š”ÍˆÍƒe[ƒuƒ‹‚ª‘¶İ‚·‚é */
-#define MINMAX_TABLE_ZEN 0x08 /* ‘SŠp•¶š”ÍˆÍƒe[ƒuƒ‹‚ª‘¶İ‚·‚é */
-#define WIDTH_TABLE_HAN 0x10  /* ”¼Šp•¶š•ƒe[ƒuƒ‹‚ª‘¶İ‚·‚é */
-#define WIDTH_TABLE_ZEN 0x20  /* ‘SŠp•¶š•ƒe[ƒuƒ‹‚ª‘¶İ‚·‚é */
+#define CODE_TABLE_HAN 0x01   /* ”¼ŠpƒR[ƒhƒe[ƒuƒ‹‚a‘--İ‚*‚e */
+#define CODE_TABLE_ZEN 0x02   /* ‘SŠpƒR[ƒhƒe[ƒuƒ‹‚a‘--İ‚*‚e */
+#define MINMAX_TABLE_HAN 0x04 /* ”¼Šp•--š”IˆIƒe[ƒuƒ‹‚a‘--İ‚*‚e */
+#define MINMAX_TABLE_ZEN 0x08 /* ‘SŠp•--š”IˆIƒe[ƒuƒ‹‚a‘--İ‚*‚e */
+#define WIDTH_TABLE_HAN 0x10  /* ”¼Šp•--š•ƒe[ƒuƒ‹‚a‘--İ‚*‚e */
+#define WIDTH_TABLE_ZEN 0x20  /* ‘SŠp•--š•ƒe[ƒuƒ‹‚a‘--İ‚*‚e */
 
 typedef struct
 {
-  Int32 Value; /* •¶šƒR[ƒh */
+  Int32 Value; /* •--šƒR[ƒh */
 } KCharRec;
 
 typedef struct
@@ -89,21 +89,21 @@ typedef struct
   uint32 fontSubType;  /* Type face of the font */
   uint32 fontFlags;    /* 32-bits of font flags.  0 for now */
 
-  uint32 fontCharWidth;  /* •¶š‚Ì‚‚³ */
-  uint32 fontCharHeight; /* •¶š‚Ì• */
+  uint32 fontCharWidth;  /* •--š‚Ì‚‚³ */
+  uint32 fontCharHeight; /* •--š‚Ì• */
   uint32 bitsPerPixel;   /* ‚P‰æ‘f“–‚½‚è‚Ìƒrƒbƒg” */
-  uint32 grayScaleBit;   /* ‚P‰æ‘f“–‚½‚è‚Ìƒrƒbƒg”‚Ì‚¤‚¿ŠK’²—pƒrƒbƒg” */
+  uint32 grayScaleBit;   /* ‚P‰æ‘f“–‚½‚è‚Ìƒrƒbƒg”‚Ì‚¤‚?ŠK’²—pƒrƒbƒg” */
   uint32 cornerWeightBit;
-  uint32 hmincode;        /* ”¼Šp•¶šÅ¬ƒR[ƒh */
-  uint32 hmaxcode;        /* ”¼Šp•¶šÅ‘åƒR[ƒh */
-  uint32 zmincode;        /* ‘SŠp•¶šÅ¬ƒR[ƒh */
-  uint32 zmaxcode;        /* ‘SŠp•¶šÅ‘åƒR[ƒh */
-  uint32 hcharNum;        /* ”¼Šp•¶š” */
-  uint32 zcharNum;        /* ‘SŠp•¶š” */
-  uint32 offsetHcodetbl;  /* ”¼Špk‘Şƒe[ƒuƒ‹‚Ö‚ÌƒIƒtƒZƒbƒg */
-  uint32 offsetZcodetbl;  /* ‘SŠpk‘Şƒe[ƒuƒ‹‚Ö‚ÌƒIƒtƒZƒbƒg */
-  uint32 offsetHwidthtbl; /* ”¼Šp•¶š•ƒe[ƒuƒ‹‚Ö‚ÌƒIƒtƒZƒbƒg */
-  uint32 offsetZwidthtbl; /* ‘SŠp•¶š•ƒe[ƒuƒ‹‚Ö‚ÌƒIƒtƒZƒbƒg */
+  uint32 hmincode;        /* ”¼Šp•--šAnot ƒR[ƒh */
+  uint32 hmaxcode;        /* ”¼Šp•--šA‘åƒR[ƒh */
+  uint32 zmincode;        /* ‘SŠp•--šAnot ƒR[ƒh */
+  uint32 zmaxcode;        /* ‘SŠp•--šA‘åƒR[ƒh */
+  uint32 hcharNum;        /* ”¼Šp•--š” */
+  uint32 zcharNum;        /* ‘SŠp•--š” */
+  uint32 offsetHcodetbl;  /* ”¼Špk‘Şƒe[ƒuƒ‹‚O‚ÌƒIƒtƒZƒbƒg */
+  uint32 offsetZcodetbl;  /* ‘SŠpk‘Şƒe[ƒuƒ‹‚O‚ÌƒIƒtƒZƒbƒg */
+  uint32 offsetHwidthtbl; /* ”¼Šp•--š•ƒe[ƒuƒ‹‚O‚ÌƒIƒtƒZƒbƒg */
+  uint32 offsetZwidthtbl; /* ‘SŠp•--š•ƒe[ƒuƒ‹‚O‚ÌƒIƒtƒZƒbƒg */
   uint32 offsetHbitmap;
   uint32 offsetZbitmap;
   uint32 offsetCopyright;    /* offset to '/0' terminated Copyright string */
@@ -120,7 +120,7 @@ typedef struct
 typedef struct
 {
   KFontFileHeader *header; /* ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹ƒwƒbƒ_ */
-  char *hcodeTbl;          /* ”¼Šp‚Ì•¶šƒR[ƒhƒe[ƒuƒ‹ */
+  char *hcodeTbl;          /* ”¼Šp‚Ì•--šƒR[ƒhƒe[ƒuƒ‹ */
 } KFontDesc;
 
 ///ÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑ
@@ -271,7 +271,7 @@ KMakePLUT2 (Color fgColor, Color bgColor, uint8 opaqueFlag,
   uint16 foreColor, backColor;
   uint8 red, green, blue, *byteptr;
 
-  /* 1bitƒZƒ‹‚ÌPLUT‚ğİ’è‚·‚é */
+  /* 1bitƒZƒ‹‚ÌPLUT‚ğİ’è‚*‚e */
   /* set foreground color */
   byteptr = (uint8 *)&fgColor;
   red = *(byteptr + 1);
@@ -436,13 +436,13 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
   Int32 pSize;
 
   /***********************************************************************\
-   *	ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_î•ñ‚ğƒ[ƒh‚·‚é	                    *
+   *	ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_î•ñ‚ğƒ[ƒh‚*‚e	                    *
    \***********************************************************************/
   strcpy (fileName, (char *)name);
 
   /* KFontFileHeader‚ğ“Ç‚İ‚Ş */
   dataSize = sizeof (KFontFileHeader);
-  /* KFontFileHeader ‚ğ“Ç‚İ‚Ş‚½‚ß‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é */
+  /* KFontFileHeader ‚ğ“Ç‚İ‚Ş‚½‚ß‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚*‚e */
   dataPtr = (char *)ALLOCMEM (dataSize, MEMTYPE_CEL);
   if (dataPtr == NULL)
     {
@@ -487,7 +487,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
 
   fontDesc->header = (KFontFileHeader *)dataPtr;
   fseekOffset
-      += sizeof (KFontFileHeader); /* MAC‚ÌƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_‚Ì‘å‚«‚³*/
+      += sizeof (KFontFileHeader); /* MAC‚ÌƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_‚Ì‘å‚"‚³*/
 
   printf ("\n\n");
   printf ("chunk_ID   = '%c%c%c%c'\n",
@@ -540,7 +540,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
   theFont->font_ZFSeekOffset = fontDesc->header->offsetZbitmap;
 
   /***********************************************************************
-   *	ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_î•ñ‚ğƒ`ƒFƒbƒN‚·‚é *
+   *	ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_î•ñ‚ğƒ`ƒFƒbƒN‚*‚e *
    ***********************************************************************/
 
   if ((fontDesc->header->fontCharWidth) == 0)
@@ -612,11 +612,11 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
   if (fontDesc->header->hcharNum > 0)
     {
       /***********************************************************************\
-       *	”¼Šp‚ÌƒR[ƒhƒe[ƒuƒ‹‚Æ•¶š•ƒe[ƒuƒ‹‚ğƒ[ƒh‚·‚é *
+       *	”¼Šp‚ÌƒR[ƒhƒe[ƒuƒ‹‚Æ•--š•ƒe[ƒuƒ‹‚ğƒ[ƒh‚*‚e *
        \***********************************************************************/
       if (fontDesc->header->offsetHcodetbl != 0)
         { // <HPP> for our sake this is ignored
-          /* ”¼Šp‚ÌƒR[ƒhƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é(ƒeƒ“ƒ|ƒ‰ƒŠ) */
+          /* ”¼Šp‚ÌƒR[ƒhƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚*‚e(ƒeƒ“ƒ|ƒ‰ƒŠ) */
           dataSize = fontDesc->header->hcharNum;
           tmpSize = dataSize;
           dataPtr = (char *)ALLOCMEM (dataSize, MEMTYPE_CEL);
@@ -642,7 +642,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
             }
           fontDesc->hcodeTbl = (char *)dataPtr;
 
-          /* ”¼Šp‚ÌƒR[ƒhƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é */
+          /* ”¼Šp‚ÌƒR[ƒhƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚*‚e */
           dataSize = fontDesc->header->hcharNum * sizeof (uint16);
           dataPtr = (char *)ALLOCMEM (dataSize, MEMTYPE_CEL);
           if (dataPtr == NULL)
@@ -656,7 +656,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
               return (ER_KTextBox_CannotMemAlloc);
             }
           theFont->font_Hinfo.codeTbl = (uint16 *)dataPtr;
-          /* KFont3DO\\‘¢‘Ì‚É”¼ŠpƒR[ƒhƒe[ƒuƒ‹ ‚ğƒZƒbƒg‚·‚é */
+          /* KFont3DO\\‘¢‘Ì‚E”¼ŠpƒR[ƒhƒe[ƒuƒ‹ ‚ğƒZƒbƒg‚*‚e */
           for (i = 0; i < fontDesc->header->hcharNum; i++)
             {
               theFont->font_Hinfo.codeTbl[i] = (uint16)fontDesc->hcodeTbl[i];
@@ -667,7 +667,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
 
       if (fontDesc->header->offsetHwidthtbl != 0)
         { // <HPP> for our sake this is ignored
-          /* ”¼Šp‚Ì•¶š•ƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é */
+          /* ”¼Šp‚Ì•--š•ƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚*‚e */
           dataSize = fontDesc->header->hcharNum;
           tmpSize = dataSize;
           dataPtr = (char *)ALLOCMEM (dataSize, MEMTYPE_CEL);
@@ -686,7 +686,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
               return (ER_KTextBox_CannotMemAlloc);
             }
           fseekOffset = fontDesc->header->offsetHwidthtbl;
-          /* ”¼Šp‚Ì•¶š•ƒe[ƒuƒ‹ ‚ğ“Ç‚İ‚Ş */
+          /* ”¼Šp‚Ì•--š•ƒe[ƒuƒ‹ ‚ğ“Ç‚İ‚Ş */
           error = ReadFile_E (theFont, (int)dataSize, (Int32 *)dataPtr,
                               fseekOffset);
           if (error < 0)
@@ -703,7 +703,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
               DIAGNOSTIC ("Error reading font file hwidthTbl.\n");
               return error;
             }
-          /* KFont3DO\\‘¢‘Ì‚É•¶š•ƒe[ƒuƒ‹ ‚ğƒZƒbƒg‚·‚é */
+          /* KFont3DO\\‘¢‘Ì‚E•--š•ƒe[ƒuƒ‹ ‚ğƒZƒbƒg‚*‚e */
           theFont->font_Hinfo.widthTbl = (uint8 *)dataPtr;
           fseekOffset += dataSize;
         }
@@ -712,11 +712,11 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
   if (fontDesc->header->zcharNum > 0)
     {
       /***********************************************************************\
-       *	‘SŠp‚ÌƒR[ƒhƒe[ƒuƒ‹‚Æ•¶š•ƒe[ƒuƒ‹‚ğƒ[ƒh‚·‚é *
+       *	‘SŠp‚ÌƒR[ƒhƒe[ƒuƒ‹‚Æ•--š•ƒe[ƒuƒ‹‚ğƒ[ƒh‚*‚e *
        \***********************************************************************/
       if (fontDesc->header->offsetZcodetbl != 0)
         { // <HPP> for our sake this is ignored
-          /* ‘SŠp‚ÌƒR[ƒhƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é(ƒeƒ“ƒ|ƒ‰ƒŠ) */
+          /* ‘SŠp‚ÌƒR[ƒhƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚*‚e(ƒeƒ“ƒ|ƒ‰ƒŠ) */
           dataSize = fontDesc->header->zcharNum * sizeof (uint16);
           dataPtr = (char *)ALLOCMEM (dataSize, MEMTYPE_CEL);
           if (dataPtr == NULL)
@@ -766,7 +766,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
               DIAGNOSTIC ("Error reading font file zcodeTbl.\n");
               return error;
             }
-          /* KFont3DO\\‘¢‘Ì‚É‘SŠpƒR[ƒhƒe[ƒuƒ‹ ‚ğƒZƒbƒg‚·‚é */
+          /* KFont3DO\\‘¢‘Ì‚E‘SŠpƒR[ƒhƒe[ƒuƒ‹ ‚ğƒZƒbƒg‚*‚e */
           theFont->font_Zinfo.codeTbl = (uint16 *)dataPtr;
 
           fseekOffset += dataSize;
@@ -774,7 +774,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
 
       if (fontDesc->header->offsetZwidthtbl != 0)
         { // <HPP> for our sake this is ignored
-          /* ‘SŠp‚Ì•¶š•ƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é */
+          /* ‘SŠp‚Ì•--š•ƒe[ƒuƒ‹—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚*‚e */
           dataSize = fontDesc->header->zcharNum;
           dataPtr = (char *)ALLOCMEM (dataSize, MEMTYPE_CEL);
           if (dataPtr == NULL)
@@ -805,7 +805,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
               return (ER_KTextBox_CannotMemAlloc);
             }
           fseekOffset = fontDesc->header->offsetZwidthtbl;
-          /* ‘SŠp‚Ì•¶š•ƒe[ƒuƒ‹ ‚ğ“Ç‚İ‚Ş */
+          /* ‘SŠp‚Ì•--š•ƒe[ƒuƒ‹ ‚ğ“Ç‚İ‚Ş */
           error = ReadFile_E (theFont, (int)dataSize, (Int32 *)dataPtr,
                               fseekOffset);
           if (error < 0)
@@ -834,7 +834,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
               DIAGNOSTIC ("Error reading font file hwidthTbl.\n");
               return error;
             }
-          /* KFont3DO\\‘¢‘Ì‚É•¶š•ƒe[ƒuƒ‹ ‚ğƒZƒbƒg‚·‚é */
+          /* KFont3DO\\‘¢‘Ì‚E•--š•ƒe[ƒuƒ‹ ‚ğƒZƒbƒg‚*‚e */
           theFont->font_Zinfo.widthTbl = (uint8 *)dataPtr;
           fseekOffset += dataSize;
         }
@@ -842,7 +842,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
 
   if (fontDesc->header->hcharNum > 0)
     {
-      /* ”¼Šp‚ÌƒtƒHƒ“ƒgƒf[ƒ^—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é */
+      /* ”¼Šp‚ÌƒtƒHƒ“ƒgƒf[ƒ^—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚*‚e */
       pSize = fontDesc->header->fontCharWidth
               * fontDesc->header->fontCharHeight
               * fontDesc->header->bitsPerPixel / 2;
@@ -929,7 +929,7 @@ KLoadFontDesc (char *name, KFontDesc *fontDesc, KFont3DO *theFont,
 
   if (fontDesc->header->zcharNum > 0)
     {
-      /* ‘SŠp‚ÌƒtƒHƒ“ƒgƒf[ƒ^—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é */
+      /* ‘SŠp‚ÌƒtƒHƒ“ƒgƒf[ƒ^—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚*‚e */
       pSize = fontDesc->header->fontCharHeight
               * fontDesc->header->fontCharWidth
               * fontDesc->header->bitsPerPixel;
@@ -1039,7 +1039,7 @@ KLoadFont (char *name, KFont3DO *theFont, Boolean fullRead)
   Int32 ret;
 
   /***********************************************************************\
-   *	Font3DO\\‘¢‘Ì‚ğ‰Šú‰»‚·‚é			                     *
+   *	Font3DO\\‘¢‘Ì‚ğ‰Šu‰"‚*‚e			                     *
    \***********************************************************************/
 
   theFont->font_Gpp = 0;
@@ -1068,7 +1068,7 @@ KLoadFont (char *name, KFont3DO *theFont, Boolean fullRead)
   theFont->maxCharSize = 0;
 
   /***********************************************************************\
-   *	KFontDesc\\‘¢‘Ì‚Öƒf[ƒ^‚ğƒ[ƒh‚·‚é		                     *
+   *	KFontDesc\\‘¢‘Ì‚Oƒf[ƒ^‚ğƒ[ƒh‚*‚e		                     *
    \***********************************************************************/
 
   ret = KLoadFontDesc (name, &theFontDesc, theFont, fullRead, true);
@@ -1076,7 +1076,7 @@ KLoadFont (char *name, KFont3DO *theFont, Boolean fullRead)
     return (ret);
 
   /***********************************************************************\
-   *	c‚è‚Ìƒf[ƒ^‚ğƒZƒbƒg‚·‚é			                    *
+   *	c‚è‚Ìƒf[ƒ^‚ğƒZƒbƒg‚*‚e			                    *
    \***********************************************************************/
 
   theFont->font_Gpp = (uint8)theFontDesc.header->grayScaleBit;
@@ -1116,7 +1116,7 @@ Int32
 KFreeFont (KFont3DO *theFont)
 {
 
-  /* ”¼Šp‚ÌƒR[ƒhƒe[ƒuƒ‹‚Æ•ƒe[ƒuƒ‹‚ÆƒsƒNƒZƒ‹ƒf[ƒ^•”‚ğ‰ğ•ú‚·‚é */
+  /* ”¼Šp‚ÌƒR[ƒhƒe[ƒuƒ‹‚Æ•ƒe[ƒuƒ‹‚ÆƒsƒNƒZƒ‹ƒf[ƒ^•”‚ğ‰ğ•u‚*‚e */
   if (theFont->font_Hinfo.codeTbl != NULL)
     {
       FREEMEM (theFont->font_Hinfo.codeTbl,
@@ -1133,7 +1133,7 @@ KFreeFont (KFont3DO *theFont)
            theFont->font_Hinfo.nChars * theFont->font_Hinfo.oneCharSize);
   theFont->font_Hinfo.charData = (char *)0;
 
-  /* ‘SŠp‚ÌƒR[ƒhƒe[ƒuƒ‹‚Æ•ƒe[ƒuƒ‹‚ÆƒsƒNƒZƒ‹ƒf[ƒ^•”‚ğ‰ğ•ú‚·‚é */
+  /* ‘SŠp‚ÌƒR[ƒhƒe[ƒuƒ‹‚Æ•ƒe[ƒuƒ‹‚ÆƒsƒNƒZƒ‹ƒf[ƒ^•”‚ğ‰ğ•u‚*‚e */
   if (theFont->font_Zinfo.codeTbl != NULL)
     {
       FREEMEM (theFont->font_Zinfo.codeTbl,
@@ -1166,24 +1166,24 @@ KFreeCel (CCB *theCCB)
       return (ER_KTextBox_BadParameter);
     }
 
-  /* ƒZƒ‹‚Ì[‚³‚ğ‹‚ß‚é*/
+  /* ƒZƒ‹‚Ì[‚³‚ğ‹‚ß‚e*/
   pixelDepth = theCCB->ccb_PRE0 & 0x07;
-  /* PLUT‚ªè—L‚·‚éƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚éB */
+  /* PLUT‚aè—L‚*‚eƒƒ‚ƒŠ‚ğ‰ğ•u‚*‚eB */
   if (pixelDepth == PRE0_BPP_4)
     {
-      /* ‚SƒrƒbƒgƒZƒ‹‚Ìê‡ */
+      /* ‚SƒrƒbƒgƒZƒ‹‚Ìe‡ */
       FREEMEM (theCCB->ccb_PLUTPtr, PLUTSIZE_4BIT_CODEDCEL);
       boxRowBytes = ((((theCCB->ccb_Width + 1) / 2) + 3) / 4) * 4;
     }
   else if (pixelDepth == PRE0_BPP_1)
     {
-      /* ‚PƒrƒbƒgƒZƒ‹‚Ìê‡ */
+      /* ‚PƒrƒbƒgƒZƒ‹‚Ìe‡ */
       FREEMEM (theCCB->ccb_PLUTPtr, PLUTSIZE_1BIT_CODEDCEL);
       boxRowBytes = ((((theCCB->ccb_Width + 7) / 8) + 3) / 4) * 4;
     }
   else
     {
-      /* —\\Šú‚µ‚Ä‚¢‚È‚¢ƒZƒ‹‚ª—^‚¦‚ç‚ê‚½ */
+      /* —\\Šu‚µ‚A‚¢‚È‚¢ƒZƒ‹‚a—^‚¦‚ç‚e‚½ */
       DIAGNOSTIC ("Bad cel type.\n");
       return (ER_KTextBox_BadParameter);
     }
@@ -1191,16 +1191,16 @@ KFreeCel (CCB *theCCB)
   if (boxRowBytes < 8)
     boxRowBytes = 8;
   boxHeight = theCCB->ccb_Height;
-  /* ƒsƒNƒZƒ‹ƒf[ƒ^‚ªè—L‚·‚éƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚éB */
+  /* ƒsƒNƒZƒ‹ƒf[ƒ^‚aè—L‚*‚eƒƒ‚ƒŠ‚ğ‰ğ•u‚*‚eB */
 #if RED_HARDWARE
   FREEMEM (theCCB->ccb_CelData, boxHeight * boxRowBytes);
 #else
   FREEMEM (theCCB->ccb_SourcePtr, boxHeight * boxRowBytes);
 #endif
-  /* CCB‚ªè—L‚·‚éƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚éB */
+  /* CCB‚aè—L‚*‚eƒƒ‚ƒŠ‚ğ‰ğ•u‚*‚eB */
   FREEMEM (theCCB, sizeof (CCB));
 
-  /* ƒƒ‚ƒŠ‚Ì‰ğ•ú‚É¬Œ÷ */
+  /* ƒƒ‚ƒŠ‚Ì‰ğ•u‚Enot Œ/ */
   return (ER_KTextBox_NoError);
 }
 
@@ -1233,11 +1233,11 @@ KConvertText (uint8 *src, KCharRec **dst, Int32 len)
     {
       if (isKanji (*src))
         {
-          /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚PƒoƒCƒg‚Å‚ ‚é */
+          /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚PƒoƒCƒg‚A‚ ‚e */
           (*dst + i)->Value = (*src++ << 8);
           if (isKanji2 (*src))
             {
-              /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚QƒoƒCƒg‚Å‚ ‚é */
+              /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚QƒoƒCƒg‚A‚ ‚e */
               (*dst + i)->Value += *src++;
             }
           else
@@ -1251,7 +1251,7 @@ KConvertText (uint8 *src, KCharRec **dst, Int32 len)
         }
       else if (isANK (*src) || (*src == LF) || (*src == CR))
         {
-          /* ASCIIƒR[ƒh‚Å‚ ‚é */
+          /* ASCIIƒR[ƒh‚A‚ ‚e */
           (*dst + i)->Value = *src++;
         }
       else
@@ -1281,11 +1281,11 @@ KTextLength (uint8 *theText)
     {
       if (isKanji (*theText))
         {
-          /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚PƒoƒCƒg‚Å‚ ‚é */
+          /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚PƒoƒCƒg‚A‚ ‚e */
           theText++;
           if (isKanji2 (*theText))
             {
-              /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚QƒoƒCƒg‚Å‚ ‚é */
+              /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚QƒoƒCƒg‚A‚ ‚e */
               n++;
             }
           else
@@ -1299,7 +1299,7 @@ KTextLength (uint8 *theText)
         }
       else if (isANK (*theText) || (*theText == LF) || (*theText == CR))
         {
-          /* ASCIIƒR[ƒh‚Å‚ ‚é */
+          /* ASCIIƒR[ƒh‚A‚ ‚e */
           n++;
         }
       else
@@ -1335,12 +1335,12 @@ KTextLength2 (uint8 *theText, Int32 nbytes)
     {
       if (isKanji (*theText))
         {
-          /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚PƒoƒCƒg‚Å‚ ‚é */
+          /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚PƒoƒCƒg‚A‚ ‚e */
           theText++;
           nbytes--;
           if (isKanji2 (*theText))
             {
-              /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚QƒoƒCƒg‚Å‚ ‚é */
+              /* ƒVƒtƒgJISƒR[ƒh‚Ì‘æ‚QƒoƒCƒg‚A‚ ‚e */
               n++;
             }
           else
@@ -1354,7 +1354,7 @@ KTextLength2 (uint8 *theText, Int32 nbytes)
         }
       else if (isANK (*theText) || (*theText == LF) || (*theText == CR))
         {
-          /* ASCIIƒR[ƒh‚Å‚ ‚é */
+          /* ASCIIƒR[ƒh‚A‚ ‚e */
           n++;
         }
       else
@@ -1614,12 +1614,12 @@ KGetCharIndex (KFont3DO *theFont, uint16 charVal)
   Int32 i = 0;
   Int32 min, max;
 
-  /* ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚ªk‘ŞƒtƒHƒ“ƒg‚Ìê‡ */
+  /* ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚ak‘ŞƒtƒHƒ“ƒg‚Ìe‡ */
   if (isANK (charVal))
     {
       if (theFont->font_Hinfo.codeTbl == NULL)
         {
-          /* min‚Æmax‚Íank‚Å‚ ‚é‚±‚Æ‚ª•ÛØ‚³‚ê‚Ä‚¢‚é */
+          /* min‚Æmax‚Iank‚A‚ ‚e‚±‚Æ‚a•ÛØ‚³‚e‚A‚¢‚e */
           min = KankToiCode (theFont->font_Hinfo.minCode);
           max = KankToiCode (theFont->font_Hinfo.maxCode);
           i = KankToiCode (charVal);
@@ -1665,7 +1665,7 @@ KGetCharIndex (KFont3DO *theFont, uint16 charVal)
     {
       if (theFont->font_Zinfo.codeTbl == NULL)
         {
-          /* min‚Æmax‚Ísjis‚Å‚ ‚é‚±‚Æ‚ª•ÛØ‚³‚ê‚Ä‚¢‚é */
+          /* min‚Æmax‚Isjis‚A‚ ‚e‚±‚Æ‚a•ÛØ‚³‚e‚A‚¢‚e */
           min = KsjisToiCode (theFont->font_Zinfo.minCode);
           max = KsjisToiCode (theFont->font_Zinfo.maxCode);
           i = KsjisToiCode (charVal);
@@ -1781,14 +1781,14 @@ KGetLineChars (KFont3DO *theFont, KTextBox *theTextBox, Int32 boxWidth,
                Int32 *lineTextWidth)
 {
   Int32 lineChars;
-  Int32 wordChars; /* ‚Pƒ[ƒh‚Ì•¶š” */
+  Int32 wordChars; /* ‚Pƒ[ƒh‚Ì•--š” */
   Int32 wordWidth; /* ƒ[ƒh• */
   Int32 charWidth;
-  bool roomLeft; /* ƒ[ƒh‚ğ“ü‚ê‚é‹ó‚«‚ª‚ ‚é‚©‚Ç‚¤‚© */
+  bool roomLeft; /* ƒ[ƒh‚ğ“u‚e‚e‹o‚"‚a‚ ‚e‚(c)‚Ç‚¤‚(c) */
   bool startofline;
   bool firstWord;
   Int32 widthLeft;   /* •`‰æ‰Â”\\‚Èc‚è‚Ì•*/
-  KCharRec *curChar; /* Œ»İˆ—’†‚Ì•¶š */
+  KCharRec *curChar; /* Œ"İˆ—’†‚Ì•--š */
 
   firstWord = TRUE;
   startofline = TRUE;
@@ -1800,7 +1800,7 @@ KGetLineChars (KFont3DO *theFont, KTextBox *theTextBox, Int32 boxWidth,
   widthLeft = boxWidth;
   curChar = *lineStart;
 
-  /* ƒ[ƒhƒ‰ƒbƒv‚ÍA3DOFont‰p”š‚Ì‚İ—LŒø*/
+  /* ƒ[ƒhƒ‰ƒbƒv‚IA3DOFont‰p”š‚Ì‚İ—LŒø*/
   /*    if (theFont->font_Flags & FONT_ASCII) {
           *lineHeight = theFont->fontHinfo.charHeight;
           while ( (*textLeft > 0) && roomLeft && (curChar->Value != '\n') ) {
@@ -1845,7 +1845,7 @@ KGetLineChars (KFont3DO *theFont, KTextBox *theTextBox, Int32 boxWidth,
       else {
   */
   if (theFont->font_Hinfo.nChars > 0)
-    { /*•¶š—ñ‚Ìæ“ª‚É‰üsƒR[ƒh‚ª“ü‚Á‚Ä‚¢‚½ê‡‚ÌlineHeight‚ğİ’è‚·‚éB*/
+    { /*•--š—ñ‚Ìæ“a‚E‰usƒR[ƒh‚a“u‚Á‚A‚¢‚½e‡‚ÌlineHeight‚ğİ’è‚*‚eB*/
       *lineHeight = (Int32)theFont->font_Hinfo.charHeight;
     }
   else if (theFont->font_Zinfo.nChars > 0)
@@ -1905,7 +1905,7 @@ KDrawChar4BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
       return x;
     }
 
-  /* 4BitƒZƒ‹ˆÈŠO‚ÍƒGƒ‰[ */
+  /* 4BitƒZƒ‹ˆÈŠO‚IƒGƒ‰[ */
   pixelDepth = fourBitCel->ccb_PRE0 & 0x07;
   if (pixelDepth != PRE0_BPP_4)
     {
@@ -1926,7 +1926,7 @@ KDrawChar4BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
   startj = 0;
   endj = charHeight;
 
-  /* ƒtƒHƒ“ƒg‚Ì‘å‚«‚³‚ªƒZƒ‹‚æ‚è‘å‚«‚¢ */
+  /* ƒtƒHƒ“ƒg‚Ì‘å‚"‚³‚aƒZƒ‹‚æ‚è‘å‚"‚¢ */
   if ((charWidth > fourBitCel->ccb_Width)
       || (charHeight > fourBitCel->ccb_Height))
     {
@@ -1947,7 +1947,7 @@ KDrawChar4BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
 
   if (yDiff < 0)
     {
-      /* ‘‚«n‚ß‚ªã’[‚©‚ç‚Í‚İo‚éê‡ */
+      /* ‘‚"n‚ß‚aã’[‚(c)‚ç‚I‚İo‚ee‡ */
       if (yDiff + charHeight <= 0)
         skipChar = true;
       else
@@ -1956,7 +1956,7 @@ KDrawChar4BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
     }
   else if (yDiff + charHeight > fourBitCel->ccb_Height)
     {
-      /* ‘‚«I‚í‚è‚ª‰º’[‚©‚ç‚Í‚İo‚éê‡ */
+      /* ‘‚"I‚i‚è‚a‰o’[‚(c)‚ç‚I‚İo‚ee‡ */
       if (yDiff >= fourBitCel->ccb_Height)
         skipChar = true;
       else
@@ -1965,7 +1965,7 @@ KDrawChar4BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
 
   if (xDiff < 0)
     {
-      /* ‘‚«n‚ß‚ª¶’[‚©‚ç‚Í‚İo‚éê‡ */
+      /* ‘‚"n‚ß‚a--’[‚(c)‚ç‚I‚İo‚ee‡ */
       if (xDiff + charWidth <= 0)
         skipChar = true;
       else
@@ -1974,7 +1974,7 @@ KDrawChar4BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
     }
   else if (xDiff + charWidth > fourBitCel->ccb_Width)
     {
-      /* ‘‚«I‚í‚è‚ª‰E’[‚©‚ç‚Í‚İo‚éê‡ */
+      /* ‘‚"I‚i‚è‚a‰E’[‚(c)‚ç‚I‚İo‚ee‡ */
       if (xDiff >= fourBitCel->ccb_Width)
         skipChar = true;
       else
@@ -2032,12 +2032,12 @@ KDrawChar4BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
       #endif
       */
       if (charWidth & 0x01)
-        { /* •¶š•‚ªŠï”‚Ìê‡ */
+        { /* •--š•‚aŠï”‚Ìe‡ */
           loop = charWidth / 2 + 1;
           for (j = 0; j < endj; j++)
-            { /* ƒZƒ‹‚Ì‰º’[‚©‚ç‚Í‚İo‚·è‘O‚ÌƒsƒNƒZƒ‹s‚Ü‚Å•`‰æ‚·‚é*/
+            { /* ƒZƒ‹‚Ì‰o’[‚(c)‚ç‚I‚İo‚*è‘O‚ÌƒsƒNƒZƒ‹s‚U‚A•`‰æ‚*‚e*/
               if (j < startj)
-                { /* ƒZƒ‹‚Ìã’[‚©‚ç‚Í‚İo‚·ƒsƒNƒZƒ‹s‚ÍA•`‰æ‚µ‚È‚¢*/
+                { /* ƒZƒ‹‚Ìã’[‚(c)‚ç‚I‚İo‚*ƒsƒNƒZƒ‹s‚IA•`‰æ‚µ‚È‚¢*/
                   if (j & 0x01)
                     pImageData += (loop - 1);
                   else
@@ -2076,12 +2076,12 @@ KDrawChar4BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
             }
         }
       else
-        { /* •¶š•‚ª‹ô”‚Ìê‡ */
+        { /* •--š•‚a‹ô”‚Ìe‡ */
           loop = charWidth / 2;
           for (j = 0; j < endj; j++)
-            { /* ƒZƒ‹‚Ì‰º’[‚©‚ç‚Í‚İo‚·è‘O‚ÌƒsƒNƒZƒ‹s‚Ü‚Å•`‰æ‚·‚é*/
+            { /* ƒZƒ‹‚Ì‰o’[‚(c)‚ç‚I‚İo‚*è‘O‚ÌƒsƒNƒZƒ‹s‚U‚A•`‰æ‚*‚e*/
               if (j < startj)
-                { /* ƒZƒ‹‚Ìã’[‚©‚ç‚Í‚İo‚·ƒsƒNƒZƒ‹s‚ÍA•`‰æ‚µ‚È‚¢*/
+                { /* ƒZƒ‹‚Ìã’[‚(c)‚ç‚I‚İo‚*ƒsƒNƒZƒ‹s‚IA•`‰æ‚µ‚È‚¢*/
                   pImageData += loop;
                   continue;
                 }
@@ -2162,7 +2162,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
       return x;
     }
 
-  /* 1BitƒZƒ‹ˆÈŠO‚ÍƒGƒ‰[ */
+  /* 1BitƒZƒ‹ˆÈŠO‚IƒGƒ‰[ */
   pixelDepth = oneBitCel->ccb_PRE0 & 0x07;
   if (pixelDepth != PRE0_BPP_1)
     {
@@ -2182,7 +2182,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
   startj = 0;
   endj = charHeight;
 
-  /* ƒtƒHƒ“ƒg‚Ì‘å‚«‚³‚ªƒZƒ‹‚æ‚è‘å‚«‚¢ */
+  /* ƒtƒHƒ“ƒg‚Ì‘å‚"‚³‚aƒZƒ‹‚æ‚è‘å‚"‚¢ */
   if ((charWidth > oneBitCel->ccb_Width)
       || (charHeight > oneBitCel->ccb_Height))
     {
@@ -2203,7 +2203,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
 
   if (yDiff < 0)
     {
-      /* ‘‚«n‚ß‚ªã’[‚©‚ç‚Í‚İo‚éê‡ */
+      /* ‘‚"n‚ß‚aã’[‚(c)‚ç‚I‚İo‚ee‡ */
       if (yDiff + charHeight <= 0)
         skipChar = true;
       else
@@ -2212,7 +2212,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
     }
   else if (yDiff + charHeight > oneBitCel->ccb_Height)
     {
-      /* ‘‚«I‚í‚è‚ª‰º’[‚©‚ç‚Í‚İo‚éê‡ */
+      /* ‘‚"I‚i‚è‚a‰o’[‚(c)‚ç‚I‚İo‚ee‡ */
       if (yDiff >= oneBitCel->ccb_Height)
         skipChar = true;
       else
@@ -2271,7 +2271,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
                   kprintf("\n");
       #endif
       */
-      xbit = 0; /*8bit‚ÌMSB‚©‚ç”‚¦‚Äxbit–Ú‚ğw‚·*/
+      xbit = 0; /*8bit‚ÌMSB‚(c)‚ç”‚¦‚Axbit–U‚ğw‚**/
       ybit = 8 - xbit;
       zbit = 0;
       leftBit = charWidth;
@@ -2282,7 +2282,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
         { /* Draw partial character */
           bitStart = (-xDiff) & 0x07;
           for (j = 0; j < endj; j++)
-            { /* ƒZƒ‹‚Ì‰º’[‚©‚ç‚Í‚İo‚·è‘O‚ÌƒsƒNƒZƒ‹s‚Ü‚Å•`‰æ‚·‚é*/
+            { /* ƒZƒ‹‚Ì‰o’[‚(c)‚ç‚I‚İo‚*è‘O‚ÌƒsƒNƒZƒ‹s‚U‚A•`‰æ‚*‚e*/
               while (leftBit >= 8)
                 {
                   lineData[l] = pImageData[m++] << xbit;
@@ -2303,7 +2303,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
                 }
               ybit = 8 - xbit;
               if (j < startj)
-                { /* ƒZƒ‹‚Ìã’[‚©‚ç‚Í‚İo‚·ƒsƒNƒZƒ‹s‚ÍA•`‰æ‚µ‚È‚¢*/
+                { /* ƒZƒ‹‚Ìã’[‚(c)‚ç‚I‚İo‚*ƒsƒNƒZƒ‹s‚IA•`‰æ‚µ‚È‚¢*/
                   l = 0;
                   continue;
                 }
@@ -2324,7 +2324,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
         { /* Draw partial character */
           bitStart = (charWidth + xDiff) - (oneBitCel->ccb_Width);
           for (j = 0; j < endj; j++)
-            { /* ƒZƒ‹‚Ì‰º’[‚©‚ç‚Í‚İo‚·è‘O‚ÌƒsƒNƒZƒ‹s‚Ü‚Å•`‰æ‚·‚é*/
+            { /* ƒZƒ‹‚Ì‰o’[‚(c)‚ç‚I‚İo‚*è‘O‚ÌƒsƒNƒZƒ‹s‚U‚A•`‰æ‚*‚e*/
               while (leftBit >= 8)
                 {
                   lineData[l] = pImageData[m++] << xbit;
@@ -2345,7 +2345,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
                 }
               ybit = 8 - xbit;
               if (j < startj)
-                { /* ƒZƒ‹‚Ìã’[‚©‚ç‚Í‚İo‚·ƒsƒNƒZƒ‹s‚ÍA•`‰æ‚µ‚È‚¢*/
+                { /* ƒZƒ‹‚Ìã’[‚(c)‚ç‚I‚İo‚*ƒsƒNƒZƒ‹s‚IA•`‰æ‚µ‚È‚¢*/
                   l = 0;
                   continue;
                 }
@@ -2366,7 +2366,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
         { /* Draw whole character */
           bitStart = xDiff & 0x07;
           for (j = 0; j < endj; j++)
-            { /* ƒZƒ‹‚Ì‰º’[‚©‚ç‚Í‚İo‚·è‘O‚ÌƒsƒNƒZƒ‹s‚Ü‚Å•`‰æ‚·‚é*/
+            { /* ƒZƒ‹‚Ì‰o’[‚(c)‚ç‚I‚İo‚*è‘O‚ÌƒsƒNƒZƒ‹s‚U‚A•`‰æ‚*‚e*/
               if (leftBit >= 8)
                 {
                   while (leftBit >= 8)
@@ -2435,7 +2435,7 @@ KDrawChar1BitCel (KFont3DO *theFont, uint16 charVal, Int32 x, Int32 y,
               ybit = 8 - xbit;
 
               if (j < startj)
-                { /* ƒZƒ‹‚Ìã’[‚©‚ç‚Í‚İo‚·ƒsƒNƒZƒ‹s‚ÍA•`‰æ‚µ‚È‚¢*/
+                { /* ƒZƒ‹‚Ìã’[‚(c)‚ç‚I‚İo‚*ƒsƒNƒZƒ‹s‚IA•`‰æ‚µ‚È‚¢*/
                   l = 0;
                   for (i = 0; i < l; i++)
                     lineData[i] = 0;
@@ -2570,7 +2570,7 @@ KDrawTextA (KFont3DO *theFont, KTextBox *theTextBox, Int32 boxWidth,
           x = left + ((boxWidth - lineTextWidth) / 2);
           break;
         case justJustify:
-          /* Œ»İƒWƒƒƒXƒeƒBƒtƒ@ƒC‚ÍÀ‘•‚Å‚«‚Ä‚¢‚È‚¢B*/
+          /* Œ"İƒWƒƒƒXƒeƒBƒtƒ@ƒC‚IÀ‘•‚A‚"‚A‚¢‚È‚¢B*/
           x = left;
           break;
         default:
@@ -2594,7 +2594,7 @@ KWrapAndDraw (KFont3DO *theFont, KTextBox *theTextBox, Int32 boxWidth,
   Int32 curY;       /* Current vertical pen location */
   Int32 lineTextWidth;
 
-  /* ‘‚«o‚µˆÊ’uYÀ•W‚ğ‰Šú‰» */
+  /* ‘‚"o‚µˆE’uYÀ•W‚ğ‰Šu‰" */
   curY = top;
   lineCount = 0;
 
@@ -2606,7 +2606,7 @@ KWrapAndDraw (KFont3DO *theFont, KTextBox *theTextBox, Int32 boxWidth,
 
   if (theTextBox->otherFlags & O_KINSOKU)
     {
-      /*‹Ö‘«ˆ—‚ªON‚Ìê‡*/
+      /*‹O‘"ˆ—‚aON‚Ìe‡*/
     }
   else
     {
@@ -2620,14 +2620,14 @@ KWrapAndDraw (KFont3DO *theFont, KTextBox *theTextBox, Int32 boxWidth,
             {
               if (lineCount == 0)
                 {
-                  /* ˆês–Ú‚Ì‘‚«o‚µˆÊ’u‚ª‚Í‚İo‚éê‡‚ÍƒGƒ‰[*/
+                  /* ˆes–U‚Ì‘‚"o‚µˆE’u‚a‚I‚İo‚ee‡‚IƒGƒ‰[*/
                   DIAGNOSTIC ("The font height size is greater than the "
                               "wrapRect height.\n");
                   return (ER_KTextBox_BadParameter);
                 }
               else
                 {
-                  return (ER_KTextBox_NoError); /* “ñs–Ú‚Ìê‡‚ÍƒmƒbƒgƒGƒ‰[*/
+                  return (ER_KTextBox_NoError); /* “ñs–U‚Ìe‡‚IƒmƒbƒgƒGƒ‰[*/
                 }
             }
 
@@ -2672,7 +2672,7 @@ KTextBoxMain (KFont3DO *theFont, KTextBox *theTextBox, uint8 *theText,
   CCB *theCCB;
   Int32 retValue;
 
-  /* w’è‚³‚ê‚½ˆø‚«”‚Ìƒ`ƒFƒbƒN‚ğ‚·‚é*/
+  /* w’è‚³‚e‚½ˆø‚"”‚Ìƒ`ƒFƒbƒN‚ğ‚*‚e*/
   /* Do some idiot testing */
   if (theFont == NULL)
     {
@@ -2747,7 +2747,7 @@ KTextBoxMain (KFont3DO *theFont, KTextBox *theTextBox, uint8 *theText,
       return (ER_KTextBox_BadParameter);
     }
 
-  /* w’è‚³‚ê‚½•¶š”‚¾‚¯ƒeƒLƒXƒgƒf[ƒ^‚ÌƒtƒH[ƒ}ƒbƒg‚ğƒRƒ“ƒo[ƒg‚·‚éB*/
+  /* w’è‚³‚e‚½•--š”‚¾‚-ƒeƒLƒXƒgƒf[ƒ^‚ÌƒtƒH[ƒ}ƒbƒg‚ğƒRƒ“ƒo[ƒg‚*‚eB*/
   retValue = KConvertText (theText, (KCharRec **)&(lineStart), textLen);
   if (retValue < 0)
     {
@@ -2759,14 +2759,14 @@ KTextBoxMain (KFont3DO *theFont, KTextBox *theTextBox, uint8 *theText,
       return (ER_KTextBox_BadCharCode);
     }
   origLineStart = lineStart;
-  /* ÅŒã‚Ì•¶š‚ÌŸ‚ÌƒAƒhƒŒƒX */
+  /* AŒã‚Ì•--š‚ÌŸ‚ÌƒAƒhƒŒƒX */
   textEnd = lineStart + textLen;
-  /* ‚Ü‚¾•`‰æ‚µ‚Ä‚¢‚È‚¢c‚è‚Ì•¶š” */
+  /* ‚U‚¾•`‰æ‚µ‚A‚¢‚È‚¢c‚è‚Ì•--š” */
   textLeft = textLen;
 
   if (theFont->font_Bpp == ONEBITS_PER_PIXEL)
     {
-      /*	1bitƒZƒ‹‚ÌƒoƒCƒg•‚ğ‹‚ß‚é	*/
+      /*	1bitƒZƒ‹‚ÌƒoƒCƒg•‚ğ‹‚ß‚e	*/
       cel_boxRowBytes = ((((cel_boxWidth + 7) / 8) + 3) / 4) * 4;
       if (cel_boxRowBytes < 8)
         cel_boxRowBytes = 8;
@@ -2817,7 +2817,7 @@ KTextBoxMain (KFont3DO *theFont, KTextBox *theTextBox, uint8 *theText,
     }
   else if (theFont->font_Bpp == FOURBITS_PER_PIXEL)
     {
-      /*	4bitƒZƒ‹‚ÌƒoƒCƒg•‚ğ‹‚ß‚é	*/
+      /*	4bitƒZƒ‹‚ÌƒoƒCƒg•‚ğ‹‚ß‚e	*/
       cel_boxRowBytes = ((((cel_boxWidth + 1) / 2) + 3) / 4) * 4;
       if (cel_boxRowBytes < 8)
         cel_boxRowBytes = 8;
@@ -2859,7 +2859,7 @@ KTextBoxMain (KFont3DO *theFont, KTextBox *theTextBox, uint8 *theText,
       theCCB->ccb_XPos = theTextBox->celRect.rectf16_XLeft;
       theCCB->ccb_YPos = theTextBox->celRect.rectf16_YTop;
 #endif
-      /* 4bitƒZƒ‹‚ÌPLUT‚ğİ’è‚·‚é */
+      /* 4bitƒZƒ‹‚ÌPLUT‚ğİ’è‚*‚e */
       retValue = KMakePLUT16 (theTextBox->fgColor, theTextBox->bgColor,
                               theTextBox->opaqueFlag,
                               (uint16 **)&(theCCB->ccb_PLUTPtr));

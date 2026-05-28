@@ -13,7 +13,7 @@
 
 	Written by:	Charlie Eckhaus (per Anup Murarka's suggestion)
 
-	Copyright:	© 1994 by The 3DO Company Inc., all rights reserved.
+	Copyright:	(c) 1994 by The 3DO Company Inc., all rights reserved.
 
 	Change History (most recent first):
 

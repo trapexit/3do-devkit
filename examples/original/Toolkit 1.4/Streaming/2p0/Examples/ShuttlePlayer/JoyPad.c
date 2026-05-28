@@ -5,7 +5,7 @@
 
         Written by:	Eric Carlson
 
-        Copyright:	© 1993 by The 3DO Company. All rights reserved.
+        Copyright:	(c) 1993 by The 3DO Company. All rights reserved.
                                 This material constitutes confidential and
    proprietary information of the 3DO Company and shall not be used by any
    Person or for any purpose except as expressly authorized in writing by the
@@ -186,7 +186,7 @@ _GetJoyPadState (int32 padNum)
  *
  * read the joypad and report the state of the buttons.  continuously
  *  pressed buttons are only reported if their bits are set in the
- *  global ‘gJoyContinuousBtns’.
+ *  global OgJoyContinuousBtnsO.
  * if the user has requested lefthanded play, map the switches.
  *
  * Returns true if the START button is depressed.

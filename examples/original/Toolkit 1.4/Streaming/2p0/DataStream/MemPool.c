@@ -6,7 +6,7 @@
  *free list using the "-4" offset of the objects. Objects are reused in LIFO
  *order (add and remove from list head only) for maximum performance.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	10/19/93	jb		Version 1.3

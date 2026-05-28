@@ -287,7 +287,7 @@ FullDisposeCell (ListHandler *listP, ListCell *cellP)
   // delete the file record
   STFreeMem (fr);
 
-  // Ébefore disposing of the current
+  // Ebefore disposing of the current
   LHDisposeCell (cellP);
 }
 

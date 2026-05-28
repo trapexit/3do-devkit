@@ -13,12 +13,12 @@
 ################################################################################
 # Compress the AIFF files into 2:1 SDX2 AIFC format with SquashSnd
 
-	if `evaluate "{1}" =~ "/(Å)¨1.aiff/"`
+	if `evaluate "{1}" =~ "/(A)"1.aiff/"`
 
-		SquashSnd -i "{1}" -o "{¨1}".aifc
+		SquashSnd -i "{1}" -o "{"1}".aifc
 
 # Make streamed audio files from AIFF and AIFC sources
-		sftostream -i "{¨1}".aifc -o "{¨1}".saudio
+		sftostream -i "{"1}".aifc -o "{"1}".saudio
 	else
 		echo "Not an aiff file."
 	end

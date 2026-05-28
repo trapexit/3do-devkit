@@ -6,7 +6,7 @@
  *
  *	Written by:		Joe Buczek
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	07/12/94		DLD		Fixed definition of CHECK_SA_RESULT

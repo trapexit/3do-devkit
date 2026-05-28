@@ -5,7 +5,7 @@
  *					into it using fast block I/O, then parse the
  *cel.
  *
- *	Copyright © 1993 The 3DO Company. All Rights Reserved.
+ *	Copyright (c) 1993 The 3DO Company. All Rights Reserved.
  *
  *	History:
  *	03/24/94  Ian	Changed to new DeleteCelMagic standard that uses the
