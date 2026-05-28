@@ -150,7 +150,7 @@ typedef struct StreamChunk StreamChunk, *StreamChunkPtr;
   long	whatToDo;	/* opcode determining msg contents */           \
   Item	msgItem;	/* message item for sending this buffer */      \
   void*	privatePtr;	/* ptr to sender's private data */              \
-  void*	link;		/* user defined -- for linking msg into lists */
+  void*	link		/* user defined -- for linking msg into lists */
 
 typedef struct GenericMsg {
   DS_MSG_HEADER;
