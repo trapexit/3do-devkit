@@ -71,6 +71,8 @@ INCFLAGS = -I$(INCPATH)/3do -I$(INCPATH)/community -I$(INCPATH)/ttl
 CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs "3/32/fp/swst/wide/softfp"
 CXXFLAGS = $(CFLAGS)
 ASFLAGS  = -bigend -fpu none -arch 3 -apcs "3/32/fp/swst"
+ARMLIB   = armlib
+ARMLIBFLAGS = -c -o
 LIBPATH  = ${TDO_DEVKIT_PATH}/lib
 LDFLAGS  = -match 0x1 -nodebug -noscanlib -nozeropad -verbose -remove -aif -reloc -dupok -ro-base 0
 STARTUP  = $(LIBPATH)/3do/cstartup.o
@@ -78,7 +80,6 @@ STARTUP  = $(LIBPATH)/3do/cstartup.o
 LIBS =						\
 	$(LIBPATH)/3do/3dlib.lib		\
 	$(LIBPATH)/3do/audio.lib		\
-	$(LIBPATH)/3do/clib.lib			\
 	$(LIBPATH)/3do/codec.lib		\
 	$(LIBPATH)/3do/compression.lib		\
 	$(LIBPATH)/3do/cpluslib.lib		\
@@ -104,6 +105,7 @@ LIBS =						\
 	$(LIBPATH)/community/example_folio.lib	\
 	$(LIBPATH)/community/svc_funcs.lib      \
 	$(LIBPATH)/community/svc_mem.lib        \
+	$(LIBPATH)/community/libc.lib       	\
 #	$(LIBPATH)/3do/burger.lib		\
 #	$(LIBPATH)/3do/jstring.lib		\
 #	$(LIBPATH)/3do/memdebug.lib		\
@@ -123,6 +125,18 @@ PROGRAMS       = $(APPS)
 PROGRAM_PATHS  = $(PROGRAMS:%=$(FILESYSTEM)/%)
 APP_BUILD_DIRS = $(APPS:%=build/%)
 
+# ===== Subdirectory libraries (src/<name>/* without main.*) =====
+SRC_DIRS = $(sort $(dir $(wildcard src/*/*.s src/*/*.c src/*/*.cpp)))
+LIB_DIRS = $(filter-out $(APP_DIRS),$(SRC_DIRS))
+LIBRARIES = $(notdir $(patsubst %/,%,$(LIB_DIRS)))
+
+LIBRARY_PATHS = $(foreach library,$(LIBRARIES),build/$(library)/$(library).lib)
+LIBRARY_BUILD_DIRS = $(LIBRARIES:%=build/%)
+INSTALL_LIB_DIR = $(LIBPATH)/community
+
+SUBDIR_BUILD_DIRS = $(sort $(APP_BUILD_DIRS) $(LIBRARY_BUILD_DIRS))
+LINK_LIBRARY_PATHS = $(filter $(LIBRARY_PATHS),$(LIBS))
+
 OBJS = $(LAUNCHME_OBJS)
 
 define APP_TEMPLATE
@@ -132,22 +146,41 @@ $(1)_SRCS_CXX := $$(wildcard src/$(1)/*.cpp)
 $(1)_OBJS     := $$($(1)_SRCS_S:src/%.s=build/%.s.o) $$($(1)_SRCS_C:src/%.c=build/%.c.o) $$($(1)_SRCS_CXX:src/%.cpp=build/%.cpp.o)
 OBJS          += $$($(1)_OBJS)
 
-$(FILESYSTEM)/$(1): builddir $$($(1)_OBJS)
+$(FILESYSTEM)/$(1): builddir $$(LINK_LIBRARY_PATHS) $$($(1)_OBJS)
 	armlink -o $$@ $$(LDFLAGS) $$(STARTUP) $$(LIBS) $$($(1)_OBJS)
 endef
 
 $(foreach app,$(APPS),$(eval $(call APP_TEMPLATE,$(app))))
 
+define LIBRARY_TEMPLATE
+$(1)_SRCS_S   := $$(wildcard src/$(1)/*.s)
+$(1)_SRCS_C   := $$(wildcard src/$(1)/*.c)
+$(1)_SRCS_CXX := $$(wildcard src/$(1)/*.cpp)
+$(1)_OBJS     := $$($(1)_SRCS_S:src/%.s=build/%.s.o) $$($(1)_SRCS_C:src/%.c=build/%.c.o) $$($(1)_SRCS_CXX:src/%.cpp=build/%.cpp.o)
+OBJS          += $$($(1)_OBJS)
+
+build/$(1)/$(1).lib: builddir $$($(1)_OBJS)
+	$$(ARMLIB) $$(ARMLIBFLAGS) $$@ $$($(1)_OBJS)
+endef
+
+$(foreach library,$(LIBRARIES),$(eval $(call LIBRARY_TEMPLATE,$(library))))
+
 OBJS := $(sort $(OBJS))
 
 ifneq ($(strip $(LAUNCHME_OBJS)),)
-$(LAUNCHME): builddir $(LAUNCHME_OBJS)
+$(LAUNCHME): builddir $(LINK_LIBRARY_PATHS) $(LAUNCHME_OBJS)
 	armlink -o $@ $(LDFLAGS) $(STARTUP) $(LIBS) $(LAUNCHME_OBJS)
 endif
 
 DEPS = $(OBJS:.o=.d)
 
-all: launchme programs modbin iso
+ifneq ($(strip $(wildcard $(FILESYSTEM)/.)),)
+IMAGE_TARGETS = launchme programs modbin iso
+else
+IMAGE_TARGETS =
+endif
+
+all: libraries $(IMAGE_TARGETS)
 
 build/.touched:
 ifeq ($(IS_POSIX_SHELL),1)
@@ -158,14 +191,14 @@ else
 	type nul > $@
 endif
 
-$(APP_BUILD_DIRS): build/.touched
+$(SUBDIR_BUILD_DIRS): build/.touched
 ifeq ($(IS_POSIX_SHELL),1)
 	mkdir -p "$@"
 else
 	if not exist "$(subst /,\,$@)" mkdir "$(subst /,\,$@)"
 endif
 
-builddir: build/.touched $(APP_BUILD_DIRS)
+builddir: build/.touched $(SUBDIR_BUILD_DIRS)
 
 objs: builddir $(OBJS)
 
@@ -176,6 +209,19 @@ launchme:
 endif
 
 programs: $(PROGRAM_PATHS)
+
+libraries: $(LIBRARY_PATHS)
+
+install: install-libs
+
+install-libs: libraries
+ifeq ($(IS_POSIX_SHELL),1)
+	mkdir -p "$(INSTALL_LIB_DIR)"
+	cp $(LIBRARY_PATHS) "$(INSTALL_LIB_DIR)/"
+else
+	if not exist "$(subst /,\,$(INSTALL_LIB_DIR))" mkdir "$(subst /,\,$(INSTALL_LIB_DIR))"
+	for %%f in ($(subst /,\,$(LIBRARY_PATHS))) do copy /Y "%%f" "$(subst /,\,$(INSTALL_LIB_DIR))\"
+endif
 
 copy-data:
 ifeq ($(IS_POSIX_SHELL),1)
@@ -213,14 +259,14 @@ isodir: iso/.touched
 iso: isodir copy-data
 	3dt pack --sign "$(FILESYSTEM)" -o "$(ISONAME)"
 
-build/%.s.o: src/%.s
-	armasm $(INCFLAGS) $(DEFFLAGS) $(ASFLAGS) $< -o $@
+build/%.s.o: src/%.s | builddir
+	armasm $(INCFLAGS) $(ASFLAGS) $< -o $@
 
-build/%.c.o: src/%.c
+build/%.c.o: src/%.c | builddir
 	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -M $< -o $@ > ${@:.o=.d}
 	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
 
-build/%.cpp.o: src/%.cpp
+build/%.cpp.o: src/%.cpp | builddir
 	armcpp $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -M $< -o $@ > ${@:.o=.d}
 	armcpp $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -c $< -o $@
 
@@ -244,6 +290,6 @@ else
 	run-iso "$(ISONAME)"
 endif
 
-.PHONY: builddir isodir clean distclean launchme programs copy-data modbin modbin-launchme banner iso run
+.PHONY: builddir isodir clean distclean launchme programs libraries install install-libs copy-data modbin modbin-launchme banner iso run
 
 -include $(DEPS)

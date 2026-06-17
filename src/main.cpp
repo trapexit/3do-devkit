@@ -63,6 +63,7 @@ static const Example examples[] =
     { "NVRAM"     ,        "$boot/nvram" },
     { "Messages",          "$boot/msgpassing" },
     { "File Walker",       "$boot/walker" },
+    { "FILE API",          "$boot/file_api" },
     { "Font Library",      "$boot/fontlibexample" },
     { "Drum Box",          "$boot/drumbox" }
   };
