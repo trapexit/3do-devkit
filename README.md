@@ -105,6 +105,7 @@ own executable and launched from the menu with `LoadProgram()`.
 | NVRAM | [src/nvram](src/nvram) | NVRAM file create, read, write, and delete example. |
 | Messages | [src/msgpassing](src/msgpassing) | Kernel message passing example. |
 | File Walker | [src/walker](src/walker) | File system traversal example. |
+| FILE API | [src/file_api](src/file_api) | Writes and reads a small NVRAM file through `fopen`, `fputs`, `fwrite`, `fflush`, `fread`, and `fclose`. |
 | Font Library | [src/fontlibexample](src/fontlibexample) | Font loading and text rendering example. |
 | Drum Box | [src/drumbox](src/drumbox) | Interactive audio drum sequencer example. |
 
@@ -154,20 +155,52 @@ install required. Just download, activate environment, and build.
 
 * Modify `Makefile` to change the project `NAME`. Not much else should
   need to be modified in the `Makefile` for basic usage.
-* The makefile builds assembly source files (`*.s`), C files (`*.c`),
-  and C++ files (`*.cpp`) in the root of `src/` into the LaunchMe boot
-  binary.
-* Each `src/<name>/main.c`, `src/<name>/main.cpp`, or
-  `src/<name>/main.s` directory is built as a separate executable named
-  `<name>` in the disc filesystem.
-* Optional app data can be placed under `src/<name>/takeme/`; its
-  contents are copied into `takeme/` before the ISO is generated.
+* See [Makefile and src/ Layout](#makefile-and-src-layout) for how
+  source files, apps, libraries, and app data are discovered.
 * The included [src/main.cpp](src/main.cpp) program is a LaunchMe menu
   that starts the bundled app executables with `LoadProgram()`.
 * Run `make` to build object files, link executable, build ISO, and
   sign ISO for retail system usage.
 
 See below for OS specific workflows.
+
+
+### Makefile and src/ Layout
+
+The root `Makefile` is designed around a small set of conventions in
+the `src/` tree. Most projects should only need to change the variables
+at the top of the file, especially `NAME`, `ISONAME`, `FILESYSTEM`, and
+`STACKSIZE`.
+
+Source files in the root of `src/` are treated as the boot program. The
+Makefile compiles root-level `src/*.s`, `src/*.c`, and `src/*.cpp`
+files into `build/*.o`, then links them into `takeme/LaunchMe`. In this
+repo that program is the LaunchMe menu in [src/main.cpp](src/main.cpp).
+
+Each `src/<name>/` directory that contains `main.c`, `main.cpp`, or
+`main.s` is treated as a standalone app. All assembly, C, and C++
+sources in that directory are compiled into `build/<name>/`, then
+linked into an executable named `takeme/<name>`. The directory name is
+the app name, so adding `src/myapp/main.c` creates the `takeme/myapp`
+build target. If the app should appear in the bundled menu, also add it
+to [src/main.cpp](src/main.cpp).
+
+Each `src/<name>/` directory that contains source files but no
+`main.*` file is treated as a static library directory. Its sources are
+compiled into `build/<name>/` and archived with `armlib` as
+`build/<name>/<name>.lib`. These libraries are build artifacts; add a
+library to `LIBS` if an app or the boot program should link against it.
+
+Optional app data belongs under `src/<name>/takeme/`. The `copy-data`
+target copies the contents of each of those directories into `takeme/`
+before the ISO is packed, preserving the same disc filesystem layout
+the app will see at runtime.
+
+The default `all` target always runs `libraries`. When the configured
+`FILESYSTEM` directory exists, it also runs `launchme`, `programs`,
+`modbin`, and `iso`. In order, that archives static libraries, builds
+the boot program, links each standalone app, applies `modbin` metadata
+to executables, and runs `3dt pack --sign` to create the signed ISO.
 
 
 ### Windows
@@ -310,7 +343,7 @@ manually and place them into the RetroArch `system` folder.
   releases as well as new and reworked examples. Some of them also
   exist in [src/](src/).
 * build/: Automatically created directory during build to store object
-  files.
+  files and generated static libraries.
 * iso/: Automatically created directory during build to store ISO file.
 
 
