@@ -147,7 +147,7 @@ endif
 
 DEPS = $(OBJS:.o=.d)
 
-all: launchme programs modbin iso encrypt-iso
+all: launchme programs modbin iso
 
 build/.touched:
 ifeq ($(IS_POSIX_SHELL),1)
@@ -211,10 +211,7 @@ endif
 isodir: iso/.touched
 
 iso: isodir copy-data
-	3doiso -in "$(FILESYSTEM)" -out "$(ISONAME)"
-
-encrypt-iso: $(ISONAME)
-	3DOEncrypt genromtags "$(ISONAME)"
+	3dt pack --sign "$(FILESYSTEM)" -o "$(ISONAME)"
 
 build/%.s.o: src/%.s
 	armasm $(INCFLAGS) $(DEFFLAGS) $(ASFLAGS) $< -o $@
@@ -247,6 +244,6 @@ else
 	run-iso "$(ISONAME)"
 endif
 
-.PHONY: builddir isodir clean distclean launchme programs copy-data modbin modbin-launchme banner iso encrypt-iso run
+.PHONY: builddir isodir clean distclean launchme programs copy-data modbin modbin-launchme banner iso run
 
 -include $(DEPS)

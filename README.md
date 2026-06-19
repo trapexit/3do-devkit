@@ -66,12 +66,6 @@ More can be found at https://3dodev.com
   Compression Tool
 * [modbin](https://github.com/trapexit/modbin/releases): trapexit's
   recreation of the original SDK's tool by the same name
-* 3doiso v0.1 by nikk
-* 3DOEncrypt v0.6a by Charles Doty
-* MakeBanner v1.0b by Charles Doty
-* BMPTo3DOCel v0.6a by Charles Doty
-* BMPTo3DOImage v1.0b by Charles Doty
-* BMPTo3DOAnim v0.6a by Charles Doty
 * [GNU make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm)
 
 trapexit's tooling may not always be fully up to date in this repo so
@@ -372,8 +366,6 @@ alignment you will need to use original Classic MacOS software.
 * Rebuild original privileged libraries and enhance them where possible.
 * Continue to enhance the C++ standard library replacement.
 * C++ based 3DO specific libraries.
-* Create a new iso building tool.
-* Create a new iso encrypt tool.
 * More examples.
 * Better compiler support. Possibly use CLANG or GCC to generate assembly and
   translate it to work with Norcroft armasm.
@@ -393,11 +385,11 @@ the console was retired and the limited open source compiler suite
 support for these formats were removed long long ago. Support for
 ARMv3 era CPUs have also been removed.
 
-trapexit has spoken with John Fitch of Codemist regarding licensing or
-open sourcing their ARM compiler suite as well as individuals who
-maintain the compiler suite for RISCOS. Unfortunately, neither were
-able to help. The latter having narrowly scoped licensing with no
-ability to sublicense.
+trapexit has spoken with John Fitch of Codemist and ARM regarding
+licensing or open sourcing their ARM compiler suite as well as
+individuals who maintain the compiler suite for RISCOS. Unfortunately,
+none were able to help. The latter having narrowly scoped licensing
+with no ability to sublicense.
 
 Adding ARMv3 support to a modern compiler might not be so hard given
 ARMv4 is still supported by but adding AIF and AOF to modern linkers
