@@ -1,0 +1,10 @@
+# Build products
+/build/
+/iso/
+
+# Generated package-root outputs. Tracked files under takeme/ still report
+# normal modifications; this only hides newly generated/untracked files.
+/takeme/
+
+# Editor and local backup files
+*~
