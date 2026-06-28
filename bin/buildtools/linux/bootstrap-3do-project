@@ -38,16 +38,21 @@ cp "${SRC_PATH}/activate-env" "${DST_PATH}/activate-env"
 echo "Copying Makefile"
 cp "${SRC_PATH}/Makefile" "${DST_PATH}/Makefile"
 
-echo "Copying takeme (CDROM filesystem contents)"
-cp -r "${SRC_PATH}/takeme" "${DST_PATH}/takeme"
+echo "Copying takeme (core CDROM filesystem contents)"
+mkdir -p "${DST_PATH}/takeme"
+cp "${SRC_PATH}/takeme/AppStartup" "${DST_PATH}/takeme/AppStartup"
+cp "${SRC_PATH}/takeme/BannerScreen" "${DST_PATH}/takeme/BannerScreen"
+cp -r "${SRC_PATH}/takeme/System" "${DST_PATH}/takeme/System"
 
 [ -e "${DST_PATH}/data" ] && \
     echo "Copying data/* into takeme/" && \
     cp -r "${DST_PATH}/data/"* "${DST_PATH}/takeme/"
 
-[ ! -d "${DST_PATH}/src" ] && \
-    echo "Copying src" && \
-    cp -vr "${SRC_PATH}/src" "${DST_PATH}/src"
+if [ ! -d "${DST_PATH}/src" ]; then
+    echo "Copying starter src/main.c"
+    mkdir -p "${DST_PATH}/src"
+    cp "${SRC_PATH}/src/helloworld/main.c" "${DST_PATH}/src/main.c"
+fi
 
 printf '%s' "${SRC_PATH}" > "${DST_PATH}/.devkit-path"
 

@@ -92,6 +92,7 @@ own executable and launched from the menu with `LoadProgram()`.
 
 | App | Source | Description |
 |-----|--------|-------------|
+| Hello, World! | [src/helloworld](src/helloworld) | Minimal C example that logs and draws centered text. |
 | Cel rotation | [src/cel_rotation](src/cel_rotation) | C++ cel rotation and zoom demo. |
 | 3D 3DO logo | [src/3d_3do_logo](src/3d_3do_logo) | 3D logo rendering demo. |
 | Rotating cube | [src/rotating_cube](src/rotating_cube) | Simple rotating 3D cube demo. |
