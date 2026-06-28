@@ -50,6 +50,7 @@ run_example(const Example &example)
 
 static const Example examples[] =
   {
+    { "Hello, World!",     "$boot/helloworld" },
     { "Cel rotation",      "$boot/cel_rotation" },
     { "3D 3DO logo",       "$boot/3d_3do_logo" },
     { "Rotating cube",     "$boot/rotating_cube" },
