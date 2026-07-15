@@ -4,9 +4,13 @@ function global:deactivate-env {
         return
     }
 
-    $env:PATH = $env:PATH -replace [regex]::Escape(";$env:TDO_DEVKIT_PATH\bin\compiler\win"), ""
-    $env:PATH = $env:PATH -replace [regex]::Escape(";$env:TDO_DEVKIT_PATH\bin\tools\win"), ""
-    $env:PATH = $env:PATH -replace [regex]::Escape(";$env:TDO_DEVKIT_PATH\bin\buildtools\win"), ""
+    $compilerPath = "$env:TDO_DEVKIT_PATH\bin\compiler\win"
+    $toolsPath = "$env:TDO_DEVKIT_PATH\bin\tools\win"
+    $buildtoolsPath = "$env:TDO_DEVKIT_PATH\bin\buildtools\win"
+
+    $env:PATH = ($env:PATH -split ';' | Where-Object {
+        $_ -and $_ -ne $compilerPath -and $_ -ne $toolsPath -and $_ -ne $buildtoolsPath
+    }) -join ';'
     Remove-Item Env:\TDO_DEVKIT_PATH -ErrorAction SilentlyContinue
 
     Write-Host "3DO development environment deactivated."
@@ -23,9 +27,9 @@ else {
     $env:TDO_DEVKIT_PATH = (Split-Path -Path $MyInvocation.MyCommand.Path -Parent)
 }
 
-$env:PATH = "$env:PATH;$env:TDO_DEVKIT_PATH\bin\compiler\win"
-$env:PATH = "$env:PATH;$env:TDO_DEVKIT_PATH\bin\tools\win"
-$env:PATH = "$env:PATH;$env:TDO_DEVKIT_PATH\bin\buildtools\win"
+$env:PATH = "$env:TDO_DEVKIT_PATH\bin\compiler\win;$env:PATH"
+$env:PATH = "$env:TDO_DEVKIT_PATH\bin\tools\win;$env:PATH"
+$env:PATH = "$env:TDO_DEVKIT_PATH\bin\buildtools\win;$env:PATH"
 
 if (Get-Command armcc -ErrorAction SilentlyContinue) {
     Write-Host "3DO development environment activated. Run 'deactivate-env' to deactivate."

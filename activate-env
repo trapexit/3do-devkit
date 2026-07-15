@@ -13,20 +13,44 @@ script_basepath() {
 }
 
 deactivate-env() {
+    _remove_path_entry() {
+        target_path="$1"
+        cleaned_path=""
+        old_ifs="$IFS"
+        segment=""
+
+        IFS=':'
+        for segment in $PATH; do
+            if [ "$segment" = "$target_path" ] || [ -z "$segment" ]; then
+                continue
+            fi
+
+            if [ -z "$cleaned_path" ]; then
+                cleaned_path="$segment"
+            else
+                cleaned_path="$cleaned_path:$segment"
+            fi
+        done
+        IFS="$old_ifs"
+
+        PATH="$cleaned_path"
+    }
+
     if [ -z "$TDO_DEVKIT_PATH" ]; then
         echo "3DO development environment not activated."
         return 1
     fi
 
     if [ -n "$MSYSTEM" ] || [[ "$OSTYPE" == *msys* ]]; then
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/compiler/win}
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/tools/win}
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/buildtools/win}
+        _remove_path_entry "$TDO_DEVKIT_PATH/bin/buildtools/win"
+        _remove_path_entry "$TDO_DEVKIT_PATH/bin/tools/win"
+        _remove_path_entry "$TDO_DEVKIT_PATH/bin/compiler/win"
     else
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/compiler/linux}
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/tools/linux}
-        PATH=${PATH//:$TDO_DEVKIT_PATH/bin/buildtools/linux}
+        _remove_path_entry "$TDO_DEVKIT_PATH/bin/buildtools/linux"
+        _remove_path_entry "$TDO_DEVKIT_PATH/bin/tools/linux"
+        _remove_path_entry "$TDO_DEVKIT_PATH/bin/compiler/linux"
     fi
+    unset -f _remove_path_entry
     export PATH
     unset TDO_DEVKIT_PATH
     unset -f deactivate-env
@@ -42,13 +66,13 @@ if [ -z "$TDO_DEVKIT_PATH" ]; then
     export TDO_DEVKIT_PATH="$basepath"
 
     if [ -n "$MSYSTEM" ] || [[ "$OSTYPE" == *msys* ]]; then
-        export PATH="$PATH:$basepath/bin/compiler/win"
-        export PATH="$PATH:$basepath/bin/tools/win"
-        export PATH="$PATH:$basepath/bin/buildtools/win"
+        export PATH="$basepath/bin/compiler/win:$PATH"
+        export PATH="$basepath/bin/tools/win:$PATH"
+        export PATH="$basepath/bin/buildtools/win:$PATH"
     else
-        export PATH="$PATH:$basepath/bin/compiler/linux"
-        export PATH="$PATH:$basepath/bin/tools/linux"
-        export PATH="$PATH:$basepath/bin/buildtools/linux"
+        export PATH="$basepath/bin/compiler/linux:$PATH"
+        export PATH="$basepath/bin/tools/linux:$PATH"
+        export PATH="$basepath/bin/buildtools/linux:$PATH"
     fi
 fi
 
