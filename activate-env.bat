@@ -16,9 +16,9 @@ set "TDO_DEVKIT_PATH=%~dp0"
 set "TDO_DEVKIT_PATH=%TDO_DEVKIT_PATH:~0,-1%"
 
 :add_path
-set "PATH=%PATH%;%TDO_DEVKIT_PATH%\bin\compiler\win"
-set "PATH=%PATH%;%TDO_DEVKIT_PATH%\bin\tools\win"
-set "PATH=%PATH%;%TDO_DEVKIT_PATH%\bin\buildtools\win"
+set "PATH=%TDO_DEVKIT_PATH%\bin\compiler\win;%PATH%"
+set "PATH=%TDO_DEVKIT_PATH%\bin\tools\win;%PATH%"
+set "PATH=%TDO_DEVKIT_PATH%\bin\buildtools\win;%PATH%"
 
 where armcc >nul 2>&1
 if %errorlevel% equ 0 (
@@ -34,9 +34,17 @@ if %errorlevel% equ 0 (
 )
 
 :deactivate-env
-set "PATH=%PATH:;%TDO_DEVKIT_PATH%\bin\compiler\win=%"
-set "PATH=%PATH:;%TDO_DEVKIT_PATH%\bin\tools\win=%"
-set "PATH=%PATH:;%TDO_DEVKIT_PATH%\bin\buildtools\win=%"
+set "PATH=;%PATH%;"
+set "PATH=%PATH:;%TDO_DEVKIT_PATH%\bin\compiler\win;=%"
+set "PATH=%PATH:;%TDO_DEVKIT_PATH%\bin\tools\win;=%"
+set "PATH=%PATH:;%TDO_DEVKIT_PATH%\bin\buildtools\win;=%"
+:dedupe_path
+set "PATH=%PATH:;;=%"
+if not "%PATH%"=="%PATH:;;=%" goto dedupe_path
+if "%PATH:~0,1%"==";" set "PATH=%PATH:~1%"
+if "%PATH:~0,1%"==";" set "PATH=%PATH:~1%"
+if "%PATH:~-1%"==";" set "PATH=%PATH:~0,-1%"
+if "%PATH:~-1%"==";" set "PATH=%PATH:~0,-1%"
 set "TDO_DEVKIT_PATH="
 echo 3DO development environment deactivated.
 goto :eof
