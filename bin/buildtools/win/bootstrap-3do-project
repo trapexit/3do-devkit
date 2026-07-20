@@ -27,8 +27,8 @@ fi
 
 SRC_PATH="${TDO_DEVKIT_PATH}"
 
-if [ -e "${DST_PATH}/takeme" ]; then
-    echo "'takeme' directory exists. Appears path is already bootstrapped."
+if [ -e "${DST_PATH}/takeme" ] && [ ! -d "${DST_PATH}/takeme" ]; then
+    echo "Error: 'takeme' exists and is not a directory. Aborting."
     exit 1
 fi
 
@@ -38,15 +38,19 @@ cp "${SRC_PATH}/activate-env" "${DST_PATH}/activate-env"
 echo "Copying Makefile"
 cp "${SRC_PATH}/Makefile" "${DST_PATH}/Makefile"
 
-echo "Copying takeme (core CDROM filesystem contents)"
-mkdir -p "${DST_PATH}/takeme"
-cp "${SRC_PATH}/takeme/AppStartup" "${DST_PATH}/takeme/AppStartup"
-cp "${SRC_PATH}/takeme/BannerScreen" "${DST_PATH}/takeme/BannerScreen"
-cp -r "${SRC_PATH}/takeme/System" "${DST_PATH}/takeme/System"
+if [ -d "${DST_PATH}/takeme" ]; then
+    echo "'takeme' directory exists. Skipping."
+else
+    echo "Copying takeme (core CDROM filesystem contents)"
+    mkdir -p "${DST_PATH}/takeme"
+    cp "${SRC_PATH}/takeme/AppStartup" "${DST_PATH}/takeme/AppStartup"
+    cp "${SRC_PATH}/takeme/BannerScreen" "${DST_PATH}/takeme/BannerScreen"
+    cp -r "${SRC_PATH}/takeme/System" "${DST_PATH}/takeme/System"
 
-[ -e "${DST_PATH}/data" ] && \
-    echo "Copying data/* into takeme/" && \
-    cp -r "${DST_PATH}/data/"* "${DST_PATH}/takeme/"
+    [ -e "${DST_PATH}/data" ] && \
+        echo "Copying data/* into takeme/" && \
+        cp -r "${DST_PATH}/data/"* "${DST_PATH}/takeme/"
+fi
 
 if [ ! -d "${DST_PATH}/src" ]; then
     echo "Copying starter src/main.c"
