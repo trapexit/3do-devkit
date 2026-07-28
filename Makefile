@@ -270,7 +270,7 @@ ifeq ($(IS_POSIX_SHELL),1)
 else
 	if not exist "$(subst /,\,$(ISO_DIR))" mkdir "$(subst /,\,$(ISO_DIR))"
 endif
-	3dt pack --sign "$(FILESYSTEM)" -o "$(ISONAME)"
+	3dt pack "$(FILESYSTEM)" -o "$(ISONAME)"
 
 build/%.s.o: src/%.s | build $(SUBDIR_BUILD_DIRS)
 	armasm $(INCFLAGS) $(ASFLAGS) $< -o $@
