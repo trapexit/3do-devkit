@@ -56,19 +56,47 @@ endif
 #             The default Procedure Call Standard (PCS) for the ARM compiler, and
 #             the assembler in SDT 2.50 and C++ 1.10 is now:
 #             -apcs 3/32/nofp/noswst/narrow/softfp
+# nofp      : Part of the -apcs string. In the default fp variant, register r11 is
+#             reserved as the frame pointer: every function with a non-trivial frame
+#             saves it in the prologue, points it at the current stack pointer, and
+#             addresses its locals and parameters through it, which also lets a
+#             debugger walk the frame chain to produce backtraces.
+#             With nofp, r11 is freed for general use as an ordinary callee-saved
+#             variable register (v6). The prologue/epilogue no longer save and
+#             restore the frame pointer, locals are addressed relative to sp instead
+#             of r11, and the compiler gains a full extra register to relieve
+#             register pressure. Net effect: smaller, faster code.
+#             It is ABI compatible: arguments and return values are passed identically
+#             in both variants, and r11 is callee-saved either way, so objects
+#             compiled with and without a frame pointer link and interoperate freely.
+#             The only thing lost is debugger stack backtraces, which is irrelevant
+#             here because the original remote debugger is not used.
+# -zpno_check_stack : -zp passes options to the compiler's pragma system, so this is
+#             equivalent to #pragma no_check_stack. By default the compiler emits a
+#             stack-limit check in every function prologue that allocates stack space:
+#             the new sp is compared against the stack limit maintained by the runtime
+#             and a call to __rt_stkovf_split or __rt_stkovf_split_small is made when
+#             the frame could overflow, ultimately invoking __rt_stkovf_handler to
+#             abort cleanly.
+#             no_check_stack removes that compare-plus-call from every prologue,
+#             saving cycles (a call costs a pipeline refill on the ARM60). The
+#             tradeoff: stack exhaustion is no longer detected. The stack silently
+#             grows into adjacent memory and corrupts it (or raises a data abort on
+#             an unmapped page) instead of aborting with a clear error. Acceptable
+#             because 3DO task stacks and frame usage are bounded and known.
 ifeq ($(DEBUG),1)
 OPT      = -O0
 DEFFLAGS = -DDEBUG=1
 else
-OPT      = -O2
+OPT      = -O2 -zpno_check_stack
 DEFFLAGS = -DNDEBUG=1
 endif
 
 INCPATH  = ${TDO_DEVKIT_PATH}/include
 INCFLAGS = -I$(INCPATH)/3do -I$(INCPATH)/community -I$(INCPATH)/ttl
-CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs "3/32/fp/swst/wide/softfp"
+CFLAGS   = $(OPT) -bigend -za1 -zi4 -fa -fh -fx -fpu none -arch 3 -apcs "3/32/nofp/swst/wide/softfp"
 CXXFLAGS = $(CFLAGS)
-ASFLAGS  = -bigend -fpu none -arch 3 -apcs "3/32/fp/swst"
+ASFLAGS  = -bigend -fpu none -arch 3 -apcs "3/32/nofp/swst"
 ARMLIB   = armlib
 ARMLIBFLAGS = -c -o
 LIBPATH  = ${TDO_DEVKIT_PATH}/lib
