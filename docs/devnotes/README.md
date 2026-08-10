@@ -7,8 +7,13 @@
 * CPU within the 3DO is an
   [ARM60](../cpu/arm60_datasheet_-_zarlink_semiconductor.pdf) of the
   ARMv3 architecture.
-* 12.5Mhz, ~10MIPS, big endian, 16 32bit registers, 32bit data bus,
-32bit address bus.
+* 12.5MHz, ~10MIPS, big endian, 16 32bit registers, 32bit data bus,
+  32bit address bus.
+* The [ABI (the APCS)](../compilers/APCS.md) allocates 4 caller-saved
+  registers for function arguments, 5 as callee-saved register
+  variables. If you use more variables than you have register space
+  for you'll have costly loads/stores to memory.
+* There is integer multiplication but is relatively expensive.
 * No integer division instructions, uses C library functions
 `__rt_sdiv` and `__rt_udiv` for signed and unsigned division
 respectively. Can take 20-140 cycles. See
@@ -17,8 +22,9 @@ code to divide by known values.
 * No floating point hardware.
 * No 16bit integer instructions. Reads/writes to memory will be more
   expensive.
-* Registers are 32bit so best to avoid using `char` and `short` for
-local variables. Otherwise will need to sign-extend or zero-extend.
+* Registers are 32bit so best to avoid using 8-bit `char` and 16-bit
+  `short` for local variables. Otherwise will need to sign-extended or
+  zero-extended.
 * Data should be word aligned (4 bytes). See the data sheet for
   details on how unaligned loads/stores behave.
 * Function calls with more than 4 arguments will store additional
@@ -68,22 +74,34 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
 
 ### CEL Engine
 
-* Only supports quads. No distinction between texture and polygon
-  (no UV.)
-* Can not run in parallel with the CPU.
+* Uses forward rasterization. Performance is directly related to CEL
+  data size and how many texels rendered. Fewer bytes to process on
+  both ends of the pipeline the better.
+* Only supports quads. No distinction between texture and
+  polygon. i.e. there is no UV.
+* Can *NOT* run in parallel with the CPU.
 * Call `DrawCels()` or `DrawScreenCels()` as few times as
-  possible. Instead chain together CELs and call draw once if possible.
-* `DrawCels()` is faster than `DrawScreenCels()`.
+  possible. Instead chain/link together CELs and call draw once if
+  possible. The CEL/CCB structure is a linked list.
+* [DrawCels()](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gprfldr/drawcels)
+  and 
+  [DrawScreenCels()](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gprfldr/drawscreencels)
+  vary little in performance. The latter is more for convenience and
+  has an additional check on the screen item.
 * Larger CELs are more expensive to draw than smaller even if scaled
   up. Use LODs / manual mipmaps if possible.
 * Avoid VRAM as a source for CELs. Reduces performance.
-* `MapCel()` is slower than `FastMapCel()` but the latter has
-  limitation.
-* No Z-buffer. Need to sort CELs for painters algo yourself.
-* Uses forward rasteriation. Performance is directly related to CEL
-  data size.
+* For mapping a CEL's vector based CCB values to screen coordinates
+  you can use
+  [MapCel()](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gprfldr/mapcel),
+  [FastMapCel()](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gprfldr/fastmapcel),
+  or
+  [MapP2Cel()](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gprfldr/mapp2cel). They
+  however are not identical in behavior. Be sure to review docs.
+* No Z-buffer. Need to sort CELs for painters algorithm yourself.
 * No hardware mip-mapping.
-* Does support backface culling and clipping.
+* Does support backface culling and clipping but manually doing both
+  is still recommended.
 * CEL Engines are pipelined and work on rows. This means that every
   row of CEL data must be word aligned and a minimum of 2 words (8
   bytes) even if not used. Not the width and height or related. Just
@@ -99,12 +117,16 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
       effects](https://3dodev.com/documentation/development/opera/pf25/tktfldr/anifldr/1anif)
     * [The Cel Control Block](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/5gpgl)
     * [CrossFadeCels](https://github.com/trapexit/portfolio_os/blob/master/src/libs/lib3DO/CelUtils/CrossFadeCels.c#L118)
+* Transparency via packed CELs will generally be faster than `black as
+  transparent` due to being able to skip multiple pixels at a time.
+* [3DO Rendering, CEL vectors explained](https://www.youtube.com/watch?v=P8X_oJGCTSs) 
+
 
 ### Math Engine
 
-* Part of the MADAM chip. Memory mapped fixed point matrix arithmetic
-  mostly. Technically asynchronous but practically can not run in
-  parallel to the CPU.
+* Part of the MADAM/ANVIL chip. Memory mapped fixed point matrix
+  arithmetic mostly. Technically asynchronous but practically can not
+  run in parallel to the CPU.
 * Wrapped by API due to different hardware support on different
   hardware variants.
 * Supports arrays as input which should be used to reduce library
@@ -131,6 +153,12 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
   controls the clipping width and height) to the bitmap width and
   height rather than the clip values if provided. When/if we rebuild
   the library this can be fixed.
+* Since it is a high level OS with `supervisor` and `user` level
+  functions there is additional inherent overhead to syscalls.
+* Items within the system have ownership. Some calls will require
+  ownership checks and that check typically is faster (short
+  circuited) if the owner is the current task. This isn't a common
+  concern but worth noting if using multiple threads or processes.
 
 
 ## Text and Fonts
@@ -139,19 +167,19 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
   FontLib](https://github.com/trapexit/portfolio_os/tree/master/src/libs/lib3DO/TextLib)
   provide decent, flexible functions for fonts and text
   generation. TextLib provides a "TextCel" object which has a Cel CCB
-  which can then be used to render to a Bitmap. No documentation but
-  look at "DrawTextString()" for an example.
+  which can then be used to render to a Bitmap. Look at
+  "DrawTextString()" for an example.
+* [CreateTextCel](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/ldofldr/createtextcel) 
+* [DrawTextString](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/ldofldr/drawtextstring)
 * Unless doing a lot of text it is probably better/easier to do bitmap
   based fonts.
 
 
-### Programming Do's and Don'ts
+## Programming Do's and Don'ts
 
-https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/cdmfldr/07cdm002
+https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/cdmfldr/programming_dos_and_donts
 
 * Don't assume a certain data delivery rate from an IO request.
-* When using `DoIO()` be sure to check both the return value and on
-  success `io_req->io_Error`.
 * Don't alternate reads, rapidly, between two or more files. This will
   almost certainly require seeking and impose serious delay in IO
   requests.
@@ -161,13 +189,11 @@ https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/cdmfldr/
 * Use multiplex data streams rather than multiple open files.
 * Concat files into a single file and split in memory to improve
   loading time.
-* The current ISO builder app is not sophisticated as the original and
-  have some bugs but plans exist to build a new one.
 
 
-### Programming Etiquette
+## Programming Etiquette
 
-https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/gspfldr/06pgstoc
+https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/gspfldr/portfolio_programming_etiquette
 
 * [Don't Leave Unused Fields in DMA Structures
   Uninitialized](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/gspfldr/06pgs008)
@@ -176,16 +202,16 @@ https://3dodev.com/documentation/development/opera/pf25/ppgfldr/smmfldr/gspfldr/
 ### Threading
 
 * As mentioned in the
-  [docs](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/pgsfldr/spg/02spg004)
+  [docs](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/pgsfldr/spg/starting_and_ending_threads)
   you must open any Devices, Drivers, Folios, etc. before using them
-  in a thread. While memory may be shared between Tasks and Threads it
-  does not appear Items share ownership or exist within one's scope.
+  in a thread. While memory may be shared between Tasks and Threads,
+  Items ownership is not shared.
 * While it may appear that threads can't take arguments due to the
   CreateThread signature you can in fact pass two values via the
-  CREATETASK_TAG_ARGC and CREATETASK_TAG_ARGV tags via
+  CREATETASK_TAG_ARGC and CREATETASK_TAG_ARGP tags via
   CreateItem/CreateItemVA.
 * When using CREATETASK_TAG_SP the ta_Arg value should be set to the
-  bottom of the stack. malloc(stacksize) + stacksize.
+  top of the stack / bottom of the allocation. malloc(stacksize) + stacksize.
 
 
 ## sysload
@@ -248,4 +274,4 @@ Simple versions of shared_ptr and unique_ptr are provided.
 
 There might be a better solution to this problem but after many attempts,
 including attempting to use the strategy by RogueWave which didn't seem
-to work, this was settled on till something better could be be done.
+to work, this was settled on till something better could be done.
