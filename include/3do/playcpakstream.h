@@ -3,6 +3,7 @@
 #include "extern_c.h"
 
 #include "graphics.h"
+#include "displayutils.h"
 #include "types.h"
 #include "preparestream.h"
 #include "dataacq.h"
