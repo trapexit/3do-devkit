@@ -4,36 +4,28 @@
 
 #include "graphics.h"
 #include "subscriberutils.h"
+#include "subscriberconstants.h"
 #include "codec.h"
 #include "datastreamlib.h"
 
 #define	FILM_CHUNK_TYPE	CHAR4LITERAL('F','I','L','M') /* chunk data type for this subscriber */
-#define	FHDR_CHUNK_TYPE	CHAR4LITERAL('F','H','D','R') /* chunk data type for this subscriber */
-#define	FRME_CHUNK_TYPE	CHAR4LITERAL('F','R','M','E') /* chunk data type for this subscriber */
 
-#define	CPAK_MAX_SUBSCRIPTIONS 2 /* max # of streams that can use this subscriber */
-#define	CPAK_MAX_CHANNELS      8 /* max # of logical channels per subscription */
-#define	CPAK_MAX_CHUNKS	       128 /* max # of chunks pending per subscriber */
-
-#define	BYTES_PER_PIXEL	  2	// this is all 16 bit uncoded data
-#define	SCANLINES_PER_ROW 2	// 2 interlaced scanlines per frame buffer line
-
-#define	NO_FRAME_ITEM -1	/* used to indicate no current frame msg item */
+/* FHDR_CHUNK_TYPE, FRME_CHUNK_TYPE, CPAK_MAX_SUBSCRIPTIONS,
+ * CPAK_MAX_CHANNELS, CPAK_MAX_CHUNKS, BYTES_PER_PIXEL,
+ * SCANLINES_PER_ROW and NO_FRAME_ITEM are shared with ezqsubscriber.h
+ * and are defined in subscriberconstants.h. */
 
 
-typedef struct ImageDesc_Tag ImageDesc_Tag;
-struct ImageDesc_Tag
+typedef struct ImageDesc
 {
   int32	baseAddr;
   int32	rowBytes;
   int32	baseAddrFrame;
-
   int32	width;
   int32	height;
   int32	xPos;
   int32	yPos;
-
-};
+} ImageDesc;
 
 typedef ImageDesc *ImageDescPtr;
 
