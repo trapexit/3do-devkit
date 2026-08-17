@@ -5,6 +5,8 @@
 	Also available for Mac, Apple IIgs, IBM PC
 
 ********************************/
+#pragma once
+
 
 #ifndef __BURGER__
 #define __BURGER__

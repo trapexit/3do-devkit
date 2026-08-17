@@ -108,7 +108,8 @@ int32 DisposeJoinSubscriber( JoinContextPtr ctx );
 
 /* Data port create/destroy */
 
-Int32 InitJoinPort( JoinContextPtr ctx, Item *joinPort, int32 dataType );
+int32 InitJoinPort( JoinContextPtr ctx, Item *joinPort, int32 dataType );
+
 void  DestroyJoinPort( JoinContextPtr ctx, DSDataType dataType);
 
 /* Get/release data element */

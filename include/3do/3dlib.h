@@ -627,11 +627,13 @@ struct CHUNK_HDR
 };
 
 typedef struct LIST_CHUNK LIST_CHUNK;
+struct LIST_CHUNK
 {
   CHUNK_HDR  header;
   int32      nElement;
   char      *Data;
 };
+
 
 typedef struct QUAD_DATA QUAD_DATA;
 struct QUAD_DATA
@@ -770,7 +772,7 @@ void CenterModelByWeight(ModelDefinition *item);
 void CreateFaceCenters(WorldObject *object);
 void CreateNormalList(WorldObject *object);
 void ClearUpdateFlags(WorldPort *world,uint32 mask);
-void CopyMatrix (mat33f16 matrix,mat33f16 matrix);
+void CopyMatrix (mat33f16 destination,mat33f16 source);
 Obj3D DeRefCameraHandle(WorldPort *world,Obj3D Obj);
 Obj3D DeRefSoundHandle(WorldPort *world,Obj3D Obj);
 int32 FaceCulling1Proc(WorldPort *world, WorldObject *object,

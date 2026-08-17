@@ -23,14 +23,11 @@
 
 #include "types.h"
 
-#ifndef __CC_NORCROFT
-/* The following preamble is used at the top of each subscriber
- * chunk passed in from the streamer.
+/* The following preamble is used at the top of each subscriber chunk passed
+ * in from the streamer.
  */
-
 #include "subschunkcommon.h"
 
-#endif
 
 /**********************/
 /* Internal constants */

@@ -14,6 +14,8 @@
 #include "extern_c.h"
 
 #include "types.h"
+#include "directory.h"
+
 
 EXTERN_C_BEGIN
 

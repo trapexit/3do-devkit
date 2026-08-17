@@ -12,9 +12,14 @@
 **
 **
 */
+#pragma once
+
 
 
 /* #include "l3Error.h" */
+#include "displayutils.h"
+#include "kernel.h"
+
 
 #ifdef DEBUG
 #define STRICT

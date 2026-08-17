@@ -44,4 +44,3 @@ boolean	GetJoyPad(JoyPadState* joyState, int32 padNum);
 EXTERN_C_END
 
 extern	boolean gPadInitialized;
-#endif
