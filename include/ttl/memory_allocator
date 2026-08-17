@@ -16,7 +16,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#pragma include_only_once
+#pragma once
 
 #include "types_size_t.h"
 #include "types_ptrdiff_t.h"

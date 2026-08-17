@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 /****************************************************************************
  **
  **  Copyright (C) 1995, an unpublished work by The 3DO Company. All rights reserved.

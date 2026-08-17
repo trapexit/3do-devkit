@@ -1,6 +1,5 @@
 #pragma force_top_level
-#pragma include_only_once
-
+#pragma once
 
 #include "types.h"
 #include "item.h"

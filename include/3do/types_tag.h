@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 /* TagArgs - use to pass a list of arguments to functions */
 typedef	void *TagData;
 

@@ -16,7 +16,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#pragma include_only_once
+#pragma once
 
 extern void* operator new(unsigned int);
 extern void* operator new[](unsigned int);

@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #ifndef RELATIVE_BRANCHING
 #	define	RELATIVE_BRANCHING	0
 #endif

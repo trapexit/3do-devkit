@@ -1,3 +1,2 @@
-#pragma include_only_once
-
+#pragma once
 #define MAX3DOBJECTS 200

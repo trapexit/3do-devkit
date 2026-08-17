@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #include "subscriberutils.h"
 
 typedef struct SAudioSampleDescriptor

@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #ifndef NULL
 #define NULL 0
 #endif

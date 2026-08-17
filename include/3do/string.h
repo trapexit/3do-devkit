@@ -1,4 +1,4 @@
-#pragma include_only_once
+#pragma once
 
 #include "extern_c.h"
 
