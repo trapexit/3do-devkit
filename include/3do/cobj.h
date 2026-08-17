@@ -13,6 +13,11 @@
  ****************************************************************************/
 
 
+#include "extern_c.h"
+#include "types.h"
+#include "nodes.h"
+
+
 #ifdef NOT_ARM
 void bcopy ( char *s, char *d, long n )
 {
@@ -20,7 +25,7 @@ void bcopy ( char *s, char *d, long n )
   for (i=0; i<n; i++) *d++ = *s++;
 }
 #include "stdio.h"
-typedef long int32;
+
 #else
 
 #endif

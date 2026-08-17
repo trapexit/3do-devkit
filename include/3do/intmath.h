@@ -3,6 +3,8 @@
 	Calls to the integer math toolbox
 
 **********************************/
+#pragma once
+
 
 #include <burger.h>
 

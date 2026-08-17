@@ -1,3 +1,5 @@
+#pragma once
+
 #define SH	65536
 #define SM	32768
 #define CH	10000

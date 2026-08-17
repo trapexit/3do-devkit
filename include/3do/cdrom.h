@@ -10,6 +10,8 @@
 
 #include "types.h"
 #include "nodes.h"
+#include "device.h"
+
 
 /* #define CDLOG 256 */
 #define CDROM_TICKLE_DELAY       2

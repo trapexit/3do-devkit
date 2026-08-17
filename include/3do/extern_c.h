@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef EXTERN_C_INCLUDED
 #define EXTERN_C_INCLUDED
 

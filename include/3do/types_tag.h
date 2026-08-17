@@ -1,5 +1,7 @@
 #pragma once
 /* TagArgs - use to pass a list of arguments to functions */
+#include "types_ints.h"
+
 typedef	void *TagData;
 
 typedef struct TagArg

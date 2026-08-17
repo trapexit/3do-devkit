@@ -14,6 +14,10 @@
  ****************************************************************************/
 
 #include "extern_c.h"
+#include "types.h"
+#include "operamath.h"
+
+
 
 #define NOMINAL3DFREQ (0x8000)
 

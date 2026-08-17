@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef __cplusplus
 #ifndef __CPLUSSWI_H
 #define __CPLUSSWI_H
