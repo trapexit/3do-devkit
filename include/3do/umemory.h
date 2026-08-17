@@ -17,7 +17,7 @@
 
 EXTERN_C_BEGIN
 
-void *Malloc(uint32 size, uint32 memtype);
+void *Malloc(u32 size, u32 memtype);
 void *Free(void *ptr);
 
 EXTERN_C_END

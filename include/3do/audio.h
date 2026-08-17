@@ -362,12 +362,12 @@ enum DSPPResourceTypes    /* !!!! These must match dspp_asm.fth */
 ** We reserve the right to change the definition of these structures.
 */
 
-typedef uint32 AudioTime;
+typedef u32 AudioTime;
 
 typedef struct DataTimePair
 {
-  uint32     dtpr_Time;
-  int32      dtpr_Data;
+  u32     dtpr_Time;
+  s32      dtpr_Data;
 } DataTimePair;
 
 /**********************************************************************/
@@ -376,7 +376,7 @@ typedef struct DataTimePair
 
 /* useful macros for comparing AudioTimes.  These macros assume
    that the times to be compared are <= 0x7fffffff ticks apart. */
-#define CompareAudioTimes(t1,t2)         ( (int32) ( (t1) - (t2) ) )
+#define CompareAudioTimes(t1,t2)         ( (s32) ( (t1) - (t2) ) )
 #define AudioTimeLaterThan(t1,t2)        (CompareAudioTimes((t1),(t2)) > 0)
 #define AudioTimeLaterThanOrEqual(t1,t2) (CompareAudioTimes((t1),(t2)) >= 0)
 
@@ -394,7 +394,7 @@ typedef struct DataTimePair
 
 EXTERN_C_BEGIN
 
-Err __swi(AUDIOSWI+0) TweakKnob( Item KnobItem, int32 Value );
+Err __swi(AUDIOSWI+0) TweakKnob( Item KnobItem, s32 Value );
 Err __swi(AUDIOSWI+1) StartInstrument( Item Instrument, TagArg *TagList);
 Err __swi(AUDIOSWI+2) ReleaseInstrument( Item Instrument, TagArg *TagList);
 Err __swi(AUDIOSWI+3) StopInstrument( Item Instrument, TagArg *TagList);
@@ -402,35 +402,35 @@ Err __swi(AUDIOSWI+4) TuneInsTemplate( Item InsTemplate, Item Tuning );
 Err __swi(AUDIOSWI+5) TuneInstrument( Item Instrument, Item Tuning );
 Err __swi(AUDIOSWI+8) ConnectInstruments( Item SrcIns, char *SrcName,
                                           Item DstIns, char *DstName);
-uint32 __swi(AUDIOSWI+9) TraceAudio( int32 Mask );
-int32 __swi(AUDIOSWI+10) AllocAmplitude( int32 Amplitude);
-Err __swi(AUDIOSWI+11) FreeAmplitude( int32 Amplitude);
+u32 __swi(AUDIOSWI+9) TraceAudio( s32 Mask );
+s32 __swi(AUDIOSWI+10) AllocAmplitude( s32 Amplitude);
+Err __swi(AUDIOSWI+11) FreeAmplitude( s32 Amplitude);
 Err __swi(AUDIOSWI+12) DisconnectInstruments( Item SrcIns, char *SrcName,
                                               Item DstIns, char *DstName);
 Err __swi(AUDIOSWI+13) SignalAtTime( Item Cue, AudioTime Time );
 Err __swi(AUDIOSWI+15) SetAudioRate( Item Owner, frac16 Rate);
-Err __swi(AUDIOSWI+16) SetAudioDuration( Item Owner, uint32 Frames);
+Err __swi(AUDIOSWI+16) SetAudioDuration( Item Owner, u32 Frames);
 /****************************************************************/
 /* New SWIs as of 3/15/93 */
-Err __swi(AUDIOSWI+17) TweakRawKnob( Item KnobItem, int32 Value );
+Err __swi(AUDIOSWI+17) TweakRawKnob( Item KnobItem, s32 Value );
 Err __swi(AUDIOSWI+18) StartAttachment( Item Attachment, TagArg *tp );
 Err __swi(AUDIOSWI+19) ReleaseAttachment( Item Attachment, TagArg *tp );
 Err __swi(AUDIOSWI+20) StopAttachment(  Item Attachment, TagArg *tp );
 Err __swi(AUDIOSWI+21) LinkAttachments( Item At1, Item At2 );
-Err __swi(AUDIOSWI+22) MonitorAttachment( Item Attachment, Item Cue, int32 CueAt );
+Err __swi(AUDIOSWI+22) MonitorAttachment( Item Attachment, Item Cue, s32 CueAt );
 
 /* Dynamic Voice Allocation support */
 Err __swi(AUDIOSWI+24) AbandonInstrument( Item Instrument );
 Item __swi(AUDIOSWI+25) AdoptInstrument( Item InsTemplate );
-Item __swi(AUDIOSWI+26) ScavengeInstrument( Item InsTemplate, uint8 Priority,
-                                            int32 MaxActivity, int32 IfSystemWide );
+Item __swi(AUDIOSWI+26) ScavengeInstrument( Item InsTemplate, u8 Priority,
+                                            s32 MaxActivity, s32 IfSystemWide );
 
 Err __swi(AUDIOSWI+27) SetAudioItemInfo( Item AnyItem, TagArg *tp );
 
 /* Added 6/4/93 */
 Err __swi(AUDIOSWI+28) PauseInstrument( Item Instrument );
 Err __swi(AUDIOSWI+29) ResumeInstrument( Item Instrument );
-int32 __swi(AUDIOSWI+30) WhereAttachment( Item Attachment );
+s32 __swi(AUDIOSWI+30) WhereAttachment( Item Attachment );
 
 /* Added 9/15/93  */
 Err __swi(AUDIOSWI+32) BendInstrumentPitch( Item Instrument, frac16 BendFrac );
@@ -439,15 +439,15 @@ Err __swi(AUDIOSWI+32) BendInstrumentPitch( Item Instrument, frac16 BendFrac );
 Err __swi(AUDIOSWI+33) AbortTimerCue( Item Cue );
 
 /* Added 4/27/94  */
-Err __swi(AUDIOSWI+34) EnableAudioInput( int32 OnOrOff, TagArg *Tags );
+Err __swi(AUDIOSWI+34) EnableAudioInput( s32 OnOrOff, TagArg *Tags );
 
 
 /* Added 9/22/94  */
-Err __swi(AUDIOSWI+36) ReadProbe( Item Probe, int32 *ValuePtr );
+Err __swi(AUDIOSWI+36) ReadProbe( Item Probe, s32 *ValuePtr );
 
 /* Added 9/26/94  */
-uint16 __swi(AUDIOSWI+38) GetAudioFrameCount( void );
-int32 __swi(AUDIOSWI+39) GetAudioCyclesUsed( void );
+u16 __swi(AUDIOSWI+38) GetAudioFrameCount( void );
+s32 __swi(AUDIOSWI+39) GetAudioCyclesUsed( void );
 
 /****************************************************************/
 Err OpenAudioFolio( void );
@@ -466,8 +466,8 @@ Err FreeInstrument( Item Instrument );
 /****************************************************************/
 Item  GrabKnob ( Item Instrument, char *Name );
 Err  ReleaseKnob ( Item KnobItem );
-char *GetKnobName ( Item Instrument, int32 KnobNumber);
-int32 GetNumKnobs ( Item Instrument );
+char *GetKnobName ( Item Instrument, s32 KnobNumber);
+s32 GetNumKnobs ( Item Instrument );
 
 /****************************************************************/
 /******* Samples ************************************************/
@@ -475,36 +475,36 @@ int32 GetNumKnobs ( Item Instrument );
 Item   LoadSample ( char *Name );
 Item   LoadSampleHere ( char *Name, void *(*CustomAllocMem)(), void (*CustomFreeMem)());
 Err  DebugSample ( Item SampleItem );
-/* OBSOLETE: Item MakeSample (uint32 NumBytes, TagArg *TagList);  Use CreateSample() instead. */
-Item   ScanSample ( char *Name, int32 BufferSize );
+/* OBSOLETE: Item MakeSample (u32 NumBytes, TagArg *TagList);  Use CreateSample() instead. */
+Item   ScanSample ( char *Name, s32 BufferSize );
 Err  UnloadSample ( Item SampleItem );
 
 /****************************************************************/
 /******* Audio Timer Functions **********************************/
 /****************************************************************/
-int32 GetCueSignal( Item Cue );
+s32 GetCueSignal( Item Cue );
 AudioTime GetAudioTime( void );
 Err  SleepUntilTime(Item Cue, AudioTime Time);
 Item  OwnAudioClock( void );
 Err   DisownAudioClock( Item Owner );
 frac16 GetAudioRate( void );
-uint32 GetAudioDuration( void );
+u32 GetAudioDuration( void );
 
 /* Obsolete */
-Err SleepAudioTicks( int32 Ticks );
+Err SleepAudioTicks( s32 Ticks );
 
 /* Modified user routines as of 3/15/93 ********************************/
-Item  LoadInstrument( char *Name, Item AudioDevice, uint8 Priority);
+Item  LoadInstrument( char *Name, Item AudioDevice, u8 Priority);
 Item  LoadInsTemplate( char *Name, Item AudioDevice);
-Item  AllocInstrument( Item InsTemplate, uint8 Priority);
+Item  AllocInstrument( Item InsTemplate, u8 Priority);
 
 Item AttachSample( Item Instrument, Item Sample, char *FIFOName );
 Err DetachSample( Item Attachment );
 
 /* New user routines as of 3/15/93 *************************************/
-Item  DefineInsTemplate( uint8 *Definition, int32 NumBytes, Item Device, char *Name );
+Item  DefineInsTemplate( u8 *Definition, s32 NumBytes, Item Device, char *Name );
 
-Item  CreateTuning( ufrac16 *Frequencies, int32 NumNotes, int32 NotesPerOctave, int32 BaseNote );
+Item  CreateTuning( ufrac16 *Frequencies, s32 NumNotes, s32 NotesPerOctave, s32 BaseNote );
 Err DeleteTuning( Item Tuning );
 
 Err GetAudioItemInfo( Item AnyItem, TagArg *tp );
@@ -513,18 +513,18 @@ Err GetAudioItemInfo( Item AnyItem, TagArg *tp );
 /* Envelopes */
 Item  AttachEnvelope( Item Instrument, Item Envelope, char *EnvName );
 Err DetachEnvelope( Item Attachment );
-Item  CreateEnvelope( DataTimePair *Points, int32 Numpoints,
-                      int32 SustainBegin, int32 SustainEnd );
+Item  CreateEnvelope( DataTimePair *Points, s32 Numpoints,
+                      s32 SustainBegin, s32 SustainEnd );
 Err DeleteEnvelope( Item Envelope );
 
 
 /* New user routines as of 7/20/93 *************************************/
-Item   CreateDelayLine ( int32 NumBytes , int32 NumChannels, int32 IfLoop);
+Item   CreateDelayLine ( s32 NumBytes , s32 NumChannels, s32 IfLoop);
 Err  DeleteDelayLine( Item DelayLIne );
-Item   DefineSampleHere ( uint8 *AIFFImage, int32 NumBytes, void *(*CustomAllocMem)(), void (*CustomFreeMem)());
+Item   DefineSampleHere ( u8 *AIFFImage, s32 NumBytes, void *(*CustomAllocMem)(), void (*CustomFreeMem)());
 
 /* New user routines as of 11/29/93 *************************************/
-Err Convert12TET_F16( int32 Semitones, int32 Cents, frac16 *FractionPtr );
+Err Convert12TET_F16( s32 Semitones, s32 Cents, frac16 *FractionPtr );
 
 /* New user routines as of 12/15/93 *************************************/
 Item CreateSample ( TagArg *Tags);
@@ -534,27 +534,27 @@ Item CreateInsTemplate ( TagArg *Tags);
 Err GetAudioFolioInfo (TagArg *Tags);
 
 /* New varargs glue routines for V24 ************************************/
-Item CreateSampleVA (uint32 tag1, ...);
-Item CreateInsTemplateVA (uint32 tag1, ...);
+Item CreateSampleVA (u32 tag1, ...);
+Item CreateInsTemplateVA (u32 tag1, ...);
 
-Err StartInstrumentVA   (Item Instrument, uint32 tag1, ...);
-Err ReleaseInstrumentVA (Item Instrument, uint32 tag1, ...);
-Err StopInstrumentVA    (Item Instrument, uint32 tag1, ...);
+Err StartInstrumentVA   (Item Instrument, u32 tag1, ...);
+Err ReleaseInstrumentVA (Item Instrument, u32 tag1, ...);
+Err StopInstrumentVA    (Item Instrument, u32 tag1, ...);
 
-Err StartAttachmentVA   (Item Attachment, uint32 tag1, ...);
-Err ReleaseAttachmentVA (Item Attachment, uint32 tag1, ...);
-Err StopAttachmentVA    (Item Attachment, uint32 tag1, ...);
+Err StartAttachmentVA   (Item Attachment, u32 tag1, ...);
+Err ReleaseAttachmentVA (Item Attachment, u32 tag1, ...);
+Err StopAttachmentVA    (Item Attachment, u32 tag1, ...);
 
-Err SetAudioItemInfoVA (Item AnyItem, uint32 tag1, ...);
+Err SetAudioItemInfoVA (Item AnyItem, u32 tag1, ...);
 
-Err EnableAudioInputVA (int32 OnOrOff, uint32 tag1, ...);
+Err EnableAudioInputVA (s32 OnOrOff, u32 tag1, ...);
 
 /* New user routines as of 9/21/94 *************************************/
 Item CreateInstrument ( Item InsTemplate, const TagArg *Tags );
-Item CreateInstrumentVA ( Item InsTemplate, uint32 tag1, ...);
+Item CreateInstrumentVA ( Item InsTemplate, u32 tag1, ...);
 Err  DeleteInstrument ( Item Instrument );
 Item CreateProbe ( Item Insrument, const char *OutputName, const TagArg *Tags );
-Item CreateProbeVA ( Item Insrument, const char *OutputName, uint32 tag1, ... );
+Item CreateProbeVA ( Item Insrument, const char *OutputName, u32 tag1, ... );
 Err  DeleteProbe ( Item Probe );
 
 /* Removed functions ***************************************************/
@@ -563,28 +563,28 @@ Err  DeleteProbe ( Item Probe );
   implemented:
 
   Item  FindAudioDevice( TagArg *tp );
-  Err ControlAudioDevice( Item Device, void *SendBuffer, int32 SendLen,
-  void *RecvBuffer, int32 RecvLen, TagArg *tp );
-  int32 GetNumInstruments( Item InsTemplate );
+  Err ControlAudioDevice( Item Device, void *SendBuffer, s32 SendLen,
+  void *RecvBuffer, s32 RecvLen, TagArg *tp );
+  s32 GetNumInstruments( Item InsTemplate );
   frac16 GetMasterTuning( void );
   Err __swi(AUDIOSWI+23) SetMasterTuning( frac16 Frequency );
-  int32 DSPGetMaxTicks( void );
+  s32 DSPGetMaxTicks( void );
 */
 
 
 /******************************************************************/
 /* Debug/Hack Routines - may not exist in final version. **********/
-int32 DSPGetTicks( void );   /* Call GetAudioCyclesUsed() instead */
+s32 DSPGetTicks( void );   /* Call GetAudioCyclesUsed() instead */
 
 /* These routines should never be called as of 9/26/94. */
-int32 DSPGetRsrcAlloc (Item Instrument, int32 RsrcType,
-                       char *Name, int32 *Alloc); /* Use ReadProbe() instead. */
-void *DSPWhereDMA ( uint32 DMAChannel );    /* Call WhereAttachment() instead. */
-int32 DSPReadEO(int32 EO_Offset);   /* Use ReadProbe() instead. */
+s32 DSPGetRsrcAlloc (Item Instrument, s32 RsrcType,
+                       char *Name, s32 *Alloc); /* Use ReadProbe() instead. */
+void *DSPWhereDMA ( u32 DMAChannel );    /* Call WhereAttachment() instead. */
+s32 DSPReadEO(s32 EO_Offset);   /* Use ReadProbe() instead. */
 
 /* These routines are used only for debugging and development. */
-int32 DSPGetInsRsrcUsed( Item Instrument, int32 RsrcType );
-int32 DSPGetTotalRsrcUsed( int32 RsrcType );
+s32 DSPGetInsRsrcUsed( Item Instrument, s32 RsrcType );
+s32 DSPGetTotalRsrcUsed( s32 RsrcType );
 
 EXTERN_C_END
 

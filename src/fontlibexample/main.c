@@ -83,7 +83,7 @@ static char big_block_o_text[]
 
 static char test_text_2[] = "This text\ncolor cycles\na bit.";
 
-static int32 pen_colors_test_values[4] = {
+static s32 pen_colors_test_values[4] = {
   MakeRGB15 (31, 31, 31),
   MakeRGB15 (1, 1, 1),
   MakeRGB15 (0, 31, 0),
@@ -94,11 +94,11 @@ static int32 pen_colors_test_values[4] = {
  *
  ****************************************************************************/
 
-static uint32
+static u32
 controlButtons (void)
 {
-  uint32 button;
-  int32 status;
+  u32 button;
+  s32 status;
 
   status = DoControlPad (1, &button, 0);
   return button;
@@ -107,7 +107,7 @@ controlButtons (void)
 static void
 wait_for_button (char *prompt)
 {
-  uint32 button;
+  u32 button;
 
   PRT ((prompt));
 
@@ -126,7 +126,7 @@ wait_for_button (char *prompt)
 static void
 bluebar_background (ScreenContext *sc)
 {
-  int32 i;
+  s32 i;
   Rect bounds;
   GrafCon gcon;
 
@@ -167,13 +167,13 @@ drawBackground (ScreenContext *sc, CCB *backgroundCel)
  *
  ****************************************************************************/
 
-static int32
+static s32
 testFont (ScreenContext *sc, char *fontName, char *bgCelName)
 {
-  int32 err;
-  int32 i, j;
-  int32 twidth;
-  int32 theight;
+  s32 err;
+  s32 i, j;
+  s32 twidth;
+  s32 theight;
   GrafCon gcon;
   FontDescriptor *fontDesc = NULL;
   TextCel *tCel = NULL;

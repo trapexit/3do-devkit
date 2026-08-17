@@ -42,18 +42,18 @@
 #include "bounce_sound.h"
 #include "getvideoinfo.h"
 
-extern int32 gGlobeXPos;
-extern int32 gGlobeYPos;
-extern int32 gCubeXPos;
-extern int32 gCubeYPos;
-extern int32 gTvXPos;
-extern int32 gTvYPos;
-extern int32 gBallXPos;
-extern int32 gBallYPos;
+extern s32 gGlobeXPos;
+extern s32 gGlobeYPos;
+extern s32 gCubeXPos;
+extern s32 gCubeYPos;
+extern s32 gTvXPos;
+extern s32 gTvYPos;
+extern s32 gBallXPos;
+extern s32 gBallYPos;
 
-extern int32 gDisplayType;
+extern s32 gDisplayType;
 
-int32 gDisplayHeight;
+s32 gDisplayHeight;
 
 pTSampleInfo Effect[NUMSAMPLERS];
 
@@ -108,12 +108,12 @@ GetSoundFilename(char *filename, char *fullPathname)
   strcat(fullPathname, filename);
 }
 
-int32
+s32
 InitBounceSound(void)
 /* Initialize the mixer and the program's sounds */
 {
   Err err;
-  int32 retValue = -1;
+  s32 retValue = -1;
   char filename[128];
 
   /*
@@ -251,13 +251,13 @@ InitBounceSound(void)
 }
 
 void
-DoObjectCollisionSound(uint32 IAFlags)
+DoObjectCollisionSound(u32 IAFlags)
 /* Play the appropriate sound for the collision of two objects. */
 {
   if(BALL_TV_COLL & IAFlags)
     {
       PanMixerChannel(BALL_TV, BALL_TV_GAIN, gBallXPos);
-      startTags[0].ta_Arg = (int32 *)YPositionToPitch(gBallYPos);
+      startTags[0].ta_Arg = (s32 *)YPositionToPitch(gBallYPos);
       CheckAudioErr("StartInstrument",
                     "ball-tv collision",
                     StartInstrument(Effect[BALL_TV]->si_Player, &startTags[0]));
@@ -270,7 +270,7 @@ DoObjectCollisionSound(uint32 IAFlags)
   if(BALL_GLOBE_COLL & IAFlags)
     {
       PanMixerChannel(BALL_GLOBE, BALL_GLOBE_GAIN, gGlobeXPos);
-      startTags[0].ta_Arg = (int32 *)YPositionToPitch(gGlobeYPos);
+      startTags[0].ta_Arg = (s32 *)YPositionToPitch(gGlobeYPos);
       CheckAudioErr(
                     "StartInstrument",
                     "ball-globe collision",
@@ -284,7 +284,7 @@ DoObjectCollisionSound(uint32 IAFlags)
   if(TV_CUBE_COLL & IAFlags)
     {
       PanMixerChannel(TV_CUBE, TV_CUBE_GAIN, gTvXPos);
-      startTags[0].ta_Arg = (int32 *)YPositionToPitch(gTvYPos);
+      startTags[0].ta_Arg = (s32 *)YPositionToPitch(gTvYPos);
       CheckAudioErr("StartInstrument",
                     "tv-cube collision",
                     StartInstrument(Effect[TV_CUBE]->si_Player, &startTags[0]));
@@ -297,7 +297,7 @@ DoObjectCollisionSound(uint32 IAFlags)
   if(CUBE_GLOBE_COLL & IAFlags)
     {
       PanMixerChannel(CUBE_GLOBE, CUBE_GLOBE_GAIN, gCubeXPos);
-      startTags[0].ta_Arg = (int32 *)YPositionToPitch(gCubeYPos);
+      startTags[0].ta_Arg = (s32 *)YPositionToPitch(gCubeYPos);
       CheckAudioErr(
                     "StartInstrument",
                     "cube-globe collision",
@@ -313,7 +313,7 @@ DoObjectCollisionSound(uint32 IAFlags)
 }
 
 void
-DoRoomCollisionSound(uint32 IAFlags)
+DoRoomCollisionSound(u32 IAFlags)
 /*
   Play the appropriate sound for the collision of an object
   and the floor.
@@ -369,14 +369,14 @@ DoRoomCollisionSound(uint32 IAFlags)
 }
 
 void
-PanMixerChannel(int32 ChannelNumber, int32 MaxAmp, int32 xPos)
+PanMixerChannel(s32 ChannelNumber, s32 MaxAmp, s32 xPos)
 /*
   Set the left and right gains for the sound in the specified channel
   according to the object's x-position.
 */
 {
-  int32 RightGain;
-  int32 LeftGain;
+  s32 RightGain;
+  s32 LeftGain;
 
   RightGain = ((MaxAmp * (xPos - LEFT_WALL_POS)) / WINDOW_WIDTH);
   LeftGain
@@ -390,8 +390,8 @@ PanMixerChannel(int32 ChannelNumber, int32 MaxAmp, int32 xPos)
                 TweakKnob(Effect[ChannelNumber]->si_RightGainKnob, RightGain));
 }
 
-int32
-YPositionToPitch(int32 yPosition)
+s32
+YPositionToPitch(s32 yPosition)
 /*
   Map the specified y-position to a pitch; the higher the object (i.e.,
   the lower the yPosition), the higher the pitch.
@@ -406,7 +406,7 @@ KillBounceSound(void)
   Dispose of the mixer and all of the sounds.
 */
 {
-  int32 samplerIndex;
+  s32 samplerIndex;
 
   for(samplerIndex = 0; samplerIndex < NUMSAMPLERS; samplerIndex++)
     {

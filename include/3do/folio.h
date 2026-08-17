@@ -21,12 +21,12 @@ typedef struct Folio Folio;
 struct Folio
 {
   ItemNode fn;
-  int32    f_OpenCount;
-  uint8    f_TaskDataIndex;
-  uint8    f_MaxSwiFunctions;
-  uint8    f_MaxUserFunctions;
-  uint8    f_MaxNodeType;
-  int32    f_Private[17];
+  s32    f_OpenCount;
+  u8    f_TaskDataIndex;
+  u8    f_MaxSwiFunctions;
+  u8    f_MaxUserFunctions;
+  u8    f_MaxNodeType;
+  s32    f_Private[17];
 };
 
 enum folio_tags
@@ -51,7 +51,7 @@ enum folio_tags
   the negative direction.  FolioFunc is a pointer to a folio function.
   GetFolioFunc() gets the function pointer for a particular folio function.
 */
-typedef int32 (*FolioFunc)();
+typedef s32 (*FolioFunc)();
 #define GetFolioFunc(folio,func) ((const FolioFunc *)(folio))[func]
 
 /* To interpret this mismash of * and () */
@@ -65,7 +65,7 @@ typedef int32 (*FolioFunc)();
   }
 #define CALLFOLIORET(folio,func,args,ret,cast)  \
   {                                             \
-    int32 (* *_f)() = (int32 (* *)())folio;     \
+    s32 (* *_f)() = (s32 (* *)())folio;     \
     ret = cast (*_f[func])args;                 \
   }
 #define CallFolio(folio,func,args)              \
@@ -75,7 +75,7 @@ typedef int32 (*FolioFunc)();
   }
 #define CallFolioRet(folio,func,args,ret,cast)  \
   {                                             \
-    int32 (* *_f)() = (int32 (* *)())folio;     \
+    s32 (* *_f)() = (s32 (* *)())folio;     \
     ret = cast (*_f[func])args;                 \
   }
 

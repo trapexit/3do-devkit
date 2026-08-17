@@ -106,10 +106,10 @@ typedef struct EventBrokerHeader {
 typedef struct ConfigurationRequest {
   EventBrokerHeader     cr_Header; /* { EB_Configure } */
   enum ListenerCategory cr_Category; /* focus, monitor, or hybrid */
-  uint32                cr_TriggerMask[8]; /* events to trigger on */
-  uint32                cr_CaptureMask[8]; /* events to capture */
-  int32                 cr_QueueMax;  /* max # events in transit */
-  uint32                rfu[8];            /* must be zero for now */
+  u32                cr_TriggerMask[8]; /* events to trigger on */
+  u32                cr_CaptureMask[8]; /* events to capture */
+  s32                 cr_QueueMax;  /* max # events in transit */
+  u32                rfu[8];            /* must be zero for now */
 } ConfigurationRequest;
 
 /*****   EB_EventRecord message
@@ -126,33 +126,33 @@ typedef struct ConfigurationRequest {
 *****/
 
 typedef struct EventFrame {
-  uint32         ef_ByteCount;         /* total size of EventFrame */
-  uint32         ef_SystemID;          /* Opera machine ID, or zero=local */
-  uint32         ef_SystemTimeStamp;   /* event-count timestamp */
-  int32          ef_Submitter;         /* Item of event sender, or 0 */
-  uint8          ef_EventNumber;       /* event code, [0,255] */
-  uint8          ef_PodNumber;         /* CP pod number, or zero */
-  uint8          ef_PodPosition;       /* CP position on daisychain, or zero */
-  uint8          ef_GenericPosition;   /* Nth generic device of type, or 0 */
-  uint8          ef_Trigger;           /* 1 for trigger, 0 for capture */
-  uint8          rfu1[3];
-  uint32         rfu2;
-  uint32         ef_EventData[1];      /* first word of event data */
+  u32         ef_ByteCount;         /* total size of EventFrame */
+  u32         ef_SystemID;          /* Opera machine ID, or zero=local */
+  u32         ef_SystemTimeStamp;   /* event-count timestamp */
+  s32          ef_Submitter;         /* Item of event sender, or 0 */
+  u8          ef_EventNumber;       /* event code, [0,255] */
+  u8          ef_PodNumber;         /* CP pod number, or zero */
+  u8          ef_PodPosition;       /* CP position on daisychain, or zero */
+  u8          ef_GenericPosition;   /* Nth generic device of type, or 0 */
+  u8          ef_Trigger;           /* 1 for trigger, 0 for capture */
+  u8          rfu1[3];
+  u32         rfu2;
+  u32         ef_EventData[1];      /* first word of event data */
 } EventFrame;
 
 
 typedef struct EventFrameHeader {
-  uint32         ef_ByteCount;         /* total size of EventFrame */
-  uint32         ef_SystemID;          /* Opera machine ID, or zero=local */
-  uint32         ef_SystemTimeStamp;   /* event-count timestamp */
-  int32          ef_Submitter;         /* Item of event sender, or 0 */
-  uint8          ef_EventNumber;       /* event code, [0,255] */
-  uint8          ef_PodNumber;         /* CP pod number, or zero */
-  uint8          ef_PodPosition;       /* CP position on daisychain, or zero */
-  uint8          ef_GenericPosition;   /* Nth generic device of type, or 0 */
-  uint8          ef_Trigger;           /* 1 for trigger, 0 for capture */
-  uint8          rfu1[3];
-  uint32         rfu2;
+  u32         ef_ByteCount;         /* total size of EventFrame */
+  u32         ef_SystemID;          /* Opera machine ID, or zero=local */
+  u32         ef_SystemTimeStamp;   /* event-count timestamp */
+  s32          ef_Submitter;         /* Item of event sender, or 0 */
+  u8          ef_EventNumber;       /* event code, [0,255] */
+  u8          ef_PodNumber;         /* CP pod number, or zero */
+  u8          ef_PodPosition;       /* CP position on daisychain, or zero */
+  u8          ef_GenericPosition;   /* Nth generic device of type, or 0 */
+  u8          ef_Trigger;           /* 1 for trigger, 0 for capture */
+  u8          rfu1[3];
+  u32         rfu2;
 } EventFrameHeader;
 
 typedef struct SendEvent {
@@ -166,7 +166,7 @@ typedef struct SendEvent {
 */
 
 typedef struct ControlPadEventData {
-  uint32         cped_ButtonBits;  /* left justified, zero fill */
+  u32         cped_ButtonBits;  /* left justified, zero fill */
 } ControlPadEventData;
 
 /*****
@@ -189,9 +189,9 @@ typedef struct ControlPadEventData {
 #define ControlLeftShift     0x00200000
 
 typedef struct MouseEventData {
-  uint32         med_ButtonBits;   /* left justified, zero fill */
-  int32          med_HorizPosition;
-  int32          med_VertPosition;
+  u32         med_ButtonBits;   /* left justified, zero fill */
+  s32          med_HorizPosition;
+  s32          med_VertPosition;
 } MouseEventData;
 
 #define MouseLeft            0x80000000
@@ -219,33 +219,33 @@ typedef struct MouseEventData {
 */
 
 typedef struct GunEventData {
-  uint32         ged_ButtonBits;   /* left justified, zero fill */
-  int32          ged_HorizPosition;
-  int32          ged_VertPosition;
+  u32         ged_ButtonBits;   /* left justified, zero fill */
+  s32          ged_HorizPosition;
+  s32          ged_VertPosition;
 } GunEventData;
 
 typedef struct LightGunEventData {
-  uint32         lged_ButtonBits;       /* left justified, zero fill */
-  uint32         lged_Counter;          /* counter at top-center of hit */
-  uint32         lged_LinePulseCount;   /* # of scan lines which were hit */
+  u32         lged_ButtonBits;       /* left justified, zero fill */
+  u32         lged_Counter;          /* counter at top-center of hit */
+  u32         lged_LinePulseCount;   /* # of scan lines which were hit */
 } LightGunEventData;
 
 #define LightGunTrigger      0x80000000
 
 typedef struct CharacterEventData {
-  uint32         ced_CharacterTyped;  /* right-justified */
-  uint32         ced_ModifierKeys;    /* left justified ? */
+  u32         ced_CharacterTyped;  /* right-justified */
+  u32         ced_ModifierKeys;    /* left justified ? */
 } CharacterEventData;
 
 typedef struct KeyboardEventData {
-  uint32         ked_KeyMatrix[8];
+  u32         ked_KeyMatrix[8];
 } KeyboardEventData;
 
 typedef struct StickEventData {
-  uint32         stk_ButtonBits;        /* left justified, zero fill */
-  int32          stk_HorizPosition;
-  int32          stk_VertPosition;
-  int32          stk_DepthPosition;
+  u32         stk_ButtonBits;        /* left justified, zero fill */
+  s32          stk_HorizPosition;
+  s32          stk_VertPosition;
+  s32          stk_DepthPosition;
 } StickEventData;
 
 #define StickCapability      0x000C0000
@@ -267,10 +267,10 @@ typedef struct StickEventData {
 
 
 typedef struct IRControllerEventData {
-  uint32         ir_KeyMatrix[8];      /* 256 key codes, 1 = down, 0 = up */
-  int32          ir_KeyCode;           /* key code for up/down events */
-  int32          ir_GenericCode;       /* generic code for up/down events */
-  int32          ir_Model;             /* type of IR controller */
+  u32         ir_KeyMatrix[8];      /* 256 key codes, 1 = down, 0 = up */
+  s32          ir_KeyCode;           /* key code for up/down events */
+  s32          ir_GenericCode;       /* generic code for up/down events */
+  s32          ir_Model;             /* type of IR controller */
 } IRControllerEventData;
 
 #define IRModelGeneric3DO    0x33444F20
@@ -283,7 +283,7 @@ typedef struct IRControllerEventData {
 
 typedef struct DeviceStateEventData {
   Item            dsed_DeviceItem;
-  uint32          dsed_DeviceUnit;
+  u32          dsed_DeviceUnit;
 } DeviceStateEventData;
 
 typedef struct FilesystemEventData {
@@ -399,7 +399,7 @@ typedef struct FilesystemEventData {
 
 typedef struct RegisterEvent {
   EventBrokerHeader     re_Header; /* { EB_RegisterEvent } */
-  int32                 re_IsUserInterfaceEvent;
+  s32                 re_IsUserInterfaceEvent;
   char                  re_EventName[256];
 } RegisterEvent;
 
@@ -413,7 +413,7 @@ typedef struct RegisterEvent {
 
 typedef struct ListenerList {
   EventBrokerHeader     ll_Header; /* { EB_GetListenersReply } */
-  int32                 ll_Count;
+  s32                 ll_Count;
   struct {
     Item                  li_PortItem;
     enum ListenerCategory li_Category;
@@ -469,17 +469,17 @@ typedef struct SetFocus {
 
 typedef struct PodData {
   EventBrokerHeader    pd_Header;
-  int32                pd_PodNumber;
-  int32                pd_WaitFlag;
-  int32                pd_DataByteCount;
-  uint8                pd_Data[4];
+  s32                pd_PodNumber;
+  s32                pd_WaitFlag;
+  s32                pd_DataByteCount;
+  u8                pd_Data[4];
 } PodData;
 
 typedef struct PodDataHeader {
   EventBrokerHeader    pd_Header;
-  int32                pd_PodNumber;
-  int32                pd_WaitFlag;
-  int32                pd_DataByteCount;
+  s32                pd_PodNumber;
+  s32                pd_WaitFlag;
+  s32                pd_DataByteCount;
 } PodDataHeader;
 
 /*****   EB_DescribePods message,  EB_DescribePodsReply response
@@ -493,20 +493,20 @@ typedef struct PodDataHeader {
 *****/
 
 typedef struct PodDescription {
-  uint8          pod_Number;
-  uint8          pod_Position;
-  uint8          rfu[2];
-  uint32         pod_Type;
-  uint32         pod_BitsIn;
-  uint32         pod_BitsOut;
-  uint32         pod_Flags;
-  uint8          pod_GenericNumber[16];
+  u8          pod_Number;
+  u8          pod_Position;
+  u8          rfu[2];
+  u32         pod_Type;
+  u32         pod_BitsIn;
+  u32         pod_BitsOut;
+  u32         pod_Flags;
+  u8          pod_GenericNumber[16];
   Item           pod_LockHolder;
 } PodDescription;
 
 typedef struct PodDescriptionList {
   EventBrokerHeader    pdl_Header;
-  int32                pdl_PodCount;
+  s32                pdl_PodCount;
   PodDescription       pdl_Pod[1];
 } PodDescriptionList;
 
@@ -582,7 +582,7 @@ enum GenericPodType {
 
 typedef struct PodDescriptions {
   EventBrokerHeader   pd_Header;
-  int32               pd_Pods;
+  s32               pd_Pods;
   PodDescription      pd_Pod[1];
 } PodDescriptions;
 
@@ -613,8 +613,8 @@ typedef struct PodDescriptions {
 
 #define GENERICTABLE(name,eventstruct)          \
   typedef struct name {                         \
-    uint32        gt_HowMany;                   \
-    uint32       *gt_ValidityTimeStamps;        \
+    u32        gt_HowMany;                   \
+    u32       *gt_ValidityTimeStamps;        \
     eventstruct  *gt_EventSpecificData;         \
   } name
 
@@ -854,11 +854,11 @@ enum POD_LightGunCommands {
 
 EXTERN_C_BEGIN
 
-Err InitEventUtility (int32 numControlPads, int32 numMice,
-		      int32 focusListener);
+Err InitEventUtility (s32 numControlPads, s32 numMice,
+		      s32 focusListener);
 
-Err GetControlPad(int32 padNumber, int32 wait, ControlPadEventData *data);
-Err GetMouse(int32 mouseNumber, int32 wait, MouseEventData *data);
+Err GetControlPad(s32 padNumber, s32 wait, ControlPadEventData *data);
+Err GetMouse(s32 mouseNumber, s32 wait, MouseEventData *data);
 
 Err KillEventUtility(void);
 

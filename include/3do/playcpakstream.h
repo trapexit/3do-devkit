@@ -50,7 +50,7 @@ typedef struct Player {
 
 EXTERN_C_BEGIN
 
-int32 PlayCPakStream(ScreenContext  *screenContextPtr,
+s32 PlayCPakStream(ScreenContext  *screenContextPtr,
                      char*           streamFileName,
                      PlayCPakUserFn  userFn,
                      void           *userContext );

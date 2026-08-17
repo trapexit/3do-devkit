@@ -95,7 +95,7 @@ main()
 
   while(true)
     {
-      uint32 buttons;
+      u32 buttons;
 
       buttons = 0;
       err = DoControlPad(1, &buttons, 0);

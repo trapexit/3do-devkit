@@ -40,19 +40,19 @@ static const char randomChars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 static
 void
 GenerateRandomString(char *buffer_,
-                     int32 bufferSize_)
+                     s32 bufferSize_)
 {
-  uint32 randomValue;
-  int32 length;
-  int32 i;
-  int32 maxLength;
+  u32 randomValue;
+  s32 length;
+  s32 i;
+  s32 maxLength;
 
   maxLength = bufferSize_ - 1;
   if(maxLength > RANDOM_TEXT_MAX)
     maxLength = RANDOM_TEXT_MAX;
 
   randomValue = ReadHardwareRandomNumber();
-  length = (int32)(randomValue % maxLength) + 1;
+  length = (s32)(randomValue % maxLength) + 1;
 
   for(i = 0; i < length; i++)
     {
@@ -64,14 +64,14 @@ GenerateRandomString(char *buffer_,
 }
 
 static
-int32
+s32
 CheckReadback(const char *buffer_,
-              int32       bytesRead_,
+              s32       bytesRead_,
               const char *expected_)
 {
-  int32 expectedSize;
+  s32 expectedSize;
 
-  expectedSize = (int32)strlen(expected_);
+  expectedSize = (s32)strlen(expected_);
 
   if(bytesRead_ != expectedSize)
     return -1;
@@ -101,8 +101,8 @@ ClearScreen(ScreenContext *sc_)
 static
 void
 DrawText(ScreenContext *sc_,
-         int32          x_,
-         int32          y_,
+         s32          x_,
+         s32          y_,
          const char    *text_,
          Color          color_)
 {
@@ -110,7 +110,7 @@ DrawText(ScreenContext *sc_,
 
   SetFGPen(&gc, color_);
   MoveTo(&gc, x_, y_);
-  DrawText8(&gc, sc_->sc_BitmapItems[sc_->sc_curScreen], (uint8 *)text_);
+  DrawText8(&gc, sc_->sc_BitmapItems[sc_->sc_curScreen], (u8 *)text_);
 }
 
 static
@@ -118,7 +118,7 @@ void
 WaitForExit(void)
 {
   Err err;
-  uint32 buttons;
+  u32 buttons;
 
   do
     {
@@ -135,19 +135,19 @@ WaitForExit(void)
 }
 
 static
-int32
+s32
 WriteExampleFile(const char *path_,
                  const char *text_)
 {
   FILE *file;
-  int32 wrote;
-  int32 textSize;
+  s32 wrote;
+  s32 textSize;
 
   file = fopen(path_, "w");
   if(file == NULL)
     return -1;
 
-  textSize = (int32)strlen(text_);
+  textSize = (s32)strlen(text_);
   wrote = fwrite(text_, 1, textSize, file);
   if(wrote != textSize)
     {
@@ -168,13 +168,13 @@ WriteExampleFile(const char *path_,
 }
 
 static
-int32
+s32
 ReadExampleFile(const char *path_,
                 char       *buffer_,
-                int32       bufferSize_)
+                s32       bufferSize_)
 {
   FILE *file;
-  int32 got;
+  s32 got;
 
   file = fopen(path_, "r");
   if(file == NULL)
@@ -200,9 +200,9 @@ main(int    argc_,
   char buffer[96];
   char expected[RANDOM_TEXT_MAX + 1];
   char status[96];
-  int32 bytesRead;
-  int32 titleX;
-  int32 exitX;
+  s32 bytesRead;
+  s32 titleX;
+  s32 exitX;
   const char title[] = "FILE API";
   const char exitText[] = "Press X to return";
 

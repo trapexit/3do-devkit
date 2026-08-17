@@ -1,4 +1,4 @@
 #pragma once
 #include "types_ints.h"
 
-typedef int32 Coord;
+typedef s32 Coord;

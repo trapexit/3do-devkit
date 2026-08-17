@@ -62,8 +62,8 @@ typedef struct FPoint
 /* Integer point */
 typedef struct IPoint
 {
-  int32	x;
-  int32	y;
+  s32	x;
+  s32	y;
 } IPoint;
 
 /* Size Rectangle - specifies topleft corner and size */
@@ -113,12 +113,12 @@ typedef struct CQuad
 
 #define IS_LASTCEL(ccb)	(((ccb)->ccb_Flags & CCB_LAST) || (ccb)->ccb_NextPtr == NULL)
 
-#define CEL_NEXTPTR(ccb) (CCB*)(((ccb)->ccb_Flags & CCB_LAST)  ? NULL : ((ccb)->ccb_Flags & CCB_NPABS) ? (ccb)->ccb_NextPtr : AddToPtr(&((ccb)->ccb_NextPtr), (int32)((ccb)->ccb_NextPtr)+4))
-#define CEL_PLUTPTR(ccb) (uint16 *)(((ccb)->ccb_Flags & CCB_PPABS) ? (ccb)->ccb_PLUTPtr   : AddToPtr(&((ccb)->ccb_PLUTPtr), (int32)((ccb)->ccb_PLUTPtr)+4))
-#define CEL_DATAPTR(ccb) (CelData*)(((ccb)->ccb_Flags & CCB_SPABS) ? (ccb)->ccb_SourcePtr : AddToPtr(&((ccb)->ccb_SourcePtr), (int32)((ccb)->ccb_SourcePtr)+4))
+#define CEL_NEXTPTR(ccb) (CCB*)(((ccb)->ccb_Flags & CCB_LAST)  ? NULL : ((ccb)->ccb_Flags & CCB_NPABS) ? (ccb)->ccb_NextPtr : AddToPtr(&((ccb)->ccb_NextPtr), (s32)((ccb)->ccb_NextPtr)+4))
+#define CEL_PLUTPTR(ccb) (u16 *)(((ccb)->ccb_Flags & CCB_PPABS) ? (ccb)->ccb_PLUTPtr   : AddToPtr(&((ccb)->ccb_PLUTPtr), (s32)((ccb)->ccb_PLUTPtr)+4))
+#define CEL_DATAPTR(ccb) (CelData*)(((ccb)->ccb_Flags & CCB_SPABS) ? (ccb)->ccb_SourcePtr : AddToPtr(&((ccb)->ccb_SourcePtr), (s32)((ccb)->ccb_SourcePtr)+4))
 
-#define CEL_PRE0WORD(ccb) (((ccb)->ccb_Flags & CCB_CCBPRE) ? (ccb)->ccb_PRE0 : ((uint32 *)CEL_DATAPTR(ccb))[0])
-#define CEL_PRE1WORD(ccb) (((ccb)->ccb_Flags & CCB_CCBPRE) ? (ccb)->ccb_PRE1 : ((uint32 *)CEL_DATAPTR(ccb))[1])
+#define CEL_PRE0WORD(ccb) (((ccb)->ccb_Flags & CCB_CCBPRE) ? (ccb)->ccb_PRE0 : ((u32 *)CEL_DATAPTR(ccb))[0])
+#define CEL_PRE1WORD(ccb) (((ccb)->ccb_Flags & CCB_CCBPRE) ? (ccb)->ccb_PRE1 : ((u32 *)CEL_DATAPTR(ccb))[1])
 
 /*----------------------------------------------------------------------------
  * Misc cel macros.
@@ -167,7 +167,7 @@ void  LinkCel(CCB *ccb, CCB *nextCCB);
  * functions for mapping and moving and sizing cels.
  *--------------------------------------------------------------------------*/
 
-void OffsetCel(CCB *ccb, int32 xOffset, int32 yOffset);
+void OffsetCel(CCB *ccb, s32 xOffset, s32 yOffset);
 
 void OffsetCelByFDelta(CCB *list, FPoint *deltaXY);
 void OffsetCelByIDelta(CCB *list, IPoint *deltaXY);
@@ -226,19 +226,19 @@ void CenterRectCelListInDisplay(CCB *cel);
  * functions for Point and Rect conversions.
  *--------------------------------------------------------------------------*/
 
-FPoint *FPointFromIVal(FPoint *dst, int32 x, int32 y);
+FPoint *FPointFromIVal(FPoint *dst, s32 x, s32 y);
 FPoint *FPointFromFVal(FPoint *dst, frac16 x, frac16 y);
 FPoint *FPointFromIPoint(FPoint *dst, IPoint *src);
 
-IPoint *IPointFromIVal(IPoint *dst, int32 x, int32 y);
+IPoint *IPointFromIVal(IPoint *dst, s32 x, s32 y);
 IPoint *IPointFromFVal(IPoint *dst, frac16 x, frac16 y);
 IPoint *IPointFromFPoint(IPoint *dst, FPoint *src);
 
-CRect *CRectFromIVal(CRect *dst, int32  tlx, int32  tly, int32  brx, int32  bry);
+CRect *CRectFromIVal(CRect *dst, s32  tlx, s32  tly, s32  brx, s32  bry);
 CRect *CRectFromSRect(CRect *dst, SRect *src);
 CRect *CRectFromCel(CRect *dst, CCB *cel);
 
-SRect *SRectFromIVal(SRect *dst, int32 x, int32 y, int32 w, int32 h);
+SRect *SRectFromIVal(SRect *dst, s32 x, s32 y, s32 w, s32 h);
 SRect *SRectFromCRect(SRect *dst, CRect *src);
 SRect *SRectFromCel(SRect *dst, CCB *cel);
 
@@ -290,45 +290,45 @@ boolean IPointIsInCRect(IPoint *point, CRect *rect);
 CCB *DeleteCel(CCB *cel);
 CCB *DeleteCelList(CCB *celList);
 
-CCB *CreateCel(int32 width, int32 height, int32 bitsPerPixel, int32 options, void *dataBuf);
-CCB *CreateBackdropCel(int32 width, int32 height, int32 color, int32 opacityPercent);
+CCB *CreateCel(s32 width, s32 height, s32 bitsPerPixel, s32 options, void *dataBuf);
+CCB *CreateBackdropCel(s32 width, s32 height, s32 color, s32 opacityPercent);
 CCB *CreateLRFormCel(CCB *dst, Item screenItem, SRect *subRect);
 CCB *CreateSubrectCel(CCB *dst, CCB *src, SRect *subRect);
 
-CCB  *LoadCel (const char *filename, uint32 memTypeBits);
+CCB  *LoadCel (const char *filename, u32 memTypeBits);
 void  UnloadCel(CCB *cel);
 
-CCB *CloneCel(CCB *src, int32 options);
+CCB *CloneCel(CCB *src, s32 options);
 
 /*----------------------------------------------------------------------------
  * functions for rendering into a cel's data buffer.
  *--------------------------------------------------------------------------*/
 
-void RenderCelPixel(CCB *cel, int32 pixel, int32 x, int32 y);
-void RenderCelHLine(CCB *cel, int32 pixel, int32 x, int32 y, int32 w);
-void RenderCelVLine(CCB *cel, int32 pixel, int32 x, int32 y, int32 h);
-void RenderCelFillRect(CCB *cel, int32 pixel, int32 x, int32 y, int32 w, int32 h);
-void RenderCelOutlineRect(CCB *cel, int32 pixel, int32 x, int32 y, int32 w, int32 h);
+void RenderCelPixel(CCB *cel, s32 pixel, s32 x, s32 y);
+void RenderCelHLine(CCB *cel, s32 pixel, s32 x, s32 y, s32 w);
+void RenderCelVLine(CCB *cel, s32 pixel, s32 x, s32 y, s32 h);
+void RenderCelFillRect(CCB *cel, s32 pixel, s32 x, s32 y, s32 w, s32 h);
+void RenderCelOutlineRect(CCB *cel, s32 pixel, s32 x, s32 y, s32 w, s32 h);
 
-int32 ReturnCelPixel(CCB *cel, int32 x, int32 y);
+s32 ReturnCelPixel(CCB *cel, s32 x, s32 y);
 
 /*----------------------------------------------------------------------------
  * misc functions.
  *--------------------------------------------------------------------------*/
 
-CCB *CrossFadeCels8(Item screen, int32 step, CCB *oldCel, CCB *newCel);
-CCB *CrossFadeCels(Item screen, int32 step, CCB *oldCel, CCB *newCel);
+CCB *CrossFadeCels8(Item screen, s32 step, CCB *oldCel, CCB *newCel);
+CCB *CrossFadeCels(Item screen, s32 step, CCB *oldCel, CCB *newCel);
 
-CCB *ParseCel(void *inBuf, int32 inBufSize);
+CCB *ParseCel(void *inBuf, s32 inBufSize);
 
-int32 InitCel(CCB * cel, int32 width, int32 height, int32 bitsPerPixel, int32 options);
+s32 InitCel(CCB * cel, s32 width, s32 height, s32 bitsPerPixel, s32 options);
 
 /*----------------------------------------------------------------------------
  * functions that support library internals, but might be generally useful.
  *--------------------------------------------------------------------------*/
 
-int32 GetCelBitsPerPixel(CCB *cel);
-int32 GetCelBytesPerRow(CCB *cel);
-int32 GetCelDataBufferSize(CCB *cel);
+s32 GetCelBitsPerPixel(CCB *cel);
+s32 GetCelBytesPerRow(CCB *cel);
+s32 GetCelDataBufferSize(CCB *cel);
 
 EXTERN_C_END

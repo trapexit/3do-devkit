@@ -66,7 +66,7 @@ Usage(void)
  **
  **	  Synopsis
  **
- **	    static int32 Initialize( ScreenContext *sc, int32 nScreens )
+ **	    static s32 Initialize( ScreenContext *sc, s32 nScreens )
  **
  **	  Description
  **
@@ -89,11 +89,11 @@ Usage(void)
  **	    Called prior to main loop
  **
  *********************/
-static int32
-Initialize(ScreenContext *sc, int32 nScreens)
+static s32
+Initialize(ScreenContext *sc, s32 nScreens)
 {
 
-  int32 status = 0;
+  s32 status = 0;
 
   /*
     create an error text item to return opera style errors
@@ -163,7 +163,7 @@ Initialize(ScreenContext *sc, int32 nScreens)
  **
  **	  Synopsis
  **
- **	    int main( int32 argc, char *argv[] )
+ **	    int main( s32 argc, char *argv[] )
  **
  **	  Description
  **
@@ -184,18 +184,18 @@ Initialize(ScreenContext *sc, int32 nScreens)
  **
  *********************/
 int
-main(int32 argc, char *argv[])
+main(s32 argc, char *argv[])
 {
 
   ScreenContext sc;
   ANIM *anim = NULL;
   ubyte *background = NULL;
 
-  uint32 button;
+  u32 button;
 
   CCB *ccb = NULL, *alphaCCB = NULL, *realCCB;
 
-  int32 status = 0;
+  s32 status = 0;
 
   IOReq *pIOReq;
   struct timeval lastTime;
@@ -493,7 +493,7 @@ main(int32 argc, char *argv[])
  **
  **	  Synopsis
  **
- **	    static bool HandleButton( uint32 button, CCB *alphaCCB )
+ **	    static bool HandleButton( u32 button, CCB *alphaCCB )
  **
  **	  Description
  **
@@ -564,7 +564,7 @@ main(int32 argc, char *argv[])
  **
  *********************/
 static bool
-HandleButton(uint32 button, CCB *alphaCCB)
+HandleButton(u32 button, CCB *alphaCCB)
 {
 
   CCB *ccb;
@@ -809,7 +809,7 @@ HandleButton(uint32 button, CCB *alphaCCB)
  **
  **	  Synopsis
  **
- **	    static int32 GetTime( IOReq *pIOReq, struct timeval *tv )
+ **	    static s32 GetTime( IOReq *pIOReq, struct timeval *tv )
  **
  **	  Description
  **
@@ -830,7 +830,7 @@ HandleButton(uint32 button, CCB *alphaCCB)
  *value) *	    if an error occurs.
  **
  *********************/
-static int32
+static s32
 GetTime(IOReq *pIOReq, struct timeval *tv)
 {
 
@@ -861,7 +861,7 @@ GetTime(IOReq *pIOReq, struct timeval *tv)
  **
  **	  Synopsis
  **
- **	   static int32 AdvanceFrame( IOReq *pIOReq, struct timeval *lastTime
+ **	   static s32 AdvanceFrame( IOReq *pIOReq, struct timeval *lastTime
  *)
  **
  **	  Description
@@ -889,13 +889,13 @@ GetTime(IOReq *pIOReq, struct timeval *tv)
  *display the next frame
  **
  *********************/
-static int32
+static s32
 AdvanceFrame(IOReq *pIOReq, struct timeval *lastTime)
 {
 
   struct timeval curTime;
-  int32 status = 0;
-  int32 frameDur;
+  s32 status = 0;
+  s32 frameDur;
 
   /*
     Because we are using the microsecond timer, get everything into

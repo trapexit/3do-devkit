@@ -29,13 +29,13 @@
 
 typedef struct JoinElementMsg {
   DS_MSG_HEADER;
-  int32	dataType;		/* 4 character data type (e.g. ANIM) */
-  int32	dataChannel;		/* entities within dataTypes are identified by channel */
+  s32	dataType;		/* 4 character data type (e.g. ANIM) */
+  s32	dataChannel;		/* entities within dataTypes are identified by channel */
   void*	dataPtr;		/* pointer to local mem containing assembled data */
-  int32	dataSize;		/* size of final assembled data */
-  int32	dataOffset;		/* current offset into the dataPtr. Put next chunk here. */
-  int32	dataTime;		/* the stream time contained in the first join chunk */
-  int32	flags;
+  s32	dataSize;		/* size of final assembled data */
+  s32	dataOffset;		/* current offset into the dataPtr. Put next chunk here. */
+  s32	dataTime;		/* the stream time contained in the first join chunk */
+  s32	flags;
 } JoinElementMsg, *JoinElementMsgPtr;
 
 
@@ -45,21 +45,21 @@ typedef struct JoinElementMsg {
 
 typedef struct JoinContext {
   Item              creatorTask; /* who to signal when we're done initializing */
-  uint32            creatorSignal; /* signal to send for synchronous completion */
-  int32             creatorStatus; /* result code for creator */
+  u32            creatorSignal; /* signal to send for synchronous completion */
+  s32             creatorStatus; /* result code for creator */
   Item              threadItem; /* subscriber thread item */
   void*             threadStackBlock; /* pointer to thread's stack memory block */
   Item              requestPort; /* message port item for subscriber requests */
-  uint32            requestPortSignal; /* signal to detect request port messages */
+  u32            requestPortSignal; /* signal to detect request port messages */
   MemPoolPtr        joinElemMsgPool; /* Pool of msgs for sending data elements to display task */
   Item              portListSem; /* semaphore to arbitrate access to the dataPort info */
   Item              dataPort[MAX_PORTS]; /* message port item to send data elements */
   DSDataType        dataType[MAX_PORTS]; /* message type for this port */
   boolean           userPort[MAX_PORTS]; /* true if client allocated the port for InitJoinPort */
-  int32             numPorts;   /* number of ports currently in use */
+  s32             numPorts;   /* number of ports currently in use */
   Item              replyPort;  /* message port item for subscriber requests */
-  uint32            replyPortSignal; /* signal to detect request port messages */
-  int32             localTimeOrigin; /* local version of the time */
+  u32            replyPortSignal; /* signal to detect request port messages */
+  s32             localTimeOrigin; /* local version of the time */
   JoinElementMsgPtr dataMsgHead; /* ptr to a list of data that is not yet full */
   boolean           streamStopped; /* TRUE if kOpStopStream has been sent */
   JoinElementMsgPtr JoinElemMsgWaitingPtr; /* Unfinish message */
@@ -74,18 +74,18 @@ typedef struct JoinContext {
 
 typedef struct JoinChunkFirst {
   SUBS_CHUNK_COMMON;
-  int32	joinChunkType;		/* 'JHDR' for JoinChunkFirst  or 'JDAT' for JoinChunkData */
-  int32	totalDataSize;		/* the total size of the data in all chunks */
-  int32	ramType;		/* AllocMem flags for this type of data */
-  int32	compType;		/* type of compression used on this data */
-  int32	dataSize;		/* the size of the data in this chunk */
+  s32	joinChunkType;		/* 'JHDR' for JoinChunkFirst  or 'JDAT' for JoinChunkData */
+  s32	totalDataSize;		/* the total size of the data in all chunks */
+  s32	ramType;		/* AllocMem flags for this type of data */
+  s32	compType;		/* type of compression used on this data */
+  s32	dataSize;		/* the size of the data in this chunk */
   /* char		data[4];				   the data goes here... */
 } JoinChunkFirst, *JoinChunkFirstPtr;
 
 typedef struct JoinChunkData {
   SUBS_CHUNK_COMMON;
-  int32	joinChunkType;		/* 'JHDR' for JoinChunkFirst  or 'JDAT' for JoinChunkData */
-  int32	dataSize;		/* the size of the data in this chunk */
+  s32	joinChunkType;		/* 'JHDR' for JoinChunkFirst  or 'JDAT' for JoinChunkData */
+  s32	dataSize;		/* the size of the data in this chunk */
   /* char		data[4];				   the data goes here... */
 } JoinChunkData, *JoinChunkDataPtr;
 
@@ -98,17 +98,17 @@ EXTERN_C_BEGIN
 
 /* Subscriber one-time init/shutdown routines */
 
-int32 InitJoinSubscriber( void );
-int32 CloseJoinSubscriber( void );
+s32 InitJoinSubscriber( void );
+s32 CloseJoinSubscriber( void );
 
 /* New/dispose subscriber instance */
 
-int32 NewJoinSubscriber( JoinContextPtr *pCtx, int32 priority );
-int32 DisposeJoinSubscriber( JoinContextPtr ctx );
+s32 NewJoinSubscriber( JoinContextPtr *pCtx, s32 priority );
+s32 DisposeJoinSubscriber( JoinContextPtr ctx );
 
 /* Data port create/destroy */
 
-int32 InitJoinPort( JoinContextPtr ctx, Item *joinPort, int32 dataType );
+s32 InitJoinPort( JoinContextPtr ctx, Item *joinPort, s32 dataType );
 
 void  DestroyJoinPort( JoinContextPtr ctx, DSDataType dataType);
 
@@ -120,6 +120,6 @@ void		  ReleaseJoinElementResources( JoinContextPtr ctx, JoinElementMsgPtr joinE
 
 /* Miscellaneous */
 
-int32 FlushJoinSubscriber( JoinContextPtr ctx );
+s32 FlushJoinSubscriber( JoinContextPtr ctx );
 
 EXTERN_C_END

@@ -6,7 +6,7 @@ typedef	void *TagData;
 
 typedef struct TagArg
 {
-  uint32  ta_Tag;
+  u32  ta_Tag;
   TagData ta_Arg;
 } TagArg, *TagArgP;
 

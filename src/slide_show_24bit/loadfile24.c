@@ -18,17 +18,17 @@
 #include "parse3do.h"
 #include "types.h"
 
-int32
-parsefile (Stream *fs, char *name, void *buffer, uint32 buffersize,
-           uint32 memtype, VdlChunk **rawVDLPtr, ImageCC *image)
+s32
+parsefile (Stream *fs, char *name, void *buffer, u32 buffersize,
+           u32 memtype, VdlChunk **rawVDLPtr, ImageCC *image)
 {
-  int32 chunkID;
-  int32 chunkSize, datasize;
+  s32 chunkID;
+  s32 chunkSize, datasize;
   VdlChunk *vdlbuf = NULL;
-  int32 gotPDAT = 0;
-  int32 gotVDL = 0;
-  int32 bpp = 0;
-  int32 retValue = -1;
+  s32 gotPDAT = 0;
+  s32 gotVDL = 0;
+  s32 bpp = 0;
+  s32 retValue = -1;
 
   if (ReadDiskStream (fs, (char *)image, sizeof (ImageCC)) != sizeof (ImageCC))
     {
@@ -51,10 +51,10 @@ parsefile (Stream *fs, char *name, void *buffer, uint32 buffersize,
           goto DONE;
         }
 
-      datasize = chunkSize - (int32)8;
+      datasize = chunkSize - (s32)8;
       switch (chunkID)
         {
-        case (int32)CHUNK_PDAT:
+        case (s32)CHUNK_PDAT:
           if (buffer && (datasize > buffersize))
             {
               PRT (("Filesize exceeds buffersize (%ld > %ld): %s\n", datasize,
@@ -81,7 +81,7 @@ parsefile (Stream *fs, char *name, void *buffer, uint32 buffersize,
           gotPDAT = 1;
           break;
 
-        case (int32)CHUNK_VDL:
+        case (s32)CHUNK_VDL:
           vdlbuf = (VdlChunk *)AllocMem ((int)(chunkSize), MEMTYPE_ANY);
           if (!vdlbuf)
             {
@@ -119,9 +119,9 @@ parsefile (Stream *fs, char *name, void *buffer, uint32 buffersize,
   return retValue;
 }
 
-int32
-loadfile24 (char *name, void *buffer, uint32 buffersize, uint32 memtype,
-            VdlChunk **rawVDLPtr, ImageCC *image, int32 width, int32 height)
+s32
+loadfile24 (char *name, void *buffer, u32 buffersize, u32 memtype,
+            VdlChunk **rawVDLPtr, ImageCC *image, s32 width, s32 height)
 /*
   Load an image from a file which may contain a custom VDL.
 
@@ -139,10 +139,10 @@ loadfile24 (char *name, void *buffer, uint32 buffersize, uint32 memtype,
   Returns 0 if the image is successfully loaded, otherwise -1.
 */
 {
-  int32 filesize;
+  s32 filesize;
   Stream *fstream = NULL;
-  int32 bpp;
-  int32 retValue = -1;
+  s32 bpp;
+  s32 retValue = -1;
 
   filesize = GetFileSize (name);
 

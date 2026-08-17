@@ -20,10 +20,10 @@ EXTERN_C_BEGIN
 #define FILEFOLIOSWI 0x00030000
 
 extern Item  __swi(FILEFOLIOSWI+0) OpenDiskFile(char *path);
-extern int32 __swi(FILEFOLIOSWI+1) CloseDiskFile(Item fileItem);
+extern s32 __swi(FILEFOLIOSWI+1) CloseDiskFile(Item fileItem);
 extern Item  __swi(FILEFOLIOSWI+4) MountFileSystem(Item deviceItem,
-						   int32 unit,
-						   uint32 blockOffset);
+						   s32 unit,
+						   u32 blockOffset);
 extern Item  __swi(FILEFOLIOSWI+5) OpenDiskFileInDir(Item dirItem, char *path);
 extern Item  __swi(FILEFOLIOSWI+6) MountMacFileSystem(char *path);
 extern Item  __swi(FILEFOLIOSWI+7) ChangeDirectory(char *path);
@@ -36,17 +36,17 @@ extern Err   __swi(FILEFOLIOSWI+13) DismountFileSystem(char *name);
 
 
 extern Item  LoadProgram(char *path);
-extern Item  LoadProgramPrio(char *path, int32 prio);
+extern Item  LoadProgramPrio(char *path, s32 prio);
 extern Err   LoadCode(char *fileName, CodeHandle *code);
 extern Err   UnloadCode(CodeHandle code);
-extern int32 ExecuteAsSubroutine(CodeHandle code,
-                                 uint32 argc,
+extern s32 ExecuteAsSubroutine(CodeHandle code,
+                                 u32 argc,
                                  char **argv);
 extern Item  ExecuteAsThread(CodeHandle code,
-                             uint32 argc,
+                             u32 argc,
                              char **argv,
                              char *threadName,
-                             int32 priority);
+                             s32 priority);
 
 extern void OpenFileFolio(void);
 extern void CloseFileFolio(void);

@@ -23,32 +23,32 @@
 typedef struct CtrlContext
 {
   Item		creatorTask;	/* who to signal when we're done initializing */
-  uint32	creatorSignal;	/* signal to send for synchronous completion */
-  int32		creatorStatus;	/* result code for creator */
+  u32	creatorSignal;	/* signal to send for synchronous completion */
+  s32		creatorStatus;	/* result code for creator */
   DSStreamCBPtr	streamCBPtr;	/* Ptr to the stream's context block */
 
   Item	threadItem;		/* subscriber thread item */
   void*	threadStackBlock;	/* pointer to thread's stack memory block */
 
   Item	 requestPort;		/* message port item for subscriber requests */
-  uint32 requestPortSignal;	/* signal to detect request port messages */
+  u32 requestPortSignal;	/* signal to detect request port messages */
 
   Item	     dsReqReplyPort;	/* reply port for requests to streamer */
-  uint32     dsReqReplyPortSignal; /* signal for replies to streamer requests */
+  u32     dsReqReplyPortSignal; /* signal for replies to streamer requests */
   MemPoolPtr dsReqMsgPool;	/* pool of message blocks for requests to streamer */
 
   Item	     subsReplyPort;	/* reply port for subscriber broadcasts */
-  uint32     subsReplyPortSignal; /* signal for subscriber reply port */
+  u32     subsReplyPortSignal; /* signal for subscriber reply port */
   MemPoolPtr subsMsgPool;	/* pool of subscriber message blocks */
 
   Item	  cueItem;		/* audio cue item for scheduling output */
-  uint32  cueSignal;		/* signal associated with cueItem */
+  u32  cueSignal;		/* signal associated with cueItem */
   boolean fTimerRunning;	/* flag: timer currently running */
-  uint32  timerOwner;		/* subchunk processing that is using the timer */
+  u32  timerOwner;		/* subchunk processing that is using the timer */
 
-  uint32 newClockTime;		/* set stream clock to this when we wake from timer */
+  u32 newClockTime;		/* set stream clock to this when we wake from timer */
 
-  int32	      numChannels;
+  s32	      numChannels;
   SubsChannel channel[CTRL_MAX_CHANNELS]; /* an array of channels */
 } CtrlContext, *CtrlContextPtr;
 
@@ -57,25 +57,25 @@ typedef struct ControlChunk
   SUBS_CHUNK_COMMON;			/* from SubscriberUtils.h */
   union {
     struct {				/* sub-type 'GOTO' */
-      uint32		value;
+      u32		value;
     } marker;
 
     struct {				/* sub-type 'SYNC' */
-      uint32		value;
+      u32		value;
     } sync;
 
     struct {				/* sub-type 'ALRM' */
-      uint32		options;
-      uint32		newTime;
+      u32		options;
+      u32		newTime;
     } alarm;
 
     struct {				/* sub-type 'PAUS' */
-      uint32		options;
-      uint32		amount;
+      u32		options;
+      u32		amount;
     } pause;
 
     struct {				/* sub-type 'STOP' */
-      uint32		options;
+      u32		options;
     } stop;
   } u;
 
@@ -83,12 +83,12 @@ typedef struct ControlChunk
 
 EXTERN_C_BEGIN
 
-int32 InitCtrlSubscriber(void);
-int32 CloseCtrlSubscriber(void);
+s32 InitCtrlSubscriber(void);
+s32 CloseCtrlSubscriber(void);
 
-int32 NewCtrlSubscriber(CtrlContextPtr *pCtx, DSStreamCBPtr	streamCBPtr, int32 priority);
-int32 DisposeCtrlSubscriber(CtrlContextPtr ctx);
+s32 NewCtrlSubscriber(CtrlContextPtr *pCtx, DSStreamCBPtr	streamCBPtr, s32 priority);
+s32 DisposeCtrlSubscriber(CtrlContextPtr ctx);
 
-void CtrlSubscriberThread(int32 notUsed, CtrlContextPtr ctx);
+void CtrlSubscriberThread(s32 notUsed, CtrlContextPtr ctx);
 
 EXTERN_C_END

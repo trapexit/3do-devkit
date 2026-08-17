@@ -23,24 +23,24 @@ typedef struct IOReq IOReq;
 typedef struct Driver
 {
   ItemNode drv;
-  uint32   drv_Private;
-  int32    drv_OpenCnt;
+  u32   drv_Private;
+  s32    drv_OpenCnt;
 } Driver;
 
 typedef struct DeviceStatus
 {
-  uint8  ds_DriverIdentity;
-  uint8  ds_DriverStatusVersion;
-  uint8  ds_FamilyCode;
-  uint8  ds_headerPad;
-  uint32 ds_MaximumStatusSize;
-  uint32 ds_DeviceBlockSize;
-  uint32 ds_DeviceBlockCount;
-  uint32 ds_DeviceFlagWord;
-  uint32 ds_DeviceUsageFlags;
-  uint32 ds_DeviceLastErrorCode;
-  uint32 ds_DeviceMediaChangeCntr;
-  uint32 ds_Reserved;
+  u8  ds_DriverIdentity;
+  u8  ds_DriverStatusVersion;
+  u8  ds_FamilyCode;
+  u8  ds_headerPad;
+  u32 ds_MaximumStatusSize;
+  u32 ds_DeviceBlockSize;
+  u32 ds_DeviceBlockCount;
+  u32 ds_DeviceFlagWord;
+  u32 ds_DeviceUsageFlags;
+  u32 ds_DeviceLastErrorCode;
+  u32 ds_DeviceMediaChangeCntr;
+  u32 ds_Reserved;
 } DeviceStatus;
 
 /*

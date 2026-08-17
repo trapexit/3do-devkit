@@ -28,8 +28,8 @@
 #include "types_size_t.h"
 #include "types_tag.h"
 
-typedef int32 Item;
-typedef	int32 Err;
+typedef s32 Item;
+typedef	s32 Err;
 
 typedef void *CodeHandle;
 

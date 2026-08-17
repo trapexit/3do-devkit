@@ -107,7 +107,7 @@
 
 
 /* language dialects describing regional variations of languages */
-typedef uint32 DialectCodes;
+typedef u32 DialectCodes;
 
 /* defines the end of an array of dialects */
 #define INTL_DIALECT_ARRAY_END 0
@@ -304,12 +304,12 @@ typedef enum CharacterSets
 /* For use with intlFormatDate() */
 typedef struct GregorianDate
 {
-  uint32 gd_Year;         /* 1..0xfffff                          */
-  uint32 gd_Month;        /* 1..12                               */
-  uint8  gd_Day;          /* 1..28/29/30/31   (depends on month) */
-  uint8  gd_Hour;         /* 0..23                               */
-  uint8  gd_Minute;       /* 0..59                               */
-  uint8  gd_Second;       /* 0..59                               */
+  u32 gd_Year;         /* 1..0xfffff                          */
+  u32 gd_Month;        /* 1..12                               */
+  u8  gd_Day;          /* 1..28/29/30/31   (depends on month) */
+  u8  gd_Hour;         /* 0..23                               */
+  u8  gd_Minute;       /* 0..59                               */
+  u8  gd_Second;       /* 0..59                               */
 } GregorianDate;
 
 
@@ -321,7 +321,7 @@ typedef struct GregorianDate
  * it means a separator sequence should be inserted after digit 0 of
  * the formatted number.
  */
-typedef uint32 GroupingDesc;
+typedef u32 GroupingDesc;
 
 
 /*****************************************************************************/
@@ -344,8 +344,8 @@ typedef struct NumericSpec
   GroupingDesc  ns_PosFractionalGroups; /* grouping description */
   unichar      *ns_PosFractionalGroupSep; /* separates the groups */
   unichar      *ns_PosFormat;   /* for post-processing  */
-  uint32        ns_PosMinFractionalDigits; /* min # of frac digits */
-  uint32        ns_PosMaxFractionalDigits; /* max # of frac digits */
+  u32        ns_PosMinFractionalDigits; /* min # of frac digits */
+  u32        ns_PosMaxFractionalDigits; /* max # of frac digits */
 
   /* how to generate a negative number */
   GroupingDesc  ns_NegGroups;   /* grouping description */
@@ -354,14 +354,14 @@ typedef struct NumericSpec
   GroupingDesc  ns_NegFractionalGroups; /* grouping description */
   unichar      *ns_NegFractionalGroupSep; /* separates the groups */
   unichar      *ns_NegFormat;   /* for post-processing  */
-  uint32        ns_NegMinFractionalDigits; /* min # of frac digits */
-  uint32        ns_NegMaxFractionalDigits; /* max # of frac digits */
+  u32        ns_NegMinFractionalDigits; /* min # of frac digits */
+  u32        ns_NegMaxFractionalDigits; /* max # of frac digits */
 
   /* when the number is zero, this string is used 'as-is' */
   unichar *ns_Zero;
 
   /* additional formatting options */
-  uint32 ns_Flags;              /* for now, always 0    */
+  u32 ns_Flags;              /* for now, always 0    */
 } NumericSpec;
 
 
@@ -395,7 +395,7 @@ typedef struct Locale
   CountryCodes      loc_Country;
 
   /* general description of the user's environment */
-  int32             loc_GMTOffset;         /* minutes from GMT            */
+  s32             loc_GMTOffset;         /* minutes from GMT            */
   MeasuringSystems  loc_MeasuringSystem;   /* measuring system to use     */
   CalendarTypes     loc_CalendarType;      /* calendar type to use        */
   DrivingTypes      loc_DrivingType;       /* side of the street          */
@@ -428,25 +428,25 @@ Err intlCloseFolio(void);
 /* core Locale functions */
 #define intlOpenLocale(tags)      FindAndOpenItem(MKNODEID(NST_INTL,INTL_LOCALE_NODE),tags)
 #define intlCloseLocale(locItem)  CloseItem(locItem)
-#define intlLookupLocale(locItem) ((Locale *)CheckItem(locItem,(uint8)NST_INTL,INTL_LOCALE_NODE))
+#define intlLookupLocale(locItem) ((Locale *)CheckItem(locItem,(u8)NST_INTL,INTL_LOCALE_NODE))
 
 /* date formatting */
-int32 intlFormatDate(Item locItem, DateSpec spec,
+s32 intlFormatDate(Item locItem, DateSpec spec,
                      const GregorianDate *date,
-                     unichar *result, uint32 resultSize);
+                     unichar *result, u32 resultSize);
 
 /* number and currency formatting */
-int32 intlFormatNumber(Item locItem, const NumericSpec *spec,
-                       uint32 whole, uint32 frac, boolean negative, boolean doFrac,
-                       unichar *result, uint32 resultSize);
+s32 intlFormatNumber(Item locItem, const NumericSpec *spec,
+                       u32 whole, u32 frac, boolean negative, boolean doFrac,
+                       unichar *result, u32 resultSize);
 
 /* localized string handling routines */
-int32 intlCompareStrings(Item locItem, const unichar *string1, const unichar *string2);
-int32 intlConvertString(Item locItem, const unichar *string, unichar *result, uint32 resultSize, uint32 flags);
-int32 intlTransliterateString(const void *string, CharacterSets stringSet,
+s32 intlCompareStrings(Item locItem, const unichar *string1, const unichar *string2);
+s32 intlConvertString(Item locItem, const unichar *string, unichar *result, u32 resultSize, u32 flags);
+s32 intlTransliterateString(const void *string, CharacterSets stringSet,
                               void *result, CharacterSets resultSet,
-                              uint32 resultSize, uint8 unknownFiller);
-uint32 intlGetCharAttrs(Item locItem, unichar character);
+                              u32 resultSize, u8 unknownFiller);
+u32 intlGetCharAttrs(Item locItem, unichar character);
 
 
 EXTERN_C_END

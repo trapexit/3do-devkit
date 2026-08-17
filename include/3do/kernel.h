@@ -23,46 +23,46 @@ struct KernelBase
   List       *kb_Semaphores;	/* will we be message based? */
   Task       *kb_CurrentTask;   /* Currently executing Task */
   Node      **kb_InterruptHandlers;
-  uint32      kb_TimerBits;	/* allocated timers/ctrs */
-  uint32      kb_ElapsedQuanta; /* timerticks for current task */
-  uint32     *kb_VRAMHack;
+  u32      kb_TimerBits;	/* allocated timers/ctrs */
+  u32      kb_ElapsedQuanta; /* timerticks for current task */
+  u32     *kb_VRAMHack;
   ItemEntry **kb_ItemTable;	/* table of ptrs to ItemEntries */
-  int32       kb_MaxItem;
-  uint32      kb_CPUFlags;	/* various flags for operation */
-  uint8       kb_MaxInterrupts;
-  uint8       kb_Forbid;	/* software lockout for task swapping */
-  uint8       kb_FolioTableSize;
-  uint8       kb_PleaseReschedule;
-  uint32     *kb_MacPkt;
-  uint32      kb_Flags;
-  uint32      kb_Reserved;
-  uint32      kb_numticks;	/* convert secs to ticks numerator */
-  uint32      kb_denomticks;	/* convert secs to ticks denominator */
-  uint32      kb_Obsolete;	/* shadow copy of Madam->Msysbits */
-  uint8       kb_FolioTaskDataCnt; /* lwords */
-  uint8       kb_FolioTaskDataSize; /* lwords */
-  uint8       kb_DRAMSetSize;
-  uint8       kb_VRAMSetSize;
+  s32       kb_MaxItem;
+  u32      kb_CPUFlags;	/* various flags for operation */
+  u8       kb_MaxInterrupts;
+  u8       kb_Forbid;	/* software lockout for task swapping */
+  u8       kb_FolioTableSize;
+  u8       kb_PleaseReschedule;
+  u32     *kb_MacPkt;
+  u32      kb_Flags;
+  u32      kb_Reserved;
+  u32      kb_numticks;	/* convert secs to ticks numerator */
+  u32      kb_denomticks;	/* convert secs to ticks denominator */
+  u32      kb_Obsolete;	/* shadow copy of Madam->Msysbits */
+  u8       kb_FolioTaskDataCnt; /* lwords */
+  u8       kb_FolioTaskDataSize; /* lwords */
+  u8       kb_DRAMSetSize;
+  u8       kb_VRAMSetSize;
   Folio     **kb_DataFolios;
   jmp_buf    *kb_CatchDataAborts; /* setjmp buf */
-  uint32      kb_QuietAborts;   /* no messages for these bits */
-  uint32     *kb_RamDiskAddr;   /* kernel needs to help RamDevice */
-  int32       kb_RamDiskSize;
+  u32      kb_QuietAborts;   /* no messages for these bits */
+  u32     *kb_RamDiskAddr;   /* kernel needs to help RamDevice */
+  s32       kb_RamDiskSize;
   List       *kb_ExtendedErrors; /* list of extended err tables */
-  uint8       kb_MadamRev;
-  uint8       kb_ClioRev;
-  uint8       kb_Resbyte0;
-  uint8       kb_Resbyte1;
+  u8       kb_MadamRev;
+  u8       kb_ClioRev;
+  u8       kb_Resbyte0;
+  u8       kb_Resbyte1;
   Item        kb_DevSemaphore;  /* Device List Semaphore */
   List       *kb_SystemStackList; /* List of System stacks available */
-  uint32      kb_NumTaskSwitches; /* total # of switch since bootup  */
-  uint32     *kb_VRAM0;         /* memory reserved by kernel */
-  uint32      kb_VRAM0Size;
-  uint32     *kb_VRAM1;
-  uint32      kb_VRAM1Size;
+  u32      kb_NumTaskSwitches; /* total # of switch since bootup  */
+  u32     *kb_VRAM0;         /* memory reserved by kernel */
+  u32      kb_VRAM0Size;
+  u32     *kb_VRAM1;
+  u32      kb_VRAM1Size;
   char       *kb_BootVolumeName;
   List       *kb_Tasks;
-  uint32      kb_MemEnd;	/* Address of end-of-memory */
+  u32      kb_MemEnd;	/* Address of end-of-memory */
 };
 
 extern struct KernelBase *KernelBase;

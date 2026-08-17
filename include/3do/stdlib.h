@@ -12,10 +12,10 @@ EXTERN_C_BEGIN
 #define calloc(n,s)  callocDebug(n,s,__FILE__,__LINE__)
 #define free(p)      freeDebug(p,__FILE__,__LINE__)
 #define realloc(p,s) reallocDebug(p,s,__FILE__,__LINE__)
-void *mallocDebug(int32, const char *sourceFile, uint32 sourceLine);
-void freeDebug(void *, const char *sourceFile, uint32 sourceLine);
-void *callocDebug(size_t nelem, size_t elsize, const char *sourceFile, uint32 sourceLine);
-void *reallocDebug(void *oldBlock, size_t newSize, const char *sourceFile, uint32 sourceLine);
+void *mallocDebug(s32, const char *sourceFile, u32 sourceLine);
+void freeDebug(void *, const char *sourceFile, u32 sourceLine);
+void *callocDebug(size_t nelem, size_t elsize, const char *sourceFile, u32 sourceLine);
+void *reallocDebug(void *oldBlock, size_t newSize, const char *sourceFile, u32 sourceLine);
 
 #else
 

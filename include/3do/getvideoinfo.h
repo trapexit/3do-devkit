@@ -26,8 +26,8 @@
 
 EXTERN_C_BEGIN
 
-int32 GetDisplayType(void);
-int32 GetScreenWidth(int32 displayType);
-int32 GetScreenHeight(int32 displayType);
+s32 GetDisplayType(void);
+s32 GetScreenWidth(s32 displayType);
+s32 GetScreenHeight(s32 displayType);
 
 EXTERN_C_END

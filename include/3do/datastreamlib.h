@@ -55,64 +55,64 @@
 
 EXTERN_C_BEGIN
 
-int32	_SendRequestToDSThread( Item            msgItem, boolean fAsync, DSStreamCBPtr streamCBPtr,
+s32	_SendRequestToDSThread( Item            msgItem, boolean fAsync, DSStreamCBPtr streamCBPtr,
                                 DSRequestMsgPtr reqMsg );
 
-int32	_SubscriberBroadcast( DSStreamCBPtr    streamCBPtr, MemPoolPtr msgPoolPtr,
+s32	_SubscriberBroadcast( DSStreamCBPtr    streamCBPtr, MemPoolPtr msgPoolPtr,
                               SubscriberMsgPtr subMsg );
 
 boolean FillPoolWithMsgItems( MemPoolPtr memPool, Item replyPort );
 
-int32	DSSubscribe( Item       msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32	DSSubscribe( Item       msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                      DSDataType dataType, Item subscriberPort );
 
-int32	DSPreRollStream( Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr );
+s32	DSPreRollStream( Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr );
 
-int32	DSStartStream( Item          msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32	DSStartStream( Item          msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                        unsigned long startOptions );
 
-int32	DSStopStream( Item          msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32	DSStopStream( Item          msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                       unsigned long stopOptions );
 
-int32	DSClockSync( DSStreamCBPtr streamCBPtr, MemPoolPtr msgPoolPtr,
+s32	DSClockSync( DSStreamCBPtr streamCBPtr, MemPoolPtr msgPoolPtr,
                      unsigned long nowTime );
 
-int32	DSGoMarker( Item          msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32	DSGoMarker( Item          msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                     unsigned long markerValue, unsigned long options );
 
-int32	DSGetChannel( Item       msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32	DSGetChannel( Item       msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                       DSDataType streamType, long channelNumber,
                       long*      channelStatusPtr );
 
-int32	DSSetChannel( Item       msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32	DSSetChannel( Item       msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                       DSDataType streamType, long channelNumber, long channelStatus );
 
-int32	DSControl( Item       msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32	DSControl( Item       msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                    DSDataType streamType, long userDefinedOpcode,
                    void*      userDefinedArgPtr );
 
-int32	DSConnect( Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32	DSConnect( Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                    Item acquirePort );
 
-int32	DSSetClock( DSStreamCBPtr streamCBPtr, uint32 newStreamClock );
+s32	DSSetClock( DSStreamCBPtr streamCBPtr, u32 newStreamClock );
 
-int32	DSGetClock( DSStreamCBPtr streamCBPtr, uint32* streamClock );
+s32	DSGetClock( DSStreamCBPtr streamCBPtr, u32* streamClock );
 
-int32	DSIsMarker( DSStreamCBPtr streamCBPtr, uint32 markerValue, boolean* fIsMarker );
+s32	DSIsMarker( DSStreamCBPtr streamCBPtr, u32 markerValue, boolean* fIsMarker );
 
-int32	DSWaitEndOfStream( Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr );
+s32	DSWaitEndOfStream( Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr );
 
-int32	DSSetBranchDest( DSStreamCBPtr streamCBPtr, uint32 branchTimeDest );
+s32	DSSetBranchDest( DSStreamCBPtr streamCBPtr, u32 branchTimeDest );
 
-int32	DSSetBranchType( DSStreamCBPtr streamCBPtr );
+s32	DSSetBranchType( DSStreamCBPtr streamCBPtr );
 
 
 #if RELATIVE_BRANCHING
-int32 DSSetSkipMode( Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
+s32 DSSetSkipMode( Item msgItem, DSRequestMsgPtr reqMsg, DSStreamCBPtr streamCBPtr,
                        unsigned long markerValue, unsigned long options );
-int32 FlushAllSubscribers( DSStreamCBPtr streamCBPtr, MemPoolPtr msgPoolPtr, StreamChunkPtr cp );
+s32 FlushAllSubscribers( DSStreamCBPtr streamCBPtr, MemPoolPtr msgPoolPtr, StreamChunkPtr cp );
 
-int32 DSGetChunkFlag( StreamChunkPtr cp );
+s32 DSGetChunkFlag( StreamChunkPtr cp );
 #endif
 
 EXTERN_C_END

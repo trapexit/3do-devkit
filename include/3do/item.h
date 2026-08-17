@@ -21,32 +21,32 @@
 
 EXTERN_C_BEGIN
 
-Item  __swi(KERNELSWI+0)  CreateSizedItem(int32 ctype,TagArg *p,int32 size);
+Item  __swi(KERNELSWI+0)  CreateSizedItem(s32 ctype,TagArg *p,s32 size);
 Err   __swi(KERNELSWI+3)  DeleteItem(Item i);
-Item  __swi(KERNELSWI+4)  FindItem(int32 ctype,TagArg *tp);
+Item  __swi(KERNELSWI+4)  FindItem(s32 ctype,TagArg *tp);
 Err   __swi(KERNELSWI+8)  CloseItem(Item i);
 Item  __swi(KERNELSWI+5)  OpenItem(Item foundItem, void *args);
-int32 __swi(KERNELSWI+10) SetItemPri(Item i,uint8 newpri);
+s32 __swi(KERNELSWI+10) SetItemPri(Item i,u8 newpri);
 Err   __swi(KERNELSWI+28) SetItemOwner(Item i,Item newOwner);
-int32 __swi(KERNELSWI+7)  LockItem(Item s,uint32 flags);
+s32 __swi(KERNELSWI+7)  LockItem(Item s,u32 flags);
 Err   __swi(KERNELSWI+6)  UnlockItem(Item s);
-Item  __swi(KERNELSWI+36) FindAndOpenItem(int32 ctype,TagArg *tp);
+Item  __swi(KERNELSWI+36) FindAndOpenItem(s32 ctype,TagArg *tp);
 
 /* varargs variants of some of the above */
-Item CreateSizedItemVA(int32 ctype, int32 size, uint32 tags, ...);
-Item CreateItemVA(int32 ctype, uint32 tags, ...);
-Item FindItemVA(int32 ctype, uint32 tags, ...);
-Item FindAndOpenItemVA(int32 ctype, uint32 tags, ...);
+Item CreateSizedItemVA(s32 ctype, s32 size, u32 tags, ...);
+Item CreateItemVA(s32 ctype, u32 tags, ...);
+Item FindItemVA(s32 ctype, u32 tags, ...);
+Item FindAndOpenItemVA(s32 ctype, u32 tags, ...);
 
 /* learn more about an item */
 void *LookupItem(Item i);
-void *CheckItem(Item i,uint8 ftype,uint8 ntype);
+void *CheckItem(Item i,u8 ftype,u8 ntype);
 Err IsItemOpened(Item task, Item i);
 
 /* convenience routines */
-Item FindNamedItem(int32 ctype, const char *name);
-Item FindVersionedItem(int32 ctype, const char *name, uint8 vers, uint8 rev);
-Item FindAndOpenNamedItem(int32 ctype, const char *name);
+Item FindNamedItem(s32 ctype, const char *name);
+Item FindVersionedItem(s32 ctype, const char *name, u8 vers, u8 rev);
+Item FindAndOpenNamedItem(s32 ctype, const char *name);
 
 EXTERN_C_END
 
@@ -76,7 +76,7 @@ typedef struct ItemEntry ItemEntry;
 struct ItemEntry
 {
   void   *ie_ItemAddr;
-  uint32  ie_ItemInfo;
+  u32  ie_ItemInfo;
 };
 
 #define ITEM_GEN_MASK   0x7fff0000

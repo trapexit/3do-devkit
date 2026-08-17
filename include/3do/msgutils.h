@@ -20,24 +20,24 @@
  *--------------------------------------------------------------------------*/
 
 typedef union MsgValueTypes {	/* a variety of ways that the value fields in */
-  int32	 msgid;			/* a message can be interpreted.  many of these */
-  int32	 status;		/* are int32 synonyms which make your code */
-  int32	 result;		/* a little more readable by indicating how  */
-  int32	 num;			/* you're interpreting a value conceptually. */
-  int32	 inum;
-  uint32 unum;
+  s32	 msgid;			/* a message can be interpreted.  many of these */
+  s32	 status;		/* are s32 synonyms which make your code */
+  s32	 result;		/* a little more readable by indicating how  */
+  s32	 num;			/* you're interpreting a value conceptually. */
+  s32	 inum;
+  u32 unum;
   Err	 err;
   void * ptr;
   Item	 item;
 } MsgValueTypes;
 
-typedef int32 MSEventHandle;
+typedef s32 MSEventHandle;
 
 typedef struct MSEventData {
   char *	  name;
-  int32           (*handler)(struct MSEventData *eventData, void *userContext);
+  s32           (*handler)(struct MSEventData *eventData, void *userContext);
   void *	  userData;
-  int32		  signal;
+  s32		  signal;
   Item		  port;
   Item		  msgItem;
   Message *	  msgPtr;
@@ -51,10 +51,10 @@ typedef struct MSEventData {
 
 EXTERN_C_BEGIN
 
-int32	      DispatchMSEvents(MSEventHandle mseHandle, void *userContext, int32 reserved);
+s32	      DispatchMSEvents(MSEventHandle mseHandle, void *userContext, s32 reserved);
 void	      CleanupMSEvents(MSEventHandle mseHandle);
-MSEventHandle SetupMSEvents(MSEventData eventData[], int32 numEvents, int32 reserved);
-void	      DisableMSEvent(MSEventData *theEvent, int32 reserved);
-void	      EnableMSEvent(MSEventData *theEvent, int32 reserved);
+MSEventHandle SetupMSEvents(MSEventData eventData[], s32 numEvents, s32 reserved);
+void	      DisableMSEvent(MSEventData *theEvent, s32 reserved);
+void	      EnableMSEvent(MSEventData *theEvent, s32 reserved);
 
 EXTERN_C_END

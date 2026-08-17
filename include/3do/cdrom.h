@@ -80,34 +80,34 @@ enum CDROM_Block_Sizes
 
 struct CDROM_BlockParameters
 {
-  uint8  densityCode;
-  uint8  lengthMSB;
-  uint8  lengthLSB;
-  uint8  flags;
-  uint32 userBlockSize;
+  u8  densityCode;
+  u8  lengthMSB;
+  u8  lengthLSB;
+  u8  flags;
+  u32 userBlockSize;
 };
 
 struct CDROM_ErrorRecoveryParameters
 {
-  uint8 type;
-  uint8 retryCount;
+  u8 type;
+  u8 retryCount;
 };
 
 struct CDROM_StopTimeParameters
 {
-  uint8 time;
+  u8 time;
 };
 
 struct CDROM_DriveSpeedParameters
 {
-  uint8 speed;                  /* 0x00 or 0x80 */
-  uint8 vpitchMSB;
-  uint8 vpitchLSB;
+  u8 speed;                  /* 0x00 or 0x80 */
+  u8 vpitchMSB;
+  u8 vpitchLSB;
 };
 
 struct CDROM_ChunkSizeParameters
 {
-  uint8 size;                   /* 1 to 8 */
+  u8 size;                   /* 1 to 8 */
 };
 
 typedef struct CDROM_Parameters
@@ -121,10 +121,10 @@ typedef struct CDROM_Parameters
 
 struct CDROM_MSF
 {
-  uint8 rfu;
-  uint8 minutes;
-  uint8 seconds;
-  uint8 frames;
+  u8 rfu;
+  u8 minutes;
+  u8 seconds;
+  u8 frames;
 };
 
 enum CDROMAddressFormat
@@ -143,7 +143,7 @@ enum CDROMAddressFormat
 
 union CDROMCommandOptions
 {
-  uint32 asLongword;
+  u32 asLongword;
   struct
   {
     unsigned int     densityCode   : 3;
@@ -190,33 +190,33 @@ enum MEI_CDROM_Error_Codes
 
 struct CDROM_Disc_Information
 {
-  uint8 discID;
-  uint8 firstTrackNumber;
-  uint8 lastTrackNumber;
-  uint8 minutes;
-  uint8 seconds;
-  uint8 frames;
+  u8 discID;
+  u8 firstTrackNumber;
+  u8 lastTrackNumber;
+  u8 minutes;
+  u8 seconds;
+  u8 frames;
 };
 
 struct CDROM_TOC_Entry
 {
-  uint8 reserved0;
-  uint8 addressAndControl;
-  uint8 trackNumber;
-  uint8 reserved3;
-  uint8 minutes;
-  uint8 seconds;
-  uint8 frames;
-  uint8 reserved7;
+  u8 reserved0;
+  u8 addressAndControl;
+  u8 trackNumber;
+  u8 reserved3;
+  u8 minutes;
+  u8 seconds;
+  u8 frames;
+  u8 reserved7;
 };
 
 struct CDROM_Session_Information
 {
-  uint8 valid;
-  uint8 minutes;
-  uint8 seconds;
-  uint8 frames;
-  uint8 rfu[2];
+  u8 valid;
+  u8 minutes;
+  u8 seconds;
+  u8 frames;
+  u8 rfu[2];
 };
 
 struct CDROM_Disc_Data

@@ -39,27 +39,27 @@ void bcopy ( char *s, char *d, long n )
 typedef struct COBClass
 {
   struct  COBClass *Super;	/* Superclass */
-  int32             DataSize;	/* Size of an object of this class */
-  int32    (*Init)();
-  int32    (*Term)();
-  int32    (*Print)();
-  int32    (*SetInfo)();
-  int32    (*GetInfo)();
-  int32    (*Alloc)();
-  int32    (*Free)();
-  int32    (*Add)();
-  int32    (*Clear)();
-  int32    (*GetNthFrom)();
-  int32    (*RemoveNthFrom)();
-  int32    (*Start)();
-  int32    (*Stop)();
-  int32    (*Bump)();
-  int32    (*Rewind)();
-  int32    (*Pause)();
-  int32    (*Unpause)();
-  int32    (*Abort)();
-  int32    (*Finish)();
-  int32    (*Done)();
+  s32             DataSize;	/* Size of an object of this class */
+  s32    (*Init)();
+  s32    (*Term)();
+  s32    (*Print)();
+  s32    (*SetInfo)();
+  s32    (*GetInfo)();
+  s32    (*Alloc)();
+  s32    (*Free)();
+  s32    (*Add)();
+  s32    (*Clear)();
+  s32    (*GetNthFrom)();
+  s32    (*RemoveNthFrom)();
+  s32    (*Start)();
+  s32    (*Stop)();
+  s32    (*Bump)();
+  s32    (*Rewind)();
+  s32    (*Pause)();
+  s32    (*Unpause)();
+  s32    (*Abort)();
+  s32    (*Finish)();
+  s32    (*Done)();
 } COBClass;
 
 EXTERN_C_BEGIN
@@ -78,16 +78,16 @@ EXTERN_C_BEGIN
 #define COBObjectIV                             \
   Node      COBNode;                            \
   COBClass *Class;                              \
-  uint32    cob_ValidationKey
+  u32    cob_ValidationKey
 
 typedef struct COBObject
 {
   COBObjectIV;
 } COBObject;
 
-int32 DefineClass( COBClass *Class, COBClass *SuperClass, int32 DataSize);
+s32 DefineClass( COBClass *Class, COBClass *SuperClass, s32 DataSize);
 COBObject *CreateObject( COBClass *Class);
-int32 DestroyObject( COBObject *Object );
-int32 ValidateObject( COBObject *cob );
+s32 DestroyObject( COBObject *Object );
+s32 ValidateObject( COBObject *cob );
 
 EXTERN_C_END

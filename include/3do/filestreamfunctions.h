@@ -18,13 +18,13 @@
 EXTERN_C_BEGIN
 
 extern Stream *OpenDiskStream(char *theName,
-                              int32 bSize);
-extern int32 SeekDiskStream(Stream *theStream,
-                            int32   offset,
+                              s32 bSize);
+extern s32 SeekDiskStream(Stream *theStream,
+                            s32   offset,
                             enum SeekOrigin whence);
 extern void CloseDiskStream(Stream *theStream);
-extern int32 ReadDiskStream(Stream *theStream,
+extern s32 ReadDiskStream(Stream *theStream,
                             char *buffer,
-                            int32 nBytes);
+                            s32 nBytes);
 
 EXTERN_C_END

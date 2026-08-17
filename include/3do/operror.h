@@ -193,10 +193,10 @@
     typedef struct ErrorText
     {
       ItemNode et;
-      uint32	et_ObjID;	/* 12 bit identifier */
-      uint8	et_MaxErr;	/* max size of table */
-      uint8	et_MaxStringSize;	/* size of largest string */
-      uint8	et_Reserved[2];
+      u32	et_ObjID;	/* 12 bit identifier */
+      u8	et_MaxErr;	/* max size of table */
+      u8	et_MaxStringSize;	/* size of largest string */
+      u8	et_Reserved[2];
       char	**et_ErrorTable;	/* ptr to table of char * */
     } ErrorText;
 
@@ -269,7 +269,7 @@ enum errtxt_tags
 EXTERN_C_BEGIN
 
 void PrintfSysErr(Item);	/* printfs the error */
-int32 GetSysErr(char *buff,int32 buffsize,Item err);	/* fills buffer with error text */
+s32 GetSysErr(char *buff,s32 buffsize,Item err);	/* fills buffer with error text */
 
 /* PrintError is quiet on RUNTIME builds */
 #ifndef	RUNTIME

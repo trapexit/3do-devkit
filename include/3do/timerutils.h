@@ -35,7 +35,7 @@
  **
  **  Getting time in terms of 10ths, 100ths, or 1000ths of a second is a
  **  convenience; you can get accurate intervals expressed as an easy-to-handle
- **  single integer value, but the values will overflow an int32 representation
+ **  single integer value, but the values will overflow an s32 representation
  **  eventually.  For 10ths of a second, it takes about 7 years of continuous
  **  running for the values to overflow.  For 100ths it takes roughly 250 days
  **  of continuous running to overflow.  And for 1000ths it takes roughly 25
@@ -50,7 +50,7 @@
  **  on for that long, not just that you can't time intervals longer than that.
  **
  **  The overflow periods can be doubled if you choose to interpret the returned
- **  values as a uint32, but this of course prevents you from detecting error
+ **  values as a u32, but this of course prevents you from detecting error
  **  return values.  Of course, errors aren't very likely as long as you pass
  **  a valid IOReq item.  That is, anything that's likely to go wrong in
  **  obtaining the time or sleeping is also likely to bring the whole machine
@@ -72,12 +72,12 @@
  *	compiler will resolve them into integer constants at compile time, and
  *	no runtime fp support is needed.  For example, HZ_TO_USEC(2.5) is valid.
  *	You can express up to 2147 seconds (about 35 minutes) in microseconds
- *	without overflowing an int32.
+ *	without overflowing an s32.
  *--------------------------------------------------------------------------*/
 
-#define HZ_TO_USEC(val)	  (uint32)(1000000 / (val)) /* hertz to microseconds */
-#define SEC_TO_USEC(val)  (uint32)(1000000 * (val)) /* seconds to microseconds */
-#define MSEC_TO_USEC(val) (uint32)(1000    * (val)) /* milliseconds to microseconds */
+#define HZ_TO_USEC(val)	  (u32)(1000000 / (val)) /* hertz to microseconds */
+#define SEC_TO_USEC(val)  (u32)(1000000 * (val)) /* seconds to microseconds */
+#define MSEC_TO_USEC(val) (u32)(1000    * (val)) /* milliseconds to microseconds */
 
 /*****************************************************************************
  * Passive utilites.
@@ -87,46 +87,46 @@ EXTERN_C_BEGIN
 
 Item GetTimerIOReq(void);
 
-int32	GetVBLTime(Item ioreq, uint32 *hiorder, uint32 *loworder);
+s32	GetVBLTime(Item ioreq, u32 *hiorder, u32 *loworder);
 
-int32	GetUSecTime(Item ioreq, uint32 *seconds, uint32 *useconds);
-int32	GetMSecTime(Item ioreq);
-int32	GetHSecTime(Item ioreq);
-int32	GetTSecTime(Item ioreq);
-int32	GetTime(Item ioreq);
+s32	GetUSecTime(Item ioreq, u32 *seconds, u32 *useconds);
+s32	GetMSecTime(Item ioreq);
+s32	GetHSecTime(Item ioreq);
+s32	GetTSecTime(Item ioreq);
+s32	GetTime(Item ioreq);
 
-Err SleepUSec(Item ioreq, uint32 seconds, uint32 useconds);
-Err SleepMSec(Item ioreq, uint32 mseconds);
-Err SleepHSec(Item ioreq, uint32 hseconds);
-Err SleepTSec(Item ioreq, uint32 tseconds);
-Err Sleep(Item ioreq, uint32 seconds);
+Err SleepUSec(Item ioreq, u32 seconds, u32 useconds);
+Err SleepMSec(Item ioreq, u32 mseconds);
+Err SleepHSec(Item ioreq, u32 hseconds);
+Err SleepTSec(Item ioreq, u32 tseconds);
+Err Sleep(Item ioreq, u32 seconds);
 
 /*****************************************************************************
  * TimerServices package...
  ****************************************************************************/
 
-typedef int32 TimerHandle;
+typedef s32 TimerHandle;
 
 /*----------------------------------------------------------------------------
  * Create a timer functions.
  *	Functions that return a TimerHandle type will return negative on error.
  *--------------------------------------------------------------------------*/
 
-TimerHandle TimerMsgAtTime(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
-TimerHandle TimerMsgAfterDelay(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
-TimerHandle TimerMsgHeartbeat(Item msgport, uint32 seconds, uint32 microseconds, uint32 userdata1, uint32 userdata2);
+TimerHandle TimerMsgAtTime(Item msgport, u32 seconds, u32 microseconds, u32 userdata1, u32 userdata2);
+TimerHandle TimerMsgAfterDelay(Item msgport, u32 seconds, u32 microseconds, u32 userdata1, u32 userdata2);
+TimerHandle TimerMsgHeartbeat(Item msgport, u32 seconds, u32 microseconds, u32 userdata1, u32 userdata2);
 
-TimerHandle TimerSignalAtTime(int32 signal, uint32 seconds, uint32 microseconds);
-TimerHandle TimerSignalAfterDelay(int32 signal, uint32 seconds, uint32 microseconds);
-TimerHandle TimerSignalHeartbeat(int32 signal, uint32 seconds, uint32 microseconds);
+TimerHandle TimerSignalAtTime(s32 signal, u32 seconds, u32 microseconds);
+TimerHandle TimerSignalAfterDelay(s32 signal, u32 seconds, u32 microseconds);
+TimerHandle TimerSignalHeartbeat(s32 signal, u32 seconds, u32 microseconds);
 
-TimerHandle TimerMsgAtTimeVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
-TimerHandle TimerMsgAfterDelayVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
-TimerHandle TimerMsgHeartbeatVBL(Item msgport, uint32 fields, uint32 userdata1, uint32 userdata2);
+TimerHandle TimerMsgAtTimeVBL(Item msgport, u32 fields, u32 userdata1, u32 userdata2);
+TimerHandle TimerMsgAfterDelayVBL(Item msgport, u32 fields, u32 userdata1, u32 userdata2);
+TimerHandle TimerMsgHeartbeatVBL(Item msgport, u32 fields, u32 userdata1, u32 userdata2);
 
-TimerHandle TimerSignalAtTimeVBL(int32 signal, uint32 fields);
-TimerHandle TimerSignalAfterDelayVBL(int32 signal, uint32 fields);
-TimerHandle TimerSignalHeartbeatVBL(int32 signal, uint32 fields);
+TimerHandle TimerSignalAtTimeVBL(s32 signal, u32 fields);
+TimerHandle TimerSignalAfterDelayVBL(s32 signal, u32 fields);
+TimerHandle TimerSignalHeartbeatVBL(s32 signal, u32 fields);
 
 /*----------------------------------------------------------------------------
  * Manipulate an existing timer functions.
@@ -135,8 +135,8 @@ TimerHandle TimerSignalHeartbeatVBL(int32 signal, uint32 fields);
 Err TimerCancel(TimerHandle thandle);
 Err TimerSuspend(TimerHandle thandle);
 Err TimerRestart(TimerHandle thandle);
-Err TimerReset(TimerHandle thandle, uint32 seconds, uint32 microseconds_or_fields);
-Err TimerChangeUserdata(TimerHandle thandle, uint32 userdata1, uint32 userdata2);
+Err TimerReset(TimerHandle thandle, u32 seconds, u32 microseconds_or_fields);
+Err TimerChangeUserdata(TimerHandle thandle, u32 userdata1, u32 userdata2);
 
 /*----------------------------------------------------------------------------
  * Open/Close functions.
@@ -155,7 +155,7 @@ void TimerServicesClose(void);
  *	After calling Startup the task & any of its threads can use the	services.
  *--------------------------------------------------------------------------*/
 
-Err  TimerServicesStartup(int32 delta_priority);
+Err  TimerServicesStartup(s32 delta_priority);
 void TimerServicesShutdown(void);
 Err  TimerServicesVerify(void);
 

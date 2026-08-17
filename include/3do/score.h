@@ -27,10 +27,10 @@
 typedef struct PIMapEntry
 {
   Item  pimp_InsTemplate;
-  uint8 pimp_Priority;
-  uint8 pimp_MaxVoices;
-  uint8 pimp_RateDivide;
-  uint8 pimp_Reserved3;
+  u8 pimp_Priority;
+  u8 pimp_MaxVoices;
+  u8 pimp_RateDivide;
+  u8 pimp_Reserved3;
 } PIMapEntry;
 
 #define NTTR_FLAG_INUSE    (0x01)  /* In channel list */
@@ -40,24 +40,24 @@ typedef struct PIMapEntry
 typedef struct NoteTracker
 {
   Node  nttr_Node;
-  int8  nttr_Note;
-  int8  nttr_MixerChannel;
-  uint8 nttr_Flags;
-  int8  nttr_Channel;           /* MIDI */
+  s8  nttr_Note;
+  s8  nttr_MixerChannel;
+  u8 nttr_Flags;
+  s8  nttr_Channel;           /* MIDI */
   Item  nttr_Instrument;
 } NoteTracker;
 
 /* One for each of the 16 MIDI Channels. */
 typedef struct ScoreChannel
 {
-  int8   schn_DefaultProgram;   /* MIDI Programs */
-  int8   schn_CurrentProgram;
-  uint8  schn_Priority;
-  uint8  schn_NumVoices;
-  int32  schn_Volume;           /* 14 bit volume set by control 7 */
-  int32  schn_Pan;              /* 14 bit pan set by control 10 */
-  int32  schn_LeftVolume;       /* calculated from Volume, Pan, Max */
-  int32  schn_RightVolume;      /* calculated from Volume, Pan, Max */
+  s8   schn_DefaultProgram;   /* MIDI Programs */
+  s8   schn_CurrentProgram;
+  u8  schn_Priority;
+  u8  schn_NumVoices;
+  s32  schn_Volume;           /* 14 bit volume set by control 7 */
+  s32  schn_Pan;              /* 14 bit pan set by control 10 */
+  s32  schn_LeftVolume;       /* calculated from Volume, Pan, Max */
+  s32  schn_RightVolume;      /* calculated from Volume, Pan, Max */
   List   schn_NoteList;
   frac16 schn_PitchBend;        /* in MIDI units, 0x2000 is no bend. */
 } ScoreChannel;
@@ -69,54 +69,54 @@ typedef struct ScoreChannel
 /* Global context for score to be played in. */
 typedef struct ScoreContext
 {
-  uint8         scon_PIMapSize; /* Number of Entries in PIMap */
-  uint8         scon_MaxVoices;
-  uint8         scon_Flags;
-  uint8         scon_Reserved3;
+  u8         scon_PIMapSize; /* Number of Entries in PIMap */
+  u8         scon_MaxVoices;
+  u8         scon_Flags;
+  u8         scon_Reserved3;
   PIMapEntry   *scon_PIMap;
-  int32 	scon_MaxVolume; /* Per Voice */
+  s32 	scon_MaxVolume; /* Per Voice */
   Item          scon_MixerIns;
   Item          scon_LeftGains[MAXSCOREVOICES]; /* Gain Knobs */
   Item          scon_RightGains[MAXSCOREVOICES];
   NoteTracker  *scon_NoteTrackers;
   List          scon_FreeNoteTrackers;
   ScoreChannel  scon_Channels[NUMMIDICHANNELS];
-  int32         scon_BendRange; /* in semitones, used to interpret MIDI bend */
-  int32	(*scon_PurgeHook)(uint8 Priority, int32 MaxActivity); /* Called when desparate. */
+  s32         scon_BendRange; /* in semitones, used to interpret MIDI bend */
+  s32	(*scon_PurgeHook)(u8 Priority, s32 MaxActivity); /* Called when desparate. */
 } ScoreContext;
 
 EXTERN_C_BEGIN
 
-ScoreContext *CreateScoreContext(int32 MaxNumPrograms);
-char *SelectSamplePlayer(Item Sample , int32 IfVariable);
-Err ChangeScoreControl(ScoreContext *scon, int32 Channel, int32 Index, int32 Value);
-Err ChangeScoreProgram(ScoreContext *ScoreCon, int32 Channel, int32 ProgramNum);
-Err ChangeScorePitchBend(ScoreContext *scon, int32 Channel, int32 Bend);
-Err ConvertPitchBend(int32 Bend, int32 SemitoneRange, frac16 *BendFractionPtr);
+ScoreContext *CreateScoreContext(s32 MaxNumPrograms);
+char *SelectSamplePlayer(Item Sample , s32 IfVariable);
+Err ChangeScoreControl(ScoreContext *scon, s32 Channel, s32 Index, s32 Value);
+Err ChangeScoreProgram(ScoreContext *ScoreCon, s32 Channel, s32 ProgramNum);
+Err ChangeScorePitchBend(ScoreContext *scon, s32 Channel, s32 Bend);
+Err ConvertPitchBend(s32 Bend, s32 SemitoneRange, frac16 *BendFractionPtr);
 Err DeleteScoreContext(ScoreContext *scon);
-Err DisableScoreMessages(int32 Flag);
-Err InitScoreDynamics ( ScoreContext *scon, int32 MaxScoreVoices);
-Err InitScoreMixer(ScoreContext *scon, char *MixerName, int32 MaxNumVoices, int32 Amplitude);
+Err DisableScoreMessages(s32 Flag);
+Err InitScoreDynamics ( ScoreContext *scon, s32 MaxScoreVoices);
+Err InitScoreMixer(ScoreContext *scon, char *MixerName, s32 MaxNumVoices, s32 Amplitude);
 Err InterpretMIDIEvent(Sequence *SeqPtr, MIDIEvent *MEvCur, ScoreContext *scon);
-Err InterpretMIDIMessage(ScoreContext *ScoreCon, char *MIDIMsg, int32 IfMute);
+Err InterpretMIDIMessage(ScoreContext *ScoreCon, char *MIDIMsg, s32 IfMute);
 Err LoadPIMap(ScoreContext *scon, char *FileName);
-Err MFDefineCollection (MIDIFileParser *mfpptr, char *Image, int32 NumBytes, Collection *ColPtr);
+Err MFDefineCollection (MIDIFileParser *mfpptr, char *Image, s32 NumBytes, Collection *ColPtr);
 Err MFLoadCollection(MIDIFileParser *mfpptr, char *filename, Collection *ColPtr);
 Err MFLoadSequence(MIDIFileParser *mfpptr, char *filename, Sequence *SeqPtr);
 Err MFUnloadCollection(Collection *ColPtr);
-Err NoteOffIns(Item Instrument, int32 Note, int32 Velocity);
-Err NoteOnIns(Item Instrument, int32 Note, int32 Velocity);
-Err ReleaseScoreNote(ScoreContext *scon, int32 Channel, int32 Note, int32 Velocity);
-Err SetPIMapEntry(ScoreContext *scon, int32 ProgramNum, Item InsTemplate, int32 MaxVoices, int32 Priority);
-Err StartScoreNote(ScoreContext *scon, int32 Channel, int32 Note, int32 Velocity);
-Err StopScoreNote(ScoreContext *scon, int32 Channel, int32 Note);
+Err NoteOffIns(Item Instrument, s32 Note, s32 Velocity);
+Err NoteOnIns(Item Instrument, s32 Note, s32 Velocity);
+Err ReleaseScoreNote(ScoreContext *scon, s32 Channel, s32 Note, s32 Velocity);
+Err SetPIMapEntry(ScoreContext *scon, s32 ProgramNum, Item InsTemplate, s32 MaxVoices, s32 Priority);
+Err StartScoreNote(ScoreContext *scon, s32 Channel, s32 Note, s32 Velocity);
+Err StopScoreNote(ScoreContext *scon, s32 Channel, s32 Note);
 Err TermScoreMixer(ScoreContext *ScoreCon);
 Err UnloadPIMap(ScoreContext *scon);
-Err FreeChannelInstruments(ScoreContext *scon, int32 Channel);
+Err FreeChannelInstruments(ScoreContext *scon, s32 Channel);
 
-int32 PurgeScoreInstrument(ScoreContext *scon, uint8 Priority, int32 MaxLevel);
+s32 PurgeScoreInstrument(ScoreContext *scon, u8 Priority, s32 MaxLevel);
 
-Err SetScoreBendRange(ScoreContext *scon, int32 BendRange);
-int32 GetScoreBendRange(ScoreContext *scon);
+Err SetScoreBendRange(ScoreContext *scon, s32 BendRange);
+s32 GetScoreBendRange(ScoreContext *scon);
 
 EXTERN_C_END

@@ -33,28 +33,28 @@
 /* NOTE: nodes with system privileges must have item numbers < 256 */
 #define	NST_ITEMMASK	ITEM_INDX_MASK
 
-#define	NODETOSUBSYS(a)	((uint32)(((ItemNode *)(a))->n_Item & NST_ITEMMASK))
+#define	NODETOSUBSYS(a)	((u32)(((ItemNode *)(a))->n_Item & NST_ITEMMASK))
 
 #define	NodeToSubsys(a)	NODETOSUBSYS(a)
 
-#define MKNODEID(a,b)	(int32)( ((a)<<8) | (b))
-#define SUBSYSPART(n)	((uint32)(((n)>>8) & 0xfff))
-#define NODEPART(n)	((uint8)((n) & 0xff))
+#define MKNODEID(a,b)	(s32)( ((a)<<8) | (b))
+#define SUBSYSPART(n)	((u32)(((n)>>8) & 0xfff))
+#define NODEPART(n)	((u8)((n) & 0xff))
 
-#define MkNodeID(a,b)	(int32)( ((a)<<8) | (b))
-#define SubsysPart(n)	((uint32)(((n)>>8) & 0xfff))
-#define NodePart(n)	((uint8)((n) & 0xff))
+#define MkNodeID(a,b)	(s32)( ((a)<<8) | (b))
+#define SubsysPart(n)	((u32)(((n)>>8) & 0xfff))
+#define NodePart(n)	((u8)((n) & 0xff))
 
 /* Standard Node structure */
 typedef struct Node
 {
   struct Node *n_Next;	/* pointer to next node in list */
   struct Node *n_Prev;	/* pointer to previous node in list */
-  uint8 n_SubsysType;	/* what folio manages this node */
-  uint8 n_Type;		/* what type of node for the folio */
-  uint8 n_Priority;	/* queueing priority */
-  uint8 n_Flags;		/* misc flags, see below */
-  int32  n_Size;		/* total size of node including hdr */
+  u8 n_SubsysType;	/* what folio manages this node */
+  u8 n_Type;		/* what type of node for the folio */
+  u8 n_Priority;	/* queueing priority */
+  u8 n_Flags;		/* misc flags, see below */
+  s32  n_Size;		/* total size of node including hdr */
   /* Optional part starts here */
   char *n_Name;		/* ptr to null terminated string or NULL */
 } Node, *NodeP;
@@ -64,27 +64,27 @@ typedef struct NamelessNode
 {
   struct NamelessNode *n_Next;
   struct NamelessNode *n_Prev;
-  uint8 n_SubsysType;
-  uint8 n_Type;
-  uint8 n_Priority;
-  uint8 n_Flags;
-  int32 n_Size;
+  u8 n_SubsysType;
+  u8 n_Type;
+  u8 n_Priority;
+  u8 n_Flags;
+  s32 n_Size;
 } NamelessNode, *NamelessNodeP;
 
 typedef struct ItemNode
 {
   struct ItemNode *n_Next; /* pointer to next itemnode in list */
   struct ItemNode *n_Prev; /* pointer to previous itemnode in list */
-  uint8 n_SubsysType;	/* what folio manages this node */
-  uint8 n_Type;		/* what type of node for the folio */
-  uint8 n_Priority;	/* queueing priority */
-  uint8 n_Flags;		/* misc flags, see below */
-  int32 n_Size;		/* total size of node including hdr */
+  u8 n_SubsysType;	/* what folio manages this node */
+  u8 n_Type;		/* what type of node for the folio */
+  u8 n_Priority;	/* queueing priority */
+  u8 n_Flags;		/* misc flags, see below */
+  s32 n_Size;		/* total size of node including hdr */
   char *n_Name;		/* ptr to null terminated string or NULL */
-  uint8 n_Version;	/* version of of this itemnode */
-  uint8 n_Revision;	/* revision of this itemnode */
-  uint8 n_FolioFlags;	/* flags for this item's folio */
-  uint8 n_ItemFlags;	/* additional system item flags */
+  u8 n_Version;	/* version of of this itemnode */
+  u8 n_Revision;	/* revision of this itemnode */
+  u8 n_FolioFlags;	/* flags for this item's folio */
+  u8 n_ItemFlags;	/* additional system item flags */
   Item  n_Item;		/* ItemNumber for this data structure */
   Item  n_Owner;		/* creator, present owner, disposer */
   void *n_ReservedP;	/* Reserved pointer */

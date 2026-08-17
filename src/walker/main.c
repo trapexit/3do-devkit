@@ -79,7 +79,7 @@ typedef struct Terminal
 {
   ScreenContext screen;
   char          lines[TEXT_ROWS][TEXT_COLUMNS + 1];
-  int32         count;
+  s32         count;
 } Terminal;
 
 static Terminal gTerminal;
@@ -102,7 +102,7 @@ ClearScreen(ScreenContext *sc)
 static
 void
 DrawLine(ScreenContext *sc,
-         int32          row,
+         s32          row,
          const char    *text,
          Color          color)
 {
@@ -117,7 +117,7 @@ static
 void
 TerminalDraw(Terminal *term)
 {
-  int32 i;
+  s32 i;
 
   ClearScreen(&term->screen);
   for(i = 0; i < term->count; i++)
@@ -132,7 +132,7 @@ void
 TerminalAddLine(Terminal  *term,
                 const char *text)
 {
-  int32 i;
+  s32 i;
 
   if(term->count >= TEXT_ROWS)
     {
@@ -177,7 +177,7 @@ WaitForExit(void)
 }
 
 static
-int32
+s32
 ExitPressed(void)
 {
   ControlPadEventData cped;
@@ -188,19 +188,19 @@ ExitPressed(void)
 
 /*****************************************************************************/
 
-static int32
+static s32
 TraverseDirectory(Item      dirItem,
                   Terminal *term,
-                  int32     depth)
+                  s32     depth)
 {
   Directory *dir;
   DirectoryEntry de;
   Item subDirItem;
   char indent[32];
   char name[96];
-  int32 i;
+  s32 i;
 
-  for(i = 0; i < depth * 2 && i < (int32)(sizeof(indent) - 1); i++)
+  for(i = 0; i < depth * 2 && i < (s32)(sizeof(indent) - 1); i++)
     indent[i] = ' ';
   indent[i] = 0;
 
@@ -263,7 +263,7 @@ Walk(const char *path,
      Terminal   *term)
 {
   Item startItem;
-  int32 interrupted;
+  s32 interrupted;
 
   startItem = OpenDiskFile((char *)path);
   if(startItem >= 0)
@@ -286,11 +286,11 @@ Walk(const char *path,
 /*****************************************************************************/
 
 int
-main(int32 argc, char **argv)
+main(s32 argc, char **argv)
 {
   Terminal *term;
   Err       result;
-  int32     interrupted;
+  s32     interrupted;
   int       i;
 
   term = &gTerminal;

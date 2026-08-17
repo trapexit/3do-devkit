@@ -30,20 +30,20 @@ typedef struct FlexStream
   Stream *flxs_FileStream;
   /* The following fields are used for parsing from an in memory image. */
   char   *flxs_Image;     /* Image in memory. */
-  int32   flxs_Cursor;    /* Position in image. */
-  int32   flxs_Size;      /* Size of image. */
+  s32   flxs_Cursor;    /* Position in image. */
+  s32   flxs_Size;      /* Size of image. */
 } FlexStream;
 
 EXTERN_C_BEGIN
 
-int32 CloseFlexStreamFile( FlexStream *flxs );
-int32 CloseFlexStreamImage( FlexStream *flxs );
-int32 OpenFlexStreamFile( FlexStream *flxs, const char *filename );
-int32 OpenFlexStreamImage( FlexStream *flxs, char *Image, int32 NumBytes );
-int32 ReadFlexStream( FlexStream *flxs, char *Addr, int32 NumBytes );
-int32 SeekFlexStream( FlexStream *flxs, int32 Offset, enum SeekOrigin Mode );
-int32 TellFlexStream( const FlexStream *flxs );
+s32 CloseFlexStreamFile( FlexStream *flxs );
+s32 CloseFlexStreamImage( FlexStream *flxs );
+s32 OpenFlexStreamFile( FlexStream *flxs, const char *filename );
+s32 OpenFlexStreamImage( FlexStream *flxs, char *Image, s32 NumBytes );
+s32 ReadFlexStream( FlexStream *flxs, char *Addr, s32 NumBytes );
+s32 SeekFlexStream( FlexStream *flxs, s32 Offset, enum SeekOrigin Mode );
+s32 TellFlexStream( const FlexStream *flxs );
 char *TellFlexStreamAddress( const FlexStream *flxs );
-char *LoadFileImage( const char *Name, int32 *NumBytesPtr );
+char *LoadFileImage( const char *Name, s32 *NumBytesPtr );
 
 EXTERN_C_END

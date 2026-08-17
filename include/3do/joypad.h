@@ -35,11 +35,11 @@ typedef JoyPadState *JoyPadStatePtr;
 
 EXTERN_C_BEGIN
 
-int32	KillJoypad( void );
-int32	GetJoyPadContinuous(int32 padNum);
-int32	SetJoyPadContinuous(int32 continuousBtnFlags, int32 padNum);
-void	SetJoyPadLeftHanded(boolean playLeftHanded, int32 padNum);
-boolean	GetJoyPad(JoyPadState* joyState, int32 padNum);
+s32	KillJoypad( void );
+s32	GetJoyPadContinuous(s32 padNum);
+s32	SetJoyPadContinuous(s32 continuousBtnFlags, s32 padNum);
+void	SetJoyPadLeftHanded(boolean playLeftHanded, s32 padNum);
+boolean	GetJoyPad(JoyPadState* joyState, s32 padNum);
 
 EXTERN_C_END
 

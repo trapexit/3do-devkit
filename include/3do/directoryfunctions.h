@@ -21,7 +21,7 @@ EXTERN_C_BEGIN
 
 Directory *OpenDirectoryItem(Item openFileItem);
 Directory *OpenDirectoryPath(char *thePath);
-int32      ReadDirectory (Directory *dir, DirectoryEntry *de);
+s32      ReadDirectory (Directory *dir, DirectoryEntry *de);
 void       CloseDirectory (Directory *dir);
 
 EXTERN_C_END

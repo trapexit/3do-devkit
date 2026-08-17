@@ -36,19 +36,19 @@
 
 Item gVramIOReq = -1, gVblIOReq = -1;
 frac16 gFrameIncr, gMoveIncr;
-int32 gCorner = 0;
+s32 gCorner = 0;
 bool gMoveCorners = false;
 Point gP[4];
 Item gAAErrorItem = -1;
 Item gTimerDevice = -1, gTimerReq = -1;
-int32 gFrameRate = 15;
+s32 gFrameRate = 15;
 
 /* local function prototypes */
 
-static bool HandleButton (uint32 button, CCB *ccb);
-static int32 Initialize (ScreenContext *sc, int32 nScreens);
+static bool HandleButton (u32 button, CCB *ccb);
+static s32 Initialize (ScreenContext *sc, s32 nScreens);
 static void Usage (void);
-static int32 AdvanceFrame (IOReq *pIOReq, struct timeval *lastTime);
-static int32 GetTime (IOReq *pIOReq, struct timeval *tv);
+static s32 AdvanceFrame (IOReq *pIOReq, struct timeval *lastTime);
+static s32 GetTime (IOReq *pIOReq, struct timeval *tv);
 
 #endif /* _AAPLAYER_H */

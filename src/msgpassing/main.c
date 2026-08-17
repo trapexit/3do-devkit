@@ -57,7 +57,7 @@ passes it on
 /*****************************************************************************/
 
 /* a signal mask used to sync the thread with the parent */
-int32 parentSig;
+s32 parentSig;
 
 /*****************************************************************************/
 
@@ -76,7 +76,7 @@ ClearScreen (ScreenContext *sc)
 }
 
 static void
-DrawText (ScreenContext *sc, int32 x, int32 y, const char *text, Color color)
+DrawText (ScreenContext *sc, s32 x, s32 y, const char *text, Color color)
 {
   GrafCon gc;
 
@@ -93,7 +93,7 @@ Present (ScreenContext *sc)
 }
 
 static void
-DrawStep (ScreenContext *sc, int32 step, Message *msg)
+DrawStep (ScreenContext *sc, s32 step, Message *msg)
 {
   char line[80];
 
@@ -239,7 +239,7 @@ ThreadFunction (void)
 /*****************************************************************************/
 
 int
-main (int32 argc, char **argv)
+main (s32 argc, char **argv)
 {
   ScreenContext sc;
   Item portItem;

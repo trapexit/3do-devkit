@@ -41,8 +41,8 @@
 
 EXTERN_C_BEGIN
 
-Item NewThread(void* threadProcPtr, int32 stackSize, int32 threadPriority,
-               char* threadName, void** stackMemoryPtr, int32 argc, void* argp);
-int32 DisposeThread(Item threadItem);
+Item NewThread(void* threadProcPtr, s32 stackSize, s32 threadPriority,
+               char* threadName, void** stackMemoryPtr, s32 argc, void* argp);
+s32 DisposeThread(Item threadItem);
 
 EXTERN_C_END

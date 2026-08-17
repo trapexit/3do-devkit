@@ -85,9 +85,9 @@
 #define LEFT 256
 #define RIGHT 512
 
-int32 InitBounceSound(void);
+s32 InitBounceSound(void);
 void KillBounceSound(void);
-void DoObjectCollisionSound(uint32 IAFlags);
-void DoRoomCollisionSound(uint32 IAFlags);
-void PanMixerChannel(int32 ChannelNumber, int32 MaxAmp, int32 Pan);
-int32 YPositionToPitch(int32 YPosition);
+void DoObjectCollisionSound(u32 IAFlags);
+void DoRoomCollisionSound(u32 IAFlags);
+void PanMixerChannel(s32 ChannelNumber, s32 MaxAmp, s32 Pan);
+s32 YPositionToPitch(s32 YPosition);

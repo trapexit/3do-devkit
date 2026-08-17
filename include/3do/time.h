@@ -24,8 +24,8 @@
 typedef struct TimerDevice
 {
   Device timerdev_dev;
-  uint32 timerdev_VBlankCountOverFlow;
-  uint32 timerdev_VBlankCount;
+  u32 timerdev_VBlankCountOverFlow;
+  u32 timerdev_VBlankCount;
 } TimerDevice;
 
 
@@ -45,8 +45,8 @@ typedef struct TimerDevice
 /* For use with TIMER_UNIT_USEC */
 typedef struct timeval
 {
-  int32 tv_sec;         /* seconds          */
-  int32 tv_usec;        /* and microseconds */
+  s32 tv_sec;         /* seconds          */
+  s32 tv_usec;        /* and microseconds */
 } TimeVal;
 
 /* synonyms */
@@ -60,8 +60,8 @@ typedef struct timeval
 /* For use with TIMER_UNIT_VBLANK */
 typedef struct VBlankTimeVal
 {
-  uint32 vbltv_VBlankHi32;   /* upper 32 bits of vblank counter */
-  uint32 vbltv_VBlankLo32;   /* lower 32 bits of vblank counter */
+  u32 vbltv_VBlankHi32;   /* upper 32 bits of vblank counter */
+  u32 vbltv_VBlankLo32;   /* lower 32 bits of vblank counter */
 } VBlankTimeVal;
 
 
@@ -71,21 +71,21 @@ typedef struct VBlankTimeVal
 EXTERN_C_BEGIN
 
 /* sample the current system time with very low overhead */
-uint32 __swi(KERNELSWI+38) SampleSystemTime(void);
+u32 __swi(KERNELSWI+38) SampleSystemTime(void);
 void SampleSystemTimeTV(TimeVal *time);
 
 /* timer device convenience routines */
 Item CreateTimerIOReq(void);
 Err DeleteTimerIOReq(Item ioreq);
-Err WaitTime(Item ioreq, uint32 seconds, uint32 micros);
-Err WaitUntil(Item ioreq, uint32 seconds, uint32 micros);
-Err StartMetronome(Item ioreq, uint32 seconds, uint32 micros, int32 signal);
+Err WaitTime(Item ioreq, u32 seconds, u32 micros);
+Err WaitUntil(Item ioreq, u32 seconds, u32 micros);
+Err StartMetronome(Item ioreq, u32 seconds, u32 micros, s32 signal);
 Err StopMetronome(Item ioreq);
 
 /* time arithmetic convenience routines */
 void AddTimes(const TimeVal *tv1, const TimeVal *tv2, TimeVal *result);
 void SubTimes(const TimeVal *tv1, const TimeVal *tv2, TimeVal *result);
-int32 CompareTimes(const TimeVal *tv1, const TimeVal *tv2);
+s32 CompareTimes(const TimeVal *tv1, const TimeVal *tv2);
 
 EXTERN_C_END
 

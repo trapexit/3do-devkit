@@ -33,24 +33,24 @@
 
 typedef struct FontHeader
 {
-  int32	 chunk_ID;		/* Standard 3DO file header fields; */
-  int32	 chunk_size; 		/* font file is one huge chunk */
-  uint32 fh_version;		/* Font header/date version number */
-  uint32 fh_fontFlags;		/* Font flags */
-  uint32 fh_charHeight;		/* Height of character (ascent+descent) */
-  uint32 fh_charWidth;		/* Max width of character (pixels) */
-  uint32 fh_bitsPerPixel;	/* Pixel depth of each character, as stored in file */
-  uint32 fh_firstChar;		/* First char defined in character set */
-  uint32 fh_lastChar;		/* Last char defined in character set */
-  uint32 fh_charExtra;		/* Spacing between characters */
-  uint32 fh_ascent;		/* Distance from baseline to ascentline */
-  uint32 fh_descent;		/* Distance from baseline to descentline */
-  uint32 fh_leading;		/* Distance from descent line to next ascent line */
-  uint32 fh_charInfoOffset;	/* Offset from file beginning to offset/width table */
-  uint32 fh_charInfoSize;	/* Size of offset/width table in bytes */
-  uint32 fh_charDataOffset;	/* Offset from file beginning to char data */
-  uint32 fh_charDataSize;	/* Size of all character data in bytes */
-  uint32 fh_reserved[4];	/* Typical reserved-for-future-expansion */
+  s32	 chunk_ID;		/* Standard 3DO file header fields; */
+  s32	 chunk_size; 		/* font file is one huge chunk */
+  u32 fh_version;		/* Font header/date version number */
+  u32 fh_fontFlags;		/* Font flags */
+  u32 fh_charHeight;		/* Height of character (ascent+descent) */
+  u32 fh_charWidth;		/* Max width of character (pixels) */
+  u32 fh_bitsPerPixel;	/* Pixel depth of each character, as stored in file */
+  u32 fh_firstChar;		/* First char defined in character set */
+  u32 fh_lastChar;		/* Last char defined in character set */
+  u32 fh_charExtra;		/* Spacing between characters */
+  u32 fh_ascent;		/* Distance from baseline to ascentline */
+  u32 fh_descent;		/* Distance from baseline to descentline */
+  u32 fh_leading;		/* Distance from descent line to next ascent line */
+  u32 fh_charInfoOffset;	/* Offset from file beginning to offset/width table */
+  u32 fh_charInfoSize;	/* Size of offset/width table in bytes */
+  u32 fh_charDataOffset;	/* Offset from file beginning to char data */
+  u32 fh_charDataSize;	/* Size of all character data in bytes */
+  u32 fh_reserved[4];	/* Typical reserved-for-future-expansion */
 } FontHeader;
 
 typedef struct FontCharInfo
@@ -79,17 +79,17 @@ typedef struct FontCharInfo
 
 typedef struct FontDescriptor
 {
-  uint32  fd_fontFlags;		/* Flags describing the font */
-  uint32  fd_charHeight;	/* Height of character (ascent+descent) */
-  uint32  fd_charWidth;		/* Max width of character (pixels) */
-  uint32  fd_bitsPerPixel;	/* Pixel depth of each character, as stored in file */
-  uint32  fd_firstChar;		/* First char defined in character set */
-  uint32  fd_lastChar;		/* Last char defined in character set */
-  uint32  fd_charExtra;		/* Spacing between characters */
-  uint32  fd_ascent;		/* Distance from baseline to ascentline */
-  uint32  fd_descent;		/* Distance from baseline to descentline */
-  uint32  fd_leading;		/* Distance from descent line to next ascent line */
-  uint32  fd_reserved[4];	/* Reserved values from font file header. */
+  u32  fd_fontFlags;		/* Flags describing the font */
+  u32  fd_charHeight;	/* Height of character (ascent+descent) */
+  u32  fd_charWidth;		/* Max width of character (pixels) */
+  u32  fd_bitsPerPixel;	/* Pixel depth of each character, as stored in file */
+  u32  fd_firstChar;		/* First char defined in character set */
+  u32  fd_lastChar;		/* Last char defined in character set */
+  u32  fd_charExtra;		/* Spacing between characters */
+  u32  fd_ascent;		/* Distance from baseline to ascentline */
+  u32  fd_descent;		/* Distance from baseline to descentline */
+  u32  fd_leading;		/* Distance from descent line to next ascent line */
+  u32  fd_reserved[4];	/* Reserved values from font file header. */
   void   *fd_userData;		/* Client code can store a value here. */
   void   *fd_fontHeader;	/* Font header information */
   void   *fd_charInfo;		/* Per-character data table */
@@ -108,21 +108,21 @@ EXTERN_C_BEGIN
  *	area into a cel buffer.
  *--------------------------------------------------------------------------*/
 
-int32 GetFontCharInfo(FontDescriptor *fDesc, int32 character, void **blitInfo);
-int32 BlitFontChar(FontDescriptor *fDesc, uint32 theChar, void *blitInfo,
-                   void *dstBuf, int32 dstX, int32 dstY,
-                   int32 dstBPR, int32 dstColorIndex, int32 dstBPP);
+s32 GetFontCharInfo(FontDescriptor *fDesc, s32 character, void **blitInfo);
+s32 BlitFontChar(FontDescriptor *fDesc, u32 theChar, void *blitInfo,
+                   void *dstBuf, s32 dstX, s32 dstY,
+                   s32 dstBPR, s32 dstColorIndex, s32 dstBPP);
 
 /*----------------------------------------------------------------------------
  * Font file API
  *--------------------------------------------------------------------------*/
 
 FontDescriptor *ParseFont(void *fontImage);
-FontDescriptor *LoadFont(const char *fontFileName, uint32 memTypeBits);
+FontDescriptor *LoadFont(const char *fontFileName, u32 memTypeBits);
 void		UnloadFont(FontDescriptor *fDesc);
 
-int32 GetFontCharWidth(FontDescriptor *fDesc, int32 character);
-int32 GetFontCharWidest(FontDescriptor *fDesc, char *string);
-int32 GetFontStringWidth(FontDescriptor *fDesc, char *string);
+s32 GetFontCharWidth(FontDescriptor *fDesc, s32 character);
+s32 GetFontCharWidest(FontDescriptor *fDesc, char *string);
+s32 GetFontStringWidth(FontDescriptor *fDesc, char *string);
 
 EXTERN_C_END

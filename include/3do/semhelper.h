@@ -32,6 +32,6 @@
 
 EXTERN_C_BEGIN
 
-Item NewSemaphore(char* baseNameString, int32 uniqueID);
+Item NewSemaphore(char* baseNameString, s32 uniqueID);
 
 EXTERN_C_END

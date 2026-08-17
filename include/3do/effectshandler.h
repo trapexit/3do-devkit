@@ -47,7 +47,7 @@
 typedef struct TMixerInfoTag
 {
   Item	mi_Mixer;
-  int32	mi_ChannelsUsed;
+  s32	mi_ChannelsUsed;
 } TMixerInfo, *pTMixerInfo;
 
 typedef enum TOutputTag
@@ -61,24 +61,24 @@ typedef struct TSampleInfoTag
   Item		si_Sample;
   Item		si_Player;
   Item		si_Attachment;
-  int32		si_Channel;
+  s32		si_Channel;
   Item		si_LeftGainKnob;
   Item		si_RightGainKnob;
 } TSampleInfo, *pTSampleInfo;
 
 EXTERN_C_BEGIN
 
-extern Err  ehNewMixerInfo( pTMixerInfo *pNewMixerInfo, int32 channelsUsed, const char *mixerName );
+extern Err  ehNewMixerInfo( pTMixerInfo *pNewMixerInfo, s32 channelsUsed, const char *mixerName );
 extern void ehDisposeMixerInfo( pTMixerInfo pMixerInfo );
 
 extern pTSampleInfo ehNewSampleInfo( void );
 extern void	    ehDisposeSampleInfo( pTSampleInfo pSampleInfo );
 
 extern Err ehSetupSamplePlayer( pTSampleInfo pSampleInfo, const char *sampleName );
-extern Err ehConnectSamplePlayer( pTMixerInfo pMixerInfo, pTSampleInfo pSampleInfo, int32 channel );
+extern Err ehConnectSamplePlayer( pTMixerInfo pMixerInfo, pTSampleInfo pSampleInfo, s32 channel );
 extern Err ehDisconnectSamplePlayer( pTMixerInfo pMixerInfo, pTSampleInfo pSampleInfo );
-extern Err ehLoadSoundEffect( pTSampleInfo *pNewSampleInfo, pTMixerInfo pMixerInfo, const char *sampleName, int32 channel );
+extern Err ehLoadSoundEffect( pTSampleInfo *pNewSampleInfo, pTMixerInfo pMixerInfo, const char *sampleName, s32 channel );
 
-extern void ehSetChannelLevels( pTMixerInfo pMixerInfo, Item leftKnob, Item rightKnob, int32 volume, int32 balance);
+extern void ehSetChannelLevels( pTMixerInfo pMixerInfo, Item leftKnob, Item rightKnob, s32 volume, s32 balance);
 
 EXTERN_C_END

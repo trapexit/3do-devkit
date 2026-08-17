@@ -18,8 +18,8 @@
 EXTERN_C_BEGIN
 
 void     DumpTagList(const TagArg *tagList, const char *desc);
-TagArg  *FindTagArg(const TagArg *tagList, uint32 tag);
-TagData  GetTagArg(const TagArg *tagList, uint32 tag, TagData defaultValue);
+TagArg  *FindTagArg(const TagArg *tagList, u32 tag);
+TagData  GetTagArg(const TagArg *tagList, u32 tag, TagData defaultValue);
 TagArg  *NextTagArg(const TagArg **tagList);
 
 EXTERN_C_END

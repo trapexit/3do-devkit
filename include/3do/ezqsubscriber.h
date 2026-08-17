@@ -47,10 +47,10 @@
 
 typedef struct ImageDesc
 {
-  int32	baseAddr;
-  int32	rowBytes;
-  int32	width;
-  int32	height;
+  s32	baseAddr;
+  s32	rowBytes;
+  s32	width;
+  s32	height;
 } ImageDesc;
 typedef ImageDesc *ImageDescPtr;
 
@@ -71,21 +71,21 @@ typedef struct EZQChannel {
 
 typedef struct EZQContext {
   Item	 creatorTask;		/* who to signal when we're done initializing */
-  uint32 creatorSignal;		/* signal to send for synchronous completion */
-  int32	 creatorStatus;		/* result code for creator */
+  u32 creatorSignal;		/* signal to send for synchronous completion */
+  s32	 creatorStatus;		/* result code for creator */
 
   Item	threadItem;		/* subscriber thread item */
   void*	threadStackBlock;	/* pointer to thread's stack memory block */
 
   Item	 requestPort;		/* message port item for subscriber requests */
-  uint32 requestPortSignal;	/* signal to detect request port messages */
+  u32 requestPortSignal;	/* signal to detect request port messages */
 
   Item	 replyPort;             /* message port item for subscriber requests */
-  uint32 replyPortSignal;	/* signal to detect request port messages */
+  u32 replyPortSignal;	/* signal to detect request port messages */
 
   Item	  cueItem; /* audio cue item for scheduling output */
-  uint32  cueSignal; /* signal associated with cueItem */
-  int32	  localTimeOrigin; /* local version of the time */
+  u32  cueSignal; /* signal associated with cueItem */
+  s32	  localTimeOrigin; /* local version of the time */
   boolean fTimerRunning; /* flag: timer currently running */
 
   codecHandler codecHndlr;	/* Should be an item - I don't really know what this is */
@@ -100,8 +100,8 @@ typedef struct EZQContext {
   boolean fTimeChanged;         /* flag: subscriber got sync msg */
   boolean firstFrameFlag;       /* flag: Last chunk received was header frame  -- WSD */
 
-  int32	     framesDropped;			/*	count of frames skipped because we are behind -- WSD */
-  int32	     numChannels;
+  s32	     framesDropped;			/*	count of frames skipped because we are behind -- WSD */
+  s32	     numChannels;
   EZQChannel channel[CPAK_MAX_CHANNELS]; /* an array of channels */
 
 } EZQContext, *EZQContextPtr;
@@ -117,19 +117,19 @@ typedef struct EZQChunkMsg {
 
 typedef	struct EZSqueezeHeader {
   SUBS_CHUNK_COMMON;
-  int32	version;		/*	0 for this version			*/
-  int32	cType;			/*	video compression type		*/
-  int32	height;			/*	Height of each frame		*/
-  int32	width;			/*	Width of each frame			*/
-  int32	scale;			/*	Timescale of Film			*/
-  int32	count;			/*	Number of frames			*/
+  s32	version;		/*	0 for this version			*/
+  s32	cType;			/*	video compression type		*/
+  s32	height;			/*	Height of each frame		*/
+  s32	width;			/*	Width of each frame			*/
+  s32	scale;			/*	Timescale of Film			*/
+  s32	count;			/*	Number of frames			*/
 } EZSqueezeHeader, *EZSqueezeHeaderPtr;
 
 
 typedef	struct	EZSqueezeFrame {
   SUBS_CHUNK_COMMON;
-  int32	duration;		/*	Duration of this sample		*/
-  int32	frameSize;		/*	Number of bytes in frame	*/
+  s32	duration;		/*	Duration of this sample		*/
+  s32	frameSize;		/*	Number of bytes in frame	*/
   char	frameData[4];           /*	compressed frame data...	*/
 } EZSqueezeFrame, *EZSqueezeFramePtr;
 
@@ -144,9 +144,9 @@ typedef struct EZQRec
   struct EZSqueezeHeader cpHeader; /* Copy of the Header chunk for this cinepak film */
   CCB			 cpCCB;	/* The LRForm CCB chunk for this streamed anim */
   EZSqueezeFramePtr	 curFramePtr; /* the frame currently being displayed */
-  int32			 channel; /* The streamed anim channel to use with this record */
+  s32			 channel; /* The streamed anim channel to use with this record */
   SubscriberMsgPtr	 curSubMsg; /* The msg containing the currently displayed frame */
-  int32			 lastCurTime; /* Remember the previous Stream clock time to check for loop */
+  s32			 lastCurTime; /* Remember the previous Stream clock time to check for loop */
 } EZQRec, *EZQRecPtr;
 
 
@@ -154,32 +154,32 @@ typedef struct EZQRec
 /* Public routine prototypes */
 /*****************************/
 
-int32 InitEZQSubscriber( void );
-int32 CloseEZQSubscriber( void );
+s32 InitEZQSubscriber( void );
+s32 CloseEZQSubscriber( void );
 
-void SetEZQScreen( int32 horizontalOffset, int32 verticalOffset, boolean centered );
+void SetEZQScreen( s32 horizontalOffset, s32 verticalOffset, boolean centered );
 
-int32 NewEZQSubscriber( EZQContextPtr *pCtx, int32 numChannels, int32 priority );
-int32 DisposeEZQSubscriber( EZQContextPtr ctx );
+s32 NewEZQSubscriber( EZQContextPtr *pCtx, s32 numChannels, s32 priority );
+s32 DisposeEZQSubscriber( EZQContextPtr ctx );
 
-int32 EZQDuration (EZQRecPtr ezRecPtr);
-int32 EZQCurrTime (EZQRecPtr ezRecPtr);
+s32 EZQDuration (EZQRecPtr ezRecPtr);
+s32 EZQCurrTime (EZQRecPtr ezRecPtr);
 
-int32 InitEZQCel(DSStreamCBPtr  streamCBPtr,
+s32 InitEZQCel(DSStreamCBPtr  streamCBPtr,
                  EZQContextPtr  ctx,
                  EZQRecPtr     *pCPRecPtr,
-                 int32	       channel,
+                 s32	       channel,
                  boolean        flushOnSync );
-int32 DestroyEZQCel(EZQContextPtr ctx, EZQRecPtr ezRecPtr, int32 channel);
+s32 DestroyEZQCel(EZQContextPtr ctx, EZQRecPtr ezRecPtr, s32 channel);
 
 CCB* GetEZQCel(EZQContextPtr ctx, EZQRecPtr ezRecPtr);
-int32 DrawEZQToBuffer(EZQContextPtr ctx, EZQRecPtr ezRecPtr, Bitmap *bitmap,
+s32 DrawEZQToBuffer(EZQContextPtr ctx, EZQRecPtr ezRecPtr, Bitmap *bitmap,
                       long catsup_strategy);
 CCB* GetStepEZQCel(EZQContextPtr ctx, EZQRecPtr ezRecPtr);
-int32 DrawStepEZQToBuffer(EZQContextPtr ctx, EZQRecPtr ezRecPtr, Bitmap *bitmap);
+s32 DrawStepEZQToBuffer(EZQContextPtr ctx, EZQRecPtr ezRecPtr, Bitmap *bitmap);
 
-void FlushEZQChannel(EZQContextPtr ctx, EZQRecPtr ezRecPtr, int32 channel);
-int32 SendFreeEZQSignal(EZQContextPtr ctx);
+void FlushEZQChannel(EZQContextPtr ctx, EZQRecPtr ezRecPtr, s32 channel);
+s32 SendFreeEZQSignal(EZQContextPtr ctx);
 
-void EZQSubscriberThread(int32 notUsed, EZQContextPtr ctx);
+void EZQSubscriberThread(s32 notUsed, EZQContextPtr ctx);
 void FreeMovieBuff(ImageDesc *imagePtr);

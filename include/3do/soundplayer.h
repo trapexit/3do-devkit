@@ -93,21 +93,21 @@ extern const char sp_markerNameReleaseEnd[];
 EXTERN_C_BEGIN
 
 /* SPPlayer create, deletion, set attributes */
-Err spCreatePlayer (SPPlayer **resultPlayer, Item samplerIns, uint32 numBuffers, uint32 bufSize, void * const buffers[]);
+Err spCreatePlayer (SPPlayer **resultPlayer, Item samplerIns, u32 numBuffers, u32 bufSize, void * const buffers[]);
 Err spDeletePlayer (SPPlayer *);
 Err spSetDefaultDecisionFunction (SPPlayer *, SPDecisionFunction, void *decisionData);
 #define spClearDefaultDecisionFunction(player) spSetDefaultDecisionFunction ((player), NULL, NULL)
-int32 spGetPlayerSignalMask (const SPPlayer *);
+s32 spGetPlayerSignalMask (const SPPlayer *);
 
 /* SPPlayer control */
 Err spStartReading (SPSound *startSound, const char *startMarkerName);
 Err spStartPlaying (SPPlayer *, const TagArg *samplerTags);
-Err spStartPlayingVA (SPPlayer *, uint32 samplerTag1, ...);
+Err spStartPlayingVA (SPPlayer *, u32 samplerTag1, ...);
 Err spStop (SPPlayer *);
 Err spPause (SPPlayer *);
 Err spResume (SPPlayer *);
-int32 spService (SPPlayer *, int32 signals);
-int32 spGetPlayerStatus (const SPPlayer *);
+s32 spService (SPPlayer *, s32 signals);
+s32 spGetPlayerStatus (const SPPlayer *);
 
 /* SPSound add, remove, status */
 Err spAddSample (SPSound **resultSound, SPPlayer *, Item sample);
@@ -117,13 +117,13 @@ SPPlayer *spGetPlayerFromSound (const SPSound *);
 boolean spIsSoundInUse (const SPSound *);
 
 /* SPMarker add, remove, set attributes */
-Err spAddMarker (SPSound *, uint32 position, const char *markerName);
+Err spAddMarker (SPSound *, u32 position, const char *markerName);
 Err spRemoveMarker (SPMarker *);
 SPMarker *spFindMarkerName (const SPSound *, const char *markerName);
 Err spSetMarkerDecisionFunction (SPSound *, const char *markerName, SPDecisionFunction, void *decisionData);
 #define spClearMarkerDecisionFunction(sound,markerName) spSetMarkerDecisionFunction ((sound), (markerName), NULL, NULL)
 SPSound *spGetSoundFromMarker (const SPMarker *);
-uint32 spGetMarkerPosition (const SPMarker *);
+u32 spGetMarkerPosition (const SPMarker *);
 const char *spGetMarkerName (const SPMarker *);
 
 /* SPMarker action control */

@@ -196,30 +196,30 @@
 /* no return value - End the query list */
 
 #define QUERYGRAF_TAG_FIELDFREQ		1
-/* int32 - return the frequency of the current video fields in Hz */
+/* s32 - return the frequency of the current video fields in Hz */
 /* (NTSC=60, PAL=50) */
 
 #define QUERYGRAF_TAG_FIELDTIME		2
-/* int32 - return the number of microseconds in one video display field */
+/* s32 - return the number of microseconds in one video display field */
 
 #define QUERYGRAF_TAG_FIELDCOUNT	3
-/* uint32 - return the current video field number */
+/* u32 - return the current video field number */
 
 #define QUERYGRAF_TAG_DEFAULTWIDTH	4
-/* int32 - return the default display width */
+/* s32 - return the default display width */
 /* *** NOTE *** this value will be 320 on every system that can support
  * a display that is 320 pixels wide.  This may not be the preferred
  * width.
  */
 
 #define QUERYGRAF_TAG_DEFAULTHEIGHT	5
-/* int32 - return the default display height */
+/* s32 - return the default display height */
 /* *** NOTE *** this value will be 240 on every system that can support
  * a display that is 240 lines.  This may not be the preferred height.
  */
 
 #define QUERYGRAF_TAG_DEFAULTDISPLAYTYPE 6
-/* int32 - return the default display type */
+/* s32 - return the default display type */
 
 
 
@@ -256,21 +256,21 @@
  * cel, you might want to explicitly clear the control flag:
  *      ClearFlag( cel->ccb_Flags, CCB_NPABS );
  */
-#define MakeCCBRelative(field,linkobject) ((int32)(linkobject)-(int32)(field)-4)
+#define MakeCCBRelative(field,linkobject) ((s32)(linkobject)-(s32)(field)-4)
 
-#define MakeRGB15(r,g,b) (((uint32)(r)<<10)|((uint32)(g)<<5)|(uint32)(b))
+#define MakeRGB15(r,g,b) (((u32)(r)<<10)|((u32)(g)<<5)|(u32)(b))
 #define MakeRGB15Pair(r,g,b) (MakeRGB15(r,g,b)*0x00010001)
 
-#define MakeCLUTColorEntry(index,r,g,b) ((((uint32)(index)<<24)|VDL_FULLRGB \
-                                          |((uint32)(r)<<16)|((uint32)(g)<<8)|((uint32)(b))))
-#define MakeCLUTRedEntry(index,r) ((((uint32)(index)<<24)|VDL_REDONLY   \
-                                    |((uint32)(r)<<16)))
-#define MakeCLUTGreenEntry(index,g) ((((uint32)(index)<<24)|VDL_GREENONLY \
-                                      |((uint32)(g)<<8)))
-#define MakeCLUTBlueEntry(index,b) ((((uint32)(index)<<24)|VDL_BLUEONLY \
-                                     |((uint32)(b)<<0)))
+#define MakeCLUTColorEntry(index,r,g,b) ((((u32)(index)<<24)|VDL_FULLRGB \
+                                          |((u32)(r)<<16)|((u32)(g)<<8)|((u32)(b))))
+#define MakeCLUTRedEntry(index,r) ((((u32)(index)<<24)|VDL_REDONLY   \
+                                    |((u32)(r)<<16)))
+#define MakeCLUTGreenEntry(index,g) ((((u32)(index)<<24)|VDL_GREENONLY \
+                                      |((u32)(g)<<8)))
+#define MakeCLUTBlueEntry(index,b) ((((u32)(index)<<24)|VDL_BLUEONLY \
+                                     |((u32)(b)<<0)))
 #define MakeCLUTBackgroundEntry(r,g,b) ((VDL_DISPCTRL|VDL_BACKGROUND    \
-                                         |((uint32)(r)<<16)|((uint32)(g)<<8)|((uint32)(b))))
+                                         |((u32)(r)<<16)|((u32)(g)<<8)|((u32)(b))))
 
 
 /* === RJ's Idiosyncracies === */
@@ -288,20 +288,20 @@
 /* ===                   ================================================ */
 /* ===  ===============  ================================================ */
 
-  typedef uint32 VDLEntry;
+  typedef u32 VDLEntry;
 
-typedef uint32  Color;
-typedef uint32  RGB888;
-typedef uint8 CharMap;
+typedef u32  Color;
+typedef u32  RGB888;
+typedef u8 CharMap;
 
 /* Here's the new font data structures */
 typedef struct FontEntry
 {
   Node     ft;
-  int32    ft_CharValue;
-  int32    ft_Width;
+  s32    ft_CharValue;
+  s32    ft_Width;
   CelData *ft_Image;
-  int32    ft_ImageByteCount;
+  s32    ft_ImageByteCount;
 
   struct FontEntry *ft_LesserBranch;
   struct FontEntry *ft_GreaterBranch;
@@ -313,22 +313,22 @@ typedef struct ScreenGroup
   ItemNode sg;
 
   /* display location, 0 == top of screen */
-  int32 sg_Y;
+  s32 sg_Y;
 
   /* total height of each screen */
-  int32 sg_ScreenHeight;
+  s32 sg_ScreenHeight;
 
   /* display height of each screen (can be less than the screen's
    * actual height)
    */
-  int32 sg_DisplayHeight;
+  s32 sg_DisplayHeight;
 
   /* list of tasks that have shared access to this ScreenGroup */
   List sg_SharedList;
 
   /* Flag verifying that user has called AddScreenGroup() */
   /* Just a temp solution for now (4-21-93) */
-  int32 sg_Add_SG_Called;
+  s32 sg_Add_SG_Called;
 
   List sg_ScreenList;
 } ScreenGroup;
@@ -344,25 +344,25 @@ typedef struct DisplayInfo
 
 /* end of displayinfo tag list */
 #define DI_END		0
-/* uint32 - numeric type of display for passing into Screen and VDL creation calls */
+/* u32 - numeric type of display for passing into Screen and VDL creation calls */
 #define DI_TYPE		1
-/* uint32 - width of display in pixels */
+/* u32 - width of display in pixels */
 #define DI_WIDTH	2
-/* uint32 - height of display in pixels */
+/* u32 - height of display in pixels */
 #define DI_HEIGHT	3
-/* uint32 - number of usec/field */
+/* u32 - number of usec/field */
 #define DI_FIELDTIME	4
-/* uint32 - frequency (Hz) of field */
+/* u32 - frequency (Hz) of field */
 #define DI_FIELDFREQ	5
 /* ufrac16 - aspect ratio (width/height) of a pixel */
 #define DI_ASPECT	6
-/* uint32 - width component of aspect ratio */
+/* u32 - width component of aspect ratio */
 #define DI_ASPECTW	7
-/* uint32 - height component of aspect ratio */
+/* u32 - height component of aspect ratio */
 #define DI_ASPECTH	8
-/* uint32 - flag word - non-zero if display does not support interlace */
+/* u32 - flag word - non-zero if display does not support interlace */
 #define DI_NOINTERLACE	9
-/* uint32 - flag word - non-zero if display does not support stereographics */
+/* u32 - flag word - non-zero if display does not support stereographics */
 #define DI_NOSTEREO	10
 /* char * - text string - name of display standard supported */
 #define DI_NAME		11
@@ -390,26 +390,26 @@ typedef struct Bitmap
 
   ubyte *bm_Buffer;
 
-  int32 bm_Width;
-  int32 bm_Height;
-  int32 bm_VerticalOffset;
-  int32 bm_Flags;
+  s32 bm_Width;
+  s32 bm_Height;
+  s32 bm_VerticalOffset;
+  s32 bm_Flags;
 
-  int32 bm_ClipWidth;
-  int32 bm_ClipHeight;
-  int32 bm_ClipX;
-  int32 bm_ClipY;
-  int32 bm_WatchDogCtr;  /* JCR */
-  int32 bm_SysMalloc;  /* If set, CreateScreenGroup MALLOCED for bm. JCR */
+  s32 bm_ClipWidth;
+  s32 bm_ClipHeight;
+  s32 bm_ClipX;
+  s32 bm_ClipY;
+  s32 bm_WatchDogCtr;  /* JCR */
+  s32 bm_SysMalloc;  /* If set, CreateScreenGroup MALLOCED for bm. JCR */
 
   /* List of tasks that have share access to this Bitmap */
   List bm_SharedList;
 
-  int32 bm_CEControl;
-  int32 bm_REGCTL0;
-  int32 bm_REGCTL1;
-  int32 bm_REGCTL2;
-  int32 bm_REGCTL3;
+  s32 bm_CEControl;
+  s32 bm_REGCTL0;
+  s32 bm_REGCTL1;
+  s32 bm_REGCTL2;
+  s32 bm_REGCTL3;
 } Bitmap;
 
 
@@ -424,13 +424,13 @@ typedef struct VDL
   ItemNode vdl;  /* link VDL's in screen lists */
   struct Screen* vdl_ScreenPtr;
   VDLEntry* vdl_DataPtr; /* addr of concatenation of VDLEntries*/
-  int32    vdl_Type;
-  int32    vdl_DataSize;  /* length of concat */
+  s32    vdl_Type;
+  s32    vdl_DataSize;  /* length of concat */
 
-  int32	vdl_Flags;	/* element added 24-Sep-93 - SHL */
-  int32 vdl_DisplayType;	/* The type of display that this VDL was created for */
-  int32 vdl_Height;	/* number of lines this VDL encompasses */
-  int32 vdl_Offset;	/* number of blank lines to pad preceding this VDL */
+  s32	vdl_Flags;	/* element added 24-Sep-93 - SHL */
+  s32 vdl_DisplayType;	/* The type of display that this VDL was created for */
+  s32 vdl_Height;	/* number of lines this VDL encompasses */
+  s32 vdl_Offset;	/* number of blank lines to pad preceding this VDL */
 } VDL;
 
 /* JCR */
@@ -442,9 +442,9 @@ typedef struct Screen
 
   VDL       *scr_VDLPtr;
   Item      scr_VDLItem; /* Item # for above VDL */
-  int32     scr_VDLType;
+  s32     scr_VDLType;
 
-  int32 scr_BitmapCount;
+  s32 scr_BitmapCount;
   List  scr_BitmapList;
 
   List scr_SharedList;
@@ -503,7 +503,7 @@ typedef struct GrafCon
   Color gc_BGPen;
   Coord gc_PenX;
   Coord gc_PenY;
-  uint32 gc_Flags;
+  u32 gc_Flags;
 } GrafCon;
 
 /* These are temporary definitions of the data structures the text
@@ -512,13 +512,13 @@ typedef struct GrafCon
  */
 
 /* The FontChar structure defines the image for a single character
- * The text value of the character is defined with an int32 to allow
+ * The text value of the character is defined with an s32 to allow
  * either 8-bit or 16-bit text character definitions.
  */
 typedef struct FontChar
 {
-  uint32   fc_CharValue;
-  uint8    fc_Width;
+  u32   fc_CharValue;
+  u8    fc_Width;
   CelData *fc_Image;
 } FontChar;
 
@@ -535,8 +535,8 @@ typedef struct FontChar
  */
 typedef struct Font
 {
-  uint8      font_Height;
-  uint8      font_Flags;
+  u8      font_Height;
+  u8      font_Flags;
   CCB       *font_CCB;
 
   /* The font_FontEntries field is significant only with RAM-resident fonts */
@@ -557,26 +557,26 @@ typedef struct GrafFolio
 {
   Folio gf;
 
-  uint32 gf_Flags;
+  u32 gf_Flags;
 
 #ifdef __cplusplus
-  uint32 gf_VBLNumber;
+  u32 gf_VBLNumber;
 #else
-  volatile uint32 gf_VBLNumber;
+  volatile u32 gf_VBLNumber;
 #endif /* __cplusplus */
 
   void*	gf_ZeroPage;
   void*	gf_VIRSPage;
 
-  uint32 gf_VRAMPageSize;
-  int32  gf_DefaultDisplayWidth;
-  int32  gf_DefaultDisplayHeight;
+  u32 gf_VRAMPageSize;
+  s32  gf_DefaultDisplayWidth;
+  s32  gf_DefaultDisplayHeight;
 
   struct Timer*	gf_TimeoutTimer;
 
-  int32	gf_Reserved5;
-  int32	gf_Reserved6;
-  int32	gf_Reserved7;
+  s32	gf_Reserved5;
+  s32	gf_Reserved6;
+  s32	gf_Reserved7;
 
   VDLEntry* gf_VDLForcedFirst;
   VDLEntry* gf_VDLPreDisplay;
@@ -586,34 +586,34 @@ typedef struct GrafFolio
   VDL*      gf_CurrentVDLOdd;
   VDLEntry* gf_VDLDisplayLink;
 
-  int32	gf_Reserved1;
-  int32	gf_Reserved3;
+  s32	gf_Reserved1;
+  s32	gf_Reserved3;
 
   Semaphore *gf_CelSemaphore;
 
-  int32	gf_VBLTime;		/* number of usec between VBLs */
-  int32	gf_VBLFreq;		/* approximate VBL frequency in Hz */
+  s32	gf_VBLTime;		/* number of usec between VBLs */
+  s32	gf_VBLFreq;		/* approximate VBL frequency in Hz */
 
-  int32   gf_Reserved2;
+  s32   gf_Reserved2;
 
   struct Stream* gf_CurrentFontStream;
-  int32          gf_FileFontCacheSize;
-  int32          gf_FileFontCacheAlloc;
+  s32          gf_FileFontCacheSize;
+  s32          gf_FileFontCacheAlloc;
   ubyte*         gf_FileFontCache;
   FontEntry*     gf_FontEntryHead;
   FontEntry*     gf_FontEntryButt;
   List           gf_FontLRUList;
-  int32          gf_FileFontFlags;
-  int32          gf_FontBaseChar;
-  int32          gf_FontMaxChar;
+  s32          gf_FileFontFlags;
+  s32          gf_FontBaseChar;
+  s32          gf_FontMaxChar;
   Font*          gf_CurrentFont;
-  int32          gf_CharArrayOffset;
-  int32          gf_fileFontCacheUSed;
+  s32          gf_CharArrayOffset;
+  s32          gf_fileFontCacheUSed;
 
   List	gf_DisplayInfoList;
 
-  uint32 gf_DefaultDisplayType;
-  uint32 gf_DisplayTypeMask;
+  u32 gf_DefaultDisplayType;
+  u32 gf_DisplayTypeMask;
   VDL*   gf_BlankVDL;
 
 } GrafFolio;
@@ -776,24 +776,24 @@ EXTERN_C_BEGIN
 #endif
 
 Err AddScreenGroup(Item screenGroup, TagArg *targs);
-Err AddScreenGroupVA(Item screenGroup, uint32 tag, ...);
-/* int32 CloseFont(void); */
+Err AddScreenGroupVA(Item screenGroup, u32 tag, ...);
+/* s32 CloseFont(void); */
 #define CreateBitmap(x) CreateItem(MKNODEID(NST_GRAPHICS,BITMAPNODE),x)
 #define DeleteBitmap(x) DeleteItem(x)
-Item CreateBitmapVA(uint32 tag, ...);
+Item CreateBitmapVA(u32 tag, ...);
 Item CreateScreenGroup(Item *screenItemArray, TagArg *targs);
-Item CreateScreenGroupVA(Item *screenItemArray, uint32 tag, ...);
+Item CreateScreenGroupVA(Item *screenItemArray, u32 tag, ...);
 Err DeleteScreenGroup(Item screenGroupItem);
 #define CreateVDL(x) CreateItem(MKNODEID(NST_GRAPHICS,VDLNODE),x)
 #define DeleteVDL(x) DeleteItem(x)
-Item CreateVDLVA(uint32 tag, ...);
+Item CreateVDLVA(u32 tag, ...);
 Err DisableHAVG(Item screenItem);
 Err DisableVAVG(Item screenItem);
-Item DisplayOverlay(Item bitmap, int32 topedge);
+Item DisplayOverlay(Item bitmap, s32 topedge);
 Err DisplayScreen(Item screenItem0, Item screenItem1);
-Err DrawChar(GrafCon *gcon, Item bitmapItem, uint32 character);
-Err DrawText16(GrafCon *gcon, Item bitmapItem, uint16 *text);
-Err DrawText8(GrafCon *gcon, Item bitmapItem, const uint8 *text);
+Err DrawChar(GrafCon *gcon, Item bitmapItem, u32 character);
+Err DrawText16(GrafCon *gcon, Item bitmapItem, u16 *text);
+Err DrawText8(GrafCon *gcon, Item bitmapItem, const u8 *text);
 Err DrawTo(Item bitmapItem, GrafCon *grafcon, Coord x, Coord y);
 Err EnableHAVG(Item screenItem);
 Err EnableVAVG(Item screenItem);
@@ -802,53 +802,53 @@ Font *GetCurrentFont(void);
 void *GetPixelAddress(Item screenItem, Coord x, Coord y);
 void MapCel(CCB *ccb, Point *quad);
 void MoveTo(GrafCon *gc, Coord x, Coord y);
-/* int32 OpenFileFont(char *filename);  */
+/* s32 OpenFileFont(char *filename);  */
 Err OpenGraphicsFolio(void);
 Err CloseGraphicsFolio(void);
-/* int32 OpenRAMFont(Font *font); */
-Err QueryGraphics(int32 tag, void *ret);
+/* s32 OpenRAMFont(Font *font); */
+Err QueryGraphics(s32 tag, void *ret);
 Err QueryGraphicsList(TagArg *ta);
-Err QueryGraphicsListVA(uint32 tag, ...);
-RGB888 ReadCLUTColor(uint32 index);
+Err QueryGraphicsListVA(u32 tag, ...);
+RGB888 ReadCLUTColor(u32 index);
 Color ReadPixel(Item bitmapItem, GrafCon *gc, Coord x, Coord y);
 Err RemoveScreenGroup(Item screenGroup);
 Err ResetCurrentFont(void);
 Err ResetReadAddress(Item bitmapItem);
 Err ResetScreenColors(Item screenItem);
 void  SetBGPen(GrafCon *gc, Color c);
-Err SetCEControl(Item bitmapItem, int32 controlWord, int32 controlMask);
-Err SetCEWatchDog(Item bitmapItem, int32 db_ctr);
-Err SetClipHeight(Item bitmapItem, int32 clipHeight);
-Err SetClipOrigin(Item bitmapItem, int32 x, int32 y);
-Err SetClipWidth(Item bitmapItem, int32 clipWidth);
+Err SetCEControl(Item bitmapItem, s32 controlWord, s32 controlMask);
+Err SetCEWatchDog(Item bitmapItem, s32 db_ctr);
+Err SetClipHeight(Item bitmapItem, s32 clipHeight);
+Err SetClipOrigin(Item bitmapItem, s32 x, s32 y);
+Err SetClipWidth(Item bitmapItem, s32 clipWidth);
 Err SetCurrentFontCCB(CCB *ccb);
 void SetFGPen(GrafCon *gc, Color c);
-/* int32 SetFileFontCacheSize(int32 size); */
-Err SetReadAddress(Item bitmapItem, ubyte *buffer, int32 width);
-Err SetScreenColor(Item screenItem, uint32 colorEntry);
-Err SetScreenColors(Item screenItem, uint32 *entries, int32 count);
+/* s32 SetFileFontCacheSize(s32 size); */
+Err SetReadAddress(Item bitmapItem, ubyte *buffer, s32 width);
+Err SetScreenColor(Item screenItem, u32 colorEntry);
+Err SetScreenColors(Item screenItem, u32 *entries, s32 count);
 Err SetVDL(Item screenItem, Item vdlItem);
-Item SubmitVDL(VDLEntry *VDLDataPtr, int32 length, int32 type);
+Item SubmitVDL(VDLEntry *VDLDataPtr, s32 length, s32 type);
 Err WritePixel(Item bitmapItem, GrafCon *gc, Coord x, Coord y);
 
 Err ModifyVDL(Item vdlItem, TagArg* vdlTags);
-Err ModifyVDLVA(Item vdlItem, uint32 tag, ...);
+Err ModifyVDLVA(Item vdlItem, u32 tag, ...);
 
 DisplayInfo* GetFirstDisplayInfo(void);
 
 Item GetVRAMIOReq(void);
 #define	DeleteVRAMIOReq(x) DeleteItem(x)
-Err SetVRAMPages(Item ioreq, void *dest, int32 val, int32 numpages, int32 mask);
-Err CopyVRAMPages(Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
-Err CloneVRAMPages(Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
-Err SetVRAMPagesDefer(Item ioreq, void *dest, int32 val, int32 numpages, int32 mask);
-Err CopyVRAMPagesDefer(Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
-Err CloneVRAMPagesDefer(Item ioreq, void *dest, void *src, uint32 numpages, uint32 mask);
+Err SetVRAMPages(Item ioreq, void *dest, s32 val, s32 numpages, s32 mask);
+Err CopyVRAMPages(Item ioreq, void *dest, void *src, u32 numpages, u32 mask);
+Err CloneVRAMPages(Item ioreq, void *dest, void *src, u32 numpages, u32 mask);
+Err SetVRAMPagesDefer(Item ioreq, void *dest, s32 val, s32 numpages, s32 mask);
+Err CopyVRAMPagesDefer(Item ioreq, void *dest, void *src, u32 numpages, u32 mask);
+Err CloneVRAMPagesDefer(Item ioreq, void *dest, void *src, u32 numpages, u32 mask);
 
 Item GetVBLIOReq(void);
 #define	DeleteVBLIOReq(x)	DeleteItem(x)
-Err WaitVBL(Item ioreq, uint32 numfields);
-Err WaitVBLDefer(Item ioreq, uint32 numfields);
+Err WaitVBL(Item ioreq, u32 numfields);
+Err WaitVBLDefer(Item ioreq, u32 numfields);
 
 
 /***************************************************************************

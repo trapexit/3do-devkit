@@ -203,8 +203,8 @@ typedef enum TQuadCornerTag
 
 /* Function Prototypes */
 
-int32 InitGraphicObjects(void);
-int32 HandleControlPad(void);
+s32 InitGraphicObjects(void);
+s32 HandleControlPad(void);
 
 /* Global variables */
 
@@ -218,17 +218,17 @@ bool gCollision = FALSE; /* Are collisions enabled? */
 /*
   Graphic object positions
 */
-int32 gGlobeXPos = GLOBE_INIT_XPOS;
-int32 gGlobeYPos = GLOBE_INIT_YPOS;
+s32 gGlobeXPos = GLOBE_INIT_XPOS;
+s32 gGlobeYPos = GLOBE_INIT_YPOS;
 
-int32 gCubeXPos = CUBE_INIT_XPOS;
-int32 gCubeYPos = CUBE_INIT_YPOS;
+s32 gCubeXPos = CUBE_INIT_XPOS;
+s32 gCubeYPos = CUBE_INIT_YPOS;
 
-int32 gTvXPos = TV_INIT_XPOS;
-int32 gTvYPos = TV_INIT_YPOS;
+s32 gTvXPos = TV_INIT_XPOS;
+s32 gTvYPos = TV_INIT_YPOS;
 
-int32 gBallXPos = BALL_INIT_XPOS;
-int32 gBallYPos = BALL_INIT_YPOS;
+s32 gBallXPos = BALL_INIT_XPOS;
+s32 gBallYPos = BALL_INIT_YPOS;
 
 /*
   Each object is loaded as an animation
@@ -276,7 +276,7 @@ ubyte *gWallOnPict = NULL;
 static ScreenContext *gScreenContext = NULL;
 
 /* Type of video being displayed */
-int32 gDisplayType;
+s32 gDisplayType;
 
 /* Basic display created */
 Item gDisplayItem = -1;
@@ -332,11 +332,11 @@ clear_screen(int color)
 }
 
 static void
-ShowInstructions(int32 *screenSelect)
+ShowInstructions(s32 *screenSelect)
 {
   GrafCon gcon;
   Item bitmapItem;
-  uint32 buttons;
+  u32 buttons;
   Err err;
   int x;
 
@@ -488,10 +488,10 @@ DrawGlobe(Item currentBitmapItem)
     }
 }
 
-int32
-CalcShadowSpeed(int32 xPos)
+s32
+CalcShadowSpeed(s32 xPos)
 {
-  int32 speed;
+  s32 speed;
 
   if(xPos > MAX_RIGHT)
     speed = 12;
@@ -531,10 +531,10 @@ CalcShadowSpeed(int32 xPos)
 
 void
 SetQuadFromPosAndSize(Point *aQuad,
-                      int32  xPos,
-                      int32  yPos,
-                      int32  width,
-                      int32  height)
+                      s32  xPos,
+                      s32  yPos,
+                      s32  width,
+                      s32  height)
 {
   aQuad[kQuadBL].pt_X = aQuad[kQuadTL].pt_X = xPos;
   aQuad[kQuadTR].pt_Y = aQuad[kQuadTL].pt_Y = yPos;
@@ -544,11 +544,11 @@ SetQuadFromPosAndSize(Point *aQuad,
 
 void
 SetShadowQuad(Point *aQuad,
-              int32  xPos,
-              int32  ySpeed)
+              s32  xPos,
+              s32  ySpeed)
 {
-  int32 shadowSpeed = CalcShadowSpeed(xPos);
-  int32 yIncrement = ySpeed + ySpeed + 8;
+  s32 shadowSpeed = CalcShadowSpeed(xPos);
+  s32 yIncrement = ySpeed + ySpeed + 8;
 
   aQuad[kQuadTL].pt_X += shadowSpeed;
   aQuad[kQuadTL].pt_Y += yIncrement;
@@ -561,7 +561,7 @@ SetShadowQuad(Point *aQuad,
 }
 
 void
-SetReflectionQuad(Point *aQuad, int32 speed)
+SetReflectionQuad(Point *aQuad, s32 speed)
 /*
   Set the quad for an object's reflection.
   On entry, the quad is expected to be set to the
@@ -577,7 +577,7 @@ SetReflectionQuad(Point *aQuad, int32 speed)
 }
 
 void
-ConstrainQuad(Point *aQuad, int32 minX, int32 maxX, int32 minY, int32 maxY)
+ConstrainQuad(Point *aQuad, s32 minX, s32 maxX, s32 minY, s32 maxY)
 /*
   Limit the quad's members to the specified min and max values.
 */
@@ -601,7 +601,7 @@ ConstrainQuad(Point *aQuad, int32 minX, int32 maxX, int32 minY, int32 maxY)
 }
 
 void
-SpecialConstrainQuad(Point *aQuad, int32 maxX)
+SpecialConstrainQuad(Point *aQuad, s32 maxX)
 /*
   Limit the quad's horizontal members to the standard minimum and
   specified maximum; limit the vertical to the standard maximum.
@@ -619,7 +619,7 @@ SpecialConstrainQuad(Point *aQuad, int32 maxX)
 
 /* Main functions */
 
-int32
+s32
 Initialize(void)
 /*
   Allocate global resources:
@@ -634,8 +634,8 @@ Initialize(void)
   Returns 0 if all operations are successful, otherwise -1.
 */
 {
-  int32 retValue = -1;
-  int32 errorCode;
+  s32 retValue = -1;
+  s32 errorCode;
 
   gVRAMIOReq = CreateVRAMIOReq(); /* Obtain an IOReq for all SPORT operations */
   if(gVRAMIOReq < 0)
@@ -734,7 +734,7 @@ Cleanup(void)
 
   if(gScreenContext)
     {
-      int32 imagesize = gScreenContext->sc_nFrameByteCount;
+      s32 imagesize = gScreenContext->sc_nFrameByteCount;
 
       if(gWallOffPict)
         FreeMem(gWallOffPict, imagesize);
@@ -792,7 +792,7 @@ UnifyAnimation(ANIM *pAnim)
   and scale.
 */
 {
-  int32 frameIndex;
+  s32 frameIndex;
   CCB *theCcb;
 
   theCcb = pAnim->pentries[0].af_CCB;
@@ -807,7 +807,7 @@ UnifyAnimation(ANIM *pAnim)
 int
 main(int argc, char **argv)
 {
-  int32 screenSelect = 0;
+  s32 screenSelect = 0;
   Item currentBitmapItem;
 
   /*
@@ -823,9 +823,9 @@ main(int argc, char **argv)
   bool cubeUpDir = FALSE;
   bool cubeLftDir = FALSE;
 
-  int32 xPos;
-  int32 yPos;
-  int32 ySpeed;
+  s32 xPos;
+  s32 yPos;
+  s32 ySpeed;
 
   Point aQuad[4];
 
@@ -1472,7 +1472,7 @@ main(int argc, char **argv)
 
 /*  Miscellaneous Utility Routines */
 
-int32
+s32
 HandleControlPad(void)
 /*
   Respond to the user's control pad input.
@@ -1487,9 +1487,9 @@ HandleControlPad(void)
   Returns -1 if user pressed the Start button to quit, otherwise 0.
 */
 {
-  uint32 button;
-  int32 status;
-  int32 retValue = 0;
+  u32 button;
+  s32 status;
+  s32 retValue = 0;
 
   status = DoControlPad(1, &button, CONTROL_CONTINUOUS);
   if(status < 0)
@@ -1617,7 +1617,7 @@ GetArtFilename(char *filename, char *fullPathname)
   strcat(fullPathname, filename);
 }
 
-int32
+s32
 InitGraphicObjects(void)
 /*
   Allocate memory for and load all images and animations.

@@ -63,7 +63,7 @@ DrawText(ScreenContext *sc_,
 
   SetFGPen(&gc,color_);
   MoveTo(&gc,x_,y_);
-  DrawText8(&gc,sc_->sc_BitmapItems[sc_->sc_curScreen],(const uint8*)text_);
+  DrawText8(&gc,sc_->sc_BitmapItems[sc_->sc_curScreen],(const u8*)text_);
 }
 
 static
@@ -93,9 +93,9 @@ main(int    argc_,
 {
   ScreenContext sc;
   Err err;
-  int32 helloX;
-  int32 helloY;
-  int32 exitX;
+  s32 helloX;
+  s32 helloY;
+  s32 exitX;
 
   (void)argc_;
   (void)argv_;

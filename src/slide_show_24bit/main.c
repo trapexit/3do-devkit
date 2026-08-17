@@ -100,32 +100,32 @@
 
 /*	Function Prototypes */
 
-int32 ParseArgs (int32 argc, char *argv[]);
-int32 ParseImageList (char *filename);
-int32 LoadImageBuffer (char *filename, int32 whichBuffer);
-int32 HandleControlPad (void);
+s32 ParseArgs (s32 argc, char *argv[]);
+s32 ParseImageList (char *filename);
+s32 LoadImageBuffer (char *filename, s32 whichBuffer);
+s32 HandleControlPad (void);
 void LoadNextImage (void);
 void LoadPreviousImage (void);
-int32 Initialize (void);
-int32 DisplayCurrentScreen (void);
+s32 Initialize (void);
+s32 DisplayCurrentScreen (void);
 void Usage (void);
 void Cleanup (void);
 
 /**** 24-BIT ****/
-Err DisableV (uint32 which);
-Err EnableV (uint32 which);
-Err DisableH (uint32 which);
-Err EnableH (uint32 which);
+Err DisableV (u32 which);
+Err EnableV (u32 which);
+Err DisableH (u32 which);
+Err EnableH (u32 which);
 void ToggleBit15 (void);
 void ClearBit15 (void);
-Item CreateVDLWrapper (int32 vdlType, int32 length, void *dataPtr);
+Item CreateVDLWrapper (s32 vdlType, s32 length, void *dataPtr);
 
 /*	Global variables */
 
 ubyte *gImage[NUM_BUFFERS] = { NULL, NULL }; /* background image buffers */
-int32 gCurrentImage = 0;                     /* current image # */
-int32 gImageCount = 0;                       /* # of images we show */
-int32 gImageVisTime = 4 * ONE_SECOND; /* default autoshow = 4 sec per image */
+s32 gCurrentImage = 0;                     /* current image # */
+s32 gImageCount = 0;                       /* # of images we show */
+s32 gImageVisTime = 4 * ONE_SECOND; /* default autoshow = 4 sec per image */
 bool gAutoShowFlag = FALSE;           /* auto-show the images? */
 bool gNextImageLoaded = FALSE;        /* is the next buffer loaded? */
 bool gPrevImageLoaded = FALSE;        /* is the previous buffer loaded? */
@@ -134,24 +134,24 @@ ScreenContext *gScreenContext = NULL; /* screen context structures */
 Item gVRAMIOReq = -1;                 /* I/O request for SPORT calls */
 Item gVBLIOReq = -1; /* I/O request used for vertical blank waiting */
 ImageCC gImageHeader[NUM_BUFFERS];
-int32 gImageSize[NUM_BUFFERS];     /* Total number of bytes in image */
-int32 gImageVDLLines[NUM_BUFFERS]; /* Number of lines in image's VDL? */
-int32 gImageIndex[NUM_BUFFERS];    /* index in gFilenames for this buffer */
+s32 gImageSize[NUM_BUFFERS];     /* Total number of bytes in image */
+s32 gImageVDLLines[NUM_BUFFERS]; /* Number of lines in image's VDL? */
+s32 gImageIndex[NUM_BUFFERS];    /* index in gFilenames for this buffer */
 
 Item gVDLItem[NUM_SCREENS + 2]; /* actual VDL items */
 VDLEntry *gVDLPtrArray;         /* our raw VDL */
 Item gSystemVDL[NUM_SCREENS];   /* Items for system's default VDL */
 
 /**** 24-BIT ****/
-uint32 gMaxImageSize;              /* size for a 32-bit image */
-uint32 gMinImageSize;              /* size for a 16-bit image */
-int32 gPrevBuff = -1;              /* which image buffer is current */
-int32 gVAVG[NUM_BUFFERS];          /* enable vertical averaging */
-int32 gHAVG[NUM_BUFFERS];          /* enabling horizontal averaging */
-int32 gDisplayType = DI_TYPE_NTSC; /* what type of video is being displayed */
-int32 gMyScreenWidth
+u32 gMaxImageSize;              /* size for a 32-bit image */
+u32 gMinImageSize;              /* size for a 16-bit image */
+s32 gPrevBuff = -1;              /* which image buffer is current */
+s32 gVAVG[NUM_BUFFERS];          /* enable vertical averaging */
+s32 gHAVG[NUM_BUFFERS];          /* enabling horizontal averaging */
+s32 gDisplayType = DI_TYPE_NTSC; /* what type of video is being displayed */
+s32 gMyScreenWidth
 = NTSC_SCREEN_WIDTH; /* Screen Width in current RUNTINE environment */
-int32 gMyScreenHeight
+s32 gMyScreenHeight
 = NTSC_SCREEN_HEIGHT; /* Screen Height in current RUNTINE environment */
 
 /*	Main functions */
@@ -159,7 +159,7 @@ int32 gMyScreenHeight
 int
 main (int argc, char *argv[])
 {
-  int32 showImageTime; /* time each image is shown when in automatic */
+  s32 showImageTime; /* time each image is shown when in automatic */
 
   printf ("slideshow24\n");
 
@@ -181,7 +181,7 @@ main (int argc, char *argv[])
   gNextImageLoaded = FALSE;
 
   {
-    int32 imageIndex;
+    s32 imageIndex;
     for (imageIndex = 0; imageIndex < NUM_BUFFERS; imageIndex++)
       LoadNextImage ();
   }
@@ -232,12 +232,12 @@ main (int argc, char *argv[])
   return 0;
 }
 
-int32
+s32
 ParseImageList (char *filename)
 {
-  int32 retValue = -1;
-  int32 fileSize;
-  int32 bufferSize;
+  s32 retValue = -1;
+  s32 fileSize;
+  s32 bufferSize;
   char *scriptBuffer = NULL;
   char *scanChar;
   char *imageFilename;
@@ -264,7 +264,7 @@ ParseImageList (char *filename)
       goto DONE;
     }
   memset (scriptBuffer, 0, fileSize + 1);
-  retValue = ReadFile (filename, fileSize, (int32 *)scriptBuffer, 0);
+  retValue = ReadFile (filename, fileSize, (s32 *)scriptBuffer, 0);
   if (retValue < 0)
     {
       DIAGNOSE_SYSERR (retValue, ("Error reading image list.\n"));
@@ -287,7 +287,7 @@ ParseImageList (char *filename)
           see if the last run of chars specified a valid file name
         */
         {
-          int32 lineLength;
+          s32 lineLength;
 
           *scanChar = '\0';
           lineLength = strlen (imageFilename);
@@ -299,7 +299,7 @@ ParseImageList (char *filename)
             {
               if ((imageFilename[1] == 'a') || (imageFilename[1] == 'A'))
                 {
-                  int32 seconds = strtol (&imageFilename[3], NULL, 0);
+                  s32 seconds = strtol (&imageFilename[3], NULL, 0);
 
                   gAutoShowFlag = TRUE;
                   gImageVisTime = seconds * ONE_SECOND;
@@ -347,8 +347,8 @@ ParseImageList (char *filename)
   return retValue;
 }
 
-int32
-ParseArgs (int32 argc, char **argv)
+s32
+ParseArgs (s32 argc, char **argv)
 /*
   Parse the command line parameters.
   If a filename is specified, build the list of image filenames from it.
@@ -361,8 +361,8 @@ ParseArgs (int32 argc, char **argv)
   not found, invalid option), otherwise 0.
 */
 {
-  int32 retValue = -1;
-  int32 argIndex;
+  s32 retValue = -1;
+  s32 argIndex;
   boolean haveFilename = FALSE;
   char *cmdLineParam;
 
@@ -439,13 +439,13 @@ DisposeOldVDL (Item oldVDL)
 }
 
 /**** 24-BIT ****/
-int32
-LoadImageBuffer (char *filename, int32 whichBuffer)
+s32
+LoadImageBuffer (char *filename, s32 whichBuffer)
 /*
   Load an image from disk into an available buffer
 */
 {
-  int32 retValue = -1;
+  s32 retValue = -1;
 
   VdlChunk *rawVDLPtr = NULL;
   Item oldVDL;
@@ -472,7 +472,7 @@ LoadImageBuffer (char *filename, int32 whichBuffer)
   gImageVDLLines[whichBuffer] = 0;
   if ((rawVDLPtr != NULL) && (rawVDLPtr->chunk_size))
     {
-      int32 vdlLines = rawVDLPtr->vdlcount;
+      s32 vdlLines = rawVDLPtr->vdlcount;
 
       /* Incorporate the custom VDL into the screen's VDL */
       MergeVDL24 (&(rawVDLPtr->vdl[0]), (VDL_REC *)gVDLPtrArray, vdlLines,
@@ -523,7 +523,7 @@ LoadImageBuffer (char *filename, int32 whichBuffer)
   return retValue;
 }
 
-int32
+s32
 HandleControlPad (void)
 /*
   Respond to the user's control pad input:
@@ -541,8 +541,8 @@ HandleControlPad (void)
   otherwise 0.
 */
 {
-  int32 retValue = 0;
-  uint32 controlBits;
+  s32 retValue = 0;
+  u32 controlBits;
 
   DoControlPad (1, &controlBits, 0); /* no continuous button presses */
 
@@ -723,14 +723,14 @@ LoadNextImage (void)
 }
 
 /**** 24-BIT ****/
-int32
-InitScreenVDLs (ScreenContext *sc, int32 displayType)
+s32
+InitScreenVDLs (ScreenContext *sc, s32 displayType)
 /*
   Initialize the VDLs for each screen
 */
 {
-  int32 retValue = -1;
-  int32 screenIndex;
+  s32 retValue = -1;
+  s32 screenIndex;
 
   /* allocate memory for the raw VDL, initialize it.  Fail if we can't get the
    * memory */
@@ -771,7 +771,7 @@ InitScreenVDLs (ScreenContext *sc, int32 displayType)
 /**** 24-BIT ****/
 /* Utility function for copying screen item info to a ScreenContext */
 Screen *
-ScreenToScreenContext (int32 screenIndex, ScreenContext *sc)
+ScreenToScreenContext (s32 screenIndex, ScreenContext *sc)
 {
   Screen *pScreen;
 
@@ -790,21 +790,21 @@ ScreenToScreenContext (int32 screenIndex, ScreenContext *sc)
 
 /**** 24-BIT ****/
 /* VERY SIMILAR TO OpenGraphicsNTSCPAL */
-int32
+s32
 CreateScreens (ScreenContext *sc)
 {
-  int32 retValue = -1; /* value returned by THIS function */
-  int32 result;        /* value returned by some internal calls */
-  uint32 nScreens;
-  int32 width;
-  int32 height;
-  int32 displayType;
-  int32 pageSize;
+  s32 retValue = -1; /* value returned by THIS function */
+  s32 result;        /* value returned by some internal calls */
+  u32 nScreens;
+  s32 width;
+  s32 height;
+  s32 displayType;
+  s32 pageSize;
   Item screenGroupItem;
-  uint32 bitmapWidth[MAXSCREENS];
-  uint32 bitmapHeight[MAXSCREENS];
+  u32 bitmapWidth[MAXSCREENS];
+  u32 bitmapHeight[MAXSCREENS];
   ubyte *bitmap[NUM_SCREENS];
-  int32 *vdl[NUM_SCREENS];
+  s32 *vdl[NUM_SCREENS];
 
   TagArg screenGroupTags24[] =
   /*
@@ -833,7 +833,7 @@ CreateScreens (ScreenContext *sc)
       (void *)0,
     };
 
-  int32 vdlSize = 2 * 40 * sizeof (int32);
+  s32 vdlSize = 2 * 40 * sizeof (s32);
   ubyte *screenBuffer;
 
   /* Check for bad arguments */
@@ -860,7 +860,7 @@ CreateScreens (ScreenContext *sc)
   gDisplayType = displayType;
 
   {
-    int32 screenIndex;
+    s32 screenIndex;
 
     for (screenIndex = 0; screenIndex < nScreens; screenIndex++)
       {
@@ -916,7 +916,7 @@ CreateScreens (ScreenContext *sc)
 
   /* Use the screen group items to fill out more of the ScreenContext */
   {
-    int32 screenIndex;
+    s32 screenIndex;
 
     for (screenIndex = 0; screenIndex < nScreens; screenIndex++)
       {
@@ -942,7 +942,7 @@ CreateScreens (ScreenContext *sc)
     the CLUTs with default ramps after each field.  For 24bit,
     this would cause a bad display.
   */
-  vdl[0] = (int32 *)AllocMem (vdlSize, MEMTYPE_ANY);
+  vdl[0] = (s32 *)AllocMem (vdlSize, MEMTYPE_ANY);
   if (vdl[0] == NULL)
     {
       printf("Can't allocate VDL memory\n");
@@ -978,8 +978,8 @@ CreateScreens (ScreenContext *sc)
     the single large bitmap we allocated
   */
   {
-    int32 screenIndex;
-    int32 vdlIndex = 0;
+    s32 screenIndex;
+    s32 vdlIndex = 0;
     Item oldVDL;
 
     for (screenIndex = (nScreens - 2); screenIndex < nScreens; screenIndex++)
@@ -1020,7 +1020,7 @@ CreateScreens (ScreenContext *sc)
   return retValue;
 }
 
-int32
+s32
 Initialize (void)
 /*
   Allocate and prepare all of the program's global resources.
@@ -1037,7 +1037,7 @@ Initialize (void)
   negative value.
 */
 {
-  int32 retValue = -1;
+  s32 retValue = -1;
 
   gVBLIOReq = CreateVBLIOReq ();
   if (gVBLIOReq < 0)
@@ -1068,9 +1068,9 @@ Initialize (void)
 
   // now allocate some memory for the image buffers
   {
-    int32 screenIndex;
+    s32 screenIndex;
 
-    gMinImageSize = (int32)(gScreenContext->sc_nFrameByteCount);
+    gMinImageSize = (s32)(gScreenContext->sc_nFrameByteCount);
     gMaxImageSize = 2 * gMinImageSize;
 
     for (screenIndex = 0; screenIndex < NUM_BUFFERS; screenIndex++)
@@ -1102,7 +1102,7 @@ Initialize (void)
 
 /**** 24-BIT ****/
 Err
-DisableV (uint32 screenIndex)
+DisableV (u32 screenIndex)
 {
   Err result = 0;
   TagArg DVAVGTags[] = {
@@ -1123,7 +1123,7 @@ DisableV (uint32 screenIndex)
 
 /**** 24-BIT ****/
 Err
-EnableV (uint32 screenIndex)
+EnableV (u32 screenIndex)
 {
   Err result = 0;
   TagArg EVAVGTags[] = {
@@ -1144,7 +1144,7 @@ EnableV (uint32 screenIndex)
 
 /**** 24-BIT ****/
 Err
-DisableH (uint32 screenIndex)
+DisableH (u32 screenIndex)
 {
   Err result = 0;
   TagArg DHAVGTags[] = {
@@ -1165,7 +1165,7 @@ DisableH (uint32 screenIndex)
 
 /**** 24-BIT ****/
 Err
-EnableH (uint32 screenIndex)
+EnableH (u32 screenIndex)
 {
   Err result = 0;
   TagArg EHAVGTags[] = {
@@ -1188,15 +1188,15 @@ EnableH (uint32 screenIndex)
 void
 DoBit15 (bool doToggle)
 {
-  uint32 *p;
-  uint32 n;
+  u32 *p;
+  u32 n;
 
   n = gImageSize[gScreenContext->sc_curScreen] >> 2;
   if (gImageSize[gScreenContext->sc_curScreen] == gMinImageSize)
-    p = (uint32 *)gScreenContext->sc_Bitmaps[gScreenContext->sc_curScreen]
+    p = (u32 *)gScreenContext->sc_Bitmaps[gScreenContext->sc_curScreen]
       ->bm_Buffer;
   else
-    p = (uint32 *)gScreenContext->sc_Bitmaps[2]->bm_Buffer;
+    p = (u32 *)gScreenContext->sc_Bitmaps[2]->bm_Buffer;
   if (doToggle)
     {
       while (n--)
@@ -1240,10 +1240,10 @@ Cleanup (void)
   because we used loadfile24 rather than LoadImage.
 */
 {
-  int32 imageIndex;
+  s32 imageIndex;
 
   for (imageIndex = 0; imageIndex < NUM_BUFFERS; imageIndex++)
-    FreeMem (gImage[imageIndex], (int32)(gScreenContext->sc_nFrameByteCount));
+    FreeMem (gImage[imageIndex], (s32)(gScreenContext->sc_nFrameByteCount));
 
   KillControlPad ();
 
@@ -1252,7 +1252,7 @@ Cleanup (void)
     {
       Item screenGroup;
       Screen *screen;
-      int32 screenIndex;
+      s32 screenIndex;
 
       for (screenIndex = 0; screenIndex <= 2; screenIndex += 2)
         {
@@ -1282,11 +1282,11 @@ Cleanup (void)
 }
 
 /**** 24-BIT ****/
-int32
+s32
 DisplayCurrentScreen (void)
 {
-  int32 retValue = 0;
-  int32 currScreen = gScreenContext->sc_curScreen;
+  s32 retValue = 0;
+  s32 currScreen = gScreenContext->sc_curScreen;
 
   if (gPrevBuff == currScreen)
     goto DONE;
@@ -1355,7 +1355,7 @@ Usage (void)
 }
 
 Item
-CreateVDLWrapper (int32 vdlType, int32 length, void *dataPtr)
+CreateVDLWrapper (s32 vdlType, s32 length, void *dataPtr)
 /*
   Convenience routine for creating a VDL item, given VDL type, size in
   int32s, and address of the VDL data.

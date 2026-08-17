@@ -43,7 +43,7 @@ typedef int BOOL;
 typedef struct usoGlobals {
   ScreenContext uso_sc;	// a screen context for all tasks
   Item uso_iTask;			// the uso task
-  uint8 uso_nPriority;	// the priority of the USO task
+  u8 uso_nPriority;	// the priority of the USO task
   Item uso_iMp;			// the uso parent message port
 
 } USOGLOBALS, *PUSOGLOBALS;
@@ -68,7 +68,7 @@ extern BOOL l3Init(void);
 extern void l3Shutdown(void);
 extern BOOL l3InitGraphics(void);
 
-// extern void *l3AllocMem(int32 size, uint32 type);
-extern BOOL l3ReAlloc(void **pMem, int32 nSize, int nOldSize);
+// extern void *l3AllocMem(s32 size, u32 type);
+extern BOOL l3ReAlloc(void **pMem, s32 nSize, int nOldSize);
 
 extern BOOL initScreenApp(PUSOGLOBALS *pg, int nMsgSig, char *pMsgPort);
