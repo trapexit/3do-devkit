@@ -253,10 +253,7 @@ CPU and DSP resource overlay to your app.
 
 ## C++ Standard Template Library
 
-* A version of RogueWave's STL was originally included but found to be
-  troublesome to use and occasionally broken.
-* `ttl` Trapexit's Template Library was created to replace it but is
-  incomplete.
+* `ttl` Trapexit's Template Library is incomplete.
 
 
 ## Memory Management
@@ -272,6 +269,5 @@ that when wanting to free data from 'new' one should use `memory_delete(ptr)`.
 That said best to use or create higher level objects to manage such things.
 Simple versions of shared_ptr and unique_ptr are provided.
 
-There might be a better solution to this problem but after many attempts,
-including attempting to use the strategy by RogueWave which didn't seem
-to work, this was settled on till something better could be done.
+There might be a better solution to this problem, but this was settled on after
+other approaches failed.

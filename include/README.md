@@ -5,5 +5,3 @@
 * community: Headers for any included modern community libraries.
 * ttl: "trapexit's template library". A simple work in progress
   replacement for C++ STL.
-* rwstl: Original RogueWave STL headers from ARM C++
-  compiler. Unused. For reference.

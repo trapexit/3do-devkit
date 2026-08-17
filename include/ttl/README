@@ -1,8 +1,6 @@
 This is a simple standard template library for C++ targeting the
-pre-standard Norcroft ARM C++ compiler v1.11. The intent is to
-replace the Roguewave STL implementation which came with ARM C++ due
-to licensing concerns as well as to expand the APIs to more closely
-match modern versions.
+pre-standard Norcroft ARM C++ compiler v1.11. The intent is to expand the APIs
+to more closely match modern versions.
 
 ETL (https://github.com/ETLCPP/etl) and similar libraries are not
 usable due to the limitations of the compiler. Such as lacking

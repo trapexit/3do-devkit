@@ -27,8 +27,6 @@ the 3DO.
 * [example_folio](https://github.com/trapexit/3do-example-folio):
   example Folio (shared library)
 * ttl: trapexit's template library (simplistic replacement to STL)
-* Roguewave STL which originally came with ARM C++ (probably not worth
-  using)
 
 
 ### Documentation
@@ -336,8 +334,6 @@ manually and place them into the RetroArch `system` folder.
    * community: Headers for any included modern community libraries.
    * ttl: "trapexit's template library". A simple work in progress
      replacement for C++ STL.
-   * rwstl: Original RogueWave STL headers from ARM C++
-     compiler. Unused. For reference.
 * lib/: All libraries from original SDK and community projects.
 * [examples/](examples/): Examples from all available original 3DO SDK
   releases as well as new and reworked examples. Some of them also
