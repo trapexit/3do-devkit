@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 typedef unsigned char boolean;
 
 #ifndef TRUE

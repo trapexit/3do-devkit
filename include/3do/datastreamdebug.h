@@ -15,7 +15,7 @@
  *	5/21/93		jb		New today.
  *
  *******************************************************************************************/
-#pragma include_only_once
+#pragma once
 
 #include "extern_c.h"
 

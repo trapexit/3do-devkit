@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #include "types_size_t.h"
 
 #define Offset(struct_type,field) ((size_t)&(((struct_type)NULL)->field))

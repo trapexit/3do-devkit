@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #include "portfolio.h"
 #include "init3do.h"
 #include "parse3do.h"

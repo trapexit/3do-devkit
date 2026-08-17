@@ -1,6 +1,5 @@
 #pragma force_top_level
-#pragma include_only_once
-
+#pragma once
 /* Runtime and compile-time assertion interfaces. */
 
 #ifndef STATIC_ASSERT

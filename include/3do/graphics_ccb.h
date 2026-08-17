@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #include "graphics_celdata.h"
 #include "graphics_coord.h"
 #include "types_ints.h"

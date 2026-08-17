@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #include "graphics_coord.h"
 
 typedef struct Rect Rect;

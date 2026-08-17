@@ -16,6 +16,5 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#pragma include_only_once
-
+#pragma once
 typedef int ptrdiff_t;

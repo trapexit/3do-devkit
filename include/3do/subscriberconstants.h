@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #include "subscriberutils.h"
 
 /* Shared constants for the Cinepak (CPak) and EZSqueeze (EZQ) movie

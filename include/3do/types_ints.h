@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 /* 8bit */
 typedef signed char    i8;
 typedef i8             s8;

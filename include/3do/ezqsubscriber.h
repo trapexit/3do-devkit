@@ -1,5 +1,4 @@
-#pragma include_only_once
-
+#pragma once
 #include "graphics.h"
 #include "subscriberutils.h"
 #include "subscriberconstants.h"
