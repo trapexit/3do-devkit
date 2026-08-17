@@ -33,12 +33,12 @@
  * *************************************************************************
  */
 
-uint32 ScreenSelect = 0;
-int32 coDebug = 0;
+u32 ScreenSelect = 0;
+s32 coDebug = 0;
 
 /* Initialize the Cel Control Block */
 struct CCB EchoCCB = {
-  /* uint32 ccb_Flags; */
+  /* u32 ccb_Flags; */
   CCB_LAST |                  /* last cel in list */
       CCB_NPABS |             /* Use absolute address for NextPtr */
       CCB_SPABS |             /* Use absolute address for SourceData */
@@ -63,7 +63,7 @@ struct CCB EchoCCB = {
   /* Coord ccb_X, ccb_Y; */
   0,
   0,
-  /* int32 ccb_hdx, ccb_hdy, ccb_vdx, ccb_vdy, ccb_ddx, ccb_ddy; */
+  /* s32 ccb_hdx, ccb_hdy, ccb_vdx, ccb_vdy, ccb_ddx, ccb_ddy; */
   0,
   0,
   0,
@@ -71,7 +71,7 @@ struct CCB EchoCCB = {
   0,
   0,
 
-  /* uint32 ccb_PIXC; */
+  /* u32 ccb_PIXC; */
   PPMP_BOTH_AVERAGE,
   /*
   ** Cel first preamble word bits.
@@ -89,16 +89,16 @@ struct CCB EchoCCB = {
       PRE1_TLLSB_PDC0 | /* Pass LSB of Blue through pixel processor. */
       ((CEL_WIDTH - PRE1_TLHPCNT_PREFETCH) << PRE1_TLHPCNT_SHIFT), /* width */
 
-  /* int32 ccb_Width, ccb_Height; */
+  /* s32 ccb_Width, ccb_Height; */
   CEL_WIDTH,
   CEL_HEIGHT
 };
 
 /************************************************************************/
-int32
+s32
 ce_Init(ColorEcho *ce)
 {
-  int32 Result;
+  s32 Result;
   Result = 0;
 
   /* Initialize ColorEcho control srtucture. */
@@ -148,14 +148,14 @@ ce_Init(ColorEcho *ce)
 }
 
 /************************************************************************/
-uint32
-Random(uint32 n)
+u32
+Random(u32 n)
 /* Return a random number from 0 to n-1
  * The return value has 16 bits of significance, and ought to be unsigned.
  * Is the above true?
  */
 {
-  uint32 rand16;
+  u32 rand16;
 
   rand16 = rand() & 0x0000FFFF;
 
@@ -165,7 +165,7 @@ Random(uint32 n)
 /************************************************************************/
 #define SORT(v1, v2)                                                                               \
   {                                                                                                \
-    int32 temp;                                                                                    \
+    s32 temp;                                                                                    \
     if(v1 > v2)                                                                                    \
     {                                                                                              \
       temp = v2;                                                                                   \
@@ -175,12 +175,12 @@ Random(uint32 n)
   }
 
 /************************************************************************/
-int32
-RandomBoxes(Item BitMap, int32 NumBoxes)
+s32
+RandomBoxes(Item BitMap, s32 NumBoxes)
 {
-  int32 x1, y1, x2, y2;
-  int32 i;
-  int32 Result;
+  s32 x1, y1, x2, y2;
+  s32 i;
+  s32 Result;
   Rect WorkRect;
   GrafCon GCon;
 
@@ -208,12 +208,12 @@ RandomBoxes(Item BitMap, int32 NumBoxes)
 }
 
 /************************************************************************/
-int32
-RandomPixels(Item BitMap, int32 XCenter, int32 YCenter, int32 NumPixels)
+s32
+RandomPixels(Item BitMap, s32 XCenter, s32 YCenter, s32 NumPixels)
 {
-  int32 x, y;
-  int32 i;
-  int32 Result = 0;
+  s32 x, y;
+  s32 i;
+  s32 Result = 0;
   GrafCon GCon;
 
   for(i = 0; i < NumPixels; i++)
@@ -247,13 +247,13 @@ ce_Freeze(ColorEcho *ce)
 }
 
 /*********************************************************************/
-int32
+s32
 ce_SeedPattern(ScreenContext *sc, ColorEcho *ce)
 {
-  int32 Result;
+  s32 Result;
   Item BitMap;
   GrafCon GCon;
-  int32 i, x, y;
+  s32 i, x, y;
 
   /* Initialize random number generator for identical pattern. */
   srand(ce->ce_PatternSeed);
@@ -283,10 +283,10 @@ ce_SeedPattern(ScreenContext *sc, ColorEcho *ce)
 /**********************************************************************
 ** Sprinkle some color into the picture to seed the feedback process.
 *************************************************************************/
-int32
+s32
 ce_Seed(ScreenContext *sc, ColorEcho *ce)
 {
-  int32 Result;
+  s32 Result;
   Item BitMap;
   Item t;
 
@@ -319,12 +319,12 @@ ce_Seed(ScreenContext *sc, ColorEcho *ce)
 /*************************************************************************
 ** Do Sport transfer and a DrawCel
 *************************************************************************/
-int32
+s32
 ce_DrawNextScreen(ScreenContext *sc, ColorEcho *ce)
 {
   Point Pts[4];
   frac16 Phi;
-  int32 Result = 0;
+  s32 Result = 0;
   Item t;
 
   /* Apply velocities to current values. */

@@ -25,14 +25,14 @@ typedef struct AnimFrame
   CCB 	*af_CCB;		/* Pointer to CCB for this frame */
   char	*af_PLUT;		/* Pointer to PLUT for this frame */
   char	*af_pix;		/* Pointer to pixels for this frame */
-  int32  reserved;
+  s32  reserved;
 } AnimFrame;
 
 typedef struct ANIM
 {
-  int32      num_Frames;        /* greatest number of PDATs or CCBs in file */
+  s32      num_Frames;        /* greatest number of PDATs or CCBs in file */
   frac16     cur_Frame;         /* allows fractional values for smooth speed */
-  int32      num_Alloced_Frames;
+  s32      num_Alloced_Frames;
   AnimFrame *pentries;
   void      *dataBuffer;        /* for internal use by LoadAnim/UnloadAnim only! */
 } ANIM;
@@ -49,10 +49,10 @@ typedef struct ANIM
 
 EXTERN_C_BEGIN
 
-ANIM *LoadAnim(char *filename, uint32 memTypeBits);
+ANIM *LoadAnim(char *filename, u32 memTypeBits);
 void  UnloadAnim(ANIM *anim);
-ANIM *ParseAnim(void *inBuf, int32 inBufSize, uint32 memTypeBits);
-void  DrawAnimCel(ANIM *pAnim, Item bitmapItem, int32 xPos, int32 yPos, frac16 frameIncrement, int32 hotSpot);
+ANIM *ParseAnim(void *inBuf, s32 inBufSize, u32 memTypeBits);
+void  DrawAnimCel(ANIM *pAnim, Item bitmapItem, s32 xPos, s32 yPos, frac16 frameIncrement, s32 hotSpot);
 CCB  *GetAnimCel(ANIM *pAnim, frac16 frameIncrement);
 
 EXTERN_C_END

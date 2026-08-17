@@ -6,7 +6,7 @@
 typedef struct CCB CCB;
 struct CCB
 {
-  uint32 ccb_Flags;
+  u32 ccb_Flags;
 
   CCB     *ccb_NextPtr;
   CelData *ccb_SourcePtr;
@@ -14,19 +14,19 @@ struct CCB
 
   Coord  ccb_XPos;
   Coord  ccb_YPos;
-  int32  ccb_HDX;
-  int32  ccb_HDY;
-  int32  ccb_VDX;
-  int32  ccb_VDY;
-  int32  ccb_HDDX;
-  int32  ccb_HDDY;
-  uint32 ccb_PIXC;
-  uint32 ccb_PRE0;
-  uint32 ccb_PRE1;
+  s32  ccb_HDX;
+  s32  ccb_HDY;
+  s32  ccb_VDX;
+  s32  ccb_VDY;
+  s32  ccb_HDDX;
+  s32  ccb_HDDY;
+  u32 ccb_PIXC;
+  u32 ccb_PRE0;
+  u32 ccb_PRE1;
 
   /* These are special fields, tacked on to support some of the
    * rendering functions.
    */
-  int32 ccb_Width;
-  int32 ccb_Height;
+  s32 ccb_Width;
+  s32 ccb_Height;
 };

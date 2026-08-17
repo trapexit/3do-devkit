@@ -113,7 +113,7 @@ void
 wait_control_pad_release(BasicDisplay &display)
 {
   Err err;
-  uint32 buttons;
+  u32 buttons;
 
   do
     {
@@ -147,7 +147,7 @@ select_example(int selected)
 
   while(true)
     {
-      uint32 buttons;
+      u32 buttons;
 
       buttons = 0;
       err = DoControlPad(1, &buttons, 0);

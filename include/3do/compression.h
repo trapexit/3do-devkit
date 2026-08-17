@@ -23,7 +23,7 @@
 
 /*****************************************************************************/
 
-typedef void (* CompFunc)(void *userData, uint32 word);
+typedef void (* CompFunc)(void *userData, u32 word);
 
 #ifndef __COMPRESSION_PRIVATE
 typedef void Compressor;
@@ -79,24 +79,24 @@ Err CloseCompressionFolio(void);
 /* compressor */
 Err CreateCompressor(Compressor **comp, CompFunc cf, const TagArg *tags);
 Err DeleteCompressor(Compressor *comp);
-Err FeedCompressor(Compressor *comp, void *data, uint32 numDataWords);
-int32 GetCompressorWorkBufferSize(const TagArg *tags);
+Err FeedCompressor(Compressor *comp, void *data, u32 numDataWords);
+s32 GetCompressorWorkBufferSize(const TagArg *tags);
 
 /* decompressor */
 Err CreateDecompressor(Decompressor **decomp, CompFunc cf, const TagArg *tags);
 Err DeleteDecompressor(Decompressor *decomp);
-Err FeedDecompressor(Decompressor *decomp, void *data, uint32 numDataWords);
-int32 GetDecompressorWorkBufferSize(const TagArg *tags);
+Err FeedDecompressor(Decompressor *decomp, void *data, u32 numDataWords);
+s32 GetDecompressorWorkBufferSize(const TagArg *tags);
 
 /* varargs variants of some of the above */
-Err CreateCompressorVA(Compressor **comp, CompFunc cf, uint32 tags, ...);
-int32 GetCompressorWorkBufferSizeVA(uint32 tags, ...);
-Err CreateDecompressorVA(Decompressor **decomp, CompFunc cf, uint32 tags, ...);
-int32 GetDecompressorWorkBufferSizeVA(uint32 tags, ...);
+Err CreateCompressorVA(Compressor **comp, CompFunc cf, u32 tags, ...);
+s32 GetCompressorWorkBufferSizeVA(u32 tags, ...);
+Err CreateDecompressorVA(Decompressor **decomp, CompFunc cf, u32 tags, ...);
+s32 GetDecompressorWorkBufferSizeVA(u32 tags, ...);
 
 /* convenience routines */
-Err SimpleCompress(void *source, uint32 sourceWords, void *result, uint32 resultWords);
-Err SimpleDecompress(void *source, uint32 sourceWords, void *result, uint32 resultWords);
+Err SimpleCompress(void *source, u32 sourceWords, void *result, u32 resultWords);
+Err SimpleDecompress(void *source, u32 sourceWords, void *result, u32 resultWords);
 
 EXTERN_C_END
 

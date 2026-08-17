@@ -298,6 +298,6 @@
 EXTERN_C_BEGIN
 
 /* === Finally, a kernel call that uses the hardware (?) === */
-uint32 __swi(KERNELSWI+17) ReadHardwareRandomNumber(void);
+u32 __swi(KERNELSWI+17) ReadHardwareRandomNumber(void);
 
 EXTERN_C_END

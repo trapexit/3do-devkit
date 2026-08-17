@@ -125,33 +125,33 @@ mixer,
 typedef struct DrumLine
 {
   Item drl_Instrument;
-  uint8 drl_Velocities[DRB_NUM_COLUMNS];
+  u8 drl_Velocities[DRB_NUM_COLUMNS];
 } DrumLine;
 
 typedef struct DrumBox
 {
-  uint32 drb_Flags;
-  int32 drb_Row; /* Cursor row and column. */
-  int32 drb_Column;
-  int32 drb_TopY; /* Position of grid. */
-  int32 drb_LeftX;
-  int32 drb_DeltaX; /* Width and height of grid cells. */
-  int32 drb_DeltaY;
+  u32 drb_Flags;
+  s32 drb_Row; /* Cursor row and column. */
+  s32 drb_Column;
+  s32 drb_TopY; /* Position of grid. */
+  s32 drb_LeftX;
+  s32 drb_DeltaX; /* Width and height of grid cells. */
+  s32 drb_DeltaY;
   struct DrumLine drb_Lines[DRB_NUM_ROWS]; /* One row/line of drum hits. */
   struct ScoreContext *drb_ScoreContext;
   Item drb_Cue;           /* For use with timer. */
-  int32 drb_Toggle;       /* Are notes on or off? */
-  int32 drb_CurrentIndex; /* Currently playing column. */
-  uint32 drb_CurTime;     /* Internal time clock. */
-  int32 drb_Duration;     /* Time between notes/2 */
+  s32 drb_Toggle;       /* Are notes on or off? */
+  s32 drb_CurrentIndex; /* Currently playing column. */
+  u32 drb_CurTime;     /* Internal time clock. */
+  s32 drb_Duration;     /* Time between notes/2 */
 } DrumBox;
 
 Err drbDrawAboutScreen (ScreenContext *sc);
-Err drbProcessUserInput (ScreenContext *sc, DrumBox *drb, uint32 Joy);
+Err drbProcessUserInput (ScreenContext *sc, DrumBox *drb, u32 Joy);
 Err drbInteractiveLoop (ScreenContext *sc, DrumBox *drb);
 Err drbDrawNextScreen (ScreenContext *sc, DrumBox *drb);
-Err drbDrawRect (Item Bitmap, GrafCon *GConPtr, int32 LeftX, int32 Topy,
-                 int32 RightX, int32 BottomY);
+Err drbDrawRect (Item Bitmap, GrafCon *GConPtr, s32 LeftX, s32 Topy,
+                 s32 RightX, s32 BottomY);
 Err drbDrawGrid (ScreenContext *sc, DrumBox *drb);
 
 /*****************************************************************
@@ -160,7 +160,7 @@ Err drbDrawGrid (ScreenContext *sc, DrumBox *drb);
 Err
 drbTermSound (DrumBox *drb)
 {
-  int32 Result = 0;
+  s32 Result = 0;
   if (drb->drb_Cue)
     DeleteItem (drb->drb_Cue);
   if (drb->drb_ScoreContext)
@@ -175,10 +175,10 @@ drbTermSound (DrumBox *drb)
 /*****************************************************************
 ** Initialize sound system.
 *****************************************************************/
-int32
+s32
 drbInitSound (DrumBox *drb, char *mapfile)
 {
-  int32 Result;
+  s32 Result;
 
   Result = -1;
 
@@ -213,10 +213,10 @@ cleanup:
 ** Turn on all the selected notes in a column.
 *****************************************************************/
 Err
-drbColumnOn (DrumBox *drb, int32 ColumnIndex)
+drbColumnOn (DrumBox *drb, s32 ColumnIndex)
 {
-  int32 Vel, i;
-  int32 Result;
+  s32 Vel, i;
+  s32 Result;
 
   Result = 0;
   for (i = 0; i < DRB_NUM_ROWS; i++)
@@ -235,10 +235,10 @@ cleanup:
 ** Turn off all the notes in a column.
 *****************************************************************/
 Err
-drbColumnOff (DrumBox *drb, int32 ColumnIndex)
+drbColumnOff (DrumBox *drb, s32 ColumnIndex)
 {
-  int32 Vel, i;
-  int32 Result;
+  s32 Vel, i;
+  s32 Result;
 
   Result = 0;
   for (i = 0; i < DRB_NUM_ROWS; i++)
@@ -258,11 +258,11 @@ cleanup:
 ** Graphic Utility to draw a rectangle.
 *****************************************************************/
 Err
-drbDrawRect (Item Bitmap, GrafCon *GConPtr, int32 LeftX, int32 Topy,
-             int32 RightX, int32 BottomY)
+drbDrawRect (Item Bitmap, GrafCon *GConPtr, s32 LeftX, s32 Topy,
+             s32 RightX, s32 BottomY)
 {
   Rect WorkRect;
-  int32 Result;
+  s32 Result;
 
   DBUG (("drbDrawRect: 0x%x, %d, %d, %d, %d\n", Bitmap, GConPtr, LeftX, Topy,
          RightX, BottomY));
@@ -284,10 +284,10 @@ cleanup:
 Err
 drbDrawGrid (ScreenContext *sc, DrumBox *drb)
 {
-  int32 Result;
-  int32 ix, iy;
+  s32 Result;
+  s32 ix, iy;
   GrafCon GCon;
-  int32 LeftX, TopY;
+  s32 LeftX, TopY;
 
   Result = 0;
 
@@ -387,7 +387,7 @@ cleanup:
 Err
 drbDrawNextScreen (ScreenContext *sc, DrumBox *drb)
 {
-  int32 Result;
+  s32 Result;
   GrafCon GCon;
 
   MoveTo (&GCon, 100, 30);
@@ -435,7 +435,7 @@ drbInit (DrumBox *drb)
 Err
 drbDrawAboutScreen (ScreenContext *sc)
 {
-  int32 y;
+  s32 y;
 
   GrafCon GCon;
 
@@ -476,7 +476,7 @@ Err
 drbClearScreens (ScreenContext *sc)
 {
   GrafCon GCon;
-  int32 Result;
+  s32 Result;
 
   SetFGPen (&GCon, 0x000F);
   sc->sc_curScreen = 1;
@@ -490,9 +490,9 @@ drbClearScreens (ScreenContext *sc)
 ** Respond appropriately to button presses.
 *****************************************************************/
 Err
-drbProcessUserInput (ScreenContext *sc, DrumBox *drb, uint32 Joy)
+drbProcessUserInput (ScreenContext *sc, DrumBox *drb, u32 Joy)
 {
-  int32 Result;
+  s32 Result;
 
   Result = 0;
 
@@ -544,15 +544,15 @@ drbProcessUserInput (ScreenContext *sc, DrumBox *drb, uint32 Joy)
   return Result;
 }
 
-static uint32 OldJoy;
+static u32 OldJoy;
 
 /*********************************************************************/
 Err
 drbInteractiveLoop (ScreenContext *sc, DrumBox *drb)
 {
-  int32 Result;
-  uint32 Joy;
-  int32 HandsOffCount;
+  s32 Result;
+  u32 Joy;
+  s32 HandsOffCount;
   ControlPadEventData cped;
 
   HandsOffCount = 0;
@@ -638,7 +638,7 @@ main (int argc, char *argv[])
 {
   char *progname;
   char *mapfile;
-  int32 Result;
+  s32 Result;
   DrumBox MyDRB;
   ScreenContext ScreenCon, *sc;
   ControlPadEventData cped;

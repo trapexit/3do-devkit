@@ -304,7 +304,7 @@ WATCHDOG_DEFAULT	EQU 1000000
 ;
 
 ;  The FontChar structure defines the image for a single character
-;  The text value of the character is defined with an int32 to allow
+;  The text value of the character is defined with an s32 to allow
 ;  either 8-bit or 16-bit text character definitions.
 ;
 	BEGINSTRUCT	 FontChar

@@ -69,16 +69,16 @@ written.
 Err
 SaveDataFile(const char *name,
              void       *data,
-             uint32      dataSize)
+             u32      dataSize)
 {
   Item       fileItem;
   Item       ioReqItem;
   IOInfo     ioInfo;
   void      *temp;
   Err        result;
-  uint32     numBlocks;
-  uint32     blockSize;
-  uint32     roundedSize;
+  u32     numBlocks;
+  u32     blockSize;
+  u32     roundedSize;
   FileStatus status;
 
   // get rid of the file if it was already there
@@ -166,7 +166,7 @@ SaveDataFile(const char *name,
           return result;
         }
 
-      data = (void *)((uint32)data + roundedSize);
+      data = (void *)((u32)data + roundedSize);
       dataSize -= roundedSize;
     }
 
@@ -218,19 +218,19 @@ typedef struct NVRAMFile
 {
   char   name[FILESYSTEM_MAX_NAME_LEN];
   char   path[FILESYSTEM_MAX_NAME_LEN + 8];
-  uint32 byteCount;
+  u32 byteCount;
 } NVRAMFile;
 
 typedef struct AppState
 {
   ScreenContext screen;
   NVRAMFile     files[MAX_FILES];
-  int32         fileCount;
-  int32         selected;
-  int32         top;
-  int32         dumpTop;
-  uint8         fileData[FILE_DATA_SIZE];
-  uint32        fileDataSize;
+  s32         fileCount;
+  s32         selected;
+  s32         top;
+  s32         dumpTop;
+  u8         fileData[FILE_DATA_SIZE];
+  u32        fileDataSize;
   char          status[96];
 } AppState;
 
@@ -258,8 +258,8 @@ ClearScreen(ScreenContext *sc)
 static
 void
 DrawText(ScreenContext *sc,
-         int32          x,
-         int32          y,
+         s32          x,
+         s32          y,
          const char    *text,
          Color          color)
 {
@@ -289,17 +289,17 @@ DrawHeader(AppState *app, const char *title)
 
 static
 void
-FillRandomData(uint8  *data,
-               uint32  size)
+FillRandomData(u8  *data,
+               u32  size)
 {
-  uint32 i;
-  uint32 r = 0;
+  u32 i;
+  u32 r = 0;
 
   for(i = 0; i < size; i++)
     {
       if((i & 3) == 0)
         r = ReadHardwareRandomNumber();
-      data[i] = (uint8)(r >> ((i & 3) * 8));
+      data[i] = (u8)(r >> ((i & 3) * 8));
     }
 }
 
@@ -307,7 +307,7 @@ static
 Err
 SaveRandomFile(AppState *app)
 {
-  uint8 data[FILE_DATA_SIZE];
+  u8 data[FILE_DATA_SIZE];
   char name[32];
   Err err;
 
@@ -333,8 +333,8 @@ RefreshFileList(AppState *app)
 {
   Directory      *dir;
   DirectoryEntry de;
-  int32          result;
-  int32          oldSelected;
+  s32          result;
+  s32          oldSelected;
 
   oldSelected = app->selected;
   app->fileCount = 0;
@@ -384,15 +384,15 @@ RefreshFileList(AppState *app)
 static
 Err
 LoadDataFile(const char *name,
-             uint8      *data,
-             uint32      dataCapacity,
-             uint32     *dataSize)
+             u8      *data,
+             u32      dataCapacity,
+             u32     *dataSize)
 {
   Item       fileItem;
   Item       ioReqItem;
   IOInfo     ioInfo;
   FileStatus status;
-  uint32     readSize;
+  u32     readSize;
   Err        result;
 
   *dataSize = 0;
@@ -435,7 +435,7 @@ LoadDataFile(const char *name,
 
 static
 char
-HexDigit(uint32 v)
+HexDigit(u32 v)
 {
   v &= 15;
   return (char)(v < 10 ? ('0' + v) : ('A' + v - 10));
@@ -444,7 +444,7 @@ HexDigit(uint32 v)
 static
 void
 HexByte(char  *out,
-        uint8  v)
+        u8  v)
 {
   out[0] = HexDigit(v >> 4);
   out[1] = HexDigit(v);
@@ -453,11 +453,11 @@ HexByte(char  *out,
 static
 void
 MakeHexLine(char   *out,
-            uint32  offset,
-            uint8  *data,
-            uint32  size)
+            u32  offset,
+            u8  *data,
+            u32  size)
 {
-  uint32 i;
+  u32 i;
   char  *p;
 
   sprintf(out, "%04lx:", offset);
@@ -491,8 +491,8 @@ static
 void
 DrawFileList(AppState *app)
 {
-  int32 i;
-  int32 index;
+  s32 i;
+  s32 index;
   char line[96];
 
   ClearScreen(&app->screen);
@@ -514,7 +514,7 @@ DrawFileList(AppState *app)
 }
 
 static
-int32
+s32
 ConfirmDelete(AppState *app)
 {
   ControlPadEventData cped;
@@ -575,8 +575,8 @@ static
 void
 DrawDump(AppState *app)
 {
-  int32  i;
-  uint32 offset;
+  s32  i;
+  u32 offset;
   char   line[64];
 
   ClearScreen(&app->screen);
@@ -599,7 +599,7 @@ void
 ViewSelectedFile(AppState *app)
 {
   ControlPadEventData cped;
-  uint32              joy;
+  u32              joy;
   Err                 err;
 
   if(app->fileCount <= 0)
@@ -617,7 +617,7 @@ ViewSelectedFile(AppState *app)
   app->dumpTop = 0;
   while(1)
     {
-      uint32 maxTop;
+      u32 maxTop;
 
       DrawDump(app);
       GetControlPad(1, TRUE, &cped);
@@ -633,7 +633,7 @@ ViewSelectedFile(AppState *app)
         break;
       if((joy & ControlUp) && app->dumpTop > 0)
         app->dumpTop--;
-      if((joy & ControlDown) && ((uint32)app->dumpTop < maxTop))
+      if((joy & ControlDown) && ((u32)app->dumpTop < maxTop))
         app->dumpTop++;
       WaitForRelease();
     }
@@ -657,7 +657,7 @@ void
 FileListLoop(AppState *app)
 {
   ControlPadEventData cped;
-  uint32              joy;
+  u32              joy;
 
   if(RefreshFileList(app) < 0)
     return;
@@ -700,7 +700,7 @@ FileListLoop(AppState *app)
 }
 
 int
-main(int32 argc, char **argv)
+main(s32 argc, char **argv)
 {
   AppState *app;
   Err       result;

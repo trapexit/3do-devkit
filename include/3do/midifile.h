@@ -42,25 +42,25 @@
 typedef struct MIDIFileParser
 {
   FlexStream mfp_FlexStream;
-  int32   mfp_Format;
-  int32   mfp_NumTracks;
-  int32   mfp_TrackIndex;
-  int32   mfp_Division;
-  int32   mfp_Shift;          /* Scale times by shifting if needed. */
-  int32   mfp_Tempo;
+  s32   mfp_Format;
+  s32   mfp_NumTracks;
+  s32   mfp_TrackIndex;
+  s32   mfp_Division;
+  s32   mfp_Shift;          /* Scale times by shifting if needed. */
+  s32   mfp_Tempo;
   frac16  mfp_Rate;           /* TicksPerSecond */
-  int32   mfp_Time;           /* Current Time as we scan track. */
-  int32   mfp_RunningStatus;  /* Current running status command byte */
-  int32   mfp_NumData;        /* Number of data bytes for above command. */
-  int32   mfp_BytesLeft;      /* Bytes left in current track */
-  int32 (*mfp_HandleTrack)();  /* User function to handle Track */
-  int32 (*mfp_HandleEvent)();  /* User function to handle Event */
+  s32   mfp_Time;           /* Current Time as we scan track. */
+  s32   mfp_RunningStatus;  /* Current running status command byte */
+  s32   mfp_NumData;        /* Number of data bytes for above command. */
+  s32   mfp_BytesLeft;      /* Bytes left in current track */
+  s32 (*mfp_HandleTrack)();  /* User function to handle Track */
+  s32 (*mfp_HandleEvent)();  /* User function to handle Event */
   void   *mfp_UserData;       /* For whatever user wants. */
 } MIDIFileParser;
 
 typedef struct MIDIEvent
 {
-  uint32	mev_Time;
+  u32	mev_Time;
   unsigned char mev_Command;
   unsigned char mev_Data1;
   unsigned char mev_Data2;
@@ -73,10 +73,10 @@ Err ParseMFEvent( MIDIFileParser *mfpptr );
 Err ParseMFHeader( MIDIFileParser *mfpptr );
 Err ParseMFMetaEvent( MIDIFileParser *mfpptr );
 Err ParseMFTrack( MIDIFileParser *mfpptr );
-Err ScanMFTrack( MIDIFileParser *mfpptr, int32 Size );
-int32 GetMFChar( MIDIFileParser *mfpptr );
-int32 MIDIDataBytesPer( int32 command );
-int32 ParseMFVLN( MIDIFileParser *mfpptr );
-int32 ReadMFTrackHeader( MIDIFileParser *mfpptr );
+Err ScanMFTrack( MIDIFileParser *mfpptr, s32 Size );
+s32 GetMFChar( MIDIFileParser *mfpptr );
+s32 MIDIDataBytesPer( s32 command );
+s32 ParseMFVLN( MIDIFileParser *mfpptr );
+s32 ReadMFTrackHeader( MIDIFileParser *mfpptr );
 
 EXTERN_C_END

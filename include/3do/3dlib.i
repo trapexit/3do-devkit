@@ -144,7 +144,7 @@ MaxLights	EQU     4
 	IMPORT	AddCamera
 	IMPORT	RemoveCamera
 
-;Obj3D AddSound(long *world,long *object,uint32 volume);
+;Obj3D AddSound(long *world,long *object,u32 volume);
 ;Err DeleteSound(long *world,long *object);
 
 	IMPORT	Add3DSound
@@ -161,7 +161,7 @@ MaxLights	EQU     4
 ;	IMPORT	SetObjectMatrixx
 
 ;Err DrawWorld(long *world,Obj3D camera);
-;void WorldTick(long *world,uint32 timeval);
+;void WorldTick(long *world,u32 timeval);
 
 ;	IMPORT	DrawWorld
 	IMPORT	WorldTick

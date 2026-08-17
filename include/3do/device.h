@@ -21,11 +21,11 @@ typedef struct Device
 {
   ItemNode       dev;
   struct Driver *dev_Driver;
-  int32          dev_OpenCnt;
-  uint32         dev_Private0[13];
-  uint8          dev_MaxUnitNum;  /* maximum allowed unit for this device */
-  uint8          dev_Private1[3];
-  uint32         dev_Private2[3];
+  s32          dev_OpenCnt;
+  u32         dev_Private0[13];
+  u8          dev_MaxUnitNum;  /* maximum allowed unit for this device */
+  u8          dev_Private1[3];
+  u32         dev_Private2[3];
 } Device;
 
 

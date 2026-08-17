@@ -18,19 +18,19 @@
 typedef struct IOBuf
 {
   void	*iob_Buffer;            /* ptr to users buffer */
-  int32  iob_Len;               /* len of this buffer, or transfer size */
+  s32  iob_Len;               /* len of this buffer, or transfer size */
 } IOBuf;
 
 /* User portion of IOReq data structure supplied by user*/
 typedef struct IOInfo
 {
-  uint8  ioi_Command;           /* Command to be executed */
-  uint8  ioi_Flags;             /* misc flags */
-  uint8  ioi_Unit;              /* unit of this device */
-  uint8  ioi_Flags2;            /* more flags, should be set to zero */
-  uint32 ioi_CmdOptions;	/* device dependent options */
-  uint32 ioi_User;              /* back ptr for user use */
-  int32  ioi_Offset;            /* offset into device for transfer to begin */
+  u8  ioi_Command;           /* Command to be executed */
+  u8  ioi_Flags;             /* misc flags */
+  u8  ioi_Unit;              /* unit of this device */
+  u8  ioi_Flags2;            /* more flags, should be set to zero */
+  u32 ioi_CmdOptions;	/* device dependent options */
+  u32 ioi_User;              /* back ptr for user use */
+  s32  ioi_Offset;            /* offset into device for transfer to begin */
   IOBuf  ioi_Send;              /* copy out information */
   IOBuf  ioi_Recv;              /* copy in info, (address validated) */
 } IOInfo;
@@ -69,7 +69,7 @@ typedef struct IOInfo
 
 /* get the address of an IOReq from the embedded io_Link address */
 /* internal use only */
-#define IOReq_Addr(a)	(IOReq *)((uint32)(a) - Offset(IOReq *, io_Link))
+#define IOReq_Addr(a)	(IOReq *)((u32)(a) - Offset(IOReq *, io_Link))
 
 /* System Portion of IoReq */
 #ifndef	IOReq_typedef
@@ -83,12 +83,12 @@ struct IOReq {
   struct Device	*io_Dev;
   struct IOReq	*(*io_CallBack)(struct IOReq *iorP); /* call, donot ReplyMsg */
   IOInfo         io_Info;
-  int32          io_Actual;	/* actual size of request completed */
-  uint32         io_Flags;	/* internal to device driver */
-  int32          io_Error;	/* any errors from request? */
-  int32          io_Extension[2]; /* extra space if needed */
+  s32          io_Actual;	/* actual size of request completed */
+  u32         io_Flags;	/* internal to device driver */
+  s32          io_Error;	/* any errors from request? */
+  s32          io_Extension[2]; /* extra space if needed */
   Item           io_MsgItem;
-  uint32         io_Private0;
+  u32         io_Private0;
 };
 
 /* io_Flags 0x0000ffff reserved for system */
@@ -116,8 +116,8 @@ extern "C" {
   Err __swi(KERNELSWI+25) AbortIO(Item ior); /* abort an io          */
   Err __swi(KERNELSWI+41) WaitIO(Item ior); /* wait for io completion */
 
-  int32 CheckIO(Item ior);      /* Is io done? */
-  Item  CreateIOReq(const char *name, uint8 pri, Item dev, Item mp); /* mp can be 0 */
+  s32 CheckIO(Item ior);      /* Is io done? */
+  Item  CreateIOReq(const char *name, u8 pri, Item dev, Item mp); /* mp can be 0 */
 
 
 #ifdef  __cplusplus

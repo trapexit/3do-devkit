@@ -30,7 +30,7 @@
 #include "string.h"
 #include "cobj.h"
 
-typedef  uint32 Time;
+typedef  u32 Time;
 
 /* Define basic root class Instance Variables for Juggler. */
 #define JuggleeIV                                                       \
@@ -38,18 +38,18 @@ typedef  uint32 Time;
   void   *jglr_Parent;  /* Who started you in hierarchy. */             \
   Time    jglr_StartTime;                                               \
   Time    jglr_NextTime;                                                \
-  int32   jglr_RepeatCount; /* Decremented each time till zero */       \
-  int32   jglr_Active; /* True if currently executing. */               \
-  int32 (*jglr_StartFunction)();                                        \
-  int32 (*jglr_RepeatFunction)();                                       \
-  int32 (*jglr_StopFunction)();                                         \
-  uint32  jglr_StartDelay;                                              \
-  uint32  jglr_RepeatDelay;                                             \
-  uint32  jglr_StopDelay;                                               \
-  int32   jglr_CurrentIndex;   /* Index of current thing. */            \
+  s32   jglr_RepeatCount; /* Decremented each time till zero */       \
+  s32   jglr_Active; /* True if currently executing. */               \
+  s32 (*jglr_StartFunction)();                                        \
+  s32 (*jglr_RepeatFunction)();                                       \
+  s32 (*jglr_StopFunction)();                                         \
+  u32  jglr_StartDelay;                                              \
+  u32  jglr_RepeatDelay;                                             \
+  u32  jglr_StopDelay;                                               \
+  s32   jglr_CurrentIndex;   /* Index of current thing. */            \
   void   *jglr_UserContext;                                             \
-  int32   jglr_Many;       /* Number of valid subunits */               \
-  uint32  jglr_Flags
+  s32   jglr_Many;       /* Number of valid subunits */               \
+  u32  jglr_Flags
 
 typedef struct
 {
@@ -64,9 +64,9 @@ extern COBClass JuggleeClass;
 /* Sequence Structure */
 #define SequenceIV                                              \
   JuggleeIV;                                                    \
-  int32 (*seq_InterpFunction)();                                \
-  int32   seq_Max;        /* Number of Events allocated. */     \
-  int32   seq_EventSize;  /* Size in bytes of an event */       \
+  s32 (*seq_InterpFunction)();                                \
+  s32   seq_Max;        /* Number of Events allocated. */     \
+  s32   seq_EventSize;  /* Size in bytes of an event */       \
   char   *seq_Events     /* Pointer to event data */
 
 typedef struct
@@ -79,9 +79,9 @@ extern COBClass SequenceClass;
 /* Collection Structure ***************************************/
 #define CollectionIV                            \
   JuggleeIV;                                    \
-  int32 (*col_SelectorFunction)();              \
+  s32 (*col_SelectorFunction)();              \
   List    col_Children;                         \
-  int32   col_Pending
+  s32   col_Pending
 
 typedef struct
 {
@@ -106,7 +106,7 @@ typedef struct PlaceHolder
 {
   Node     plch_Node;
   Jugglee *plch_Thing;
-  int32    plch_NumRepeats;
+  s32    plch_NumRepeats;
 } PlaceHolder;
 
 /* Define TAG ARGS */
@@ -132,9 +132,9 @@ enum juggler_tags
 
 EXTERN_C_BEGIN
 
-int32 InitJuggler( void );
-int32 TermJuggler( void );
-int32 BumpJuggler( Time CurrentTime, Time *NextTime,
-                   int32 CurrentSignals, int32 *NextSignals);
+s32 InitJuggler( void );
+s32 TermJuggler( void );
+s32 BumpJuggler( Time CurrentTime, Time *NextTime,
+                   s32 CurrentSignals, s32 *NextSignals);
 
 EXTERN_C_END

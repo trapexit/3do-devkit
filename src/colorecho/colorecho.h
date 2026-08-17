@@ -57,40 +57,40 @@
 
 typedef struct ColorEcho
 {
-  uint32 ce_Flags;
-  int32 ce_Zoom;
-  int32 ce_Radius;
-  int32 ce_HalfDiagonal;
-  int32 ce_MiddleX;
-  int32 ce_MiddleY;
-  int32 ce_XOffset;
-  int32 ce_YOffset;
-  int32 ce_IfSport;
+  u32 ce_Flags;
+  s32 ce_Zoom;
+  s32 ce_Radius;
+  s32 ce_HalfDiagonal;
+  s32 ce_MiddleX;
+  s32 ce_MiddleY;
+  s32 ce_XOffset;
+  s32 ce_YOffset;
+  s32 ce_IfSport;
   frac16 ce_Angle;
   frac16 ce_Theta;
-  uint32 ce_PIXC;
-  int32 ce_ZoomVelocity;
-  int32 ce_AngleVelocity;
-  int32 ce_XVelocity;
-  int32 ce_YVelocity;
+  u32 ce_PIXC;
+  s32 ce_ZoomVelocity;
+  s32 ce_AngleVelocity;
+  s32 ce_XVelocity;
+  s32 ce_YVelocity;
   struct CCB *ce_CCB;
-  int32 ce_PatternSeed;
+  s32 ce_PatternSeed;
 } ColorEcho;
 
-int32
-RandomBoxes(Item BitMap, int32 NumBoxes);
-int32
-RandomPixels(Item BitMap, int32 XCenter, int32 YCenter, int32 NumPixels);
-uint32 Random(uint32);
-int32
+s32
+RandomBoxes(Item BitMap, s32 NumBoxes);
+s32
+RandomPixels(Item BitMap, s32 XCenter, s32 YCenter, s32 NumPixels);
+u32 Random(u32);
+s32
 ce_Init(ColorEcho *ce);
-int32
+s32
 ce_DrawNextScreen(ScreenContext *sc, ColorEcho *ce);
 void
 ce_Freeze(ColorEcho *ce);
 void
 ce_Center(ColorEcho *ce);
-int32
+s32
 ce_Seed(ScreenContext *sc, ColorEcho *ce);
-int32
+s32
 ce_SeedPattern(ScreenContext *sc, ColorEcho *ce);

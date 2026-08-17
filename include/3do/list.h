@@ -87,12 +87,12 @@ typedef struct List
    * This makes a List variable "l" which is ready for use without having to
    * call InitList() on it.
    */
-#define INITLIST(l,n) {{NULL,NULL,KERNELNODE,LISTNODE,0,(uint8)NODE_NAMEVALID,sizeof(List),n}, {(Link *)&l.ListAnchor.tail.links.flink,NULL,(Link *)&l.ListAnchor.head.links.flink}}
+#define INITLIST(l,n) {{NULL,NULL,KERNELNODE,LISTNODE,0,(u8)NODE_NAMEVALID,sizeof(List),n}, {(Link *)&l.ListAnchor.tail.links.flink,NULL,(Link *)&l.ListAnchor.head.links.flink}}
 
 EXTERN_C_BEGIN
 
 /* set the priority of a node in a list */
-extern uint8 SetNodePri(Node *n, uint8 newpri);	/* returns old pri */
+extern u8 SetNodePri(Node *n, u8 newpri);	/* returns old pri */
 
 /* insert a node in the prioritized list starting from the tail */
 extern void InsertNodeFromTail(List *l, Node *n);
@@ -128,13 +128,13 @@ extern void InitList(List *l, const char *name);
 extern Node *FindNamedNode(const List *l, const char *name);
 
 /* convenience routines */
-extern uint32 GetNodeCount(const List *l);
+extern u32 GetNodeCount(const List *l);
 extern void InsertNodeBefore(Node *oldNode, Node *newNode);
 extern void InsertNodeAfter(Node *oldNode, Node *newNode);
-extern Node *FindNodeFromHead(const List *l, uint32 position);
-extern Node *FindNodeFromTail(const List *l, uint32 position);
-extern int32 GetNodePosFromHead(const List *l, const Node *n);
-extern int32 GetNodePosFromTail(const List *l, const Node *n);
+extern Node *FindNodeFromHead(const List *l, u32 position);
+extern Node *FindNodeFromTail(const List *l, u32 position);
+extern s32 GetNodePosFromHead(const List *l, const Node *n);
+extern s32 GetNodePosFromTail(const List *l, const Node *n);
 
 /* debugging aid */
 extern void DumpNode(const Node *n, const char *banner);

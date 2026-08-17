@@ -18,13 +18,13 @@
 
 typedef struct ImageDesc
 {
-  int32	baseAddr;
-  int32	rowBytes;
-  int32	baseAddrFrame;
-  int32	width;
-  int32	height;
-  int32	xPos;
-  int32	yPos;
+  s32	baseAddr;
+  s32	rowBytes;
+  s32	baseAddrFrame;
+  s32	width;
+  s32	height;
+  s32	xPos;
+  s32	yPos;
 } ImageDesc;
 
 typedef ImageDesc *ImageDescPtr;
@@ -46,21 +46,21 @@ typedef CPakContext* CPakContextPtr;
 struct CPakContext
 {
   Item	 creatorTask;		/* who to signal when we're done initializing */
-  uint32 creatorSignal;		/* signal to send for synchronous completion */
-  int32	 creatorStatus;		/* result code for creator */
+  u32 creatorSignal;		/* signal to send for synchronous completion */
+  s32	 creatorStatus;		/* result code for creator */
 
   Item	threadItem;		/* subscriber thread item */
   void*	threadStackBlock;	/* pointer to thread's stack memory block */
 
   Item	 requestPort;		/* message port item for subscriber requests */
-  uint32 requestPortSignal;	/* signal to detect request port messages */
+  u32 requestPortSignal;	/* signal to detect request port messages */
 
   Item   replyPort;             /* message port item for subscriber requests */
-  uint32 replyPortSignal;	/* signal to detect request port messages */
+  u32 replyPortSignal;	/* signal to detect request port messages */
 
   Item	  cueItem;              /* audio cue item for scheduling output */
-  uint32  cueSignal;            /* signal associated with cueItem */
-  int32	  localTimeOrigin;      /* local version of the time */
+  u32  cueSignal;            /* signal associated with cueItem */
+  s32	  localTimeOrigin;      /* local version of the time */
   boolean fTimerRunning;        /* flag: timer currently running */
 
   codecHandler codecHndlr;	/* Should be an item - I don't really know what this is */
@@ -74,7 +74,7 @@ struct CPakContext
 
   boolean fTimeChanged;         /* flag: subscriber got sync msg */
 
-  int32       numChannels;
+  s32       numChannels;
   CPakChannel channel[CPAK_MAX_CHANNELS]; /* an array of channels */
 };
 
@@ -89,20 +89,20 @@ struct CPakChunkMsg
 typedef	struct CinePakHeader
 {
   SUBS_CHUNK_COMMON;
-  int32	version;		/*	0 for this version			*/
-  int32	cType;			/*	video compression type		*/
-  int32	height;			/*	Height of each frame		*/
-  int32	width;			/*	Width of each frame			*/
-  int32	scale;			/*	Timescale of Film			*/
-  int32	count;			/*	Number of frames			*/
+  s32	version;		/*	0 for this version			*/
+  s32	cType;			/*	video compression type		*/
+  s32	height;			/*	Height of each frame		*/
+  s32	width;			/*	Width of each frame			*/
+  s32	scale;			/*	Timescale of Film			*/
+  s32	count;			/*	Number of frames			*/
 } CinePakHeader, *CinePakHeaderPtr;
 
 
 typedef	struct	CinePakFrame
 {
   SUBS_CHUNK_COMMON;
-  int32	duration;		/*	Duration of this sample		*/
-  int32	frameSize;		/*	Number of bytes in frame	*/
+  s32	duration;		/*	Duration of this sample		*/
+  s32	frameSize;		/*	Number of bytes in frame	*/
   char	frameData[4];           /*	compressed frame data...	*/
 } CinePakFrame, *CinePakFramePtr;
 
@@ -113,34 +113,34 @@ typedef struct CPakRec
   struct CinePakHeader cpHeader; /* Copy of the Header chunk for this cinepak film */
   CCB		       cpCCB;	/* The LRForm CCB chunk for this streamed anim */
   CinePakFramePtr      curFramePtr; /* the frame currently being displayed */
-  int32		       channel;	/* The streamed anim channel to use with this record */
+  s32		       channel;	/* The streamed anim channel to use with this record */
   SubscriberMsgPtr     curSubMsg; /* The msg containing the currently displayed frame */
-  int32		       lastCurTime;	/* Remember the previous Stream clock time to check for loop */
+  s32		       lastCurTime;	/* Remember the previous Stream clock time to check for loop */
 } CPakRec, *CPakRecPtr;
 
 EXTERN_C_BEGIN
 
-int32 InitCPakSubscriber(void);
-int32 CloseCPakSubscriber(void);
+s32 InitCPakSubscriber(void);
+s32 CloseCPakSubscriber(void);
 
-int32 NewCPakSubscriber(CPakContextPtr *pCtx, int32 numChannels, int32 priority);
-int32 DisposeCPakSubscriber(CPakContextPtr ctx);
+s32 NewCPakSubscriber(CPakContextPtr *pCtx, s32 numChannels, s32 priority);
+s32 DisposeCPakSubscriber(CPakContextPtr ctx);
 
-int32 CPakDuration(CPakRecPtr cpRecPtr);
-int32 CPakCurrTime(CPakRecPtr cpRecPtr);
+s32 CPakDuration(CPakRecPtr cpRecPtr);
+s32 CPakCurrTime(CPakRecPtr cpRecPtr);
 
-int32 InitCPakCel(DSStreamCBPtr   streamCBPtr,
+s32 InitCPakCel(DSStreamCBPtr   streamCBPtr,
                   CPakContextPtr  ctx,
                   CPakRecPtr	 *pCPRecPtr,
-                  int32           channel,
+                  s32           channel,
                   boolean         flushOnSync);
-int32 DestroyCPakCel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, int32 channel);
+s32 DestroyCPakCel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, s32 channel);
 CCB*  GetCPakCel(CPakContextPtr ctx, CPakRecPtr cpRecPtr);
 void  DrawCPakToBuffer(CPakContextPtr ctx, CPakRecPtr cpRecPtr, Bitmap *bitmap);
-void  FlushCPakChannel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, int32 channel);
-int32 SendFreeCPakSignal(CPakContextPtr ctx);
+void  FlushCPakChannel(CPakContextPtr ctx, CPakRecPtr cpRecPtr, s32 channel);
+s32 SendFreeCPakSignal(CPakContextPtr ctx);
 
-void CPakSubscriberThread(int32 notUsed, CPakContextPtr ctx);
+void CPakSubscriberThread(s32 notUsed, CPakContextPtr ctx);
 void FreeMovieBuff(ImageDesc *imagePtr);
 
 EXTERN_C_END

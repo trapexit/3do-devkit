@@ -46,7 +46,7 @@ typedef struct _OrbitObj
 {
   CCB *obj_CCB;   /* ccb to hold the cel with which to draw this object */
   ANIM *obj_ANIM; /* animation for this object */
-  int32
+  s32
   obj_Height; /* actual height of artwork, minus any black border pixels */
   frac16 obj_Border; /* size of the black border pixels */
   frac16 obj_yTop; /* used in calculation of new orbit... the highest point in
@@ -72,15 +72,15 @@ Item gVramIOReq = -1, gVblIOReq = -1;
 Item gOrbitErrorItem = -1;
 pTMixerInfo gAudioCtx = NULL;
 pTSampleInfo gClickSound, gCheerSound;
-uint32 gCueSignal;
+u32 gCueSignal;
 Item gCue;
 
-static int32 Initialize (ScreenContext *sc, int32 nScreens);
-static int32 SetObjCCB (OrbitObj *obj, int32 iObj);
-static int32 LoadObj (OrbitObjPtr *pObj);
+static s32 Initialize (ScreenContext *sc, s32 nScreens);
+static s32 SetObjCCB (OrbitObj *obj, s32 iObj);
+static s32 LoadObj (OrbitObjPtr *pObj);
 static void UnloadObj (OrbitObjPtr obj);
 static void InitObj (OrbitObjPtr obj);
 static bool UpdateObj (OrbitObjPtr obj);
-static int32 LoadSounds (void);
+static s32 LoadSounds (void);
 
 #endif /* _ORBIT_H */

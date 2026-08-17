@@ -40,7 +40,7 @@ EXTERN_C_BEGIN
 /*  physical VRAM page boundary. */
 
 /* the actual number of color entries in a vdl entry */
-#define CLUT_COLOR_WORDS ((sizeof(VDL_REC) / sizeof(uint32)) - CONTROL_WORDS)
+#define CLUT_COLOR_WORDS ((sizeof(VDL_REC) / sizeof(u32)) - CONTROL_WORDS)
 
 typedef struct
 {
@@ -91,15 +91,15 @@ typedef struct
 } VDLDisplayCtlWord;
 
 
-int32 SetDisplayCtlWord(boolean Hinterp, boolean Vinterp, boolean clutBypass);
-int32 SetDMACtlWord(int32 clutColorWords, int32 scanLineCount, boolean lastScanLine, int32 displayMode);
-void  InitVDL(VDLEntry *vdlPtr, Bitmap *destBitmap, int32 displayMode);
-void  MergeVDL(VDL_REC *rawVDLPtr, VDL_REC *activeVDLPtr, uint32 vdlLines, int32 displayMode);
+s32 SetDisplayCtlWord(boolean Hinterp, boolean Vinterp, boolean clutBypass);
+s32 SetDMACtlWord(s32 clutColorWords, s32 scanLineCount, boolean lastScanLine, s32 displayMode);
+void  InitVDL(VDLEntry *vdlPtr, Bitmap *destBitmap, s32 displayMode);
+void  MergeVDL(VDL_REC *rawVDLPtr, VDL_REC *activeVDLPtr, u32 vdlLines, s32 displayMode);
 
-int32 AllocateVDL(VDLEntry **newVDL, Bitmap *screenBitMap, int32 displayMode);
+s32 AllocateVDL(VDLEntry **newVDL, Bitmap *screenBitMap, s32 displayMode);
 void  ShowAnotherField(VDLDisplayCtlWord dmaWord, boolean nextField);
 void  SetCtlField(VDLDisplayCtlWord *dmaWord, boolean increase);
-int32 GetVDLSize(int32 displayMode);
+s32 GetVDLSize(s32 displayMode);
 
 short   	  GetDisplayCtlValue(VDLDisplayCtlWord dmaWord, short fieldNum);
 VDLDisplayCtlWord SetDisplayCtlValue(VDLDisplayCtlWord dmaWord, short newValue, short fieldNum);
@@ -107,8 +107,8 @@ VDLDisplayCtlWord SetDisplayCtlValue(VDLDisplayCtlWord dmaWord, short newValue, 
 void printVDLEntry(VDLEntry *entry);
 void printVDL(VDL *vdl);
 
-void  InitVDL24(VDLEntry *vdlPtr, Bitmap *destBitmap, int32 displayMode);
-int32 AllocateVDL24(VDLEntry **newVDL, Bitmap *screenBitMap, int32 displayMode);
-void  MergeVDL24(VDL_REC *rawVDLPtr, VDL_REC *activeVDLPtr, uint32 vdlLines, int32 displayMode);
+void  InitVDL24(VDLEntry *vdlPtr, Bitmap *destBitmap, s32 displayMode);
+s32 AllocateVDL24(VDLEntry **newVDL, Bitmap *screenBitMap, s32 displayMode);
+void  MergeVDL24(VDL_REC *rawVDLPtr, VDL_REC *activeVDLPtr, u32 vdlLines, s32 displayMode);
 
 EXTERN_C_END

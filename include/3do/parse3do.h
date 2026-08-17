@@ -26,7 +26,7 @@
 
 EXTERN_C_BEGIN
 
-int32 GetFileSize(char *fn);
-int32 ReadFile(char *filename, int32 size, int32 *buffer, int32 offset);
+s32 GetFileSize(char *fn);
+s32 ReadFile(char *filename, s32 size, s32 *buffer, s32 offset);
 
 EXTERN_C_END

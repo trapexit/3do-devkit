@@ -90,7 +90,7 @@ Usage(void)
  **
  **	  Synopsis
  **
- **	    static int32 Initialize( ScreenContext *sc, int32 nScreens )
+ **	    static s32 Initialize( ScreenContext *sc, s32 nScreens )
  **
  **	  Description
  **
@@ -127,11 +127,11 @@ Usage(void)
  **
  **
  *********************/
-static int32
-Initialize(ScreenContext *sc, int32 nScreens)
+static s32
+Initialize(ScreenContext *sc, s32 nScreens)
 {
 
-  int32 status = 0;
+  s32 status = 0;
 
   /*
     create an error text item to return opera style errors
@@ -316,7 +316,7 @@ SetLRForm(ScreenContext *sc, CCB *lrccb)
  **
  **	  Synopsis
  **
- **	    int main( int32 argc, char *argv[] )
+ **	    int main( s32 argc, char *argv[] )
  **
  **	  Description
  **
@@ -353,16 +353,16 @@ SetLRForm(ScreenContext *sc, CCB *lrccb)
  **
  *********************/
 int
-main(int32 argc, char *argv[])
+main(s32 argc, char *argv[])
 {
   ScreenContext sc;
   ubyte *background = NULL;
 
-  uint32 button;
+  u32 button;
 
   CCB *lrccb = NULL;
 
-  int32 status = 0, offset;
+  s32 status = 0, offset;
   char *imagefile;
 
   printf("Usage:: %s <imagefile>\n", argv[0]);
@@ -604,7 +604,7 @@ main(int32 argc, char *argv[])
  **
  **	  Synopsis
  **
- **	    static bool HandleButton( uint32 button, CCB *ccb )
+ **	    static bool HandleButton( u32 button, CCB *ccb )
  **
  **	  Description
  **
@@ -685,7 +685,7 @@ main(int32 argc, char *argv[])
  **	    MapCel(), MapP2Cel(), FastMapCel(), InitFastMapCel()
  *********************/
 static bool
-HandleButton(uint32 button, CCB *ccb)
+HandleButton(u32 button, CCB *ccb)
 {
 
   if(button == ControlX)

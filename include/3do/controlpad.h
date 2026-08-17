@@ -43,9 +43,9 @@
 */
 EXTERN_C_BEGIN
 
-extern int32 InitControlPad ( int32 nPads );
-extern int32 KillControlPad ( void );
-extern int32 DoControlPad ( int32 whichPad, uint32 *pButton, int32 continuousBits );
-extern int32 ReturnPreviousControlPad ( int32 whichPad, uint32 *pButton );
+extern s32 InitControlPad ( s32 nPads );
+extern s32 KillControlPad ( void );
+extern s32 DoControlPad ( s32 whichPad, u32 *pButton, s32 continuousBits );
+extern s32 ReturnPreviousControlPad ( s32 whichPad, u32 *pButton );
 
 EXTERN_C_END

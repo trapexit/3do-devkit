@@ -408,7 +408,7 @@ typedef struct DSRequestMsg
 typedef struct DSSubscriber
 {
   DSDataType dataType;		/* type of data owned by subscriber */
-  int32	     subscriberPort;	/* pointer to data subscriber proc */
+  s32	     subscriberPort;	/* pointer to data subscriber proc */
 } DSSubscriber, *DSSubscriberPtr;
 
 
@@ -423,8 +423,8 @@ typedef struct DSStreamCB
   /**************************************/
 
   Item	 creatorTask;		/* who to signal when we're done initializing */
-  uint32 creatorSignal;		/* signal to send for synchronous completion */
-  int32	 creatorStatus;		/* result code for creator */
+  u32 creatorSignal;		/* signal to send for synchronous completion */
+  s32	 creatorStatus;		/* result code for creator */
 
   Item	threadItem;		/* The thread Item for the server process */
   void*	threadStackBlock;	/* pointer to thread's stack memory block */
@@ -443,19 +443,19 @@ typedef struct DSStreamCB
   /*****************************/
 
   unsigned long	streamFlags;	/* stream state flags */
-  uint32	clockOffset;	/* offset to get relative stream clock */
-  uint32	lastValidClock;	/* set when stream stopped */
-  uint32	branchDest;	/* marker we're branching to if STRM_GO_INPROGRESS true */
+  u32	clockOffset;	/* offset to get relative stream clock */
+  u32	lastValidClock;	/* set when stream stopped */
+  u32	branchDest;	/* marker we're branching to if STRM_GO_INPROGRESS true */
 
   Item	 requestPort;		/* work request message port */
-  uint32 requestPortSignal;	/* signal for request port */
+  u32 requestPortSignal;	/* signal for request port */
 
   Item	     acqReplyPort;	/* reply port for data acquisition communications */
-  uint32     acqReplyPortSignal; /* signal for data acquisition reply port */
+  u32     acqReplyPortSignal; /* signal for data acquisition reply port */
   MemPoolPtr dataMsgPool;	/* pool of data message blocks */
 
   Item	     subsReplyPort;	/* reply port for subscriber communication */
-  uint32     subsReplyPortSignal; /* signal for subscriber reply port */
+  u32     subsReplyPortSignal; /* signal for subscriber reply port */
   MemPoolPtr subsMsgPool;	/* pool of subscriber message blocks */
 
   DSDataBufPtr filledBufHead;	/* pointer to list of filled data buffers */
@@ -465,7 +465,7 @@ typedef struct DSStreamCB
   long		  currentFreeBufferCount;		/* number of buffers currently available for filling */
   DSRequestMsgPtr endOfStreamMsg;				/* reply to this request msg at end of stream */
 
-  int32		  repliesPending;				/* # of replies needed before replying to request */
+  s32		  repliesPending;				/* # of replies needed before replying to request */
   DSRequestMsgPtr requestMsgHead;				/* pointer to first request msg in queue */
   DSRequestMsgPtr requestMsgTail;				/* pointer to last request msg in queue */
 
@@ -520,15 +520,15 @@ typedef struct StreamControlChunk
 
 EXTERN_C_BEGIN
 
-int32 InitDataStreaming(long maxNumberOfStreams);
-int32 CloseDataStreaming(void);
+s32 InitDataStreaming(long maxNumberOfStreams);
+s32 CloseDataStreaming(void);
 
-int32 NewDataStream(DSStreamCBPtr *pCtx,
+s32 NewDataStream(DSStreamCBPtr *pCtx,
                     void*          bufferListPtr,
                     long           bufferSize,
                     long           deltaPriority,
                     long           numSubsMsgs);
-int32 DisposeDataStream(Item          msgItem,
+s32 DisposeDataStream(Item          msgItem,
                         DSStreamCBPtr streamCBPtr);
 
 EXTERN_C_END

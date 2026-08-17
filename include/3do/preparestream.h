@@ -50,8 +50,8 @@ enum
 
 EXTERN_C_BEGIN
 
-int32	     FindAndLoadStreamHeader(DSHeaderChunkPtr headerPtr, char *streamFileName);
+s32	     FindAndLoadStreamHeader(DSHeaderChunkPtr headerPtr, char *streamFileName);
 DSDataBufPtr CreateBufferList(long numBuffers, long bufferSize);
-int32	     UseDefaultStreamHeader(DSHeaderChunkPtr headerPtr);
+s32	     UseDefaultStreamHeader(DSHeaderChunkPtr headerPtr);
 
 EXTERN_C_END

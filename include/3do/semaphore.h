@@ -23,24 +23,24 @@
 typedef struct Semaphore
 {
   ItemNode s;
-  uint32	sem_bit;	/* use swap on this word */
+  u32	sem_bit;	/* use swap on this word */
 #ifdef MULTIT
   Task	*sem_Owner;	/* Present owner */
 #else
   Item	sem_Owner;	/* Present owner */
 #endif
-  int32	sem_NestCnt;	/* cnt of times this task has locked */
+  s32	sem_NestCnt;	/* cnt of times this task has locked */
   List sem_TaskWaitingList;
 } Semaphore, *SemaphoreP;
 
 
 EXTERN_C_BEGIN
 
-int32 __swi(KERNELSWI+7) LockSemaphore(Item s,uint32 flags);
+s32 __swi(KERNELSWI+7) LockSemaphore(Item s,u32 flags);
 Err   __swi(KERNELSWI+6) UnlockSemaphore(Item s);
 
-extern Item CreateSemaphore(const char *name, uint8 pri);
-extern Item CreateUniqueSemaphore(const char *name, uint8 pri);
+extern Item CreateSemaphore(const char *name, u8 pri);
+extern Item CreateUniqueSemaphore(const char *name, u8 pri);
 
 EXTERN_C_END
 

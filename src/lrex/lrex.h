@@ -35,7 +35,7 @@
 
 Item gVramIOReq = -1, gVblIOReq = -1;
 frac16 gFrameIncr, gMoveIncr;
-int32 gCorner = 0;
+s32 gCorner = 0;
 bool gMoveCorners = false;
 Point gP[4];
 Item gLREXErrorItem = -1;
@@ -43,8 +43,8 @@ Item gLREXErrorItem = -1;
 /* local function prototypes */
 
 static void SetLRForm (ScreenContext *sc, CCB *lrccb);
-static bool HandleButton (uint32 button, CCB *ccb);
-static int32 Initialize (ScreenContext *sc, int32 nScreens);
+static bool HandleButton (u32 button, CCB *ccb);
+static s32 Initialize (ScreenContext *sc, s32 nScreens);
 static void Usage (void);
 
 #endif /* _LREX_H */

@@ -19,13 +19,13 @@
 #include "vdlutil.h"
 
 void
-InitVDL480 (int32 *vdl, Bitmap *destBitmap, int32 bitmapindex,
-            int32 displayMode)
+InitVDL480 (s32 *vdl, Bitmap *destBitmap, s32 bitmapindex,
+            s32 displayMode)
 /*
         Initialize a VDL for a double-height (480 lines in NTSC mode) screen
 */
 {
-  int32 j;
+  s32 j;
 
   /* Set the DMA control word */
   vdl[0]
@@ -48,10 +48,10 @@ InitVDL480 (int32 *vdl, Bitmap *destBitmap, int32 bitmapindex,
     vdl[0] |= VDL_DISPMOD_320;
 
   /* The current-bitmap-buffer-address word */
-  vdl[1] = ((uint32)destBitmap->bm_Buffer);
+  vdl[1] = ((u32)destBitmap->bm_Buffer);
 
   /* The previous-bitmap-buffer-address word */
-  vdl[2] = ((uint32)destBitmap->bm_Buffer) + 2;
+  vdl[2] = ((u32)destBitmap->bm_Buffer) + 2;
 
   /*
           The next-VDL-entry-address word -- VDL entries are 40 words;
@@ -59,7 +59,7 @@ InitVDL480 (int32 *vdl, Bitmap *destBitmap, int32 bitmapindex,
           DMA control word above, this is interpreted as an offset (relative
      address), in words.
   */
-  vdl[3] = (int32)(vdl + 40);
+  vdl[3] = (s32)(vdl + 40);
 
   /* RGB values for CLUT registers 0 to 8 */
   for (j = 0; j < 8; j++)
@@ -89,7 +89,7 @@ InitVDL480 (int32 *vdl, Bitmap *destBitmap, int32 bitmapindex,
                 | VDL_HSUB_ZERO /* Set h-cornerweight to zero */
                 | VDL_BLSB_BLUE /* Use bit 0 of the bitmap-buffer pixel for the
                                    pixel's least-significant blue bit */
-                | (int32)(bitmapindex ? VDL_VSUB_ONE : VDL_VSUB_ZERO);
+                | (s32)(bitmapindex ? VDL_VSUB_ONE : VDL_VSUB_ZERO);
   /* Set v-cornerweight to 1 for the 2nd bitmap,
           0 for the 1st bitmap */
 

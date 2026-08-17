@@ -16,7 +16,7 @@
 #include "types.h"
 
 #define CONTROL_ARROWS                                                  \
-  ((int32)(ControlUp | ControlDown | ControlLeft | ControlRight))
+  ((s32)(ControlUp | ControlDown | ControlLeft | ControlRight))
 #define CONTROL_CONTINUOUS CONTROL_ARROWS
 
 #define NTSC_FOLDER "bounce_data/ntsc/"

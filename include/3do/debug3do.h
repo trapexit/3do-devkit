@@ -81,7 +81,7 @@ EXTERN_C_END
 #define	PRT(x)	{ printf x; }
 #define	ERR(x)	PRT(x)
 #define CHECKRESULT(name, val)                          \
-  if ( (int32)val < 0 )                                 \
+  if ( (s32)val < 0 )                                 \
     {                                                   \
       printf("Failure in %s: $%lx\n", name, val);       \
       PrintfSysErr((Item)val);                          \

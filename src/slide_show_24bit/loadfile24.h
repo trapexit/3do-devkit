@@ -16,11 +16,11 @@
 #include "types.h"
 #include "form3do.h"
 
-int32 loadfile24(char *name,
+s32 loadfile24(char *name,
                  void *buffer,
-                 uint32 buffersize,
-                 uint32 memtype,
+                 u32 buffersize,
+                 u32 memtype,
                  VdlChunk **rawVDLPtr,
                  ImageCC *image,
-                 int32 width,
-                 int32 height);
+                 s32 width,
+                 s32 height);

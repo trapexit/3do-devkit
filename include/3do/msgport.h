@@ -22,10 +22,10 @@
 typedef struct MsgPort
 {
   ItemNode  mp;
-  uint32    mp_Signal;          /* what Owner needs to wake up */
+  u32    mp_Signal;          /* what Owner needs to wake up */
   List      mp_Msgs;            /* Messages waiting for Owner */
   void     *mp_UserData;	/* User data pointer */
-  uint32    mp_Reserved;	/* Kernel use only */
+  u32    mp_Reserved;	/* Kernel use only */
 } MsgPort;
 
 /* MsgPort flags */
@@ -41,13 +41,13 @@ typedef struct Message
 {
   ItemNode  msg;
   Item      msg_ReplyPort;
-  uint32    msg_Result;         /* result from ReplyMsg */
+  u32    msg_Result;         /* result from ReplyMsg */
   void     *msg_DataPtr;	/* ptr to beginning of data */
-  int32     msg_DataSize;	/* size of data field */
+  s32     msg_DataSize;	/* size of data field */
   Item      msg_MsgPort;	/* MsgPort currently queued on */
-  uint32    msg_DataPtrSize;    /* size of allocated data area */
+  u32    msg_DataPtrSize;    /* size of allocated data area */
   Item      msg_SigItem;	/* Designated Signal Receiver */
-  uint32    msg_Waiters;        /* number of tasks waiting on this msg */
+  u32    msg_Waiters;        /* number of tasks waiting on this msg */
 } Message;
 
 #define Msg Message
@@ -68,24 +68,24 @@ enum message_tags
 
 EXTERN_C_BEGIN
 
-extern Item CreateMsgPort(const char *name, uint8 pri, uint32 signal);
-extern Item CreateUniqueMsgPort(const char *name, uint8 pri, uint32 signal);
+extern Item CreateMsgPort(const char *name, u8 pri, u32 signal);
+extern Item CreateUniqueMsgPort(const char *name, u8 pri, u32 signal);
 
-extern Item CreateMsg(const char *name, uint8 pri, Item mp);
-extern Item CreateSmallMsg(const char *name, uint8 pri, Item mp);
-extern Item CreateBufferedMsg(const char *name, uint8 pri, Item mp, uint32 buffsize);
+extern Item CreateMsg(const char *name, u8 pri, Item mp);
+extern Item CreateSmallMsg(const char *name, u8 pri, Item mp);
+extern Item CreateBufferedMsg(const char *name, u8 pri, Item mp, u32 buffsize);
 
 extern Err __swi(KERNELSWI+16)  SendMsg(Item mp,Item msg,
-                                        const void *dataptr, int32 datasize);
+                                        const void *dataptr, s32 datasize);
 extern Err __swi(KERNELSWI+16)  SendSmallMsg(Item mp,Item msg,
-                                             uint32 val1, uint32 val2);
+                                             u32 val1, u32 val2);
 extern Item __swi(KERNELSWI+19) GetMsg(Item mp);
 extern Item __swi(KERNELSWI+15) GetThisMsg(Item msg);
 extern Item __swi(KERNELSWI+40) WaitPort(Item mp,Item msg);
-extern Err __swi(KERNELSWI+18)  ReplyMsg(Item msg, int32 result,
-                                         const void *dataptr, int32 datasize);
-extern Err __swi(KERNELSWI+18)  ReplySmallMsg(Item msg, int32 result,
-                                              uint32 val1, uint32 val2);
+extern Err __swi(KERNELSWI+18)  ReplyMsg(Item msg, s32 result,
+                                         const void *dataptr, s32 datasize);
+extern Err __swi(KERNELSWI+18)  ReplySmallMsg(Item msg, s32 result,
+                                              u32 val1, u32 val2);
 
 EXTERN_C_END
 

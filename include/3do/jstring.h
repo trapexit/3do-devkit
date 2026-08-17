@@ -39,38 +39,38 @@ Err OpenJStringFolio(void);
 Err CloseJStringFolio(void);
 
 /* conversion routines */
-int32 ConvertShiftJIS2UniCode(const char *string, unichar *result,
-                              uint32 resultSize, uint8 filler);
-int32 ConvertUniCode2ShiftJIS(const unichar *string, char *result,
-                              uint32 resultSize, uint8 filler);
-int32 ConvertASCII2ShiftJIS(const char *string, char *result,
-                            uint32 resultSize, uint8 filler);
-int32 ConvertShiftJIS2ASCII(const char *string, char *result,
-                            uint32 resultSize, uint8 filler);
-int32 ConvertRomaji2Hiragana(const char *string, char *result,
-                             uint32 resultSize, uint8 filler);
-int32 ConvertRomaji2FullKana(const char *string, char *result,
-                             uint32 resultSize, uint8 filler);
-int32 ConvertRomaji2HalfKana(const char *string, char *result,
-                             uint32 resultSize, uint8 filler);
-int32 ConvertHiragana2Romaji(const char *string, char *result,
-                             uint32 resultSize, uint8 filler);
-int32 ConvertHiragana2HalfKana(const char *string, char *result,
-                               uint32 resultSize, uint8 filler);
-int32 ConvertHiragana2FullKana(const char *string, char *result,
-                               uint32 resultSize, uint8 filler);
-int32 ConvertFullKana2Romaji(const char *string, char *result,
-                             uint32 resultSize, uint8 filler);
-int32 ConvertFullKana2HalfKana(const char *string, char *result,
-                               uint32 resultSize, uint8 filler);
-int32 ConvertFullKana2Hiragana(const char *string, char *result,
-                               uint32 resultSize, uint8 filler);
-int32 ConvertHalfKana2Romaji(const char *string, char *result,
-                             uint32 resultSize, uint8 filler);
-int32 ConvertHalfKana2FullKana(const char *string, char *result,
-                               uint32 resultSize, uint8 filler);
-int32 ConvertHalfKana2Hiragana(const char *string, char *result,
-                               uint32 resultSize, uint8 filler);
+s32 ConvertShiftJIS2UniCode(const char *string, unichar *result,
+                              u32 resultSize, u8 filler);
+s32 ConvertUniCode2ShiftJIS(const unichar *string, char *result,
+                              u32 resultSize, u8 filler);
+s32 ConvertASCII2ShiftJIS(const char *string, char *result,
+                            u32 resultSize, u8 filler);
+s32 ConvertShiftJIS2ASCII(const char *string, char *result,
+                            u32 resultSize, u8 filler);
+s32 ConvertRomaji2Hiragana(const char *string, char *result,
+                             u32 resultSize, u8 filler);
+s32 ConvertRomaji2FullKana(const char *string, char *result,
+                             u32 resultSize, u8 filler);
+s32 ConvertRomaji2HalfKana(const char *string, char *result,
+                             u32 resultSize, u8 filler);
+s32 ConvertHiragana2Romaji(const char *string, char *result,
+                             u32 resultSize, u8 filler);
+s32 ConvertHiragana2HalfKana(const char *string, char *result,
+                               u32 resultSize, u8 filler);
+s32 ConvertHiragana2FullKana(const char *string, char *result,
+                               u32 resultSize, u8 filler);
+s32 ConvertFullKana2Romaji(const char *string, char *result,
+                             u32 resultSize, u8 filler);
+s32 ConvertFullKana2HalfKana(const char *string, char *result,
+                               u32 resultSize, u8 filler);
+s32 ConvertFullKana2Hiragana(const char *string, char *result,
+                               u32 resultSize, u8 filler);
+s32 ConvertHalfKana2Romaji(const char *string, char *result,
+                             u32 resultSize, u8 filler);
+s32 ConvertHalfKana2FullKana(const char *string, char *result,
+                               u32 resultSize, u8 filler);
+s32 ConvertHalfKana2Hiragana(const char *string, char *result,
+                               u32 resultSize, u8 filler);
 
 EXTERN_C_END
 

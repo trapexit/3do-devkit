@@ -35,7 +35,7 @@
 #define ENTER(x) if(Debug_flag)printf("entering %s\n",x)
 #define EXIT(x)  if(Debug_flag)printf("exiting %s\n",x)
 
-extern int32 Debug_flag;
+extern s32 Debug_flag;
 
 #else
 #define ENTER(X)
@@ -293,9 +293,9 @@ extern int32 Debug_flag;
 
 /*** ALL TYPEDEFS GO HERE ***/
 
-typedef int32 vector[3];
-typedef int32 Index2[2];
-typedef int32 Obj3D;			/*  handle to an object */
+typedef s32 vector[3];
+typedef s32 Index2[2];
+typedef s32 Obj3D;			/*  handle to an object */
 
 /*** STRUCTURE DEFINITIONS ***/
 
@@ -316,7 +316,7 @@ struct SoundDefinition
   frac16          sd_MaxSoundDistance; /* distance sound sound is the softest */
   frac16          sd_MinSoundVolume; /* lowest sound vol, max vol is DSP dependent */
   frac16          sd_SoundScale; /* maps 3D geometry units into 3D sound units */
-  int32           sd_Flags;
+  s32           sd_Flags;
   Item            sd_LeftGain;  /* used by simplesound stuff */
   Item            sd_RightGain;
   Item            sd_Sampler;   /* sampler handler, used to get Frequency knob */
@@ -338,32 +338,32 @@ struct WorldObject
   mat33f16     wo_ObjectMatrix; /* The object's local matrix */
   mat33f16     wo_ResultMatrix; /* cameras ObjectMatrix  * ObjectMatrix */
   vec3f16      wo_LocalPosition; /* Position relative to camera */
-  int32        wo_UpdateFlags;  /* Internal use to driver */
+  s32        wo_UpdateFlags;  /* Internal use to driver */
 
   /*** in MatrixMethod, the lowest byte is the rotation order, the second byte
    *** specifies the sorting method. ***/
 
-  int32  wo_MatrixMethod;
-  int32 *wo_ObjectDefinition;   /* points to ModelDefinition */
-  int32 *wo_TransformedData;	/* Ptr to transformed vertex data */
-  int32 *wo_SourceData;         /* use for handle to a sound */
-  int32  wo_PointCount;         /* Number of points that to multiply */
+  s32  wo_MatrixMethod;
+  s32 *wo_ObjectDefinition;   /* points to ModelDefinition */
+  s32 *wo_TransformedData;	/* Ptr to transformed vertex data */
+  s32 *wo_SourceData;         /* use for handle to a sound */
+  s32  wo_PointCount;         /* Number of points that to multiply */
 
   /* ^^^^^^^^^^ DO NOT INSERT ANY NEW FIELDS ABOVE THIS LINE!
      ^^^^^^^^^^ DUE TO ASSEMBLY ADDRESSING RESTRICTIONS!!! APPEND
      ^^^^^^^^^^ ANY NEW FIELDS TO THE END OF THE STRUCT */
 
-  int32 (*wo_PreProcessObject)(); /* Code to execute during MATH time */
-  int32 (*wo_RenderTimeProc)(); /* Code you want to execute before the */
+  s32 (*wo_PreProcessObject)(); /* Code to execute during MATH time */
+  s32 (*wo_RenderTimeProc)(); /* Code you want to execute before the */
   /* CCB's are cued up. */
-  int32 (*wo_LightProc)();      /* handles lighting considerations */
-  int32 (*wo_MappingProc)();    /* handles screen mapping */
-  int32 (*wo_ObjectCullingProc)(); /* handles any custom object culling */
-  int32 (*wo_FaceCullingProc)(); /* handles any custom object culling */
-  int32 (*wo_SimpleSoundProc)(); /* handles simple-sound processing */
-  int32 (*wo_ScaleProc)();      /* called when scales are changed */
-  int32 (*wo_PerspProc)();      /* Perspective proc */
-  int32	wo_UserDefinedData;
+  s32 (*wo_LightProc)();      /* handles lighting considerations */
+  s32 (*wo_MappingProc)();    /* handles screen mapping */
+  s32 (*wo_ObjectCullingProc)(); /* handles any custom object culling */
+  s32 (*wo_FaceCullingProc)(); /* handles any custom object culling */
+  s32 (*wo_SimpleSoundProc)(); /* handles simple-sound processing */
+  s32 (*wo_ScaleProc)();      /* called when scales are changed */
+  s32 (*wo_PerspProc)();      /* Perspective proc */
+  s32	wo_UserDefinedData;
 
   /*** wo_ModelDefinition points to the main model, and the MeshDef
    *** points to a meshed-version (based on the highest resolution
@@ -375,8 +375,8 @@ struct WorldObject
    *** by wo_ModelDefinition will be used, but if a mesh is called for
    *** then the system will load that pointer into the ObjectDef field. ***/
 
-  int32 *wo_ModelDefinition;
-  int32 *wo_MeshDefinition;
+  s32 *wo_ModelDefinition;
+  s32 *wo_MeshDefinition;
 
   /*** wo_LightPrefs : first 4 bits contains a minimum lighting value which
    *** specifies the minimum level of lighting for a face. This will let you
@@ -387,7 +387,7 @@ struct WorldObject
    *** lights turn on all bits, if just the first light, use the first bit
    *** (number 4). Currently only a single light source is available. ***/
 
-  int32  wo_LightPrefs;
+  s32  wo_LightPrefs;
   frac16 wo_ObjectVelocity;
 
   /*** Camera MASK. Bit 0=camera 0, etc. for the first 8 bits. The next 8 bits are used
@@ -397,7 +397,7 @@ struct WorldObject
    *** with if I tinkered with them. Plus the system doesn't perform distance calcs for
    *** and invisible object, so I needed to bypass that with a second set of flags. ***/
 
-  int32   wo_CameraVisibility;
+  s32   wo_CameraVisibility;
   vec3f16 wo_ObjectDirection;   /* The objects direction */
 
   /*** ZScale is a value calculated inside DrawModel for the Pseudoperspective
@@ -419,19 +419,19 @@ struct WorldObject
   /*** Tells what scale of object was used for last transform. It is
    *** -1 if the object is not visible. ***/
 
-  int32	wo_ScaleUsed;
+  s32	wo_ScaleUsed;
 
   SoundDefinition *wo_SoundDef;
 
   /***	the following fields for for internal use only and should be of
    *** little or no use to the programmer. ***/
 
-  int32  wo_HeirLevel;          /* 0 if root, 1 for first child, etc. */
-  int32  wo_CameraLens;		/* field-of-view */
+  s32  wo_HeirLevel;          /* 0 if root, 1 for first child, etc. */
+  s32  wo_CameraLens;		/* field-of-view */
   frac16 wo_CameraField;	/* like	FieldScale,but for CAMERA_PERSPECTIVE */
   frac16 wo_DistToOrigin;	/* Camera's distance to origin */
   frac16 wo_FieldScale;		/* the smaller,	the wider angle the "lens" */
-  int32  wo_ObjectFlags;	/* misc	stuff attribute	flags */
+  s32  wo_ObjectFlags;	/* misc	stuff attribute	flags */
 };
 
 /*** 3D	lib uses its own definition which spells out the contents of the
@@ -449,31 +449,31 @@ struct WorldPort
 {
   void  *wp_CurrentPointHeap;	/* Should be *PointHeapPtr + ??? */
   void  *wp_PointHeapPtr;       /* 3D-Transform	rendering area HEAP	*/
-  int32  wp_CameraMask;         /* The mask of the current camera */
-  int32  wp_MaxObjects;         /* This	MUST be	Max3DObjects */
-  int32  wp_PointHeapSize;      /* This	is the size of the PointHeap in bytes */
-  int32  wp_SortMethod;         /* The sorting strategy. */
-  int32  wp_TotalObjectCount;	/* Total objects in database */
-  int32  wp_HighestObjectIndex;
-  int32  wp_TotalSortedObjects; /* Total	of objects in sorted list */
+  s32  wp_CameraMask;         /* The mask of the current camera */
+  s32  wp_MaxObjects;         /* This	MUST be	Max3DObjects */
+  s32  wp_PointHeapSize;      /* This	is the size of the PointHeap in bytes */
+  s32  wp_SortMethod;         /* The sorting strategy. */
+  s32  wp_TotalObjectCount;	/* Total objects in database */
+  s32  wp_HighestObjectIndex;
+  s32  wp_TotalSortedObjects; /* Total	of objects in sorted list */
 
   /* ^^^^^^^^^^ DO	NOT	INSERT ANY NEW FIELDS ABOVE	THIS LINE!
      ^^^^^^^^^^ DUE TO	ASSEMBLY ADDRESSING	RESTRICTIONS!!!	APPEND
      ^^^^^^^^^^ ANY NEW UTILITY FIELDS TO THE END OF THE STRUCT */
 
-  int32 wp_Eye;                 /* either LEFT or RIGHT eye, right=default*/
-  int32 wp_EyeZDist;            /* distance of eyes from video screen */
-  int32 wp_EyeSep;              /* seperation of eyes in inches */
-  int32 (*wp_SortProc)();       /* custom sorting hook */
-  int32 (*wp_CollisionProc)();  /* called when a collision occurs */
-  int32 wp_TotalSimpleSounds;   /* needed to set max-input volume */
+  s32 wp_Eye;                 /* either LEFT or RIGHT eye, right=default*/
+  s32 wp_EyeZDist;            /* distance of eyes from video screen */
+  s32 wp_EyeSep;              /* seperation of eyes in inches */
+  s32 (*wp_SortProc)();       /* custom sorting hook */
+  s32 (*wp_CollisionProc)();  /* called when a collision occurs */
+  s32 wp_TotalSimpleSounds;   /* needed to set max-input volume */
 
-  int32 wp_Reserved[10];
+  s32 wp_Reserved[10];
 
-  int32 wp_Temp1;
-  int32 wp_Temp2;
-  int32 wp_Temp3;
-  int32 wp_Temp4;
+  s32 wp_Temp1;
+  s32 wp_Temp2;
+  s32 wp_Temp3;
+  s32 wp_Temp4;
 
   void *wp_UserObjects[MAX3DOBJECTS];
 
@@ -484,22 +484,22 @@ struct WorldPort
    *** 0 to total number of loaded objects. */
 
   void  *wp_SortedObjects[MAX3DOBJECTS][MAX3DCAMERAS+1];
-  int32  wp_ObjectCount[8];              /* Count of objects for each camera */
-  int32  wp_SoundHandles[MAX3DSOUNDS];   /* The list of sound objects */
-  int32  wp_CameraHandles[MAX3DCAMERAS]; /* The list of cameras */
+  s32  wp_ObjectCount[8];              /* Count of objects for each camera */
+  s32  wp_SoundHandles[MAX3DSOUNDS];   /* The list of sound objects */
+  s32  wp_CameraHandles[MAX3DCAMERAS]; /* The list of cameras */
 
   vec3f16 wp_LightPosition[MAXLIGHTS]; /* light-source positions */
-  int32   wp_SimpleSoundHandles[MAXSIMPLESOUNDS];
+  s32   wp_SimpleSoundHandles[MAXSIMPLESOUNDS];
 };
 
 typedef struct Render3DPort Render3DPort;
 struct Render3DPort
 {
   Item  rp_BitmapItem;          /* bitmap to draw on */
-  int32 rp_Width;
-  int32 rp_Height;
-  int32 rp_Center_x;
-  int32 rp_Center_y;
+  s32 rp_Width;
+  s32 rp_Height;
+  s32 rp_Center_x;
+  s32 rp_Center_y;
 };
 
 /*** GeoDefinition describes the actual geometry of the object. (Well, you
@@ -523,10 +523,10 @@ struct Render3DPort
 typedef struct GeoDefinition GeoDefinition;
 struct GeoDefinition
 {
-  int32  gd_RangeMin;
-  int32  gd_RangeMax;
-  int32  gd_PointCount;
-  int32  gd_SurfaceCount;
+  s32  gd_RangeMin;
+  s32  gd_RangeMax;
+  s32  gd_PointCount;
+  s32  gd_SurfaceCount;
   void  *gd_PointList;          /* vertices */
   void  *gd_SurfaceList;        /* connectivity array */
   void  *gd_SurfaceType;        /* Two words, 1st is flag, 2nd is CCB or PIXC */
@@ -534,7 +534,7 @@ struct GeoDefinition
   void  *gd_FaceNormals;        /* array of face normals (vec3f16 format) */
   void  *gd_FaceCenters;        /* array of face center points */
   void  *gd_FaceCentersXformed; /* transformed face-center data */
-  int32  gd_Flags;
+  s32  gd_Flags;
   void  *res;
 };
 
@@ -544,9 +544,9 @@ struct GeoDefinition
 typedef struct ModelDefinition ModelDefinition;
 struct ModelDefinition
 {
-  int32          md_NumberOfScales; /* number of detail levels (GeoDefs) */
+  s32          md_NumberOfScales; /* number of detail levels (GeoDefs) */
   GeoDefinition *md_GeoDefs[MAXNUMGEODEFS];
-  int32          md_Flags;
+  s32          md_Flags;
 };
 
 /*** defines the gd_SurfaceType above. Use one of these for each face. ***/
@@ -554,8 +554,8 @@ struct ModelDefinition
 typedef struct ModelSurface ModelSurface;
 struct ModelSurface
 {
-  int32 ms_Flags;
-  int32 ms_Control;             /* CCB, PPMP, color, etc. */
+  s32 ms_Flags;
+  s32 ms_Control;             /* CCB, PPMP, color, etc. */
 };
 
 /*** special temporary vertex struct used when subdividing all of the faces of an
@@ -573,10 +573,10 @@ typedef struct SpecialVertex SpecialVertex;
 struct SpecialVertex
 {
   point3f16 vertex;
-  int32     id1;
-  int32     id2;
-  int32     id3;
-  int32     dupe;
+  s32     id1;
+  s32     id2;
+  s32     id3;
+  s32     dupe;
 };
 
 /*** Extra data for interpolated mesh objects. im_ParentGdef is a pointer to the parent
@@ -587,12 +587,12 @@ struct SpecialVertex
 typedef struct IntMeshDefs IntMeshDefs;
 struct IntMeshDefs
 {
-  int32          im_WidthDiv;   //number of segments wide
-  int32          im_HeightDiv;  //number of segments high
+  s32          im_WidthDiv;   //number of segments wide
+  s32          im_HeightDiv;  //number of segments high
   GeoDefinition *im_ParentGdef; //pointer to parent geodef
   void          *im_ParentData; //pointer to parent's transformed data used to intepolate the
   //mesh data.
-  int32          im_Scale;      //which of the parent's scales was used for this mesh
+  s32          im_Scale;      //which of the parent's scales was used for this mesh
   //(needed for cloning meshed objects)
 };
 
@@ -602,19 +602,19 @@ typedef struct Lib3DState Lib3DState;
 struct Lib3DState
 {
   char  l3ds_Version[10];
-  int32 l3ds_TotalObjectCount;
-  int32 l3ds_ModelCount;
-  int32 l3ds_CameraCount;
-  int32 l3ds_SoundCount;
-  int32 l3ds_SimpleSoundCount;
-  int32 l3ds_MeshCount;
-  int32 l3ds_Size;
-  int32 l3ds_HeapReq;
-  int32 l3ds_MemReq;
-  int32 l3ds_VertexCount;
-  int32 l3ds_FaceCount;
-  int32 l3ds_MaxPoints;
-  int32 l3ds_HeapSize;
+  s32 l3ds_TotalObjectCount;
+  s32 l3ds_ModelCount;
+  s32 l3ds_CameraCount;
+  s32 l3ds_SoundCount;
+  s32 l3ds_SimpleSoundCount;
+  s32 l3ds_MeshCount;
+  s32 l3ds_Size;
+  s32 l3ds_HeapReq;
+  s32 l3ds_MemReq;
+  s32 l3ds_VertexCount;
+  s32 l3ds_FaceCount;
+  s32 l3ds_MaxPoints;
+  s32 l3ds_HeapSize;
 };
 
 /*** stuff for the IFF model files ***/
@@ -623,14 +623,14 @@ typedef struct CHUNK_HDR CHUNK_HDR;
 struct CHUNK_HDR
 {
   char  chunkID[4];
-  int32 chunkSize;
+  s32 chunkSize;
 };
 
 typedef struct LIST_CHUNK LIST_CHUNK;
 struct LIST_CHUNK
 {
   CHUNK_HDR  header;
-  int32      nElement;
+  s32      nElement;
   char      *Data;
 };
 
@@ -638,11 +638,11 @@ struct LIST_CHUNK
 typedef struct QUAD_DATA QUAD_DATA;
 struct QUAD_DATA
 {
-  int32 ul;
-  int32 ur;
-  int32 lr;
-  int32 ll;
-  int32 texture_num;
+  s32 ul;
+  s32 ur;
+  s32 lr;
+  s32 ll;
+  s32 texture_num;
 };
 
 /*** this first field to this struct is a combined version number and flags,
@@ -652,8 +652,8 @@ struct QUAD_DATA
 typedef struct GENERAL_INFO GENERAL_INFO;
 struct GENERAL_INFO
 {
-  int32  VersionNumberFlags;
-  int32  OrderingList[8];
+  s32  VersionNumberFlags;
+  s32  OrderingList[8];
   frac16 scaling[3];
   frac16 rotation[3];
   frac16 translation[3];
@@ -671,10 +671,10 @@ struct GENERAL_INFO
 
 /*** the following are documented calls ***/
 
-Obj3D Add3DSound(WorldPort *world,WorldObject *object, int32 flags);
+Obj3D Add3DSound(WorldPort *world,WorldObject *object, s32 flags);
 Obj3D AddCamera(WorldPort *world,WorldObject *object);
 Obj3D AddModel(WorldPort *world,WorldObject *object);
-Obj3D AddSimpleSound(WorldPort *world,WorldObject *object, int32 flags);
+Obj3D AddSimpleSound(WorldPort *world,WorldObject *object, s32 flags);
 void BuildCameraList(WorldPort *world,Obj3D Camera);
 void BuildLookAtMatrix(mat33f16 mat, vec3f16 target, vec3f16 camera, vec3f16 up);
 void BuildXYZ(frac16 xr,frac16 yr,frac16 zr,mat33f16 resultmatrix);
@@ -684,41 +684,41 @@ void BuildYZX(frac16 xr,frac16 yr,frac16 zr,mat33f16 resultmatrix);
 void BuildZXY(frac16 xr,frac16 yr,frac16 zr,mat33f16 resultmatrix);
 void BuildZYX(frac16 xr,frac16 yr,frac16 zr,mat33f16 resultmatrix);
 void CallBacks(WorldPort *world,Obj3D Camera);
-void ChangeLens(WorldPort *world,Obj3D camera_id,int32 fov);
-WorldObject *CloneModel(WorldObject *object,int32 flags);
-CCB *CreateColorCCB(int32 r,int32 g,int32 b);
-void DestroyModel(WorldObject *object,int32 flags);
-void DestroySound(WorldObject *object,int32 flags);
-void DestroyWorld(WorldPort *world,int32 flags);
+void ChangeLens(WorldPort *world,Obj3D camera_id,s32 fov);
+WorldObject *CloneModel(WorldObject *object,s32 flags);
+CCB *CreateColorCCB(s32 r,s32 g,s32 b);
+void DestroyModel(WorldObject *object,s32 flags);
+void DestroySound(WorldObject *object,s32 flags);
+void DestroyWorld(WorldPort *world,s32 flags);
 frac16 Distance3D(vec3f16 point1,vec3f16 point2);
 void DoCollisionHandling(WorldPort *world,Obj3D camera_id);
-int32 DoObjectsIntersect(WorldObject *obj1,WorldObject *obj2);
-int32 DoRotateMath(WorldPort *wport,WorldObject *obj);
-int32 DrawModel(Render3DPort *rport,WorldPort *world,WorldObject *model,WorldObject *camera);
+s32 DoObjectsIntersect(WorldObject *obj1,WorldObject *obj2);
+s32 DoRotateMath(WorldPort *wport,WorldObject *obj);
+s32 DrawModel(Render3DPort *rport,WorldPort *world,WorldObject *model,WorldObject *camera);
 WorldObject *GetCameraAddress(WorldPort *world,Obj3D camera_id);
-CCB *GetFaceCCB(WorldObject *object,int32 scale,int32 face_id,int32 flags);
+CCB *GetFaceCCB(WorldObject *object,s32 scale,s32 face_id,s32 flags);
 frac16 GetModelRadius(WorldObject *object);
 void GetObjectLocation(WorldObject *object,frac16 *x,frac16 *y,frac16 *z);
 void GetObjectOrientation(WorldObject *object,frac16 *x,frac16 *y,frac16 *z);
 Err  InitModel(WorldObject *initobj,ModelDefinition *mdef,TagArg *taglist);
-int32 Init3DLib(int32 view_mode, int32 flags);
+s32 Init3DLib(s32 view_mode, s32 flags);
 Err  Init3DSound(WorldObject *initobj,char *soundname, TagArg *taglist);
 Err  InitCamera(WorldObject *initobj,TagArg *taglist);
 Err  InitGlasses(Item eb_port,Item reply_port);
 Err  InitNewWorld(WorldPort *world,char *point,
-                  int32 pointsize,TagArg *taglist);
+                  s32 pointsize,TagArg *taglist);
 void InitRender3DPort(Render3DPort *rport,Item bitmapitem);
 Err  InitSimpleSound(WorldObject *initobj,char *soundname, TagArg *taglist);
-int32 LightFace(WorldObject *object,int32 scale,int32 face_id,int32 brightness,int32 flags);
-void LightModel(WorldPort *world,WorldObject *object,int32 camera_id,
-                int32 flags);
-int32 LookAtMatrix(mat33f16 matrix,vec3f16 camera,vec3f16 target,frac16 roll);
+s32 LightFace(WorldObject *object,s32 scale,s32 face_id,s32 brightness,s32 flags);
+void LightModel(WorldPort *world,WorldObject *object,s32 camera_id,
+                s32 flags);
+s32 LookAtMatrix(mat33f16 matrix,vec3f16 camera,vec3f16 target,frac16 roll);
 void LookAt(WorldPort *world,Obj3D camera,vec3f16 target,frac16 roll);
 ModelDefinition *LoadModel(char *file);
-void MakeCRotationMatrix (vec3f16 orientation,mat33f16 matrix,int32 method);
+void MakeCRotationMatrix (vec3f16 orientation,mat33f16 matrix,s32 method);
 void MapCelQuick(CCB *ccb,Point *quad);
 void ModifyObject(WorldObject *object,TagArg *taglist);
-int32 NormalizeMatrix(mat33f16 matrix);
+s32 NormalizeMatrix(mat33f16 matrix);
 void NormalizeVector(vec3f16 vect);
 void OffsetModel(frac16 x,frac16 y,frac16 z,GeoDefinition *gd);
 boolean QuadInView(Render3DPort *rport,Point quad[4]);
@@ -726,31 +726,31 @@ Err  Remove3DSound(WorldPort *world,Obj3D Obj);
 Err  RemoveCamera(WorldPort *world,Obj3D Obj);
 Err  RemoveModel(WorldPort *world,Obj3D Obj);
 Err  RemoveSimpleSound(WorldPort *world,Obj3D Obj);
-int32 RenderSound(WorldPort *world,WorldObject *object,Obj3D camera_id);
+s32 RenderSound(WorldPort *world,WorldObject *object,Obj3D camera_id);
 void RenderWorld(Render3DPort *rport,WorldPort *world,Obj3D Camera);
 void ResolveObjectMatrix(WorldPort *world,WorldObject *item);
 void RotateModel(WorldObject *object,frac16 x,frac16 y,frac16 z);
 void SetCallBacks(WorldPort *wport,WorldObject *object,
-                  int32 selection,int32 (*fn)());
-Err  SetFaceCCB(WorldObject *object,int32 scale,int32 face_id,
-                CCB *ccb, int32 flags);
-void SetFacePIXC(WorldObject *object,int32 scale,int32 face_id,int32 pixc,int32 flags);
-void SetModelCCB(WorldObject *object,CCB *ccb,int32 flags);
-Err  SetModelPIXC(WorldObject *object,int32 pixc);
+                  s32 selection,s32 (*fn)());
+Err  SetFaceCCB(WorldObject *object,s32 scale,s32 face_id,
+                CCB *ccb, s32 flags);
+void SetFacePIXC(WorldObject *object,s32 scale,s32 face_id,s32 pixc,s32 flags);
+void SetModelCCB(WorldObject *object,CCB *ccb,s32 flags);
+Err  SetModelPIXC(WorldObject *object,s32 pixc);
 void SetObjectLocation(WorldObject *object,frac16 x,frac16 y, frac16 z);
 void SetObjectOrientation(WorldObject *object,frac16 x,frac16 y,frac16 z);
 Err  SetObjectSpeed(WorldObject *object,vec3f16 Direction,frac16 speed);
-void ScanFaces(WorldPort *world,WorldObject *model,int32 (*fn)());
-void ScanObjects(WorldPort *world,Obj3D camera_id,int32 (*fn)());
+void ScanFaces(WorldPort *world,WorldObject *model,s32 (*fn)());
+void ScanObjects(WorldPort *world,Obj3D camera_id,s32 (*fn)());
 void StretchModel(WorldObject *object,frac16 x_size, frac16 y_size,
                   frac16 z_size);
 void Snapshot(WorldPort *world,Obj3D camera);
 void SortCameraList(WorldPort *world,Obj3D Camera);
-int32 SwapScreens(ScreenContext sc);
-void   ToggleSimpleSound(WorldObject *object,int32 flags);
+s32 SwapScreens(ScreenContext sc);
+void   ToggleSimpleSound(WorldObject *object,s32 flags);
 frac16 VectorDot(vec3f16 Vect1,vec3f16 Vect2);
 frac16 VectorLength(vec3f16 x);
-void WorldTick(WorldPort *world,uint32 timeval);
+void WorldTick(WorldPort *world,u32 timeval);
 
 /*** The following are undocumented calls. This routines were designed for
  *** internal use only and are deemed too specific to be of practical use
@@ -759,74 +759,74 @@ void WorldTick(WorldPort *world,uint32 timeval);
  *** some of these to be of use. ***/
 
 Obj3D Add3DObject(WorldPort *world,WorldObject *object);
-Err   AddObject2List(WorldPort *world,int32 object_handle);
-int32 BubbleSortObjects(WorldPort *world, Obj3D Camera);
+Err   AddObject2List(WorldPort *world,s32 object_handle);
+s32 BubbleSortObjects(WorldPort *world, Obj3D Camera);
 void BuildRotateX(frac16 Angle,mat33f16 *resultmatrix);
 void BuildRotateY(frac16 Angle,mat33f16 *resultmatrix);
 void BuildRotateZ(frac16 Angle,mat33f16 *resultmatrix);
 void CalcCameraField(Render3DPort *rport,WorldObject *cam);
-int32 CameraMapping(Render3DPort *rport,WorldObject *object,WorldObject *cam,
-                    int32 *vertex_array,int32 *result,int32 pointcount);
+s32 CameraMapping(Render3DPort *rport,WorldObject *object,WorldObject *cam,
+                    s32 *vertex_array,s32 *result,s32 pointcount);
 void CenterModelByRadius(ModelDefinition *item);
 void CenterModelByWeight(ModelDefinition *item);
 void CreateFaceCenters(WorldObject *object);
 void CreateNormalList(WorldObject *object);
-void ClearUpdateFlags(WorldPort *world,uint32 mask);
+void ClearUpdateFlags(WorldPort *world,u32 mask);
 void CopyMatrix (mat33f16 destination,mat33f16 source);
 Obj3D DeRefCameraHandle(WorldPort *world,Obj3D Obj);
 Obj3D DeRefSoundHandle(WorldPort *world,Obj3D Obj);
-int32 FaceCulling1Proc(WorldPort *world, WorldObject *object,
-                       GeoDefinition *geo,int32 face_id, point3f16 *vertices[4]);
-int32 FaceCulling2Proc(WorldPort *world, WorldObject *object,
-                       GeoDefinition *geo,int32 face_id, point3f16 *vertices[4]);
-int32 FaceCulling3Proc(WorldPort *world, WorldObject *object,
-                       GeoDefinition *geo,int32 face_id,point3f16 *vertices[4]);
+s32 FaceCulling1Proc(WorldPort *world, WorldObject *object,
+                       GeoDefinition *geo,s32 face_id, point3f16 *vertices[4]);
+s32 FaceCulling2Proc(WorldPort *world, WorldObject *object,
+                       GeoDefinition *geo,s32 face_id, point3f16 *vertices[4]);
+s32 FaceCulling3Proc(WorldPort *world, WorldObject *object,
+                       GeoDefinition *geo,s32 face_id,point3f16 *vertices[4]);
 void GetLocalPositions(WorldPort *world, Obj3D camera_id,WorldObject *cam);
-int32 GetObjectSpeed(WorldPort *world,Obj3D Obj,vec3f16 Direction);
+s32 GetObjectSpeed(WorldPort *world,Obj3D Obj,vec3f16 Direction);
 void GlueMulMat33Mat33_F16(mat33f16 resultmat,
                            mat33f16 obj_world_matrix,mat33f16 cam_world_matrix);
 Err  Init3DObject(WorldObject *initobj,ModelDefinition *mdef,
-                  TagArg *taglist,int32 type);
-int32 IsFrontFace(Point sp[4]);
+                  TagArg *taglist,s32 type);
+s32 IsFrontFace(Point sp[4]);
 void MakeRotationMatrix (frac16 xrot,frac16 yrot,frac16 zrot,
-                         mat33f16 matrix,int32 method);
+                         mat33f16 matrix,s32 method);
 void PreProcessCallbacks(WorldPort *world,Obj3D camera_id);
-int32 PseudoMapping(Render3DPort *rport,WorldObject *object,WorldObject *cam,
-                    int32 *vertex_array,int32 *result,int32 pointcount);
+s32 PseudoMapping(Render3DPort *rport,WorldObject *object,WorldObject *cam,
+                    s32 *vertex_array,s32 *result,s32 pointcount);
 void RotateOnX(frac16 Angle,mat33f16 matrix);
 void RotateOnY(frac16 Angle,mat33f16 matrix);
 void RotateOnZ(frac16 Angle,mat33f16 matrix);
 void ResetHighestIndex(WorldPort *world,Obj3D obj);
 void ResortLinks(WorldPort *world);
 void RotateObjects(WorldPort *world,Obj3D Camera);
-int32 SetModelScale(WorldPort *world,WorldObject *obj,int32 object_type);
-void SummationSort (WorldPort *world,Obj3D Camera,int32 count);
-void VectorTranslate(point3f16 *vertex1,vec3f16 *vertex2,int32 pointcount);
+s32 SetModelScale(WorldPort *world,WorldObject *obj,s32 object_type);
+void SummationSort (WorldPort *world,Obj3D Camera,s32 count);
+void VectorTranslate(point3f16 *vertex1,vec3f16 *vertex2,s32 pointcount);
 
 /*** misc. prototypes ***/
 
-//void *malloc(int32 size);
-//int32 printf(const char *fmt, ...);
+//void *malloc(s32 size);
+//s32 printf(const char *fmt, ...);
 
 /*** Remember : Don't put your pet gerbil in a microwave to dry it off. ***/
 
 /*** new routines for 3dlib 1.1, starting Sept. 1993 ***/
 
-int32 CreateMeshDefinition(WorldObject *object,int32 obj_id,int32 mindist,
-                           int32 maxdist,int32 div,TagArg *tags);
-CCB *ClipCel(CCB *ccb,int32 x,int32 y,int32 w,int32 h);
-void  Toggle3DSound(WorldObject *object,int32 flags);
+s32 CreateMeshDefinition(WorldObject *object,s32 obj_id,s32 mindist,
+                           s32 maxdist,s32 div,TagArg *tags);
+CCB *ClipCel(CCB *ccb,s32 x,s32 y,s32 w,s32 h);
+void  Toggle3DSound(WorldObject *object,s32 flags);
 void  CreateNormalListForGdef(WorldObject *object, GeoDefinition *geodef);
 void  CreateFaceCentersForGdef(WorldObject *object,GeoDefinition *geodef);
-GeoDefinition *CreateMeshGeodef(WorldObject *object,GeoDefinition *src_geo,int32 div);
+GeoDefinition *CreateMeshGeodef(WorldObject *object,GeoDefinition *src_geo,s32 div);
 void FreeGeodef(GeoDefinition *geodef);
 void AverageVertex(point3f16 *v1,point3f16 *v2, point3f16 *v3);
-void AverageSpecialVertex(SpecialVertex *v1,SpecialVertex *v2,SpecialVertex *v3,int32 vnum);
-void ScrollCel(CCB *ccb,CCB *srcccb,int32 x,int32 y,int32 w, int32 h);
+void AverageSpecialVertex(SpecialVertex *v1,SpecialVertex *v2,SpecialVertex *v3,s32 vnum);
+void ScrollCel(CCB *ccb,CCB *srcccb,s32 x,s32 y,s32 w, s32 h);
 CCB *ScreenToCel(Item screenitem);
-void RotateQuad2D(Point srcquad[4],Point dstquad[4], int32 cx, int32 cy, frac16 angle);
-boolean WorldToScreen(Render3DPort *rport,vec3f16 vtx,WorldObject *cam,int32 mapping_form,
-                      int32 *vx,int32 *vy);
+void RotateQuad2D(Point srcquad[4],Point dstquad[4], s32 cx, s32 cy, frac16 angle);
+boolean WorldToScreen(Render3DPort *rport,vec3f16 vtx,WorldObject *cam,s32 mapping_form,
+                      s32 *vx,s32 *vy);
 
 WorldObject *ClosestModel(WorldPort *world,Obj3D camera_id);
 void Get3DLibState(WorldPort *wport, Lib3DState *state);
@@ -834,12 +834,12 @@ void Get3DLibState(WorldPort *wport, Lib3DState *state);
 
 /*** new routines for 3dlib 1.2, starting November 12, 1993 ***/
 
-void SetLightPosition(WorldPort *world,int32 lightid,frac16 x,frac16 y,frac16 z);
+void SetLightPosition(WorldPort *world,s32 lightid,frac16 x,frac16 y,frac16 z);
 void SetVec3f16(vec3f16 vector,frac16 x, frac16 y, frac16 z);
-char *Frac16str(frac16 value,char *buffer,int32 len);
+char *Frac16str(frac16 value,char *buffer,s32 len);
 void CullByDistance(WorldPort *world,Obj3D camera_id,frac16 distance);
-int32 CreateIntMeshDefinition(WorldObject *object,int32 obj_id,int32 mindist,int32 maxdist,
-                              int32 width, int32 height, TagArg *taglist);
+s32 CreateIntMeshDefinition(WorldObject *object,s32 obj_id,s32 mindist,s32 maxdist,
+                              s32 width, s32 height, TagArg *taglist);
 GeoDefinition *CreateIntMeshGeodef(WorldObject *object, GeoDefinition *src_geodef);
-void DestroyGeodef(GeoDefinition *geodef,int32 flags);
+void DestroyGeodef(GeoDefinition *geodef,s32 flags);
 void GenerateImeshData(WorldPort *wport,WorldObject *object);

@@ -94,8 +94,8 @@
 typedef struct AcqContext
 {
   Item	 creatorTask;		/* who to signal when we're done initializing */
-  uint32 creatorSignal;		/* signal to send for synchronous completion */
-  int32	 creatorStatus;		/* result code for creator */
+  u32 creatorSignal;		/* signal to send for synchronous completion */
+  s32	 creatorStatus;		/* result code for creator */
   char*	 fileName;		/* pointer to file name string at init time */
 
   ItemPoolPtr ioReqItemPoolPtr;	/* a pool of ioReqItems for the DataBufs to use */
@@ -104,10 +104,10 @@ typedef struct AcqContext
   void*	threadStackBlock;	/* pointer to thread's stack memory block */
 
   Item	 requestPort;		/* message port for data acquisition requests */
-  uint32 requestPortSignal;	/* signal associated with requestPort */
+  u32 requestPortSignal;	/* signal associated with requestPort */
 
   Item	 ioDoneReplyPort;       /* message port for I/O completion messages */
-  uint32 ioDoneReplyPortSignal; /* signal associated with ioDoneReplyPort */
+  u32 ioDoneReplyPortSignal; /* signal associated with ioDoneReplyPort */
 
   DataAcqMsgPtr	requestQueue;	/* list of outstanding I/O request messages */
 
@@ -125,9 +125,9 @@ typedef struct AcqContext
 
 #if TIME_BASED_BRANCHING
   Item	 dsReqReplyPort;        /* reply port for requests to streamer */
-  uint32 dsReqReplyPortSignal;  /* signal for replies to streamer requests */
+  u32 dsReqReplyPortSignal;  /* signal for replies to streamer requests */
 
-  uint32 subscriberPortSignal;  /* signal for receipt of subscriber messages */
+  u32 subscriberPortSignal;  /* signal for receipt of subscriber messages */
   Item	 subscriberPort;        /* message port for our data type */
 
   DSStreamCBPtr	streamCBPtr;	/* stream control block of stream we are connected to */
@@ -144,10 +144,10 @@ typedef struct AcqContext
 
 EXTERN_C_BEGIN
 
-int32 InitDataAcq(int32 dataAcqCount);
-int32 CloseDataAcq(void);
+s32 InitDataAcq(s32 dataAcqCount);
+s32 CloseDataAcq(void);
 
-int32 NewDataAcq(AcqContextPtr *pCtx, char* fileName, long deltaPriority);
+s32 NewDataAcq(AcqContextPtr *pCtx, char* fileName, long deltaPriority);
 void  DisposeDataAcq(AcqContextPtr ctx);
 
 EXTERN_C_END

@@ -26,19 +26,19 @@
 typedef struct ScreenContext
 {
   Item   sc_ScreenGroup;        /* associated screen group    */
-  uint32 sc_DisplayType;        /* DI_TYPE_* from graphics.h  */
+  u32 sc_DisplayType;        /* DI_TYPE_* from graphics.h  */
 
-  uint32  sc_NumScreens;        /* # of screens created       */
-  uint32  sc_CurrentScreen;     /* displayed screen           */
+  u32  sc_NumScreens;        /* # of screens created       */
+  u32  sc_CurrentScreen;     /* displayed screen           */
   Item    sc_ScreenItems[MAXSCREENS]; /* item for the screen        */
   Item    sc_BitmapItems[MAXSCREENS]; /* bitmap item for the screen */
   Bitmap *sc_Bitmaps[MAXSCREENS]; /* structure itself           */
 
-  uint32 sc_NumBitmapPages;     /* # pages of memory for each bitmap */
-  uint32 sc_NumBitmapBytes;     /* # bytes of memory for each bitmap */
-  uint32 sc_BitmapBank;         /* bank of memory for all bitmaps    */
-  uint32 sc_BitmapWidth;        /* pixel width of each bitmap        */
-  uint32 sc_BitmapHeight;       /* pixel height of each bitmap       */
+  u32 sc_NumBitmapPages;     /* # pages of memory for each bitmap */
+  u32 sc_NumBitmapBytes;     /* # bytes of memory for each bitmap */
+  u32 sc_BitmapBank;         /* bank of memory for all bitmaps    */
+  u32 sc_BitmapWidth;        /* pixel width of each bitmap        */
+  u32 sc_BitmapHeight;       /* pixel height of each bitmap       */
 } ScreenContext;
 
 /* remap old names to new ones */
@@ -52,14 +52,14 @@ typedef struct ScreenContext
 
 EXTERN_C_BEGIN
 
-Item     CreateBasicDisplay(ScreenContext *sc, uint32 displayType, uint32 numScreens);
+Item     CreateBasicDisplay(ScreenContext *sc, u32 displayType, u32 numScreens);
 Err      DeleteBasicDisplay(ScreenContext *sc);
 void    *LoadImage( char *filename, ubyte* dest, VdlChunk **rawVDLPtr, ScreenContext *sc );
 void     UnloadImage(void *imagebuf);
 boolean  DrawImage(Item iScreen, ubyte* pbImage, ScreenContext *sc);
-void     FadeToBlack(ScreenContext *sc, int32 nFrames);
-void     FadeFromBlack(ScreenContext *sc, int32 frameCount);
-Err      ClearBitmap(Item ioreq, Item screen_or_bitmap, Bitmap *bm, int32 value);
+void     FadeToBlack(ScreenContext *sc, s32 nFrames);
+void     FadeFromBlack(ScreenContext *sc, s32 frameCount);
+Err      ClearBitmap(Item ioreq, Item screen_or_bitmap, Bitmap *bm, s32 value);
 
 EXTERN_C_END
 

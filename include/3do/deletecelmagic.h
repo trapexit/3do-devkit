@@ -35,8 +35,8 @@ enum
 
 EXTERN_C_BEGIN
 
-CCB  *AllocMagicCel_(uint32 extraBytes, uint32 freeMagic, void *freeData, void *creatorData);
-void  ModifyMagicCel_(CCB *cel, uint32 freeMagic, void *freeData, void *creatorData);
+CCB  *AllocMagicCel_(u32 extraBytes, u32 freeMagic, void *freeData, void *creatorData);
+void  ModifyMagicCel_(CCB *cel, u32 freeMagic, void *freeData, void *creatorData);
 void  FreeMagicCel_(CCB *cel);
 
 EXTERN_C_END

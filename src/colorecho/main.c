@@ -34,16 +34,16 @@
  * *************************************************************************
  */
 
-int32 ce_DrawAboutScreen(ScreenContext *sc);
-int32 ce_ProcessUserInput(ScreenContext *sc, ColorEcho *ce, uint32 Joy);
-int32 ce_FakeUserInput(ScreenContext *sc, ColorEcho *ce);
-int32 ce_InteractiveLoop(ScreenContext *sc, ColorEcho *ce);
+s32 ce_DrawAboutScreen(ScreenContext *sc);
+s32 ce_ProcessUserInput(ScreenContext *sc, ColorEcho *ce, u32 Joy);
+s32 ce_FakeUserInput(ScreenContext *sc, ColorEcho *ce);
+s32 ce_InteractiveLoop(ScreenContext *sc, ColorEcho *ce);
 
 /************************************************************************/
-int32
+s32
 ce_DrawAboutScreen(ScreenContext *sc)
 {
-  int32 y;
+  s32 y;
 
   GrafCon GCon;
 
@@ -74,17 +74,17 @@ ce_DrawAboutScreen(ScreenContext *sc)
 /*********************************************************************/
 
 /* Roll binary die based on Prob/1024 */
-#define Maybe(Prob) ((((uint32)rand()) & 1023) < (Prob))
+#define Maybe(Prob) ((((u32)rand()) & 1023) < (Prob))
 
 /**********************************************************************
  ** Automatic demo mode.
  ** Randomly change parameters to simulate user unput.
  **********************************************************************/
-int32
+s32
 ce_FakeUserInput(ScreenContext *sc, ColorEcho *ce)
 {
-  int32 Result = 0;
-  int32 iv;
+  s32 Result = 0;
+  s32 iv;
 
   ce->ce_PIXC = PPMP_BOTH_AVERAGE;
 
@@ -156,8 +156,8 @@ ce_FakeUserInput(ScreenContext *sc, ColorEcho *ce)
 }
 
 /************************************************************************/
-int32
-ce_ProcessUserXY(ColorEcho *ce, uint32 Joy)
+s32
+ce_ProcessUserXY(ColorEcho *ce, u32 Joy)
 {
   if(Joy & ControlRight)
   {
@@ -189,8 +189,8 @@ ce_ProcessUserXY(ColorEcho *ce, uint32 Joy)
 }
 
 /************************************************************************/
-int32
-ce_ProcessUserZoom(ColorEcho *ce, uint32 Joy)
+s32
+ce_ProcessUserZoom(ColorEcho *ce, u32 Joy)
 {
   if(Joy & ControlUp)
   {
@@ -222,11 +222,11 @@ ce_ProcessUserZoom(ColorEcho *ce, uint32 Joy)
 }
 
 /************************************************************************/
-int32
-ce_ProcessUserInput(ScreenContext *sc, ColorEcho *ce, uint32 Joy)
+s32
+ce_ProcessUserInput(ScreenContext *sc, ColorEcho *ce, u32 Joy)
 {
 
-  int32 Result;
+  s32 Result;
   Result = 0;
 
   ce->ce_IfSport = TRUE;
@@ -283,12 +283,12 @@ ce_ProcessUserInput(ScreenContext *sc, ColorEcho *ce, uint32 Joy)
 }
 
 /*********************************************************************/
-int32
+s32
 ce_InteractiveLoop(ScreenContext *sc, ColorEcho *ce)
 {
-  int32 Result;
-  uint32 Joy;
-  int32 HandsOffCount;
+  s32 Result;
+  u32 Joy;
+  s32 HandsOffCount;
   ControlPadEventData cped;
   HandsOffCount = 0;
 
@@ -361,10 +361,10 @@ DONE:
 int
 main(int argc, char *argv[])
 {
-  int32 Result;
+  s32 Result;
   ColorEcho MyCE;
   char *ptr, c;
-  uint8 EnableAuto, WaitToStart;
+  u8 EnableAuto, WaitToStart;
   ScreenContext ScreenCon;
   ControlPadEventData cped;
 

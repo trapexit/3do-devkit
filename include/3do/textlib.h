@@ -40,20 +40,20 @@ typedef struct TextCel
   CCB            *tc_CCB;	/* pointer to CCB containing the text */
   void           *tc_userData;	/* client code can store a value here */
   FontDescriptor *tc_fontDesc;	/* everything from here down is internal-use-only */
-  int32		  tc_fontAdjustSpacing;
-  int32		  tc_fontAdjustLeading;
-  uint32	  tc_formatFlags;
+  s32		  tc_fontAdjustSpacing;
+  s32		  tc_fontAdjustLeading;
+  u32	  tc_formatFlags;
   char           *tc_formatBuffer;
-  uint32	  tc_formatBufferSize;
-  int32		  tc_XPosInCel;
-  int32		  tc_YPosInCel;
-  int32		  tc_leftMargin;
-  int32		  tc_topMargin;
-  int32		  tc_penNumber;
-  int32		  tc_celRowBytes;
-  uint32	  tc_bgColor;
-  uint32	  tc_fgColor[4];
-  uint16	  tc_tabStops[16];
+  u32	  tc_formatBufferSize;
+  s32		  tc_XPosInCel;
+  s32		  tc_YPosInCel;
+  s32		  tc_leftMargin;
+  s32		  tc_topMargin;
+  s32		  tc_penNumber;
+  s32		  tc_celRowBytes;
+  u32	  tc_bgColor;
+  u32	  tc_fgColor[4];
+  u16	  tc_tabStops[16];
 } TextCel;
 
 /*----------------------------------------------------------------------------
@@ -95,48 +95,48 @@ Err	   taModifyTextCel(TextCel *tCel, TagArg *args);
  * prototypes for text-in-a-cel routines
  *--------------------------------------------------------------------------*/
 
-TextCel *CreateTextCel(const FontDescriptor *fDesc, uint32 formatFlags, int32 width, int32 height);
+TextCel *CreateTextCel(const FontDescriptor *fDesc, u32 formatFlags, s32 width, s32 height);
 TextCel *CloneTextCel(TextCel *templateTextCel, boolean clonePixels);
 void	   DeleteTextCel(TextCel *tCel);
 CCB     *DetachTextCelCCB(TextCel *tCel);
 
-void SetTextCelSpacingAdjust(TextCel *tCel, int32 adjustSpacing);
-void SetTextCelLeadingAdjust(TextCel *tCel, int32 adjustLeading);
-void SetTextCelColor(TextCel *tCel, int32 bgColor, int32 fgColor0);
-void SetTextCelColors(TextCel *tCel, int32 bgColor, int32 fgColors[4]);
+void SetTextCelSpacingAdjust(TextCel *tCel, s32 adjustSpacing);
+void SetTextCelLeadingAdjust(TextCel *tCel, s32 adjustLeading);
+void SetTextCelColor(TextCel *tCel, s32 bgColor, s32 fgColor0);
+void SetTextCelColors(TextCel *tCel, s32 bgColor, s32 fgColors[4]);
 void SetTextCelCoords(TextCel *tCel, Coord ccbX, Coord ccbY);
-void SetTextCelMargins(TextCel *tCel, int32 leftMargin, int32 topMargin);
-void SetTextCelPenNumber(TextCel *tCel, int32 penNumber);
-void SetTextCelFormatFlags(TextCel *tCel, uint32 formatFlags);
-Err  SetTextCelSize(TextCel *tCel, int32 width, int32 height);
-Err  SetTextCelFormatBuffer(TextCel *tCel, char *buffer, uint32 bufsize);
-void SetTextCelTabStops(TextCel *tCel, uint16 tabStops[16], ...);
+void SetTextCelMargins(TextCel *tCel, s32 leftMargin, s32 topMargin);
+void SetTextCelPenNumber(TextCel *tCel, s32 penNumber);
+void SetTextCelFormatFlags(TextCel *tCel, u32 formatFlags);
+Err  SetTextCelSize(TextCel *tCel, s32 width, s32 height);
+Err  SetTextCelFormatBuffer(TextCel *tCel, char *buffer, u32 bufsize);
+void SetTextCelTabStops(TextCel *tCel, u16 tabStops[16], ...);
 
-void   GetTextCelSpacingAdjust(TextCel *tCel, int32 *adjustSpacing);
-void   GetTextCelLeadingAdjust(TextCel *tCel, int32 *adjustLeading);
-void   GetTextCelColor(TextCel *tCel, int32 *bgColor, int32 *fgColor0);
-void   GetTextCelColors(TextCel *tCel, int32 *bgColor, int32 fgColors[4]);
+void   GetTextCelSpacingAdjust(TextCel *tCel, s32 *adjustSpacing);
+void   GetTextCelLeadingAdjust(TextCel *tCel, s32 *adjustLeading);
+void   GetTextCelColor(TextCel *tCel, s32 *bgColor, s32 *fgColor0);
+void   GetTextCelColors(TextCel *tCel, s32 *bgColor, s32 fgColors[4]);
 void   GetTextCelCoords(TextCel *tCel, Coord *ccbX, Coord *ccbY);
-void   GetTextCelMargins(TextCel *tCel, int32 *leftMargin, int32 *topMargin);
-void   GetTextCelPenNumber(TextCel *tCel, int32 *penNumber);
-uint32 GetTextCelFormatFlags(TextCel *tCel, uint32 *formatFlags);
-void   GetTextCelSize(TextCel *tCel, int32 *width, int32 *height);
-void   GetTextCelFormatBuffer(TextCel *tCel, char **buffer, uint32 *bufsize);
-void   GetTextCelTabStops(TextCel *tCel, uint16 tabStops[16]);
+void   GetTextCelMargins(TextCel *tCel, s32 *leftMargin, s32 *topMargin);
+void   GetTextCelPenNumber(TextCel *tCel, s32 *penNumber);
+u32 GetTextCelFormatFlags(TextCel *tCel, u32 *formatFlags);
+void   GetTextCelSize(TextCel *tCel, s32 *width, s32 *height);
+void   GetTextCelFormatBuffer(TextCel *tCel, char **buffer, u32 *bufsize);
+void   GetTextCelTabStops(TextCel *tCel, u16 tabStops[16]);
 
 void EraseTextInCel(TextCel *tCel);
 
 Err vUpdateTextInCel(TextCel *tCel, boolean replaceExisting, const char *fmtString, va_list fmtArgs);
 Err UpdateTextInCel(TextCel *tCel, boolean replaceExisting, const char *fmtString, ...);
 
-char *vGetTextExtent(TextCel *tCel, int32 *pWidth, int32 *pHeight, const char *fmtString, va_list fmtArgs);
-char *GetTextExtent(TextCel *tCel, int32 *pWidth, int32 *pHeight, const char *fmtString, ...);
+char *vGetTextExtent(TextCel *tCel, s32 *pWidth, s32 *pHeight, const char *fmtString, va_list fmtArgs);
+char *GetTextExtent(TextCel *tCel, s32 *pWidth, s32 *pHeight, const char *fmtString, ...);
 
 /*----------------------------------------------------------------------------
  * prototypes for render-direct-to-screen routines
  *--------------------------------------------------------------------------*/
 
 void DrawTextString(FontDescriptor *fDesc, GrafCon *gcon, Item bitmapItem, const char *text, ...);
-void DrawTextChar(FontDescriptor *fDesc, GrafCon *gcon, Item bitmapItem, uint32 character);
+void DrawTextChar(FontDescriptor *fDesc, GrafCon *gcon, Item bitmapItem, u32 character);
 
 EXTERN_C_END

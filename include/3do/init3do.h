@@ -62,8 +62,8 @@ boolean OpenAudio(void);
 void    ShutDown(void);
 
 boolean SetChannel(Item iInstrument, int nChannel);
-boolean SetMixer(int nChannel, int32 nVolume, int32 nBalance);
-boolean SetMixerChannel(int nChannel, int32 nLeftLevel, int32 nRightLevel);
+boolean SetMixer(int nChannel, s32 nVolume, s32 nBalance);
+boolean SetMixerChannel(int nChannel, s32 nLeftLevel, s32 nRightLevel);
 Item    LoadSoundEffect(char* sFilename, int nNumVoices);
 Item    LoadSoundFX(char* sFilename, int nNumVoices, SoundInfo *theSoundInfo);
 void    FreeSoundEffects(void);

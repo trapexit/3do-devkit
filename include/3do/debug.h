@@ -28,17 +28,17 @@ EXTERN_C_END
 
 typedef struct dbghdr
 {
-  uint32 dbgLock;
-  uint32 dbgReady;
+  u32 dbgLock;
+  u32 dbgReady;
 } dbghdr;
 
 typedef struct debugio
 {
-  uint32  reqOwner;             /* unused */
-  uint32  reqCallerID;          /* unused */
-  uint32  reqCommand;
-  int32  *reqStatusPtr;
-  uint32  ptrs[4];              /* misc other args */
+  u32  reqOwner;             /* unused */
+  u32  reqCallerID;          /* unused */
+  u32  reqCommand;
+  s32  *reqStatusPtr;
+  u32  ptrs[4];              /* misc other args */
   char    namebuf[MACNAMEBUFBYTES];
 } debugio;
 

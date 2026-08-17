@@ -153,7 +153,7 @@ typedef struct FileIOReq {
 
 typedef struct FileStatus {
   DeviceStatus fs;
-  uint32       fs_ByteCount;
+  u32       fs_ByteCount;
 } FileStatus;
 
 
@@ -187,11 +187,11 @@ typedef struct FileFolio {
 
 typedef struct FileSystemStat
 {
-  uint32 fst_BitMap;            /* field bitmap */
-  uint32 fst_CreateTime;	/* filesystem creation time */
-  uint32 fst_BlockSize;         /* block size of the filesystem */
-  uint32 fst_Size;		/* size of the filesystem in blocks */
-  uint32 fst_MaxFileSize;	/* max blocks that can be allocated */
-  uint32 fst_Free;		/* total number of free blocks available */
-  uint32 fst_Used;		/* total number of blocks in use */
+  u32 fst_BitMap;            /* field bitmap */
+  u32 fst_CreateTime;	/* filesystem creation time */
+  u32 fst_BlockSize;         /* block size of the filesystem */
+  u32 fst_Size;		/* size of the filesystem in blocks */
+  u32 fst_MaxFileSize;	/* max blocks that can be allocated */
+  u32 fst_Free;		/* total number of free blocks available */
+  u32 fst_Used;		/* total number of blocks in use */
 } FileSystemStat;

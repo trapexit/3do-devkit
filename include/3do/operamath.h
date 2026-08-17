@@ -27,9 +27,9 @@
  * frac14 is a 2.14 fraction (using the upper 16 bits of a 32 bit quantity)
  */
 
-typedef int32 frac16, frac30, frac14;
-typedef uint32 ufrac16, ufrac30, ufrac14;
-typedef struct int64 { uint32 hi; uint32 lo; } int64, uint64, frac32, ufrac32, frac60, ufrac60;
+typedef s32 frac16, frac30, frac14;
+typedef u32 ufrac16, ufrac30, ufrac14;
+typedef struct int64 { u32 hi; u32 lo; } int64, uint64, frac32, ufrac32, frac60, ufrac60;
 
 typedef frac16 vec3f16[3], vec4f16[4], mat33f16[3][3], mat44f16[4][4], mat34f16[4][3];
 typedef frac30 vec3f30[3], vec4f30[4], mat33f30[3][3], mat44f30[4][4], mat34f30[4][3];
@@ -75,15 +75,15 @@ extern MathFolio *_MathBase;
 #define Convert32_F32(d,x) {(d)->hi=(x);(d)->lo=0;}
 /* convert 32 bit integer to 32.32 fraction */
 
-#define ConvertUF16_F32(d,x) {(d)->hi=((uint32)(x))>>16;(d)->lo=(x)<<16;}
-#define ConvertSF16_F32(d,x) {(d)->hi=((int32)(x))>>16;(d)->lo=(x)<<16;}
+#define ConvertUF16_F32(d,x) {(d)->hi=((u32)(x))>>16;(d)->lo=(x)<<16;}
+#define ConvertSF16_F32(d,x) {(d)->hi=((s32)(x))>>16;(d)->lo=(x)<<16;}
 /* convert 16.16 fraction to 32.32 fraction */
 
 #define ConvertF32_F16(x) (((x)->hi<<16)+((x)->lo>>16))
 /* convert 32.32 fraction to 16.16 fraction */
 
 #define ConvertU32_64(d,x) {(d)->hi=0;(d)->lo=(x);}
-#define ConvertS32_64(d,x) {(d)->hi=((int32)(x)>>31);(d)->lo=(x);}
+#define ConvertS32_64(d,x) {(d)->hi=((s32)(x)>>31);(d)->lo=(x);}
 /* convert 32 bit integer to 64 bit integer */
 
 #define Neg32(x) (-(x))
@@ -159,21 +159,21 @@ typedef struct mmv3m33d {
   vec3f16 *src;
   mat33f16 *mat;
   frac16 n;
-  uint32 count;
+  u32 count;
 } mmv3m33d;
 
 /* structure to pass arguments to MULOBJECTVECxMATxx_F16 routines */
 typedef struct ObjOffset1 {
-  int32 oo1_DestArrayPtrOffset;
-  int32 oo1_SrcArrayPtrOffset;
-  int32 oo1_MatOffset;
-  int32 oo1_CountOffset;
+  s32 oo1_DestArrayPtrOffset;
+  s32 oo1_SrcArrayPtrOffset;
+  s32 oo1_MatOffset;
+  s32 oo1_CountOffset;
 } ObjOffset1;
 
 /* structure to pass arguments to MULOBJECTMATxx_F16 routines */
 typedef struct ObjOffset2 {
-  int32 oo2_DestMatOffset;
-  int32 oo2_SrcMatOffset;
+  s32 oo2_DestMatOffset;
+  s32 oo2_SrcMatOffset;
 } ObjOffset2;
 
 EXTERN_C_BEGIN
@@ -202,11 +202,11 @@ void NotF60 (frac60 *dest, frac60 *src);
 ufrac16 SqrtF16 (ufrac16 x);
 /* Return the positive square root of an unsigned 16.16 number */
 
-uint32 Sqrt32 (uint32 x);
+u32 Sqrt32 (u32 x);
 /* Return the positive square root of an unsigned 32 bit number */
 
 ufrac16 DivUF16 (ufrac16 d1, ufrac16 d2);
-ufrac16 DivRemUF16 (uint32 *rem, ufrac16 d1, ufrac16 d2);
+ufrac16 DivRemUF16 (u32 *rem, ufrac16 d1, ufrac16 d2);
 /* Divide an unsigned 16.16 fraction into another an return an unsigned */
 /* 16.16 result.  The remainder from DivUF16 will be returned in r1, which */
 /* is unavailable to C code, so DivRemUF16 stores the remainder at the */
@@ -214,10 +214,10 @@ ufrac16 DivRemUF16 (uint32 *rem, ufrac16 d1, ufrac16 d2);
 /* maximum return in both values. */
 /* Note:  The remainder is in 0.32 format. */
 /* Note:  The divide will return a correct 16.16 result if the arguments */
-/* are uint32 or ufrac30, as long as both inputs are the same type. */
+/* are u32 or ufrac30, as long as both inputs are the same type. */
 
 frac16 DivSF16 (frac16 d1, frac16 d2);
-frac16 DivRemSF16 (int32 *rem, frac16 d1, frac16 d2);
+frac16 DivRemSF16 (s32 *rem, frac16 d1, frac16 d2);
 /* Divide a signed 16.16 fraction into another an return a signed 16.16 */
 /* result.  The remainder from DivSF16 will be returned in r1, which is */
 /* unavailable to C code, so DivRemSF16 stores the remainder at the */
@@ -227,7 +227,7 @@ frac16 DivRemSF16 (int32 *rem, frac16 d1, frac16 d2);
 /* Note: the MSB of the remainder is a sign bit, and must be extended if */
 /* remainder is to be used in subsequent calculations */
 /* Note:  The divide will return a correct 16.16 result if the arguments */
-/* are int32 or frac30, as long as both inputs are the same type. */
+/* are s32 or frac30, as long as both inputs are the same type. */
 
 ufrac16 RecipUF16 (ufrac16 d);
 /* Take the reciprocal of an unsigned 16.16 number and return the 16.16 */
@@ -259,7 +259,7 @@ ufrac16 SquareUF16 (ufrac16 m);
 /* Return the square of an unsigned 16.16 integer. */
 /* Overflows are not detected.  Lower bits are truncated. */
 
-void MulS32_64 (int64 *prod, int32 m1, int32 m2);
+void MulS32_64 (int64 *prod, s32 m1, s32 m2);
 void MulSF16_F32 (frac32 *prod, frac16 m1, frac16 m2);
 void MulSF30_F60 (frac60 *prod, frac30 m1, frac30 m2);
 /* Multiply two signed 32 bit integers together, and get a 64 bit result. */
@@ -267,7 +267,7 @@ void MulSF30_F60 (frac60 *prod, frac30 m1, frac30 m2);
 /* Alternately multiply two signed 2.30 numbers and get a 4.60 result. */
 /* (all names call the same routine) */
 
-void MulU32_64 (uint64 *prod, uint32 m1, uint32 m2);
+void MulU32_64 (uint64 *prod, u32 m1, u32 m2);
 void MulUF16_F32 (ufrac32 *prod, ufrac16 m1, ufrac16 m2);
 void MulUF30_F60 (ufrac60 *prod, ufrac30 m1, ufrac30 m2);
 /* Multiply two unsigned 32 bit integers together, and get a 64 bit result. */
@@ -289,17 +289,17 @@ void SubF60 (frac60 *r, frac60 *s1, frac60 *s2);
 /* Alternately subtract two 32.32 fractions or two 4.60 fractions*/
 /* (all names call the same routine) */
 
-int32 CompareU64 (uint64 *s1, uint64 *s2);
-int32 CompareUF32 (ufrac32 *s1, ufrac32 *s2);
-int32 CompareUF60 (ufrac60 *s1, ufrac60 *s2);
+s32 CompareU64 (uint64 *s1, uint64 *s2);
+s32 CompareUF32 (ufrac32 *s1, ufrac32 *s2);
+s32 CompareUF60 (ufrac60 *s1, ufrac60 *s2);
 /* Subtract two unsigned 64 bit integers and return 1 if s1>s2, 0 if s1==s2, */
 /* and -1 if s1<s2. */
 /* Alternately compare two unsigned 32.32 fractions or two 4.60 fractions */
 /* (all names call the same routine) */
 
-int32 CompareS64 (int64 *s1, int64 *s2);
-int32 CompareSF32 (frac32 *s1, frac32 *s2);
-int32 CompareSF60 (frac60 *s1, frac60 *s2);
+s32 CompareS64 (int64 *s1, int64 *s2);
+s32 CompareSF32 (frac32 *s1, frac32 *s2);
+s32 CompareSF60 (frac60 *s1, frac60 *s2);
 /* Subtract two signed 64 bit integers and return the high word of the result */
 /* (or 1 if the high word is zero, and the low word is non-zero). */
 /* Alternately compare two 32.32 fractions or two 4.60 fractions */
@@ -322,7 +322,7 @@ void Mul64 (int64 *p, int64 *m1, int64 *m2);
 void Square64 (uint64 *p, int64 *m);
 /* Return the square of a 64 bit integer.  Overflow is not detected. */
 
-uint32 Sqrt64_32 (uint64 *x);
+u32 Sqrt64_32 (uint64 *x);
 ufrac16 SqrtF32_F16 (ufrac32 *x);
 ufrac30 SqrtF60_F30 (ufrac60 *x);
 /* Return the 32 bit square root of an unsigned 64 bit integer. */
@@ -330,24 +330,24 @@ ufrac30 SqrtF60_F30 (ufrac60 *x);
 /* Alternatively, return the square root of 4.60 fraction as a 2.30 fraction. */
 /* (all names call the same routine) */
 
-/* uint32 __rt_udiv (uint32 d1, uint32 d2); */
+/* u32 __rt_udiv (u32 d1, u32 d2); */
 /* Divide a 32 bit integer d2 by 32 bit integer d1 and return a 32 bit quotient. */
 /* The remainder is also returned in r1.  This routine takes arguments and returns */
 /* values in the same way that the compiler expects the internally supplied */
 /* library routines to.   Use DivRemU32() to get the remainder for C code. */
 
-/* int32 __rt_sdiv (int32 d1, int32 d2); */
+/* s32 __rt_sdiv (s32 d1, s32 d2); */
 /* Divide a 32 bit integer d2 by 32 bit integer d1 and return a 32 bit quotient. */
 /* The remainder is also returned in r1.  This routine takes arguments and returns */
 /* values in the same way that the compiler expects the internally supplied */
 /* library routines to.  Use DivRemS32() to get the remainder for C code. */
 
-uint32 DivRemU32 (uint32 *rem, uint32 d1, uint32 d2);
+u32 DivRemU32 (u32 *rem, u32 d1, u32 d2);
 /* Calculate the quotient and remainder when dividing unsigned 32 bit integers d1/d2 */
 /* This routine calls __rt_udiv, but rearranges the arguments and return values */
 /* to return the remainder to C code. */
 
-int32 DivRemS32 (int32 *rem, int32 d1, int32 d2);
+s32 DivRemS32 (s32 *rem, s32 d1, s32 d2);
 /* Calculate the quotient and remainder when dividing signed 32 bit integers d1/d2 */
 /* This routine calls __rt_sdiv, but rearranges the arguments and return values */
 /* to return the remainder to C code. */
@@ -363,7 +363,7 @@ frac16 CosF16 (frac16 x);
 frac16 Atan2F16 (frac16 x, frac16 y);
 /* Return the arctangent of the ratio y/x */
 /* The result assume 256.0 units in the circle (or 16,777,216 units if used as an integer) */
-/* Note:  The correct 16.16 result will be returned if the arguments are int32, frac30 or */
+/* Note:  The correct 16.16 result will be returned if the arguments are s32, frac30 or */
 /* frac14, assuming the both arguments are the same type. */
 
 frac30 SinF30 (frac16 x);
@@ -415,37 +415,37 @@ void Transpose44_F16 (mat44f16 dest, mat44f16 src);
 /* Return the transpose of a 4x4 matrix of 16.16 values */
 
 void __swi(MULMANYVEC3MAT33_F16) MulManyVec3Mat33_F16
-  (vec3f16 *dest, vec3f16 *src, mat33f16 mat, int32 count);
+  (vec3f16 *dest, vec3f16 *src, mat33f16 mat, s32 count);
 /* Multiply many vectors by a matrix */
 
 void __swi(MULMANYVEC4MAT44_F16) MulManyVec4Mat44_F16
-  (vec4f16 *dest, vec4f16 *src, mat44f16 mat, int32 count);
+  (vec4f16 *dest, vec4f16 *src, mat44f16 mat, s32 count);
 /* Multiply many vectors by a matrix */
 
 void __swi(MULOBJECTVEC3MAT33_F16) MulObjectVec3Mat33_F16
-  (void *objectlist[], ObjOffset1 *offsetstruct, int32 count);
+  (void *objectlist[], ObjOffset1 *offsetstruct, s32 count);
 /* Multiply many vectors within object structures by a matrix within that object */
 /* structure, and repeat over a number of objects */
 
 void __swi(MULOBJECTVEC4MAT44_F16) MulObjectVec4Mat44_F16
-  (void *objectlist[], ObjOffset1 *offsetstruct, int32 count);
+  (void *objectlist[], ObjOffset1 *offsetstruct, s32 count);
 /* Multiply many vectors within object structures by a matrix within that object */
 /* structure, and repeat over a number of objects */
 
 void __swi(MULOBJECTMAT33_F16) MulObjectMat33_F16
-  (void *objectlist[], ObjOffset2 *offsetstruct, mat33f16 mat, int32 count);
+  (void *objectlist[], ObjOffset2 *offsetstruct, mat33f16 mat, s32 count);
 /* Multiply a matrix within an object structure by an external matrix, and repeat */
 /* over a number of objects */
 
 void __swi(MULOBJECTMAT44_F16) MulObjectMat44_F16
-  (void *objectlist[], ObjOffset2 *offsetstruct, mat44f16 mat, int32 count);
+  (void *objectlist[], ObjOffset2 *offsetstruct, mat44f16 mat, s32 count);
 /* Multiply a matrix within an object structure by an external matrix, and repeat */
 /* over a number of objects */
 
-void __swi(MULMANYF16) MulManyF16 (frac16 *dest, frac16 *src1, frac16 *src2, int32 count);
+void __swi(MULMANYF16) MulManyF16 (frac16 *dest, frac16 *src1, frac16 *src2, s32 count);
 /* Multiply an array of 16.16 fractions by another array of fractions */
 
-void __swi(MULSCALARF16) MulScalarF16 (frac16 *dest, frac16 *src, frac16 scalar, int32 count);
+void __swi(MULSCALARF16) MulScalarF16 (frac16 *dest, frac16 *src, frac16 scalar, s32 count);
 /* Multiply a 16.16 scalar by an array of 16.16 fractions */
 
 frac16 __swi(ABSVEC3_F16) AbsVec3_F16 (vec3f16 vec);

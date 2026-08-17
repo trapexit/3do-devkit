@@ -435,7 +435,7 @@ create_objects(void)
           signed int r = ((signed int)urand() & 7) - 3; /* -3..+4 */
           if(r == 0)
             r = 1;
-          solid_objs[s]->spin_velocity[a] = (frac16)((int32)r * 0x4000);
+          solid_objs[s]->spin_velocity[a] = (frac16)((s32)r * 0x4000);
         }
   }
 
@@ -570,7 +570,7 @@ static
 boolean
 exit_requested(void)
 {
-  uint32 buttons;
+  u32 buttons;
   Err err;
 
   buttons = 0;

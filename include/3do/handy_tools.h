@@ -21,30 +21,30 @@
 /* Structures */
 typedef struct TableAllocator
 {
-  int32  tall_Size;
-  int32  tall_Offset;
+  s32  tall_Size;
+  s32  tall_Offset;
   uchar *tall_Table;
-  int32  tall_Many;   /* How many have been allocated. */
+  s32  tall_Many;   /* How many have been allocated. */
 } TableAllocator;
 
 EXTERN_C_BEGIN
 
 /* Prototypes */
-int32 AllocThings(TableAllocator *tall, int32 Many, uint32 *Allocated);
-int32 Choose(int32 range);
-int32 ClearThings(TableAllocator *tall);
-int32 EZMemSize(void *ptr);
-int32 FreeThings(TableAllocator *tall, int32 Start, int32 Many);
-int32 MarkThings(TableAllocator *tall, int32 StartIndex, int32 Many, int32 Val);
-int32 PrintThings(TableAllocator *tall);
-int32 EZMemSetCustomVectors(void *(*AllocVector)(int32 Size, uint32 Type),
-                            void (*FreeVector)(void *p, int32 Size));
-int32 SumAvailMem(List *l, uint32 Type);
-void  DumpMemory(void *addr, int32 cnt);
+s32 AllocThings(TableAllocator *tall, s32 Many, u32 *Allocated);
+s32 Choose(s32 range);
+s32 ClearThings(TableAllocator *tall);
+s32 EZMemSize(void *ptr);
+s32 FreeThings(TableAllocator *tall, s32 Start, s32 Many);
+s32 MarkThings(TableAllocator *tall, s32 StartIndex, s32 Many, s32 Val);
+s32 PrintThings(TableAllocator *tall);
+s32 EZMemSetCustomVectors(void *(*AllocVector)(s32 Size, u32 Type),
+                            void (*FreeVector)(void *p, s32 Size));
+s32 SumAvailMem(List *l, u32 Type);
+void  DumpMemory(void *addr, s32 cnt);
 void  EZMemFree(void *ptr);
-void *EZMemAlloc(int32 size, int32 type);
-void *zalloc(int32 NumBytes);
-void *UserMemAlloc(int32 size, int32 type);
-void UserMemFree(void *p, int32 size);
+void *EZMemAlloc(s32 size, s32 type);
+void *zalloc(s32 NumBytes);
+void *UserMemAlloc(s32 size, s32 type);
+void UserMemFree(void *p, s32 size);
 
 EXTERN_C_END

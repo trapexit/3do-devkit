@@ -30,15 +30,15 @@ typedef struct
 
 typedef struct
 {
-  uint32 SVDLDMA;
-  uint32 SVDLCurBuf;
-  uint32 SVDLPrevBuf;
-  uint32 SVDLNextVDL;
-  uint32 SVDLDisplay;
+  u32 SVDLDMA;
+  u32 SVDLCurBuf;
+  u32 SVDLPrevBuf;
+  u32 SVDLNextVDL;
+  u32 SVDLDisplay;
   VDLColorEntry SVDLColors[32];
-  uint32 backgroundEntry; //	RGB 000 will use this entry
-  uint32 SVDLFiller1;
-  uint32 SVDLFiller2;
+  u32 backgroundEntry; //	RGB 000 will use this entry
+  u32 SVDLFiller1;
+  u32 SVDLFiller2;
 } SVDL;
 
 /*****************************************************************************/
@@ -48,8 +48,8 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-  void InitVDL480 (int32 *vdl, Bitmap *destBitmap, int32 bitmapindex,
-                   int32 displayMode);
+  void InitVDL480 (s32 *vdl, Bitmap *destBitmap, s32 bitmapindex,
+                   s32 displayMode);
 
 #ifdef __cplusplus
 }

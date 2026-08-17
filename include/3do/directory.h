@@ -22,27 +22,27 @@ struct Directory
   Item    dir_OpenFileItem;
   Item    dir_IOReqItem;
   IOReq  *dir_IOReq;
-  uint32  dir_Flags;
-  uint32  dir_BlockSize;
-  uint32  dir_BlockCount;
-  int32   dir_BlockNumber;
-  uint32  dir_BlockOffset;
-  uint32  dir_EntryNum;
+  u32  dir_Flags;
+  u32  dir_BlockSize;
+  u32  dir_BlockCount;
+  s32   dir_BlockNumber;
+  u32  dir_BlockOffset;
+  u32  dir_EntryNum;
   char   *dir_BlockBuf;
 };
 
 typedef struct DirectoryEntry DirectoryEntry;
 struct DirectoryEntry
 {
-  uint32 de_Flags;
-  uint32 de_UniqueIdentifier;
-  uint32 de_Type;
-  uint32 de_BlockSize;
-  uint32 de_ByteCount;
-  uint32 de_BlockCount;
-  uint32 de_Burst;
-  uint32 de_Gap;
-  uint32 de_AvatarCount;
+  u32 de_Flags;
+  u32 de_UniqueIdentifier;
+  u32 de_Type;
+  u32 de_BlockSize;
+  u32 de_ByteCount;
+  u32 de_BlockCount;
+  u32 de_Burst;
+  u32 de_Gap;
+  u32 de_AvatarCount;
   char   de_FileName[FILESYSTEM_MAX_NAME_LEN];
-  uint32 de_Location;
+  u32 de_Location;
 };

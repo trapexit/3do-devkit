@@ -63,20 +63,20 @@ loaded, and sfp_SampleIns is not connected to anything.
 That becomes the client's responsibility. In this case,
 this field is set to 0. Don't touch it. */
 
-  uint32 sfp_Cursor;            /* Position of file reader. */
-  uint32 sfp_NumBuffers;        /* Number of Buffers in use. */
-  uint32 sfp_BufIndex;          /* Next buffer to be loaded. */
-  uint32 sfp_BufSize;           /* Size of the buffer in bytes. */
-  int32  sfp_LastPos;           /* Byte position of DMA, updated periodically */
-  uint32 sfp_NumToRead;         /* Number of bytes to read, total. */
-  uint32 sfp_DataOffset;        /* Start of Data in file. */
-  uint32 sfp_BuffersPlayed;     /* How many played so far. */
-  uint32 sfp_BuffersToPlay;     /* How many total need to be played. */
+  u32 sfp_Cursor;            /* Position of file reader. */
+  u32 sfp_NumBuffers;        /* Number of Buffers in use. */
+  u32 sfp_BufIndex;          /* Next buffer to be loaded. */
+  u32 sfp_BufSize;           /* Size of the buffer in bytes. */
+  s32  sfp_LastPos;           /* Byte position of DMA, updated periodically */
+  u32 sfp_NumToRead;         /* Number of bytes to read, total. */
+  u32 sfp_DataOffset;        /* Start of Data in file. */
+  u32 sfp_BuffersPlayed;     /* How many played so far. */
+  u32 sfp_BuffersToPlay;     /* How many total need to be played. */
 
-  uint8	sfp_Flags;          /* User settable flags (SFP_). */
+  u8	sfp_Flags;          /* User settable flags (SFP_). */
 
-  uint8  sfp_PrivateFlags;   /* Private flags. Don't Touch! */
-  uint32 sfp_BlockSize;      /* Block size of file. (V24) */
+  u8  sfp_PrivateFlags;   /* Private flags. Don't Touch! */
+  u32 sfp_BlockSize;      /* Block size of file. (V24) */
 } SoundFilePlayer;
 
 
@@ -95,16 +95,16 @@ this field is set to 0. Don't touch it. */
 
 EXTERN_C_BEGIN
 
-SoundFilePlayer *CreateSoundFilePlayer(int32 NumBuffers, int32 BufSize, void *Buffers[]);
-SoundFilePlayer *OpenSoundFile(char *FileName, int32 NumBuffers, int32 BufSize);
-int32 CloseSoundFile(SoundFilePlayer *sfp);
-int32 DeleteSoundFilePlayer(SoundFilePlayer *sfp);
-int32 LoadSoundFile( SoundFilePlayer *sfp, char *FileName);
-int32 ReadSoundFile(SoundFilePlayer *sfp, int32 Cursor, int32 BufIndex);
-int32 RewindSoundFile(SoundFilePlayer *sfp);
-int32 ServiceSoundFile(SoundFilePlayer *sfp, int32 SignalIn, int32 *SignalNeeded);
-int32 StartSoundFile(SoundFilePlayer *sfp , int32 Amplitude);
-int32 StopSoundFile(SoundFilePlayer *sfp);
-int32 UnloadSoundFile(SoundFilePlayer *sfp);
+SoundFilePlayer *CreateSoundFilePlayer(s32 NumBuffers, s32 BufSize, void *Buffers[]);
+SoundFilePlayer *OpenSoundFile(char *FileName, s32 NumBuffers, s32 BufSize);
+s32 CloseSoundFile(SoundFilePlayer *sfp);
+s32 DeleteSoundFilePlayer(SoundFilePlayer *sfp);
+s32 LoadSoundFile( SoundFilePlayer *sfp, char *FileName);
+s32 ReadSoundFile(SoundFilePlayer *sfp, s32 Cursor, s32 BufIndex);
+s32 RewindSoundFile(SoundFilePlayer *sfp);
+s32 ServiceSoundFile(SoundFilePlayer *sfp, s32 SignalIn, s32 *SignalNeeded);
+s32 StartSoundFile(SoundFilePlayer *sfp , s32 Amplitude);
+s32 StopSoundFile(SoundFilePlayer *sfp);
+s32 UnloadSoundFile(SoundFilePlayer *sfp);
 
 EXTERN_C_END

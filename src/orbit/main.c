@@ -52,7 +52,7 @@ Usage(void)
  **
  **	  Synopsis
  **
- **	    static int32 Initialize( ScreenContext *sc, int32 nScreens )
+ **	    static s32 Initialize( ScreenContext *sc, s32 nScreens )
  **
  **	  Description
  **
@@ -90,10 +90,10 @@ Usage(void)
  **
  **
  *********************/
-static int32
-Initialize(ScreenContext *sc, int32 nScreens)
+static s32
+Initialize(ScreenContext *sc, s32 nScreens)
 {
-  int32 status = 0;
+  s32 status = 0;
 
   /*
     create an error text item to return opera style errors
@@ -292,7 +292,7 @@ DrawScreen(ScreenContext *sc, OrbitObjPtr obj, ubyte *background)
  **
  *********************/
 int
-main(int32 argc, char *argv[])
+main(s32 argc, char *argv[])
 {
 
   ScreenContext sc;
@@ -300,9 +300,9 @@ main(int32 argc, char *argv[])
   OrbitObjPtr obj = NULL;
   ubyte *background = NULL;
 
-  uint32 button;
+  u32 button;
 
-  int32 status = 0;
+  s32 status = 0;
 
   PRT(("%s %s\n", argv[0], VERSION));
   Usage();
@@ -409,7 +409,7 @@ main(int32 argc, char *argv[])
  **
  **	  Synopsis
  **
- **	    static int32 LoadSounds(void)
+ **	    static s32 LoadSounds(void)
  **
  **	  Description
  **
@@ -443,11 +443,11 @@ main(int32 argc, char *argv[])
  **	    ehLoadSoundEffect()
  **
  *********************/
-static int32
+static s32
 LoadSounds(void)
 {
 
-  int32 status = 0;
+  s32 status = 0;
 
   status = ehLoadSoundEffect(&gClickSound, gAudioCtx,
                               "orbit_data/sounds/click.aiff", 0);
@@ -474,7 +474,7 @@ LoadSounds(void)
  **
  **	  Synopsis
  **
- **	    static int32 SetObjCCB( OrbitObj *obj, int32 iObj )
+ **	    static s32 SetObjCCB( OrbitObj *obj, s32 iObj )
  **
  **	  Description
  **
@@ -507,11 +507,11 @@ LoadSounds(void)
  **
  **
  *********************/
-static int32
-SetObjCCB(OrbitObj *obj, int32 iObj)
+static s32
+SetObjCCB(OrbitObj *obj, s32 iObj)
 {
 
-  int32 status = 0;
+  s32 status = 0;
 
   /*
     allocate space for a CCB, then grab the first frame of the animation
@@ -535,7 +535,7 @@ SetObjCCB(OrbitObj *obj, int32 iObj)
  **
  **	  Synopsis
  **
- **	    static int32 LoadObj( OrbitObjPtr *pObj )
+ **	    static s32 LoadObj( OrbitObjPtr *pObj )
  **
  **	  Description
  **
@@ -567,11 +567,11 @@ SetObjCCB(OrbitObj *obj, int32 iObj)
  **	    LoadCel(), LoadAnim()
  **
  *********************/
-static int32
+static s32
 LoadObj(OrbitObjPtr *pObj)
 {
 
-  int32 iObj = 0, status = 0;
+  s32 iObj = 0, status = 0;
   OrbitObjPtr obj;
 
   /*
@@ -682,7 +682,7 @@ static void
 UnloadObj(OrbitObjPtr obj)
 {
 
-  int32 iObj;
+  s32 iObj;
 
   for(iObj = 0; iObj < 3; iObj++)
     {
@@ -744,7 +744,7 @@ static void
 InitObj(OrbitObjPtr obj)
 {
 
-  int32 iObj;
+  s32 iObj;
   frac16 angle;
 
   /*
@@ -775,9 +775,9 @@ InitObj(OrbitObjPtr obj)
 
       /*
         set the initial radius, angle, velocity, frame increment, etc for
-        the orbit objects.  Watch out for what is a frac16 and an int32.  Get
+        the orbit objects.  Watch out for what is a frac16 and an s32.  Get
         a little bit of a speed boost by figuring ahead of time what the
-        frac16 representation is of an int32 so we don't have to continually
+        frac16 representation is of an s32 so we don't have to continually
         do bit shifting during run time
       */
       obj[iObj].obj_radius = RADIUS;
@@ -871,11 +871,11 @@ static bool
 UpdateObj(OrbitObjPtr obj)
 {
 
-  int32 iObj;
+  s32 iObj;
   static toStop = 0;
   CCB *ccb, *objCCB;
   OrbitObjPtr object;
-  uint32 signals;
+  u32 signals;
 
   /*
     if all the animations have ended, then play the ending sound, wait

@@ -71,7 +71,7 @@ typedef struct MoveRec {
 
 EXTERN_C_BEGIN
 
-void 	PreMoveCel(CCB *ccb, Point *beginQuad, Point *endQuad, int32 numberOfFrames, MoveRec *pMove);
+void 	PreMoveCel(CCB *ccb, Point *beginQuad, Point *endQuad, s32 numberOfFrames, MoveRec *pMove);
 void 	MoveCel(CCB *ccb, MoveRec *pMove);
 
 void 	MapP2Cel(CCB* ccb, Point* quad);
@@ -81,17 +81,17 @@ void 	SetRectf16(Rectf16 *r, Coord left, Coord top, Coord right, Coord bottom);
 void	CenterRectf16(Point *q, Rectf16 *rect, Rectf16 *Frame);
 void	CenterCelOnScreen(CCB *ccb);
 
-void    SetCelScale(CCB *ccb, CCB *maskccb, int32 step);
-void    SetFadeInCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
-boolean FadeInCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
-void    SetFadeOutCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
-boolean FadeOutCel(CCB *ccb, CCB *maskccb, int32 *stepValue);
+void    SetCelScale(CCB *ccb, CCB *maskccb, s32 step);
+void    SetFadeInCel(CCB *ccb, CCB *maskccb, s32 *stepValue);
+boolean FadeInCel(CCB *ccb, CCB *maskccb, s32 *stepValue);
+void    SetFadeOutCel(CCB *ccb, CCB *maskccb, s32 *stepValue);
+boolean FadeOutCel(CCB *ccb, CCB *maskccb, s32 *stepValue);
 
-int32 ReadControlPad(int32 lControlMask);
+s32 ReadControlPad(s32 lControlMask);
 
 boolean FrameBufferToCel(Item iScreen, CCB* cel);
 CCB*    MakeNewCel(Rectf16 *r);
 CCB*    MakeNewDupCCB(CCB *ccb);
-void    FreeBuffer(char *filename, int32 *fileBuffer);
+void    FreeBuffer(char *filename, s32 *fileBuffer);
 
 EXTERN_C_END

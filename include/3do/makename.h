@@ -23,6 +23,6 @@
 
 EXTERN_C_BEGIN
 
-char* MakeName(char* outputNameBuf, int32 maxNameLen, char* baseNameString, int32 uniqueID);
+char* MakeName(char* outputNameBuf, s32 maxNameLen, char* baseNameString, s32 uniqueID);
 
 EXTERN_C_END

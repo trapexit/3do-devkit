@@ -595,7 +595,7 @@ static
 boolean
 check_control_pad(void)
 {
-  uint32 buttons;
+  u32 buttons;
   Err err;
 
   buttons = 0;

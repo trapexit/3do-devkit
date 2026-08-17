@@ -27,10 +27,10 @@
 #include "stdio.h"		/* for printf() */
 
 #define CHECK_DS_RESULT( name, dsResult )                               \
-  if ( ((int32) dsResult) < 0 )                                         \
+  if ( ((s32) dsResult) < 0 )                                         \
     {                                                                   \
-      printf( "Failure in %s: $%lx\n", name, ((int32) dsResult) );	\
-      PrintfDSError( ((int32) dsResult) ); 				\
+      printf( "Failure in %s: $%lx\n", name, ((s32) dsResult) );	\
+      PrintfDSError( ((s32) dsResult) ); 				\
       exit( 0 );                                                        \
     }
 #else
@@ -44,6 +44,6 @@
 
 EXTERN_C_BEGIN
 
-void PrintfDSError(int32 dsResult);
+void PrintfDSError(s32 dsResult);
 
 EXTERN_C_END
