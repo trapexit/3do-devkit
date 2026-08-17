@@ -39,7 +39,7 @@ semaphores, threading, message passing, signals, etc. An initial focus
 on the [OS
 APIs](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/pgsfldr/00pgs)
 and how
-[graphics](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/00ggs)
+[graphics](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/programming_3do_graphics)
 work on the console is suggested.
 
 * [3DO SDK's "Developer's Documentation Set"](https://3dodev.com/documentation/development_documents)
@@ -386,7 +386,7 @@ Till a new decoder is written or `ffmpeg` modified to provide proper
 alignment you will need to use original Classic MacOS software.
 
 * https://3dodev.com/tutorials/trapexit/creating_3do_compatible_fmv
-* http://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
+* https://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm
 
 
 ## TODO

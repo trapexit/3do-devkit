@@ -110,9 +110,9 @@ details](https://3dodev.com/documentation/hardware/opera/arm)
   fixed function color arithmetic but has a large number of settings
   making it a bit complex to use.
     * [The Pixel
-      Processor](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/3gpgd)
+      Processor](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/the_pixel_processor)
     * [Working With a CCB: The PIXC
-      Word](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/5gpgc?s[]=pixc#the_pixc_word)
+      Word](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/working_with_a_ccb#the_pixc_word)
     * [Working with special
       effects](https://3dodev.com/documentation/development/opera/pf25/tktfldr/anifldr/1anif)
     * [The Cel Control Block](https://3dodev.com/documentation/development/opera/pf25/ppgfldr/ggsfldr/gpgfldr/5gpgl)
