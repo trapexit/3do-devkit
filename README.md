@@ -382,8 +382,70 @@ A Cinepak library was included in the original SDK. Unfortunately,
 `ffmpeg` does not support the 3DO Stream container format nor does the
 Cinepak encoder generate frames which align properly for the 3DO.
 
-Till a new decoder is written or `ffmpeg` modified to provide proper
-alignment you will need to use original Classic MacOS software.
+For a modern custom-decoder path, `src/3vxplayer/` contains a PortfolioOS
+3VX player adapted from the sibling `3vt/player` sources. It streams video
+from CD into a persistent LR-form framebuffer, uses ARM60 block painters
+and double-buffered CEL presentation, and plays SDX2 stereo through the
+Portfolio sound spooler. It does not use the legacy Cinepak subscriber.
+
+Build its bootable disc from the devkit root:
+
+```sh
+source activate-env
+make 3vxplayer-iso
+```
+
+The result is `iso/3vxplayer.iso`. The standalone executable is
+`takeme/3vxplayer`; its media lives at `3vxplayer_data/video.3vx` on disc.
+The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
+the shared `takeme/LaunchMe`. Start/P pauses or resumes; X restarts;
+the clip loops automatically.
+
+The included sample is FFmpeg's animated test pattern with 440 Hz left /
+660 Hz right tones: 300 frames, 320x240, exactly 30000/1001 fps (10.01 s),
+and 22050 Hz stereo audio. To regenerate it, first build the sibling `3vt`
+repository, then run:
+
+```sh
+make 3vxplayer-sample
+make 3vxplayer-iso
+```
+
+`python3 src/3vxplayer/generate_sample.py --encoder /path/to/3vt` supports
+another encoder location. FFmpeg generates BGR24/PCM AVI in
+`build/3vxplayer-media/sample.avi`; 3vt encodes quality 100 with the quality
+preset, three-frame codebook planning, and a 45-frame keyframe interval.
+The encoded asset is retained in `src/3vxplayer/takeme/3vxplayer_data/`.
+
+This sample is 1,939,164 bytes, averages 6,463.6 media bytes/frame, and
+passes the 3vt validator and full 300-frame host decode. Its measured
+0.25/0.5/1/2-second burst sizes are 63,976/110,496/207,420/400,248 bytes,
+all below the validator's 2x-CD budgets. Opera verification covered three
+complete loops, changing video frames, zero reported decode errors,
+440/660 Hz audio, pause/resume, and restart. Playback follows the actual
+audio DMA byte cursor, not a nominal 240 Hz timer or counted VBL waits.
+The exact 147147-samples/200-frames ratio eliminates cumulative timing
+roundoff. Pause and starvation freeze media time. More than three frames
+of video lag triggers discard-through-keyframe recovery, with at most two
+decodes and 32 queue scans per service call. The last good screen is held
+until a current independent keyframe is available; audio is never skipped
+to make video catch up. A drained audio pipeline behind a full video queue
+also releases video slots rather than deadlocking. Late decodes need not
+be presented; stream cadence is not a guarantee of 300 screen presents.
+
+The supported header limit is 450000 frames (4 h 10 min 15 s), subject to
+the signed-32-bit BlockFile size limit. DMA FIFO read-ahead and display
+refresh introduce bounded timing uncertainty. Physical-console testing
+has not been performed; arbitrary IO failures or insufficient decode
+throughput cannot guarantee uninterrupted video. Both this example and
+the sibling 3vt player contain the same timing/recovery implementation.
+Generation validates frame/audio capacities, decode cost and all four CD
+burst windows before publishing the asset. Source-matched testing of this
+sample selected quality/q100 (41.5634 dB PSNR) over quality/q90 (41.5167)
+and exhaustive/q100 (41.5633). The differences are small; this is the best
+measured candidate for this sample, not a universal optimum for movies.
+
+For the original SDK's legacy workflow:
 
 * https://3dodev.com/tutorials/trapexit/creating_3do_compatible_fmv
 * https://3dodev.com/software/sdks#prebuilt_qemu_macos_9_vm

@@ -171,6 +171,24 @@ DATA_INPUTS = $(foreach dir,$(DATA_DIRS),$(call rwildcard,$(dir)/,*))
 FILESYSTEM_INPUTS = $(call rwildcard,$(FILESYSTEM)/,*)
 COPY_DATA_STAMP = build/.copy-data.stamp
 
+# 3VX uses ARM60 block painters and a bounded 32 KiB playback stack.
+3vxplayer_STACKSIZE = 32768
+build/3vxplayer/%.c.o: CFLAGS += -DTARGET_3DO
+
+# Stage this example separately; never replace the shared takeme/LaunchMe.
+.PHONY: 3vxplayer-iso 3vxplayer-sample
+3vxplayer-sample:
+	python3 src/3vxplayer/generate_sample.py
+
+3vxplayer-iso: $(FILESYSTEM)/3vxplayer src/3vxplayer/takeme/3vxplayer_data/video.3vx
+	rm -rf build/3vxplayer-disc
+	mkdir -p build/3vxplayer-disc/3vxplayer_data "$(ISO_DIR)"
+	cp -R "$(FILESYSTEM)/System" build/3vxplayer-disc/
+	cp "$(FILESYSTEM)/BannerScreen" "$(FILESYSTEM)/AppStartup" build/3vxplayer-disc/
+	cp "$(FILESYSTEM)/3vxplayer" build/3vxplayer-disc/LaunchMe
+	cp src/3vxplayer/takeme/3vxplayer_data/video.3vx build/3vxplayer-disc/3vxplayer_data/
+	3dt pack --volume-unique-id=1 --root-unique-id=1 build/3vxplayer-disc -o "$(ISO_DIR)/3vxplayer.iso"
+
 define APP_TEMPLATE
 $(1)_SRCS_S   := $$(wildcard src/$(1)/*.s)
 $(1)_SRCS_C   := $$(wildcard src/$(1)/*.c)
