@@ -584,7 +584,7 @@ service_video(int *recovering, uint32 *next_frame_index)
         }
       decodes++;
       start = profile_clock();
-      decode_error = vx_dec_frame(&gDEC, payload, size, NULL);
+      decode_error = vx_dec_frame(&gDEC, payload, size);
       elapsed = profile_clock() - start;
       profile_record(&gDecodeTime, elapsed, frame);
       for(rank = 0; rank < 8; rank++)

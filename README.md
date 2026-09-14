@@ -459,10 +459,14 @@ The decoder now batches full/range codebook loads: aligned V4 updates copy
 their already-native words in one operation, and V1 expansion hoists shape
 and alignment decisions out of the entry loop. Unaligned byte-load fallbacks
 remain. A stats-free ARMv3 VEC interpreter keeps command/row state across
-runs and paints inline, eliminating per-run C/assembly call overhead. Every
-command checks row and input bounds before writing. Callers requesting
-statistics retain the original C dispatch path; both paths produce identical
-pixels. Compile-time layout checks bind the assembly offsets to VxDec.
+runs and paints inline, eliminating per-run C/assembly call overhead.
+There is one decoder API: `vx_dec_frame(dec, payload, bytes)`. It always
+uses the optimized validated-input path, with no checked variant, mode flag
+or per-command statistics. The ARM VEC loop omits input-length/run-bound
+checks and requires nonempty complete grids, sufficient indices and
+row-contained runs. Malformed VEC input may overwrite memory or hang.
+Chunk/codebook framing, prediction state and runtime I/O/ownership checks
+remain. Compile-time layout checks bind assembly offsets to VxDec.
 
 Actual big-endian ARM execution was compared against the previous compiled
 decoder for every frame of all three movies, including framebuffer and
@@ -475,6 +479,21 @@ changed from 12268/32768 us to 7507/22016 us; codebook batching alone measured
 11610/30272 us. These are emulator timings, not promised console speedups.
 Scheduling, media, and quality settings are unchanged. Evidence is under
 `build/3vx-decoder-opt/`.
+
+The subsequent trusted-asset pass removed redundant VEC checks, kept the V4
+table base in a register, replaced repeat-count stack traffic with a register,
+and tested V4 literal-loop unrolling. Mean 30-fps Opera decode time changed
+from about 7506 us to 7152 us (trusted/register changes), 7105 us (two-block
+unroll) and 7080 us (retained four-block unroll). These are measured changes,
+not a universal performance optimum or physical-console prediction.
+Validate new files offline with `tools/verify_3vx_stream.py` in 3vt before
+adding them to the player's data directory. Validation is a separate tool,
+not a runtime decoder mode. The former checked entry, statistics structure,
+C-to-ARM run dispatch and superseded painter assembly have been removed.
+The host build implements the same unchecked VEC contract portably for
+pixel verification; the 3DO build uses only the optimized ARM interpreter.
+Historical trusted/checked comparison evidence is under `build/3vx-trusted/`;
+single-API cutover evidence is under `build/3vx-single/`.
 
 The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
 the shared `takeme/LaunchMe`. An optional sample generator creates FFmpeg's

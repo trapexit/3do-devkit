@@ -123,19 +123,6 @@ load_v4(VxDec *dec, uint32 index, const uint8 *p)
 
 /* ---- block painters ------------------------------------------------ */
 
-#ifdef TARGET_3DO
-extern void vx_put_v1_asm(uint32 *rp0, uint32 *rp1, const uint32 *tile4);
-extern void vx_put_v4_asm(uint32 *rp0, uint32 *rp1, const uint32 *cb,
-                          const uint8 *idx4);
-extern void vx_v4_run_asm(uint32 *rp0, uint32 *rp1, const uint32 *cb,
-                          const uint8 *idxlist, uint32 n);
-extern void vx_v1_run_asm(uint32 *rp0, uint32 *rp1, const uint32 *v1cb,
-                          const uint8 *idxlist, uint32 n);
-extern void vx_v1rep_run_asm(uint32 *rp0, uint32 *rp1, const uint32 *v1cb,
-                             const uint8 *idx, uint32 n);
-extern void vx_v4rep_run_asm(uint32 *rp0, uint32 *rp1, const uint32 *cb,
-                             const uint8 *entry, uint32 n);
-#endif
 #ifndef TARGET_3DO
 static void
 put_v1(const VxDec *dec, uint16 *d0, uint16 *d1, uint32 index)
@@ -243,7 +230,7 @@ load_entries(VxDec *dec, uint32 first, const uint8 *p, uint32 count,
 
 static uint32
 load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
-                    uint8 id, VxDecStats *st)
+                    uint8 id)
 {
   int is_v1 = (id == KC1_FULL || id == KC1_SPARSE || id == KC1_RANGE);
 
@@ -253,10 +240,6 @@ load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
       if(bytes < 256 * 8)
         return VXE_SUBCHUNK;
       load_entries(dec, 0, p, 256, is_v1);
-      if(is_v1)
-        st->v1_updates += 256;
-      else
-        st->v4_updates += 256;
       return VXE_OK;
     }
 
@@ -271,10 +254,6 @@ load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
       if(last < first || last > 255 || bytes < 4 + (last - first + 1) * 8)
         return VXE_CB_RANGE;
       load_entries(dec, first, p + 4, last - first + 1, is_v1);
-      if(is_v1)
-        st->v1_updates += (last - first + 1);
-      else
-        st->v4_updates += (last - first + 1);
       return VXE_OK;
     }
 
@@ -294,247 +273,80 @@ load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
         else
           load_v4(dec, r[0], r + 4);
       }
-    if(is_v1)
-      st->v1_updates += recs;
-    else
-      st->v4_updates += recs;
     return VXE_OK;
   }
 }
 
 /* ---- VEC interpreter ------------------------------------------------ */
 
-static uint32
-run_vec(VxDec *dec, const uint8 *p, uint32 bytes, VxDecStats *st)
-{
-  uint32 bx = 0, by = 0;
-  uint32 i = 0;
-  uint32 bw = dec->blocks_w;
-  uint32 bh = dec->blocks_h;
-  uint32 w16 = (uint32)dec->width * 2;   /* u16s per rowpair band */
-  uint16 *d0 = dec->backbuf;                 /* rp0 band ptr, cur block */
-  uint16 *d1 = d0 + w16;                     /* rp1 band ptr */
-#ifdef TARGET_3DO
-  if(!st) return vx_run_vec_asm(dec, p, bytes);
-#endif
-
-  /* Chunk payloads pad with zeros to a 4-byte boundary, and 0x00 is a
-     valid skip-1 opcode: STOP as soon as the block grid is complete and
-     treat the remaining bytes as padding. */
-#define VEC_GRID_DONE() (by == bh && bx == 0)
-#define VEC_ADV() do { bx++; d0 += 8; d1 += 8; \
-                       if(bx == bw) { bx = 0; by++; \
-                                      if(by <= bh) { \
-                                        d0 = dec->backbuf + (2 * by) * w16; \
-                                        d1 = d0 + w16; \
-                                      } } } while(0)
-#define VEC_SKIPN(N) do { uint32 m = (N); \
-                          while(m > 0) { \
-                            uint32 kk = bw - bx; \
-                            if(kk > m) kk = m; \
-                            bx += kk; d0 += kk * 8; d1 += kk * 8; m -= kk; \
-                            if(bx == bw) { bx = 0; by++; \
-                                           if(by <= bh) { \
-                                             d0 = dec->backbuf + (2 * by) * w16; \
-                                             d1 = d0 + w16; \
-                                           } } } } while(0)
-
-  while(i < bytes && !VEC_GRID_DONE())
-    {
-      uint8 op = p[i++];
-      uint32 n;
 #ifndef TARGET_3DO
-      uint32 k;
-#endif
-
-      if(op < 0x40)
+/* Portable implementation of the same validated-input contract. */
+static uint32
+run_vec(VxDec *dec, const uint8 *p)
+{
+  uint32 row, bx, n, k;
+  uint32 stride = (uint32)dec->width * 2;
+  for(row = 0; row < dec->blocks_h; row++)
+    {
+      uint16 *d0 = dec->backbuf + row * 2 * stride;
+      uint16 *d1 = d0 + stride;
+      bx = 0;
+      while(bx < dec->blocks_w)
         {
-          /* SKIP run */
-          n = (uint32)op + 1;
-          if(by >= bh || bx + n > bw)
-            return VXE_VEC_OVERRUN;
-          if(st) st->skip_runs++;
-          if(st) st->skip_blocks += n;
-          VEC_SKIPN(n);
-          continue;
+          uint32 op = *p++;
+          n = (op & 63u) + 1;
+          if(op < 64)
+            { d0 += n * 8; d1 += n * 8; }
+          else if(op < 128)
+            {
+              for(k = 0; k < n; k++)
+                { put_v1(dec, d0, d1, *p++); d0 += 8; d1 += 8; }
+            }
+          else if(op < 192)
+            {
+              for(k = 0; k < n; k++)
+                { put_v4(dec, d0, d1, p); p += 4; d0 += 8; d1 += 8; }
+            }
+          else if(op < 255)
+            {
+              uint32 index = *p++;
+              for(k = 0; k < n; k++)
+                { put_v1(dec, d0, d1, index); d0 += 8; d1 += 8; }
+            }
+          else
+            {
+              n = (uint32)*p++ + 1;
+              for(k = 0; k < n; k++)
+                { put_v4(dec, d0, d1, p); d0 += 8; d1 += 8; }
+              p += 4;
+            }
+          bx += n;
         }
-      if(op < 0x80)
-        {
-          /* V1 literal run */
-          n = (uint32)(op - 0x40) + 1;
-          if(by >= bh || bx + n > bw || i + n > bytes)
-            return VXE_VEC_OVERRUN;
-          if(st) st->v1_runs++;
-          if(st) st->v1_blocks += n;
-          if(st) st->coded_blocks += n;
-#ifdef TARGET_3DO
-          vx_v1_run_asm((uint32 *)d0, (uint32 *)d1, dec->v1cb, p + i, n);
-          /* the dispatcher guard (bx + n > bw) proves the run cannot
-             cross a block-row end: advance is straight-line with at
-             most one row wrap */
-          bx += n; d0 += n * 8; d1 += n * 8;
-          if(bx == bw)
-            {
-              bx = 0; by++;
-              if(by <= bh)
-                {
-                  d0 = dec->backbuf + (2 * by) * w16;
-                  d1 = d0 + w16;
-                }
-            }
-          i += n;
-#else
-          for(k = 0; k < n; k++)
-            {
-              put_v1(dec, d0, d1, p[i + k]);
-              VEC_ADV();
-            }
-          i += n;
-#endif
-          continue;
-        }
-      if(op < 0xc0)
-        {
-          /* V4 literal run */
-          n = (uint32)(op - 0x80) + 1;
-          if(by >= bh || bx + n > bw || i + 4 * n > bytes)
-            return VXE_VEC_OVERRUN;
-          if(st) st->v4_runs++;
-          if(st) st->v4_blocks += n;
-          if(st) st->coded_blocks += n;
-#ifdef TARGET_3DO
-          vx_v4_run_asm((uint32 *)d0, (uint32 *)d1, dec->v4cb, p + i, n);
-          bx += n; d0 += n * 8; d1 += n * 8;
-          if(bx == bw)
-            {
-              bx = 0; by++;
-              if(by <= bh)
-                {
-                  d0 = dec->backbuf + (2 * by) * w16;
-                  d1 = d0 + w16;
-                }
-            }
-          i += 4 * n;
-#else
-          for(k = 0; k < n; k++)
-            {
-              put_v4(dec, d0, d1, p + i);
-              i += 4;
-              VEC_ADV();
-            }
-#endif
-          continue;
-        }
-      if(op < 0xff)
-        {
-          /* V1 repeat run */
-          n = (uint32)(op - 0xc0) + 1;
-          if(by >= bh || bx + n > bw || i + 1 > bytes)
-            return VXE_VEC_OVERRUN;
-          if(st) st->v1rep_runs++;
-          if(st) st->v1_blocks += n;
-          if(st) st->coded_blocks += n;
-#ifdef TARGET_3DO
-          vx_v1rep_run_asm((uint32 *)d0, (uint32 *)d1, dec->v1cb, p + i, n);
-          /* same O(1) advance as the literal branches: the guard
-             (bx + n > bw) proves the run cannot cross a block-row end */
-          bx += n; d0 += n * 8; d1 += n * 8;
-          if(bx == bw)
-            {
-              bx = 0; by++;
-              if(by <= bh)
-                {
-                  d0 = dec->backbuf + (2 * by) * w16;
-                  d1 = d0 + w16;
-                }
-            }
-          i++;   /* a repeat paints one tile n times */
-#else
-          for(k = 0; k < n; k++)
-            {
-              put_v1(dec, d0, d1, p[i]);
-              VEC_ADV();
-            }
-          i++;   /* kept scalar: a repeat paints one tile n times */
-#endif
-          continue;
-        }
-      /* op == 0xff: V4 repeat */
-      if(i + 5 > bytes)
-        return VXE_VEC_OVERRUN;
-      n = (uint32)p[i] + 1;
-      if(by >= bh || bx + n > bw)
-        return VXE_VEC_OVERRUN;
-      if(st) st->v4rep_runs++;
-      if(st) st->v4_blocks += n;
-      if(st) st->coded_blocks += n;
-#ifdef TARGET_3DO
-          vx_v4rep_run_asm((uint32 *)d0, (uint32 *)d1, dec->v4cb, p + i + 1, n);
-          /* same O(1) advance as the literal branches: the guard
-             (bx + n > bw) proves the run cannot cross a block-row end */
-          bx += n; d0 += n * 8; d1 += n * 8;
-          if(bx == bw)
-            {
-              bx = 0; by++;
-              if(by <= bh)
-                {
-                  d0 = dec->backbuf + (2 * by) * w16;
-                  d1 = d0 + w16;
-                }
-            }
-          i += 5;   /* single V4 entry painted n times */
-#else
-          for(k = 0; k < n; k++)
-            {
-              put_v4(dec, d0, d1, p + i + 1);
-              VEC_ADV();
-            }
-          i += 5;   /* scalar: single V4 painted n times */
-#endif
     }
-
-  if(by != bh || bx != 0)
-    return VXE_VEC_OVERRUN;  /* frame must end exactly at grid end */
-  (void)bytes;
   return VXE_OK;
-#undef VEC_GRID_DONE
-#undef VEC_ADV
-#undef VEC_SKIPN
 }
+#endif
 
 uint32
-vx_dec_frame(VxDec *dec, const uint8 *payload, uint32 payload_bytes,
-             VxDecStats *stats)
+vx_dec_frame(VxDec *dec, const uint8 *payload, uint32 payload_bytes)
 {
   uint32 pos = 4;  /* skip flags+reserved */
   uint16 flags;
   uint32 saw_vec = 0;
   uint32 err = VXE_OK;
-  VxDecStats local;
-  VxDecStats *st = stats ? stats : &local;
 
   if(payload_bytes < 4)
     {
       dec->state_valid = 0;
-      st->error = VXE_SUBCHUNK;
       return VXE_SUBCHUNK;
     }
 
-  {
-    uint32 *z = (uint32 *)st;
-    uint32 i, n = sizeof(*st) / sizeof(uint32);
-    for(i = 0; i < n; i++)
-      z[i] = 0;
-  }
 
   flags = rd_u16(payload);
-  st->keyframe = (flags & 1) ? 1 : 0;
+  flags &= 1;
 
-  if(!st->keyframe && !dec->state_valid)
-    {
-      st->error = VXE_NOT_KEYFRAME;
-      return st->error;
-    }
+  if(!flags && !dec->state_valid)
+    return VXE_NOT_KEYFRAME;
 
   while(pos + 4 <= payload_bytes)
     {
@@ -556,12 +368,16 @@ vx_dec_frame(VxDec *dec, const uint8 *payload, uint32 payload_bytes,
         case KC1_RANGE:
           if(saw_vec)
             { err = VXE_SUBCHUNK; goto out; }  /* codebooks precede VEC */
-          err = load_codebook_chunk(dec, payload + pos + 4, cbytes, id, st);
+          err = load_codebook_chunk(dec, payload + pos + 4, cbytes, id);
           if(err)
             goto out;
           break;
         case KVEC:
-          err = run_vec(dec, payload + pos + 4, cbytes, stats);
+#ifdef TARGET_3DO
+          err = vx_run_vec_asm(dec, payload + pos + 4, cbytes);
+#else
+          err = run_vec(dec, payload + pos + 4);
+#endif
           if(err)
             goto out;
           saw_vec = 1;
@@ -580,11 +396,10 @@ vx_dec_frame(VxDec *dec, const uint8 *payload, uint32 payload_bytes,
     { err = VXE_SUBCHUNK; goto out; }
 
   dec->state_valid = 1;
-  st->error = VXE_OK;
   return VXE_OK;
 
 out:
   dec->state_valid = 0;
-  st->error = err;
   return err;
 }
+

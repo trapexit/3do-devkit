@@ -36,32 +36,20 @@ typedef struct VxDec {
   uint32  v4cb[256 * 2];
 } VxDec;
 
-/* VFRM payload parse result stats */
-typedef struct VxDecStats {
-  uint32 keyframe;
-  uint32 v1_runs, v1_blocks, v1rep_runs, v4_runs, v4_blocks, v4rep_runs;
-  uint32 skip_runs, skip_blocks;
-  uint32 v1_updates, v4_updates;
-  uint32 coded_blocks;
-  uint32 error; /* 0 ok; else VXE_* code */
-} VxDecStats;
 
 #define VXE_OK          0
 #define VXE_SUBCHUNK    2  /* bad sub-chunk header/size */
 #define VXE_CB_ID       3  /* unknown codebook chunk id */
 #define VXE_CB_RANGE    4  /* codebook update out of range */
-#define VXE_VEC_OVERRUN 6  /* vec data runs past chunk */
 #define VXE_NOT_KEYFRAME 7 /* delta frame decoded on invalid state */
 
 void   vx_dec_init(VxDec *dec, uint16 *backbuf, uint16 width, uint16 height);
 
-/* Decode one VFRM payload (post 16-byte container header):
-     u16be flags, u16be reserved, sub-chunks...
-   The first frame after init or any error must carry the keyframe flag.
-   Errors may partially mutate codebooks/backbuffer and invalidate state;
-   the caller must not present that buffer and must seek a fresh keyframe.
-   stats may be NULL to omit command-level accounting during playback.
-*/
-uint32 vx_dec_frame(VxDec *dec, const uint8 *payload, uint32 payload_bytes,
-                    VxDecStats *stats);
+/* Decode a prevalidated VFRM payload (after its 16-byte container header).
+   One optimized path: no VEC bounds checking or command statistics.
+   Requires nonempty complete block grids, row-contained runs and sufficient
+   index bytes. Malformed VEC input may overwrite memory or hang.
+   Chunk/codebook framing and prediction-state checks remain. The first
+   frame after init or error must be independently keyed. */
+uint32 vx_dec_frame(VxDec *dec, const uint8 *payload, uint32 payload_bytes);
 #endif /* VX_DEC_H */
