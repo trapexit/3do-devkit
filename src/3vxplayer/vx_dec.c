@@ -17,6 +17,13 @@
 */
 #include "vx_dec.h"
 #include "string.h"
+#ifdef TARGET_3DO
+#include "stddef.h"
+typedef char VxAsmLayout[(sizeof(void *) == 4 && offsetof(VxDec, blocks_w) == 8
+  && offsetof(VxDec, blocks_h) == 10 && offsetof(VxDec, v1cb) == 16
+  && offsetof(VxDec, v4cb) == 4112) ? 1 : -1];
+extern uint32 vx_run_vec_asm(VxDec *dec, const uint8 *p, uint32 bytes);
+#endif
 
 #define KC4_FULL   0x20
 #define KC4_SPARSE 0x21
@@ -165,6 +172,75 @@ put_v4(const VxDec *dec, uint16 *d0, uint16 *d1, const uint8 *idx)
 
 /* ---- codebook sub-chunks ------------------------------------------- */
 
+/* Load `count` codebook entries with consecutive indices starting at
+   `first` from a stride-8 entry array at `p` (full chunks feed p, range
+   chunks p+4). The caller has already validated the payload size and
+   index range. Alignment and the v1/v4 shape are decided once per batch
+   so the entry loops carry no per-entry test or call: an aligned V4 run
+   is already the resident native words (one contiguous copy), while V1
+   entries always need the doubling expansion. Unaligned sources (and
+   every host build) fall back to the per-entry byte-wise forms. */
+static void
+load_entries(VxDec *dec, uint32 first, const uint8 *p, uint32 count,
+             int is_v1)
+{
+  uint32 i;
+
+  if(is_v1)
+    {
+      uint32 *e = dec->v1cb + first * 4;
+
+#ifdef TARGET_3DO
+      if(((uint32)p & 3u) == 0)
+        {
+          const uint32 *w = (const uint32 *)p;
+
+          for(i = 0; i < count; i++)
+            {
+              uint32 top = w[0], bottom = w[1];
+              uint32 tl = top >> 16, tr = top & 0xffffu;
+              uint32 bl = bottom >> 16, br = bottom & 0xffffu;
+
+              e[0] = tl | (tl << 16);
+              e[1] = tr | (tr << 16);
+              e[2] = bl | (bl << 16);
+              e[3] = br | (br << 16);
+              w += 2;
+              e += 4;
+            }
+          return;
+        }
+#endif
+      for(i = 0; i < count; i++)
+        {
+          uint32 tl = rd_u16(p);
+          uint32 tr = rd_u16(p + 2);
+          uint32 bl = rd_u16(p + 4);
+          uint32 br = rd_u16(p + 6);
+
+          e[0] = tl | (tl << 16);
+          e[1] = tr | (tr << 16);
+          e[2] = bl | (bl << 16);
+          e[3] = br | (br << 16);
+          p += 8;
+          e += 4;
+        }
+      return;
+    }
+
+#ifdef TARGET_3DO
+  if(((uint32)p & 3u) == 0)
+    {
+      /* Aligned V4: every 8-byte stream entry is exactly the pair of
+         resident native words, so the whole run is one copy. */
+      memcpy(dec->v4cb + first * 2, p, (size_t)(count * 8));
+      return;
+    }
+#endif
+  for(i = 0; i < count; i++)
+    load_v4(dec, first + i, p + i * 8);
+}
+
 static uint32
 load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
                     uint8 id, VxDecStats *st)
@@ -174,17 +250,9 @@ load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
   if(id == KC4_FULL || id == KC1_FULL)
     {
       /* full: 256 entries, entry bytes = 8 (v4 raw / v1 packed) */
-      uint32 i;
-
       if(bytes < 256 * 8)
         return VXE_SUBCHUNK;
-      for(i = 0; i < 256; i++)
-        {
-          if(is_v1)
-            expand_v1(dec, i, p + i * 8);
-          else
-            load_v4(dec, i, p + i * 8);
-        }
+      load_entries(dec, 0, p, 256, is_v1);
       if(is_v1)
         st->v1_updates += 256;
       else
@@ -194,7 +262,7 @@ load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
 
   if(id == KC4_RANGE || id == KC1_RANGE)
     {
-      uint32 first, last, i;
+      uint32 first, last;
 
       if(bytes < 4)
         return VXE_SUBCHUNK;
@@ -202,13 +270,7 @@ load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
       last  = p[1];
       if(last < first || last > 255 || bytes < 4 + (last - first + 1) * 8)
         return VXE_CB_RANGE;
-      for(i = first; i <= last; i++)
-        {
-          if(is_v1)
-            expand_v1(dec, i, p + 4 + (i - first) * 8);
-          else
-            load_v4(dec, i, p + 4 + (i - first) * 8);
-        }
+      load_entries(dec, first, p + 4, last - first + 1, is_v1);
       if(is_v1)
         st->v1_updates += (last - first + 1);
       else
@@ -252,6 +314,9 @@ run_vec(VxDec *dec, const uint8 *p, uint32 bytes, VxDecStats *st)
   uint32 w16 = (uint32)dec->width * 2;   /* u16s per rowpair band */
   uint16 *d0 = dec->backbuf;                 /* rp0 band ptr, cur block */
   uint16 *d1 = d0 + w16;                     /* rp1 band ptr */
+#ifdef TARGET_3DO
+  if(!st) return vx_run_vec_asm(dec, p, bytes);
+#endif
 
   /* Chunk payloads pad with zeros to a 4-byte boundary, and 0x00 is a
      valid skip-1 opcode: STOP as soon as the block grid is complete and

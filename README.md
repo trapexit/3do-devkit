@@ -455,6 +455,27 @@ subsequent frames and increased post-draw losses. Only the cadence
 diagnostics were retained; acceptance thresholds remain unchanged.
 Full receipts and variant source are in `build/3vx-acceptance/`.
 
+The decoder now batches full/range codebook loads: aligned V4 updates copy
+their already-native words in one operation, and V1 expansion hoists shape
+and alignment decisions out of the entry loop. Unaligned byte-load fallbacks
+remain. A stats-free ARMv3 VEC interpreter keeps command/row state across
+runs and paints inline, eliminating per-run C/assembly call overhead. Every
+command checks row and input bounds before writing. Callers requesting
+statistics retain the original C dispatch path; both paths produce identical
+pixels. Compile-time layout checks bind the assembly offsets to VxDec.
+
+Actual big-endian ARM execution was compared against the previous compiled
+decoder for every frame of all three movies, including framebuffer and
+codebook state. An additional 16000 VEC cases exercised valid, truncated,
+cross-row and unaligned streams, and 6000 codebook cases checked malformed
+sizes/ranges and alignments. Callee-saved registers and stack preservation
+were checked. Host fixtures, the original 300-frame pixel manifest and all
+five encoder byte anchors passed. The full 30-fps Opera decode mean/max
+changed from 12268/32768 us to 7507/22016 us; codebook batching alone measured
+11610/30272 us. These are emulator timings, not promised console speedups.
+Scheduling, media, and quality settings are unchanged. Evidence is under
+`build/3vx-decoder-opt/`.
+
 The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
 the shared `takeme/LaunchMe`. An optional sample generator creates FFmpeg's
 300-frame test pattern with 440/660 Hz stereo tones. The following commands
