@@ -1,14 +1,14 @@
 /*
-  3vxplayer - custom 29.97fps 320x240 stereo video player for stock 3DO.
+  3vxplayer - profiled NTSC 15/20/30-rate 320x240 stereo video player.
 
   Pipeline (single thread, polled):
     CD (async block reads) -> 3VX demux -> [VFRM slots -> 3VX decode into
-    DRAM LR backbuffer -> CEL present (double-buffered screens)]
+    DRAM LR backbuffer -> CEL present (triple-buffered screens)]
                                         -> [AUD0 ring -> SoundSpooler ->
     dcsqxdhalfstereo.dsp -> directout.dsp]
 
-  Sync: audio-clock master with fractional samples-per-frame (735.735).
-  Controls: P pause/resume, X restart from beginning; auto-loop at EOF.
+  Sync: exact sample-clock master at the selected file's frame rate.
+  Controls: P pause/resume, X file menu; EOF summary: A replay, X file menu.
 */
 #include "vx_stream.h"
 #include "vx_audio.h"
@@ -29,8 +29,9 @@
 #include "string.h"
 #include "types.h"
 #include "timerutils.h"
+#include "directoryfunctions.h"
 
-#define VIDEO_PATH "3vxplayer_data/video.3vx"
+#define VIDEO_DIRECTORY "$boot/3vxplayer_data"
 
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
@@ -78,6 +79,215 @@ static uint32 gPhaseField;
 static uint32 gPhaseFrame;
 static int gPhaseValid;
 static uint32 gSubmittedTick;
+
+/* Release-build measurements: no drawing or logging in timed regions. */
+typedef struct Timing {
+  uint32 count, total_ms, remainder_us, maximum_us, maximum_frame, over;
+  uint32 bins[21]; /* 5 ms buckets; last bucket is >= 100 ms */
+} Timing;
+typedef struct SlowFrame {
+  uint32 frame, usec;
+} SlowFrame;
+static Timing gDecodeTime, gDrawTime;
+static SlowFrame gSlow[8];
+static uint32 gSkipped, gRecoveries, gEmptyPending, gLatePresents;
+static uint32 gFrameBudget, gFieldsPerFrame, gTimerOverhead;
+static Item gProfileTimer;
+static void teardown(void);
+
+static uint32
+profile_clock(void)
+{
+  uint32 seconds = 0, useconds = 0;
+  if(GetUSecTime(gProfileTimer, &seconds, &useconds) < 0)
+    { kprintf("profile timer failed\n"); teardown(); exit(1); }
+  return seconds * 1000000u + useconds;
+}
+
+static void
+profile_record(Timing *t, uint32 us, uint32 frame)
+{
+  uint32 bin = us / 5000u;
+  t->count++;
+  t->total_ms += us / 1000u;
+  t->remainder_us += us % 1000u;
+  if(t->remainder_us >= 1000u)
+    { t->total_ms++; t->remainder_us -= 1000u; }
+  if(us > t->maximum_us)
+    { t->maximum_us = us; t->maximum_frame = frame; }
+  if(us > gFrameBudget) t->over++;
+  if(bin > 20) bin = 20;
+  t->bins[bin]++;
+}
+
+static uint32
+profile_average(const Timing *t)
+{
+  if(!t->count) return 0;
+  return (t->total_ms / t->count) * 1000u
+       + ((t->total_ms % t->count) * 1000u + t->remainder_us) / t->count;
+}
+
+/* Upper bound of the bucket containing p99; 105000 means >=100 ms. */
+static uint32
+profile_p99(const Timing *t)
+{
+  uint32 i, sum = 0, target = t->count - t->count / 100u;
+  if(!t->count) return 0;
+  for(i = 0; i < 21; i++)
+    {
+      sum += t->bins[i];
+      if(sum >= target) return (i + 1u) * 5000u;
+    }
+  return 105000u;
+}
+
+static void
+profile_line(GrafCon *gc, int row, const char *text)
+{
+  MoveTo(gc, 4, 4L + (int32)row * 12L);
+  DrawText8(gc, gSC.sc_BitmapItems[gSC.sc_curScreen], (const uint8 *)text);
+  kprintf("%s\n", text);
+}
+
+static int
+profile_summary(void)
+{
+  GrafCon gc;
+  char line[96];
+  uint32 i, buttons = 0;
+  int row = 0;
+  if(gVblPending) { WaitIO(gVbl); gVblPending = 0; }
+  /* All media has drained before this screen replaces the final picture. */
+  memset(gBackbuf, 0, BACKBUF_BYTES);
+  DrawCels(gSC.sc_BitmapItems[gSC.sc_curScreen], &gPresentCel);
+  memset(&gc, 0, sizeof(gc));
+  SetFGPen(&gc, MakeRGB15(31,31,31));
+  sprintf(line, "3VX NTSC profile %lu/1001 fps", (unsigned long)gST.info.fps_num);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Budget %lu us; clock %lu us", (unsigned long)gFrameBudget, (unsigned long)gTimerOverhead);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Decoded %lu presented %lu", (unsigned long)gDecodeTime.count, (unsigned long)gT.presents);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Skip %lu drop %lu err %lu", (unsigned long)gSkipped, (unsigned long)gT.frame_drop_decodes, (unsigned long)gT.decode_errs);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Recovery %lu phase-late %lu", (unsigned long)gRecoveries, (unsigned long)gLatePresents);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Empty polls %lu CD busy %lu", (unsigned long)gT.video_starves, (unsigned long)gEmptyPending);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Decode avg/max us %lu/%lu", (unsigned long)profile_average(&gDecodeTime), (unsigned long)gDecodeTime.maximum_us);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Dec over %lu p99 %s%lu us", (unsigned long)gDecodeTime.over,
+          profile_p99(&gDecodeTime) > 100000u ? ">=" : "<",
+          (unsigned long)(profile_p99(&gDecodeTime) > 100000u ? 100000u : profile_p99(&gDecodeTime)));
+  profile_line(&gc, row++, line);
+  sprintf(line, "Draw avg/max us %lu/%lu", (unsigned long)profile_average(&gDrawTime), (unsigned long)gDrawTime.maximum_us);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Draw over %lu worst frame %lu", (unsigned long)gDrawTime.over, (unsigned long)gDrawTime.maximum_frame);
+  profile_line(&gc, row++, line);
+  profile_line(&gc, row++, "Slow decode frames (zero-based):");
+  for(i = 0; i < 6 && i < gDecodeTime.count; i++)
+    {
+      sprintf(line, "  %lu: %lu us", (unsigned long)gSlow[i].frame, (unsigned long)gSlow[i].usec);
+      profile_line(&gc, row++, line);
+    }
+  profile_line(&gc, row, "A: replay   X: menu");
+  DisplayScreen(gSC.sc_Screens[gSC.sc_curScreen], 0);
+  /* Histogram is printed only after playback, never in a timed region. */
+  for(i = 0; i < 21; i++)
+    kprintf("decode bucket %d count %d\n", (int)(i * 5000u), (int)gDecodeTime.bins[i]);
+  do { WaitVBL(gVbl, 1); DoControlPad(1, &buttons, 0); }
+  while(!(buttons & (ControlA | ControlX)));
+  return (buttons & ControlX) != 0;
+}
+
+typedef struct VideoFile {
+  struct VideoFile *next;
+  char name[FILESYSTEM_MAX_NAME_LEN];
+} VideoFile;
+
+static VideoFile *gVideos;
+static uint32 gVideoCount;
+
+static int
+scan_videos(void)
+{
+  Directory *dir = OpenDirectoryPath(VIDEO_DIRECTORY);
+  DirectoryEntry entry;
+  if(!dir) return 0;
+  while(ReadDirectory(dir, &entry) >= 0)
+    {
+      VideoFile *file, **link;
+      uint32 n;
+      entry.de_FileName[FILESYSTEM_MAX_NAME_LEN - 1] = 0;
+      n = strlen(entry.de_FileName);
+      if((entry.de_Flags & FILE_IS_DIRECTORY) || n < 4
+         || entry.de_FileName[n-4] != '.'
+         || (entry.de_FileName[n-3] != '3')
+         || (entry.de_FileName[n-2] != 'v' && entry.de_FileName[n-2] != 'V')
+         || (entry.de_FileName[n-1] != 'x' && entry.de_FileName[n-1] != 'X')) continue;
+      file = (VideoFile *)malloc(sizeof(*file));
+      if(!file) { CloseDirectory(dir); return 0; }
+      strcpy(file->name, entry.de_FileName);
+      link = &gVideos;
+      while(*link && strcmp((*link)->name, file->name) < 0) link = &(*link)->next;
+      file->next = *link; *link = file;
+      gVideoCount++;
+    }
+  CloseDirectory(dir);
+  return 1;
+}
+
+static void
+select_video(char *path)
+{
+  static uint32 selected;
+  uint32 buttons, top, index;
+  int redraw = 1;
+  VideoFile *file;
+  GrafCon gc;
+  memset(gBackbuf, 0, BACKBUF_BYTES);
+  memset(&gc, 0, sizeof(gc));
+  SetFGPen(&gc, MakeRGB15(31,31,31));
+  for(;;)
+    {
+      if(redraw)
+      {
+      /* Keep the completed menu visible until selection changes. */
+      DrawCels(gSC.sc_BitmapItems[gSC.sc_curScreen], &gPresentCel);
+      MoveTo(&gc, 8, 12); DrawText8(&gc, gSC.sc_BitmapItems[gSC.sc_curScreen], (const uint8 *)"3VX VIDEO FILES");
+      MoveTo(&gc, 8, 28); DrawText8(&gc, gSC.sc_BitmapItems[gSC.sc_curScreen], (const uint8 *)"UP/DOWN: select  A/START: play");
+      top = selected >= 10 ? selected - 9 : 0;
+      file = gVideos;
+      for(index = 0; file; file = file->next, index++)
+        if(index >= top && index < top + 10)
+          {
+            MoveTo(&gc, 8, 52L + (int32)(index - top) * 16L);
+            DrawText8(&gc, gSC.sc_BitmapItems[gSC.sc_curScreen], (const uint8 *)(index == selected ? "* " : "  "));
+            DrawText8(&gc, gSC.sc_BitmapItems[gSC.sc_curScreen], (const uint8 *)file->name);
+          }
+      if(!gVideoCount)
+        { MoveTo(&gc, 8, 52); DrawText8(&gc, gSC.sc_BitmapItems[gSC.sc_curScreen], (const uint8 *)"No .3vx files in data directory"); }
+      DisplayScreen(gSC.sc_Screens[gSC.sc_curScreen], 0);
+      gSC.sc_curScreen = (gSC.sc_curScreen + 1) % 3;
+      redraw = 0;
+      }
+      WaitVBL(gVbl, 1);
+      buttons = 0; DoControlPad(1, &buttons, 0);
+      if(!gVideoCount) continue;
+      if(buttons & ControlUp) { selected = selected ? selected - 1 : gVideoCount - 1; redraw = 1; }
+      if(buttons & ControlDown) { selected = (selected + 1) % gVideoCount; redraw = 1; }
+      if(buttons & (ControlA | ControlStart))
+        {
+          file = gVideos;
+          for(index = 0; index < selected; index++) file = file->next;
+          sprintf(path, "%s/%s", VIDEO_DIRECTORY, file->name);
+          do { WaitVBL(gVbl, 1); DoControlPad(1, &buttons, ControlA | ControlStart); }
+          while(buttons & (ControlA | ControlStart));
+          return;
+        }
+    }
+}
 #ifdef DEBUG
 volatile uint32 dbg_avail, dbg_inbuf, dbg_nvfrm, dbg_naud0, dbg_ringfull,
                 dbg_slotfull, dbg_pending, dbg_fillcalls, dbg_pullzero,
@@ -174,6 +384,7 @@ teardown(void)
     FreeMem(gBackbuf, BACKBUF_BYTES);
   if(gVbl > 0)
     DeleteVBLIOReq(gVbl);        /* DeleteItem(gVbl) */
+  if(gProfileTimer > 0) DeleteItem(gProfileTimer);
   if(gSC.sc_ScreenGroup > 0)     /* CreateBasicDisplay succeeded; 0 is
                                     its memset value on failure (it also
                                     closes the graphics folio itself
@@ -261,7 +472,7 @@ service_video(int *recovering, uint32 *next_frame_index)
   while(scans++ < VX_SCAN_BUDGET && decodes < VX_DECODE_BUDGET)
     {
       const uint8 *payload;
-      uint32 size, frame, due;
+      uint32 size, frame, due, start, elapsed, rank;
       int action, was_recovering = *recovering;
       uint32 decode_error;
 
@@ -269,9 +480,9 @@ service_video(int *recovering, uint32 *next_frame_index)
       vx_audio_fill(&gAU, gST.aud_head - gST.aud_tail, st_pull, &gST);
       if(gST.wedged || gAU.error < 0)
         return;
-      due = vx_due_frame(vx_audio_position_samples(&gAU));
+      due = vx_due_frame(vx_audio_position_samples(&gAU), gST.info.fps_num);
       if(!vx_stream_next_frame(&gST, &payload, &size, &frame))
-        { gT.video_starves++; return; }
+        { gT.video_starves++; if(gST.read_pending) gEmptyPending++; return; }
       action = vx_sync_action(frame, due, size >= 4 && (payload[1] & 1), recovering);
       /* One image can wait in VRAM while its successor is decoded in DRAM. */
       if(action == VX_SYNC_WAIT && !*recovering && frame <= due + 2)
@@ -289,30 +500,41 @@ service_video(int *recovering, uint32 *next_frame_index)
           action = VX_SYNC_DROP;
         }
       if(!was_recovering && *recovering)
-        kprintf("catchup: skipping to keyframe from %d\n", (int)frame);
+        gRecoveries++;
       if(action == VX_SYNC_WAIT)
         return;
       if(action == VX_SYNC_DROP)
         {
+          gSkipped++;
           gDEC.state_valid = 0;
           vx_stream_frame_consumed(&gST);
           *next_frame_index = frame + 1;
           continue;
         }
       decodes++;
+      start = profile_clock();
       decode_error = vx_dec_frame(&gDEC, payload, size, NULL);
+      elapsed = profile_clock() - start;
+      profile_record(&gDecodeTime, elapsed, frame);
+      for(rank = 0; rank < 8; rank++)
+        if(elapsed > gSlow[rank].usec)
+          {
+            uint32 j;
+            for(j = 7; j > rank; j--)
+              { gSlow[j].frame = gSlow[j-1].frame; gSlow[j].usec = gSlow[j-1].usec; }
+            gSlow[rank].frame = frame; gSlow[rank].usec = elapsed;
+            break;
+          }
       if(decode_error != VXE_OK)
         {
           gT.decode_errs++;
           gDEC.state_valid = 0;
+          if(!*recovering) gRecoveries++;
           *recovering = 1;
-          kprintf("decode error %d; waiting for keyframe\n", (int)decode_error);
         }
       else
         {
-          if(was_recovering)
-            kprintf("catchup: resumed at keyframe %d\n", (int)frame);
-          due = vx_due_frame(vx_audio_position_samples(&gAU));
+          due = vx_due_frame(vx_audio_position_samples(&gAU), gST.info.fps_num);
           if(due <= frame + 1)
             {
               gDecodedFrame = frame;
@@ -331,10 +553,13 @@ service_video(int *recovering, uint32 *next_frame_index)
 static void
 stage_decoded(void)
 {
+  uint32 start;
   if(!gDecoded || gPrepared)
     return;
 #ifndef VX_PROBE_NOPRESENT
+  start = profile_clock();
   DrawCels(gSC.sc_BitmapItems[gSC.sc_curScreen], &gPresentCel);
+  profile_record(&gDrawTime, profile_clock() - start, gDecodedFrame);
 #endif
   gDecoded = 0;
   gPreparedFrame = gDecodedFrame;
@@ -347,7 +572,7 @@ present_ready(void)
   uint32 due, field;
   if(!gPrepared)
     return;
-  due = vx_due_frame(vx_audio_position_samples(&gAU));
+  due = vx_due_frame(vx_audio_position_samples(&gAU), gST.info.fps_num);
   field = gVblCount;
   if(!gPhaseValid && gPreparedFrame <= due)
     {
@@ -355,7 +580,7 @@ present_ready(void)
       gPhaseFrame = gPreparedFrame;
       gPhaseValid = 1;
     }
-  if(gPhaseValid && (int32)(field - (gPhaseField + 2 * (gPreparedFrame - gPhaseFrame))) < 0)
+  if(gPhaseValid && (int32)(field - (gPhaseField + gFieldsPerFrame * (gPreparedFrame - gPhaseFrame))) < 0)
     return;
   if(gPreparedFrame > due)
     {
@@ -370,6 +595,8 @@ present_ready(void)
     }
   if(due <= gPreparedFrame + 2)
     {
+      if(gPhaseValid && (int32)(field - (gPhaseField + gFieldsPerFrame * (gPreparedFrame - gPhaseFrame))) > 0)
+        gLatePresents++;
       present_backbuf();
     }
   else
@@ -385,6 +612,7 @@ main(int argc, char **argv)
   int paused = 0;
   int recovering = 0;
   uint32 next_frame_index = 0;
+  char video_path[sizeof(VIDEO_DIRECTORY) + FILESYSTEM_MAX_NAME_LEN + 1];
 
   (void)argc; (void)argv;
   memset(&gT, 0, sizeof(gT));
@@ -403,12 +631,14 @@ main(int argc, char **argv)
   if(err < 0) { kprintf("InitControlPad err %lx\n", err); teardown(); return 1; }
 
   kprintf("init: display\n");
-  err = CreateBasicDisplay(&gSC, DI_TYPE_DEFAULT, 3);
+  err = CreateBasicDisplay(&gSC, DI_TYPE_NTSC, 3);
   if(err < 0) { kprintf("CreateBasicDisplay err %lx\n", err); teardown(); return 1; }
   gSC.sc_curScreen = 0;
 
   kprintf("init: vbl\n");
   gVbl = GetVBLIOReq();
+  gProfileTimer = GetTimerIOReq();
+  if(gProfileTimer < 0) { kprintf("profile timer open failed\n"); teardown(); return 1; }
 #ifdef DEBUG
   kprintf("A avail %lx\n", (unsigned long)&dbg_avail);
   kprintf("A inbuf %lx\n", (unsigned long)&dbg_inbuf);
@@ -449,12 +679,20 @@ main(int argc, char **argv)
   err = vx_audio_open(&gAU);
   if(err < 0) { kprintf("audio open err %lx\n", err); teardown(); return 1; }
 
-  kprintf("init: stream %s\n", VIDEO_PATH);
-  err = vx_stream_open(&gST, VIDEO_PATH);
+  if(!scan_videos()) { kprintf("video directory scan failed\n"); teardown(); return 1; }
+select_movie:;
+  select_video(video_path);
+  kprintf("init: stream %s\n", video_path);
+  err = vx_stream_open(&gST, video_path);
   if(err < 0) { kprintf("stream open err %lx\n", err); teardown(); return 1; }
 
 restart:;
   paused = 0;
+  memset(&gT, 0, sizeof(gT));
+  memset(&gDecodeTime, 0, sizeof(gDecodeTime));
+  memset(&gDrawTime, 0, sizeof(gDrawTime));
+  memset(gSlow, 0, sizeof(gSlow));
+  gSkipped = gRecoveries = gEmptyPending = gLatePresents = 0;
   /* reset everything (fresh start, X-restart, or auto-loop) */
   vx_dec_init(&gDEC, gBackbuf, SCREEN_WIDTH, SCREEN_HEIGHT);
   next_frame_index = 0;
@@ -474,6 +712,12 @@ restart:;
       gVblCount++;
       if(gST.wedged) { kprintf("stream wedge at header\n"); teardown(); return 1; }
     }
+  gFieldsPerFrame = 60000u / gST.info.fps_num;
+  gFrameBudget = 1001000000u / gST.info.fps_num;
+  {
+    uint32 start = profile_clock();
+    gTimerOverhead = profile_clock() - start;
+  }
   kprintf("hdr ok w %u\n", gST.info.width);
   kprintf("hdr ok h %u\n", gST.info.height);
   kprintf("hdr ok fps %lu", gST.info.fps_num);
@@ -624,8 +868,8 @@ restart:;
       if(btns & ControlX)
         {
           stop_and_rewind();
-          gT.loops++;
-          goto restart;
+          vx_stream_close(&gST);
+          goto select_movie;
         }
       if(btns & ControlStart)
         {
@@ -648,7 +892,7 @@ restart:;
       /* Wait for both media tracks, including the final audio buffer. */
       if(gST.eof
          && !gPrepared && !gDecoded
-         && (!gSubmitted || gVblCount - gSubmittedTick >= 3u)
+         && (!gSubmitted || gVblCount - gSubmittedTick >= gFieldsPerFrame + 1u)
          && gST.cur == gST.fill && !gST.read_pending
          && !gST.frame_ready[0] && !gST.frame_ready[1]
          && !gST.frame_ready[2] && !gST.frame_ready[3]
@@ -656,9 +900,12 @@ restart:;
          && gST.aud_head == gST.aud_tail
          && gAU.played_bytes == gAU.total_submitted)
         {
-          kprintf("clip done; looping\n");
-          kprintf("decoded %d errors %d\n", (int)next_frame_index, (int)gT.decode_errs);
-          gT.loops++;
+          if(profile_summary())
+            {
+              stop_and_rewind();
+              vx_stream_close(&gST);
+              goto select_movie;
+            }
           stop_and_rewind();
           goto restart;
         }

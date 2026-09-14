@@ -90,6 +90,7 @@ own executable and launched from the menu with `LoadProgram()`.
 
 | App | Source | Description |
 |-----|--------|-------------|
+| 3VX Player | [src/3vxplayer](src/3vxplayer) | Directory-driven video menu with NTSC 15/20/30-fps comparisons and end-of-clip profiling. |
 | Hello, World! | [src/helloworld](src/helloworld) | Minimal C example that logs and draws centered text. |
 | Cel rotation | [src/cel_rotation](src/cel_rotation) | C++ cel rotation and zoom demo. |
 | 3D 3DO logo | [src/3d_3do_logo](src/3d_3do_logo) | 3D logo rendering demo. |
@@ -385,7 +386,7 @@ Cinepak encoder generate frames which align properly for the 3DO.
 For a modern custom-decoder path, `src/3vxplayer/` contains a PortfolioOS
 3VX player adapted from the sibling `3vt/player` sources. It streams video
 from CD into a persistent LR-form framebuffer, uses ARM60 block painters
-and double-buffered CEL presentation, and plays SDX2 stereo through the
+and triple-buffered CEL presentation, and plays SDX2 stereo through the
 Portfolio sound spooler. It does not use the legacy Cinepak subscriber.
 
 Build its bootable disc from the devkit root:
@@ -395,16 +396,33 @@ source activate-env
 make 3vxplayer-iso
 ```
 
-The result is `iso/3vxplayer.iso`. The standalone executable is
-`takeme/3vxplayer`; its media lives at `3vxplayer_data/video.3vx` on disc.
-The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
-the shared `takeme/LaunchMe`. Start/P pauses or resumes; X restarts;
-the clip loops automatically.
+The result is `iso/3vxplayer.iso`. The normal `make` also includes one
+**3VX Player** entry in the top-level menu (`iso/helloworld.iso`).
+The executable `takeme/3vxplayer` scans `$boot/3vxplayer_data` for `.3vx`
+files, sorts their names, and displays a scrolling file-selection menu.
+Place additional videos in `src/3vxplayer/takeme/3vxplayer_data/` and rebuild;
+both disc targets include the directory contents without changing source.
 
-The included sample is FFmpeg's animated test pattern with 440 Hz left /
-660 Hz right tones: 300 frames, 320x240, exactly 30000/1001 fps (10.01 s),
-and 22050 Hz stereo audio. To regenerate it, first build the sibling `3vt`
-repository, then run:
+Included files are `hackers-15.3vx` (15000/1001 fps), `hackers-20.3vx`
+(20000/1001 fps), and `video.3vx` (the original 30000/1001-fps trailer).
+All retain 320x240 video and 22050 Hz stereo audio at normal speed.
+Up/Down selects a file; A or Start plays it. During playback Start pauses
+or resumes and X returns to the file menu. At EOF the profiling summary
+remains visible: A replays with fresh counters, X returns to file selection.
+The player and its screens remain alive between videos; no reboot or
+relaunch is needed to compare them.
+
+The release-optimized summary reports decode/draw mean and maximum times,
+decode p99 in 5 ms buckets, over-budget calls, drops/skips, recovery entries,
+late submissions and the slowest decode frame numbers. Timing uses a
+dedicated GetUSecTime IOReq; clock overhead is displayed, not subtracted.
+Photograph the summary on an NTSC console for hardware comparisons.
+Opera timings are not measurements of physical CEL or CD performance.
+
+The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
+the shared `takeme/LaunchMe`. An optional sample generator creates FFmpeg's
+300-frame test pattern with 440/660 Hz stereo tones. The following commands
+**replace `video.3vx` with that test pattern**, leaving other videos intact:
 
 ```sh
 make 3vxplayer-sample

@@ -137,10 +137,14 @@ parse_header(VxStream *st, const uint8 *p)
   i->audio_bytes_per_sec = rd32(p + 0x2c);
   i->keyframe_interval   = rd32(p + 0x34);
   /* Bound duration below all 32-bit sample/byte products (over four hours).
-     Reject unsupported geometry/rates rather than silently desynchronizing. */
+     Reject unsupported geometry/rates rather than silently desynchronizing.
+     Rate support: 15000/20000/30000 over 1001 (3VX v1 field rates);
+     450000 frames at 15000/1001 = 662.2M samples = 1.32G stereo bytes,
+     inside every u32 accumulator in streamer and audio module. */
   if(rd16(p + 16) != 1 || rd16(p + 18) != 64
      || i->width != 320 || i->height != 240
-     || i->fps_num != 30000 || i->fps_den != 1001
+     || i->fps_den != 1001
+     || (i->fps_num != 15000 && i->fps_num != 20000 && i->fps_num != 30000)
      || i->audio_rate != 22050 || i->audio_channels != 2
      || i->audio_format != 0x5332 || i->audio_bytes_per_sec != 44100
      || i->frame_count == 0 || i->frame_count > 450000u)

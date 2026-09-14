@@ -50,6 +50,7 @@ run_example(const Example &example)
 
 static const Example examples[] =
   {
+    { "3VX Player",        "$boot/3vxplayer" },
     { "Hello, World!",     "$boot/helloworld" },
     { "Cel rotation",      "$boot/cel_rotation" },
     { "3D 3DO logo",       "$boot/3d_3do_logo" },
@@ -129,9 +130,8 @@ wait_control_pad_release(BasicDisplay &display)
 
 static
 int
-select_example(int selected)
+select_example(BasicDisplay &display, int selected)
 {
-  BasicDisplay display;
   Err err;
   int top;
 
@@ -186,10 +186,11 @@ main(int   argc_,
   (void)argv_;
 
   int selected = 0;
+  BasicDisplay display;
 
   while(true)
     {
-      selected = select_example(selected);
+      selected = select_example(display, selected);
       kprintf("launching example: %s\n", examples[selected].name);
       run_example(examples[selected]);
     }
