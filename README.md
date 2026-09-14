@@ -415,16 +415,23 @@ relaunch is needed to compare them.
 The release-optimized summary reports decode/draw mean and maximum times,
 decode p99 in 5 ms buckets, over-budget decode calls, drops/skips, recovery
 entries and late submissions. It now separates drops immediately after
-decoding (D) from drops after drawing, at presentation (P). For each site
-it reports drops within one NTSC field of the first rejected audio-sample
-boundary, maximum excess microseconds, and longest consecutive rejected
-decisions at that site. `Draw calls` counts actual staging work, including
-images subsequently discarded. `Phase start/reset` counts phase acquisition
-and discard resets; pause invalidation is not a discard reset. `Clock age`
-is the maximum age in fields of the loop's sampled VBL count at presentation.
-`Stage wait` is the longest delay from an accepted decode to its draw start.
-The print channel additionally includes eight slow decode frame indices and
-the full decode histogram. Timing uses a dedicated GetUSecTime IOReq; clock
+decoding (D) from drops after drawing, at presentation (P), including counts
+within one NTSC field of the first rejected audio-sample boundary.
+`Draw calls` counts actual staging work, including images later discarded.
+`Late 0/1/2` and `Late 3+` bucket submissions by fields beyond their phase
+deadline, using the fresh timer sample taken at the presentation decision.
+`Gaps` buckets intervals between successive submissions in fields (ideal:
+four at 15 fps, three at 20 fps, two at 30 fps). `max` is the longest gap.
+These measure submission timing, NOT actual VDL latch or scanout cadence.
+Intentional pauses start a new gap/streak segment and are excluded from gap
+statistics. `Phase start/reset` counts phase acquisition and discard resets;
+pause invalidation is not a discard reset.
+
+To keep the screen readable, the print channel carries the complete gap and
+lateness histograms (bin 8 means 8+ fields), drop excess/streak details,
+hidden-audio drops, stage-wait maximum (including pauses/stalls), field-clock
+age, eight slow decode indices and the decode histogram. Timing uses a
+dedicated GetUSecTime IOReq; clock
 overhead is displayed, not subtracted. Photograph the summary on an NTSC
 console for hardware comparisons. Opera timings are not measurements of
 physical CEL or CD performance.
@@ -437,6 +444,16 @@ reduced 30-fps trailer drops from 1888 to zero. Adding 25% decode delay as
 well reduced drops from 4095 to 212. These artificial delays isolate the
 scheduling mechanism; they do not simulate all hardware contention or prove
 console performance. Evidence is in `build/3vx-scheduling/`.
+
+A subsequent bounded-acceptance experiment retained the presentation
+deadline while admitting later decoded images. With the same synthetic
+11.35 ms draw time and 25% decode delay, the current gate dropped 203 frames
+with a maximum 15-field submission gap. Extensions of approximately 5 ms,
+16.6 ms, and one video frame instead dropped 253/407/873 frames, with maximum
+gaps of 28/52/164 fields. All were rejected: extra staging work delayed
+subsequent frames and increased post-draw losses. Only the cadence
+diagnostics were retained; acceptance thresholds remain unchanged.
+Full receipts and variant source are in `build/3vx-acceptance/`.
 
 The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
 the shared `takeme/LaunchMe`. An optional sample generator creates FFmpeg's

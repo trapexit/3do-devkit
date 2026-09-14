@@ -99,6 +99,33 @@ typedef struct DropTiming {
 static DropTiming gDecodeDrops, gPresentDrops;
 static uint32 gHiddenDrops, gPhaseResets, gPhaseStarts;
 static uint32 gDrawWaitStart, gDrawWaitMax, gClockAgeMax;
+/* Submission times, not graphics-latch/scanout times. 8 is the overflow bin. */
+static uint32 gSubmitGaps[9], gSubmitLate[9];
+static uint32 gLastSubmitField, gFreshField, gLateStreak, gMaxLateStreak;
+static uint32 gMaxSubmitGap;
+static int gHaveSubmitField;
+
+static void
+record_submission(uint32 ideal)
+{
+  uint32 gap, late = 0;
+  if((int32)(gFreshField - ideal) > 0) late = gFreshField - ideal;
+  gSubmitLate[late < 8 ? late : 8]++;
+  if(late)
+    {
+      gLateStreak++;
+      if(gLateStreak > gMaxLateStreak) gMaxLateStreak = gLateStreak;
+    }
+  else gLateStreak = 0;
+  if(gHaveSubmitField)
+    {
+      gap = gFreshField - gLastSubmitField;
+      gSubmitGaps[gap < 8 ? gap : 8]++;
+      if(gap > gMaxSubmitGap) gMaxSubmitGap = gap;
+    }
+  gLastSubmitField = gFreshField;
+  gHaveSubmitField = 1;
+}
 
 /* First audio sample at which frame f becomes due (ceil, no u64). */
 static uint32
@@ -218,15 +245,15 @@ profile_summary(void)
   profile_line(&gc, row++, line);
   sprintf(line, "Within 1 field D %lu P %lu", (unsigned long)gDecodeDrops.within_field, (unsigned long)gPresentDrops.within_field);
   profile_line(&gc, row++, line);
-  sprintf(line, "Drop max us D %lu P %lu", (unsigned long)gDecodeDrops.max_us, (unsigned long)gPresentDrops.max_us);
+  sprintf(line, "Late 0/1/2 %lu/%lu/%lu", (unsigned long)gSubmitLate[0], (unsigned long)gSubmitLate[1], (unsigned long)gSubmitLate[2]);
   profile_line(&gc, row++, line);
-  sprintf(line, "Drop streak D %lu P %lu", (unsigned long)gDecodeDrops.max_streak, (unsigned long)gPresentDrops.max_streak);
+  sprintf(line, "Late 3+ %lu streak %lu", (unsigned long)(gT.presents - gSubmitLate[0] - gSubmitLate[1] - gSubmitLate[2]), (unsigned long)gMaxLateStreak);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Gaps 0/1/2 %lu/%lu/%lu", (unsigned long)gSubmitGaps[0], (unsigned long)gSubmitGaps[1], (unsigned long)gSubmitGaps[2]);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Gaps 3/4 %lu/%lu max %lu", (unsigned long)gSubmitGaps[3], (unsigned long)gSubmitGaps[4], (unsigned long)gMaxSubmitGap);
   profile_line(&gc, row++, line);
   sprintf(line, "Phase start/reset %lu/%lu", (unsigned long)gPhaseStarts, (unsigned long)gPhaseResets);
-  profile_line(&gc, row++, line);
-  sprintf(line, "Clock age fields %lu hidden %lu", (unsigned long)gClockAgeMax, (unsigned long)gHiddenDrops);
-  profile_line(&gc, row++, line);
-  sprintf(line, "Stage wait max %lu us", (unsigned long)gDrawWaitMax);
   profile_line(&gc, row++, line);
   profile_line(&gc, row, "A: replay   X: menu");
   DisplayScreen(gSC.sc_Screens[gSC.sc_curScreen], 0);
@@ -235,6 +262,11 @@ profile_summary(void)
     kprintf("decode bucket %d count %d\n", (int)(i * 5000u), (int)gDecodeTime.bins[i]);
   for(i = 0; i < 8 && i < gDecodeTime.count; i++)
     kprintf("slow frame %d us %d\n", (int)gSlow[i].frame, (int)gSlow[i].usec);
+  for(i = 0; i < 9; i++)
+    kprintf("submit fields %d gaps %d late %d\n", (int)i, (int)gSubmitGaps[i], (int)gSubmitLate[i]);
+  kprintf("drop max us D %d P %d hidden %d\n", (int)gDecodeDrops.max_us, (int)gPresentDrops.max_us, (int)gHiddenDrops);
+  kprintf("drop streak D %d P %d\n", (int)gDecodeDrops.max_streak, (int)gPresentDrops.max_streak);
+  kprintf("stage wait us %d clock age fields %d\n", (int)gDrawWaitMax, (int)gClockAgeMax);
   do { WaitVBL(gVbl, 1); DoControlPad(1, &buttons, 0); }
   while(!(buttons & (ControlA | ControlX)));
   return (buttons & ControlX) != 0;
@@ -626,6 +658,7 @@ present_ready(void)
     if(GetVBLTime(gProfileTimer, NULL, &fresh) < 0)
       { kprintf("profile field read failed\n"); teardown(); exit(1); }
     if(fresh - field > gClockAgeMax) gClockAgeMax = fresh - field;
+    gFreshField = fresh;
   }
   if(!gPhaseValid && gPreparedFrame <= due)
     {
@@ -652,6 +685,7 @@ present_ready(void)
   if(due <= gPreparedFrame + 2)
     {
       gPresentDrops.streak = 0;
+      record_submission(gPhaseField + gFieldsPerFrame * (gPreparedFrame - gPhaseFrame));
       if(gPhaseValid && (int32)(field - (gPhaseField + gFieldsPerFrame * (gPreparedFrame - gPhaseFrame))) > 0)
         gLatePresents++;
       present_backbuf();
@@ -758,6 +792,10 @@ restart:;
   memset(&gPresentDrops, 0, sizeof(gPresentDrops));
   gHiddenDrops = gPhaseResets = gPhaseStarts = 0;
   gDrawWaitStart = gDrawWaitMax = gClockAgeMax = 0;
+  memset(gSubmitGaps, 0, sizeof(gSubmitGaps));
+  memset(gSubmitLate, 0, sizeof(gSubmitLate));
+  gLastSubmitField = gFreshField = gLateStreak = gMaxLateStreak = gMaxSubmitGap = 0;
+  gHaveSubmitField = 0;
   gSkipped = gRecoveries = gEmptyPending = gLatePresents = 0;
   /* reset everything (fresh start, X-restart, or auto-loop) */
   vx_dec_init(&gDEC, gBackbuf, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -940,6 +978,8 @@ restart:;
       if(btns & ControlStart)
         {
           paused = !paused;
+          gHaveSubmitField = 0; /* Exclude intentional pauses from gap statistics. */
+          gLateStreak = 0;
           gPhaseValid = 0;
           err = paused ? vx_audio_pause(&gAU) : vx_audio_resume(&gAU);
           if(err < 0)
