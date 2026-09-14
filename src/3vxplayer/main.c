@@ -93,6 +93,35 @@ static SlowFrame gSlow[8];
 static uint32 gSkipped, gRecoveries, gEmptyPending, gLatePresents;
 static uint32 gFrameBudget, gFieldsPerFrame, gTimerOverhead;
 static Item gProfileTimer;
+typedef struct DropTiming {
+  uint32 count, within_field, max_us, streak, max_streak;
+} DropTiming;
+static DropTiming gDecodeDrops, gPresentDrops;
+static uint32 gHiddenDrops, gPhaseResets, gPhaseStarts;
+static uint32 gDrawWaitStart, gDrawWaitMax, gClockAgeMax;
+
+/* First audio sample at which frame f becomes due (ceil, no u64). */
+static uint32
+frame_sample(uint32 frame)
+{
+  uint32 period = gST.info.fps_num / 50u;
+  return (frame / period) * 441441u
+       + ((frame % period) * 441441u + period - 1u) / period;
+}
+
+static void
+record_drop(DropTiming *d, uint32 samples, uint32 first_late_frame)
+{
+  uint32 boundary = frame_sample(first_late_frame);
+  uint32 excess = samples > boundary ? samples - boundary : 0;
+  uint32 us = (excess / 22050u) * 1000000u
+            + ((excess % 22050u) * 20000u) / 441u;
+  d->count++;
+  if(us <= 16683u) d->within_field++;
+  if(us > d->max_us) d->max_us = us;
+  d->streak++;
+  if(d->streak > d->max_streak) d->max_streak = d->streak;
+}
 static void teardown(void);
 
 static uint32
@@ -183,19 +212,29 @@ profile_summary(void)
   profile_line(&gc, row++, line);
   sprintf(line, "Draw avg/max us %lu/%lu", (unsigned long)profile_average(&gDrawTime), (unsigned long)gDrawTime.maximum_us);
   profile_line(&gc, row++, line);
-  sprintf(line, "Draw over %lu worst frame %lu", (unsigned long)gDrawTime.over, (unsigned long)gDrawTime.maximum_frame);
+  sprintf(line, "Draw calls %lu", (unsigned long)gDrawTime.count);
   profile_line(&gc, row++, line);
-  profile_line(&gc, row++, "Slow decode frames (zero-based):");
-  for(i = 0; i < 6 && i < gDecodeTime.count; i++)
-    {
-      sprintf(line, "  %lu: %lu us", (unsigned long)gSlow[i].frame, (unsigned long)gSlow[i].usec);
-      profile_line(&gc, row++, line);
-    }
+  sprintf(line, "Drop decode %lu present %lu", (unsigned long)gDecodeDrops.count, (unsigned long)gPresentDrops.count);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Within 1 field D %lu P %lu", (unsigned long)gDecodeDrops.within_field, (unsigned long)gPresentDrops.within_field);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Drop max us D %lu P %lu", (unsigned long)gDecodeDrops.max_us, (unsigned long)gPresentDrops.max_us);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Drop streak D %lu P %lu", (unsigned long)gDecodeDrops.max_streak, (unsigned long)gPresentDrops.max_streak);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Phase start/reset %lu/%lu", (unsigned long)gPhaseStarts, (unsigned long)gPhaseResets);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Clock age fields %lu hidden %lu", (unsigned long)gClockAgeMax, (unsigned long)gHiddenDrops);
+  profile_line(&gc, row++, line);
+  sprintf(line, "Stage wait max %lu us", (unsigned long)gDrawWaitMax);
+  profile_line(&gc, row++, line);
   profile_line(&gc, row, "A: replay   X: menu");
   DisplayScreen(gSC.sc_Screens[gSC.sc_curScreen], 0);
   /* Histogram is printed only after playback, never in a timed region. */
   for(i = 0; i < 21; i++)
     kprintf("decode bucket %d count %d\n", (int)(i * 5000u), (int)gDecodeTime.bins[i]);
+  for(i = 0; i < 8 && i < gDecodeTime.count; i++)
+    kprintf("slow frame %d us %d\n", (int)gSlow[i].frame, (int)gSlow[i].usec);
   do { WaitVBL(gVbl, 1); DoControlPad(1, &buttons, 0); }
   while(!(buttons & (ControlA | ControlX)));
   return (buttons & ControlX) != 0;
@@ -472,7 +511,7 @@ service_video(int *recovering, uint32 *next_frame_index)
   while(scans++ < VX_SCAN_BUDGET && decodes < VX_DECODE_BUDGET)
     {
       const uint8 *payload;
-      uint32 size, frame, due, start, elapsed, rank;
+      uint32 size, frame, due, start, elapsed, rank, samples;
       int action, was_recovering = *recovering;
       uint32 decode_error;
 
@@ -534,14 +573,20 @@ service_video(int *recovering, uint32 *next_frame_index)
         }
       else
         {
-          due = vx_due_frame(vx_audio_position_samples(&gAU), gST.info.fps_num);
+          samples = vx_audio_position_samples(&gAU);
+          due = vx_due_frame(samples, gST.info.fps_num);
           if(due <= frame + 1)
             {
+              gDecodeDrops.streak = 0;
+              gDrawWaitStart = profile_clock();
               gDecodedFrame = frame;
               gDecoded = 1;
             }
           else
-            gT.frame_drop_decodes++;
+            {
+              gT.frame_drop_decodes++;
+              record_drop(&gDecodeDrops, samples, frame + 2);
+            }
         }
       vx_stream_frame_consumed(&gST);
       *next_frame_index = frame + 1;
@@ -558,6 +603,7 @@ stage_decoded(void)
     return;
 #ifndef VX_PROBE_NOPRESENT
   start = profile_clock();
+  if(start - gDrawWaitStart > gDrawWaitMax) gDrawWaitMax = start - gDrawWaitStart;
   DrawCels(gSC.sc_BitmapItems[gSC.sc_curScreen], &gPresentCel);
   profile_record(&gDrawTime, profile_clock() - start, gDecodedFrame);
 #endif
@@ -569,14 +615,24 @@ stage_decoded(void)
 static void
 present_ready(void)
 {
-  uint32 due, field;
+  uint32 due, field, samples;
   if(!gPrepared)
     return;
-  due = vx_due_frame(vx_audio_position_samples(&gAU), gST.info.fps_num);
+  samples = vx_audio_position_samples(&gAU);
+  due = vx_due_frame(samples, gST.info.fps_num);
   field = gVblCount;
+  {
+    uint32 fresh = 0;
+    if(GetVBLTime(gProfileTimer, NULL, &fresh) < 0)
+      { kprintf("profile field read failed\n"); teardown(); exit(1); }
+    if(fresh - field > gClockAgeMax) gClockAgeMax = fresh - field;
+  }
   if(!gPhaseValid && gPreparedFrame <= due)
     {
-      gPhaseField = field + 2;
+      gPhaseStarts++;
+      /* A frame already behind audio must not gain a fresh two-field
+         delay: that can repeatedly hold it past the discard deadline. */
+      gPhaseField = field + 2 - gFieldsPerFrame * (due - gPreparedFrame);
       gPhaseFrame = gPreparedFrame;
       gPhaseValid = 1;
     }
@@ -590,17 +646,23 @@ present_ready(void)
          && gST.aud_head - gST.aud_tail < 4
          && gST.frame_ready[0] && gST.frame_ready[1]
          && gST.frame_ready[2] && gST.frame_ready[3])
-        { gPrepared = 0; gT.frame_drop_decodes++; }
+        { gPrepared = 0; gT.frame_drop_decodes++; gHiddenDrops++; }
       return;
     }
   if(due <= gPreparedFrame + 2)
     {
+      gPresentDrops.streak = 0;
       if(gPhaseValid && (int32)(field - (gPhaseField + gFieldsPerFrame * (gPreparedFrame - gPhaseFrame))) > 0)
         gLatePresents++;
       present_backbuf();
     }
   else
-    { gT.frame_drop_decodes++; gPhaseValid = 0; }
+    {
+      gT.frame_drop_decodes++;
+      record_drop(&gPresentDrops, samples, gPreparedFrame + 3);
+      gPhaseResets++;
+      gPhaseValid = 0;
+    }
   gPrepared = 0;
 }
 
@@ -692,6 +754,10 @@ restart:;
   memset(&gDecodeTime, 0, sizeof(gDecodeTime));
   memset(&gDrawTime, 0, sizeof(gDrawTime));
   memset(gSlow, 0, sizeof(gSlow));
+  memset(&gDecodeDrops, 0, sizeof(gDecodeDrops));
+  memset(&gPresentDrops, 0, sizeof(gPresentDrops));
+  gHiddenDrops = gPhaseResets = gPhaseStarts = 0;
+  gDrawWaitStart = gDrawWaitMax = gClockAgeMax = 0;
   gSkipped = gRecoveries = gEmptyPending = gLatePresents = 0;
   /* reset everything (fresh start, X-restart, or auto-loop) */
   vx_dec_init(&gDEC, gBackbuf, SCREEN_WIDTH, SCREEN_HEIGHT);

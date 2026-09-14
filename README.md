@@ -413,11 +413,30 @@ The player and its screens remain alive between videos; no reboot or
 relaunch is needed to compare them.
 
 The release-optimized summary reports decode/draw mean and maximum times,
-decode p99 in 5 ms buckets, over-budget calls, drops/skips, recovery entries,
-late submissions and the slowest decode frame numbers. Timing uses a
-dedicated GetUSecTime IOReq; clock overhead is displayed, not subtracted.
-Photograph the summary on an NTSC console for hardware comparisons.
-Opera timings are not measurements of physical CEL or CD performance.
+decode p99 in 5 ms buckets, over-budget decode calls, drops/skips, recovery
+entries and late submissions. It now separates drops immediately after
+decoding (D) from drops after drawing, at presentation (P). For each site
+it reports drops within one NTSC field of the first rejected audio-sample
+boundary, maximum excess microseconds, and longest consecutive rejected
+decisions at that site. `Draw calls` counts actual staging work, including
+images subsequently discarded. `Phase start/reset` counts phase acquisition
+and discard resets; pause invalidation is not a discard reset. `Clock age`
+is the maximum age in fields of the loop's sampled VBL count at presentation.
+`Stage wait` is the longest delay from an accepted decode to its draw start.
+The print channel additionally includes eight slow decode frame indices and
+the full decode histogram. Timing uses a dedicated GetUSecTime IOReq; clock
+overhead is displayed, not subtracted. Photograph the summary on an NTSC
+console for hardware comparisons. Opera timings are not measurements of
+physical CEL or CD performance.
+
+Phase acquisition is relative to the prepared frame's media time: a frame
+already trailing audio does not receive another fresh two-field delay.
+The lateness/drop thresholds and decoder remain unchanged. In a controlled
+Opera test adding an approximately 11.35 ms draw delay, this correction
+reduced 30-fps trailer drops from 1888 to zero. Adding 25% decode delay as
+well reduced drops from 4095 to 212. These artificial delays isolate the
+scheduling mechanism; they do not simulate all hardware contention or prove
+console performance. Evidence is in `build/3vx-scheduling/`.
 
 The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
 the shared `takeme/LaunchMe`. An optional sample generator creates FFmpeg's
