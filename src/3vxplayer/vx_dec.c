@@ -21,7 +21,8 @@
 #include "stddef.h"
 typedef char VxAsmLayout[(sizeof(void *) == 4 && offsetof(VxDec, blocks_w) == 8
   && offsetof(VxDec, blocks_h) == 10 && offsetof(VxDec, v1cb) == 16
-  && offsetof(VxDec, v4cb) == 4112) ? 1 : -1];
+  && offsetof(VxDec, v4cb) == 4112 && offsetof(VxDec, dirty_first) == 6160
+  && offsetof(VxDec, dirty_end) == 6164) ? 1 : -1];
 extern uint32 vx_run_vec_asm(VxDec *dec, const uint8 *p, uint32 bytes);
 #endif
 
@@ -295,6 +296,11 @@ run_vec(VxDec *dec, const uint8 *p)
         {
           uint32 op = *p++;
           n = (op & 63u) + 1;
+          if(op >= 64)
+            {
+              if(row < dec->dirty_first) dec->dirty_first = row;
+              dec->dirty_end = row + 1;
+            }
           if(op < 64)
             { d0 += n * 8; d1 += n * 8; }
           else if(op < 128)
@@ -334,6 +340,8 @@ vx_dec_frame(VxDec *dec, const uint8 *payload, uint32 payload_bytes)
   uint16 flags;
   uint32 saw_vec = 0;
   uint32 err = VXE_OK;
+  dec->dirty_first = dec->blocks_h;
+  dec->dirty_end = 0;
 
   if(payload_bytes < 4)
     {

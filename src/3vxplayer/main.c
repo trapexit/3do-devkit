@@ -62,6 +62,7 @@ static ScreenContext gSC;
 static Item          gVbl;
 static uint16       *gBackbuf;
 static CCB           gPresentCel;
+static uint32 gDirtyFirst[3], gDirtyEnd[3], gBandRows, gBandCalls;
 
 static VxStream      gST;
 static VxAudio       gAU;
@@ -239,7 +240,7 @@ profile_summary(void)
   profile_line(&gc, row++, line);
   sprintf(line, "Draw avg/max us %lu/%lu", (unsigned long)profile_average(&gDrawTime), (unsigned long)gDrawTime.maximum_us);
   profile_line(&gc, row++, line);
-  sprintf(line, "Draw calls %lu", (unsigned long)gDrawTime.count);
+  sprintf(line, "Draws %lu rows %lu", (unsigned long)gBandCalls, (unsigned long)gBandRows);
   profile_line(&gc, row++, line);
   sprintf(line, "Drop decode %lu present %lu", (unsigned long)gDecodeDrops.count, (unsigned long)gPresentDrops.count);
   profile_line(&gc, row++, line);
@@ -605,6 +606,14 @@ service_video(int *recovering, uint32 *next_frame_index)
         }
       else
         {
+          uint32 screen;
+          uint32 first = gDEC.dirty_first, end = gDEC.dirty_end;
+          if(payload[1] & 1) { first = 0; end = gDEC.blocks_h; }
+          for(screen = 0; screen < 3; screen++)
+            {
+              if(first < gDirtyFirst[screen]) gDirtyFirst[screen] = first;
+              if(end > gDirtyEnd[screen]) gDirtyEnd[screen] = end;
+            }
           samples = vx_audio_position_samples(&gAU);
           due = vx_due_frame(samples, gST.info.fps_num);
           if(due <= frame + 1)
@@ -636,7 +645,25 @@ stage_decoded(void)
 #ifndef VX_PROBE_NOPRESENT
   start = profile_clock();
   if(start - gDrawWaitStart > gDrawWaitMax) gDrawWaitMax = start - gDrawWaitStart;
-  DrawCels(gSC.sc_BitmapItems[gSC.sc_curScreen], &gPresentCel);
+  {
+    uint32 screen = gSC.sc_curScreen;
+    uint32 first = gDirtyFirst[screen], end = gDirtyEnd[screen];
+    if(first < end)
+      {
+        uint32 pairs = (end - first) * 2;
+        gPresentCel.ccb_SourcePtr = (void *)((uint8 *)gBackbuf + first * 2 * ROWPAIR_BYTES);
+        gPresentCel.ccb_YPos = (int32)(first * 4) << 16;
+        gPresentCel.ccb_Height = pairs;
+        gPresentCel.ccb_PRE0 = ((pairs - PRE0_VCNT_PREFETCH) << PRE0_VCNT_SHIFT) | PRE0_LINEAR | PRE0_BPP_16;
+        DrawCels(gSC.sc_BitmapItems[screen], &gPresentCel);
+        gBandRows += (end - first) * 4;
+        gBandCalls++;
+        setup_present_cel(&gPresentCel, gBackbuf);
+      }
+    /* A stage changes screen contents even if presentation is later dropped. */
+    gDirtyFirst[screen] = gDEC.blocks_h;
+    gDirtyEnd[screen] = 0;
+  }
   profile_record(&gDrawTime, profile_clock() - start, gDecodedFrame);
 #endif
   gDecoded = 0;
@@ -797,6 +824,11 @@ restart:;
   gLastSubmitField = gFreshField = gLateStreak = gMaxLateStreak = gMaxSubmitGap = 0;
   gHaveSubmitField = 0;
   gSkipped = gRecoveries = gEmptyPending = gLatePresents = 0;
+  {
+    uint32 i;
+    for(i = 0; i < 3; i++) { gDirtyFirst[i] = 0; gDirtyEnd[i] = SCREEN_HEIGHT / 4; }
+    gBandRows = gBandCalls = 0;
+  }
   /* reset everything (fresh start, X-restart, or auto-loop) */
   vx_dec_init(&gDEC, gBackbuf, SCREEN_WIDTH, SCREEN_HEIGHT);
   next_frame_index = 0;

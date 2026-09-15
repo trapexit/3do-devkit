@@ -417,7 +417,9 @@ decode p99 in 5 ms buckets, over-budget decode calls, drops/skips, recovery
 entries and late submissions. It now separates drops immediately after
 decoding (D) from drops after drawing, at presentation (P), including counts
 within one NTSC field of the first rejected audio-sample boundary.
-`Draw calls` counts actual staging work, including images later discarded.
+`Draws / rows` reports actual CEL draw calls and total pixel rows copied,
+including images later discarded. Frames whose target screen is already
+current need no draw. Draw timing includes staging bookkeeping for those frames.
 `Late 0/1/2` and `Late 3+` bucket submissions by fields beyond their phase
 deadline, using the fresh timer sample taken at the presentation decision.
 `Gaps` buckets intervals between successive submissions in fields (ideal:
@@ -494,6 +496,28 @@ The host build implements the same unchecked VEC contract portably for
 pixel verification; the 3DO build uses only the optimized ARM interpreter.
 Historical trusted/checked comparison evidence is under `build/3vx-trusted/`;
 single-API cutover evidence is under `build/3vx-single/`.
+
+The normal player now renders only the conservative dirty vertical band of
+each destination screen. The decoder records the first/end block rows that
+contain coded (non-skip) commands while executing the existing VEC stream.
+The player unions those bounds separately for all three screen buffers,
+including decoded-but-dropped frames, and clears a buffer's bounds only
+after staging into it. Keyframes and playback restarts invalidate every
+screen fully. This preserves the existing version-1 file format and all
+bundled videos; no private metadata or separate experimental player is needed.
+The measured dispatch improvements are also enabled: common opcode classes
+are tested before V4-repeat, and literal-loop exits branch directly to row
+advance. The single decoder and scheduler thresholds are unchanged.
+
+Harness verification matched all 5191 decoded framebuffers and codebooks,
+33 normal movie captures and 626 matched post-stall captures against the
+full-frame renderer exactly. Randomized decode/stage/presentation drops
+also preserved destination-screen pixels. All three full videos presented
+every frame, with working replay and file-menu return. The 30-fps movie
+copied 728224 pixel rows rather than 1245840 (41.5% fewer). Runtime row
+tracking adds about 0.1 ms per frame in Opera versus the previous decoder;
+the hardware Draw-time saving is the performance gate. Evidence for the
+normal-player integration is in `build/3vx-main-integration/`.
 
 The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
 the shared `takeme/LaunchMe`. An optional sample generator creates FFmpeg's

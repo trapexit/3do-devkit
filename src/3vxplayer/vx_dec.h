@@ -34,6 +34,8 @@ typedef struct VxDec {
      even scanline first in memory (high halfword on the 3DO). */
   uint32  v1cb[256 * 4];
   uint32  v4cb[256 * 2];
+  /* Conservative [first,end) coded block rows for the last frame. */
+  uint32 dirty_first, dirty_end;
 } VxDec;
 
 
