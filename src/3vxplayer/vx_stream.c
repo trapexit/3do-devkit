@@ -97,7 +97,10 @@ finish_read(VxStream *st)
     return;
   if(!ReadDoneBlockFile(st->ioreq))
     return;
-  if(WaitReadDoneBlockFile(st->ioreq) < 0)
+  /* A non-negative wait only reports the wait itself: the device error
+     lives in the request. Portfolio's own LoadFile re-reads it. */
+  if(WaitReadDoneBlockFile(st->ioreq) < 0
+     || ((IOReq *)LookupItem(st->ioreq))->io_Error < 0)
     { st->read_pending = 0; st->wedged = 1; return; }
   st->read_pending = 0;
 

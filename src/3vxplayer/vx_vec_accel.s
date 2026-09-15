@@ -1,7 +1,11 @@
 ; Trusted ARMv3 VEC interpreter: caller must validate stream commands.
 ; r4=input, r5=V4 table, r6/r7=rowpair destinations, r8=row remaining,
-; r9=rows remaining, r10=V1 table, r11=rowpair stride bytes.
-; Stack: [0]=row width, [4]=coded-row flag, [8]=decoder, [12]=row count.
+; r9=rows remaining; bit31 = this row has coded blocks, bit30 = dirty_first
+; not yet written (rows are visited in increasing order, so the first coded
+; row is the minimum and needs no compare). r10=V1 table,
+; r11=rowpair stride bytes.
+; Stack: [0]=dirty-bounds base (dec+4096), [4]=V1-repeat count spill,
+; [8]=decoder, [12]=total row count.
 ; r0-r3/ip/lr are paint temporaries. All APCS callee-saved registers survive.
         AREA |C$$code|, CODE, READONLY
         EXPORT vx_run_vec_asm
@@ -9,6 +13,8 @@ vx_run_vec_asm
         stmfd sp!, {r4-r11, lr}
         sub sp, sp, #16
         str r0, [sp, #8]
+        add ip, r0, #4096
+        str ip, [sp]
         mov r4, r1
         ldr r6, [r0]
         ldr r1, [r0, #8]
@@ -16,7 +22,7 @@ vx_run_vec_asm
         mov r9, r1, lsl #16
         mov r9, r9, lsr #16
         str r9, [sp, #12]
-        str r8, [sp]
+        orr r9, r9, #&40000000
         mov r11, r8, lsl #4
         add r7, r6, r11
         add r10, r0, #16
@@ -26,12 +32,13 @@ vxv_next
         and lr, r0, #63
         add lr, lr, #1
         cmp r0, #64
-        orrhs r9, r9, #&80000000
         blo vxv_skip
+        orr r9, r9, #&80000000
+        sub ip, r0, #128
+        cmp ip, #64
+        blo vxv_literal4
         cmp r0, #128
         blo vxv_literal1
-        cmp r0, #192
-        blo vxv_literal4
         cmp r0, #255
         beq vxv_repeat4
 ; V1 repeat: one index followed by repeated expanded quadrant colors.
@@ -184,17 +191,18 @@ vxv_advance
         tst r9, #&80000000
         beq vxv_clean_row
         bic r9, r9, #&80000000
-        ldr r0, [sp, #8]
-        add r0, r0, #4096
+        ldr r0, [sp]
         ldr r1, [sp, #12]
-        sub r1, r1, r9
-        ldr r2, [r0, #2064]
-        cmp r1, r2
-        strlo r1, [r0, #2064]
+        bic r2, r9, #&c0000000
+        sub r1, r1, r2
+        tst r9, #&40000000
+        strne r1, [r0, #2064]
+        bic r9, r9, #&40000000
         add r1, r1, #1
         str r1, [r0, #2068]
 vxv_clean_row
-        subs r9, r9, #1
+        sub r9, r9, #1
+        tst r9, #&ff
         beq vxv_ok
         mov r8, r11, lsr #4
         add r6, r6, r11

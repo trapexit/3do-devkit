@@ -542,6 +542,70 @@ hardware baseline is 8945/32240 us decode and 6942/13712 us draw, with all
 5191 frames presented and no reported visual artifacts. The new stack's
 hardware gain remains unmeasured. Evidence: `build/3vx-mincost/receipt.json`.
 
+A subsequent full review of the player and decoder retained four changes.
+V4 literal commands, 37.6 percent of all commands in the sample stream,
+now reach their handler in two class tests instead of three via a range
+test; each coded row loads the dirty-bounds base from a previously dead
+stack slot instead of recomputing it; and `finish_read` re-reads the
+request's `io_Error` after a non-negative wait, matching Portfolio's own
+`LoadFile`, so a device read error wedges instead of advancing the window
+over bytes the drive never delivered.
+
+The dispatch and stack-slot changes alone traded 31 us of mean decode time
+for 16 us on the worst frame; a fourth change removed that tail cost.
+`dirty_first` is now written only on the first coded row, latched by bit 30
+of the row-count register, rather than re-derived with a load, compare and
+conditional store on every coded row; rows are visited in increasing order,
+so the first coded row is already the minimum. Interleaved A/B/A/B against a
+pristine worktree at the previous commit, with zero microseconds of
+within-arm scatter across repeated runs of either build, puts Opera 30-fps
+decode at 6796/18608 us before and 6764/18608 us after: the mean improves
+and the worst frame is back to the baseline maximum. The read-error check is
+not a performance change.
+
+The decode maximum is a keyframe cost and is not reachable from the decoder.
+All 218 keyframes code every one of the 4800 blocks and carry about 500
+codebook entries, while the worst delta frame codes 3072. A cycle sketch
+puts V4 literals at 78 percent of keyframe paint cost, but every keyframe
+must write 4800 times 32 equals 153600 framebuffer bytes whatever the block
+mode, so the tail is dominated by mandatory memory traffic rather than
+dispatch or addressing overhead. Reordering the V4 literal index loads ahead
+of the codebook loads measured exactly neutral on both mean and maximum:
+this part has no cache and does not reorder loads, so only the number of
+accesses matters. Lowering the maximum requires changing what a keyframe has
+to write, which is an encoder or format decision.
+
+The rendering side is likewise closed at this geometry. `CCB_BGND` already
+selects the opaque path by disabling the transparency test, `PMODE_ONE`
+selects a plain source copy, and because the cel engine takes `ccb_HDX >> 4`
+the configured `1 << 20` is exactly unity scale, so the presentation cel
+already qualifies for the unscaled line-copy path. Hardware cost is 47.1 us
+per row full-frame and 49.3 us per row banded, so the draw is linear in rows
+copied with negligible per-call overhead, and dirty-band rendering already
+captured the available saving.
+
+The same review rejected five candidates on measurement rather than
+judgement: replacing the aligned V4 codebook `memcpy` with wide-register
+copies (6847 us, slower than the SDK routine); consolidating the per-field
+audio-clock reads (no gain, and the call also drives spooler completion
+processing); expanding the resident V1 codebook to eight words per entry in
+paint order, which removes every duplication `mov` from both V1 painters
+but measured 6788/18992 us against 6765/18624 because the extra 4 KiB of
+resident table costs more in codebook-load traffic than the saved
+instructions recover; drawing exact per-row spans instead of one band
+(724180 versus 728224 rows, a 0.56 percent difference); and wider V4 index
+loads, which need a format change because only 25.2 percent of index groups
+are word-aligned in real streams.
+
+Known remaining gaps, none implemented: a single transient CD read error
+still ends the movie, where a bounded re-issue of the same request would
+recover; `vx_audio_fill` still runs while paused and inflates its
+`no_free` counter; the first read is a full 128 KiB, which lengthens
+boot-to-first-frame; and with a zero-height block grid the host decoder
+no-ops while the ARM interpreter loops, a divergence outside the
+documented input contract and unreachable from the encoder. Evidence and
+the full census are in `build/3vx-review2/receipt.json`.
+
 The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
 the shared `takeme/LaunchMe`. An optional sample generator creates FFmpeg's
 300-frame test pattern with 440/660 Hz stereo tones. The following commands

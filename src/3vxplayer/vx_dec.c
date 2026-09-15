@@ -1,19 +1,18 @@
 /*
-  3vx_dec.c - 3VX VFRM payload decoder core (codebook-load cost lane).
+  vx_dec.c - 3VX VFRM payload decoder core.
 
-  Derived from build/3vx-mincost/base-vx_dec.c. ONLY the codebook load
-  paths change (see NOTES.md in this directory):
-    - sparse chunks (KC4_SPARSE/KC1_SPARSE): per-record call to
-      expand_v1/load_v4, per-record is_v1 test, per-record alignment
-      test and per-record i*12 multiply replaced by per-chunk hoisted
-      loops with walking record pointers and inline word bodies.
-    - V1 batch (KC1_FULL/KC1_RANGE, aligned): loop unrolled x2 with
-      post-increment single loads/stores.
-    - V4 batch fallback: walking pointers replace the per-entry
-      p + i*8 multiply and call.
-  API (vx_dec_frame, 3 args), VxDec layout (dirty_first@6160,
-  dirty_end@6164, v1cb@16, v4cb@4112), painters, VEC paths, error codes
-  and host pixel semantics are unchanged. vx_vec_accel.s is unchanged.
+  One optimized validated-input decoder: vx_dec_frame(dec, payload, bytes).
+  Codebook sub-chunks expand into the resident tables; the single VEC
+  sub-chunk is interpreted by the fused ARMv3 interpreter on target
+  (vx_vec_accel.s) or the portable twin run_vec on the host. Both share
+  the same validated-input precondition; chunk framing, codebook bounds
+  and prediction-state checks remain. The VEC pass also records the
+  conservative coded block-row bounds (dirty_first/dirty_end) the player
+  uses to crop its VRAM band draw.
+
+  VxDec layout is pinned by the compile-time assert below because the
+  assembly reaches these fields directly: v1cb@16, v4cb@4112,
+  dirty_first@6160, dirty_end@6164.
 */
 #include "vx_dec.h"
 #include "string.h"
