@@ -18,6 +18,18 @@
 
 #define VX_WIN_BYTES     (384 * 1024)
 #define VX_READ_BYTES    (128 * 1024)
+/* Startup read ramp. The first read is the preload that covers the next
+   read's transfer, so a full-size first request holds the stream
+   unparseable for ~446 ms at 2x CD before playback can start. Reading in
+   smaller units starts playback after ~222 ms instead. The unit returns
+   to VX_READ_BYTES once the buffered lead (bytes read ahead of the last
+   consumed frame) can cover a full read's transfer, measured over the
+   fastest streams this player accepts (~283 KB/s here, 126 KiB over
+   446 ms), or after VX_RAMP_MAX ramp reads as a bound on the small-read
+   overhead. Sector multiples. */
+#define VX_READ_RAMP     (64 * 1024)
+#define VX_RAMP_LEAD     (160 * 1024)
+#define VX_RAMP_MAX      16
 #define VX_FRAME_MAX     (56 * 1024)   /* hard cap per VFRM payload */
 #define VX_FRAME_SLOTS   4
 #define VX_AUDRING_BYTES (96 * 1024)
@@ -47,11 +59,15 @@ typedef struct VxStream {
   uint32    next_read_off;   /* absolute offset of next read */
   uint32    pend_bytes;      /* latched size of in-flight read */
   int       read_pending;
+  int       ramping;         /* still in the startup read ramp */
+  uint32    ramp_count;      /* ramp reads issued since open/rewind */
+  uint32    consumed_off;    /* stream offset of the last consumed frame */
   int       eof;             /* next_read_off reached file_size */
 
   uint8    *frames[VX_FRAME_SLOTS];
   uint32    frame_len[VX_FRAME_SLOTS];
   uint32    frame_index[VX_FRAME_SLOTS];
+  uint32    frame_end[VX_FRAME_SLOTS];  /* stream offset just past the frame */
   int       frame_ready[VX_FRAME_SLOTS];
   int       slot_w, slot_r;
 

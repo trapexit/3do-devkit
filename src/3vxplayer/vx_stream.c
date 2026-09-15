@@ -49,7 +49,12 @@ issue_read(VxStream *st)
 
   free_tail = VX_WIN_BYTES - (st->fill - st->cur);
   pos = st->fill % VX_WIN_BYTES;
-  want = VX_READ_BYTES;
+  /* Leave the ramp once the buffered lead can cover a full-size read. */
+  if(st->ramping
+     && (st->fill - st->consumed_off >= VX_RAMP_LEAD
+         || st->ramp_count >= VX_RAMP_MAX))
+    st->ramping = 0;
+  want = st->ramping ? VX_READ_RAMP : VX_READ_BYTES;
   if(want > VX_WIN_BYTES - pos) want = VX_WIN_BYTES - pos;
   if(free_tail < want)
     {
@@ -80,6 +85,7 @@ issue_read(VxStream *st)
     {
       st->read_pending = 1;
       st->pend_bytes   = want;
+      if(st->ramping) st->ramp_count++;
     }
   else
     {
@@ -216,6 +222,7 @@ demux(VxStream *st)
           window_copy(st, st->cur + CHUNK_HDR, st->frames[st->slot_w], size - CHUNK_HDR);
           st->frame_len[st->slot_w]   = size - CHUNK_HDR;
           st->frame_index[st->slot_w] = time;
+          st->frame_end[st->slot_w]   = st->cur + size;
           st->frame_ready[st->slot_w] = 1;
           st->slot_w++; if(st->slot_w == VX_FRAME_SLOTS) st->slot_w = 0;
           st->frames_delivered++;
@@ -298,6 +305,7 @@ vx_stream_open(VxStream *st, const char *path)
   memset(st, 0, sizeof(*st));
   st->port = -1;   /* close guards: DeleteMsgPort/DeleteItem only when >= 0 */
   st->ioreq = -1;
+  st->ramping = 1;  /* start on the ramp read size */
 
   st->win = (uint8 *)AllocMem(VX_WIN_BYTES,
                               MEMTYPE_DRAM | MEMTYPE_STARTPAGE | MEMTYPE_FILL);
@@ -369,6 +377,7 @@ vx_stream_next_frame(VxStream *st, const uint8 **payload,
 void
 vx_stream_frame_consumed(VxStream *st)
 {
+  st->consumed_off = st->frame_end[st->slot_r];
   st->frame_ready[st->slot_r] = 0;
   st->slot_r++; if(st->slot_r == VX_FRAME_SLOTS) st->slot_r = 0;
 }
@@ -422,6 +431,7 @@ vx_stream_rewind(VxStream *st)
   st->cur = 0; st->fill = 0;
   st->win_off = 0; st->next_read_off = 0;
   st->skip_remaining = 0;
+  st->ramping = 1; st->ramp_count = 0; st->consumed_off = 0;
   st->slot_w = 0; st->slot_r = 0;
   { int i; for(i = 0; i < VX_FRAME_SLOTS; i++) st->frame_ready[i] = 0; }
   st->aud_head = 0; st->aud_tail = 0; st->aud_tail_sample = 0;
