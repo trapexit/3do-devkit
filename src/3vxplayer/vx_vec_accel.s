@@ -1,4 +1,8 @@
 ; Trusted ARMv3 VEC interpreter: caller must validate stream commands.
+; V1/V4 repeat painters peel one block for odd run lengths, then write
+; block pairs with a single loop test per pair: (5c stm + 1c subs + taken
+; branch)/2 blocks per row pass amortizes the taken-branch refill across
+; two blocks instead of one.
 ; r4=input, r5=V4 table, r6/r7=rowpair destinations, r8=row remaining,
 ; r9=rows remaining; bit31 = this row has coded blocks, bit30 = dirty_first
 ; not yet written (rows are visited in increasing order, so the first coded
@@ -49,18 +53,46 @@ vxv_next
         ldmia ip!, {r0,r2}
         mov r1, r0
         mov r3, r2
-vxv_repeat1_loop
+; Odd count peeled first: one solo block, then all pairs. A pair step
+; writes exactly two blocks; the count register reaches zero on the
+; bne so no tail test is needed inside the loop.
+        tst lr, #1
+        beq vxv_r1t_pairs
         stmia r6!, {r0-r3}
-        subs lr, lr, #1
-        bne vxv_repeat1_loop
+        sub lr, lr, #1
+        beq vxv_r1t_done
+vxv_r1t_pairs
+        stmia r6!, {r0-r3}
+        stmia r6!, {r0-r3}
+        subs lr, lr, #2
+        beq vxv_r1t_done2
+        stmia r6!, {r0-r3}
+        stmia r6!, {r0-r3}
+        subs lr, lr, #2
+        bne vxv_r1t_pairs
+vxv_r1t_done2
+vxv_r1t_done
         ldr lr, [sp, #4]
         ldmia ip, {r0,r2}
         mov r1, r0
         mov r3, r2
 vxv_repeat1_bottom
+        tst lr, #1
+        beq vxv_r1b_pairs
         stmia r7!, {r0-r3}
-        subs lr, lr, #1
-        bne vxv_repeat1_bottom
+        sub lr, lr, #1
+        beq vxv_r1b_done
+vxv_r1b_pairs
+        stmia r7!, {r0-r3}
+        stmia r7!, {r0-r3}
+        subs lr, lr, #2
+        beq vxv_r1b_done2
+        stmia r7!, {r0-r3}
+        stmia r7!, {r0-r3}
+        subs lr, lr, #2
+        bne vxv_r1b_pairs
+vxv_r1b_done2
+vxv_r1b_done
         b vxv_advance
 vxv_skip
         sub r8, r8, lr
@@ -163,12 +195,16 @@ vxv_repeat4
         add r2, r5, r2, lsl #3
         ldmia r2, {r2,r3}
 vxv_repeat4_top
+        tst lr, #1
+        beq vxv_r4t_pairs
         stmia r6!, {r0-r3}
-        subs lr, lr, #1
+        sub lr, lr, #1
         beq vxv_repeat4_top_done
+vxv_r4t_pairs
         stmia r6!, {r0-r3}
-        subs lr, lr, #1
-        bne vxv_repeat4_top
+        stmia r6!, {r0-r3}
+        subs lr, lr, #2
+        bne vxv_r4t_pairs
 vxv_repeat4_top_done
         mov lr, ip
         ldrb r0, [r4], #1
@@ -178,12 +214,16 @@ vxv_repeat4_top_done
         add r2, r5, r2, lsl #3
         ldmia r2, {r2,r3}
 vxv_repeat4_bottom
+        tst lr, #1
+        beq vxv_r4b_pairs
         stmia r7!, {r0-r3}
-        subs lr, lr, #1
+        sub lr, lr, #1
         beq vxv_repeat4_bottom_done
+vxv_r4b_pairs
         stmia r7!, {r0-r3}
-        subs lr, lr, #1
-        bne vxv_repeat4_bottom
+        stmia r7!, {r0-r3}
+        subs lr, lr, #2
+        bne vxv_r4b_pairs
 vxv_repeat4_bottom_done
 vxv_advance
         cmp r8, #0
