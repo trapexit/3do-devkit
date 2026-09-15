@@ -425,7 +425,13 @@ setup_present_cel(CCB *ccb, uint16 *backbuf)
   ccb->ccb_Height = ROWPAIRS;
   ccb->ccb_PRE0 = (((ROWPAIRS - PRE0_VCNT_PREFETCH) << PRE0_VCNT_SHIFT)
                    | PRE0_LINEAR | PRE0_BPP_16);
+  /* PRE1_TLLSB_PDC0 passes the source pixel's blue LSB through the pixel
+     processor; without it the blue LSB is replaced by zero and every
+     displayed pixel loses one bit of blue. The SDK's own LR-form cel
+     builder sets the same field (CreateLRFormCel.c: "PRE1_TLLSB_PDC0 |
+     PRE1_LRFORM", and InitCel.c: "Use blue LSB from source pixel"). */
   ccb->ccb_PRE1 = (((SCREEN_WIDTH - PRE1_WOFFSET_PREFETCH) << PRE1_WOFFSET10_SHIFT)
+                   | PRE1_TLLSB_PDC0
                    | PRE1_LRFORM
                    | ((SCREEN_WIDTH - PRE1_TLHPCNT_PREFETCH) << PRE1_TLHPCNT_SHIFT));
 }
