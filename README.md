@@ -519,6 +519,29 @@ tracking adds about 0.1 ms per frame in Opera versus the previous decoder;
 the hardware Draw-time saving is the performance gate. Evidence for the
 normal-player integration is in `build/3vx-main-integration/`.
 
+The next cost pass keeps the coded-row flag in the unused high bit of the
+remaining-row register, derives row width from the resident stride, unrolls
+V4 repeat stores, and uses duplicated values in distinct registers for V1
+burst stores (never duplicate registers in an STM list). Sparse codebook
+loads hoist type/alignment decisions and inline entry conversion; aligned
+V1 batch expansion is unrolled. A dedicated band CCB removes full-CCB
+reinitialization after every draw while preserving the timing boundaries.
+No format, media, quality, scheduling or recovery-threshold changes result.
+
+Matched Opera measurements: 30-fps trailer decode mean/max 7172/21600 us
+before, 6796/18592 us after; repeated dense-keyframe workload 16904/17728 us
+before, 12713/13584 us after. Full ARM framebuffer/codebook/dirty-bound/ABI
+comparisons passed on all three movies plus 12000 valid geometry/run cases.
+All-rate playback, 26 matched rendering captures, replay/file-menu return,
+pause and 500 ms recovery passed. A native pre-expanded V1 wire format was
+rejected: it added 621048 bytes for only 21 us average decode saving. Packed
+chunk-header reads gave no established useful gain and were not retained.
+These timing figures are emulator measurements; they do not prove an
+absolute minimum or guarantee arbitrary-content hardware playback. Current
+hardware baseline is 8945/32240 us decode and 6942/13712 us draw, with all
+5191 frames presented and no reported visual artifacts. The new stack's
+hardware gain remains unmeasured. Evidence: `build/3vx-mincost/receipt.json`.
+
 The dedicated ISO stages under `build/3vxplayer-disc/` and does not replace
 the shared `takeme/LaunchMe`. An optional sample generator creates FFmpeg's
 300-frame test pattern with 440/660 Hz stereo tones. The following commands

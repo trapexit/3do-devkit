@@ -9,8 +9,6 @@ vx_run_vec_asm
         stmfd sp!, {r4-r11, lr}
         sub sp, sp, #16
         str r0, [sp, #8]
-        mov ip, #0
-        str ip, [sp, #4]
         mov r4, r1
         ldr r6, [r0]
         ldr r1, [r0, #8]
@@ -28,7 +26,7 @@ vxv_next
         and lr, r0, #63
         add lr, lr, #1
         cmp r0, #64
-        strhs r0, [sp, #4]
+        orrhs r9, r9, #&80000000
         blo vxv_skip
         cmp r0, #128
         blo vxv_literal1
@@ -38,20 +36,24 @@ vxv_next
         beq vxv_repeat4
 ; V1 repeat: one index followed by repeated expanded quadrant colors.
         sub r8, r8, lr
-        ldrb r0, [r4], #1
-        add r0, r10, r0, lsl #4
-        ldmia r0, {r0-r3}
+        ldrb ip, [r4], #1
+        add ip, r10, ip, lsl #4
+        str lr, [sp, #4]
+        ldmia ip!, {r0,r2}
+        mov r1, r0
+        mov r3, r2
 vxv_repeat1_loop
-        str r0, [r6], #4
-        str r0, [r6], #4
-        str r1, [r6], #4
-        str r1, [r6], #4
-        str r2, [r7], #4
-        str r2, [r7], #4
-        str r3, [r7], #4
-        str r3, [r7], #4
+        stmia r6!, {r0-r3}
         subs lr, lr, #1
         bne vxv_repeat1_loop
+        ldr lr, [sp, #4]
+        ldmia ip, {r0,r2}
+        mov r1, r0
+        mov r3, r2
+vxv_repeat1_bottom
+        stmia r7!, {r0-r3}
+        subs lr, lr, #1
+        bne vxv_repeat1_bottom
         b vxv_advance
 vxv_skip
         sub r8, r8, lr
@@ -61,17 +63,16 @@ vxv_skip
 vxv_literal1
         sub r8, r8, lr
 vxv_literal1_loop
-        ldrb r0, [r4], #1
-        add r0, r10, r0, lsl #4
-        ldmia r0, {r0-r3}
-        str r0, [r6], #4
-        str r0, [r6], #4
-        str r1, [r6], #4
-        str r1, [r6], #4
-        str r2, [r7], #4
-        str r2, [r7], #4
-        str r3, [r7], #4
-        str r3, [r7], #4
+        ldrb ip, [r4], #1
+        add ip, r10, ip, lsl #4
+        ldmia ip!, {r0,r2}
+        mov r1, r0
+        mov r3, r2
+        stmia r6!, {r0-r3}
+        ldmia ip, {r0,r2}
+        mov r1, r0
+        mov r3, r2
+        stmia r7!, {r0-r3}
         subs lr, lr, #1
         bne vxv_literal1_loop
         b vxv_advance
@@ -157,7 +158,11 @@ vxv_repeat4
 vxv_repeat4_top
         stmia r6!, {r0-r3}
         subs lr, lr, #1
+        beq vxv_repeat4_top_done
+        stmia r6!, {r0-r3}
+        subs lr, lr, #1
         bne vxv_repeat4_top
+vxv_repeat4_top_done
         mov lr, ip
         ldrb r0, [r4], #1
         add r0, r5, r0, lsl #3
@@ -168,13 +173,17 @@ vxv_repeat4_top
 vxv_repeat4_bottom
         stmia r7!, {r0-r3}
         subs lr, lr, #1
+        beq vxv_repeat4_bottom_done
+        stmia r7!, {r0-r3}
+        subs lr, lr, #1
         bne vxv_repeat4_bottom
+vxv_repeat4_bottom_done
 vxv_advance
         cmp r8, #0
         bne vxv_next
-        ldr ip, [sp, #4]
-        cmp ip, #0
+        tst r9, #&80000000
         beq vxv_clean_row
+        bic r9, r9, #&80000000
         ldr r0, [sp, #8]
         add r0, r0, #4096
         ldr r1, [sp, #12]
@@ -184,12 +193,10 @@ vxv_advance
         strlo r1, [r0, #2064]
         add r1, r1, #1
         str r1, [r0, #2068]
-        mov ip, #0
-        str ip, [sp, #4]
 vxv_clean_row
         subs r9, r9, #1
         beq vxv_ok
-        ldr r8, [sp]
+        mov r8, r11, lsr #4
         add r6, r6, r11
         add r7, r7, r11
         b vxv_next

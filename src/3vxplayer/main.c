@@ -62,6 +62,7 @@ static ScreenContext gSC;
 static Item          gVbl;
 static uint16       *gBackbuf;
 static CCB           gPresentCel;
+static CCB           gBandCel;
 static uint32 gDirtyFirst[3], gDirtyEnd[3], gBandRows, gBandCalls;
 
 static VxStream      gST;
@@ -651,14 +652,13 @@ stage_decoded(void)
     if(first < end)
       {
         uint32 pairs = (end - first) * 2;
-        gPresentCel.ccb_SourcePtr = (void *)((uint8 *)gBackbuf + first * 2 * ROWPAIR_BYTES);
-        gPresentCel.ccb_YPos = (int32)(first * 4) << 16;
-        gPresentCel.ccb_Height = pairs;
-        gPresentCel.ccb_PRE0 = ((pairs - PRE0_VCNT_PREFETCH) << PRE0_VCNT_SHIFT) | PRE0_LINEAR | PRE0_BPP_16;
-        DrawCels(gSC.sc_BitmapItems[screen], &gPresentCel);
+        gBandCel.ccb_SourcePtr = (void *)((uint8 *)gBackbuf + first * 2 * ROWPAIR_BYTES);
+        gBandCel.ccb_YPos = (int32)(first * 4) << 16;
+        gBandCel.ccb_Height = pairs;
+        gBandCel.ccb_PRE0 = ((pairs - PRE0_VCNT_PREFETCH) << PRE0_VCNT_SHIFT) | PRE0_LINEAR | PRE0_BPP_16;
+        DrawCels(gSC.sc_BitmapItems[screen], &gBandCel);
         gBandRows += (end - first) * 4;
         gBandCalls++;
-        setup_present_cel(&gPresentCel, gBackbuf);
       }
     /* A stage changes screen contents even if presentation is later dropped. */
     gDirtyFirst[screen] = gDEC.blocks_h;
@@ -796,6 +796,7 @@ main(int argc, char **argv)
   gBackbuf = (uint16 *)AllocMem(BACKBUF_BYTES, MEMTYPE_DRAM | MEMTYPE_CEL | MEMTYPE_FILL);
   if(!gBackbuf) { kprintf("backbuf alloc failed\n"); teardown(); return 1; }
   setup_present_cel(&gPresentCel, gBackbuf);
+  setup_present_cel(&gBandCel, gBackbuf);
   vx_dec_init(&gDEC, gBackbuf, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   kprintf("init: audio\n");

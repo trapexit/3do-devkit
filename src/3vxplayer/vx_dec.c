@@ -1,19 +1,19 @@
 /*
-  3vx_dec.c - 3VX VFRM payload decoder core.
+  3vx_dec.c - 3VX VFRM payload decoder core (codebook-load cost lane).
 
-  Grammar (see docs/3vx-design.md):
-    payload := u16be flags, u16be reserved, sub-chunk*
-    sub-chunk := u8 id, u24be size(incl header), payload, pad to 4
-    ids: 0x20 K4F 256*8B | 0x24 K4R range | 0x21 K4S sparse
-         0x22 K1F 256*8B packed | 0x25 K1R | 0x23 K1S
-         0x40 VEC run bytecodes
-
-  All parsing is byte-driven => bit-identical on ARM60 (BE) and host (LE).
-
-  Backbuffer block addressing (LR):
-    block (bx,by): rp0 band = (2*by)   * width*4 bytes, words x=4*bx..+3
-                   rp1 band = (2*by+1) * width*4 bytes
-    block byte offset within band = bx*16.
+  Derived from build/3vx-mincost/base-vx_dec.c. ONLY the codebook load
+  paths change (see NOTES.md in this directory):
+    - sparse chunks (KC4_SPARSE/KC1_SPARSE): per-record call to
+      expand_v1/load_v4, per-record is_v1 test, per-record alignment
+      test and per-record i*12 multiply replaced by per-chunk hoisted
+      loops with walking record pointers and inline word bodies.
+    - V1 batch (KC1_FULL/KC1_RANGE, aligned): loop unrolled x2 with
+      post-increment single loads/stores.
+    - V4 batch fallback: walking pointers replace the per-entry
+      p + i*8 multiply and call.
+  API (vx_dec_frame, 3 args), VxDec layout (dirty_first@6160,
+  dirty_end@6164, v1cb@16, v4cb@4112), painters, VEC paths, error codes
+  and host pixel semantics are unchanged. vx_vec_accel.s is unchanged.
 */
 #include "vx_dec.h"
 #include "string.h"
@@ -59,68 +59,63 @@ vx_dec_init(VxDec *dec, uint16 *backbuf, uint16 width, uint16 height)
   memset(dec->v4cb, 0, sizeof(dec->v4cb));
 }
 
-/* Expand one packed V1 entry (TL,TR,BL,BR as 4 u16be) into the
-   shattered 4-word tile {tl,tr,bl,br} with each color doubled into
-   both halfwords. */
-static void
-expand_v1(VxDec *dec, uint32 index, const uint8 *p)
-{
-  uint32 *e = dec->v1cb + index * 4;
-#ifdef TARGET_3DO
-  if(((uint32)p & 3u) == 0)
-    {
-      uint32 top = ((const uint32 *)p)[0];
-      uint32 bottom = ((const uint32 *)p)[1];
-      uint32 tl = top >> 16, tr = top & 0xffffu;
-      uint32 bl = bottom >> 16, br = bottom & 0xffffu;
-      e[0] = tl | (tl << 16); e[1] = tr | (tr << 16);
-      e[2] = bl | (bl << 16); e[3] = br | (br << 16);
-      return;
-    }
-#endif
-  {
-  uint32 tl = rd_u16(p);
-  uint32 tr = rd_u16(p + 2);
-  uint32 bl = rd_u16(p + 4);
-  uint32 br = rd_u16(p + 6);
+/* ---- codebook entry bodies ---------------------------------------- */
 
-  e[0] = tl | (tl << 16);
-  e[1] = tr | (tr << 16);
-  e[2] = bl | (bl << 16);
-  e[3] = br | (br << 16);
-  }
-}
+/* One packed entry is 8 bytes: V1 = TL,TR,BL,BR u16be, expanded into
+   the resident 4-word tile with each color doubled into both
+   halfwords; V4 = 4 u16be forming the 2 resident LR words (even
+   scanline first in memory on the 3DO, host keeps native halfword
+   order). These are macros rather than static helpers because armcc
+   2.51 does not inline C89 functions and the sparse path must not pay
+   a call per record. Each macro reads exactly one entry and writes it
+   through (e); callers supply a walking pointer. */
 
-/* Load a V4 entry: 8 bytes = 4 u16be -> 2 LR words. */
-static void
-load_v4(VxDec *dec, uint32 index, const uint8 *p)
-{
-  uint32 *e = dec->v4cb + index * 2;
-#ifdef TARGET_3DO
-  if(((uint32)p & 3u) == 0)
-    {
-      e[0] = ((const uint32 *)p)[0];
-      e[1] = ((const uint32 *)p)[1];
-      return;
-    }
-#endif
-  {
-  uint32 a = rd_u16(p);
-  uint32 b = rd_u16(p + 2);
-  uint32 cc = rd_u16(p + 4);
-  uint32 d = rd_u16(p + 6);
+#define VX_V1_FROM_WORDS(e, w0, w1) \
+  do { \
+    uint32 vx_tt = (w0), vx_bb = (w1); \
+    uint32 vxtl = vx_tt >> 16, vxtr = vx_tt & 0xffffu; \
+    uint32 vxbl = vx_bb >> 16, vxbr = vx_bb & 0xffffu; \
+    (e)[0] = vxtl | (vxtl << 16); \
+    (e)[1] = vxtr | (vxtr << 16); \
+    (e)[2] = vxbl | (vxbl << 16); \
+    (e)[3] = vxbr | (vxbr << 16); \
+  } while(0)
 
-  /* LR words store the even scanline first in memory. ARM60 is
-     big-endian; the host decoder must retain its native halfword order. */
+#define VX_V1_FROM_BYTES(e, q) \
+  do { \
+    uint32 vxtl = rd_u16(q); \
+    uint32 vxtr = rd_u16((q) + 2); \
+    uint32 vxbl = rd_u16((q) + 4); \
+    uint32 vxbr = rd_u16((q) + 6); \
+    (e)[0] = vxtl | (vxtl << 16); \
+    (e)[1] = vxtr | (vxtr << 16); \
+    (e)[2] = vxbl | (vxbl << 16); \
+    (e)[3] = vxbr | (vxbr << 16); \
+  } while(0)
+
+#define VX_V4_FROM_WORDS(e, w0, w1) \
+  do { (e)[0] = (w0); (e)[1] = (w1); } while(0)
+
+/* Unaligned/byte-form V4 keeps the byte-order split of the original
+   load_v4: the 3DO (big-endian) word is (first<<16)|second, the host
+   decoder retains its native halfword order. */
 #if defined(TARGET_3DO) || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-  e[0] = (a << 16) | b;
-  e[1] = (cc << 16) | d;
+#define VX_V4_FROM_BYTES(e, q) \
+  do { \
+    uint32 vxa = rd_u16(q), vxb = rd_u16((q) + 2); \
+    uint32 vxc = rd_u16((q) + 4), vxd = rd_u16((q) + 6); \
+    (e)[0] = (vxa << 16) | vxb; \
+    (e)[1] = (vxc << 16) | vxd; \
+  } while(0)
 #else
-  e[0] = a | (b << 16);
-  e[1] = cc | (d << 16);
+#define VX_V4_FROM_BYTES(e, q) \
+  do { \
+    uint32 vxa = rd_u16(q), vxb = rd_u16((q) + 2); \
+    uint32 vxc = rd_u16((q) + 4), vxd = rd_u16((q) + 6); \
+    (e)[0] = vxa | (vxb << 16); \
+    (e)[1] = vxc | (vxd << 16); \
+  } while(0)
 #endif
-  }
-}
 
 /* ---- block painters ------------------------------------------------ */
 
@@ -166,8 +161,9 @@ put_v4(const VxDec *dec, uint16 *d0, uint16 *d1, const uint8 *idx)
    index range. Alignment and the v1/v4 shape are decided once per batch
    so the entry loops carry no per-entry test or call: an aligned V4 run
    is already the resident native words (one contiguous copy), while V1
-   entries always need the doubling expansion. Unaligned sources (and
-   every host build) fall back to the per-entry byte-wise forms. */
+   entries always need the doubling expansion. The aligned V1 loop is
+   unrolled once; unaligned sources (and every host build) fall back to
+   the byte-wise forms. */
 static void
 load_entries(VxDec *dec, uint32 first, const uint8 *p, uint32 count,
              int is_v1)
@@ -181,38 +177,41 @@ load_entries(VxDec *dec, uint32 first, const uint8 *p, uint32 count,
 #ifdef TARGET_3DO
       if(((uint32)p & 3u) == 0)
         {
+          /* Aligned V1 batch: two native source words per entry.
+             Unrolled once; single post-increment loads and stores. */
           const uint32 *w = (const uint32 *)p;
 
-          for(i = 0; i < count; i++)
+          i = count >> 1;
+          while(i--)
             {
-              uint32 top = w[0], bottom = w[1];
-              uint32 tl = top >> 16, tr = top & 0xffffu;
-              uint32 bl = bottom >> 16, br = bottom & 0xffffu;
-
-              e[0] = tl | (tl << 16);
-              e[1] = tr | (tr << 16);
-              e[2] = bl | (bl << 16);
-              e[3] = br | (br << 16);
-              w += 2;
+              uint32 top = *w++;
+              uint32 bottom = *w++;
+              VX_V1_FROM_WORDS(e, top, bottom);
               e += 4;
+              top = *w++;
+              bottom = *w++;
+              VX_V1_FROM_WORDS(e, top, bottom);
+              e += 4;
+            }
+          if(count & 1u)
+            {
+              uint32 top = *w++;
+              uint32 bottom = *w++;
+              VX_V1_FROM_WORDS(e, top, bottom);
             }
           return;
         }
 #endif
-      for(i = 0; i < count; i++)
-        {
-          uint32 tl = rd_u16(p);
-          uint32 tr = rd_u16(p + 2);
-          uint32 bl = rd_u16(p + 4);
-          uint32 br = rd_u16(p + 6);
+      {
+        const uint8 *q = p;
 
-          e[0] = tl | (tl << 16);
-          e[1] = tr | (tr << 16);
-          e[2] = bl | (bl << 16);
-          e[3] = br | (br << 16);
-          p += 8;
-          e += 4;
-        }
+        for(i = 0; i < count; i++)
+          {
+            VX_V1_FROM_BYTES(e, q);
+            q += 8;
+            e += 4;
+          }
+      }
       return;
     }
 
@@ -225,8 +224,17 @@ load_entries(VxDec *dec, uint32 first, const uint8 *p, uint32 count,
       return;
     }
 #endif
-  for(i = 0; i < count; i++)
-    load_v4(dec, first + i, p + i * 8);
+  {
+    uint32 *e = dec->v4cb + first * 2;
+    const uint8 *q = p;
+
+    for(i = 0; i < count; i++)
+      {
+        VX_V4_FROM_BYTES(e, q);
+        q += 8;
+        e += 2;
+      }
+  }
 }
 
 static uint32
@@ -258,21 +266,69 @@ load_codebook_chunk(VxDec *dec, const uint8 *p, uint32 bytes,
       return VXE_OK;
     }
 
-  /* sparse: records of [u8 index][3 pad][8B entry] */
+  /* sparse: records of [u8 index][3 pad][8B entry]. The v1/v4 shape is
+     decided once per chunk, and every record entry sits at p + i*12 + 4
+     so a single alignment test covers the whole run: the record bodies
+     are inlined with no per-record call, is_v1 test, alignment test or
+     i*12 multiply. */
   {
     uint32 recs = bytes / 12;
-    uint32 i;
+    uint32 n;
+    const uint8 *r;
 
     if(recs * 12 != bytes)
       return VXE_SUBCHUNK;
-    for(i = 0; i < recs; i++)
-      {
-        const uint8 *r = p + i * 12;
 
-        if(is_v1)
-          expand_v1(dec, r[0], r + 4);
-        else
-          load_v4(dec, r[0], r + 4);
+    if(is_v1)
+      {
+#ifdef TARGET_3DO
+        if(((uint32)p & 3u) == 0)
+          {
+            n = recs;
+            r = p;
+            while(n--)
+              {
+                uint32 *e = dec->v1cb + (uint32)r[0] * 4;
+                const uint32 *w = (const uint32 *)(r + 4);
+
+                VX_V1_FROM_WORDS(e, w[0], w[1]);
+                r += 12;
+              }
+            return VXE_OK;
+          }
+#endif
+        n = recs;
+        r = p;
+        while(n--)
+          {
+            VX_V1_FROM_BYTES(dec->v1cb + (uint32)r[0] * 4, r + 4);
+            r += 12;
+          }
+        return VXE_OK;
+      }
+
+#ifdef TARGET_3DO
+    if(((uint32)p & 3u) == 0)
+      {
+        n = recs;
+        r = p;
+        while(n--)
+          {
+            uint32 *e = dec->v4cb + (uint32)r[0] * 2;
+            const uint32 *w = (const uint32 *)(r + 4);
+
+            VX_V4_FROM_WORDS(e, w[0], w[1]);
+            r += 12;
+          }
+        return VXE_OK;
+      }
+#endif
+    n = recs;
+    r = p;
+    while(n--)
+      {
+        VX_V4_FROM_BYTES(dec->v4cb + (uint32)r[0] * 2, r + 4);
+        r += 12;
       }
     return VXE_OK;
   }
@@ -410,4 +466,3 @@ out:
   dec->state_valid = 0;
   return err;
 }
-
