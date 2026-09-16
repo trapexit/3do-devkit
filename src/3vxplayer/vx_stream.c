@@ -25,11 +25,21 @@ rd16(const uint8 *p)
   return (uint16)(((uint16)p[0] << 8) | (uint16)p[1]);
 }
 
-/* cur/fill are absolute file offsets; physical storage wraps independently. */
+/* cur/fill are absolute file offsets; physical storage wraps independently.
+   cur_pos/fill_pos carry the physical positions so no software divide is
+   needed per chunk. */
+static uint32
+phys_of(const VxStream *st, uint32 offset, uint32 mask)
+{
+  uint32 pos = (offset - st->cur) + st->cur_pos;
+  if(pos >= mask) pos -= mask;
+  return pos;
+}
+
 static void
 window_copy(const VxStream *st, uint32 offset, uint8 *dst, uint32 bytes)
 {
-  uint32 pos = offset % VX_WIN_BYTES;
+  uint32 pos = phys_of(st, offset, VX_WIN_BYTES);
   uint32 first = VX_WIN_BYTES - pos;
   if(first > bytes) first = bytes;
   memcpy(dst, st->win + pos, first);
@@ -49,8 +59,8 @@ extern void vx_copy_shift2(uint8 *dst, const uint8 *src, uint32 bytes);
 static void
 aud0_copy(const VxStream *st, uint32 offset, uint32 bytes)
 {
-  uint32 pos = offset % VX_WIN_BYTES;
-  uint32 w   = st->aud_head % VX_AUDRING_BYTES;
+  uint32 pos = phys_of(st, offset, VX_WIN_BYTES);
+  uint32 w   = st->aud_head_pos;
 
   while(bytes)
     {
@@ -84,7 +94,7 @@ issue_read(VxStream *st)
     return;
 
   free_tail = VX_WIN_BYTES - (st->fill - st->cur);
-  pos = st->fill % VX_WIN_BYTES;
+  pos = st->fill_pos;
   /* Leave the ramp once the buffered lead can cover a full-size read. */
   if(st->ramping
      && (st->fill - st->consumed_off >= VX_RAMP_LEAD
@@ -151,6 +161,7 @@ finish_read(VxStream *st)
   if(st->next_read_off + got > (uint32)st->file_size)
     got = (uint32)st->file_size - st->next_read_off;
   st->fill += got;
+  st->fill_pos += got; if(st->fill_pos >= VX_WIN_BYTES) st->fill_pos -= VX_WIN_BYTES;
   st->next_read_off += got;
   if(st->next_read_off >= (uint32)st->file_size)
     st->eof = 1;
@@ -205,6 +216,7 @@ demux(VxStream *st)
       uint32 n = st->fill - st->cur;
       if(n > st->skip_remaining) n = st->skip_remaining;
       st->cur += n;
+      st->cur_pos += n; if(st->cur_pos >= VX_WIN_BYTES) st->cur_pos -= VX_WIN_BYTES;
       st->skip_remaining -= n;
       if(st->skip_remaining) return;
     }
@@ -225,6 +237,7 @@ demux(VxStream *st)
           uint32 n = st->fill - st->cur;
           if(n > size) n = size;
           st->cur += n;
+          st->cur_pos += n; if(st->cur_pos >= VX_WIN_BYTES) st->cur_pos -= VX_WIN_BYTES;
           st->skip_remaining = size - n;
           if(st->skip_remaining) return;
           continue;
@@ -285,6 +298,8 @@ demux(VxStream *st)
             { st->aud_ringfull++; return; } /* backpressure */
           aud0_copy(st, st->cur + CHUNK_HDR + 4, bytes);
           st->aud_head += bytes;
+          st->aud_head_pos += bytes;
+          if(st->aud_head_pos >= VX_AUDRING_BYTES) st->aud_head_pos -= VX_AUDRING_BYTES;
           st->audio_payload_bytes += bytes;
           st->n_aud0++;
           break;
@@ -295,6 +310,7 @@ demux(VxStream *st)
         }
 
       st->cur += size;
+      st->cur_pos += size; if(st->cur_pos >= VX_WIN_BYTES) st->cur_pos -= VX_WIN_BYTES;
       if(st->wedged)
         return;
     }
@@ -437,7 +453,7 @@ vx_stream_audio_pull(VxStream *st, uint8 *dst, uint32 max,
     return 0;
   if(first_sample)
     *first_sample = st->aud_tail_sample;
-  r     = st->aud_tail % VX_AUDRING_BYTES;
+  r     = st->aud_tail_pos;
   first = VX_AUDRING_BYTES - r;
   if(first > n)
     first = n;
@@ -445,6 +461,7 @@ vx_stream_audio_pull(VxStream *st, uint8 *dst, uint32 max,
   if(first < n)
     memcpy(dst + first, st->aud, n - first);
   st->aud_tail += n;
+  st->aud_tail_pos += n; if(st->aud_tail_pos >= VX_AUDRING_BYTES) st->aud_tail_pos -= VX_AUDRING_BYTES;
   st->aud_tail_sample += n >> 1;  /* SDX2 stereo: 2 B per per-channel sample */
   return submitted;
 }
@@ -458,13 +475,14 @@ vx_stream_rewind(VxStream *st)
         st->wedged = 1;
       st->read_pending = 0;
     }
-  st->cur = 0; st->fill = 0;
+  st->cur = 0; st->fill = 0; st->cur_pos = 0; st->fill_pos = 0;
   st->win_off = 0; st->next_read_off = 0;
   st->skip_remaining = 0;
   st->ramping = 1; st->ramp_count = 0; st->consumed_off = 0;
   st->slot_w = 0; st->slot_r = 0;
   { int i; for(i = 0; i < VX_FRAME_SLOTS; i++) st->frame_ready[i] = 0; }
   st->aud_head = 0; st->aud_tail = 0; st->aud_tail_sample = 0;
+  st->aud_head_pos = 0; st->aud_tail_pos = 0;
   st->header_ok = 0;
   st->eof = 0;
   st->eof_said = 0;

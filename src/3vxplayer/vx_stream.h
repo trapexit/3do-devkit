@@ -56,6 +56,8 @@ typedef struct VxStream {
   uint32    win_off;         /* reserved; zero (no sliding-window relocation) */
   uint32    cur;             /* absolute parse offset */
   uint32    fill;            /* absolute valid-data end (>= cur) */
+  uint32    cur_pos;         /* cur  % VX_WIN_BYTES  (avoids a software divide) */
+  uint32    fill_pos;        /* fill % VX_WIN_BYTES */
   uint32    next_read_off;   /* absolute offset of next read */
   uint32    pend_bytes;      /* latched size of in-flight read */
   int       read_pending;
@@ -74,6 +76,8 @@ typedef struct VxStream {
   uint8    *aud;             /* audio ring */
   uint32    aud_head;        /* total bytes ever written */
   uint32    aud_tail;        /* total bytes ever read */
+  uint32    aud_head_pos;    /* aud_head % VX_AUDRING_BYTES */
+  uint32    aud_tail_pos;    /* aud_tail % VX_AUDRING_BYTES */
   uint32    aud_tail_sample; /* per-channel sample index at aud_tail */
 
   int       header_ok;

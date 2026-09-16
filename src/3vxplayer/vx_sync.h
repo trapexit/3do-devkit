@@ -18,9 +18,17 @@ static uint32
 vx_due_frame(uint32 samples, uint32 fps_num)
 {
   const uint32 period = 441441u;        /* samples per fps_num/50 frames */
-  const uint32 frames_per_period = fps_num / 50u;
-  return (samples / period) * frames_per_period
-       + ((samples % period) * frames_per_period) / period;
+  /* armcc turns a constant `%` into a call to __rt_udiv (~100
+     instructions); derive the remainder from the quotient instead, and
+     cache frames-per-period (it only changes when the movie does). */
+  static uint32 cached_fps, cached_fpp;
+  uint32 q, r;
+
+  if(cached_fps != fps_num)
+    { cached_fps = fps_num; cached_fpp = fps_num / 50u; }
+  q = samples / period;
+  r = samples - q * period;
+  return q * cached_fpp + (r * cached_fpp) / period;
 }
 
 /* A skipped delta invalidates the whole prediction chain. Do not resume
