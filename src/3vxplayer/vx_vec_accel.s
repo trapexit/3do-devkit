@@ -252,4 +252,48 @@ vxv_ok
         mov r0, #0
         add sp, sp, #16
         ldmfd sp!, {r4-r11, pc}
+
+; Byte-exact copy for the 2-mod-4 destination case: the C library memcpy
+; only has a word path when the destination is word aligned, so the AUD0
+; ring write (2-byte aligned half the time) falls back to a byte loop.
+; This writes the destination's aligned words instead. With dstA = dst & ~3
+; and src word-aligned, out[i] (stored at dstA+4i, i>=1) holds source bytes
+; 4i-2..4i+1, i.e. (W(i-1) << 16) | (W(i) >> 16); the first word keeps the
+; two bytes already present at dstA. Writes exactly `bytes` bytes and reads
+; at most bytes-1, so it never runs past the source piece.
+;   r0 = dst (2 mod 4, and dst-2 writable), r1 = src (word aligned),
+;   r2 = bytes (>= 8). Returns nothing.
+        EXPORT vx_copy_shift2
+vx_copy_shift2
+        stmfd sp!, {r4-r8, lr}
+        bic   r3, r0, #3
+        ldr   r4, [r3]
+        ldr   r5, [r1], #4
+        mov   r6, r4, lsr #16
+        mov   r6, r6, lsl #16
+        orr   r6, r6, r5, lsr #16
+        str   r6, [r3], #4
+        sub   r2, r2, #2
+        cmp   r2, #8
+        blo   vxcs2_tail
+vxcs2_loop
+        ldr   r8, [r1], #4
+        mov   r6, r5, lsl #16
+        orr   r6, r6, r8, lsr #16
+        str   r6, [r3], #4
+        mov   r5, r8
+        subs  r2, r2, #4
+        cmp   r2, #8
+        bhs   vxcs2_loop
+vxcs2_tail
+        sub   r1, r1, #2
+        cmp   r2, #0
+        beq   vxcs2_done
+vxcs2_byte
+        ldrb  r6, [r1], #1
+        strb  r6, [r3], #1
+        subs  r2, r2, #1
+        bne   vxcs2_byte
+vxcs2_done
+        ldmfd sp!, {r4-r8, pc}
         END

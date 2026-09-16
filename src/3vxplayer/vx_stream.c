@@ -36,6 +36,42 @@ window_copy(const VxStream *st, uint32 offset, uint8 *dst, uint32 bytes)
   if(first < bytes) memcpy(dst + first, st->win, bytes - first);
 }
 
+#ifdef TARGET_3DO
+extern void vx_copy_shift2(uint8 *dst, const uint8 *src, uint32 bytes);
+#endif
+
+/* AUD0 payload copy: window -> audio ring, honouring both ring wraps.
+   The window side is word aligned but the ring write position is only
+   2-byte aligned half the time (the AUD0 byte counts are 2-byte
+   granular), and the C library memcpy only has a word path for a
+   word-aligned destination: such a copy would run byte-at-a-time.
+   vx_copy_shift2 does the same job with word stores. */
+static void
+aud0_copy(const VxStream *st, uint32 offset, uint32 bytes)
+{
+  uint32 pos = offset % VX_WIN_BYTES;
+  uint32 w   = st->aud_head % VX_AUDRING_BYTES;
+
+  while(bytes)
+    {
+      uint32 k  = VX_WIN_BYTES - pos;
+      uint32 k2 = VX_AUDRING_BYTES - w;
+
+      if(k  > bytes)  k  = bytes;
+      if(k2 < k)      k  = k2;
+#ifdef TARGET_3DO
+      if(((uint32)(st->win + pos) & 3u) == 0
+         && ((uint32)(st->aud + w) & 3u) != 0 && k >= 8)
+        vx_copy_shift2(st->aud + w, st->win + pos, k);
+      else
+#endif
+        memcpy(st->aud + w, st->win + pos, k);
+      pos += k; if(pos >= VX_WIN_BYTES)     pos -= VX_WIN_BYTES;
+      w   += k; if(w   >= VX_AUDRING_BYTES) w   -= VX_AUDRING_BYTES;
+      bytes -= k;
+    }
+}
+
 /* ---------------- read engine ---------------- */
 
 static void
@@ -230,7 +266,7 @@ demux(VxStream *st)
 
         case 0x41554430: { /* AUD0: payload = u32 count + SDX2 bytes */
           uint32 bytes = size - CHUNK_HDR;
-          uint32 avail, w, first, count;
+          uint32 avail, count;
           uint8 count_bytes[4];
           if(bytes < 4) { st->wedged = 1; return; }
           window_copy(st, st->cur + CHUNK_HDR, count_bytes, 4);
@@ -247,13 +283,7 @@ demux(VxStream *st)
           avail = VX_AUDRING_BYTES - (st->aud_head - st->aud_tail);
           if(avail < bytes)
             { st->aud_ringfull++; return; } /* backpressure */
-          w     = st->aud_head % VX_AUDRING_BYTES;
-          first = VX_AUDRING_BYTES - w;
-          if(first > bytes)
-            first = bytes;
-          window_copy(st, st->cur + CHUNK_HDR + 4, st->aud + w, first);
-          if(first < bytes)
-            window_copy(st, st->cur + CHUNK_HDR + 4 + first, st->aud, bytes - first);
+          aud0_copy(st, st->cur + CHUNK_HDR + 4, bytes);
           st->aud_head += bytes;
           st->audio_payload_bytes += bytes;
           st->n_aud0++;
