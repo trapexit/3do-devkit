@@ -3,10 +3,13 @@
 
   One circular 384 KiB window over the file; a single outstanding async
   block read refills it; the parser walks complete chunks in order and:
-    - copies each VFRM payload into one of 4 frame slots (~8-15 KiB/frame,
-      bounded copy; preferred over a pin/straddle state machine),
+    - hands each VFRM payload out in place, at its position in the window
+      (no copy); the payload is pinned until vx_stream_frame_consumed and
+      the read engine is clamped so a refill can never overwrite it,
+    - bounces only the ~1.5% of payloads that straddle the window wrap
+      into one of 4 frame slots (such a payload has no single pointer),
     - appends AUD0 payloads into a 96 KiB ring the audio module pulls,
-    - wraps reads and payload copies without moving unread data.
+    - wraps reads without moving unread data.
   Everything polled: vx_stream_service() once per frame slot.
   C89: no uint64. Header validation limits clips to 450000 frames (>4 h).
 */
@@ -66,9 +69,12 @@ typedef struct VxStream {
   uint32    consumed_off;    /* stream offset of the last consumed frame */
   int       eof;             /* next_read_off reached file_size */
 
-  uint8    *frames[VX_FRAME_SLOTS];
+  uint8    *frames[VX_FRAME_SLOTS];     /* bounce buffers for wrap straddles */
+  uint8    *frame_ptr[VX_FRAME_SLOTS];  /* payload handed to the player: a
+                                           position in `win`, or a slot */
   uint32    frame_len[VX_FRAME_SLOTS];
   uint32    frame_index[VX_FRAME_SLOTS];
+  uint32    frame_start[VX_FRAME_SLOTS];/* stream offset of the payload start */
   uint32    frame_end[VX_FRAME_SLOTS];  /* stream offset just past the frame */
   int       frame_ready[VX_FRAME_SLOTS];
   int       slot_w, slot_r;
@@ -95,7 +101,7 @@ Err  vx_stream_open(VxStream *st, const char *path);
 void vx_stream_close(VxStream *st);
 void vx_stream_service(VxStream *st);
 
-/* Peek next available video frame (slot pointer valid until consumed). */
+/* Peek next available video frame (pointer valid until consumed). */
 int  vx_stream_next_frame(VxStream *st, const uint8 **payload,
                           uint32 *size, uint32 *frame_index);
 void vx_stream_frame_consumed(VxStream *st);

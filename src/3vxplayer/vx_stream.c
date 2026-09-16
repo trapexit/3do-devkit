@@ -88,16 +88,31 @@ aud0_copy(const VxStream *st, uint32 offset, uint32 bytes)
 
 /* ---------------- read engine ---------------- */
 
+/* Stream offset the window contents below are pinned at: the start of the
+   oldest payload handed to the player and not yet consumed.  Reads land at
+   absolute fill and a read ending at F makes everything below F - VX_WIN_BYTES
+   dead, so the reader may only advance while
+       fill + want <= read_pin(st) + VX_WIN_BYTES.
+   The slot cursor is the oldest unconsumed slot while frames are consumed in
+   order, so its payload start is the minimum over the queued payloads.
+   Nothing is handed out while the cursor slot is empty. */
+static uint32
+read_pin(const VxStream *st)
+{
+  if(!st->frame_ready[st->slot_r])
+    return st->cur;                  /* nothing handed out (slots are in order) */
+  return st->frame_start[st->slot_r];
+}
+
 static void
 issue_read(VxStream *st)
 {
-  uint32 free_tail, want, pos;
+  uint32 room, want, pos;
   Err err;
 
   if(st->read_pending || st->eof)
     return;
 
-  free_tail = VX_WIN_BYTES - (st->fill - st->cur);
   pos = st->fill_pos;
   /* Leave the ramp once the buffered lead can cover a full-size read. */
   if(st->ramping
@@ -105,18 +120,35 @@ issue_read(VxStream *st)
          || st->ramp_count >= VX_RAMP_MAX))
     st->ramping = 0;
   want = st->ramping ? VX_READ_RAMP : VX_READ_BYTES;
-  if(want > VX_WIN_BYTES - pos) want = VX_WIN_BYTES - pos;
-  if(free_tail < want)
+
+  /* Room for the next read.  Three bounds, all in absolute bytes:
+       - the pin: bytes above the oldest un-consumed payload start,
+       - the free tail: bytes not yet parsed,
+       - the physical tail: a read never wraps, so it stops at the window end.
+     The pin is at or below `cur`, so it is the tighter of the first two and
+     has to be applied in addition to the free-space rule, never instead. */
+  {
+    uint32 used = st->fill - read_pin(st);
+    room = (used >= VX_WIN_BYTES) ? 0u : VX_WIN_BYTES - used;
+  }
+  {
+    uint32 free_tail = VX_WIN_BYTES - (st->fill - st->cur);
+    uint32 phys      = VX_WIN_BYTES - pos;
+    if(free_tail < room) room = free_tail;
+    if(phys      < room) room = phys;
+  }
+  if(want > room)
     {
       uint8 hdr[CHUNK_HDR];
-      /* Normally wait for a whole read's room. A chunk larger than the
-         reserve needs a partial read to finish instead of deadlocking. */
+      /* Normally wait for a whole read's room.  A chunk larger than the
+         reserve needs a partial read to finish instead of deadlocking, and
+         a pin-limited reader can likewise only take what is offered. */
       if(st->fill - st->cur >= CHUNK_HDR)
         {
           window_copy(st, st->cur, hdr, CHUNK_HDR);
           if(rd32(hdr + 4) <= st->fill - st->cur) return;
         }
-      want = free_tail & ~(SECTOR - 1u);
+      want = room & ~(SECTOR - 1u);
     }
   if(want == 0)
     return;
@@ -125,6 +157,9 @@ issue_read(VxStream *st)
       uint32 rem = (uint32)st->file_size - st->next_read_off;
       if(rem == 0)
         { st->eof = 1; return; }
+      /* Last block: round up to the sector.  `want` here is already <= room
+         and a sector multiple, and rem < want, so the rounded tail is still
+         within room and cannot reach the pinned payload. */
       want = (rem + SECTOR - 1) & ~(SECTOR - 1u); /* last block overhang */
     }
 
@@ -272,11 +307,33 @@ demux(VxStream *st)
           if(st->frame_ready[st->slot_w])
             { st->slotfull++; return; }  /* backpressure: leave chunk staged */
           st->n_vfrm++;
-          window_copy(st, st->cur + CHUNK_HDR, st->frames[st->slot_w], size - CHUNK_HDR);
-          st->frame_len[st->slot_w]   = size - CHUNK_HDR;
-          st->frame_index[st->slot_w] = time;
-          st->frame_end[st->slot_w]   = st->cur + size;
-          st->frame_ready[st->slot_w] = 1;
+          {
+            /* Decode out of the window: the payload stays where the read
+               put it and read_pin() keeps it intact until it is consumed.
+               A payload that straddles the window wrap has no single
+               pointer, so it is bounced into the slot buffer instead.
+               The position stays 4-byte aligned: cur is always at a chunk
+               boundary (sizes are validated `size & 3 == 0` and the skip
+               path only advances to a chunk end), CHUNK_HDR is 16, the
+               window base is word aligned and VX_WIN_BYTES is a multiple
+               of 4, so the alignment the decoder sees is unchanged. */
+            uint32 poff = st->cur_pos + CHUNK_HDR;
+            uint32 plen = size - CHUNK_HDR;
+            if(poff >= VX_WIN_BYTES) poff -= VX_WIN_BYTES;
+            if(poff + plen <= VX_WIN_BYTES)
+              st->frame_ptr[st->slot_w] = st->win + poff;
+            else
+              {
+                window_copy(st, st->cur + CHUNK_HDR, st->frames[st->slot_w],
+                            plen);
+                st->frame_ptr[st->slot_w] = st->frames[st->slot_w];
+              }
+            st->frame_len[st->slot_w]   = plen;
+            st->frame_index[st->slot_w] = time;
+            st->frame_start[st->slot_w] = st->cur + CHUNK_HDR;
+            st->frame_end[st->slot_w]   = st->cur + size;
+            st->frame_ready[st->slot_w] = 1;
+          }
           st->slot_w++; if(st->slot_w == VX_FRAME_SLOTS) st->slot_w = 0;
           st->frames_delivered++;
           break;
@@ -418,7 +475,7 @@ vx_stream_next_frame(VxStream *st, const uint8 **payload,
 {
   if(!st->frame_ready[st->slot_r])
     return 0;
-  *payload     = st->frames[st->slot_r];
+  *payload     = st->frame_ptr[st->slot_r];
   *size        = st->frame_len[st->slot_r];
   *frame_index = st->frame_index[st->slot_r];
   return 1;
