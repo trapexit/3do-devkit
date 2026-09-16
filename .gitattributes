@@ -6,3 +6,6 @@
 *.cpp text
 *.h text
 *.hpp text
+# PIMAP assets are CR-delimited data consumed by music.lib ReadStreamLine
+# (EOL is '\r'); never apply newline normalization.
+*.pimap -text
