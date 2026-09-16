@@ -55,7 +55,11 @@ extern void vx_copy_shift2(uint8 *dst, const uint8 *src, uint32 bytes);
    2-byte aligned half the time (the AUD0 byte counts are 2-byte
    granular), and the C library memcpy only has a word path for a
    word-aligned destination: such a copy would run byte-at-a-time.
-   vx_copy_shift2 does the same job with word stores. */
+   vx_copy_shift2 does the same job with word stores. The ring
+   positions are even by construction (aud_head advances only by even
+   AUD0 byte counts), so the 2-mod-4 test below is exactly the range
+   vx_copy_shift2's contract covers; anything else falls back to
+   memcpy. */
 static void
 aud0_copy(const VxStream *st, uint32 offset, uint32 bytes)
 {
@@ -71,7 +75,7 @@ aud0_copy(const VxStream *st, uint32 offset, uint32 bytes)
       if(k2 < k)      k  = k2;
 #ifdef TARGET_3DO
       if(((uint32)(st->win + pos) & 3u) == 0
-         && ((uint32)(st->aud + w) & 3u) != 0 && k >= 8)
+         && ((uint32)(st->aud + w) & 3u) == 2u && k >= 8)
         vx_copy_shift2(st->aud + w, st->win + pos, k);
       else
 #endif
