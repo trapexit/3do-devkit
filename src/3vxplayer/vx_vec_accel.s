@@ -3,6 +3,13 @@
 ; block pairs with a single loop test per pair: (5c stm + 1c subs + taken
 ; branch)/2 blocks per row pass amortizes the taken-branch refill across
 ; two blocks instead of one.
+; Each handler's tail performs the row-remaining test itself, so the command
+; that exhausts a row branches out to vxv_rowend while every other command
+; falls straight through into its own back-edge to vxv_next: one taken branch
+; per command instead of a branch to a shared advance plus a re-test of r8.
+; Where the run length is still live at the tail the test is the "subs" that
+; used to be the decrement (skip: lr; V4 repeat: ip); the loop-counted
+; handlers decrement r8 at entry as before and compare here.
 ; r4=input, r5=V4 table, r6/r7=rowpair destinations, r8=row remaining,
 ; r9=rows remaining; bit31 = this row has coded blocks, bit30 = dirty_first
 ; not yet written (rows are visited in increasing order, so the first coded
@@ -93,12 +100,15 @@ vxv_r1b_pairs
         bne vxv_r1b_pairs
 vxv_r1b_done2
 vxv_r1b_done
-        b vxv_advance
+        cmp r8, #0
+        bne vxv_next
+        b vxv_rowend
 vxv_skip
-        sub r8, r8, lr
         add r6, r6, lr, lsl #4
         add r7, r7, lr, lsl #4
-        b vxv_advance
+        subs r8, r8, lr
+        bne vxv_next
+        b vxv_rowend
 vxv_literal1
         sub r8, r8, lr
 vxv_literal1_loop
@@ -114,7 +124,9 @@ vxv_literal1_loop
         stmia r7!, {r0-r3}
         subs lr, lr, #1
         bne vxv_literal1_loop
-        b vxv_advance
+        cmp r8, #0
+        bne vxv_next
+        b vxv_rowend
 vxv_literal4
         sub r8, r8, lr
 vxv_literal4_loop
@@ -133,7 +145,7 @@ vxv_literal4_loop
         ldmia r2, {r2,r3}
         stmia r7!, {r0-r3}
         subs lr, lr, #1
-        beq vxv_advance
+        beq vxv_literal4_done
         ldrb r0, [r4], #1
         add r0, r5, r0, lsl #3
         ldmia r0, {r0,r1}
@@ -149,7 +161,7 @@ vxv_literal4_loop
         ldmia r2, {r2,r3}
         stmia r7!, {r0-r3}
         subs lr, lr, #1
-        beq vxv_advance
+        beq vxv_literal4_done
         ldrb r0, [r4], #1
         add r0, r5, r0, lsl #3
         ldmia r0, {r0,r1}
@@ -165,7 +177,7 @@ vxv_literal4_loop
         ldmia r2, {r2,r3}
         stmia r7!, {r0-r3}
         subs lr, lr, #1
-        beq vxv_advance
+        beq vxv_literal4_done
         ldrb r0, [r4], #1
         add r0, r5, r0, lsl #3
         ldmia r0, {r0,r1}
@@ -182,11 +194,13 @@ vxv_literal4_loop
         stmia r7!, {r0-r3}
         subs lr, lr, #1
         bne vxv_literal4_loop
-        b vxv_advance
+vxv_literal4_done
+        cmp r8, #0
+        bne vxv_next
+        b vxv_rowend
 vxv_repeat4
         ldrb lr, [r4], #1
         add lr, lr, #1
-        sub r8, r8, lr
         mov ip, lr
         ldrb r0, [r4], #1
         add r0, r5, r0, lsl #3
@@ -225,9 +239,12 @@ vxv_r4b_pairs
         subs lr, lr, #2
         bne vxv_r4b_pairs
 vxv_repeat4_bottom_done
-vxv_advance
-        cmp r8, #0
+        subs r8, r8, ip
         bne vxv_next
+; The row remainder is exhausted. Only this tail reaches vxv_rowend by
+; fall-through; every other handler branches here, and all of them arrive
+; with r8 already zero.
+vxv_rowend
         tst r9, #&80000000
         beq vxv_clean_row
         bic r9, r9, #&80000000
