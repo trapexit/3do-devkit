@@ -110,8 +110,44 @@ own executable and launched from the menu with `LoadProgram()`.
 
 ### Misc
 
-* 3DO "takeme" CDROM base files from Portfolio 2.5 w/ a swapped out
-  boot_code from Game Guru.
+* 3DO "takeme" CDROM base files from Portfolio 2.5 with Game Guru
+  boot_code (a patched 5,996-byte version.)
+
+#### Boot code provenance and patch
+
+`takeme/System/Kernel/boot_code` uses the 5,996-byte Game Guru bootstrap
+instead of the official Portfolio 2.5 release's 8,192-byte bootstrap.
+
+Compared with the official Portfolio 2.5 file, the Game Guru file's decrypted
+executable and relocation data are identical except for two ARM instructions.
+Offsets below are relative to the decrypted `boot_code` file:
+
+| Offset | Official Portfolio 2.5 instruction | Game Guru instruction |
+|---|---|---|
+| `0x0CD8` | `movne r0, #6` | `mov r0, r0` (NOP) |
+| `0x0CDC` | `bne 0x121c` | `mov r0, r0` (NOP) |
+
+This removes a **boot-drive restriction**, not a region or OS-version check.
+The matching [Portfolio CD bootstrap source](https://github.com/trapexit/portfolio_os/blob/e395995c8e677640cbe097d357f31ad74eddc331/src/dipir/cdromdipir.c#L571-L579)
+rejects `de->device != BOOTDEVICEUNIT()` with the message
+`3DO Discs allowed in internal drive only!` and returns
+`DIPIR_RETURN_EXT_EJECT` (6). The
+[environment layout and callback definitions](https://github.com/trapexit/portfolio_os/blob/e395995c8e677640cbe097d357f31ad74eddc331/src/dipir/dipir.h#L54-L149)
+match the binary's device-byte load at context offset `0x45` and boot-device
+callback at table offset `0x90`. The two NOPs remove the mismatch return,
+allowing the bootstrap to continue on a different device. This patch does
+not remove RSA verification.
+
+The two 64-byte signature fields at `0x16EC..0x176B` also differ, and the
+Game Guru file omits the Portfolio 2.5 file's final 2,196 bytes. These
+container changes are separate from the two-instruction behavioral patch.
+
+**Speculation:** the likely purpose was to permit booting through an
+alternate or external device rather than rejecting anything other than the
+ROM-designated boot drive. This could help custom boot setups, but the
+patch author's intent, any requirement for a particular optical-drive
+emulator, and hardware compatibility have not been established.
+
 
 
 ## Download and Install
