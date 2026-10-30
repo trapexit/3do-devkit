@@ -169,8 +169,12 @@ the dev kit.
 level. This removes the need to use `activate-env.bat` or
 `activate-env.ps1` each terminal session.
 
-Note: the devkit includes `make.bat` and `make-run.bat` which need no
-activation and can be run from Explorer.
+The Windows convenience wrappers `make.bat`, `make-run.bat`, and
+`make-clean.bat` activate the DevKit automatically. In the DevKit checkout
+they use the adjacent activation script, without prior activation or
+global setup. Copied project wrappers use `TDO_DEVKIT_PATH` to locate the
+installed DevKit. Direct Make and bootstrap commands still require a
+configured environment.
 
 
 ### Linux
@@ -178,12 +182,28 @@ activation and can be run from Explorer.
 * Download: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
 * Add `source /path/to/3do-devkit/activate-env` to your shell config file.
 
+Activation selects the installation containing the invoked activation
+script, even if `TDO_DEVKIT_PATH` previously named another checkout. It
+validates that installation before changing the environment. Repeating
+activation does not duplicate its `PATH` entries; activating another
+checkout switches installations. A failed activation reports an error and
+leaves the previous environment intact.
+
+Use `deactivate-env` in Bash or PowerShell, or call
+`activate-env.bat deactivate` in CMD, to remove the active installation's
+environment entries without discarding unrelated `PATH` changes.
+
 
 ## Usage
 
 This setup is intended to be as simple as possible to start using. To
 that end it is primarily designed to be used in-place. There is no
 install required. Just download, activate environment, and build.
+
+Before running Make directly or bootstrapping, activate the installed DevKit
+environment. `TDO_DEVKIT_PATH` must be nonempty and `armcc` must be on
+`PATH`. If either is missing, the command fails and asks you to source
+the DevKit environment.
 
 ### General
 
@@ -245,16 +265,18 @@ to executables, and runs `3dt pack --sign` to create the signed ISO.
 * Uncompress and move the folder into its final location
 * From a terminal (cmd.exe or PowerShell):
   * Enter the directory: `cd 3do-devkit`
-  * Source the environment: `activate-env` (CMD) or `.\activate-env` (PowerShell)
-  * Run make: `make`
+  * Build: `.\make.bat`
     * Generates `iso\helloworld.iso`
-  * Run in RetroArch Opera emulator (if installed): `make run`
-* From Explorer:
-  * Enter the directory
-  * Run `make.bat` to build the project
-  * Run `make-run.bat` to run the created iso via Opera if RetroArch
-    is installed
-  * Run `make-clean.bat` to remove build files
+  * Run in RetroArch Opera emulator (if installed): `.\make-run.bat`
+  * Clean build files: `.\make-clean.bat`
+
+To invoke `make` directly instead of using the wrappers, first call
+`activate-env.bat` in CMD or dot-source `. .\activate-env.ps1` in PowerShell.
+
+
+* From Explorer in the DevKit checkout, run `make.bat`, `make-run.bat`,
+  or `make-clean.bat`. No separate activation or persistent environment
+  setup is needed.
 
 
 #### WSL
@@ -287,7 +309,7 @@ available on Windows.
 
 * Download: `git clone --depth=1 https://github.com/trapexit/3do-devkit`
 * Enter the directory: `cd 3do-devkit`
-* Source the environment: `source activate-env`
+* Source the environment: `source ./activate-env`
 * Run make: `make`
   * Generates `iso/helloworld.iso`
   * Run in RetroArch Opera emulator (if installed): `make run`
@@ -296,33 +318,40 @@ available on Windows.
 
 ## Bootstrapping a New Project
 
-If you have "installed" the dev kit as described above or activated
-the environment you can easily copy code, assets, and build tools into
-their own directories which will use the binaries found in the
-"install" location.
+Activate the installed DevKit environment before bootstrapping a new
+project. The `bootstrap-3do-project` script copies build templates,
+assets, and starter code into the project, which uses the binaries
+from the installed DevKit.
 
-To simplify the creation of these there is the `bootstrap-3do-project`
-script.
+Projects use the installed DevKit's activation scripts rather than local
+copies. The Windows build wrappers activate the installed DevKit
+using `TDO_DEVKIT_PATH`; that variable must identify the installation, but
+its tool directories need not already be on `PATH`. For direct Make or
+bootstrap commands, activate the installed DevKit first unless its
+environment is configured globally. Build wrappers return Make's exit
+status, and bootstrap commands stop and return an error if a file copy
+fails.
 
 
 ### Windows
 
-* Run `setup-3do-devkit-env.bat` (if not done already) to setup paths
-  globally or `activate-env`
+* Activate the installed checkout with
+  `call C:\path\to\3do-devkit\activate-env.bat` (CMD) or
+  `. C:\path\to\3do-devkit\activate-env.ps1` (PowerShell)
 * Make a directory for your project
 * Change the directory to your new project path
 * Run `bootstrap-3do-project.bat`
 * Or copy `bootstrap-3do-project.bat` to that directory and run it
-  (from shell or Explorer)
+  from the activated terminal
 
-This will copy all relevant files into the path and can be used the
-same as described above. Feel free to remove
+The copied project can be built as described above after activating
+the installed DevKit. Feel free to remove
 `bootstrap-3do-project.bat` afterwards.
 
 
 ### Linux
 
-* Source `activate-env` as described above
+* Source the installed checkout: `source /path/to/3do-devkit/activate-env`
 * Make a directory for your project
 * Run `bootstrap-3do-project` from within that directory
 * You can also run `bootstrap-3do-project PATH`

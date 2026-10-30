@@ -1,12 +1,5 @@
 #!/usr/bin/env sh
 
-script_dir() {
-    filepath=$0
-    filepath=$(readlink -f "${filepath}")
-    dirpath=$(dirname "${filepath}")
-    echo $(cd "${dirpath}" && pwd)
-}
-
 case $# in
     0)
         DST_PATH="$(pwd)"
@@ -17,12 +10,18 @@ case $# in
     *)
         echo "usage: bootstrap-project [dstpath]"
         echo "  * dstpath defaults to pwd"
+        exit 1
         ;;
 esac
 
 if [ -z "${TDO_DEVKIT_PATH}" ]; then
-    basepath=$(cd "$(script_dir)/../.." && pwd)
-    export TDO_DEVKIT_PATH="$basepath"
+    echo "Error: Source the DevKit environment before bootstrapping (TDO_DEVKIT_PATH is not set)." >&2
+    exit 1
+fi
+
+if ! command -v armcc >/dev/null 2>&1; then
+    echo "Error: Source the DevKit environment before bootstrapping (armcc is not on PATH)." >&2
+    exit 1
 fi
 
 SRC_PATH="${TDO_DEVKIT_PATH}"
@@ -32,32 +31,31 @@ if [ -e "${DST_PATH}/takeme" ] && [ ! -d "${DST_PATH}/takeme" ]; then
     exit 1
 fi
 
-echo "Copying activate-env"
-cp "${SRC_PATH}/activate-env" "${DST_PATH}/activate-env"
-
 echo "Copying Makefile"
-cp "${SRC_PATH}/Makefile" "${DST_PATH}/Makefile"
+cp "${SRC_PATH}/Makefile" "${DST_PATH}/Makefile" || exit $?
 
 if [ -d "${DST_PATH}/takeme" ]; then
     echo "'takeme' directory exists. Skipping."
 else
     echo "Copying takeme (core CDROM filesystem contents)"
-    mkdir -p "${DST_PATH}/takeme"
-    cp "${SRC_PATH}/takeme/AppStartup" "${DST_PATH}/takeme/AppStartup"
-    cp "${SRC_PATH}/takeme/BannerScreen" "${DST_PATH}/takeme/BannerScreen"
-    cp -r "${SRC_PATH}/takeme/System" "${DST_PATH}/takeme/System"
+    mkdir -p "${DST_PATH}/takeme" || exit $?
+    cp "${SRC_PATH}/takeme/AppStartup" "${DST_PATH}/takeme/AppStartup" || exit $?
+    cp "${SRC_PATH}/takeme/BannerScreen" "${DST_PATH}/takeme/BannerScreen" || exit $?
+    cp -r "${SRC_PATH}/takeme/System" "${DST_PATH}/takeme/System" || exit $?
 
-    [ -e "${DST_PATH}/data" ] && \
-        echo "Copying data/* into takeme/" && \
-        cp -r "${DST_PATH}/data/"* "${DST_PATH}/takeme/"
+    if [ -e "${DST_PATH}/data" ]; then
+        echo "Copying data/* into takeme/"
+        for data_path in "${DST_PATH}/data/"*; do
+            [ -e "${data_path}" ] || [ -L "${data_path}" ] || continue
+            cp -r "${data_path}" "${DST_PATH}/takeme/" || exit $?
+        done
+    fi
 fi
 
 if [ ! -d "${DST_PATH}/src" ]; then
     echo "Copying starter src/main.c"
-    mkdir -p "${DST_PATH}/src"
-    cp "${SRC_PATH}/src/helloworld/main.c" "${DST_PATH}/src/main.c"
+    mkdir -p "${DST_PATH}/src" || exit $?
+    cp "${SRC_PATH}/src/helloworld/main.c" "${DST_PATH}/src/main.c" || exit $?
 fi
-
-printf '%s' "${SRC_PATH}" > "${DST_PATH}/.devkit-path"
 
 echo "Now run 'make' to build the ISO and 'make run' to run in Opera"

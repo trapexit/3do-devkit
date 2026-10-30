@@ -16,22 +16,17 @@ else
   IS_POSIX_SHELL := 1
 endif
 
-ifeq ($(origin TDO_DEVKIT_PATH),undefined)
-  $(warning WARNING: run "source activate-env" to have access to tooling)
-  ifeq ($(wildcard .devkit-path),)
-    TDO_DEVKIT_PATH := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-  else
-    TDO_DEVKIT_PATH := $(shell cat .devkit-path)/
-  endif
-  ifeq ($(IS_POSIX_SHELL),1)
-	ifeq ($(OS),Windows_NT)
-		PATH := $(TDO_DEVKIT_PATH)bin/compiler/win:$(TDO_DEVKIT_PATH)bin/tools/win:$(TDO_DEVKIT_PATH)bin/buildtools/win:$(PATH)
-	else
-		PATH := $(TDO_DEVKIT_PATH)bin/compiler/linux:$(TDO_DEVKIT_PATH)bin/tools/linux:$(TDO_DEVKIT_PATH)bin/buildtools/linux:$(PATH)
-	endif
-  else
-    PATH := $(TDO_DEVKIT_PATH)bin\compiler\win;$(TDO_DEVKIT_PATH)bin\tools\win;$(TDO_DEVKIT_PATH)bin\buildtools\win;$(PATH)
-  endif
+ifeq ($(strip $(TDO_DEVKIT_PATH)),)
+  $(error TDO_DEVKIT_PATH is not set. Source the DevKit environment before running make)
+endif
+
+ifeq ($(IS_POSIX_SHELL),1)
+  TDO_DEVKIT_ARMCC := $(shell command -v armcc 2>/dev/null)
+else
+  TDO_DEVKIT_ARMCC := $(shell where armcc 2>nul)
+endif
+ifeq ($(TDO_DEVKIT_ARMCC),)
+  $(error armcc not found in PATH. Source the DevKit environment before running make)
 endif
 
 .DEFAULT_GOAL := all

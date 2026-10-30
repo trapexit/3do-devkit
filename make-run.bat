@@ -1,3 +1,4 @@
 @echo off
 
-call make run
+call "%~dp0make.bat" run
+exit /b %errorlevel%

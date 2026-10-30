@@ -1,87 +1,113 @@
-script_basepath() {
-    if test -n "$BASH" ; then filepath=$BASH_SOURCE
-    elif test -n "$TMOUT"; then filepath=${.sh.file}
-    elif test -n "$ZSH_NAME" ; then filepath=${(%):-%x}
-    elif test ${0##*/} = dash; then x=$(lsof -p $$ -Fn0 | tail -1); filepath=${x#n}
-    else filepath=$0
-    fi
+_tdo_devkit_activate() {
+    local root platform compiler previous_root remaining segment cleaned separator more
 
-    filepath=$(readlink -f "${filepath}")
-    dirpath=$(dirname "${filepath}")
-
-    echo $(cd "${dirpath}" && pwd)
-}
-
-deactivate-env() {
-    _remove_path_entry() {
-        target_path="$1"
-        cleaned_path=""
-        old_ifs="$IFS"
-        segment=""
-
-        IFS=':'
-        for segment in $PATH; do
-            if [ "$segment" = "$target_path" ] || [ -z "$segment" ]; then
-                continue
-            fi
-
-            if [ -z "$cleaned_path" ]; then
-                cleaned_path="$segment"
-            else
-                cleaned_path="$cleaned_path:$segment"
-            fi
-        done
-        IFS="$old_ifs"
-
-        PATH="$cleaned_path"
+    # Keep activation's working state out of the caller, even on failure.
+    unset -f _tdo_devkit_activate
+    root=$(
+        if [ -n "${BASH_VERSION:-}" ]; then
+            filepath=$BASH_SOURCE
+        elif [ -n "${ZSH_VERSION:-}" ]; then
+            filepath=${(%):-%x}
+        elif [ -n "${KSH_VERSION:-}" ]; then
+            filepath=${.sh.file}
+        elif [ "${0##*/}" = dash ]; then
+            filepath=$(lsof -p $$ -Fn | tail -n 1)
+            filepath=${filepath#n}
+        else
+            filepath=$0
+        fi
+        filepath=$(readlink -f "$filepath") || exit 1
+        CDPATH= cd -P -- "$(dirname "$filepath")" && pwd -P
+    ) || {
+        echo "Error: Activation failed. Cannot locate the DevKit installation." >&2
+        return 1
     }
 
-    if [ -z "$TDO_DEVKIT_PATH" ]; then
-        echo "3DO development environment not activated."
+    platform=linux
+    case "${MSYSTEM:-}:${OSTYPE:-}" in
+        ?*:*|*:*msys*) platform=win ;;
+    esac
+    compiler="$root/bin/compiler/$platform/armcc"
+    if [ "$platform" = win ]; then
+        compiler="$compiler.exe"
+    fi
+    if [ ! -f "$compiler" ] || [ ! -x "$compiler" ]; then
+        echo "Error: Activation failed. Compiler is missing or not executable: $compiler." >&2
+        return 1
+    fi
+    if [ ! -d "$root/bin/tools/$platform" ] ||
+       [ ! -d "$root/bin/buildtools/$platform" ]; then
+        echo "Error: Activation failed. DevKit tool or buildtool directory is missing." >&2
         return 1
     fi
 
-    if [ -n "$MSYSTEM" ] || [[ "$OSTYPE" == *msys* ]]; then
-        _remove_path_entry "$TDO_DEVKIT_PATH/bin/buildtools/win"
-        _remove_path_entry "$TDO_DEVKIT_PATH/bin/tools/win"
-        _remove_path_entry "$TDO_DEVKIT_PATH/bin/compiler/win"
-    else
-        _remove_path_entry "$TDO_DEVKIT_PATH/bin/buildtools/linux"
-        _remove_path_entry "$TDO_DEVKIT_PATH/bin/tools/linux"
-        _remove_path_entry "$TDO_DEVKIT_PATH/bin/compiler/linux"
-    fi
-    unset -f _remove_path_entry
-    export PATH
-    unset TDO_DEVKIT_PATH
-    unset -f deactivate-env
-    echo "3DO development environment deactivated."
+    previous_root=${_TDO_DEVKIT_ACTIVE_ROOT:-${TDO_DEVKIT_PATH:-}}
+    remaining=${PATH-}
+    cleaned=
+    separator=
+    # Split explicitly so empty entries, spaces, and wildcard characters survive.
+    while :; do
+        case "$remaining" in
+            *:*) segment=${remaining%%:*}; remaining=${remaining#*:}; more=1 ;;
+            *) segment=$remaining; more= ;;
+        esac
+        case "$segment" in
+            "$root/bin/compiler/$platform"|"$root/bin/tools/$platform"|"$root/bin/buildtools/$platform")
+                ;;
+            "$previous_root/bin/compiler/linux"|"$previous_root/bin/tools/linux"|"$previous_root/bin/buildtools/linux"|"$previous_root/bin/compiler/win"|"$previous_root/bin/tools/win"|"$previous_root/bin/buildtools/win")
+                if [ -z "$previous_root" ]; then
+                    cleaned="$cleaned$separator$segment"
+                    separator=:
+                fi
+                ;;
+            *)
+                cleaned="$cleaned$separator$segment"
+                separator=:
+                ;;
+        esac
+        [ -n "$more" ] || break
+    done
+
+    PATH="$root/bin/buildtools/$platform:$root/bin/tools/$platform:$root/bin/compiler/$platform${separator:+:$cleaned}"
+    TDO_DEVKIT_PATH=$root
+    _TDO_DEVKIT_ACTIVE_ROOT=$root
+    _TDO_DEVKIT_ACTIVE_PLATFORM=$platform
+    export PATH TDO_DEVKIT_PATH
+
+    deactivate-env() {
+        local root platform remaining segment cleaned separator more
+
+        if [ -z "${_TDO_DEVKIT_ACTIVE_ROOT:-}" ]; then
+            echo "3DO development environment not activated."
+            return 1
+        fi
+        root=$_TDO_DEVKIT_ACTIVE_ROOT
+        platform=$_TDO_DEVKIT_ACTIVE_PLATFORM
+        remaining=${PATH-}
+        cleaned=
+        separator=
+        while :; do
+            case "$remaining" in
+                *:*) segment=${remaining%%:*}; remaining=${remaining#*:}; more=1 ;;
+                *) segment=$remaining; more= ;;
+            esac
+            case "$segment" in
+                "$root/bin/compiler/$platform"|"$root/bin/tools/$platform"|"$root/bin/buildtools/$platform")
+                    ;;
+                *)
+                    cleaned="$cleaned$separator$segment"
+                    separator=:
+                    ;;
+            esac
+            [ -n "$more" ] || break
+        done
+        PATH=$cleaned
+        export PATH
+        unset TDO_DEVKIT_PATH _TDO_DEVKIT_ACTIVE_ROOT _TDO_DEVKIT_ACTIVE_PLATFORM
+        echo "3DO development environment deactivated."
+    }
+
+    echo "3DO development environment activated. Run 'deactivate-env' to deactivate."
 }
 
-if [ -z "$TDO_DEVKIT_PATH" ]; then
-    if [ -f ".devkit-path" ]; then
-        basepath=$(cat .devkit-path)
-    else
-        basepath=$(script_basepath)
-    fi
-    export TDO_DEVKIT_PATH="$basepath"
-
-    if [ -n "$MSYSTEM" ] || [[ "$OSTYPE" == *msys* ]]; then
-        export PATH="$basepath/bin/compiler/win:$PATH"
-        export PATH="$basepath/bin/tools/win:$PATH"
-        export PATH="$basepath/bin/buildtools/win:$PATH"
-    else
-        export PATH="$basepath/bin/compiler/linux:$PATH"
-        export PATH="$basepath/bin/tools/linux:$PATH"
-        export PATH="$basepath/bin/buildtools/linux:$PATH"
-    fi
-fi
-
-if command -v armcc >/dev/null 2>&1; then
-    echo "3DO development environment activated. Run 'deactivate-env' to deactivate."
-else
-    echo "Error: Activation failed. armcc not found in PATH."
-    if [ -f ".devkit-path" ]; then
-        echo "Note: .devkit-path contains: $basepath"
-        echo "If this path is wrong, update .devkit-path."
-    fi
-fi
+_tdo_devkit_activate
